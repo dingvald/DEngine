@@ -769,6 +769,7 @@
     <None Include="data\static\prototypes.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="data\static\player.json" />
+    <None Include="data\static\materials.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">

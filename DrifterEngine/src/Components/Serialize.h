@@ -24,6 +24,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, Physical& physical)
+	{
+		archive(physical.materials);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Actor& actor)
 	{
 		archive(actor.ap, actor.moveSpeed, actor.actSpeed);

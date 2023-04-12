@@ -25,6 +25,11 @@ namespace component
 		sf::Color color = { sf::Color::Magenta };
 	};
 
+	struct Physical
+	{
+		std::vector<std::string> materials = {};
+	};
+
 	struct Camera
 	{
 		sf::FloatRect viewport = { 0,0,0,0 };
@@ -61,11 +66,6 @@ namespace component
 	struct Faction
 	{
 		std::string name;
-	};
-
-	struct Container
-	{
-		std::vector<entt::entity> contents;
 	};
 }
 
