@@ -28,6 +28,10 @@ void component::Meta::initialize()
 		.data<&Render::sprite>("sprite"_hs)
 		.data<&Render::color>("color"_hs);
 
+	snapshot::reflectComponent<Physical, PHYSICAL_STRING>()
+		.prop("serialize"_hs)
+		.data<&Physical::materials>("materials"_hs);
+
 	snapshot::reflectComponent<Actor, ACTOR_STRING>()
 		.prop("serialize"_hs)
 		.data<&Actor::ap>("ap"_hs)

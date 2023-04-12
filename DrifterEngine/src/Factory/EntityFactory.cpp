@@ -98,13 +98,23 @@ bool drft::EntityFactory::loadPrototypes(std::string filename, entt::registry& r
 						}
 						else if (arr[0].IsString())
 						{
-							std::unordered_set<std::string> strings;
-							for (int i = 0; i < size; ++i)
-							{
-								strings.insert(arr[i].GetString());
-							}
+							// Either a unordered set of strings or a vector of strings
 							if (meta.data(entt::hashed_string(memberName)).type().is_associative_container())
 							{
+								std::unordered_set<std::string> strings;
+								for (int i = 0; i < size; ++i)
+								{
+									strings.insert(arr[i].GetString());
+								}
+								meta.data(entt::hashed_string(memberName)).set(any, strings);
+							}
+							else if (meta.data(entt::hashed_string(memberName)).type().is_sequence_container())
+							{
+								std::vector<std::string> strings;
+								for (int i = 0; i < size; ++i)
+								{
+									strings.push_back(arr[i].GetString());
+								}
 								meta.data(entt::hashed_string(memberName)).set(any, strings);
 							}
 						}

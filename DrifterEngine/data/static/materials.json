@@ -1,0 +1,70 @@
+{
+  "Prototypes": [
+    // Base Material
+    {
+      "Name": "BaseMaterial",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        }
+      ]
+    },
+    // Corpse
+    {
+      "Name": "Corpse",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "corpse",
+            "extendedName": "",
+            "description": "A corpse"
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 7,
+            "color": [ 150, 60, 60 ]
+          }
+        }
+      ]
+    },
+    // Wood
+    {
+      "Name": "Wood",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "wood",
+            "extendedName": "",
+            "description": "A chunk of wood"
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 14,
+            "color": [ 133, 94, 66 ]
+          }
+        }
+      ]
+    }
+  ]
+}

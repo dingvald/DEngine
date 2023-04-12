@@ -69,6 +69,7 @@ void drft::GameState::init()
 	
 	importSystems();
 
+	_factory->loadPrototypes("materials.json", _registry);
 	_factory->loadPrototypes("prototypes.json", _registry);
 	_factory->loadPrototypes("player.json", _registry);
 

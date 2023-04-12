@@ -24,6 +24,12 @@
           }
         },
         {
+          "Name": "Physical",
+          "Data": {
+            "materials": [ "Wood" ]
+          }
+        },
+        {
           "Name": "Position",
           "Data": {
             "position": [ 10.0, 10.0 ],
@@ -67,6 +73,12 @@
           "Data": {
             "position": [ 0.0, 0.0 ],
             "depth": 2
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "materials": [ "Corpse" ]
           }
         },
         {
@@ -139,6 +151,12 @@
           }
         },
         {
+          "Name": "Physical",
+          "Data": {
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
           "Name": "Actor",
           "Data": {
             "ap": 0,
@@ -173,38 +191,6 @@
           "Name": "Faction",
           "Data": {
             "name": "bad"
-          }
-        }
-      ]
-    },
-    // Corpse
-    {
-      "Name": "Corpse",
-      "Inherits": [
-        ""
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "corpse",
-            "extendedName": "",
-            "description": "A corpse"
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 7,
-            "color": [ 150, 60, 60 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
           }
         }
       ]

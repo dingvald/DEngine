@@ -29,6 +29,12 @@
           }
         },
         {
+          "Name": "Physical",
+          "Data": {
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
           "Name": "Actor",
           "Data": {
             "ap": 0,
