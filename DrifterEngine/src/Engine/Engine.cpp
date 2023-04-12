@@ -19,9 +19,13 @@ void drft::Engine::run()
 	while (_window.isOpen())
 	{
 		sf::Time deltaTime = clock.restart();
-		processEvents();
+		handleEvents();
 		update(deltaTime.asSeconds());
 		render(deltaTime.asSeconds());
+		if (_stateStack.isEmpty())
+		{
+			this->shutDown();
+		}
 	}
 }
 
@@ -30,7 +34,9 @@ void drft::Engine::initialize()
 	loadResources();
 	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
 	service::DebugInfo::instance().setPosition({ 16,8 });
-	_states.push(std::make_unique<GameState>(State::Context{ _textures, _fonts, {960, 540}}));
+
+	registerStates();
+	_stateStack.pushState(States::Game);
 }
 
 void drft::Engine::loadResources()
@@ -40,14 +46,17 @@ void drft::Engine::loadResources()
 	_fonts.load("Terminus", resourcePath + "Fonts/terminus.ttf");
 }
 
-void drft::Engine::processEvents()
+void drft::Engine::registerStates()
+{
+	_stateStack.registerState<GameState>(States::Game);
+}
+
+void drft::Engine::handleEvents()
 {
 	sf::Event event;
 	while (_window.pollEvent(event))
 	{
-
-		if (!_states.empty() && _states.top()->processEvent(event)) continue;
-
+		_stateStack.handleEvent(event);
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
@@ -55,9 +64,6 @@ void drft::Engine::processEvents()
 			{
 				_showDebug = !_showDebug;
 			}
-			break;
-		case sf::Event::KeyReleased:
-
 			break;
 
 		case sf::Event::Closed:
@@ -69,26 +75,11 @@ void drft::Engine::processEvents()
 
 void drft::Engine::update(const float dt)
 {
-	if (!_states.empty())
-	{
-		float fps = 1.0f / dt;
+	float fps = 1.0f / dt;
+	service::DebugInfo::instance().putInfo("FPS", std::to_string(fps));
+	service::DebugInfo::instance().putInfo("dt", std::to_string(dt));
 
-		service::DebugInfo::instance().putInfo("FPS", std::to_string(fps));
-		service::DebugInfo::instance().putInfo("dt", std::to_string(dt));
-
-		_states.top()->update(dt);
-		if (_states.top()->getQuit())
-		{
-			_states.top()->endState();
-			_states.pop();
-		}
-	}
-	else
-	{
-		this->shutDown();
-	}
-	
-	
+	_stateStack.update(dt);
 }
 
 void drft::Engine::render(const float dt)
@@ -99,10 +90,8 @@ void drft::Engine::render(const float dt)
 	if (dtSinceRender >= (1.0f / TARGET_FPS))
 	{
 		_window.clear();
-		if (!_states.empty())
-		{
-			_states.top()->render(_window);
-		}
+		_stateStack.render(_window);
+
 		if (_showDebug)
 		{
 			service::DebugInfo::instance().render(_window);
@@ -111,7 +100,6 @@ void drft::Engine::render(const float dt)
 		_window.display();
 		dtSinceRender = 0.0f;
 	}
-	
 }
 
 void drft::Engine::shutDown()

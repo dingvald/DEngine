@@ -1,54 +1,50 @@
 #pragma once
 #include "Utility/ResourceHolder.h"
+#include "StateIdentifiers.h"
 
 namespace drft
 {
+	class StateStack;
+
 	class State
 	{
 	public:
-
-		struct Window
-		{
-			int width = 0;
-			int height = 0;
-		};
+		using Ptr = std::unique_ptr<State>;
 
 		struct Context
 		{
 			using TextureHolder = ResourceHolder<sf::Texture, std::string>;
 			using FontHolder = ResourceHolder<sf::Font, std::string>;
 
-			Context(TextureHolder& textures, FontHolder& fonts, Window window)
-				: textures(textures), fonts(fonts), window(window) {}
-			Context(const Context& c) = default;
-			Context& operator=(const Context&) = default;
-			Context(Context&&) = default;
-			Context& operator=(Context&&) = default;
+			Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts)
+				: window(&window)
+				, textures(&textures)
+				, fonts(&fonts)
+			{}
 
-			TextureHolder& textures;
-			FontHolder& fonts;
-			Window window;
+			sf::RenderWindow* window;
+			TextureHolder* textures;
+			FontHolder* fonts;
+			
 		};
 
 	public:
-		State(Context context);
+		State(StateStack& stack, Context context);
 		virtual ~State();
 
-		const bool& getQuit() const;
-		virtual bool processEvent(const sf::Event& ev);
-
-		virtual void update(const float dt) = 0;
+		virtual bool handleEvent(const sf::Event& ev);
+		virtual bool update(const float dt) = 0;
 		virtual void render(sf::RenderTarget& target) = 0;
-		virtual void endState() = 0;
 
 	protected:
-		Context &const getContext();
+		void requestStackPush(States stateId);
+		void requestStackPop();
+		void requestStateClear();
+
+		Context getContext() const;
 
 	private:
-		virtual void init() = 0;
-
-	private:
-		bool _quit;
+		StateStack* _stack;
 		Context _context;
 	};
 }

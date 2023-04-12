@@ -9,6 +9,7 @@
 #include "Systems/SystemScheduler.h"
 #include "Systems/Core/TileRenderer.h"
 #include "Systems/Core/EntityRenderer.h"
+#include "Systems/Core/HUD.h"
 #include "Systems/Core/RealityBubble.h"
 #include "Systems/Core/PlayerInput.h"
 #include "Systems/Core/ArtificialInput.h"
@@ -31,24 +32,37 @@
 
 
 
-drft::GameState::GameState(State::Context context) : State(context)
+drft::GameState::GameState(StateStack& stack, Context context) 
+	: State(stack, context)
 {
 	init();
 }
 
-void drft::GameState::update(const float dt)
+bool drft::GameState::handleEvent(const sf::Event& ev)
+{
+	switch (ev.type)
+	{
+		case sf::Event::KeyPressed:
+			if (ev.key.code == sf::Keyboard::Escape)
+			{
+				requestStackPop();
+				return false;
+			}
+			break;
+	}
+
+	return true;
+}
+
+bool drft::GameState::update(const float dt)
 {
 	_systems->update(dt);
+	return true;
 }
 
 void drft::GameState::render(sf::RenderTarget& target)
 {	
 	_systems->render(target);
-}
-
-void drft::GameState::endState()
-{
-	std::cout << "Leaving GameState" << std::endl;
 }
 
 void drft::GameState::init()
@@ -63,7 +77,7 @@ void drft::GameState::init()
 	_dispatcher = std::make_unique<entt::dispatcher>();
 
 	_registry.ctx().emplace<spatial::WorldGrid&>(*_world);
-	_registry.ctx().emplace<sf::Texture&>(getContext().textures.get("Sprites"));
+	_registry.ctx().emplace<sf::Texture&>(getContext().textures->get("Sprites"));
 	_registry.ctx().emplace<EntityFactory&>(*_factory);
 	_registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
 	
@@ -86,8 +100,8 @@ void drft::GameState::init()
 	// ADD CAMERA ENTITY // 
 	//
 	auto camera = _registry.create();
-	int viewportWidth = getContext().window.width;
-	int viewportHeight = getContext().window.height;
+	int viewportWidth = getContext().window->getSize().x;
+	int viewportHeight = getContext().window->getSize().y;
 	_registry.emplace<component::Camera>(camera, sf::FloatRect(0,0,viewportWidth, viewportHeight), player);
 	_registry.emplace<component::Position>(camera, startingPosition, (int)spatial::Layer::Camera);
 	//
@@ -115,6 +129,7 @@ void drft::GameState::importSystems()
 	_systems->add(RealityBubble(),		Phase::OnValidation);
 	_systems->add(TileRenderer(),		Phase::OnRender);
 	_systems->add(EntityRenderer(),		Phase::OnRender);
+	_systems->add(HUD(),				Phase::OnRender + 10);
 	_systems->add(WorldGridResolver(),	Phase::Reactive);
 	_systems->add(FactionSystem(),		Phase::Reactive);
 

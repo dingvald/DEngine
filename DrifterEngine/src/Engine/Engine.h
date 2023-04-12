@@ -1,11 +1,9 @@
 #pragma once
 #include "Utility/ResourceHolder.h"
-#include "State.h"
+#include "StateStack.h"
 
 namespace drft
 {
-	
-
 	class Engine
 	{
 	public:
@@ -15,7 +13,8 @@ namespace drft
 	private:
 		void initialize();
 		void loadResources();
-		void processEvents();
+		void registerStates();
+		void handleEvents();
 		void update(const float dt);
 		void render(const float dt);
 		void shutDown();
@@ -24,7 +23,7 @@ namespace drft
 		sf::RenderWindow _window;
 		ResourceHolder<sf::Texture, std::string> _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
-		std::stack<std::unique_ptr<State> > _states;
+		StateStack _stateStack{ State::Context{_window, _textures, _fonts} };
 
 		bool _showDebug;
 	};

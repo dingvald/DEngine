@@ -1,34 +1,38 @@
 #include "pch.h"
 #include "State.h"
+#include "StateStack.h"
 
 using namespace drft;
 
-State::State(Context context) : _context(context)
-{
-	_quit = false;
-}
+State::State(StateStack& stack, Context context)
+	: _stack(&stack)
+	, _context(context)
+{}
 
 State::~State()
-{
-}
+{}
 
-const bool& State::getQuit() const
+bool State::handleEvent(const sf::Event& ev)
 {
-	return _quit;
-}
-
-bool drft::State::processEvent(const sf::Event& ev)
-{
-	if (ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape)
-	{
-		_quit = true;
-		return true;
-	}
-
 	return false;
 }
 
-drft::State::Context &const drft::State::getContext()
+void State::requestStackPush(States stateId)
 {
-	return this->_context;
+	_stack->pushState(stateId);
+}
+
+void State::requestStackPop()
+{
+	_stack->popState();
+}
+
+void State::requestStateClear()
+{
+	_stack->clearStates();
+}
+
+State::Context State::getContext() const
+{
+	return _context;
 }

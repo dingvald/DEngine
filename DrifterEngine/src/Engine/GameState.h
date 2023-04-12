@@ -23,14 +23,15 @@ namespace drft
 	class GameState : public State
 	{
 	public:
-		GameState(State::Context context);
-		virtual void update(const float dt) override;
-		virtual void render(sf::RenderTarget& target) override;
-		virtual void endState() override;
+		GameState(StateStack& stack, State::Context context);
+
+		bool handleEvent(const sf::Event& ev) override;
+		bool update(const float dt) override;
+		void render(sf::RenderTarget& target) override;
 
 	private:
 		// Used to setup observers
-		virtual void init() override;
+		void init();
 		// Add all systems to the system queue
 		void importSystems();
 
