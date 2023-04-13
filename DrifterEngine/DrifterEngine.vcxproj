@@ -167,6 +167,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Core\HUD.cpp" />
     <ClCompile Include="src\Random\RandomNumberGenerator.cpp" />
     <ClCompile Include="src\Systems\Gameplay\FactionSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ArtificialInput.cpp" />
@@ -243,8 +244,11 @@
     <ClCompile Include="src\Spatial\Conversions.cpp" />
     <ClCompile Include="src\Components\Tags.cpp" />
     <ClCompile Include="src\Spatial\VirtualChunk.cpp" />
+    <ClCompile Include="src\Engine\StateStack.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\StateIdentifiers.h" />
+    <ClInclude Include="src\Systems\Core\HUD.h" />
     <ClInclude Include="src\Random\RandomNumberGenerator.h" />
     <ClInclude Include="src\Systems\Gameplay\FactionSystem.h" />
     <ClInclude Include="src\Systems\Core\ArtificialInput.h" />
@@ -449,6 +453,7 @@
     <ClInclude Include="src\Spatial\Conversions.h" />
     <ClInclude Include="src\Components\Tags.h" />
     <ClInclude Include="src\Spatial\VirtualChunk.h" />
+    <ClInclude Include="src\Engine\StateStack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\materials.json" />

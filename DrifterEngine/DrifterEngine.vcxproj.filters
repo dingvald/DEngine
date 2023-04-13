@@ -144,6 +144,12 @@
     <ClCompile Include="src\Random\RandomNumberGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Core\HUD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\StateStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -756,6 +762,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\RandomNumberGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Core\HUD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\StateStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\StateIdentifiers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

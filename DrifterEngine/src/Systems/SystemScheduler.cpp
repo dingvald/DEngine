@@ -21,6 +21,10 @@ void drft::system::SystemScheduler::update(const float dt) const
 	{
 		system->update(dt);
 	}
+	for (auto& [system, _] : _systems.at(Phase::OnRender))
+	{
+		system->update(dt);
+	}
 }
 
 void drft::system::SystemScheduler::render(sf::RenderTarget& target) const
