@@ -45,8 +45,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 10,
-            "current": 10
+            "max": 20,
+            "current": 20
           }
         },
         {
