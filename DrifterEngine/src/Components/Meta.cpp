@@ -2,11 +2,9 @@
 #include "Meta.h"
 #include "Serialize.h"
 #include "Snapshot/Reflection.h"
-#include "../deps/Entt/core/hashed_string.hpp"
+#include <Entt/core/hashed_string.hpp>
 
 using namespace entt::literals;
-
-
 
 void component::Meta::initialize()
 {
