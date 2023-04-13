@@ -3,7 +3,7 @@
 
 using namespace drft::util;
 
-sf::IntRect SpriteIndexer::get(unsigned int index, sf::Texture& texture)
+sf::IntRect SpriteIndexer::get(unsigned int index, const sf::Texture& texture)
 {
     sf::Vector2u spriteDimensions = { 16, 16 };
 
