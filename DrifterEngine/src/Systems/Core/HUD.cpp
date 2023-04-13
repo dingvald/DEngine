@@ -9,7 +9,8 @@ static const int HEALTHBAR_WIDTH_MULTIPLIER = 5;
 
 void drft::system::HUD::init()
 {
-	const auto& texture = registry->ctx().get<sf::Texture&>();
+	using namespace entt::literals;
+	const auto& texture = registry->ctx().get<sf::Texture&>("sprites"_hs);
 	_heartIcon.setTexture(texture);
 	_heartIcon.setTextureRect(util::SpriteIndexer::get(static_cast<unsigned int>(util::Sprite::Heart), texture));
 	_heartIcon.setPosition(HEALTHBAR_POSITION - sf::Vector2f(20.f, 5.f));

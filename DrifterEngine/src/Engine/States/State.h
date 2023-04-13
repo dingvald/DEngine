@@ -39,7 +39,7 @@ namespace drft
 	protected:
 		void requestStackPush(States stateId);
 		void requestStackPop();
-		void requestStateClear();
+		void requestStackClear();
 
 		Context getContext() const;
 

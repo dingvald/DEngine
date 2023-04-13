@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "State.h"
-#include "StateStack.h"
+#include "Engine/StateStack.h"
 
 using namespace drft;
 
@@ -27,7 +27,7 @@ void State::requestStackPop()
 	_stack->popState();
 }
 
-void State::requestStateClear()
+void State::requestStackClear()
 {
 	_stack->clearStates();
 }

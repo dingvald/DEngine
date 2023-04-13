@@ -10,11 +10,6 @@ namespace drft
 		class SystemScheduler;
 	}
 
-	namespace system::input
-	{
-		class InputBuffer;
-	}
-
 	namespace spatial
 	{
 		class WorldGrid;
@@ -30,9 +25,7 @@ namespace drft
 		void render(sf::RenderTarget& target) override;
 
 	private:
-		// Used to setup observers
 		void init();
-		// Add all systems to the system queue
 		void importSystems();
 
 	private:

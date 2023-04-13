@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Engine.h"
-#include "GameState.h"
+#include "States/GameState.h"
+#include "States/TitleScreenState.h"
+#include "States/MainMenuState.h"
 #include "Services/DebugInfo.h"
 
 using namespace drft;
@@ -36,7 +38,7 @@ void drft::Engine::initialize()
 	service::DebugInfo::instance().setPosition({ 16,8 });
 
 	registerStates();
-	_stateStack.pushState(States::Game);
+	_stateStack.pushState(States::Title);
 }
 
 void drft::Engine::loadResources()
@@ -48,6 +50,8 @@ void drft::Engine::loadResources()
 
 void drft::Engine::registerStates()
 {
+	_stateStack.registerState<TitleScreenState>(States::Title);
+	_stateStack.registerState<MainMenuState>(States::MainMenu);
 	_stateStack.registerState<GameState>(States::Game);
 }
 
@@ -59,16 +63,15 @@ void drft::Engine::handleEvents()
 		_stateStack.handleEvent(event);
 		switch (event.type)
 		{
-		case sf::Event::KeyPressed:
-			if (event.key.code == sf::Keyboard::F5)
-			{
-				_showDebug = !_showDebug;
-			}
-			break;
-
-		case sf::Event::Closed:
-			this->shutDown();
-			break;
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::F5)
+				{
+					_showDebug = !_showDebug;
+				}
+				break;
+			case sf::Event::Closed:
+				this->shutDown();
+				break;
 		}
 	}
 }

@@ -167,6 +167,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Engine\States\MainMenuState.cpp" />
     <ClCompile Include="src\Systems\Core\HUD.cpp" />
     <ClCompile Include="src\Random\RandomNumberGenerator.cpp" />
     <ClCompile Include="src\Systems\Gameplay\FactionSystem.cpp" />
@@ -197,13 +198,13 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Engine\GameState.cpp">
+    <ClCompile Include="src\Engine\States\GameState.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Engine\State.cpp">
+    <ClCompile Include="src\Engine\States\State.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -245,9 +246,11 @@
     <ClCompile Include="src\Components\Tags.cpp" />
     <ClCompile Include="src\Spatial\VirtualChunk.cpp" />
     <ClCompile Include="src\Engine\StateStack.cpp" />
+    <ClCompile Include="src\Engine\States\TitleScreenState.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Engine\StateIdentifiers.h" />
+    <ClInclude Include="src\Engine\States\MainMenuState.h" />
+    <ClInclude Include="src\Engine\States\StateIdentifiers.h" />
     <ClInclude Include="src\Systems\Core\HUD.h" />
     <ClInclude Include="src\Random\RandomNumberGenerator.h" />
     <ClInclude Include="src\Systems\Gameplay\FactionSystem.h" />
@@ -434,8 +437,8 @@
     <ClInclude Include="src\Spatial\Grid.h" />
     <ClInclude Include="src\Components\Components.h" />
     <ClInclude Include="src\Engine\Engine.h" />
-    <ClInclude Include="src\Engine\GameState.h" />
-    <ClInclude Include="src\Engine\State.h" />
+    <ClInclude Include="src\Engine\States\GameState.h" />
+    <ClInclude Include="src\Engine\States\State.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Systems\Core\EntityRenderer.h" />
     <ClInclude Include="src\Systems\System.h" />
@@ -454,6 +457,7 @@
     <ClInclude Include="src\Components\Tags.h" />
     <ClInclude Include="src\Spatial\VirtualChunk.h" />
     <ClInclude Include="src\Engine\StateStack.h" />
+    <ClInclude Include="src\Engine\States\TitleScreenState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\materials.json" />

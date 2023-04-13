@@ -20,7 +20,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 5,
-            "color": [ 20, 51, 6 ]
+            "color": [ 68, 105, 61 ]
           }
         },
         {
@@ -140,7 +140,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 11,
-            "color": [ 113, 90, 49 ]
+            "color": [ 122, 122, 88 ]
           }
         },
         {

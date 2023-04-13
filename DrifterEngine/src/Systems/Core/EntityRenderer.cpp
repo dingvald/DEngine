@@ -7,7 +7,8 @@
 
 void drft::system::EntityRenderer::init()
 {
-	_sprites = registry->ctx().get<sf::Texture&>();
+	using namespace entt::literals;
+	_sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
 	for (int l = 0; l < (int)spatial::Layer::Total; ++l)
 	{
 		_spriteLayers[l].setTexture(_sprites);

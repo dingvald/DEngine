@@ -2,7 +2,6 @@
 #include "Camera.h"
 #include "Components/Components.h"
 #include "Spatial/Conversions.h"
-#include "Engine/State.h"
 
 static const float CAMERA_SPEED = 5.0f;
 

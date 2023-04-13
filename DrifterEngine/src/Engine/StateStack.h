@@ -1,6 +1,6 @@
 #pragma once
-#include "StateIdentifiers.h"
-#include "State.h"
+#include "States/StateIdentifiers.h"
+#include "States/State.h"
 
 namespace drft
 {

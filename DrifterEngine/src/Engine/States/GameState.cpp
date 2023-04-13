@@ -51,7 +51,7 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 			break;
 	}
 
-	return true;
+	return false;
 }
 
 bool drft::GameState::update(const float dt)
@@ -67,6 +67,8 @@ void drft::GameState::render(sf::RenderTarget& target)
 
 void drft::GameState::init()
 {
+	using namespace entt::literals;
+
 	std::cout << "Initializing GameState..." << std::endl;
 
 	rng::RandomNumberGenerator::setSeed(rng::generateSeed());
@@ -77,7 +79,7 @@ void drft::GameState::init()
 	_dispatcher = std::make_unique<entt::dispatcher>();
 
 	_registry.ctx().emplace<spatial::WorldGrid&>(*_world);
-	_registry.ctx().emplace<sf::Texture&>(getContext().textures->get("Sprites"));
+	_registry.ctx().emplace_as<sf::Texture&>("sprites"_hs, getContext().textures->get("Sprites"));
 	_registry.ctx().emplace<EntityFactory&>(*_factory);
 	_registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
 	
@@ -100,8 +102,8 @@ void drft::GameState::init()
 	// ADD CAMERA ENTITY // 
 	//
 	auto camera = _registry.create();
-	int viewportWidth = getContext().window->getSize().x;
-	int viewportHeight = getContext().window->getSize().y;
+	int viewportWidth = getContext().window->getView().getSize().x;
+	int viewportHeight = getContext().window->getView().getSize().y;
 	_registry.emplace<component::Camera>(camera, sf::FloatRect(0,0,viewportWidth, viewportHeight), player);
 	_registry.emplace<component::Position>(camera, startingPosition, (int)spatial::Layer::Camera);
 	//

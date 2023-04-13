@@ -5,7 +5,8 @@
 
 void drft::system::TileRenderer::init()
 {
-	_spriteBatch.setTexture(registry->ctx().get<sf::Texture&>());
+	using namespace entt::literals;
+	_spriteBatch.setTexture(registry->ctx().get<sf::Texture&>("sprites"_hs));
 
 	// Build the tile sprite batch
 	for (int y = 0; y < spatial::CHUNK_HEIGHT; ++y)
