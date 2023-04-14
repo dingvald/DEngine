@@ -171,6 +171,9 @@
     <ClCompile Include="src\Utility\LoadEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -816,6 +819,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\SerializationOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

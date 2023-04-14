@@ -57,4 +57,8 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Faction, FACTION_STRING>()
 		.prop("serialize"_hs)
 		.data<&Faction::name>("name"_hs);
+
+	snapshot::reflectComponent<Item, ITEM_STRING>()
+		.prop("serialize"_hs)
+		.data<&Item::id>("id"_hs);
 }

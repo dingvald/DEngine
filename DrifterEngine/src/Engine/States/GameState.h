@@ -27,6 +27,8 @@ namespace drft
 
 	private:
 		void init();
+		void loadOrCreateGameSeed();
+		void loadOrCreatePlayer();
 		void importSystems();
 
 	private:

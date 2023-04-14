@@ -7,7 +7,13 @@ std::mt19937 RandomNumberGenerator::_rng(std::random_device{}());
 
 void RandomNumberGenerator::setSeed(unsigned int seed)
 {
+	_seed = seed;
 	_rng.seed(seed);
+}
+
+unsigned int drft::rng::RandomNumberGenerator::getSeed()
+{ 
+	return _seed;
 }
 
 double RandomNumberGenerator::realInRange(double min, double max)

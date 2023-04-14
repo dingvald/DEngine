@@ -64,6 +64,12 @@ namespace cereal
 	{
 		archive(faction.name);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Item& item)
+	{
+		archive(item.id);
+	}
 }
 
 

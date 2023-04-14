@@ -7,6 +7,14 @@ void drft::system::System::setRegistry(entt::registry& registry)
 	this->registry = &registry;
 }
 
+void drft::system::System::save(std::string filename)
+{
+}
+
+void drft::system::System::load(std::string filename)
+{
+}
+
 void drft::system::System::update(const float dt)
 {
 }

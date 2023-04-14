@@ -69,6 +69,17 @@ namespace component
 	{
 		std::string name;
 	};
+
+	struct Item
+	{
+		using ID = unsigned long;
+		ID id = 0;
+	};
+
+	struct Container
+	{
+		std::vector<Item::ID> contents;
+	};
 }
 
 namespace component::action
