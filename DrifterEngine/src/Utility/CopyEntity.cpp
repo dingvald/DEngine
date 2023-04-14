@@ -25,24 +25,27 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& toRegistry, const entt::registry& fromRegistry)
 {
 	auto& prototypeStorage = fromRegistry.view<component::Prototype>().storage();
-	for (auto [id, storage] : fromRegistry.storage())
+	for (auto [id, fromStorage] : fromRegistry.storage())
 	{
-		if (storage.contains(from) && storage.type() != prototypeStorage.type())
+		if (fromStorage.contains(from) && fromStorage.type() != prototypeStorage.type())
 		{
 			auto toStorage = toRegistry.storage(id);
 			if (!toStorage)
 			{
-				auto meta = entt::resolve(storage.type());
-				meta.from_void(storage.get(from));
+				auto meta = entt::resolve(fromStorage.type());
+				auto any = meta.from_void(fromStorage.get(from));
 				auto func = meta.func("emplace"_hs);
 				if (func)
 				{
-					func.invoke({}, entt::forward_as_meta(toRegistry), to);
+					func.invoke(any, entt::forward_as_meta(toRegistry), to);
+					toStorage = toRegistry.storage(id);
+					toStorage->remove(to);
+					toStorage->emplace(to, fromStorage.get(from));
 				}
 			}
 			else
 			{
-				toStorage->emplace(to, storage.get(from));
+				toStorage->emplace(to, fromStorage.get(from));
 			}
 		}
 	}

@@ -7,7 +7,6 @@
 #include "Conversions.h"
 #include "WorldGrid.h"
 
-
 using namespace drft::spatial;
 using namespace std::chrono_literals;
 
@@ -43,13 +42,16 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const char* filepath)
 {
 	entt::registry temp;
-	std::string fullPath = filepath + this->toString() + ".dat";
+	std::string filename = this->toString();
 
 	const auto& grid = reg.ctx().get<spatial::WorldGrid&>();
 	const auto entities = grid.getAllEntities(this->_coordinate);
 
 	util::copyEntities(entities, temp, reg);
-	util::saveRegistryToFile(temp, fullPath.c_str());
+	if (!temp.empty())
+	{
+		util::saveRegistryToFile(temp, filepath, filename);
+	}
 	
 	return ioStatus::Done;
 }
@@ -57,8 +59,8 @@ ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const char* file
 ioStatus drft::spatial::VirtualChunk::load(entt::registry& reg, const char* filepath)
 {
 	entt::registry temp;
-	std::string fullPath = filepath + this->toString() + ".dat";
-	util::loadRegistryFromFile(temp, fullPath.c_str());
+	std::string filename = this->toString();
+	util::loadRegistryFromFile(temp, filepath, filename);
 
 	util::copyEntities(reg, temp);
 
@@ -143,16 +145,16 @@ const std::shared_future<bool>& VirtualChunk::getFuture() const
 
 bool drft::spatial::VirtualChunk::saveChunkToFile(const char* filepath) const
 {
-	std::string fullPath = filepath + this->toString() + ".dat";
-	util::saveRegistryToFile(_asyncRegistry, fullPath.c_str());
+	std::string filename = this->toString();
+	util::saveRegistryToFile(_asyncRegistry, filepath, filename);
 
 	return true;
 }
 
 bool drft::spatial::VirtualChunk::loadChunkFromFile(const char* filepath)
 {
-	std::string fullPath = filepath + this->toString() + ".dat";
-	util::loadRegistryFromFile(_asyncRegistry, fullPath.c_str());
+	std::string filename = this->toString();
+	util::loadRegistryFromFile(_asyncRegistry, filepath, filename);
 
 	return true;
 }

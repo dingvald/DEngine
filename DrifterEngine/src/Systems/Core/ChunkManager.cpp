@@ -7,6 +7,8 @@
 #include "Services/DebugInfo.h"
 
 using namespace drft::system;
+
+// TODO: Move save directory to state context
 static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\chunks\\";
 
 void drft::system::ChunkManager::init()

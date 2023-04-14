@@ -5,9 +5,23 @@ drft::MainMenuState::MainMenuState(StateStack& stack, Context context)
 	: State(stack, context)
 {
 	addMenuOption("Continue", [this]() {requestStackPop(); requestStackPush(States::Game); });
-	addMenuOption("New Game",	[this](){requestStackPop(); requestStackPush(States::Game);});
+	addMenuOption("New Game", [this]()
+		{
+			std::filesystem::remove_all(".\\data\\savegame\\");
+			requestStackPop(); 
+			requestStackPush(States::Game);
+		});
 	addMenuOption("Settings",	[this]() {});
 	addMenuOption("Quit",		[this](){requestStackClear();});
+
+	if (hasSaveFile())
+	{
+		_cursorIndex = 0;
+	}
+	else
+	{
+		_cursorIndex = 1;
+	}
 }
 
 bool drft::MainMenuState::handleEvent(const sf::Event& ev)
@@ -23,6 +37,10 @@ bool drft::MainMenuState::handleEvent(const sf::Event& ev)
 		if (ev.key.code == sf::Keyboard::Numpad8 || ev.key.code == sf::Keyboard::Up)
 		{
 			--_cursorIndex;
+			if (_cursorIndex == 0 && !hasSaveFile())
+			{
+				--_cursorIndex;
+			}
 			if (_cursorIndex < 0)
 			{
 				_cursorIndex = _menuOptions.size() - 1;
@@ -35,6 +53,10 @@ bool drft::MainMenuState::handleEvent(const sf::Event& ev)
 			if (_cursorIndex >= _menuOptions.size())
 			{
 				_cursorIndex = 0;
+				if (!hasSaveFile())
+				{
+					++_cursorIndex;
+				}
 			}
 			return false;
 		}
@@ -56,6 +78,10 @@ bool drft::MainMenuState::update(const float dt)
 		option.text.setFillColor(sf::Color::White);
 	}
 	_menuOptions[_cursorIndex].text.setFillColor(sf::Color::Yellow);
+	if (!hasSaveFile())
+	{
+		_menuOptions[0].text.setFillColor(sf::Color(80, 80, 80));
+	}
 
 	return false;
 }
@@ -76,4 +102,9 @@ void drft::MainMenuState::addMenuOption(std::string&& name, std::function<void()
 	text.setPosition({ (static_cast<float>(getContext().window->getView().getSize().x) / 2.f) - 64.f, (_menuOptions.size() * 64.f) + 64.f });
 	text.setFont(getContext().fonts->get("Terminus"));
 	text.setFillColor(sf::Color::White);
+}
+
+bool drft::MainMenuState::hasSaveFile() const
+{
+	return std::filesystem::exists(".\\data\\savegame\\");
 }

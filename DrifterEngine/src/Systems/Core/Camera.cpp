@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Components/Components.h"
 #include "Spatial/Conversions.h"
+#include "Services/DebugInfo.h"
 
 static const float CAMERA_SPEED = 5.0f;
 
@@ -56,5 +57,16 @@ void drft::system::Camera::update(const float dt)
 
 		camera.viewport.left = pos.position.x - (camera.viewport.width / 2);
 		camera.viewport.top = pos.position.y - (camera.viewport.height / 2);
+
+		service::DebugInfo::instance().putInfo("Position", std::to_string(target->position.x) + ", " + std::to_string(target->position.y));
+	}
+}
+
+void drft::system::Camera::shutdown()
+{
+	auto cameraView = registry->view<component::Camera, component::Position>(entt::exclude<component::Prototype>);
+	for (auto [entity, camera, pos] : cameraView.each())
+	{
+		camera.target = entt::null;
 	}
 }

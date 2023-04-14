@@ -21,7 +21,7 @@ namespace component
 
 	struct Render
 	{
-		unsigned int sprite = { 0 };
+		unsigned int sprite = { 4 };
 		sf::Color color = { sf::Color::Magenta };
 	};
 

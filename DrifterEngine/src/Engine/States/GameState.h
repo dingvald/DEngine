@@ -35,7 +35,7 @@ namespace drft
 		std::unique_ptr<spatial::WorldGrid> _world;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
-		entt::handle _player;
+		entt::handle _player{ _registry, entt::null };
 	};
 
 } // namespace drft

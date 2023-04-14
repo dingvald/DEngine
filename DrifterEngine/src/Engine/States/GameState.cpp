@@ -28,10 +28,14 @@
 #include "Components/Meta.h"
 
 #include "Utility/TestEntities.h"
-#include "Utility/SaveRegistry.h"
+#include "Utility/SaveEntity.h"
+#include "Utility/LoadEntity.h"
 #include "Factory/EntityFactory.h"
 
-static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\";
+
+// TODO: Move save directory to state context
+static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";
+static constexpr std::string_view PLAYER_FILE_NAME = "playerSaveData";
 
 drft::GameState::GameState(StateStack& stack, Context context) 
 	: State(stack, context)
@@ -68,6 +72,7 @@ void drft::GameState::render(sf::RenderTarget& target)
 
 void drft::GameState::onPop()
 {
+	util::saveEntityToFile(_player, SAVE_DIRECTORY.data(), PLAYER_FILE_NAME.data(), util::SerializeOption::JSON);
 	_systems->shutdownAll();
 }
 
@@ -96,17 +101,17 @@ void drft::GameState::init()
 	_factory->loadPrototypes("prototypes.json", _registry);
 	_factory->loadPrototypes("player.json", _registry);
 
-	// Add Player
+	std::string fullpath = std::string(SAVE_DIRECTORY.data()) + PLAYER_FILE_NAME.data() + ".json";
 
-	_player = _factory->build("Player", _registry);
-	_player.emplace_or_replace<component::Player>();
-	sf::Vector2f startingPosition = spatial::toWorldSpace({ 32,32 });
-	_player.patch<component::Position>([&](auto& pos)
-		{
-			pos.position = startingPosition;
-		});
-
-	
+	if (std::filesystem::exists(fullpath))
+	{
+		_player = { _registry, _registry.create() };
+		_player = util::loadEntityFromFile(_player, SAVE_DIRECTORY.data(), PLAYER_FILE_NAME.data(), util::SerializeOption::JSON);
+	}
+	else
+	{
+		_player = _factory->build("Player", _registry);
+	}
 
 	std::cout << "Starting Gamestate" << std::endl;
 }

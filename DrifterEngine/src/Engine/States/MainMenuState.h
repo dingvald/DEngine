@@ -21,6 +21,7 @@ namespace drft
 
 	private:
 		void addMenuOption(std::string&& name, std::function<void()> callback);
+		bool hasSaveFile() const;
 
 	private:
 		std::vector<MenuOption> _menuOptions;
