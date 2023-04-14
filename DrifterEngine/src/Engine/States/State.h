@@ -36,6 +36,9 @@ namespace drft
 		virtual bool update(const float dt) = 0;
 		virtual void render(sf::RenderTarget& target) = 0;
 
+		virtual void onPush();
+		virtual void onPop();
+
 	protected:
 		void requestStackPush(States stateId);
 		void requestStackPop();

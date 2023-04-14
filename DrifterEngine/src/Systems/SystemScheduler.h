@@ -67,6 +67,8 @@ namespace drft::system
 		void update(const float dt) const;
 		void render(sf::RenderTarget& target) const;
 
+		void shutdownAll();
+
 	private:
 		using SystemList = std::vector< SystemPriorityPair >;
 

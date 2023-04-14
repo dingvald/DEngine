@@ -45,6 +45,10 @@ void component::Meta::initialize()
 		.prop("serialize"_hs)
 		.data<&Attacker::baseDamage>("baseDamage"_hs);
 
+	snapshot::reflectComponent<Player, PLAYER_STRING>()
+		.prop("serialize"_hs)
+		.data<&Player::sightRange>("sightRange"_hs);
+
 	snapshot::reflectComponent<AI, AI_STRING>()
 		.prop("serialize"_hs)
 		.data<&AI::sightRange>("sightRange"_hs)

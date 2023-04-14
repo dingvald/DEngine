@@ -55,7 +55,9 @@ namespace component
 	};
 
 	struct Player
-	{};
+	{
+		int sightRange = 10;
+	};
 
 	struct AI
 	{

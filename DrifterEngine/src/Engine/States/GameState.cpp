@@ -28,9 +28,10 @@
 #include "Components/Meta.h"
 
 #include "Utility/TestEntities.h"
+#include "Utility/SaveRegistry.h"
 #include "Factory/EntityFactory.h"
 
-
+static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\";
 
 drft::GameState::GameState(StateStack& stack, Context context) 
 	: State(stack, context)
@@ -45,7 +46,7 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 		case sf::Event::KeyPressed:
 			if (ev.key.code == sf::Keyboard::Escape)
 			{
-				requestStackPop();
+				requestStackPush(States::Pause);
 				return false;
 			}
 			break;
@@ -65,6 +66,11 @@ void drft::GameState::render(sf::RenderTarget& target)
 	_systems->render(target);
 }
 
+void drft::GameState::onPop()
+{
+	_systems->shutdownAll();
+}
+
 void drft::GameState::init()
 {
 	using namespace entt::literals;
@@ -79,6 +85,7 @@ void drft::GameState::init()
 	_dispatcher = std::make_unique<entt::dispatcher>();
 
 	_registry.ctx().emplace<spatial::WorldGrid&>(*_world);
+	_registry.ctx().emplace<sf::Window&>(*getContext().window);
 	_registry.ctx().emplace_as<sf::Texture&>("sprites"_hs, getContext().textures->get("Sprites"));
 	_registry.ctx().emplace<EntityFactory&>(*_factory);
 	_registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
@@ -90,24 +97,17 @@ void drft::GameState::init()
 	_factory->loadPrototypes("player.json", _registry);
 
 	// Add Player
-	auto player = _factory->build("Player", _registry);
-	player.emplace<component::Player>();
+
+	_player = _factory->build("Player", _registry);
+	_player.emplace_or_replace<component::Player>();
 	sf::Vector2f startingPosition = spatial::toWorldSpace({ 32,32 });
-	player.patch<component::Position>([&](auto& pos)
+	_player.patch<component::Position>([&](auto& pos)
 		{
 			pos.position = startingPosition;
 		});
 
+	
 
-	// ADD CAMERA ENTITY // 
-	//
-	auto camera = _registry.create();
-	int viewportWidth = getContext().window->getView().getSize().x;
-	int viewportHeight = getContext().window->getView().getSize().y;
-	_registry.emplace<component::Camera>(camera, sf::FloatRect(0,0,viewportWidth, viewportHeight), player);
-	_registry.emplace<component::Position>(camera, startingPosition, (int)spatial::Layer::Camera);
-	//
-	////////////////////////////////////////////////////////////////
 	std::cout << "Starting Gamestate" << std::endl;
 }
 

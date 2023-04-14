@@ -23,6 +23,7 @@ namespace drft
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;
 		void render(sf::RenderTarget& target) override;
+		void onPop() override;
 
 	private:
 		void init();
@@ -34,6 +35,7 @@ namespace drft
 		std::unique_ptr<spatial::WorldGrid> _world;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
+		entt::handle _player;
 	};
 
 } // namespace drft

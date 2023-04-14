@@ -48,6 +48,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, Player& player)
+	{
+		archive(player.sightRange);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, AI& ai)
 	{
 		archive(ai.sightRange, ai.goals);

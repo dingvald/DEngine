@@ -50,6 +50,12 @@
           }
         },
         {
+          "Name": "Player",
+          "Data": {
+            "sightRange": 10
+          }
+        },
+        {
           "Name": "Attacker",
           "Data": {
             "baseDamage": 2

@@ -17,6 +17,12 @@ bool State::handleEvent(const sf::Event& ev)
 	return false;
 }
 
+void drft::State::onPush()
+{}
+
+void drft::State::onPop()
+{}
+
 void State::requestStackPush(States stateId)
 {
 	_stack->pushState(stateId);

@@ -7,7 +7,7 @@
 #include "Services/DebugInfo.h"
 
 using namespace drft::system;
-static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\runtime\\chunks\\";
+static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\chunks\\";
 
 void drft::system::ChunkManager::init()
 {
@@ -32,6 +32,14 @@ void drft::system::ChunkManager::update(const float dt)
 
 	cleanUpChunks(newPosition);
 	service::DebugInfo::instance().putInfo("Virtual Chunks", std::to_string(_chunks.size()));
+}
+
+void drft::system::ChunkManager::shutdown()
+{
+	for (auto& [_, chunk] : _chunks)
+	{
+		chunk.save(*registry, CHUNK_SAVE_PATH.data());
+	}
 }
 
 void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
@@ -135,10 +143,10 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 		status = _chunks.at(keyablePair).build(*registry);
 		break;
 	case SAVE:
-		status = _chunks.at(keyablePair).save(*registry, CHUNK_SAVE_PATH.data());
+		status = _chunks.at(keyablePair).asyncSave(*registry, CHUNK_SAVE_PATH.data());
 		break;
 	case LOAD:
-		status = _chunks.at(keyablePair).load(*registry, CHUNK_SAVE_PATH.data());
+		status = _chunks.at(keyablePair).asyncLoad(*registry, CHUNK_SAVE_PATH.data());
 		break;
 	}
 	if (status == spatial::ioStatus::Busy)

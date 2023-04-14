@@ -19,6 +19,7 @@ namespace drft::system
 	public:
 		virtual void init() override;
 		virtual void update(const float dt) override;
+		void shutdown() override;
 
 	private:
 		void updateChunkStates(sf::Vector2i aroundNewPosition);

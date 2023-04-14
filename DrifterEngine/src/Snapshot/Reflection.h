@@ -254,9 +254,9 @@ namespace snapshot {
             entt::meta<T>().template func< &doLoad<T> >(LOAD_FN_NAME);
             entt::meta<T>().template func< &doSave<T> >(SAVE_FN_NAME);
             entt::meta<T>().template func< &doContains<T> >(CONTAINS_COMPONENT_FN_NAME);
+            entt::meta<T>().template func< &doGetType<T> >(TYPE_FN_NAME);
             entt::meta<T>().template func< &doGetComponent<T>, entt::as_ref_t >(GET_COMPONENT_FN_NAME);
             entt::meta<T>().template func< &doGetConstComponent<T>, entt::as_cref_t >(GET_CONST_COMPONENT_FN_NAME);
-            entt::meta<T>().template func< &doGetType<T> >(TYPE_FN_NAME);
             entt::meta<T>().template func< &entt::registry::emplace_or_replace<T>, entt::as_ref_t >(EMPLACE_INTO_REG_FN_NAME);
         }
 

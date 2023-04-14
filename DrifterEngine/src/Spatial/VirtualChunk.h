@@ -34,8 +34,11 @@ namespace drft::spatial
 		ChunkState getState() const;
 
 		ioStatus build(entt::registry& reg);
-		ioStatus load(entt::registry& reg, const char* filepath);
 		ioStatus save(entt::registry& reg, const char* filepath);
+		ioStatus load(entt::registry& reg, const char* filepath);
+
+		ioStatus asyncLoad(entt::registry& reg, const char* filepath);
+		ioStatus asyncSave(entt::registry& reg, const char* filepath);
 
 		std::string toString() const;
 

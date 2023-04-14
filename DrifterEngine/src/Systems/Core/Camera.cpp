@@ -7,11 +7,29 @@ static const float CAMERA_SPEED = 5.0f;
 
 void drft::system::Camera::init()
 {
+	auto camera = registry->create();
+	int viewportWidth = registry->ctx().get<sf::Window>().getSize().x;
+	int viewportHeight = registry->ctx().get<sf::Window>().getSize().y;
+	registry->emplace<component::Camera>(camera, sf::FloatRect(0, 0, viewportWidth, viewportHeight), entt::null);
+	registry->emplace<component::Position>(camera, sf::Vector2f(0,0), (int)spatial::Layer::Camera);
 }
 
 void drft::system::Camera::update(const float dt)
 {
 	auto cameraView = registry->view<component::Camera, component::Position>(entt::exclude<component::Prototype>);
+
+	for (auto [entity, camera, pos] : cameraView.each())
+	{
+		if (camera.target == entt::null)
+		{
+			auto playerView = registry->view<component::Player, component::Position>(entt::exclude<component::Prototype>);
+			for (auto [entity, _, playerPos] : playerView.each())
+			{
+				camera.target = entity;
+				pos.position = playerPos.position;
+			}
+		}
+	}
 
 	for (auto [entity, camera, pos] : cameraView.each())
 	{

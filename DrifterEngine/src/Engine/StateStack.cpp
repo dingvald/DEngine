@@ -72,16 +72,27 @@ void StateStack::applyPendingChanges()
 		switch (action)
 		{
 			case Push:
-				_stack.push_back(createState(stateID));
-				break;
-
+			{
+				auto newState = createState(stateID);
+				newState->onPush();
+				_stack.push_back(std::move(newState));
+			}
+			break;
 			case Pop:
+			{
+				_stack.back()->onPop();
 				_stack.pop_back();
-				break;
-
+			}
+			break;
 			case Clear:
-				_stack.clear();
-				break;
+			{
+				while (!_stack.empty())
+				{
+					_stack.back()->onPop();
+					_stack.pop_back();
+				}
+			}
+			break;
 		}
 	}
 

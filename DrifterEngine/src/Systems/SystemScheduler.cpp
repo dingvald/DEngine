@@ -34,3 +34,17 @@ void drft::system::SystemScheduler::render(sf::RenderTarget& target) const
 		system->render(target);
 	}
 }
+
+void drft::system::SystemScheduler::shutdownAll()
+{
+	std::cout << "Shutting Systems Down..." << std::endl;
+	for (auto& [_, systems] : _systems)
+	{
+		for (auto& [system, _] : systems)
+		{
+			system->shutdown();
+			std::string typeName = typeid(*system).name();
+			std::cout << "Shutdown " << typeName << "..." << std::endl;
+		}
+	}
+}

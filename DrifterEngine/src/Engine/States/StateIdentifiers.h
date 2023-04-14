@@ -8,6 +8,7 @@ namespace drft
 		Title,
 		MainMenu,
 		Game,
+		Pause,
 		Total
 	};
 }

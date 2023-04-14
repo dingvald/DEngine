@@ -34,7 +34,11 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 			{
 				auto meta = entt::resolve(storage.type());
 				meta.from_void(storage.get(from));
-				meta.func("emplace"_hs).invoke({}, entt::forward_as_meta(toRegistry), to);
+				auto func = meta.func("emplace"_hs);
+				if (func)
+				{
+					func.invoke({}, entt::forward_as_meta(toRegistry), to);
+				}
 			}
 			else
 			{

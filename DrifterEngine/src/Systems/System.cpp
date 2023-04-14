@@ -14,3 +14,7 @@ void drft::system::System::update(const float dt)
 void drft::system::System::render(sf::RenderTarget& target)
 {
 }
+
+void drft::system::System::shutdown()
+{
+}
