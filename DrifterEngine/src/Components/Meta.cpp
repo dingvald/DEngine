@@ -61,4 +61,7 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Item, ITEM_STRING>()
 		.prop("serialize"_hs)
 		.data<&Item::id>("id"_hs);
+
+	snapshot::reflectComponent<Container, CONTAINER_STRING>()
+		.prop("serialize"_hs);
 }

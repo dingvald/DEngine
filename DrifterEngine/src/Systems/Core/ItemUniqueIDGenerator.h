@@ -8,6 +8,9 @@ namespace drft::system
 	public:
 		void init() override;
 
+		void save(cereal::JSONOutputArchive& oarchive) override;
+		void load(cereal::JSONInputArchive& iarchive) override;
+
 	private:
 		void onItemAdd(entt::registry& registry, entt::entity);
 

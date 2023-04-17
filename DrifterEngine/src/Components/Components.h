@@ -103,6 +103,9 @@ namespace component::action
 		int amount = 0;
 	};
 
+	struct PickUp
+	{};
+
 	struct SpendPoints
 	{
 		int amount = 0;

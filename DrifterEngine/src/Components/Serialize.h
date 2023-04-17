@@ -70,6 +70,12 @@ namespace cereal
 	{
 		archive(item.id);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Container& container)
+	{
+		archive(container.contents);
+	}
 }
 
 

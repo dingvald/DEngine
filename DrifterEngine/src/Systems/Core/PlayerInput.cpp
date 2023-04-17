@@ -25,6 +25,8 @@ void drft::system::PlayerInput::init()
 		entity.emplace<component::action::Move>(sf::Vector2i(1, -1)); });
 	_actionMap.addAction(Key::Numpad5, [](entt::handle entity) {
 		entity.emplace<component::action::Wait>(); });
+	_actionMap.addAction(Key::G, [](entt::handle entity) {
+		entity.emplace<component::action::PickUp>(); });
 }
 
 void drft::system::PlayerInput::update(const float dt)

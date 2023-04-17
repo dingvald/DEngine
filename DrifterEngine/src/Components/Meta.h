@@ -13,6 +13,7 @@ constexpr std::string_view PLAYER_STRING = "Player";
 constexpr std::string_view AI_STRING = "AI";
 constexpr std::string_view FACTION_STRING = "Faction";
 constexpr std::string_view ITEM_STRING = "Item";
+constexpr std::string_view CONTAINER_STRING = "Container";
 
 namespace component
 {
