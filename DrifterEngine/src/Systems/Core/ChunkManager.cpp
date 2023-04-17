@@ -19,20 +19,20 @@ void drft::system::ChunkManager::init()
 void drft::system::ChunkManager::update(const float dt)
 {
 	auto cameraView = registry->view<const component::Camera, const component::Position>(entt::exclude<component::Prototype>);
-	sf::Vector2i newPosition = { 0,0 };
+	sf::Vector2i cameraPosition = { 0,0 };
 
 	for (auto [entity, cam, pos] : cameraView.each())
 	{
-		newPosition = spatial::toChunkCoordinate(pos.position);
+		cameraPosition = spatial::toChunkCoordinate(pos.position);
 	}
 
-	updateChunkStates(newPosition);
+	updateChunkStates(cameraPosition);
 
 	process(_toBuild, BUILD);
 	process(_toLoad, LOAD);
 	process(_toSave, SAVE);
 
-	cleanUpChunks(newPosition);
+	cleanUpChunks(cameraPosition);
 	service::DebugInfo::instance().putInfo("Virtual Chunks", std::to_string(_chunks.size()));
 }
 
