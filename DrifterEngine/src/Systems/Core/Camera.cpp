@@ -11,8 +11,8 @@ void drft::system::Camera::init()
 	auto camera = registry->create();
 	int viewportWidth = registry->ctx().get<sf::Window>().getSize().x;
 	int viewportHeight = registry->ctx().get<sf::Window>().getSize().y;
-	registry->emplace<component::Camera>(camera, sf::FloatRect(0, 0, viewportWidth, viewportHeight), entt::null);
 	registry->emplace<component::Position>(camera, sf::Vector2f(0,0), (int)spatial::Layer::Camera);
+	registry->emplace<component::Camera>(camera, sf::FloatRect(0, 0, viewportWidth, viewportHeight), entt::null);
 }
 
 void drft::system::Camera::update(const float dt)
