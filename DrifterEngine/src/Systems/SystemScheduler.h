@@ -31,7 +31,7 @@ namespace drft::system
 		SystemScheduler(entt::registry& registry) : _registry(registry) {}
 
 		void initAll() const;
-		void loadAll(std::string filename);
+		void loadAll(cereal::JSONInputArchive& iarchive);
 
 		template <typename T>
 		void add(T&& system, int priority)
@@ -68,7 +68,7 @@ namespace drft::system
 		void update(const float dt) const;
 		void render(sf::RenderTarget& target) const;
 
-		void saveAll(std::string filename);
+		void saveAll(cereal::JSONOutputArchive& oarchive);
 		void shutdownAll();
 
 	private:

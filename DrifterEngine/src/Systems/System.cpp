@@ -7,11 +7,11 @@ void drft::system::System::setRegistry(entt::registry& registry)
 	this->registry = &registry;
 }
 
-void drft::system::System::save(std::string filename)
+void drft::system::System::save(cereal::JSONOutputArchive& oarchive)
 {
 }
 
-void drft::system::System::load(std::string filename)
+void drft::system::System::load(cereal::JSONInputArchive& iarchive)
 {
 }
 

@@ -15,13 +15,13 @@ void drft::system::SystemScheduler::initAll() const
 	}
 }
 
-void drft::system::SystemScheduler::loadAll(std::string filename)
+void drft::system::SystemScheduler::loadAll(cereal::JSONInputArchive& iarchive)
 {
 	for (auto& [_, systems] : _systems)
 	{
 		for (auto& [system, _] : systems)
 		{
-			system->load(filename);
+			system->load(iarchive);
 			std::string typeName = typeid(*system).name();
 			std::cout << "Loading " << typeName << "..." << std::endl;
 		}
@@ -48,13 +48,13 @@ void drft::system::SystemScheduler::render(sf::RenderTarget& target) const
 	}
 }
 
-void drft::system::SystemScheduler::saveAll(std::string filename)
+void drft::system::SystemScheduler::saveAll(cereal::JSONOutputArchive& oarchive)
 {
 	for (auto& [_, systems] : _systems)
 	{
 		for (auto& [system, _] : systems)
 		{
-			system->save(filename);
+			system->save(oarchive);
 			std::string typeName = typeid(*system).name();
 			std::cout << "Saving " << typeName << "..." << std::endl;
 		}
