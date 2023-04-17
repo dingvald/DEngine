@@ -2,6 +2,7 @@
 #include "DeathSystem.h"
 #include "Factory/EntityFactory.h"
 #include "Components/Components.h"
+#include "Spatial/Conversions.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::DeathSystem::init()
@@ -21,6 +22,7 @@ void drft::system::DeathSystem::update(const float dt)
 			dropped.patch<component::Position>([&pos](auto& position)
 				{
 					position.position = pos.position;
+					position.depth = spatial::Layer::Item;
 				});
 		}
 		registry->destroy(entity);
