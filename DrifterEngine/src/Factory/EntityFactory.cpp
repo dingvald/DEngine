@@ -148,12 +148,12 @@ entt::handle drft::EntityFactory::build(const std::string& name, entt::registry&
 		throw std::invalid_argument(message);
 	}
 	entt::entity newEntity = registry.create();
+	util::copyEntity(newEntity, _prototypes.at(name), registry);
 	auto info = registry.try_get<component::Info>(newEntity);
 	if (info)
 	{
 		info->prototype = name;
 	}
-	util::copyEntity(newEntity, _prototypes.at(name), registry);
 
 	return entt::handle(registry, newEntity);
 }
