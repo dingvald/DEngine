@@ -40,11 +40,14 @@ sf::Vector2i drft::spatial::toChunkCoordinate(const sf::Vector2i tilePosition)
 	int xChunk = tilePosition.x / CHUNK_WIDTH;
 	if (tilePosition.x < 0)
 	{
+		xChunk = (tilePosition.x + 1) / CHUNK_WIDTH;
 		xChunk -= 1;
 	}
+
 	int yChunk = tilePosition.y / CHUNK_HEIGHT;
 	if (tilePosition.y < 0)
 	{
+		yChunk = (tilePosition.y + 1) / CHUNK_HEIGHT;
 		yChunk -= 1;
 	}
 	return { xChunk, yChunk };
@@ -53,29 +56,19 @@ sf::Vector2i drft::spatial::toChunkCoordinate(const sf::Vector2i tilePosition)
 sf::Vector2i drft::spatial::toChunkCoordinate(const sf::Vector2f worldPosition)
 {
 	auto tilePosition = toTileSpace(worldPosition);
-	int xChunk = tilePosition.x / CHUNK_WIDTH;
-	if (tilePosition.x < 0)
-	{
-		xChunk -= 1;
-	}
-	int yChunk = tilePosition.y / CHUNK_HEIGHT;
-	if (tilePosition.y < 0)
-	{
-		yChunk -= 1;
-	}
-	return { xChunk, yChunk };
+	return toChunkCoordinate(tilePosition);
 }
 
 sf::Vector2i drft::spatial::toLocalChunkSpace(const sf::Vector2i tilePosition)
 {
 	int xPos = tilePosition.x % CHUNK_WIDTH;
-	if (tilePosition.x < 0)
+	if (xPos < 0)
 	{
 		xPos += CHUNK_WIDTH - 1;
 	}
 
 	int yPos = tilePosition.y % CHUNK_HEIGHT;
-	if (tilePosition.y < 0)
+	if (yPos < 0)
 	{
 		yPos += CHUNK_HEIGHT - 1;
 	}
