@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "VirtualChunk.h"
 #include "Utility/CopyEntity.h"
-#include "Utility/TestEntities.h"
+#include "Utility/BuildMany.h"
 #include "Utility/SaveRegistry.h"
 #include"Utility/LoadRegistry.h"
 #include "Conversions.h"
@@ -29,6 +29,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 		std::cout << "Building " << toString() << std::endl;
 		setState(ChunkState::Building);
 	}
+
 	auto origin = toTileSpace(_coordinate);
 	auto bounds = sf::Vector2i{ CHUNK_WIDTH, CHUNK_HEIGHT };
 	util::buildMany("Tree", 300, { origin.x, origin.y, bounds.x, bounds.y }, reg);
@@ -48,6 +49,12 @@ ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const char* file
 	const auto entities = grid.getAllEntities(this->_coordinate);
 
 	util::copyEntities(entities, temp, reg);
+	for (auto entity : entities)
+	{
+		reg.destroy(entity);
+	}
+	reg.compact();
+
 	if (!temp.empty())
 	{
 		util::saveRegistryToFile(temp, filepath, filename);
