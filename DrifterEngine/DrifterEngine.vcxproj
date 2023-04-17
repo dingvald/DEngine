@@ -167,6 +167,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
     <ClCompile Include="src\Utility\SaveEntity.cpp" />
@@ -241,7 +242,7 @@
     <ClCompile Include="src\Utility\SaveRegistry.cpp" />
     <ClCompile Include="src\Utility\SpriteBatch.cpp" />
     <ClCompile Include="src\Utility\SpriteIndexer.cpp" />
-    <ClCompile Include="src\Utility\TestEntities.cpp" />
+    <ClCompile Include="src\Utility\BuildMany.cpp" />
     <ClCompile Include="src\Spatial\WorldGrid.cpp" />
     <ClCompile Include="src\Spatial\WorldChunk.cpp" />
     <ClCompile Include="src\Systems\Core\WorldGridResolver.cpp" />
@@ -255,6 +256,7 @@
     <ClCompile Include="src\Engine\States\TitleScreenState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />
     <ClInclude Include="src\Utility\SaveEntity.h" />
@@ -459,7 +461,7 @@
     <ClInclude Include="src\Utility\SerializationOptions.h" />
     <ClInclude Include="src\Utility\SpriteBatch.h" />
     <ClInclude Include="src\Utility\SpriteIndexer.h" />
-    <ClInclude Include="src\Utility\TestEntities.h" />
+    <ClInclude Include="src\Utility\BuildMany.h" />
     <ClInclude Include="src\Spatial\WorldGrid.h" />
     <ClInclude Include="src\Spatial\WorldChunk.h" />
     <ClInclude Include="src\Systems\Core\WorldGridResolver.h" />
