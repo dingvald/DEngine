@@ -177,6 +177,9 @@
     <ClCompile Include="src\Systems\Gameplay\PickUpSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility\ItemIDToEntityID.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -828,6 +831,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\PickUpSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\ItemIDToEntityID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
