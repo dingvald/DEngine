@@ -27,7 +27,7 @@ void drft::system::HUD::init()
 
 void drft::system::HUD::update(const float dt)
 {
-	auto view = registry->view<component::Player>(entt::exclude<component::Prototype>);
+	auto view = registry->view<component::Player>();
 	auto player = entt::handle(*registry, view.front());
 
 	if (auto health = player.try_get<component::Health>())

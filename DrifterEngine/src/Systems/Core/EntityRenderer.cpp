@@ -18,7 +18,7 @@ void drft::system::EntityRenderer::init()
 void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
 	sf::Vector2f cameraOrigin = { 0.0f, 0.0f };
-	const auto camera = registry->view<const component::Camera, const component::Position>(entt::exclude<component::Prototype>);
+	const auto camera = registry->view<const component::Camera, const component::Position>();
 
 	// assumes only one camera, otherwise will just use the last one's position
 	for (auto const& [entity, cam, pos] : camera.each())
@@ -26,7 +26,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		cameraOrigin = { cam.viewport.left, cam.viewport.top };
 	}
 
-	const auto view = registry->view< const component::Position, const component::Render >(entt::exclude<component::Prototype>);
+	const auto view = registry->view< const component::Position, const component::Render >();
 
 	for (auto const & [entity, pos, ren] : view.each())
 	{

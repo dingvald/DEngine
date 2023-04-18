@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO: Requires a refactor at some point...
+
 namespace drft::spatial
 {
 	enum class ioStatus

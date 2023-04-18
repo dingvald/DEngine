@@ -18,7 +18,7 @@ void drft::system::ChunkManager::init()
 
 void drft::system::ChunkManager::update(const float dt)
 {
-	auto cameraView = registry->view<const component::Camera, const component::Position>(entt::exclude<component::Prototype>);
+	auto cameraView = registry->view<const component::Camera, const component::Position>();
 	sf::Vector2i cameraPosition = { 0,0 };
 
 	for (auto [entity, cam, pos] : cameraView.each())

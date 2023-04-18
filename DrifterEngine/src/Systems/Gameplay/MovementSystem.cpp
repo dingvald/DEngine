@@ -40,7 +40,7 @@ void drft::system::MovementSystem::update(const float dt)
 				}
 			);
 
-			int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Move);
+			const int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Move);
 			registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);
 		}
 		else

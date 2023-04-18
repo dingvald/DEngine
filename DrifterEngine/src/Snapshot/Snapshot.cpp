@@ -49,6 +49,8 @@ namespace snapshot {
 			}
 		}
 
+		if (e_serial.components.empty()) return;
+
 		auto label = std::to_string((size_t)e);
 		archive(cereal::make_nvp(label, e_serial));
 	}

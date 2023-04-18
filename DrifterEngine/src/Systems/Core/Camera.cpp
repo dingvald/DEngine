@@ -17,13 +17,13 @@ void drft::system::Camera::init()
 
 void drft::system::Camera::update(const float dt)
 {
-	auto cameraView = registry->view<component::Camera, component::Position>(entt::exclude<component::Prototype>);
+	auto cameraView = registry->view<component::Camera, component::Position>();
 
 	for (auto [entity, camera, pos] : cameraView.each())
 	{
 		if (camera.target == entt::null)
 		{
-			auto playerView = registry->view<component::Player, component::Position>(entt::exclude<component::Prototype>);
+			auto playerView = registry->view<component::Player, component::Position>();
 			for (auto [entity, _, playerPos] : playerView.each())
 			{
 				camera.target = entity;
@@ -64,7 +64,7 @@ void drft::system::Camera::update(const float dt)
 
 void drft::system::Camera::shutdown()
 {
-	auto cameraView = registry->view<component::Camera, component::Position>(entt::exclude<component::Prototype>);
+	auto cameraView = registry->view<component::Camera, component::Position>();
 	for (auto [entity, camera, pos] : cameraView.each())
 	{
 		camera.target = entt::null;

@@ -14,7 +14,7 @@ void drft::system::WorldGridResolver::init()
 
 void drft::system::WorldGridResolver::onPositionAdd(entt::registry& registry, entt::entity entity)
 {
-	if (registry.any_of<component::Camera, component::Prototype>(entity)) return;
+	if (registry.any_of<component::Camera>(entity)) return;
 
 	auto& pos = registry.get<component::Position>(entity);
 	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
@@ -24,7 +24,7 @@ void drft::system::WorldGridResolver::onPositionAdd(entt::registry& registry, en
 
 void drft::system::WorldGridResolver::onPositionUpdate(entt::registry& registry, entt::entity entity)
 {
-	if (registry.any_of<component::Camera, component::Prototype>(entity)) return;
+	if (registry.any_of<component::Camera>(entity)) return;
 
 	auto& pos = registry.get<component::Position>(entity);
 	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
@@ -34,7 +34,7 @@ void drft::system::WorldGridResolver::onPositionUpdate(entt::registry& registry,
 
 void drft::system::WorldGridResolver::onPositionRemove(entt::registry& registry, entt::entity entity)
 {
-	if (registry.any_of<component::Camera, component::Prototype>(entity)) return;
+	if (registry.any_of<component::Camera>(entity)) return;
 
 	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
 

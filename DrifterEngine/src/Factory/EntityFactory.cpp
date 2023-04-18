@@ -14,7 +14,7 @@ drft::EntityFactory::EntityFactory()
 	component::Meta::initialize();
 }
 
-bool drft::EntityFactory::loadPrototypes(std::string filename, entt::registry& registry)
+bool drft::EntityFactory::loadPrototypes(std::string filename)
 {
 	using namespace rapidjson;
 
@@ -46,8 +46,8 @@ bool drft::EntityFactory::loadPrototypes(std::string filename, entt::registry& r
 	{
 		auto entityName = std::string(prototype["Name"].GetString());
 
-		entt::entity entity = registry.create();
-		registry.emplace_or_replace<component::Prototype>(entity);
+		entt::entity entity = _protoRegistry.create();
+		_protoRegistry.emplace_or_replace<component::Prototype>(entity);
 		_prototypes[entityName] = entity;
 
 		if (prototype.HasMember("Inherits"))
@@ -57,7 +57,7 @@ bool drft::EntityFactory::loadPrototypes(std::string filename, entt::registry& r
 			{
 				auto baseName = std::string(base.GetString());
 				if (!_prototypes.contains(baseName)) continue;
-				util::copyEntity(entity, _prototypes[baseName], registry);
+				util::copyEntity(entity, _prototypes[baseName], _protoRegistry);
 			}
 			
 		}
@@ -69,7 +69,7 @@ bool drft::EntityFactory::loadPrototypes(std::string filename, entt::registry& r
 				auto componentName = component["Name"].GetString();
 
 				auto meta = entt::resolve(entt::hashed_string(componentName));
-				auto any = meta.func("emplace"_hs).invoke(meta, entt::forward_as_meta(registry), entity);
+				auto any = meta.func("emplace"_hs).invoke(meta, entt::forward_as_meta(_protoRegistry), entity);
 				
 				if (!component.HasMember("Data")) continue;
 					
@@ -148,7 +148,7 @@ entt::handle drft::EntityFactory::build(const std::string& name, entt::registry&
 		throw std::invalid_argument(message);
 	}
 	entt::entity newEntity = registry.create();
-	util::copyEntity(newEntity, _prototypes.at(name), registry);
+	util::copyEntity(newEntity, _prototypes.at(name), registry, _protoRegistry);
 	auto info = registry.try_get<component::Info>(newEntity);
 	if (info)
 	{

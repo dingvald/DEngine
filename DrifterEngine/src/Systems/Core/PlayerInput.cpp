@@ -31,7 +31,7 @@ void drft::system::PlayerInput::init()
 
 void drft::system::PlayerInput::update(const float dt)
 {
-	auto view = registry->view<component::Player>(entt::exclude<component::Prototype>);
+	auto view = registry->view<component::Player>();
 	for (auto entity : view)
 	{
 		for (auto&& [key, action] : _actionMap.iterate())

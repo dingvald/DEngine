@@ -20,17 +20,17 @@ void drft::system::RealityBubble::init()
 
 void drft::system::RealityBubble::update(const float)
 {
-	auto cameraView = registry->view<component::Camera, component::Position>(entt::exclude<component::Prototype>);
+	auto cameraView = registry->view<component::Camera, component::Position>();
 	for (auto&& [entity, camera, position] : cameraView.each())
 	{
 		_cameraPosition = spatial::toTileSpace(position.position);
 	}
 
-	auto actorView = registry->view<component::Actor, component::Position>(entt::exclude<component::Prototype>);
+	auto actorView = registry->view<component::Actor, component::Position>();
 	for (auto&& [entity, actor, pos] : actorView.each())
 	{
-		auto actorPosition = spatial::toTileSpace(pos.position);
-		auto distance = spatial::distance(_cameraPosition, actorPosition);
+		const auto actorPosition = spatial::toTileSpace(pos.position);
+		const auto distance = spatial::distance(_cameraPosition, actorPosition);
 
 		if (distance > REALITY_RADIUS)
 		{
@@ -38,8 +38,7 @@ void drft::system::RealityBubble::update(const float)
 		}
 		else
 		{
-			if (registry->any_of<component::tag::Active>(entity)) continue;
-			registry->emplace<component::tag::Active>(entity);
+			registry->emplace_or_replace<component::tag::Active>(entity);
 		}
 	}
 
@@ -48,11 +47,10 @@ void drft::system::RealityBubble::update(const float)
 
 void drft::system::RealityBubble::onActorAddOrUpdate(entt::registry& registry, entt::entity entity)
 {
-	if (registry.any_of<component::Prototype>(entity)) return;
 	if (!registry.any_of<component::Position>(entity)) return;
 
-	auto pos = spatial::toChunkCoordinate(registry.get<component::Position>(entity).position);
-	auto distance = spatial::distance(_cameraPosition, pos);
+	const auto pos = spatial::toChunkCoordinate(registry.get<component::Position>(entity).position);
+	const auto distance = spatial::distance(_cameraPosition, pos);
 
 	if (distance > REALITY_RADIUS)
 	{

@@ -84,7 +84,7 @@ drft::system::ActorQueue::ActorQueue(entt::registry& registry)
 
 void drft::system::ActorQueue::refresh(std::set<entt::entity>& currentEntities)
 {
-	auto actorView = registry.view<component::Actor, component::tag::Active>(entt::exclude<component::Prototype>);
+	auto actorView = registry.view<component::Actor, component::tag::Active>();
 	for (auto entity : actorView)
 	{
 		if (currentEntities.contains(entity)) continue;
