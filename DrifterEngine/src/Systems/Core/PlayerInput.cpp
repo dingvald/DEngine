@@ -3,30 +3,48 @@
 #include "Components/Components.h"
 #include "Components/Tags.h"
 
+static constexpr unsigned int INPUT_BUFFER_MAX_SIZE = 2;
+
 void drft::system::PlayerInput::init()
 {
 	using Key = sf::Keyboard;
 
+#pragma region Movement Actions
 	_actionMap.addAction(Key::Numpad1, [](entt::handle entity) {
-		entity.emplace<component::action::Move>(sf::Vector2i(-1, 1)); });
+		entity.emplace<component::action::Move>(sf::Vector2i(-1, 1)); 
+		});
 	_actionMap.addAction(Key::Numpad2, [](entt::handle entity) {
-		entity.emplace<component::action::Move>(sf::Vector2i(0, 1)); });
+		entity.emplace<component::action::Move>(sf::Vector2i(0, 1)); 
+		});
 	_actionMap.addAction(Key::Numpad3, [](entt::handle entity) {
-		entity.emplace<component::action::Move>(sf::Vector2i(1, 1)); });
+		entity.emplace<component::action::Move>(sf::Vector2i(1, 1)); 
+		});
 	_actionMap.addAction(Key::Numpad4, [](entt::handle entity) {
-		entity.emplace<component::action::Move>(sf::Vector2i(-1, 0)); });
+		entity.emplace<component::action::Move>(sf::Vector2i(-1, 0)); 
+		});
 	_actionMap.addAction(Key::Numpad6, [](entt::handle entity) {
-		entity.emplace<component::action::Move>(sf::Vector2i(1, 0)); });
+		entity.emplace<component::action::Move>(sf::Vector2i(1, 0)); 
+		});
 	_actionMap.addAction(Key::Numpad7, [](entt::handle entity) {
-		entity.emplace<component::action::Move>(sf::Vector2i(-1, -1)); });
+		entity.emplace<component::action::Move>(sf::Vector2i(-1, -1)); 
+		});
 	_actionMap.addAction(Key::Numpad8, [](entt::handle entity) {
-		entity.emplace<component::action::Move>(sf::Vector2i(0, -1)); });
+		entity.emplace<component::action::Move>(sf::Vector2i(0, -1)); 
+		});
 	_actionMap.addAction(Key::Numpad9, [](entt::handle entity) {
-		entity.emplace<component::action::Move>(sf::Vector2i(1, -1)); });
+		entity.emplace<component::action::Move>(sf::Vector2i(1, -1)); 
+		});
 	_actionMap.addAction(Key::Numpad5, [](entt::handle entity) {
-		entity.emplace<component::action::Wait>(); });
+		entity.emplace<component::action::Wait>(); 
+		});
+#pragma endregion
+
 	_actionMap.addAction(Key::G, [](entt::handle entity) {
-		entity.emplace<component::action::PickUp>(); });
+		entity.emplace<component::action::PickUp>(); 
+		});
+	_actionMap.addAction(Key::I, [](entt::handle entity) {
+		entity.emplace<component::action::OpenInventory>();
+		});
 }
 
 void drft::system::PlayerInput::update(const float dt)
@@ -66,7 +84,7 @@ void drft::system::PlayerInput::update(const float dt)
 
 			if (_keyState[key].active)
 			{
-				if (_bufferedActions[entity].size() < 3) // TODO: replace magic number
+				if (_bufferedActions[entity].size() < INPUT_BUFFER_MAX_SIZE)
 				{
 					_bufferedActions[entity].push(_actionMap[key]);
 				}

@@ -21,9 +21,10 @@ namespace drft
 
 	private:
 		sf::RenderWindow _window;
+		entt::registry _registry;
 		ResourceHolder<sf::Texture, std::string> _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
-		StateStack _stateStack{ State::Context{_window, _textures, _fonts} };
+		StateStack _stateStack{ StateContext{_window, _registry, _textures, _fonts} };
 
 		bool _showDebug;
 	};

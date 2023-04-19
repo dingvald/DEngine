@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MainMenuState.h"
 
-drft::MainMenuState::MainMenuState(StateStack& stack, Context context)
+drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
 	addMenuOption("Continue", [this]() {requestStackPop(); requestStackPush(States::Game); });
@@ -99,8 +99,8 @@ void drft::MainMenuState::addMenuOption(std::string&& name, std::function<void()
 	_menuOptions.push_back({ sf::Text{}, callback });
 	auto& text = _menuOptions.back().text;
 	text.setString(std::move(name));
-	text.setPosition({ (static_cast<float>(getContext().window->getView().getSize().x) / 2.f) - 64.f, (_menuOptions.size() * 64.f) + 64.f });
-	text.setFont(getContext().fonts->get("Terminus"));
+	text.setPosition({ (static_cast<float>(getContext().window.getView().getSize().x) / 2.f) - 64.f, (_menuOptions.size() * 64.f) + 64.f });
+	text.setFont(getContext().fonts.get("Terminus"));
 	text.setFillColor(sf::Color::White);
 }
 

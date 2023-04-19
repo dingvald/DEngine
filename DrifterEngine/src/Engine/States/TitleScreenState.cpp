@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "TitleScreenState.h"
 
-drft::TitleScreenState::TitleScreenState(StateStack& stack, Context context)
+drft::TitleScreenState::TitleScreenState(StateStack& stack, StateContext& context)
     : State(stack, context)
 {
-	float centerX = getContext().window->getSize().x / 2.f;
-	float centerY = getContext().window->getSize().y / 2.f;
-	float threeQuarterY = (centerY + getContext().window->getSize().y) / 2.f;
+	float centerX = getContext().window.getSize().x / 2.f;
+	float centerY = getContext().window.getSize().y / 2.f;
+	float threeQuarterY = (centerY + getContext().window.getSize().y) / 2.f;
 	sf::Vector2f textPosition = { centerX, threeQuarterY };
 
-	_pressAnyButtonText.setFont(getContext().fonts->get("Terminus"));
+	_pressAnyButtonText.setFont(getContext().fonts.get("Terminus"));
 	_pressAnyButtonText.setFillColor(sf::Color::White);
 	_pressAnyButtonText.setString("Press any button...");
 	float textWidth = _pressAnyButtonText.getCharacterSize() * _pressAnyButtonText.getString().getSize();

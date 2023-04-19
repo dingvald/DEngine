@@ -4,7 +4,7 @@
 
 using namespace drft;
 
-State::State(StateStack& stack, Context context)
+State::State(StateStack& stack, StateContext& context)
 	: _stack(&stack)
 	, _context(context)
 {}
@@ -38,7 +38,12 @@ void State::requestStackClear()
 	_stack->clearStates();
 }
 
-State::Context State::getContext() const
+const StateContext& State::getContext() const
+{
+	return _context;
+}
+
+StateContext& drft::State::getContext()
 {
 	return _context;
 }

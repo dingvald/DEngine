@@ -99,9 +99,6 @@
     <ClCompile Include="src\Utility\EntityHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\PresetViews\PresetViews.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Components\Tags.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -178,6 +175,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\ItemIDToEntityID.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\OpenInventorySystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\States\StateContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\States\InventoryState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\GUIElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -746,9 +755,6 @@
     <ClInclude Include="src\Utility\EntityHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\PresetViews\PresetViews.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Components\Tags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -836,6 +842,21 @@
     <ClInclude Include="src\Utility\ItemIDToEntityID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\OpenInventorySystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\States\StateContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\RequestStateChange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\States\InventoryState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\GUIElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -848,6 +869,7 @@
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="data\static\player.json" />
     <None Include="data\static\materials.json" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">
@@ -856,5 +878,8 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="src\Events\RequestStatePushEvent.xaml" />
   </ItemGroup>
 </Project>

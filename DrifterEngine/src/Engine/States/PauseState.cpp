@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PauseState.h"
 
-drft::PauseState::PauseState(StateStack& stack, Context context)
+drft::PauseState::PauseState(StateStack& stack, StateContext& context)
     :State(stack, context)
 {
 	addMenuOption("Continue", [this]() {requestStackPop(); });
@@ -78,8 +78,8 @@ void drft::PauseState::addMenuOption(std::string&& name, std::function<void()> c
 	_menuOptions.push_back({ sf::Text{}, callback });
 	auto& text = _menuOptions.back().text;
 	text.setString(std::move(name));
-	text.setPosition({ (static_cast<float>(getContext().window->getView().getSize().x) / 2.f) - 64.f, (_menuOptions.size() * 64.f) + 96.f });
-	text.setFont(getContext().fonts->get("Terminus"));
+	text.setPosition({ (static_cast<float>(getContext().window.getView().getSize().x) / 2.f) - 64.f, (_menuOptions.size() * 64.f) + 96.f });
+	text.setFont(getContext().fonts.get("Terminus"));
 	text.setFillColor(sf::Color::White);
 }
 

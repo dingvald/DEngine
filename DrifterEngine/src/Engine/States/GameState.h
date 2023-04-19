@@ -5,6 +5,11 @@ namespace drft
 {
 	class EntityFactory;
 
+	namespace events
+	{
+		struct RequestStateStackPush;
+	}
+
 	namespace system
 	{
 		class SystemScheduler;
@@ -18,7 +23,7 @@ namespace drft
 	class GameState : public State
 	{
 	public:
-		GameState(StateStack& stack, State::Context context);
+		GameState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;
@@ -27,19 +32,20 @@ namespace drft
 
 	private:
 		void init();
+		void connectEventHandlers();
 		void loadOrCreateGameSeed();
 		void loadOrCreatePlayer();
 		void loadEntityPrototypes();
 		void setupRegistryContext();
 		void importSystems();
+		void onRequestStatePush(const drft::events::RequestStateStackPush& ev);
 
 	private:
-		entt::registry _registry;
 		std::unique_ptr<system::SystemScheduler> _systems;
 		std::unique_ptr<spatial::WorldGrid> _world;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
-		entt::handle _player{ _registry, entt::null };
+		entt::handle _player{};
 	};
 
 } // namespace drft

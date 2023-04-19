@@ -6,7 +6,7 @@ namespace drft
 	class TitleScreenState : public State
 	{
 	public:
-		TitleScreenState(StateStack& stack, Context context);
+		TitleScreenState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

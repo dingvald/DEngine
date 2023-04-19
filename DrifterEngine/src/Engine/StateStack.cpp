@@ -3,7 +3,7 @@
 
 using namespace drft;
 
-StateStack::StateStack(State::Context context)
+StateStack::StateStack(StateContext context)
 	: _context(context)
 {}
 

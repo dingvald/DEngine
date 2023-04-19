@@ -17,6 +17,7 @@ void drft::system::PickUpSystem::update(const float dt)
 	{
 		const auto myTilePosition = spatial::toTileSpace(pos.position);
 		const auto items = grid.entitiesAt(myTilePosition, spatial::Layer::Item);
+
 		component::Item* itemComp = nullptr;
 		entt::entity pickupItem = entt::null;
 

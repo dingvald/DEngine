@@ -1,5 +1,6 @@
 #pragma once
 #include "Utility/ResourceHolder.h"
+#include "StateContext.h"
 #include "StateIdentifiers.h"
 
 namespace drft
@@ -11,25 +12,8 @@ namespace drft
 	public:
 		using Ptr = std::unique_ptr<State>;
 
-		struct Context
-		{
-			using TextureHolder = ResourceHolder<sf::Texture, std::string>;
-			using FontHolder = ResourceHolder<sf::Font, std::string>;
-
-			Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts)
-				: window(&window)
-				, textures(&textures)
-				, fonts(&fonts)
-			{}
-
-			sf::RenderWindow* window;
-			TextureHolder* textures;
-			FontHolder* fonts;
-			
-		};
-
 	public:
-		State(StateStack& stack, Context context);
+		State(StateStack& stack, StateContext& context);
 		virtual ~State();
 
 		virtual bool handleEvent(const sf::Event& ev);
@@ -44,11 +28,12 @@ namespace drft
 		void requestStackPop();
 		void requestStackClear();
 
-		Context getContext() const;
+		const StateContext& getContext() const;
+		StateContext& getContext();
 
 	private:
 		StateStack* _stack;
-		Context _context;
+		StateContext _context;
 	};
 }
 

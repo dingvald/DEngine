@@ -13,7 +13,7 @@ namespace drft
 		};
 
 	public:
-		MainMenuState(StateStack& stack, Context context);
+		MainMenuState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

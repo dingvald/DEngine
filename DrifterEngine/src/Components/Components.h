@@ -113,4 +113,7 @@ namespace component::action
 
 	struct Die
 	{};
+
+	struct OpenInventory
+	{};
 }

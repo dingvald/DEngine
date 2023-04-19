@@ -13,7 +13,7 @@ namespace drft
 		};
 
 	public:
-		PauseState(StateStack& stack, Context context);
+		PauseState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev);
 		bool update(const float dt);

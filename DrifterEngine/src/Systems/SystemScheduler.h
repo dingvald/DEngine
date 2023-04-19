@@ -34,7 +34,7 @@ namespace drft::system
 		void loadAll(cereal::JSONInputArchive& iarchive);
 
 		template <typename T>
-		void add(T&& system, int priority)
+		void add(int priority)
 		{
 			static_assert(std::is_base_of<System, T>::value, "In SystemScheduler: type is not a system.");
 

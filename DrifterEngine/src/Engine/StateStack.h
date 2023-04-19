@@ -15,7 +15,7 @@ namespace drft
 		};
 
 	public:
-		explicit StateStack(State::Context context);
+		explicit StateStack(StateContext context);
 		template<typename T>
 		void registerState(States stateID)
 		{
@@ -49,7 +49,7 @@ namespace drft
 	private:
 		std::vector<State::Ptr> _stack;
 		std::vector<PendingChange> _pendingList;
-		State::Context _context;
+		StateContext _context;
 		std::map<States, std::function<State::Ptr()>> _factories;
 	};
 
