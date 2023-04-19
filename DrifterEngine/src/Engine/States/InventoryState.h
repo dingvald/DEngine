@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "GUI/GUIElement.h"
 
 namespace drft
 {
@@ -23,7 +24,7 @@ namespace drft
 
 	private:
 		std::vector<entt::entity> _sessionEntities;
-		sf::RectangleShape _background;
+		gui::Window _inventoryWindow;
 	};
 }
 
