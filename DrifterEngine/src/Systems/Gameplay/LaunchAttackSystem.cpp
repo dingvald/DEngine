@@ -28,6 +28,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		const auto targets = grid.entitiesAt(targetPosition, spatial::Layer::Blocking);
 		for (auto target : targets)
 		{
+			std::cout << "The " << util::getEntityName({ *registry, entity }) << " attacks the " << util::getEntityName({ *registry, target }) << std::endl;
 			registry->emplace_or_replace<component::action::TakeDamage>(target, attack.damage);
 		}
 		

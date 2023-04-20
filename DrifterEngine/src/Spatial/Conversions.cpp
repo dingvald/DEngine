@@ -64,13 +64,13 @@ sf::Vector2i drft::spatial::toLocalChunkSpace(const sf::Vector2i tilePosition)
 	int xPos = tilePosition.x % CHUNK_WIDTH;
 	if (xPos < 0)
 	{
-		xPos += CHUNK_WIDTH - 1;
+		xPos = CHUNK_WIDTH + xPos;
 	}
 
 	int yPos = tilePosition.y % CHUNK_HEIGHT;
 	if (yPos < 0)
 	{
-		yPos += CHUNK_HEIGHT - 1;
+		yPos = CHUNK_HEIGHT + yPos;
 	}
 
 	return { xPos, yPos };
