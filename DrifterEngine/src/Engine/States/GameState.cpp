@@ -167,7 +167,7 @@ void drft::GameState::onPop()
 	}
 	_systems->shutdownAll();
 	util::saveRegistryToFile(getContext().registry, SAVE_DIRECTORY.data(), "registry", util::SerializeOption::JSON);
-	getContext().registry.clear();
+	getContext().registry = entt::registry{}; // There was a bug when calling registry::clear
 }
 
 void drft::GameState::importSystems()
