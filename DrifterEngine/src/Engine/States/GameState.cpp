@@ -186,7 +186,8 @@ void drft::GameState::importSystems()
 
 	// Import all systems into game state
 	// Add an offset to adjust execution order of systems
-	_systems->add<TurnManager>(				Phase::OnPreUpdate);
+	_systems->add<RealityBubble>(			Phase::OnPreUpdate);
+	_systems->add<TurnManager>(				Phase::OnPreUpdate + 5);
 	_systems->add<PlayerInput>(				Phase::OnProcessInput);
 	_systems->add<ArtificialInput>(			Phase::OnProcessInput);
 	_systems->add<MovementSystem>(			Phase::OnUpdate);
@@ -197,7 +198,7 @@ void drft::GameState::importSystems()
 	_systems->add<DeathSystem>(				Phase::OnUpdate + 15);
 	_systems->add<Camera>(					Phase::OnPostUpdate);
 	_systems->add<ChunkManager>(			Phase::OnPostUpdate);
-	_systems->add<RealityBubble>(			Phase::OnValidation);
+	
 	_systems->add<TileRenderer>(			Phase::OnRender);
 	_systems->add<EntityRenderer>(			Phase::OnRender + 5);
 	_systems->add<HUD>(						Phase::OnRender + 10);

@@ -69,6 +69,7 @@ namespace drft::gui
 		sf::Font* font = nullptr;
 		sf::Color textColor = {};
 		int textSize = 16;
+		sf::Vector2f textScale = { 1.f, 1.f };
 	};
 
 	class Element
@@ -346,6 +347,7 @@ namespace drft::gui
 			_text.setFont(*_style[_state].font);
 			_text.setFillColor(_style[_state].textColor);
 			_text.setCharacterSize(_style[_state].textSize);
+			_text.setScale(_style[_state].textScale);
 
 			setTextOrigin(_textOrigin);
 			setTextPosition(_textPosition);

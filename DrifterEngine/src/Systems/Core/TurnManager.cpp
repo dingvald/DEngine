@@ -12,7 +12,7 @@ void drft::system::TurnManager::init()
 	_actorQueue = std::make_unique<ActorQueue>(*registry);
 
 	_timeKeeper = registry->create();
-	registry->emplace<component::Actor>(_timeKeeper, 100, 1.0f, 1.0f);
+	registry->emplace<component::Actor>(_timeKeeper, 0, 1.0f, 1.0f);
 	registry->emplace<component::tag::Active>(_timeKeeper);
 	registry->emplace<component::Info>(_timeKeeper, "", "Time Keeper", "", "");
 	_actorQueue->setSentinel(_timeKeeper);
@@ -23,10 +23,16 @@ void drft::system::TurnManager::init()
 void drft::system::TurnManager::update(const float)
 {
 	processSpentPoints();
+	_actorQueue->refresh(_managedEntities);
 	_currentActor = determineCurrentActor();
+
+	if (_currentActor != _previousActor)
+	{
+		_actorQueue->printQueue();
+	}
+
 	if (_currentActor == _timeKeeper)
 	{
-		_actorQueue->refresh(_managedEntities);
 		_actorQueue->tick();
 		_actorQueue->rotate();
 		_currentActor = _actorQueue->front();
@@ -61,7 +67,7 @@ entt::entity drft::system::TurnManager::determineCurrentActor()
 	if (_managedEntities.size() == 1) return _actorQueue->front();
 	auto currentActor = _actorQueue->front();
 	int actorAP = registry->get<component::Actor>(currentActor).ap;
-	while (actorAP <= 0)
+	while (actorAP < 0)
 	{
 		registry->remove<component::tag::CurrentActor>(currentActor);
 		_actorQueue->rotate();
@@ -87,12 +93,7 @@ void drft::system::ActorQueue::refresh(std::set<entt::entity>& currentEntities)
 	for (auto entity : actorView)
 	{
 		if (currentEntities.contains(entity)) continue;
-
-		// TODO: find out way to insert above timeKeeper (cache position?)
-		auto& actor = actorView.get<component::Actor>(entity);
-		actor.ap = 0;
-
-		_queue.push_back(entity);
+		_queue.push_front(entity);
 		currentEntities.insert(entity);
 	}
 }
@@ -102,6 +103,19 @@ void drft::system::ActorQueue::rotate()
 	auto front = _queue.front();
 	_queue.pop_front();
 	_queue.push_back(front);
+}
+
+void drft::system::ActorQueue::sort()
+{
+	std::stable_sort(_queue.begin(), _queue.end(),
+		[this](const entt::entity& a, const entt::entity& b)
+		{
+			auto& actor_a = this->registry.get<component::Actor>(a);
+	auto& actor_b = this->registry.get<component::Actor>(b);
+
+	return actor_a.ap > actor_b.ap;
+		}
+	);
 }
 
 entt::entity drft::system::ActorQueue::front() const

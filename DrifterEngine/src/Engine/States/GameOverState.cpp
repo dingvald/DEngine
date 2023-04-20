@@ -12,7 +12,8 @@ drft::GameOverState::GameOverState(StateStack& stack, StateContext& context)
 			.fillColor = sf::Color(0,0,0,0),
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color(150,0,0),
-			.textSize = 32
+			.textSize = 16,
+			.textScale = {0.1, 0.1}
 			})
 		.setTextString("You Died")
 		.setTextOrigin(gui::ElementOrigin::BOTTOM_CENTER)
@@ -44,7 +45,8 @@ bool drft::GameOverState::update(const float dt)
 	if (elapsedTime > 0.1)
 	{
 		auto& style = _gameOverWindow.modifyStyle(_gameOverWindow.getState());
-		style.textSize = std::min(style.textSize += 4, 128);
+		style.textScale.x = std::min(style.textScale.x + 0.2f, 5.f);
+		style.textScale.y = std::min(style.textScale.y + 0.2f, 5.f);
 		int alpha = style.fillColor.a;
 		alpha += 4;
 		style.fillColor.a = std::min(alpha, 255);

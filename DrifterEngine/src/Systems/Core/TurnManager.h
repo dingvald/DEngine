@@ -17,6 +17,7 @@ namespace drft::system
 		ActorQueue(entt::registry& registry);
 		void refresh(std::set<entt::entity>& currentEntities);
 		void rotate();
+		void sort();
 		entt::entity front() const;
 		void tick();
 		void printQueue() const;
