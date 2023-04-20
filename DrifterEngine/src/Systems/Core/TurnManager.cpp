@@ -38,7 +38,6 @@ void drft::system::TurnManager::update(const float)
 
 void drft::system::TurnManager::onActorRemove(entt::registry& registry, entt::entity entity)
 {
-	if (registry.any_of<component::Prototype>(entity)) return;
 	if (_managedEntities.contains(entity))
 	{
 		_managedEntities.erase(entity);

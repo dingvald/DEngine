@@ -4,42 +4,79 @@
 drft::PauseState::PauseState(StateStack& stack, StateContext& context)
     :State(stack, context)
 {
-	addMenuOption("Continue", [this]() {requestStackPop(); });
-	addMenuOption("Settings", [this]() {});
-	addMenuOption("Quit", [this]() {requestStackClear(); requestStackPush(States::MainMenu); });
+	const auto& VIEW = getContext().window.getView();
+	_pauseWindow.setSize(VIEW.getSize())
+		.setPosition(VIEW.getCenter())
+		.setStyle(gui::ElementState::Idle, {
+			.fillColor = sf::Color(0,0,0,150),
+			.innerPadding = 192.f,
+			.childPadding = 64.f
+			})
+		.setChildrenAlignment(gui::ElementAlignment::TOP_CENTER)
+		.insertChild("Continue", gui::Button())
+		.insertChild("Settings", gui::Button())
+		.insertChild("Exit", gui::Button());
+
+	_pauseWindow["Continue"]
+		.setStyle(gui::ElementState::Idle, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 32
+			})
+		.setStyle(gui::ElementState::Focused, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::Yellow,
+			.textSize = 32
+			})
+		.setTextString("Continue")
+		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
+			{
+				this->requestStackPop();
+				return true;
+			});
+
+	_pauseWindow["Settings"]
+		.setStyle(gui::ElementState::Idle, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 32
+			})
+		.setStyle(gui::ElementState::Focused, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::Yellow,
+			.textSize = 32
+			})
+		.setTextString("Settings");
+
+	_pauseWindow["Exit"]
+		.setStyle(gui::ElementState::Idle, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 32
+			})
+		.setStyle(gui::ElementState::Focused, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::Yellow,
+			.textSize = 32
+			})
+		.setTextString("Exit")
+		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
+			{
+				this->requestStackClear();
+				this->requestStackPush(States::MainMenu);
+				return true;
+			});
 }
 
 bool drft::PauseState::handleEvent(const sf::Event& ev)
 {
+	_pauseWindow.handleEvent(ev);
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
 			requestStackPop();
-			return false;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad8 || ev.key.code == sf::Keyboard::Up)
-		{
-			--_cursorIndex;
-			if (_cursorIndex < 0)
-			{
-				_cursorIndex = _menuOptions.size() - 1;
-			}
-			return false;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad2 || ev.key.code == sf::Keyboard::Down)
-		{
-			++_cursorIndex;
-			if (_cursorIndex >= _menuOptions.size())
-			{
-				_cursorIndex = 0;
-			}
-			return false;
-		}
-		if (ev.key.code == sf::Keyboard::Space)
-		{
-			_menuOptions[_cursorIndex].callback();
 			return false;
 		}
 		break;
@@ -50,37 +87,14 @@ bool drft::PauseState::handleEvent(const sf::Event& ev)
 
 bool drft::PauseState::update(const float dt)
 {
-	for (auto& option : _menuOptions)
-	{
-		option.text.setFillColor(sf::Color::White);
-	}
-	_menuOptions[_cursorIndex].text.setFillColor(sf::Color::Yellow);
+	_pauseWindow.update(dt);
 
 	return false;
 }
 
 void drft::PauseState::render(sf::RenderTarget& target)
 {
-	sf::RectangleShape background;
-	background.setFillColor(sf::Color(0, 0, 0, 150));
-	background.setSize({ static_cast<float>(target.getSize().x), static_cast<float>(target.getSize().y) });
-
-	target.draw(background);
-
-	for (auto& option : _menuOptions)
-	{
-		target.draw(option.text);
-	}
-}
-
-void drft::PauseState::addMenuOption(std::string&& name, std::function<void()> callback)
-{
-	_menuOptions.push_back({ sf::Text{}, callback });
-	auto& text = _menuOptions.back().text;
-	text.setString(std::move(name));
-	text.setPosition({ (static_cast<float>(getContext().window.getView().getSize().x) / 2.f) - 64.f, (_menuOptions.size() * 64.f) + 96.f });
-	text.setFont(getContext().fonts.get("Terminus"));
-	text.setFillColor(sf::Color::White);
+	_pauseWindow.render(target);
 }
 
 

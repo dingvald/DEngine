@@ -14,6 +14,7 @@ namespace drft::gui
 	};
 	enum class ElementState
 	{
+		Unselectable,
 		Idle,
 		Focused,
 		Active,
@@ -49,6 +50,13 @@ namespace drft::gui
 		BOTTOM_CENTER,
 		CENTER
 	};
+	enum class ElementCallbackType
+	{
+		OnSelect,
+		OnFocus,
+		OnLeave,
+		OnIsSelectable
+	};
 
 	struct Style
 	{
@@ -56,6 +64,7 @@ namespace drft::gui
 		sf::Color outlineColor = {};
 		float outlineThickness = 0.f;
 		float innerPadding = 0.f;
+		float childPadding = 16.f;
 
 		sf::Font* font = nullptr;
 		sf::Color textColor = {};
@@ -70,18 +79,38 @@ namespace drft::gui
 		void onSelect()
 		{
 			setState(ElementState::Active);
-			if (_callback)
+			if (_callback.contains(ElementCallbackType::OnSelect) 
+				&& _callback.at(ElementCallbackType::OnSelect))
 			{
-				_callback();
+				_callback.at(ElementCallbackType::OnSelect)();
 			}
 		}
 		void onFocus()
 		{
 			setState(ElementState::Focused);
+			if (_callback.contains(ElementCallbackType::OnFocus)
+				&& _callback.at(ElementCallbackType::OnFocus))
+			{
+				_callback.at(ElementCallbackType::OnFocus)();
+			}
 		}
 		void onLeave()
 		{
 			setState(ElementState::Idle);
+			if (_callback.contains(ElementCallbackType::OnLeave)
+				&& _callback.at(ElementCallbackType::OnLeave))
+			{
+				_callback.at(ElementCallbackType::OnLeave)();
+			}
+		}
+		bool isSelectable()
+		{
+			if (_callback.contains(ElementCallbackType::OnIsSelectable)
+				&& _callback.at(ElementCallbackType::OnIsSelectable))
+			{
+				return _callback.at(ElementCallbackType::OnIsSelectable)();
+			}
+			return true;
 		}
 
 		Element& setPosition(sf::Vector2f position)
@@ -249,9 +278,9 @@ namespace drft::gui
 			return *this;
 		}
 
-		Element& registerCallback(std::function<void()> callback)
+		Element& registerCallback(ElementCallbackType type, std::function<bool()> callback)
 		{
-			_callback = callback;
+			_callback[type] = callback;
 			return *this;
 		}
 		template<typename T>
@@ -309,7 +338,7 @@ namespace drft::gui
 
 	protected:
 		std::string _name;
-		std::function<void()> _callback = {};
+		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
 		sf::RectangleShape _shape;
 		sf::Text _text;
 		ElementTextPosition _textPosition = ElementTextPosition::CENTER;
@@ -341,6 +370,12 @@ namespace drft::gui
 		void render(sf::RenderTarget& target) override;
 
 	private:
+		void setStartingCursorPosition();
+		void moveCursorDown();
+		void moveCursorUp();
+
+	private:
+		bool _isInitialized = false;
 		int _cursorIndex = 0;
 	};
 

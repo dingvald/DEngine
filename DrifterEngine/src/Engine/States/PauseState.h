@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "GUI/GUIElement.h"
 
 namespace drft
 {
@@ -18,12 +19,9 @@ namespace drft
 		bool handleEvent(const sf::Event& ev);
 		bool update(const float dt);
 		void render(sf::RenderTarget& target);
-	private:
-		void addMenuOption(std::string&& name, std::function<void()> callback);
 
 	private:
-		std::vector<MenuOption> _menuOptions;
-		int _cursorIndex = 0;
+		gui::List _pauseWindow;
 	};
 }
 

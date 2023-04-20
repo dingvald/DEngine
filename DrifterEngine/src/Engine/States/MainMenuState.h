@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "GUI/GUIElement.h"
 
 namespace drft
 {
@@ -20,12 +21,10 @@ namespace drft
 		void render(sf::RenderTarget& target) override;
 
 	private:
-		void addMenuOption(std::string&& name, std::function<void()> callback);
 		bool hasSaveFile() const;
 
 	private:
-		std::vector<MenuOption> _menuOptions;
-		int _cursorIndex = 0;
+		gui::List _mainMenuWindow;
 	};
 }
 

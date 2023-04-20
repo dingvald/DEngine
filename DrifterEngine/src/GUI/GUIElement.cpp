@@ -45,20 +45,12 @@ bool drft::gui::List::handleEvent(const sf::Event& ev)
 	case sf::Event::KeyPressed:
 		if (ev.key.code == sf::Keyboard::Numpad8 || ev.key.code == sf::Keyboard::Up)
 		{
-			--_cursorIndex;
-			if (_cursorIndex < 0)
-			{
-				_cursorIndex = _children.size() - 1;
-			}
+			moveCursorUp();
 			return false;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad2 || ev.key.code == sf::Keyboard::Down)
 		{
-			++_cursorIndex;
-			if (_cursorIndex >= _children.size())
-			{
-				_cursorIndex = 0;
-			}
+			moveCursorDown();
 			return false;
 		}
 		if (ev.key.code == sf::Keyboard::Space)
@@ -74,15 +66,30 @@ bool drft::gui::List::handleEvent(const sf::Event& ev)
 
 bool drft::gui::List::update(const float dt)
 {
+	if (!_isInitialized)
+	{
+		setStartingCursorPosition();
+		_isInitialized = true;
+	}
+
 	int count = 0;
 	for (auto& child : _children)
 	{
-		child->setState(ElementState::Idle);
+		const bool isSelectable = child->isSelectable();
+		if (isSelectable)
+		{
+			child->setState(ElementState::Idle);
+		}
+		else
+		{
+			child->setState(ElementState::Unselectable);
+		}
+		
 		if (_cursorIndex == count)
 		{
 			child->setState(ElementState::Focused);
 		}
-		child->setPosition({ 0, (count * 32.f) + _style[_state].innerPadding});
+		child->setPosition({ 0, (count * _style[_state].childPadding) + _style[_state].innerPadding});
 		++count;
 	}
 	return false;
@@ -96,6 +103,64 @@ void drft::gui::List::render(sf::RenderTarget& target)
 	{
 		child->render(target);
 	}
+}
+
+void drft::gui::List::setStartingCursorPosition()
+{
+	int count = 0;
+	bool isSelectionFound = false;
+	for (auto& child : _children)
+	{
+		const bool isSelectable = child->isSelectable();
+		if (isSelectable)
+		{
+			child->setState(ElementState::Idle);
+			if (!isSelectionFound)
+			{
+				isSelectionFound = true;
+				_cursorIndex = count;
+			}
+		}
+		else
+		{
+			child->setState(ElementState::Unselectable);
+		}
+
+		if (_cursorIndex == count)
+		{
+			child->setState(ElementState::Focused);
+		}
+		child->setPosition({ 0, (count * _style[_state].childPadding) + _style[_state].innerPadding });
+		++count;
+	}
+}
+
+void drft::gui::List::moveCursorDown()
+{
+	int safetyCount = 0;
+	do 
+	{
+		++_cursorIndex;
+		if (_cursorIndex >= _children.size())
+		{
+			_cursorIndex = 0;
+		}
+		++safetyCount;
+	} while (!_children.at(_cursorIndex)->isSelectable() && safetyCount < _children.size());
+}
+
+void drft::gui::List::moveCursorUp()
+{
+	int safetyCount = 0;
+	do
+	{
+		--_cursorIndex;
+		if (_cursorIndex < 0)
+		{
+			_cursorIndex = _children.size() - 1;
+		}
+		++safetyCount;
+	} while (!_children.at(_cursorIndex)->isSelectable() && safetyCount < _children.size());
 }
 
 // LABEL

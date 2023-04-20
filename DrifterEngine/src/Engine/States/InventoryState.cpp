@@ -6,7 +6,7 @@
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
     : State(stack, context)
 {
-	const auto VIEW = getContext().window.getView();
+	const auto& VIEW = getContext().window.getView();
 
 	_inventoryWindow.setSize(VIEW.getSize())
 		.setPosition(VIEW.getCenter())
