@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Engine\States\GameOverState.cpp" />
     <ClCompile Include="src\GUI\GUIElement.cpp" />
     <ClCompile Include="src\Engine\States\InventoryState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenInventorySystem.cpp" />
@@ -261,6 +262,7 @@
     <ClCompile Include="src\Engine\States\StateContext.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\States\GameOverState.h" />
     <ClInclude Include="src\GUI\GUIElement.h" />
     <ClInclude Include="src\Engine\States\InventoryState.h" />
     <ClInclude Include="src\Events\RequestStateChange.h" />

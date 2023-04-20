@@ -11,7 +11,7 @@ void StateStack::update(const float dt)
 {
 	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
 	{
-		if (!(*state)->update(dt)) return;
+		if (!(*state)->update(dt)) break;
 	}
 
 	applyPendingChanges();
@@ -31,7 +31,7 @@ void StateStack::handleEvent(const sf::Event& event)
 {
 	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
 	{
-		if (!(*state)->handleEvent(event)) return;
+		if (!(*state)->handleEvent(event)) break;
 	}
 
 	applyPendingChanges();

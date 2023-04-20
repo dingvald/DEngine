@@ -10,6 +10,7 @@ namespace drft
 		Game,
 		Inventory,
 		Pause,
+		GameOver,
 		Total
 	};
 }

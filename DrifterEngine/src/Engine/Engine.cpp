@@ -5,6 +5,7 @@
 #include "States/MainMenuState.h"
 #include "States/InventoryState.h"
 #include "States/PauseState.h"
+#include "States/GameOverState.h"
 #include "Services/DebugInfo.h"
 
 using namespace drft;
@@ -57,6 +58,7 @@ void drft::Engine::registerStates()
 	_stateStack.registerState<GameState>(States::Game);
 	_stateStack.registerState<InventoryState>(States::Inventory);
 	_stateStack.registerState<PauseState>(States::Pause);
+	_stateStack.registerState<GameOverState>(States::GameOver);
 }
 
 void drft::Engine::handleEvents()

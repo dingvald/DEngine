@@ -2,6 +2,8 @@
 #include "DeathSystem.h"
 #include "Factory/EntityFactory.h"
 #include "Components/Components.h"
+#include "Events/RequestStateChange.h"
+#include "Engine/States/StateIdentifiers.h"
 #include "Spatial/Conversions.h"
 #include "Utility/EntityHelpers.h"
 
@@ -24,6 +26,12 @@ void drft::system::DeathSystem::update(const float dt)
 					position.position = pos.position;
 					position.depth = spatial::Layer::Item;
 				});
+		}
+		if (registry->any_of<component::Player>(entity))
+		{
+			std::filesystem::remove_all(".\\data\\savegame\\");
+			auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+			dispatcher.trigger(events::RequestStateStackPush(States::GameOver));
 		}
 		registry->destroy(entity);
 	}

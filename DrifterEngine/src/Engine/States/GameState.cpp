@@ -156,17 +156,25 @@ void drft::GameState::render(sf::RenderTarget& target)
 
 void drft::GameState::onPop()
 {
+	const bool isPlayerAlive = getContext().registry.valid(_player.entity());
 	// Save game state
-	util::saveEntityToFile(_player, SAVE_DIRECTORY.data(), PLAYER_FILE_NAME.data(), util::SerializeOption::JSON);
-
-	std::ofstream ofs{ GAME_STATE_SAVE_FILENAME.data()};
+	if (isPlayerAlive)
 	{
-		cereal::JSONOutputArchive oarchive(ofs);
-		oarchive(cereal::make_nvp("GameSeed", rng::RandomNumberGenerator::getSeed()));
-		_systems->saveAll(oarchive);
+		util::saveEntityToFile(_player, SAVE_DIRECTORY.data(), PLAYER_FILE_NAME.data(), util::SerializeOption::JSON);
+
+		std::ofstream ofs{ GAME_STATE_SAVE_FILENAME.data() };
+		{
+			cereal::JSONOutputArchive oarchive(ofs);
+			oarchive(cereal::make_nvp("GameSeed", rng::RandomNumberGenerator::getSeed()));
+			_systems->saveAll(oarchive);
+		}
 	}
 	_systems->shutdownAll();
-	util::saveRegistryToFile(getContext().registry, SAVE_DIRECTORY.data(), "registry", util::SerializeOption::JSON);
+	if (isPlayerAlive)
+	{
+		util::saveRegistryToFile(getContext().registry, SAVE_DIRECTORY.data(), "registry", util::SerializeOption::JSON);
+	}
+	
 	getContext().registry = entt::registry{}; // There was a bug when calling registry::clear
 }
 

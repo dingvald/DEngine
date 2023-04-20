@@ -36,7 +36,7 @@ void drft::system::ChunkManager::update(const float dt)
 	service::DebugInfo::instance().putInfo("Virtual Chunks", std::to_string(_chunks.size()));
 }
 
-void drft::system::ChunkManager::shutdown()
+void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
 {
 	for (auto& [_, chunk] : _chunks)
 	{
