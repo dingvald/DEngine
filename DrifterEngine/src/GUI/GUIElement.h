@@ -278,6 +278,16 @@ namespace drft::gui
 			return *this;
 		}
 
+		Style& modifyStyle(ElementState state)
+		{
+			_needsStyleUpdate = true;
+			return _style.at(state);
+		}
+		const Style& getStyle(ElementState state) const
+		{
+			return _style.at(state);
+		}
+
 		Element& registerCallback(ElementCallbackType type, std::function<bool()> callback)
 		{
 			_callback[type] = callback;
@@ -313,6 +323,10 @@ namespace drft::gui
 			_state = state;
 			applyStyle();
 		}
+		ElementState getState() const
+		{
+			return _state;
+		}
 
 		virtual bool handleEvent(const sf::Event& ev) = 0;
 		virtual bool update(const float dt) = 0;
@@ -332,6 +346,10 @@ namespace drft::gui
 			_text.setFont(*_style[_state].font);
 			_text.setFillColor(_style[_state].textColor);
 			_text.setCharacterSize(_style[_state].textSize);
+
+			setTextOrigin(_textOrigin);
+			setTextPosition(_textPosition);
+			
 
 			_needsStyleUpdate = false;
 		}

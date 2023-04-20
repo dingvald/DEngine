@@ -71,6 +71,10 @@ bool drft::gui::List::update(const float dt)
 		setStartingCursorPosition();
 		_isInitialized = true;
 	}
+	if (needsStyleUpdate())
+	{
+		applyStyle();
+	}
 
 	int count = 0;
 	for (auto& child : _children)
