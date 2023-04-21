@@ -23,14 +23,15 @@ namespace snapshot {
 
 	void Snapshot::save(OutputArchive archive, entt::registry const& reg)
 	{
-		auto sz = reg.size();
+		auto sz = reg.alive();
 
 		archive(cereal::make_nvp("e_count", sz));
 
-		for (auto it = reg.data(), last = it + sz; it != last; ++it) {
-			auto h = entt::const_handle{ reg, *it };
-			saveHandle(archive, h);
-		}
+		reg.each([&reg, &archive](entt::entity entity)
+			{
+				auto handle = entt::const_handle{ reg, entity };
+				saveHandle(archive, handle);
+			});
 	}
 
 	void Snapshot::saveHandle(OutputArchive& archive, entt::const_handle h)
