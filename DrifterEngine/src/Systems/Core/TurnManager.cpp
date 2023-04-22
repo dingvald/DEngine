@@ -10,7 +10,10 @@ void drft::system::TurnManager::init()
 	registry->on_destroy<component::tag::Active>().connect<&TurnManager::onActorRemove>(this);
 
 	_actorQueue = std::make_unique<ActorQueue>(*registry);
+}
 
+void drft::system::TurnManager::onStart()
+{
 	_timeKeeper = registry->create();
 	registry->emplace<component::Actor>(_timeKeeper, 0, 1.0f, 1.0f);
 	registry->emplace<component::tag::Active>(_timeKeeper);
@@ -28,7 +31,7 @@ void drft::system::TurnManager::update(const float)
 
 	if (_currentActor != _previousActor)
 	{
-		_actorQueue->printQueue();
+
 	}
 
 	if (_currentActor == _timeKeeper)
@@ -40,6 +43,11 @@ void drft::system::TurnManager::update(const float)
 	}
 	registry->emplace_or_replace<component::tag::CurrentActor>(_currentActor);
 	_previousActor = _currentActor;
+}
+
+void drft::system::TurnManager::shutdown()
+{
+	registry->destroy(_timeKeeper);
 }
 
 void drft::system::TurnManager::onActorRemove(entt::registry& registry, entt::entity entity)

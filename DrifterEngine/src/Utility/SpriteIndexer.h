@@ -19,14 +19,13 @@ namespace drft::util
 		Axe,
 		Sword,
 		Material,
-		Heart,
-		Total
+		Heart
 	};
 
 	class SpriteIndexer
 	{
 	public:
-		static sf::IntRect get(unsigned int index, const sf::Texture& texture);
+		static sf::IntRect get(Sprite sprite, const sf::Texture& texture);
 	};
 }
 

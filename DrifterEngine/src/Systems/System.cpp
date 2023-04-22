@@ -7,6 +7,10 @@ void drft::system::System::setRegistry(entt::registry& registry)
 	this->registry = &registry;
 }
 
+void drft::system::System::onStart()
+{
+}
+
 void drft::system::System::save(cereal::JSONOutputArchive& oarchive)
 {
 }

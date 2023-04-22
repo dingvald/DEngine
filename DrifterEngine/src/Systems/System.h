@@ -9,6 +9,7 @@ namespace drft::system
 		virtual ~System() = default;
 
 		void setRegistry(entt::registry& registry);
+		virtual void onStart();
 		virtual void init() = 0;
 		virtual void save(cereal::JSONOutputArchive& oarchive);
 		virtual void load(cereal::JSONInputArchive& iarchive);

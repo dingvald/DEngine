@@ -22,7 +22,7 @@ void drft::SpriteBatch::addSprite(unsigned int spriteNum, sf::Color color, sf::V
 {
 	sf::Vertex tl, tr, bl, br;
 
-	auto rect = util::SpriteIndexer::get(spriteNum, _spriteSheet);
+	auto rect = util::SpriteIndexer::get(static_cast<util::Sprite>(spriteNum), _spriteSheet);
 	int tu = spriteNum % (_spriteSheet.getSize().x / rect.width);
 	int tv = spriteNum / (_spriteSheet.getSize().x / rect.width);
 

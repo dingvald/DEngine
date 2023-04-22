@@ -1,7 +1,7 @@
 #pragma once
 namespace drft::util
 {
-	const std::string getEntityName(const entt::handle entity);
+	std::string getEntityName(const entt::handle entity);
 
 	enum class ActionType
 	{

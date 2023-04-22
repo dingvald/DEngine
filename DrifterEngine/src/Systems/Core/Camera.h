@@ -6,9 +6,13 @@ namespace drft::system
 	class Camera : public System
 	{
 	public:
-		virtual void init() override;
-		virtual void update(const float dt) override;
+		void init() override;
+		void onStart() override;
+		void update(const float dt) override;
 		void shutdown() override;
+
+	private:
+		entt::entity _camera;
 	};
 
 }

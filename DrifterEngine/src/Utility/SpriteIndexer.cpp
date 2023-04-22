@@ -3,7 +3,7 @@
 
 using namespace drft::util;
 
-sf::IntRect SpriteIndexer::get(unsigned int index, const sf::Texture& texture)
+sf::IntRect SpriteIndexer::get(Sprite sprite, const sf::Texture& texture)
 {
     sf::Vector2u spriteDimensions = { 16, 16 };
 
@@ -15,8 +15,8 @@ sf::IntRect SpriteIndexer::get(unsigned int index, const sf::Texture& texture)
     unsigned int row = 0;
     unsigned int col = 0;
 
-    row = index / width_sp;
-    col = index % width_sp;
+    row = static_cast<unsigned int>(sprite) / width_sp;
+    col = static_cast<unsigned int>(sprite) % width_sp;
 
     return sf::IntRect(col*spriteDimensions.x, row*spriteDimensions.y,
         spriteDimensions.x, spriteDimensions.y);

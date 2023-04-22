@@ -37,6 +37,7 @@ namespace drft
 		void loadOrCreatePlayer();
 		void loadEntityPrototypes();
 		void setupRegistryContext();
+		void loadRegistry();
 		void importSystems();
 		void onRequestStatePush(const drft::events::RequestStateStackPush& ev);
 

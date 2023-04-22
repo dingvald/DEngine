@@ -4,12 +4,9 @@
 
 void drft::util::saveRegistryToFile(const entt::registry& reg, std::string dirPath, std::string filename, SerializeOption option)
 {
-	if (reg.empty())
-	{
-		throw std::exception("Registry should not be empty");
-	}
 	using namespace snapshot;
 	std::filesystem::create_directory(dirPath);
+
 	std::string fullpath = dirPath + filename;
 	{
 		switch (option)

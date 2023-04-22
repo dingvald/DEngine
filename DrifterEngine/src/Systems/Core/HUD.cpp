@@ -12,7 +12,7 @@ void drft::system::HUD::init()
 	using namespace entt::literals;
 	const auto& texture = registry->ctx().get<sf::Texture&>("sprites"_hs);
 	_heartIcon.setTexture(texture);
-	_heartIcon.setTextureRect(util::SpriteIndexer::get(static_cast<unsigned int>(util::Sprite::Heart), texture));
+	_heartIcon.setTextureRect(util::SpriteIndexer::get(util::Sprite::Heart, texture));
 	_heartIcon.setPosition(HEALTHBAR_POSITION - sf::Vector2f(20.f, 5.f));
 	_heartIcon.setColor(sf::Color(150, 60, 60, 200));
 

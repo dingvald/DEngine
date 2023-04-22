@@ -1,6 +1,20 @@
 #include "pch.h"
 #include "SystemScheduler.h"
 
+void drft::system::SystemScheduler::startAll() const
+{
+	std::cout << "Starting Systems..." << std::endl;
+	for (auto& [_, systems] : _systems)
+	{
+		for (auto& [system, _] : systems)
+		{
+			system->onStart();
+			std::string typeName = typeid(*system).name();
+			std::cout << "Starting " << typeName << "..." << std::endl;
+		}
+	}
+}
+
 void drft::system::SystemScheduler::initAll() const
 {
 	std::cout << "Initializing Systems..." << std::endl;

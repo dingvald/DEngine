@@ -201,6 +201,8 @@ void drft::gui::Label::render(sf::RenderTarget& target)
 	}
 }
 
+// BUTTON
+
 bool drft::gui::Button::handleEvent(const sf::Event& ev)
 {
 	return false;
@@ -228,6 +230,8 @@ void drft::gui::Button::render(sf::RenderTarget& target)
 		child->render(target);
 	}
 }
+
+// ICON
 
 drft::gui::Icon::Icon(sf::Sprite sprite)
 	: _sprite(sprite)

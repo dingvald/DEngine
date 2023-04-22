@@ -65,9 +65,11 @@ void drft::GameState::init()
 	setupRegistryContext();
 	importSystems();
 	loadEntityPrototypes();
+	loadRegistry();
 	loadOrCreatePlayer();
 
 	std::cout << "Starting Gamestate" << std::endl;
+	_systems->startAll();
 }
 
 void drft::GameState::connectEventHandlers()
@@ -125,6 +127,14 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace_as<sf::Texture&>("sprites"_hs, getContext().textures.get("Sprites"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
+}
+
+void drft::GameState::loadRegistry()
+{
+	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
+	{
+		util::loadRegistryFromFile(getContext().registry, SAVE_DIRECTORY.data(), "registry", util::SerializeOption::JSON);
+	}
 }
 
 bool drft::GameState::handleEvent(const sf::Event& ev)
@@ -206,6 +216,14 @@ void drft::GameState::importSystems()
 	_systems->add<FactionSystem>(			Phase::Reactive);
 	_systems->add<ItemUniqueIDGenerator>(	Phase::Reactive);
 
+	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
+	{
+		std::ifstream ifs(GAME_STATE_SAVE_FILENAME.data());
+		{
+			cereal::JSONInputArchive iarchive(ifs);
+			_systems->loadAll(iarchive);
+		}
+	}
 	_systems->initAll();
 }
 

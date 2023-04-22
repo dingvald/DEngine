@@ -2,63 +2,12 @@
 #include "InventoryState.h"
 #include "Components/Components.h"
 #include "Utility/EntityHelpers.h"
+#include "Utility/ItemIDToEntityID.h"
 
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
     : State(stack, context)
 {
-	const auto& VIEW = getContext().window.getView();
-
-	_inventoryWindow.setSize(VIEW.getSize())
-		.setPosition(VIEW.getCenter())
-		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,150),
-			.outlineThickness = 0.0f,
-		})
-		.setChildrenAlignment(gui::ElementAlignment::CENTER)
-		.insertChild("ItemList", gui::List());
-
-	_inventoryWindow["ItemList"]
-		.setSize({ VIEW.getSize().x / 3, 3*(VIEW.getSize().y / 4)})
-		.setPosition({ 0,0 })
-		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(50,50,50,200),
-			.outlineColor = sf::Color(50,50,50),
-			.outlineThickness = 2.0f,
-			.innerPadding = 32.0f,
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 16
-			})
-		.setTextString("Inventory")
-		.setTextOrigin(gui::ElementOrigin::BOTTOM_CENTER)
-		.setTextPosition(gui::ElementTextPosition::TOP_CENTER)
-		.setChildrenAlignment(gui::ElementAlignment::TOP_CENTER)
-		.insertChild("Item1", gui::Button())
-		.insertChild("Item2", gui::Button());
 	
-	_inventoryWindow["ItemList"]["Item1"]
-		.setStyle(gui::ElementState::Idle, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White
-		})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow
-			})
-		.setTextString("Item1");
-
-	_inventoryWindow["ItemList"]["Item2"]
-		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,0),
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White
-		})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow
-			})
-		.setTextString("Item2");
-
 }
 
 bool drft::InventoryState::handleEvent(const sf::Event& ev)
@@ -104,7 +53,73 @@ void drft::InventoryState::onPop()
 
 void drft::InventoryState::setupPanels()
 {
-	
+	const auto& VIEW = getContext().window.getView();
+
+	_inventoryWindow.setSize(VIEW.getSize())
+		.setPosition(VIEW.getCenter())
+		.setStyle(gui::ElementState::Idle, {
+			.fillColor = sf::Color(0,0,0,150)
+			})
+			.setChildrenAlignment(gui::ElementAlignment::CENTER)
+		.insertChild("ItemList", gui::List());
+
+	_inventoryWindow["ItemList"]
+		.setSize({ VIEW.getSize().x / 3, 3 * (VIEW.getSize().y / 4) })
+		.setPosition({ 0,0 })
+		.setStyle(gui::ElementState::Idle, {
+			.fillColor = sf::Color(50,50,50,200),
+			.outlineColor = sf::Color(50,50,50),
+			.outlineThickness = 2.0f,
+			.innerPadding = 32.0f,
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 16
+			})
+		.setTextString(util::getEntityName({ getContext().registry, _sessionEntities.front() }) + "'s Inventory")
+		.setTextOrigin(gui::ElementOrigin::BOTTOM_CENTER)
+		.setTextPosition(gui::ElementTextPosition::TOP_CENTER)
+		.setChildrenAlignment(gui::ElementAlignment::TOP_CENTER, {-32, 0});
+
+	auto& container = getContext().registry.get<component::Container>(_sessionEntities.front());
+	int count = 0;
+	for (auto item : container.contents)
+	{
+		const auto itemEntity = util::ItemIDToEntityID(item, getContext().registry);
+		const auto itemRender = getContext().registry.get<component::Render>(itemEntity);
+		const auto& texture = getContext().textures.get("Sprites");
+		const auto textureRect = util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), texture);
+
+		_inventoryWindow["ItemList"]
+			.insertChild(std::to_string(count), gui::Button());
+
+		auto& itemText = _inventoryWindow["ItemList"][std::to_string(count)];
+		itemText.setSize({ 48,16 })
+			.setOrigin(gui::ElementOrigin::CENTER_LEFT)
+			.setStyle(gui::ElementState::Idle, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color::White,
+					.textSize = 16
+				})
+			.setStyle(gui::ElementState::Focused, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color::Yellow,
+					.textSize = 16
+				})
+			.setTextString(util::getEntityName({ getContext().registry, itemEntity }))
+			.setTextPosition(gui::ElementTextPosition::CENTER_RIGHT)
+			.setTextOrigin(gui::ElementOrigin::CENTER_LEFT);
+		itemText.setChildrenAlignment(gui::ElementAlignment::CENTER, { -32, 0 });
+		itemText.insertChild("Icon", gui::Icon(sf::Sprite(texture, textureRect)));
+
+		auto& icon = _inventoryWindow["ItemList"][std::to_string(count)]["Icon"];
+		icon.setSize({ 16.f, 16.f })
+			.setStyle(gui::ElementState::Idle, {
+				.fillColor = itemRender.color
+				})
+			.setOrigin(gui::ElementOrigin::CENTER);
+
+		++count;
+	}
 }
 
 void drft::InventoryState::determineSessionEntities()

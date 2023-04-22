@@ -20,5 +20,8 @@ void drft::system::ItemUniqueIDGenerator::load(cereal::JSONInputArchive& iarchiv
 void drft::system::ItemUniqueIDGenerator::onItemAdd(entt::registry& registry, entt::entity entity)
 {
 	auto& item = registry.get<component::Item>(entity);
-	item.id = _nextAvailableID++;
+	if (item.id == 0)
+	{
+		item.id = _nextAvailableID++;
+	}
 }

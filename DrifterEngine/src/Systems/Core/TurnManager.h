@@ -32,8 +32,10 @@ namespace drft::system
 	class TurnManager : public System
 	{
 	public:
-		virtual void init() override;
-		virtual void update(const float dt) override;
+		void init() override;
+		void onStart() override;
+		void update(const float dt) override;
+		void shutdown() override;
 
 	private:
 		void onActorRemove(entt::registry& registry, entt::entity entity);
