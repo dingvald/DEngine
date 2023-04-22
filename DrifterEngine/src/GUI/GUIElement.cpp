@@ -93,9 +93,13 @@ bool drft::gui::List::update(const float dt)
 		{
 			child->setState(ElementState::Focused);
 		}
-		child->setPosition({ 0, (count * _style[_state].childPadding) + _style[_state].innerPadding});
 		++count;
 	}
+	for (auto& child : _children)
+	{
+		child->update(dt);
+	}
+
 	return false;
 }
 
@@ -107,6 +111,11 @@ void drft::gui::List::render(sf::RenderTarget& target)
 	{
 		child->render(target);
 	}
+}
+
+sf::Vector2f drft::gui::List::determineChildPosition(int childNum) const
+{
+	return { 0, (childNum * _style.at(_state).childPadding) + _style.at(_state).innerPadding };
 }
 
 void drft::gui::List::setStartingCursorPosition()
@@ -185,7 +194,6 @@ bool drft::gui::Label::update(const float dt)
 
 void drft::gui::Label::render(sf::RenderTarget& target)
 {
-	target.draw(_shape);
 	target.draw(_text);
 	for (auto& child : _children)
 	{
@@ -204,6 +212,10 @@ bool drft::gui::Button::update(const float dt)
 	{
 		applyStyle();
 	}
+	for (auto& child : _children)
+	{
+		child->update(dt);
+	}
 	return false;
 }
 
@@ -215,4 +227,45 @@ void drft::gui::Button::render(sf::RenderTarget& target)
 	{
 		child->render(target);
 	}
+}
+
+drft::gui::Icon::Icon(sf::Sprite sprite)
+	: _sprite(sprite)
+{}
+
+bool drft::gui::Icon::handleEvent(const sf::Event& ev)
+{
+	return true;
+}
+
+bool drft::gui::Icon::update(const float dt)
+{
+	if (needsStyleUpdate())
+	{
+		applyStyle();
+	}
+	
+	return true;
+}
+
+void drft::gui::Icon::render(sf::RenderTarget& target)
+{
+	target.draw(_sprite);
+	for (auto& child : _children)
+	{
+		child->render(target);
+	}
+}
+
+void drft::gui::Icon::applyStyle()
+{
+	Element::applyStyle();
+	_sprite.setColor(_style[_state].fillColor);
+	const auto spriteBounds = _sprite.getLocalBounds();
+	const auto shapeBounds = _shape.getSize();
+	const auto scalingFactorX = shapeBounds.x / spriteBounds.width;
+	const auto scalingFactorY = shapeBounds.y / spriteBounds.height;
+	_sprite.setOrigin(_shape.getOrigin());
+	_sprite.scale({ scalingFactorX, scalingFactorY });
+	_sprite.setPosition(_shape.getPosition());
 }

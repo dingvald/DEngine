@@ -1,4 +1,5 @@
 #pragma once
+#include "Utility/SpriteIndexer.h"
 
 namespace drft::gui
 {
@@ -38,6 +39,8 @@ namespace drft::gui
 		BOTTOM_LEFT,
 		BOTTOM_CENTER,
 		BOTTOM_RIGHT,
+		CENTER_LEFT,
+		CENTER_RIGHT,
 		CENTER
 	};
 	enum class ElementTextPosition
@@ -48,6 +51,8 @@ namespace drft::gui
 		BOTTOM_RIGHT,
 		BOTTOM_LEFT,
 		BOTTOM_CENTER,
+		CENTER_RIGHT,
+		CENTER_LEFT,
 		CENTER
 	};
 	enum class ElementCallbackType
@@ -148,8 +153,15 @@ namespace drft::gui
 			case ElementOrigin::BOTTOM_RIGHT:
 				_shape.setOrigin(_shape.getSize());
 				break;
+			case ElementOrigin::CENTER_LEFT:
+				_shape.setOrigin(0, _shape.getSize().y / 2.f);
+				break;
+			case ElementOrigin::CENTER_RIGHT:
+				_shape.setOrigin(_shape.getSize().x, _shape.getSize().y / 2.f);
+				break;
 			case ElementOrigin::CENTER:
 				_shape.setOrigin(_shape.getSize() / 2.f);
+				break;
 			}
 			return *this;
 		}
@@ -159,6 +171,7 @@ namespace drft::gui
 			setOrigin(_origin);
 			return *this;
 		}
+
 		Element& setTextString(std::string&& string)
 		{
 			_text.setString(std::move(string));
@@ -194,6 +207,12 @@ namespace drft::gui
 			case ElementTextPosition::BOTTOM_RIGHT:
 				_text.setPosition({ SHAPE_RIGHT, SHAPE_BOTTOM});
 				break;
+			case ElementTextPosition::CENTER_LEFT:
+				_text.setPosition({ SHAPE_LEFT, SHAPE_CENTER_Y });
+				break;
+			case ElementTextPosition::CENTER_RIGHT:
+				_text.setPosition({ SHAPE_RIGHT, SHAPE_CENTER_Y });
+				break;
 			case ElementTextPosition::CENTER:
 				_text.setPosition({ SHAPE_CENTER_X, SHAPE_CENTER_Y });
 				break;
@@ -204,34 +223,41 @@ namespace drft::gui
 		Element& setTextOrigin(ElementOrigin origin)
 		{
 			_textOrigin = origin;
-			const auto localWidth = _text.getLocalBounds().width;
-			const auto localHeight = _text.getLocalBounds().height;
+			const auto textRect = _text.getLocalBounds();
 			switch (_textOrigin)
 			{
 			case ElementOrigin::TOP_LEFT:
 				_text.setOrigin(0, 0);
 				break;
 			case ElementOrigin::TOP_CENTER:
-				_text.setOrigin(localWidth / 2, 0);
+				_text.setOrigin(textRect.left + textRect.width / 2, 0);
 				break;
 			case ElementOrigin::TOP_RIGHT:
-				_text.setOrigin(localWidth, 0);
+				_text.setOrigin(textRect.left + textRect.width, 0);
 				break;
 			case ElementOrigin::BOTTOM_LEFT:
-				_text.setOrigin(0, localHeight);
+				_text.setOrigin(0, textRect.top + textRect.height);
 				break;
 			case ElementOrigin::BOTTOM_CENTER:
-				_text.setOrigin(localWidth / 2, localHeight);
+				_text.setOrigin(textRect.left + textRect.width / 2, textRect.top + textRect.height);
 				break;
 			case ElementOrigin::BOTTOM_RIGHT:
-				_text.setOrigin(localWidth, localHeight);
+				_text.setOrigin(textRect.left + textRect.width, textRect.top + textRect.height);
+				break;
+			case ElementOrigin::CENTER_RIGHT:
+				_text.setOrigin(textRect.left + textRect.width, textRect.top + textRect.height / 2);
+				break;
+			case ElementOrigin::CENTER_LEFT:
+				_text.setOrigin(0, textRect.top + textRect.height / 2);
 				break;
 			case ElementOrigin::CENTER:
-				_text.setOrigin(localWidth/2, localHeight/2);
+				_text.setOrigin(textRect.left + textRect.width / 2, textRect.top + textRect.height / 2);
+				break;
 			}
 			return *this;
 		}
-		Element& setChildrenAlignment(ElementAlignment alignment)
+
+		Element& setChildrenAlignment(ElementAlignment alignment, sf::Vector2f offset = {0,0})
 		{
 			const float SHAPE_TOP = (_shape.getGlobalBounds().top);
 			const float SHAPE_LEFT = (_shape.getGlobalBounds().left);
@@ -264,6 +290,7 @@ namespace drft::gui
 				_childAlignment = { SHAPE_CENTER_X, SHAPE_CENTER_Y };
 				break;
 			}
+			_childAlignment += offset;
 
 			return *this;
 		}
@@ -284,10 +311,6 @@ namespace drft::gui
 			_needsStyleUpdate = true;
 			return _style.at(state);
 		}
-		const Style& getStyle(ElementState state) const
-		{
-			return _style.at(state);
-		}
 
 		Element& registerCallback(ElementCallbackType type, std::function<bool()> callback)
 		{
@@ -298,10 +321,10 @@ namespace drft::gui
 		Element& insertChild(std::string name, T&& child)
 		{
 			static_assert(std::derived_from<T, Element>);
-			_children.push_back(std::make_unique<T>());
+			_children.push_back(std::make_unique<T>(std::move(child)));
 			_children.back()->_name = name;
 			_children.back()->_parent = this;
-			_children.back()->setPosition({0,0});
+			_children.back()->setPosition(determineChildPosition(_children.size()-1));
 			_childrenMap[name] = _children.size() - 1;
 
 			return *this;
@@ -309,6 +332,7 @@ namespace drft::gui
 		Element& removeChild(std::string name)
 		{
 
+			_childrenMap.erase(name);
 		}
 		Element& operator[](std::string name)
 		{
@@ -338,7 +362,7 @@ namespace drft::gui
 		{
 			return _needsStyleUpdate;
 		}
-		void applyStyle()
+		virtual void applyStyle()
 		{
 			_shape.setFillColor(_style[_state].fillColor);
 			_shape.setOutlineColor(_style[_state].outlineColor);
@@ -354,6 +378,10 @@ namespace drft::gui
 			
 
 			_needsStyleUpdate = false;
+		}
+		virtual sf::Vector2f determineChildPosition(int childNum) const
+		{
+			return { 0,0 };
 		}
 
 	protected:
@@ -389,6 +417,9 @@ namespace drft::gui
 		bool update(const float dt) override;
 		void render(sf::RenderTarget& target) override;
 
+	protected:
+		sf::Vector2f determineChildPosition(int childNum) const override;
+
 	private:
 		void setStartingCursorPosition();
 		void moveCursorDown();
@@ -405,6 +436,8 @@ namespace drft::gui
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;
 		void render(sf::RenderTarget& target) override;
+
+	
 	};
 
 	class Button : public Element
@@ -413,6 +446,21 @@ namespace drft::gui
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;
 		void render(sf::RenderTarget& target) override;
+	};
+
+	class Icon : public Element
+	{
+	public:
+		Icon(sf::Sprite sprite);
+
+		bool handleEvent(const sf::Event& ev) override;
+		bool update(const float dt) override;
+		void render(sf::RenderTarget& target) override;
+	protected:
+		void applyStyle() override;
+
+	private:
+		sf::Sprite _sprite;
 	};
 }
 
