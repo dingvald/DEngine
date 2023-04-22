@@ -71,6 +71,30 @@
           }
         }
       ]
+    },
+    {
+      "Name": "Stone",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "stone",
+            "extendedName": "",
+            "description": "A small rock."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 10,
+            "color": [ 128, 132, 135 ]
+          }
+        }
+      ]
     }
   ]
 }

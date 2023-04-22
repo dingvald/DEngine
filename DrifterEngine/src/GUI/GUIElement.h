@@ -66,10 +66,11 @@ namespace drft::gui
 	struct Style
 	{
 		sf::Color fillColor = { 0,0,0,0 }; // clear
-		sf::Color outlineColor = {};
+		sf::Color outlineColor = { 0,0,0,0 };
+
 		float outlineThickness = 0.f;
 		float innerPadding = 0.f;
-		float childPadding = 16.f;
+		float childPadding = 16.f; // minimum distance between children
 
 		sf::Font* font = nullptr;
 		sf::Color textColor = {};

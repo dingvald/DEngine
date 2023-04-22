@@ -58,18 +58,18 @@ void drft::InventoryState::setupPanels()
 	_inventoryWindow.setSize(VIEW.getSize())
 		.setPosition(VIEW.getCenter())
 		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,150)
+			.fillColor = sf::Color(0,0,0,200)
 			})
-			.setChildrenAlignment(gui::ElementAlignment::CENTER)
+		.setChildrenAlignment(gui::ElementAlignment::CENTER)
 		.insertChild("ItemList", gui::List());
 
 	_inventoryWindow["ItemList"]
 		.setSize({ VIEW.getSize().x / 3, 3 * (VIEW.getSize().y / 4) })
 		.setPosition({ 0,0 })
 		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(50,50,50,200),
-			.outlineColor = sf::Color(50,50,50),
-			.outlineThickness = 2.0f,
+			.fillColor = sf::Color(0,0,0,100),
+			.outlineColor = sf::Color(255,255,255),
+			.outlineThickness = 1.0f,
 			.innerPadding = 32.0f,
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,

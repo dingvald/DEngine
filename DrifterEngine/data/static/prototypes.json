@@ -1,5 +1,37 @@
 {
   "Prototypes": [
+    // Grass
+    {
+      "Name": "Grass",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Grass",
+            "extendedName": "",
+            "description": "Just simple grass."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 6,
+            "color": [ 86, 125, 70 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        }
+      ]
+    },
     // Tree
     {
       "Name": "Tree",
@@ -20,7 +52,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 5,
-            "color": [ 68, 105, 61 ]
+            "color": [ 31, 51, 36 ]
           }
         },
         {
@@ -160,8 +192,8 @@
           "Name": "Actor",
           "Data": {
             "ap": 0,
-            "moveSpeed": 0.9,
-            "actSpeed": 0.9
+            "moveSpeed": 0.8,
+            "actSpeed": 1.6
           }
         },
         {
