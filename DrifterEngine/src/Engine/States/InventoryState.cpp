@@ -111,7 +111,7 @@ void drft::InventoryState::setupPanels()
 	{
 		for (int col = 0; col < INVENTORY_WIDTH; ++col)
 		{
-			auto& container = dynamic_cast<gui::Container&>(_inventoryGrid.insert(gui::SingleContainer()));
+			auto& container = _inventoryGrid.insert(gui::SingleContainer());
 
 			container.setSize({ 32, 32 });
 			container.setOrigin(gui::ElementPosition::TOP_LEFT);
@@ -122,7 +122,7 @@ void drft::InventoryState::setupPanels()
 				.outlineThickness = 1.f
 				});
 			container.setStyle(gui::ElementState::Focused, {
-				.fillColor = sf::Color(0,0,0,150),
+				.fillColor = sf::Color(40,40,0,150),
 				.outlineColor = sf::Color::Yellow,
 				.outlineThickness = 1.f
 				});

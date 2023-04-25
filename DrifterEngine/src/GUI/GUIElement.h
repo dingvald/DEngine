@@ -351,12 +351,12 @@ namespace drft::gui
 		using InsertedElement = Element;
 
 		template<typename T>
-		InsertedElement& insert(T&& child)
+		T& insert(T&& child)
 		{
 			static_assert(std::derived_from<T, Element>);
 			_children.push_back(std::make_unique<T>(std::move(child)));
 
-			return *_children.back();
+			return static_cast<T&>(*_children.back());
 		}
 		void remove(size_t index = 0)
 		{
