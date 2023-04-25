@@ -9,14 +9,13 @@ static constexpr int INVENTORY_HEIGHT = 8;
 
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
     : State(stack, context)
-{
-	
-}
+{}
 
 bool drft::InventoryState::handleEvent(const sf::Event& ev)
 {
 	_inventoryPanel.handleEvent(ev);
 	_inventoryGrid.handleEvent(ev);
+	_itemLabel.handleEvent(ev);
 
 	switch (ev.type)
 	{
@@ -36,6 +35,7 @@ bool drft::InventoryState::update(const float dt)
 {
 	_inventoryPanel.update(dt);
 	_inventoryGrid.update(dt);
+	_itemLabel.update(dt);
 
     return false;
 }
@@ -44,6 +44,7 @@ void drft::InventoryState::render(sf::RenderTarget& target)
 {
 	_inventoryPanel.render(target);
 	_inventoryGrid.render(target);
+	_itemLabel.render(target);
 }
 
 void drft::InventoryState::onPush()
@@ -73,7 +74,7 @@ void drft::InventoryState::setupPanels()
 		.fillColor = sf::Color(0,0,0,150),
 		.outlineColor = sf::Color(255,255,255,150),
 		.outlineThickness = 1.f,
-		.innerPadding = 16.f,
+		.innerPadding = 24.f,
 		.childPadding = 8.f,
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color::White
@@ -88,17 +89,17 @@ void drft::InventoryState::setupPanels()
 			int count = 0;
 			for (auto& item : entityContainer.contents)
 			{
-				auto itemEntity = util::ItemIDToEntityID(item, getContext().registry);
-				auto& itemRender = getContext().registry.get<component::Render>(itemEntity);
-				auto& sprites = getContext().textures.get("Sprites");
+				const auto itemEntity = util::ItemIDToEntityID(item, getContext().registry);
+				const auto& itemRender = getContext().registry.get<component::Render>(itemEntity);
+				const auto& sprites = getContext().textures.get("Sprites");
+
 				auto& container = dynamic_cast<gui::Container&>(this->_inventoryGrid[count]);
 				sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
-				container.remove();
-				container.insert(gui::Icon(sprite) )
+				container.clear();
+				container.insert(gui::Icon(sprite))
 					.setSize({ 32,32 })
 					.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-					.setStyle(gui::ElementState::Idle,
-						{
+					.setStyle(gui::ElementState::Idle, {
 							.fillColor = itemRender.color
 						});
 				container.layoutChildren();
@@ -124,17 +125,45 @@ void drft::InventoryState::setupPanels()
 			container.setStyle(gui::ElementState::Focused, {
 				.fillColor = sf::Color(40,40,0,150),
 				.outlineColor = sf::Color::Yellow,
-				.outlineThickness = 1.f
+				.outlineThickness = 1.f,
 				});
 			container.setStyle(gui::ElementState::Active, {
 				.fillColor = sf::Color(0,0,0,150),
 				.outlineColor = sf::Color::Red,
 				.outlineThickness = 1.f
 				});
+			container.registerCallback(gui::ElementCallbackType::OnFocus, [col, row, this, &entityContainer, &container]() -> bool {
+				const int index = col + INVENTORY_WIDTH * row;
+				if (index >= entityContainer.contents.size())
+				{
+					_itemLabel.setTextString("");
+					_itemLabel.setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+					return false;
+				}
+				const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
+				auto itemName = util::getEntityName({ getContext().registry, itemEntity });
+				_itemLabel.setTextString(std::move(itemName));
+				_itemLabel.setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+				return true;
+			});
 		}
 	}
-
 	_inventoryGrid.layoutChildren();
+
+	const auto gridRect = _inventoryGrid.getGlobalBounds();
+
+	_itemLabel.setSize({ 64, 16 });
+	_itemLabel.setOrigin(gui::ElementPosition::BOTTOM_CENTER);
+	_itemLabel.setTextOrigin(gui::ElementPosition::CENTER);
+	_itemLabel.setStyle(gui::ElementState::Idle, {
+		.fillColor = sf::Color(0,0,0,255),
+		.outlineColor = sf::Color(255,255,255,150),
+		.outlineThickness = 0.f,
+		.innerPadding = 2.f,
+		.font = &getContext().fonts.get("Terminus"),
+		.textColor = sf::Color::White
+		});
+
 }
 
 void drft::InventoryState::determineSessionEntities()

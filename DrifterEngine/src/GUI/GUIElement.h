@@ -129,6 +129,10 @@ namespace drft::gui
 
 			return *this; 
 		}
+		sf::Vector2f getPosition()
+		{
+			return _shape.getPosition();
+		}
 		Element& setOrigin(ElementPosition origin)
 		{
 			_origin = origin;
@@ -358,11 +362,15 @@ namespace drft::gui
 
 			return static_cast<T&>(*_children.back());
 		}
-		void remove(size_t index = 0)
+		void remove(size_t index)
 		{
 			if (_children.size() <= index) return;
 			auto itr = _children.begin() + index;
 			_children.erase(itr);
+		}
+		void clear()
+		{
+			_children.clear();
 		}
 
 		Element& operator[](size_t index)

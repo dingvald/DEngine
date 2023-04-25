@@ -26,6 +26,7 @@ namespace drft
 		std::vector<entt::entity> _sessionEntities;
 		gui::Panel _inventoryPanel;
 		gui::Grid _inventoryGrid{ 0,0 };
+		gui::Label _itemLabel;
 	};
 }
 

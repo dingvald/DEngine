@@ -451,8 +451,17 @@ sf::FloatRect drft::gui::Label::getLocalBounds() const
 	return _text.getLocalBounds();
 }
 
+void drft::gui::Label::onUpdate(const float dt)
+{
+	const auto rect = getLocalBounds();
+	_shape.setSize({ rect.width + _style[_state].innerPadding, rect.height + _style[_state].innerPadding });
+	setOrigin(_origin);
+	setTextOrigin(_textOrigin);
+}
+
 void drft::gui::Label::onRender(sf::RenderTarget& target)
 {
+	target.draw(_shape);
 	target.draw(_text);
 }
 
