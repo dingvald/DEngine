@@ -106,36 +106,21 @@ void drft::InventoryState::setupPanels()
 				.outlineColor = sf::Color(50,50,50),
 				.outlineThickness = 1.f,
 				})
-				.setStyle(gui::ElementState::Focused, {
-									.fillColor = sf::Color(10, 10, 10, 150),
-									.outlineColor = sf::Color::Yellow,
-									.outlineThickness = 1.f,
+			.setStyle(gui::ElementState::Focused, {
+						.fillColor = sf::Color(30, 30, 10, 150),
+						.outlineColor = sf::Color::Yellow,
+						.outlineThickness = 1.f,
 					})
-					.setStyle(gui::ElementState::Active, {
+			.setStyle(gui::ElementState::Active, {
 						.fillColor = sf::Color(10, 10, 10, 150),
 						.outlineColor = sf::Color::Yellow,
 						.outlineThickness = 1.f,
 						})
-						.setOrigin(gui::ElementOrigin::CENTER)
+			.setOrigin(gui::ElementOrigin::CENTER)
 			.setChildrenOrigin(gui::ElementAlignment::CENTER)
 			.insertChild("Icon", gui::Icon(sf::Sprite(texture, textureRect)))
 			.registerCallback(gui::ElementCallbackType::OnFocus, [this, itemEntity]() -> bool
 				{
-				gui::Window itemInfo;
-				itemInfo.setSize({ 64,96 })
-				.setPosition(VIEW.getCenter() + sf::Vector2f(192, -64))
-				.setStyle(gui::ElementState::Idle, {
-					.fillColor = sf::Color(0,0,0,100),
-					.outlineColor = sf::Color::White,
-					.outlineThickness = 1.0f,
-					.font = &getContext().fonts.get("Terminus"),
-					.textColor = sf::Color::White,
-					.textSize = 16
-					})
-				.setTextOrigin(gui::ElementOrigin::BOTTOM_CENTER)
-				.setTextPosition(gui::ElementTextPosition::TOP_CENTER);
-					_itemInfoWindow
-						.setTextString(util::getEntityName({ this->getContext().registry, itemEntity }));
 					return true;
 				});
 

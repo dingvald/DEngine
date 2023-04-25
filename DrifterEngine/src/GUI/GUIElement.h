@@ -68,12 +68,11 @@ namespace drft::gui
 		sf::Vector2f textScale = { 1.f, 1.f };
 	};
 
-	using ElementPtr = std::unique_ptr<Element>;
 
 	class Element
 	{
 	public:
-		
+		using ElementPtr = std::unique_ptr<Element>;
 
 		void onSelect()
 		{
@@ -90,7 +89,7 @@ namespace drft::gui
 			if (_callback.contains(ElementCallbackType::OnFocus)
 				&& _callback.at(ElementCallbackType::OnFocus))
 			{
-				_callback.at(ElementCallbackType::OnFocus)(*this);
+				_callback.at(ElementCallbackType::OnFocus)();
 			}
 		}
 		void onLeave()
@@ -424,7 +423,7 @@ namespace drft::gui
 
 	protected:
 		std::string _name;
-		std::unordered_map<ElementCallbackType, std::function<bool(Element&)> > _callback;
+		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
 		sf::RectangleShape _shape;
 		sf::Text _text;
 		ElementTextPosition _textPosition = ElementTextPosition::CENTER;
