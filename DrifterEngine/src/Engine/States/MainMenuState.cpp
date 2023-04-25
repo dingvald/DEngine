@@ -9,10 +9,10 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 		.setPosition(VIEW.getCenter())
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color::Black,
-			.innerPadding = 128.f,
+			.innerPadding = 160.f,
 			.childPadding = 64.f
 			})
-		.setChildrenAlignment(gui::ElementAlignment::TOP_CENTER)
+		.setChildrenOrigin(gui::ElementAlignment::TOP_CENTER)
 		.insertChild("Continue", gui::Button())
 		.insertChild("New Game", gui::Button())
 		.insertChild("Settings", gui::Button())

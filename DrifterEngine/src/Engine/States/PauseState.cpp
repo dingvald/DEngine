@@ -12,7 +12,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 			.innerPadding = 192.f,
 			.childPadding = 64.f
 			})
-		.setChildrenAlignment(gui::ElementAlignment::TOP_CENTER)
+		.setChildrenOrigin(gui::ElementAlignment::TOP_CENTER)
 		.insertChild("Continue", gui::Button())
 		.insertChild("Settings", gui::Button())
 		.insertChild("Exit", gui::Button());

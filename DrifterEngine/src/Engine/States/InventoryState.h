@@ -25,6 +25,7 @@ namespace drft
 	private:
 		std::vector<entt::entity> _sessionEntities;
 		gui::Window _inventoryWindow;
+		gui::Window _itemInfoWindow;
 	};
 }
 

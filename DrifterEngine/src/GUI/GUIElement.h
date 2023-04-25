@@ -3,16 +3,6 @@
 
 namespace drft::gui
 {
-	enum class ElementType
-	{
-		Window,
-		Label,
-		List,
-		Button,
-		Scrollbar,
-		Textfield,
-		Total
-	};
 	enum class ElementState
 	{
 		Unselectable,
@@ -78,10 +68,12 @@ namespace drft::gui
 		sf::Vector2f textScale = { 1.f, 1.f };
 	};
 
+	using ElementPtr = std::unique_ptr<Element>;
+
 	class Element
 	{
 	public:
-		using ElementPtr = std::unique_ptr<Element>;
+		
 
 		void onSelect()
 		{
@@ -98,7 +90,7 @@ namespace drft::gui
 			if (_callback.contains(ElementCallbackType::OnFocus)
 				&& _callback.at(ElementCallbackType::OnFocus))
 			{
-				_callback.at(ElementCallbackType::OnFocus)();
+				_callback.at(ElementCallbackType::OnFocus)(*this);
 			}
 		}
 		void onLeave()
@@ -124,8 +116,9 @@ namespace drft::gui
 		{ 
 			if (_parent)
 			{
-				position += _parent->_childAlignment;
+				position += _parent->_childOrigin;
 			}
+
 			_shape.setPosition(position); 
 			setTextPosition(_textPosition);
 
@@ -258,8 +251,11 @@ namespace drft::gui
 			return *this;
 		}
 
-		Element& setChildrenAlignment(ElementAlignment alignment, sf::Vector2f offset = {0,0})
+		Element& setChildrenOrigin(ElementAlignment alignment, sf::Vector2f offset = {0,0})
 		{
+			_childAlignment = alignment;
+			_childOffset = offset;
+
 			const float SHAPE_TOP = (_shape.getGlobalBounds().top);
 			const float SHAPE_LEFT = (_shape.getGlobalBounds().left);
 			const float SHAPE_BOTTOM = (SHAPE_TOP + _shape.getGlobalBounds().height);
@@ -270,28 +266,28 @@ namespace drft::gui
 			switch (alignment)
 			{
 			case ElementAlignment::TOP_RIGHT:
-				_childAlignment = { SHAPE_RIGHT, SHAPE_TOP };
+				_childOrigin = { SHAPE_RIGHT, SHAPE_TOP };
 				break;
 			case ElementAlignment::TOP_LEFT:
-				_childAlignment = { SHAPE_LEFT, SHAPE_TOP };
+				_childOrigin = { SHAPE_LEFT, SHAPE_TOP };
 				break;
 			case ElementAlignment::TOP_CENTER:
-				_childAlignment = { SHAPE_CENTER_X, SHAPE_TOP };
+				_childOrigin = { SHAPE_CENTER_X, SHAPE_TOP };
 				break;
 			case ElementAlignment::BOTTOM_CENTER:
-				_childAlignment = { SHAPE_CENTER_X, SHAPE_BOTTOM };
+				_childOrigin = { SHAPE_CENTER_X, SHAPE_BOTTOM };
 				break;
 			case ElementAlignment::BOTTOM_LEFT:
-				_childAlignment = { SHAPE_LEFT, SHAPE_BOTTOM };
+				_childOrigin = { SHAPE_LEFT, SHAPE_BOTTOM };
 				break;
 			case ElementAlignment::BOTTOM_RIGHT:
-				_childAlignment = { SHAPE_RIGHT, SHAPE_BOTTOM };
+				_childOrigin = { SHAPE_RIGHT, SHAPE_BOTTOM };
 				break;
 			case ElementAlignment::CENTER:
-				_childAlignment = { SHAPE_CENTER_X, SHAPE_CENTER_Y };
+				_childOrigin = { SHAPE_CENTER_X, SHAPE_CENTER_Y };
 				break;
 			}
-			_childAlignment += offset;
+			_childOrigin += offset;
 
 			return *this;
 		}
@@ -318,6 +314,7 @@ namespace drft::gui
 			_callback[type] = callback;
 			return *this;
 		}
+
 		template<typename T>
 		Element& insertChild(std::string name, T&& child)
 		{
@@ -325,7 +322,7 @@ namespace drft::gui
 			_children.push_back(std::make_unique<T>(std::move(child)));
 			_children.back()->_name = name;
 			_children.back()->_parent = this;
-			_children.back()->setPosition(determineChildPosition(_children.size()-1));
+			_children.back()->setPosition({0,0});
 			_childrenMap[name] = _children.size() - 1;
 
 			return *this;
@@ -354,14 +351,58 @@ namespace drft::gui
 			return _state;
 		}
 
+		virtual sf::FloatRect getGlobalBounds() const
+		{
+			return _shape.getGlobalBounds();
+		}
+		virtual sf::FloatRect getLocalBounds() const
+		{
+			return _shape.getLocalBounds();
+		}
+
+		virtual void init() {}
 		virtual bool handleEvent(const sf::Event& ev) = 0;
-		virtual bool update(const float dt) = 0;
-		virtual void render(sf::RenderTarget& target) = 0;
+		bool update(const float dt)
+		{
+			if (!_isInitialized)
+			{
+				init();
+				_isInitialized = true;
+			}
+			if (needsStyleUpdate())
+			{
+				applyStyle();
+			}
+
+			onUpdate(dt);
+			setChildrenOrigin(_childAlignment, _childOffset);
+			layoutChildren();
+
+			for (auto& child : _children)
+			{
+				child->update(dt);
+			}
+
+			return false;
+		}
+		void render(sf::RenderTarget& target)
+		{
+			onRender(target);
+			for (auto& child : _children)
+			{
+				child->render(target);
+			}
+		}
 
 	protected:
-		bool needsStyleUpdate() const
+		virtual void onUpdate(const float dt) {}
+		virtual void onRender(sf::RenderTarget& target) {}
+		virtual void layoutChildren() 
 		{
-			return _needsStyleUpdate;
+			for (auto& child : _children)
+			{
+				child->setPosition({ 0,0 });
+			}
 		}
 		virtual void applyStyle()
 		{
@@ -380,26 +421,32 @@ namespace drft::gui
 
 			_needsStyleUpdate = false;
 		}
-		virtual sf::Vector2f determineChildPosition(int childNum) const
-		{
-			return { 0,0 };
-		}
 
 	protected:
 		std::string _name;
-		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
+		std::unordered_map<ElementCallbackType, std::function<bool(Element&)> > _callback;
 		sf::RectangleShape _shape;
 		sf::Text _text;
 		ElementTextPosition _textPosition = ElementTextPosition::CENTER;
 		Element* _parent = nullptr;
 		std::unordered_map<std::string, size_t> _childrenMap;
 		std::vector<ElementPtr> _children;
-		sf::Vector2f _childAlignment;
+		ElementAlignment _childAlignment = gui::ElementAlignment::CENTER;
+		sf::Vector2f _childOffset = { 0,0 };
+		sf::Vector2f _childOrigin;
 		ElementState _state = ElementState::Idle;
 		ElementOrigin _origin = ElementOrigin::CENTER;
 		ElementOrigin _textOrigin = ElementOrigin::CENTER;
 		std::map<ElementState, Style> _style;
+
 	private:
+		bool needsStyleUpdate() const
+		{
+			return _needsStyleUpdate;
+		}
+
+	private:
+		bool _isInitialized = false;
 		bool _needsStyleUpdate = true;
 	};
 
@@ -407,58 +454,88 @@ namespace drft::gui
 	{
 	public:
 		bool handleEvent(const sf::Event& ev) override;
-		bool update(const float dt) override;
-		void render(sf::RenderTarget& target) override;
+
+	protected:
+		void onRender(sf::RenderTarget& target) override;
 	};
 
 	class List : public Element
 	{
 	public:
+		void init() override;
 		bool handleEvent(const sf::Event& ev) override;
-		bool update(const float dt) override;
-		void render(sf::RenderTarget& target) override;
 
 	protected:
-		sf::Vector2f determineChildPosition(int childNum) const override;
+		void onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
 
 	private:
 		void setStartingCursorPosition();
+		void layoutChildren() override;
 		void moveCursorDown();
 		void moveCursorUp();
 
 	private:
+		int _cursorPosition = 0;
+	};
+
+	// Auto-sizing - no need to set size
+	class Grid : public Element
+	{
+	public:
+		Grid(int columns, int rows);
+		bool handleEvent(const sf::Event& ev) override;
+
+	protected:
+		void onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
+
+	private:
+		void setStartingCursorPosition();
+		void autoSize();
+		void layoutChildren() override;
+		void moveCursorDown();
+		void moveCursorUp();
+		void moveCursorRight();
+		void moveCursorLeft();
+
+	private:
 		bool _isInitialized = false;
-		int _cursorIndex = 0;
+		int _numColumns;
+		int _numRows;
+		sf::Vector2i _cursorPosition = { 0, 0 };
 	};
 
 	class Label : public Element
 	{
 	public:
 		bool handleEvent(const sf::Event& ev) override;
-		bool update(const float dt) override;
-		void render(sf::RenderTarget& target) override;
+		sf::FloatRect getGlobalBounds() const override;
+		sf::FloatRect getLocalBounds() const override;
 
-	
+	protected:
+		void onRender(sf::RenderTarget& target) override;
 	};
 
 	class Button : public Element
 	{
 	public:
 		bool handleEvent(const sf::Event& ev) override;
-		bool update(const float dt) override;
-		void render(sf::RenderTarget& target) override;
+
+	protected:
+		void onRender(sf::RenderTarget& target) override;
 	};
 
 	class Icon : public Element
 	{
 	public:
 		Icon(sf::Sprite sprite);
-
+		void init() override;
 		bool handleEvent(const sf::Event& ev) override;
-		bool update(const float dt) override;
-		void render(sf::RenderTarget& target) override;
+
 	protected:
-		void applyStyle() override;
+		void onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
 
 	private:
 		sf::Sprite _sprite;

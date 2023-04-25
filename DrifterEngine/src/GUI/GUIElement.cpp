@@ -13,30 +13,18 @@ bool drft::gui::Window::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::gui::Window::update(const float dt)
-{
-	if (needsStyleUpdate())
-	{
-		applyStyle();
-	}
-	for (auto& child : _children)
-	{
-		child->update(dt);
-	}
-	return false;
-}
-
-void drft::gui::Window::render(sf::RenderTarget& target)
+void drft::gui::Window::onRender(sf::RenderTarget& target)
 {
 	target.draw(_shape);
 	target.draw(_text);
-	for (auto& child : _children)
-	{
-		child->render(target);
-	}
 }
 
 // LIST
+
+void drft::gui::List::init()
+{
+	setStartingCursorPosition();
+}
 
 bool drft::gui::List::handleEvent(const sf::Event& ev)
 {
@@ -55,7 +43,7 @@ bool drft::gui::List::handleEvent(const sf::Event& ev)
 		}
 		if (ev.key.code == sf::Keyboard::Space)
 		{
-			_children[_cursorIndex]->onSelect();
+			_children[_cursorPosition]->onSelect();
 			return false;
 		}
 		break;
@@ -64,18 +52,8 @@ bool drft::gui::List::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::gui::List::update(const float dt)
+void drft::gui::List::onUpdate(const float dt)
 {
-	if (!_isInitialized)
-	{
-		setStartingCursorPosition();
-		_isInitialized = true;
-	}
-	if (needsStyleUpdate())
-	{
-		applyStyle();
-	}
-
 	int count = 0;
 	for (auto& child : _children)
 	{
@@ -89,33 +67,18 @@ bool drft::gui::List::update(const float dt)
 			child->setState(ElementState::Unselectable);
 		}
 		
-		if (_cursorIndex == count)
+		if (_cursorPosition == count)
 		{
 			child->setState(ElementState::Focused);
 		}
 		++count;
 	}
-	for (auto& child : _children)
-	{
-		child->update(dt);
-	}
-
-	return false;
 }
 
-void drft::gui::List::render(sf::RenderTarget& target)
+void drft::gui::List::onRender(sf::RenderTarget& target)
 {
 	target.draw(_shape);
 	target.draw(_text);
-	for (auto& child : _children)
-	{
-		child->render(target);
-	}
-}
-
-sf::Vector2f drft::gui::List::determineChildPosition(int childNum) const
-{
-	return { 0, (childNum * _style.at(_state).childPadding) + _style.at(_state).innerPadding };
 }
 
 void drft::gui::List::setStartingCursorPosition()
@@ -131,7 +94,7 @@ void drft::gui::List::setStartingCursorPosition()
 			if (!isSelectionFound)
 			{
 				isSelectionFound = true;
-				_cursorIndex = count;
+				_cursorPosition = count;
 			}
 		}
 		else
@@ -139,12 +102,34 @@ void drft::gui::List::setStartingCursorPosition()
 			child->setState(ElementState::Unselectable);
 		}
 
-		if (_cursorIndex == count)
+		if (_cursorPosition == count)
 		{
 			child->setState(ElementState::Focused);
 		}
-		child->setPosition({ 0, (count * _style[_state].childPadding) + _style[_state].innerPadding });
 		++count;
+	}
+}
+
+void drft::gui::List::layoutChildren()
+{
+	float x = 0;
+	float y = _style.at(_state).innerPadding;
+	float maxWidth = 0;
+
+	for (auto& child : _children)
+	{
+		auto rect = child->getGlobalBounds();
+
+		if (y + rect.height > _shape.getSize().y)
+		{
+			x += maxWidth;
+			y = 0;
+			maxWidth = 0;
+		}
+
+		child->setPosition({ x, y });
+		y += rect.height + _style.at(_state).childPadding;
+		maxWidth = std::max(maxWidth, rect.width + _style.at(_state).childPadding);
 	}
 }
 
@@ -153,13 +138,13 @@ void drft::gui::List::moveCursorDown()
 	int safetyCount = 0;
 	do 
 	{
-		++_cursorIndex;
-		if (_cursorIndex >= _children.size())
+		++_cursorPosition;
+		if (_cursorPosition >= _children.size())
 		{
-			_cursorIndex = 0;
+			_cursorPosition = 0;
 		}
 		++safetyCount;
-	} while (!_children.at(_cursorIndex)->isSelectable() && safetyCount < _children.size());
+	} while (!_children.at(_cursorPosition)->isSelectable() && safetyCount < _children.size());
 }
 
 void drft::gui::List::moveCursorUp()
@@ -167,13 +152,247 @@ void drft::gui::List::moveCursorUp()
 	int safetyCount = 0;
 	do
 	{
-		--_cursorIndex;
-		if (_cursorIndex < 0)
+		--_cursorPosition;
+		if (_cursorPosition < 0)
 		{
-			_cursorIndex = _children.size() - 1;
+			_cursorPosition = _children.size() - 1;
 		}
 		++safetyCount;
-	} while (!_children.at(_cursorIndex)->isSelectable() && safetyCount < _children.size());
+	} while (!_children.at(_cursorPosition)->isSelectable() && safetyCount < _children.size());
+}
+
+// GRID
+
+drft::gui::Grid::Grid(int columns, int rows)
+	: _numColumns(columns)
+	, _numRows(rows)
+{}
+
+bool drft::gui::Grid::handleEvent(const sf::Event& ev)
+{
+	switch (ev.type)
+	{
+	case sf::Event::KeyPressed:
+		if (ev.key.code == sf::Keyboard::Numpad8 || ev.key.code == sf::Keyboard::Up)
+		{
+			moveCursorUp();
+			return false;
+		}
+		if (ev.key.code == sf::Keyboard::Numpad2 || ev.key.code == sf::Keyboard::Down)
+		{
+			moveCursorDown();
+			return false;
+		}
+		if (ev.key.code == sf::Keyboard::Numpad6 || ev.key.code == sf::Keyboard::Right)
+		{
+			moveCursorRight();
+			return false;
+		}
+		if (ev.key.code == sf::Keyboard::Numpad4 || ev.key.code == sf::Keyboard::Left)
+		{
+			moveCursorLeft();
+			return false;
+		}
+		if (ev.key.code == sf::Keyboard::Space)
+		{
+			_children.at(_cursorPosition.x + _numColumns*_cursorPosition.y)->onSelect();
+			return false;
+		}
+		break;
+	}
+
+	return false;
+}
+
+void drft::gui::Grid::onUpdate(const float dt)
+{
+	if (!_isInitialized)
+	{
+		setStartingCursorPosition();
+		_isInitialized = true;
+	}
+
+	autoSize();
+
+	int col = 0;
+	int row = 0;
+
+	for (auto& child : _children)
+	{
+		const bool isSelectable = child->isSelectable();
+		if (isSelectable)
+		{
+			child->setState(ElementState::Idle);
+		}
+		else
+		{
+			child->setState(ElementState::Unselectable);
+		}
+
+		if (_cursorPosition == sf::Vector2i(col, row))
+		{
+			child->setState(ElementState::Focused);
+			child->onFocus();
+		}
+
+		++col;
+
+		if (col >= _numColumns)
+		{
+			col = 0;
+			++row;
+		}
+	}
+}
+
+void drft::gui::Grid::onRender(sf::RenderTarget& target)
+{
+	target.draw(_shape);
+	target.draw(_text);
+}
+
+void drft::gui::Grid::setStartingCursorPosition()
+{
+	bool isSelectionFound = false;
+
+	for (int row = 0; row < _numRows; ++row)
+	{
+		for (int col = 0; col < _numColumns; ++col)
+		{
+			if ( (col + _numRows * row) >= _children.size()) return;
+			const auto& child = _children.at(col + _numRows * row);
+			const bool isSelectable = child->isSelectable();
+			if (isSelectable)
+			{
+				child->setState(ElementState::Idle);
+				if (!isSelectionFound)
+				{
+					isSelectionFound = true;
+					_cursorPosition = sf::Vector2i(col, row);
+				}
+			}
+			else
+			{
+				child->setState(ElementState::Unselectable);
+			}
+
+			if (_cursorPosition == sf::Vector2i(col, row))
+			{
+				child->setState(ElementState::Focused);
+			}
+		}
+	}
+}
+
+void drft::gui::Grid::autoSize()
+{
+	float widest_x = 0.0f;
+	float tallest_y = 0.0f;
+
+	for (const auto& child : _children)
+	{
+		widest_x = std::max(child->getGlobalBounds().width, widest_x);
+		tallest_y = std::max(child->getGlobalBounds().height, tallest_y);
+	}
+
+	float sum_x = _style[_state].innerPadding + (_numColumns * (_style[_state].childPadding)) + (_numColumns * widest_x);
+	float sum_y = _style[_state].innerPadding + (_numRows * (_style[_state].childPadding)) + (_numRows * tallest_y);
+
+	setSize({ sum_x, sum_y });
+	setChildrenOrigin(_childAlignment, _childOffset);
+	setPosition({ 0,0 });
+	setTextOrigin(gui::ElementOrigin::BOTTOM_CENTER);
+	setTextPosition(gui::ElementTextPosition::TOP_CENTER);
+	
+}
+
+void drft::gui::Grid::layoutChildren()
+{
+	int col = 0;
+	int row = 0;
+	float x = _style.at(_state).innerPadding;
+	float y = _style.at(_state).innerPadding;
+
+	float widest_x = 0.0f;
+	float tallest_y = 0.0f;
+
+	for (const auto& child : _children)
+	{
+		widest_x = std::max(child->getGlobalBounds().width, widest_x);
+		tallest_y = std::max(child->getGlobalBounds().height, tallest_y);
+	}
+
+	for (auto& child : _children)
+	{
+		child->setPosition({ x, y });
+
+		++col;
+		x += widest_x + _style.at(_state).childPadding;
+
+		if (col >= _numColumns)
+		{
+			col = 0;
+			++row;
+			x = _style.at(_state).innerPadding;
+			y += tallest_y + _style.at(_state).childPadding;
+		}
+	}
+}
+
+void drft::gui::Grid::moveCursorDown()
+{
+	do
+	{
+		++_cursorPosition.y;
+		if (_cursorPosition.y >= _numRows || (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
+		{
+			_cursorPosition.y = 0;
+		}
+	} while (!_children.at(_cursorPosition.x + _numColumns*_cursorPosition.y)->isSelectable());
+}
+
+void drft::gui::Grid::moveCursorUp()
+{
+	do
+	{
+		--_cursorPosition.y;
+		if (_cursorPosition.y < 0)
+		{
+			_cursorPosition.y = _numRows - 1;
+			while (_cursorPosition.x + (_cursorPosition.y * _numColumns) > (_children.size()-1))
+			{
+				--_cursorPosition.y;
+			}
+		}
+	} while (!_children.at(_cursorPosition.x + _numColumns * _cursorPosition.y)->isSelectable());
+}
+
+void drft::gui::Grid::moveCursorRight()
+{
+	do
+	{
+		++_cursorPosition.x;
+		if (_cursorPosition.x >= _numColumns || (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
+		{
+			_cursorPosition.x = 0;
+		}
+	} while (!_children.at(_cursorPosition.x + _numColumns * _cursorPosition.y)->isSelectable());
+}
+
+void drft::gui::Grid::moveCursorLeft()
+{
+	do
+	{
+		--_cursorPosition.x;
+		if (_cursorPosition.x < 0)
+		{
+			_cursorPosition.x = _numColumns - 1;
+			while (_cursorPosition.x + (_cursorPosition.y * _numColumns) > (_children.size() - 1))
+			{
+				--_cursorPosition.x;
+			}
+		}
+	} while (!_children.at(_cursorPosition.x + _numColumns * _cursorPosition.y)->isSelectable());
 }
 
 // LABEL
@@ -183,22 +402,19 @@ bool drft::gui::Label::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::gui::Label::update(const float dt)
+sf::FloatRect drft::gui::Label::getGlobalBounds() const
 {
-	if (needsStyleUpdate())
-	{
-		applyStyle();
-	}
-	return false;
+	return _text.getGlobalBounds();
 }
 
-void drft::gui::Label::render(sf::RenderTarget& target)
+sf::FloatRect drft::gui::Label::getLocalBounds() const
+{
+	return _text.getLocalBounds();
+}
+
+void drft::gui::Label::onRender(sf::RenderTarget& target)
 {
 	target.draw(_text);
-	for (auto& child : _children)
-	{
-		child->render(target);
-	}
 }
 
 // BUTTON
@@ -208,27 +424,10 @@ bool drft::gui::Button::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::gui::Button::update(const float dt)
-{
-	if (needsStyleUpdate())
-	{
-		applyStyle();
-	}
-	for (auto& child : _children)
-	{
-		child->update(dt);
-	}
-	return false;
-}
-
-void drft::gui::Button::render(sf::RenderTarget& target)
+void drft::gui::Button::onRender(sf::RenderTarget& target)
 {
 	target.draw(_shape);
 	target.draw(_text);
-	for (auto& child : _children)
-	{
-		child->render(target);
-	}
 }
 
 // ICON
@@ -237,39 +436,30 @@ drft::gui::Icon::Icon(sf::Sprite sprite)
 	: _sprite(sprite)
 {}
 
+void drft::gui::Icon::init()
+{
+	const auto spriteBounds = _sprite.getLocalBounds();
+	_sprite.setOrigin(spriteBounds.width / 2, spriteBounds.height / 2);
+	const auto shapeBounds = _shape.getSize();
+	const auto scalingFactorX = shapeBounds.x / spriteBounds.width;
+	const auto scalingFactorY = shapeBounds.y / spriteBounds.height;
+	_sprite.scale({ scalingFactorX, scalingFactorY });
+	
+}
+
 bool drft::gui::Icon::handleEvent(const sf::Event& ev)
 {
 	return true;
 }
 
-bool drft::gui::Icon::update(const float dt)
+void drft::gui::Icon::onUpdate(const float dt)
 {
-	if (needsStyleUpdate())
-	{
-		applyStyle();
-	}
+	_sprite.setColor(_style[_state].fillColor);
+	_sprite.setPosition(_shape.getPosition());
 	
-	return true;
 }
 
-void drft::gui::Icon::render(sf::RenderTarget& target)
+void drft::gui::Icon::onRender(sf::RenderTarget& target)
 {
 	target.draw(_sprite);
-	for (auto& child : _children)
-	{
-		child->render(target);
-	}
-}
-
-void drft::gui::Icon::applyStyle()
-{
-	Element::applyStyle();
-	_sprite.setColor(_style[_state].fillColor);
-	const auto spriteBounds = _sprite.getLocalBounds();
-	const auto shapeBounds = _shape.getSize();
-	const auto scalingFactorX = shapeBounds.x / spriteBounds.width;
-	const auto scalingFactorY = shapeBounds.y / spriteBounds.height;
-	_sprite.setOrigin(_shape.getOrigin());
-	_sprite.scale({ scalingFactorX, scalingFactorY });
-	_sprite.setPosition(_shape.getPosition());
 }
