@@ -129,7 +129,7 @@ namespace drft::gui
 
 			return *this; 
 		}
-		sf::Vector2f getPosition()
+		sf::Vector2f getPosition() const
 		{
 			return _shape.getPosition();
 		}
@@ -173,6 +173,10 @@ namespace drft::gui
 			_shape.setSize(size); 
 			setOrigin(_origin);
 			return *this;
+		}
+		sf::Vector2f getSize() const
+		{
+			return _shape.getSize();
 		}
 
 		// Sets the text displayed by the element string
@@ -355,27 +359,45 @@ namespace drft::gui
 		using InsertedElement = Element;
 
 		template<typename T>
-		T& insert(T&& child)
+		T& insert(std::string&& name, T&& child)
 		{
 			static_assert(std::derived_from<T, Element>);
 			_children.push_back(std::make_unique<T>(std::move(child)));
+			_childrenMap[name] = _children.size() - 1;
 
 			return static_cast<T&>(*_children.back());
 		}
-		void remove(size_t index)
+		void remove(std::string&& name)
 		{
-			if (_children.size() <= index) return;
-			auto itr = _children.begin() + index;
-			_children.erase(itr);
+			auto itr = _children.begin() + _childrenMap.at(name);
+			int lastIndex = _children.size() - 1;
+			for (auto& [key, val] : _childrenMap)
+			{
+				if (val == lastIndex)
+				{
+					val = _childrenMap.at(name);
+					break;
+				}
+			}
+
+			_childrenMap.erase(name);
+			std::iter_swap(itr, _children.end() - 1);
+			_children.pop_back();
 		}
 		void clear()
 		{
+			_childrenMap.clear();
 			_children.clear();
 		}
 
 		Element& operator[](size_t index)
 		{
 			return *_children.at(index);
+		}
+
+		Element& operator[](std::string&& name)
+		{
+			return *_children.at(_childrenMap.at(name));
 		}
 
 		virtual void layoutChildren() = 0;
@@ -427,16 +449,17 @@ namespace drft::gui
 		}
 
 	protected:
+		std::map<std::string, size_t> _childrenMap;
 		std::vector<ElementPtr> _children;
 		ElementPosition _childAlignment = ElementPosition::CENTER;
 		sf::Vector2f _childOffset = { 0,0 };
 		sf::Vector2f _childOrigin;
 	};
 
-	class Panel : public Element
+	class Blob : public Container
 	{
 	public:
-		bool handleEvent(const sf::Event& ev) override;
+		void layoutChildren() override;
 
 	protected:
 		void onUpdate(const float dt) override;
@@ -499,6 +522,16 @@ namespace drft::gui
 		int _numColumns;
 		int _numRows;
 		sf::Vector2i _cursorPosition = { 0, 0 };
+	};
+
+	class Panel : public Element
+	{
+	public:
+		bool handleEvent(const sf::Event& ev) override;
+
+	protected:
+		void onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
 	};
 
 	class Label : public Element

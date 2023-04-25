@@ -14,7 +14,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 			});	
 	_mainMenuWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER);
 
-	auto& cont = _mainMenuWindow.insert(gui::Button())
+	auto& cont = _mainMenuWindow.insert("Continue", gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -42,7 +42,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 				return true;
 			});
 
-	_mainMenuWindow.insert(gui::Button())
+	_mainMenuWindow.insert("New Game", gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -62,7 +62,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 				return true;
 			});
 
-	_mainMenuWindow.insert(gui::Button())
+	_mainMenuWindow.insert("Settings", gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -75,7 +75,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 			})
 		.setTextString("Settings");
 
-	_mainMenuWindow.insert(gui::Button())
+	_mainMenuWindow.insert("Exit", gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,

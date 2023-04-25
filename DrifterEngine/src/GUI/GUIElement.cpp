@@ -1,23 +1,32 @@
 #include "pch.h"
 #include "GUIElement.h"
 
-// PANEL
+// BLOB
 
-bool drft::gui::Panel::handleEvent(const sf::Event& ev)
+void drft::gui::Blob::layoutChildren()
 {
-	Element::handleEvent(ev);
-
-	return false;
+	for (auto& child : _children)
+	{
+		child->setPosition(child->getPosition() + _shape.getPosition() + _childOrigin);
+	}
 }
 
-void drft::gui::Panel::onUpdate(const float dt)
+void drft::gui::Blob::onUpdate(const float dt)
 {
+	for (auto& child : _children)
+	{
+		child->update(dt);
+	}
 }
 
-void drft::gui::Panel::onRender(sf::RenderTarget& target)
+void drft::gui::Blob::onRender(sf::RenderTarget& target)
 {
 	target.draw(_shape);
 	target.draw(_text);
+	for (auto& child : _children)
+	{
+		child->render(target);
+	}
 }
 
 // SINGLE CONTAINER
@@ -432,6 +441,25 @@ void drft::gui::Grid::moveCursorLeft()
 			}
 		}
 	} while (!_children.at(_cursorPosition.x + _numColumns * _cursorPosition.y)->isSelectable());
+}
+
+// PANEL
+
+bool drft::gui::Panel::handleEvent(const sf::Event& ev)
+{
+	Element::handleEvent(ev);
+
+	return false;
+}
+
+void drft::gui::Panel::onUpdate(const float dt)
+{
+}
+
+void drft::gui::Panel::onRender(sf::RenderTarget& target)
+{
+	target.draw(_shape);
+	target.draw(_text);
 }
 
 // LABEL

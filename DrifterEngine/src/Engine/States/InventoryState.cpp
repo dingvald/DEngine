@@ -96,7 +96,7 @@ void drft::InventoryState::setupPanels()
 				auto& container = dynamic_cast<gui::Container&>(this->_inventoryGrid[count]);
 				sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
 				container.clear();
-				container.insert(gui::Icon(sprite))
+				container.insert("Icon", gui::Icon(sprite))
 					.setSize({ 32,32 })
 					.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
 					.setStyle(gui::ElementState::Idle, {
@@ -112,7 +112,8 @@ void drft::InventoryState::setupPanels()
 	{
 		for (int col = 0; col < INVENTORY_WIDTH; ++col)
 		{
-			auto& container = _inventoryGrid.insert(gui::SingleContainer());
+			std::string elementName = std::to_string(col) + "-" + std::to_string(row);
+			auto& container = _inventoryGrid.insert(std::move(elementName), gui::SingleContainer());
 
 			container.setSize({ 32, 32 });
 			container.setOrigin(gui::ElementPosition::TOP_LEFT);
@@ -125,7 +126,7 @@ void drft::InventoryState::setupPanels()
 			container.setStyle(gui::ElementState::Focused, {
 				.fillColor = sf::Color(40,40,0,150),
 				.outlineColor = sf::Color::Yellow,
-				.outlineThickness = 1.f,
+				.outlineThickness = 2.f,
 				});
 			container.setStyle(gui::ElementState::Active, {
 				.fillColor = sf::Color(0,0,0,150),

@@ -14,7 +14,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 			});
 	_pauseWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER);
 
-	_pauseWindow.insert(gui::Button())
+	_pauseWindow.insert("Continue", gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -32,7 +32,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 				return true;
 			});
 
-	_pauseWindow.insert(gui::Button())
+	_pauseWindow.insert("Settings", gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -45,7 +45,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 			})
 		.setTextString("Settings");
 
-	_pauseWindow.insert(gui::Button())
+	_pauseWindow.insert("Exit", gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
