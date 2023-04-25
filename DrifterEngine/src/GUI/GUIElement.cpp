@@ -301,8 +301,8 @@ void drft::gui::Grid::autoSize()
 	setSize({ sum_x, sum_y });
 	setChildrenOrigin(_childAlignment, _childOffset);
 	setPosition({ 0,0 });
-	setTextOrigin(gui::ElementOrigin::BOTTOM_CENTER);
-	setTextPosition(gui::ElementTextPosition::TOP_CENTER);
+	setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
+	setTextPosition(gui::ElementPosition::TOP_CENTER);
 	
 }
 

@@ -16,8 +16,8 @@ drft::GameOverState::GameOverState(StateStack& stack, StateContext& context)
 			.textScale = {0.5, 0.5}
 			})
 		.setTextString("YOU DIED")
-		.setTextOrigin(gui::ElementOrigin::CENTER)
-		.setTextPosition(gui::ElementTextPosition::CENTER);
+		.setTextOrigin(gui::ElementPosition::CENTER)
+		.setTextPosition(gui::ElementPosition::CENTER);
 }
 
 bool drft::GameOverState::handleEvent(const sf::Event& ev)

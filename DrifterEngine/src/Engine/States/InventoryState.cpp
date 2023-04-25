@@ -64,7 +64,7 @@ void drft::InventoryState::setupPanels()
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,150)
 			})
-		.setChildrenOrigin(gui::ElementAlignment::CENTER)
+		.setChildrenOrigin(gui::ElementPosition::CENTER)
 		.insertChild("ItemGrid", gui::Grid(6, 8))
 		.insertChild("ItemInfo", gui::Window());
 
@@ -81,11 +81,9 @@ void drft::InventoryState::setupPanels()
 			.textSize = 16
 			})
 		.setTextString(util::getEntityName({ getContext().registry, _sessionEntities.front() }) + "'s Inventory")
-		.setTextOrigin(gui::ElementOrigin::BOTTOM_CENTER)
-		.setTextPosition(gui::ElementTextPosition::TOP_CENTER)
-		.setChildrenOrigin(gui::ElementAlignment::TOP_LEFT);
-
-	
+		.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER)
+		.setTextPosition(gui::ElementPosition::TOP_CENTER)
+		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
 	auto& container = getContext().registry.get<component::Container>(_sessionEntities.front());
 	int count = 0;
@@ -116,8 +114,8 @@ void drft::InventoryState::setupPanels()
 						.outlineColor = sf::Color::Yellow,
 						.outlineThickness = 1.f,
 						})
-			.setOrigin(gui::ElementOrigin::CENTER)
-			.setChildrenOrigin(gui::ElementAlignment::CENTER)
+			.setOrigin(gui::ElementPosition::CENTER)
+			.setChildrenOrigin(gui::ElementPosition::CENTER)
 			.insertChild("Icon", gui::Icon(sf::Sprite(texture, textureRect)))
 			.registerCallback(gui::ElementCallbackType::OnFocus, [this, itemEntity]() -> bool
 				{
@@ -130,7 +128,7 @@ void drft::InventoryState::setupPanels()
 			.setStyle(gui::ElementState::Idle, {
 				.fillColor = itemRender.color
 				})
-			.setOrigin(gui::ElementOrigin::CENTER);
+			.setOrigin(gui::ElementPosition::CENTER);
 
 		++count;
 	}

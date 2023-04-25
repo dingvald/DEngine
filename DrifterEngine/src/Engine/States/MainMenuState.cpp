@@ -12,7 +12,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 			.innerPadding = 160.f,
 			.childPadding = 64.f
 			})
-		.setChildrenOrigin(gui::ElementAlignment::TOP_CENTER)
+		.setChildrenOrigin(gui::ElementPosition::TOP_CENTER)
 		.insertChild("Continue", gui::Button())
 		.insertChild("New Game", gui::Button())
 		.insertChild("Settings", gui::Button())
