@@ -481,6 +481,7 @@ namespace drft::gui
 	class List : public Container
 	{
 	public:
+		List(bool canInteract);
 		void init() override;
 		bool handleEvent(const sf::Event& ev) override;
 		void layoutChildren() override;
@@ -496,6 +497,7 @@ namespace drft::gui
 
 	private:
 		int _cursorPosition = 0;
+		bool _canInteract = false;
 	};
 
 	class Grid : public Container

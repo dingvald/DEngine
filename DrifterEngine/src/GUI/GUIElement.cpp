@@ -61,6 +61,10 @@ void drft::gui::SingleContainer::onRender(sf::RenderTarget& target)
 
 // LIST
 
+drft::gui::List::List(bool canInteract)
+	: _canInteract(canInteract)
+{}
+
 void drft::gui::List::init()
 {
 	setStartingCursorPosition();
@@ -98,6 +102,7 @@ void drft::gui::List::onUpdate(const float dt)
 	for (auto& child : _children)
 	{
 		child->update(dt);
+		if (!_canInteract) continue;
 		const bool isSelectable = child->isSelectable();
 		if (isSelectable)
 		{
@@ -128,6 +133,7 @@ void drft::gui::List::onRender(sf::RenderTarget& target)
 
 void drft::gui::List::setStartingCursorPosition()
 {
+	if (!_canInteract) return;
 	int count = 0;
 	bool isSelectionFound = false;
 	for (auto& child : _children)

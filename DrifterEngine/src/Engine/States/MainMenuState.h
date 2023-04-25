@@ -24,7 +24,7 @@ namespace drft
 		bool hasSaveFile() const;
 
 	private:
-		gui::List _mainMenuWindow;
+		gui::List _mainMenuWindow{ true };
 	};
 }
 
