@@ -22,9 +22,10 @@ namespace drft::gui
 		CENTER_RIGHT,
 		CENTER
 	};
-
 	enum class ElementCallbackType
 	{
+		OnUpdate,
+		OnRender,
 		OnSelect,
 		OnFocus,
 		OnLeave,
@@ -46,13 +47,18 @@ namespace drft::gui
 		sf::Vector2f textScale = { 1.f, 1.f };
 	};
 
+	class Container;
+
 	class Element
 	{
 	public:
 		using ElementPtr = std::unique_ptr<Element>;
-
 		virtual void init() {}
-		virtual bool handleEvent(const sf::Event& ev) = 0;
+		virtual bool handleEvent(const sf::Event& ev) 
+		{
+			return false;
+		}
+
 		bool update(const float dt)
 		{
 			if (!_isInitialized)
@@ -61,15 +67,13 @@ namespace drft::gui
 				_isInitialized = true;
 			}
 
+			if (_callback.contains(ElementCallbackType::OnUpdate)
+				&& _callback.at(ElementCallbackType::OnUpdate))
+			{
+				_callback.at(ElementCallbackType::OnUpdate)();
+			}
 			onUpdate(dt);
 			applyStyle();
-			setChildrenOrigin(_childAlignment, _childOffset);
-			layoutChildren();
-
-			for (auto& child : _children)
-			{
-				child->update(dt);
-			}
 
 			return false;
 		}
@@ -78,10 +82,6 @@ namespace drft::gui
 			if (_isVisible)
 			{
 				onRender(target);
-			}
-			for (auto& child : _children)
-			{
-				child->render(target);
 			}
 		}
 
@@ -124,11 +124,6 @@ namespace drft::gui
 
 		Element& setPosition(sf::Vector2f position)
 		{ 
-			if (_parent)
-			{
-				position += _parent->_childOrigin;
-			}
-
 			_shape.setPosition(position); 
 			setTextPosition(_textPosition);
 
@@ -186,6 +181,7 @@ namespace drft::gui
 		// Sets the text position relative to the element shape
 		Element& setTextPosition(ElementPosition position)
 		{ 
+			_textPosition = position;
 			const float SHAPE_TOP = round(_shape.getGlobalBounds().top);
 			const float SHAPE_LEFT = round(_shape.getGlobalBounds().left);
 			const float SHAPE_BOTTOM = round(SHAPE_TOP + _shape.getGlobalBounds().height);
@@ -263,9 +259,119 @@ namespace drft::gui
 			}
 			return *this;
 		}
+		// Sets the visual style of the element for a given state
+		Element& setStyle(ElementState state, Style&& style)
+		{ 
+			_style[state] = style;
+			if (_state == state)
+			{
+				applyStyle();
+			}
 
-		// Sets the position from which all children are placed
-		Element& setChildrenOrigin(ElementPosition origin, sf::Vector2f offset = {0,0})
+			return *this;
+		}
+		Style& modifyStyle(ElementState state)
+		{
+			return _style.at(state);
+		}
+
+		Element& registerCallback(ElementCallbackType type, std::function<bool()> callback)
+		{
+			_callback[type] = callback;
+			return *this;
+		}
+
+		bool isVisible() const
+		{
+			return _isVisible;
+		}
+		void setVisibility(bool isVisible)
+		{
+			_isVisible = isVisible;
+		}
+
+		void setState(ElementState state)
+		{
+			_state = state;
+		}
+		ElementState getState() const
+		{
+			return _state;
+		}
+
+		virtual sf::FloatRect getGlobalBounds() const
+		{
+			return _shape.getGlobalBounds();
+		}
+		virtual sf::FloatRect getLocalBounds() const
+		{
+			return _shape.getLocalBounds();
+		}
+
+	protected:
+		virtual void onUpdate(const float dt) = 0;
+		virtual void onRender(sf::RenderTarget& target) = 0;
+
+	private:
+		virtual void applyStyle()
+		{
+			_shape.setFillColor(_style[_state].fillColor);
+			_shape.setOutlineColor(_style[_state].outlineColor);
+			_shape.setOutlineThickness(_style[_state].outlineThickness);
+
+			_text.setFont(*_style[_state].font);
+			_text.setFillColor(_style[_state].textColor);
+			_text.setCharacterSize(_style[_state].textSize);
+			_text.setScale(_style[_state].textScale);
+
+			setTextOrigin(_textOrigin);
+			setTextPosition(_textPosition);
+		}
+
+	protected:
+		std::string _name;
+		sf::RectangleShape _shape;
+		sf::Text _text;
+		ElementState _state = ElementState::Idle;
+		ElementPosition _origin = ElementPosition::CENTER;
+		ElementPosition _textOrigin = ElementPosition::CENTER;
+		ElementPosition _textPosition = ElementPosition::CENTER;
+		std::map<ElementState, Style> _style;
+		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
+
+	private:
+		bool _isVisible = true;
+		bool _isInitialized = false;
+	};
+
+	class Container : public Element
+	{
+	public:
+		using ElementPtr = std::unique_ptr<Element>;
+		using InsertedElement = Element;
+
+		template<typename T>
+		InsertedElement& insert(T&& child)
+		{
+			static_assert(std::derived_from<T, Element>);
+			_children.push_back(std::make_unique<T>(std::move(child)));
+
+			return *_children.back();
+		}
+		void remove(size_t index = 0)
+		{
+			if (_children.size() <= index) return;
+			auto itr = _children.begin() + index;
+			_children.erase(itr);
+		}
+
+		Element& operator[](size_t index)
+		{
+			return *_children.at(index);
+		}
+
+		virtual void layoutChildren() = 0;
+		Element& setChildrenOrigin(ElementPosition origin, sf::Vector2f offset = { 0,0 })
 		{
 			_childAlignment = origin;
 			_childOffset = offset;
@@ -312,145 +418,41 @@ namespace drft::gui
 			return *this;
 		}
 
-		// Sets the visual style of the element for a given state
-		Element& setStyle(ElementState state, Style&& style)
-		{ 
-			_style[state] = style;
-			return *this;
-		}
-		Style& modifyStyle(ElementState state)
-		{
-			return _style.at(state);
-		}
-
-		Element& registerCallback(ElementCallbackType type, std::function<bool()> callback)
-		{
-			_callback[type] = callback;
-			return *this;
-		}
-
-		bool isVisible() const
-		{
-			return _isVisible;
-		}
-		void setVisibility(bool isVisible, bool affectsChildren = false)
-		{
-			_isVisible = isVisible;
-			if (affectsChildren)
-			{
-				for (auto& child : _children)
-				{
-					child->setVisibility(isVisible, true);
-				}
-			}
-		}
-
-		template<typename T>
-		Element& insertChild(std::string name, T&& child)
-		{
-			static_assert(std::derived_from<T, Element>);
-			_children.push_back(std::make_unique<T>(std::move(child)));
-			_children.back()->_name = name;
-			_children.back()->_parent = this;
-			_children.back()->setPosition({0,0});
-			_childrenMap[name] = _children.size() - 1;
-
-			return *this;
-		}
-		Element& removeChild(std::string name)
-		{
-
-			_childrenMap.erase(name);
-		}
-		Element& operator[](std::string name)
-		{
-			if (!_childrenMap.contains(name))
-			{
-				throw std::exception("Map does not contain name");
-			}
-			return *_children.at(_childrenMap.at(name));
-		}
-
-		void setState(ElementState state)
-		{
-			_state = state;
-		}
-		ElementState getState() const
-		{
-			return _state;
-		}
-
-		virtual sf::FloatRect getGlobalBounds() const
-		{
-			return _shape.getGlobalBounds();
-		}
-		virtual sf::FloatRect getLocalBounds() const
-		{
-			return _shape.getLocalBounds();
-		}
-
 	protected:
-		virtual void onUpdate(const float dt) {}
-		virtual void onRender(sf::RenderTarget& target) {}
-		virtual void layoutChildren() 
-		{
-			for (auto& child : _children)
-			{
-				child->setPosition({ 0,0 });
-			}
-		}
-		virtual void applyStyle()
-		{
-			_shape.setFillColor(_style[_state].fillColor);
-			_shape.setOutlineColor(_style[_state].outlineColor);
-			_shape.setOutlineThickness(_style[_state].outlineThickness);
-
-			_text.setFont(*_style[_state].font);
-			_text.setFillColor(_style[_state].textColor);
-			_text.setCharacterSize(_style[_state].textSize);
-			_text.setScale(_style[_state].textScale);
-
-			setTextOrigin(_textOrigin);
-			setTextPosition(_textPosition);
-		}
-
-	protected:
-		std::string _name;
-		sf::RectangleShape _shape;
-		sf::Text _text;
-		ElementState _state = ElementState::Idle;
-		ElementPosition _origin = ElementPosition::CENTER;
-		ElementPosition _textOrigin = ElementPosition::CENTER;
-		ElementPosition _textPosition = ElementPosition::CENTER;
-		std::map<ElementState, Style> _style;
-		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
-		
-		Element* _parent = nullptr;
-		std::unordered_map<std::string, size_t> _childrenMap;
 		std::vector<ElementPtr> _children;
 		ElementPosition _childAlignment = ElementPosition::CENTER;
 		sf::Vector2f _childOffset = { 0,0 };
 		sf::Vector2f _childOrigin;
-
-	private:
-		bool _isVisible = true;
-		bool _isInitialized = false;
 	};
 
-	class Window : public Element
+	class Panel : public Element
 	{
 	public:
 		bool handleEvent(const sf::Event& ev) override;
 
 	protected:
+		void onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 	};
 
-	class List : public Element
+	class SingleContainer : public Container
+	{
+	public:
+		void init() override;
+		void layoutChildren() override;
+
+	protected:
+		void onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
+
+	};
+
+	class List : public Container
 	{
 	public:
 		void init() override;
 		bool handleEvent(const sf::Event& ev) override;
+		void layoutChildren() override;
 
 	protected:
 		void onUpdate(const float dt) override;
@@ -458,7 +460,6 @@ namespace drft::gui
 
 	private:
 		void setStartingCursorPosition();
-		void layoutChildren() override;
 		void moveCursorDown();
 		void moveCursorUp();
 
@@ -466,12 +467,12 @@ namespace drft::gui
 		int _cursorPosition = 0;
 	};
 
-	// Auto-sizing - no need to set size
-	class Grid : public Element
+	class Grid : public Container
 	{
 	public:
 		Grid(int columns, int rows);
 		bool handleEvent(const sf::Event& ev) override;
+		void layoutChildren() override;
 
 	protected:
 		void onUpdate(const float dt) override;
@@ -480,7 +481,6 @@ namespace drft::gui
 	private:
 		void setStartingCursorPosition();
 		void autoSize();
-		void layoutChildren() override;
 		void moveCursorDown();
 		void moveCursorUp();
 		void moveCursorRight();
@@ -501,15 +501,14 @@ namespace drft::gui
 		sf::FloatRect getLocalBounds() const override;
 
 	protected:
+		void onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 	};
 
 	class Button : public Element
 	{
-	public:
-		bool handleEvent(const sf::Event& ev) override;
-
 	protected:
+		void onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 	};
 
@@ -518,7 +517,6 @@ namespace drft::gui
 	public:
 		Icon(sf::Sprite sprite);
 		void init() override;
-		bool handleEvent(const sf::Event& ev) override;
 
 	protected:
 		void onUpdate(const float dt) override;

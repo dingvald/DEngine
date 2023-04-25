@@ -15,7 +15,7 @@ namespace drft
 		void render(sf::RenderTarget& target);
 
 	private:
-		gui::Window _gameOverWindow;
+		gui::Panel _gameOverPanel;
 	};
 }
 

@@ -1,22 +1,53 @@
 #include "pch.h"
 #include "GUIElement.h"
 
-// WINDOW
+// PANEL
 
-bool drft::gui::Window::handleEvent(const sf::Event& ev)
+bool drft::gui::Panel::handleEvent(const sf::Event& ev)
 {
-	for (auto& child : _children)
-	{
-		child->handleEvent(ev);
-	}
+	Element::handleEvent(ev);
 
 	return false;
 }
 
-void drft::gui::Window::onRender(sf::RenderTarget& target)
+void drft::gui::Panel::onUpdate(const float dt)
+{
+}
+
+void drft::gui::Panel::onRender(sf::RenderTarget& target)
 {
 	target.draw(_shape);
 	target.draw(_text);
+}
+
+// SINGLE CONTAINER
+
+void drft::gui::SingleContainer::init()
+{
+}
+
+void drft::gui::SingleContainer::layoutChildren()
+{
+	_children.front()->setPosition(_shape.getPosition() + _childOrigin);
+}
+
+void drft::gui::SingleContainer::onUpdate(const float dt)
+{
+	for (auto& child : _children)
+	{
+		child->update(dt);
+		break;
+	}
+}
+
+void drft::gui::SingleContainer::onRender(sf::RenderTarget& target)
+{
+	target.draw(_shape);
+	for (auto& child : _children)
+	{
+		child->render(target);
+		break;
+	}
 }
 
 // LIST
@@ -57,6 +88,7 @@ void drft::gui::List::onUpdate(const float dt)
 	int count = 0;
 	for (auto& child : _children)
 	{
+		child->update(dt);
 		const bool isSelectable = child->isSelectable();
 		if (isSelectable)
 		{
@@ -79,6 +111,10 @@ void drft::gui::List::onRender(sf::RenderTarget& target)
 {
 	target.draw(_shape);
 	target.draw(_text);
+	for (auto& child : _children)
+	{
+		child->render(target);
+	}
 }
 
 void drft::gui::List::setStartingCursorPosition()
@@ -127,7 +163,7 @@ void drft::gui::List::layoutChildren()
 			maxWidth = 0;
 		}
 
-		child->setPosition({ x, y });
+		child->setPosition({ x + _childOrigin.x, y + _childOrigin.y });
 		y += rect.height + _style.at(_state).childPadding;
 		maxWidth = std::max(maxWidth, rect.width + _style.at(_state).childPadding);
 	}
@@ -212,13 +248,13 @@ void drft::gui::Grid::onUpdate(const float dt)
 		_isInitialized = true;
 	}
 
-	autoSize();
-
 	int col = 0;
 	int row = 0;
 
 	for (auto& child : _children)
 	{
+		child->update(dt);
+
 		const bool isSelectable = child->isSelectable();
 		if (isSelectable)
 		{
@@ -249,6 +285,10 @@ void drft::gui::Grid::onRender(sf::RenderTarget& target)
 {
 	target.draw(_shape);
 	target.draw(_text);
+	for (auto& child : _children)
+	{
+		child->render(target);
+	}
 }
 
 void drft::gui::Grid::setStartingCursorPosition()
@@ -295,23 +335,22 @@ void drft::gui::Grid::autoSize()
 		tallest_y = std::max(child->getGlobalBounds().height, tallest_y);
 	}
 
-	float sum_x = _style[_state].innerPadding + (_numColumns * (_style[_state].childPadding)) + (_numColumns * widest_x);
-	float sum_y = _style[_state].innerPadding + (_numRows * (_style[_state].childPadding)) + (_numRows * tallest_y);
+	float sum_x = 2*_style[_state].innerPadding + ((_numColumns-1) * (_style[_state].childPadding)) + (_numColumns * widest_x);
+	float sum_y = 2*_style[_state].innerPadding + ((_numRows-1) * (_style[_state].childPadding)) + (_numRows * tallest_y);
 
 	setSize({ sum_x, sum_y });
-	setChildrenOrigin(_childAlignment, _childOffset);
-	setPosition({ 0,0 });
-	setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
-	setTextPosition(gui::ElementPosition::TOP_CENTER);
-	
+	setTextOrigin(_textOrigin);
+	setTextPosition(_textPosition);
 }
 
 void drft::gui::Grid::layoutChildren()
 {
+	autoSize();
+
 	int col = 0;
 	int row = 0;
-	float x = _style.at(_state).innerPadding;
-	float y = _style.at(_state).innerPadding;
+	float x = _style.at(_state).innerPadding + _shape.getGlobalBounds().left;
+	float y = _style.at(_state).innerPadding + _shape.getGlobalBounds().top;
 
 	float widest_x = 0.0f;
 	float tallest_y = 0.0f;
@@ -333,7 +372,7 @@ void drft::gui::Grid::layoutChildren()
 		{
 			col = 0;
 			++row;
-			x = _style.at(_state).innerPadding;
+			x = _style.at(_state).innerPadding + _shape.getGlobalBounds().left;
 			y += tallest_y + _style.at(_state).childPadding;
 		}
 	}
@@ -419,9 +458,8 @@ void drft::gui::Label::onRender(sf::RenderTarget& target)
 
 // BUTTON
 
-bool drft::gui::Button::handleEvent(const sf::Event& ev)
+void drft::gui::Button::onUpdate(const float dt)
 {
-	return false;
 }
 
 void drft::gui::Button::onRender(sf::RenderTarget& target)
@@ -444,12 +482,6 @@ void drft::gui::Icon::init()
 	const auto scalingFactorX = shapeBounds.x / spriteBounds.width;
 	const auto scalingFactorY = shapeBounds.y / spriteBounds.height;
 	_sprite.scale({ scalingFactorX, scalingFactorY });
-	
-}
-
-bool drft::gui::Icon::handleEvent(const sf::Event& ev)
-{
-	return true;
 }
 
 void drft::gui::Icon::onUpdate(const float dt)
@@ -461,5 +493,8 @@ void drft::gui::Icon::onUpdate(const float dt)
 
 void drft::gui::Icon::onRender(sf::RenderTarget& target)
 {
+	//target.draw(_shape);
 	target.draw(_sprite);
 }
+
+

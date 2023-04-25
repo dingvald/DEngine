@@ -11,43 +11,38 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 			.fillColor = sf::Color::Black,
 			.innerPadding = 160.f,
 			.childPadding = 64.f
-			})
-		.setChildrenOrigin(gui::ElementPosition::TOP_CENTER)
-		.insertChild("Continue", gui::Button())
-		.insertChild("New Game", gui::Button())
-		.insertChild("Settings", gui::Button())
-		.insertChild("Exit", gui::Button());
+			});	
+	_mainMenuWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER);
 
-	_mainMenuWindow["Continue"]
+	auto& cont = _mainMenuWindow.insert(gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
 			.textSize = 32
-			})
+		})
 		.setStyle(gui::ElementState::Focused, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::Yellow,
 			.textSize = 32
-			})
+		})
 		.setStyle(gui::ElementState::Unselectable, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color(50,50,50),
 			.textSize = 32
-			})
+		}) 
 		.setTextString("Continue")
-		.registerCallback(gui::ElementCallbackType::OnIsSelectable, [this]() 
-			{
-				return this->hasSaveFile();
-			})
-		.registerCallback(gui::ElementCallbackType::OnSelect, [this]() 
+		.registerCallback(gui::ElementCallbackType::OnIsSelectable, [this]()
+		{
+			return this->hasSaveFile();
+		})
+		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
 			{
 				this->requestStackClear();
 				this->requestStackPush(States::Game);
 				return true;
-			}
-		);
+			});
 
-	_mainMenuWindow["New Game"]
+	_mainMenuWindow.insert(gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -65,10 +60,9 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 				this->requestStackClear();
 				this->requestStackPush(States::Game);
 				return true;
-			}
-		);
+			});
 
-	_mainMenuWindow["Settings"]
+	_mainMenuWindow.insert(gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -81,7 +75,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 			})
 		.setTextString("Settings");
 
-	_mainMenuWindow["Exit"]
+	_mainMenuWindow.insert(gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -97,9 +91,9 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 			{
 				this->requestStackClear();
 				return true;
-			}
-		);
+			});
 	
+	_mainMenuWindow.layoutChildren();
 }
 
 bool drft::MainMenuState::handleEvent(const sf::Event& ev)

@@ -24,8 +24,8 @@ namespace drft
 
 	private:
 		std::vector<entt::entity> _sessionEntities;
-		gui::Window _inventoryWindow;
-		gui::Window _itemInfoWindow;
+		gui::Panel _inventoryPanel;
+		gui::Grid _inventoryGrid{ 0,0 };
 	};
 }
 

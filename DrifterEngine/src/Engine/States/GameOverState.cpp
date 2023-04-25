@@ -6,7 +6,7 @@ drft::GameOverState::GameOverState(StateStack& stack, StateContext& context)
 {
 	const auto& VIEW = getContext().window.getView();
 
-	_gameOverWindow.setSize({ VIEW.getSize().x, VIEW.getSize().y / 5 })
+	_gameOverPanel.setSize({ VIEW.getSize().x, VIEW.getSize().y / 5 })
 		.setPosition(VIEW.getCenter())
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,0),
@@ -38,13 +38,13 @@ bool drft::GameOverState::handleEvent(const sf::Event& ev)
 
 bool drft::GameOverState::update(const float dt)
 {
-	_gameOverWindow.update(dt);
+	_gameOverPanel.update(dt);
 
 	static float elapsedTime = 0.0f;
 
 	if (elapsedTime > 0.1)
 	{
-		auto& style = _gameOverWindow.modifyStyle(_gameOverWindow.getState());
+		auto& style = _gameOverPanel.modifyStyle(_gameOverPanel.getState());
 		style.textScale.x = std::min(style.textScale.x + 0.1f, 3.f);
 		style.textScale.y = std::min(style.textScale.y + 0.1f, 3.f);
 		int alpha = style.fillColor.a;
@@ -60,5 +60,5 @@ bool drft::GameOverState::update(const float dt)
 
 void drft::GameOverState::render(sf::RenderTarget& target)
 {
-	_gameOverWindow.render(target);
+	_gameOverPanel.render(target);
 }

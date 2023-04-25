@@ -8,16 +8,13 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 	_pauseWindow.setSize(VIEW.getSize())
 		.setPosition(VIEW.getCenter())
 		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,150),
+			.fillColor = sf::Color(0,0,0,100),
 			.innerPadding = 192.f,
 			.childPadding = 64.f
-			})
-		.setChildrenOrigin(gui::ElementPosition::TOP_CENTER)
-		.insertChild("Continue", gui::Button())
-		.insertChild("Settings", gui::Button())
-		.insertChild("Exit", gui::Button());
+			});
+	_pauseWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER);
 
-	_pauseWindow["Continue"]
+	_pauseWindow.insert(gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -35,7 +32,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 				return true;
 			});
 
-	_pauseWindow["Settings"]
+	_pauseWindow.insert(gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -48,7 +45,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 			})
 		.setTextString("Settings");
 
-	_pauseWindow["Exit"]
+	_pauseWindow.insert(gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textColor = sf::Color::White,
@@ -66,6 +63,8 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 				this->requestStackPush(States::MainMenu);
 				return true;
 			});
+
+	_pauseWindow.layoutChildren();
 }
 
 bool drft::PauseState::handleEvent(const sf::Event& ev)
