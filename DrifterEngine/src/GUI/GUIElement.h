@@ -38,7 +38,7 @@ namespace drft::gui
 		sf::Color outlineColor = { 0,0,0,0 };
 
 		float outlineThickness = 0.f;
-		float innerPadding = 0.f;
+		float innerPadding = 0.f; // Space between outer edge and inner children
 		float childPadding = 16.f; // minimum distance between children
 
 		sf::Font* font = nullptr;
@@ -46,8 +46,6 @@ namespace drft::gui
 		int textSize = 16;
 		sf::Vector2f textScale = { 1.f, 1.f };
 	};
-
-	class Container;
 
 	class Element
 	{
@@ -72,6 +70,7 @@ namespace drft::gui
 			{
 				_callback.at(ElementCallbackType::OnUpdate)();
 			}
+
 			onUpdate(dt);
 			applyStyle();
 
@@ -177,6 +176,14 @@ namespace drft::gui
 		sf::Vector2f getSize() const
 		{
 			return _shape.getSize();
+		}
+		virtual sf::FloatRect getGlobalBounds() const
+		{
+			return _shape.getGlobalBounds();
+		}
+		virtual sf::FloatRect getLocalBounds() const
+		{
+			return _shape.getLocalBounds();
 		}
 
 		// Sets the text displayed by the element string
@@ -307,15 +314,6 @@ namespace drft::gui
 			return _state;
 		}
 
-		virtual sf::FloatRect getGlobalBounds() const
-		{
-			return _shape.getGlobalBounds();
-		}
-		virtual sf::FloatRect getLocalBounds() const
-		{
-			return _shape.getLocalBounds();
-		}
-
 	protected:
 		virtual void onUpdate(const float dt) = 0;
 		virtual void onRender(sf::RenderTarget& target) = 0;
@@ -337,7 +335,6 @@ namespace drft::gui
 		}
 
 	protected:
-		std::string _name;
 		sf::RectangleShape _shape;
 		sf::Text _text;
 		ElementState _state = ElementState::Idle;
@@ -345,9 +342,9 @@ namespace drft::gui
 		ElementPosition _textOrigin = ElementPosition::CENTER;
 		ElementPosition _textPosition = ElementPosition::CENTER;
 		std::map<ElementState, Style> _style;
-		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
 
 	private:
+		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
 		bool _isVisible = true;
 		bool _isInitialized = false;
 	};
@@ -394,13 +391,11 @@ namespace drft::gui
 		{
 			return *_children.at(index);
 		}
-
 		Element& operator[](std::string&& name)
 		{
 			return *_children.at(_childrenMap.at(name));
 		}
 
-		virtual void layoutChildren() = 0;
 		Element& setChildrenOrigin(ElementPosition origin, sf::Vector2f offset = { 0,0 })
 		{
 			_childAlignment = origin;
@@ -447,6 +442,8 @@ namespace drft::gui
 
 			return *this;
 		}
+		virtual void layoutChildren() = 0;
+		
 
 	protected:
 		std::map<std::string, size_t> _childrenMap;

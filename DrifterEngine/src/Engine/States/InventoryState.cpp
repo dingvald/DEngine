@@ -4,8 +4,8 @@
 #include "Utility/EntityHelpers.h"
 #include "Utility/ItemIDToEntityID.h"
 
-static constexpr int INVENTORY_WIDTH = 6;
-static constexpr int INVENTORY_HEIGHT = 8;
+static constexpr int INVENTORY_WIDTH = 5;
+static constexpr int INVENTORY_HEIGHT = 6;
 
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
     : State(stack, context)
@@ -68,11 +68,11 @@ void drft::InventoryState::setupPanels()
 			.fillColor = sf::Color(0,0,0,100)
 			});
 
-	_inventoryGrid = gui::Grid(6, 8);
+	_inventoryGrid = gui::Grid(INVENTORY_WIDTH, INVENTORY_HEIGHT);
 	_inventoryGrid.setPosition(VIEW.getCenter());
 	_inventoryGrid.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,150),
-		.outlineColor = sf::Color(255,255,255,150),
+		.fillColor = sf::Color(0,0,0,100),
+		.outlineColor = sf::Color(255,255,255,100),
 		.outlineThickness = 1.f,
 		.innerPadding = 24.f,
 		.childPadding = 8.f,
@@ -84,7 +84,8 @@ void drft::InventoryState::setupPanels()
 	_inventoryGrid.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
 
 	auto& entityContainer = getContext().registry.get<component::Container>(_sessionEntities.front());
-	_inventoryGrid.registerCallback(gui::ElementCallbackType::OnUpdate, [this, &entityContainer]() -> bool
+	_inventoryGrid.registerCallback(gui::ElementCallbackType::OnUpdate, 
+		[this, &entityContainer]() -> bool
 		{
 			int count = 0;
 			for (auto& item : entityContainer.contents)
@@ -93,7 +94,7 @@ void drft::InventoryState::setupPanels()
 				const auto& itemRender = getContext().registry.get<component::Render>(itemEntity);
 				const auto& sprites = getContext().textures.get("Sprites");
 
-				auto& container = dynamic_cast<gui::Container&>(this->_inventoryGrid[count]);
+				auto& container = static_cast<gui::Container&>(_inventoryGrid[count]);
 				sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
 				container.clear();
 				container.insert("Icon", gui::Icon(sprite))
@@ -133,20 +134,22 @@ void drft::InventoryState::setupPanels()
 				.outlineColor = sf::Color::Red,
 				.outlineThickness = 1.f
 				});
-			container.registerCallback(gui::ElementCallbackType::OnFocus, [col, row, this, &entityContainer, &container]() -> bool {
-				const int index = col + INVENTORY_WIDTH * row;
-				if (index >= entityContainer.contents.size())
+			container.registerCallback(gui::ElementCallbackType::OnFocus, 
+				[col, row, this, &entityContainer, &container]() -> bool 
 				{
-					_itemLabel.setTextString("");
+					const int index = col + INVENTORY_WIDTH * row;
+					if (index >= entityContainer.contents.size())
+					{
+						_itemLabel.setTextString("");
+						_itemLabel.setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+						return false;
+					}
+					const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
+					auto itemName = util::getEntityName({ getContext().registry, itemEntity });
+					_itemLabel.setTextString(std::move(itemName));
 					_itemLabel.setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
-					return false;
-				}
-				const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
-				auto itemName = util::getEntityName({ getContext().registry, itemEntity });
-				_itemLabel.setTextString(std::move(itemName));
-				_itemLabel.setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
-				return true;
-			});
+					return true;
+				});
 		}
 	}
 	_inventoryGrid.layoutChildren();
