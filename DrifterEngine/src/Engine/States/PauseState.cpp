@@ -9,10 +9,10 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 		.setPosition(VIEW.getCenter())
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,100),
-			.innerPadding = 192.f,
-			.childPadding = 64.f
+			.innerPadding = {0, 192.f},
+			.childPadding = {0, 64.f}
 			});
-	_pauseWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER);
+	_pauseWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER, {0,32});
 
 	_pauseWindow.insert("Continue", gui::Button())
 		.setStyle(gui::ElementState::Idle, {

@@ -38,8 +38,8 @@ namespace drft::gui
 		sf::Color outlineColor = { 0,0,0,0 };
 
 		float outlineThickness = 0.f;
-		float innerPadding = 0.f; // Space between outer edge and inner children
-		float childPadding = 16.f; // minimum distance between children
+		sf::Vector2f innerPadding = { 0.f, 0.f }; // Space between outer edge and inner children
+		sf::Vector2f childPadding = { 0.f, 0.f }; // minimum distance between children
 
 		sf::Font* font = nullptr;
 		sf::Color textColor = {};
@@ -52,13 +52,16 @@ namespace drft::gui
 	public:
 		using ElementPtr = std::unique_ptr<Element>;
 		virtual void init() {}
-		virtual bool handleEvent(const sf::Event& ev) 
-		{
-			return false;
-		}
 
+		bool handleEvent(const sf::Event& ev) 
+		{
+			if (!_isVisible) return true;
+
+			return onHandleEvent(ev);
+		}
 		bool update(const float dt)
 		{
+			if (!_isVisible) return true;
 			if (!_isInitialized)
 			{
 				init();
@@ -71,17 +74,16 @@ namespace drft::gui
 				_callback.at(ElementCallbackType::OnUpdate)();
 			}
 
-			onUpdate(dt);
+			bool canPropagate = onUpdate(dt);
 			applyStyle();
 
-			return false;
+			return canPropagate;
 		}
 		void render(sf::RenderTarget& target)
 		{
-			if (_isVisible)
-			{
-				onRender(target);
-			}
+			if (!_isVisible) return;
+		
+			onRender(target);
 		}
 
 		void onSelect()
@@ -296,65 +298,6 @@ namespace drft::gui
 			return *this;
 		}
 
-		bool isVisible() const
-		{
-			return _isVisible;
-		}
-		void setVisibility(bool isVisible)
-		{
-			_isVisible = isVisible;
-		}
-
-		void setState(ElementState state)
-		{
-			_state = state;
-		}
-		ElementState getState() const
-		{
-			return _state;
-		}
-
-	protected:
-		virtual void onUpdate(const float dt) = 0;
-		virtual void onRender(sf::RenderTarget& target) = 0;
-
-	private:
-		virtual void applyStyle()
-		{
-			_shape.setFillColor(_style[_state].fillColor);
-			_shape.setOutlineColor(_style[_state].outlineColor);
-			_shape.setOutlineThickness(_style[_state].outlineThickness);
-
-			_text.setFont(*_style[_state].font);
-			_text.setFillColor(_style[_state].textColor);
-			_text.setCharacterSize(_style[_state].textSize);
-			_text.setScale(_style[_state].textScale);
-
-			setTextOrigin(_textOrigin);
-			setTextPosition(_textPosition);
-		}
-
-	protected:
-		sf::RectangleShape _shape;
-		sf::Text _text;
-		ElementState _state = ElementState::Idle;
-		ElementPosition _origin = ElementPosition::CENTER;
-		ElementPosition _textOrigin = ElementPosition::CENTER;
-		ElementPosition _textPosition = ElementPosition::CENTER;
-		std::map<ElementState, Style> _style;
-
-	private:
-		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
-		bool _isVisible = true;
-		bool _isInitialized = false;
-	};
-
-	class Container : public Element
-	{
-	public:
-		using ElementPtr = std::unique_ptr<Element>;
-		using InsertedElement = Element;
-
 		template<typename T>
 		T& insert(std::string&& name, T&& child)
 		{
@@ -381,19 +324,14 @@ namespace drft::gui
 			std::iter_swap(itr, _children.end() - 1);
 			_children.pop_back();
 		}
+		bool isEmpty() const
+		{
+			return _children.empty();
+		}
 		void clear()
 		{
 			_childrenMap.clear();
 			_children.clear();
-		}
-
-		Element& operator[](size_t index)
-		{
-			return *_children.at(index);
-		}
-		Element& operator[](std::string&& name)
-		{
-			return *_children.at(_childrenMap.at(name));
 		}
 
 		Element& setChildrenOrigin(ElementPosition origin, sf::Vector2f offset = { 0,0 })
@@ -442,27 +380,144 @@ namespace drft::gui
 
 			return *this;
 		}
-		virtual void layoutChildren() = 0;
-		
+		virtual void layoutChildren() {};
+
+		Element& operator[](size_t index)
+		{
+			return *_children.at(index);
+		}
+		Element& operator[](std::string&& name)
+		{
+			return *_children.at(_childrenMap.at(name));
+		}
+
+		bool isVisible() const
+		{
+			return _isVisible;
+		}
+		void setVisibility(bool isVisible)
+		{
+			_isVisible = isVisible;
+		}
+
+		void setState(ElementState state)
+		{
+			_state = state;
+		}
+		ElementState getState() const
+		{
+			return _state;
+		}
 
 	protected:
+		virtual bool onHandleEvent(const sf::Event& ev) { return true; }
+		virtual bool onUpdate(const float dt) = 0;
+		virtual void onRender(sf::RenderTarget& target) = 0;
+
+	private:
+		virtual void applyStyle()
+		{
+			_shape.setFillColor(_style[_state].fillColor);
+			_shape.setOutlineColor(_style[_state].outlineColor);
+			_shape.setOutlineThickness(_style[_state].outlineThickness);
+
+			_text.setFont(*_style[_state].font);
+			_text.setFillColor(_style[_state].textColor);
+			_text.setCharacterSize(_style[_state].textSize);
+			_text.setScale(_style[_state].textScale);
+
+			setTextOrigin(_textOrigin);
+			setTextPosition(_textPosition);
+		}
+
+	protected:
+		sf::RectangleShape _shape;
+		sf::Text _text;
+		ElementState _state = ElementState::Idle;
+		ElementPosition _origin = ElementPosition::CENTER;
+		ElementPosition _textOrigin = ElementPosition::CENTER;
+		ElementPosition _textPosition = ElementPosition::CENTER;
+		std::map<ElementState, Style> _style;
+
 		std::map<std::string, size_t> _childrenMap;
 		std::vector<ElementPtr> _children;
 		ElementPosition _childAlignment = ElementPosition::CENTER;
 		sf::Vector2f _childOffset = { 0,0 };
 		sf::Vector2f _childOrigin;
+
+	private:
+		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;
+		bool _isVisible = true;
+		bool _isInitialized = false;
 	};
 
-	class Blob : public Container
+	class Container : public Element
 	{
 	public:
+		Element& setChildrenOrigin(ElementPosition origin, sf::Vector2f offset = { 0,0 })
+		{
+			_childAlignment = origin;
+			_childOffset = offset;
+
+			const float SHAPE_TOP = (_shape.getGlobalBounds().top);
+			const float SHAPE_LEFT = (_shape.getGlobalBounds().left);
+			const float SHAPE_BOTTOM = (SHAPE_TOP + _shape.getGlobalBounds().height);
+			const float SHAPE_RIGHT = (SHAPE_LEFT + _shape.getGlobalBounds().width);
+			const float SHAPE_CENTER_X = ((SHAPE_LEFT + SHAPE_RIGHT) / 2.f);
+			const float SHAPE_CENTER_Y = ((SHAPE_TOP + SHAPE_BOTTOM) / 2.f);
+
+			switch (origin)
+			{
+			case ElementPosition::TOP_RIGHT:
+				_childOrigin = { SHAPE_RIGHT, SHAPE_TOP };
+				break;
+			case ElementPosition::TOP_LEFT:
+				_childOrigin = { SHAPE_LEFT, SHAPE_TOP };
+				break;
+			case ElementPosition::TOP_CENTER:
+				_childOrigin = { SHAPE_CENTER_X, SHAPE_TOP };
+				break;
+			case ElementPosition::BOTTOM_CENTER:
+				_childOrigin = { SHAPE_CENTER_X, SHAPE_BOTTOM };
+				break;
+			case ElementPosition::BOTTOM_LEFT:
+				_childOrigin = { SHAPE_LEFT, SHAPE_BOTTOM };
+				break;
+			case ElementPosition::BOTTOM_RIGHT:
+				_childOrigin = { SHAPE_RIGHT, SHAPE_BOTTOM };
+				break;
+			case ElementPosition::CENTER_RIGHT:
+				_childOrigin = { SHAPE_RIGHT, SHAPE_CENTER_Y };
+				break;
+			case ElementPosition::CENTER_LEFT:
+				_childOrigin = { SHAPE_RIGHT, SHAPE_CENTER_Y };
+				break;
+			case ElementPosition::CENTER:
+				_childOrigin = { SHAPE_CENTER_X, SHAPE_CENTER_Y };
+				break;
+			}
+			_childOrigin += offset;
+
+			return *this;
+		}
+		virtual void layoutChildren() = 0;
+	};
+
+	// Container where elements added will have hierachical control.
+	// (i.e. VISIBLE items added at the top can supersede items below)
+	class Stack : public Container
+	{
+	public:
+		
 		void layoutChildren() override;
 
 	protected:
-		void onUpdate(const float dt) override;
+		bool onHandleEvent(const sf::Event& ev) override;
+		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 	};
 
+	// Container that holds only one child element.
 	class SingleContainer : public Container
 	{
 	public:
@@ -470,24 +525,27 @@ namespace drft::gui
 		void layoutChildren() override;
 
 	protected:
-		void onUpdate(const float dt) override;
+		bool onHandleEvent(const sf::Event& ev) override;
+		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 
 	};
 
+	// Container where items added will be ordered in an auto-sizing list from top -> down.
 	class List : public Container
 	{
 	public:
 		List(bool canInteract);
 		void init() override;
-		bool handleEvent(const sf::Event& ev) override;
 		void layoutChildren() override;
 
 	protected:
-		void onUpdate(const float dt) override;
+		bool onHandleEvent(const sf::Event& ev) override;
+		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 
 	private:
+		void autoSize();
 		void setStartingCursorPosition();
 		void moveCursorDown();
 		void moveCursorUp();
@@ -497,15 +555,16 @@ namespace drft::gui
 		bool _canInteract = false;
 	};
 
+	// Container where items added will be organized into an auto-sizing grid with a width & height.
 	class Grid : public Container
 	{
 	public:
 		Grid(int columns, int rows);
-		bool handleEvent(const sf::Event& ev) override;
 		void layoutChildren() override;
 
 	protected:
-		void onUpdate(const float dt) override;
+		bool onHandleEvent(const sf::Event& ev) override;
+		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 
 	private:
@@ -523,35 +582,35 @@ namespace drft::gui
 		sf::Vector2i _cursorPosition = { 0, 0 };
 	};
 
+	// Element with a square and text
 	class Panel : public Element
 	{
-	public:
-		bool handleEvent(const sf::Event& ev) override;
-
 	protected:
-		void onUpdate(const float dt) override;
+		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 	};
 
+	// Element that fits its shape to its text
 	class Label : public Element
 	{
 	public:
-		bool handleEvent(const sf::Event& ev) override;
 		sf::FloatRect getGlobalBounds() const override;
 		sf::FloatRect getLocalBounds() const override;
 
 	protected:
-		void onUpdate(const float dt) override;
+		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 	};
 
+	// Element that does nothing special... yet?
 	class Button : public Element
 	{
 	protected:
-		void onUpdate(const float dt) override;
+		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 	};
 
+	// Element that displays a sprite instead of a shape.
 	class Icon : public Element
 	{
 	public:
@@ -559,7 +618,7 @@ namespace drft::gui
 		void init() override;
 
 	protected:
-		void onUpdate(const float dt) override;
+		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 
 	private:

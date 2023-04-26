@@ -1,9 +1,18 @@
 #include "pch.h"
 #include "GUIElement.h"
 
-// BLOB
+// STACK
 
-void drft::gui::Blob::layoutChildren()
+bool drft::gui::Stack::onHandleEvent(const sf::Event& ev)
+{
+	for (auto child = _children.rbegin(); child != _children.rend(); ++child)
+	{
+		if (!(*child)->handleEvent(ev)) return false;
+	}
+	return true;
+}
+
+void drft::gui::Stack::layoutChildren()
 {
 	for (auto& child : _children)
 	{
@@ -11,15 +20,16 @@ void drft::gui::Blob::layoutChildren()
 	}
 }
 
-void drft::gui::Blob::onUpdate(const float dt)
+bool drft::gui::Stack::onUpdate(const float dt)
 {
-	for (auto& child : _children)
+	for (auto child = _children.rbegin(); child != _children.rend(); ++child)
 	{
-		child->update(dt);
+		if (!(*child)->update(dt)) break;
 	}
+	return true;
 }
 
-void drft::gui::Blob::onRender(sf::RenderTarget& target)
+void drft::gui::Stack::onRender(sf::RenderTarget& target)
 {
 	target.draw(_shape);
 	target.draw(_text);
@@ -35,18 +45,29 @@ void drft::gui::SingleContainer::init()
 {
 }
 
+bool drft::gui::SingleContainer::onHandleEvent(const sf::Event& ev)
+{
+	for (auto& child : _children)
+	{
+		child->handleEvent(ev);
+	}
+
+	return true;
+}
+
 void drft::gui::SingleContainer::layoutChildren()
 {
 	_children.front()->setPosition(_shape.getPosition() + _childOrigin);
 }
 
-void drft::gui::SingleContainer::onUpdate(const float dt)
+bool drft::gui::SingleContainer::onUpdate(const float dt)
 {
 	for (auto& child : _children)
 	{
 		child->update(dt);
 		break;
 	}
+	return true;
 }
 
 void drft::gui::SingleContainer::onRender(sf::RenderTarget& target)
@@ -70,7 +91,7 @@ void drft::gui::List::init()
 	setStartingCursorPosition();
 }
 
-bool drft::gui::List::handleEvent(const sf::Event& ev)
+bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 {
 	switch (ev.type)
 	{
@@ -90,13 +111,18 @@ bool drft::gui::List::handleEvent(const sf::Event& ev)
 			_children[_cursorPosition]->onSelect();
 			return false;
 		}
+		if (ev.key.code == sf::Keyboard::Escape)
+		{
+			setVisibility(false);
+			return false;
+		}
 		break;
 	}
 
 	return false;
 }
 
-void drft::gui::List::onUpdate(const float dt)
+bool drft::gui::List::onUpdate(const float dt)
 {
 	int count = 0;
 	for (auto& child : _children)
@@ -119,6 +145,8 @@ void drft::gui::List::onUpdate(const float dt)
 		}
 		++count;
 	}
+
+	return true;
 }
 
 void drft::gui::List::onRender(sf::RenderTarget& target)
@@ -129,6 +157,26 @@ void drft::gui::List::onRender(sf::RenderTarget& target)
 	{
 		child->render(target);
 	}
+}
+
+void drft::gui::List::autoSize()
+{
+	float widest_x = 0.0f;
+	float tallest_y = 0.0f;
+
+	for (const auto& child : _children)
+	{
+		widest_x = std::max(child->getGlobalBounds().width, widest_x);
+		tallest_y = std::max(child->getGlobalBounds().height, tallest_y);
+	}
+
+	float sum_x = widest_x + 2 * _style[_state].innerPadding.x;
+	float sum_y = (tallest_y + _style[_state].childPadding.y) * (_children.size()) + 2* _style[_state].innerPadding.y;
+
+	setSize({ sum_x, sum_y });
+	setTextOrigin(_textOrigin);
+	setTextPosition(_textPosition);
+	setChildrenOrigin(_childAlignment, _childOffset);
 }
 
 void drft::gui::List::setStartingCursorPosition()
@@ -163,8 +211,10 @@ void drft::gui::List::setStartingCursorPosition()
 
 void drft::gui::List::layoutChildren()
 {
-	float x = 0;
-	float y = _style.at(_state).innerPadding;
+	autoSize();
+
+	float x = _style.at(_state).innerPadding.x;
+	float y = _style.at(_state).innerPadding.y;
 	float maxWidth = 0;
 
 	for (auto& child : _children)
@@ -179,8 +229,8 @@ void drft::gui::List::layoutChildren()
 		}
 
 		child->setPosition({ x + _childOrigin.x, y + _childOrigin.y });
-		y += rect.height + _style.at(_state).childPadding;
-		maxWidth = std::max(maxWidth, rect.width + _style.at(_state).childPadding);
+		y += rect.height + _style.at(_state).childPadding.y;
+		maxWidth = std::max(maxWidth, rect.width + _style.at(_state).childPadding.y);
 	}
 }
 
@@ -219,7 +269,7 @@ drft::gui::Grid::Grid(int columns, int rows)
 	, _numRows(rows)
 {}
 
-bool drft::gui::Grid::handleEvent(const sf::Event& ev)
+bool drft::gui::Grid::onHandleEvent(const sf::Event& ev)
 {
 	switch (ev.type)
 	{
@@ -252,10 +302,10 @@ bool drft::gui::Grid::handleEvent(const sf::Event& ev)
 		break;
 	}
 
-	return false;
+	return true;
 }
 
-void drft::gui::Grid::onUpdate(const float dt)
+bool drft::gui::Grid::onUpdate(const float dt)
 {
 	if (!_isInitialized)
 	{
@@ -294,6 +344,8 @@ void drft::gui::Grid::onUpdate(const float dt)
 			++row;
 		}
 	}
+
+	return true;
 }
 
 void drft::gui::Grid::onRender(sf::RenderTarget& target)
@@ -350,8 +402,8 @@ void drft::gui::Grid::autoSize()
 		tallest_y = std::max(child->getGlobalBounds().height, tallest_y);
 	}
 
-	float sum_x = 2*_style[_state].innerPadding + ((_numColumns-1) * (_style[_state].childPadding)) + (_numColumns * widest_x);
-	float sum_y = 2*_style[_state].innerPadding + ((_numRows-1) * (_style[_state].childPadding)) + (_numRows * tallest_y);
+	float sum_x = 2*_style[_state].innerPadding.x + ((_numColumns-1) * (_style[_state].childPadding.x)) + (_numColumns * widest_x);
+	float sum_y = 2*_style[_state].innerPadding.y + ((_numRows-1) * (_style[_state].childPadding.y)) + (_numRows * tallest_y);
 
 	setSize({ sum_x, sum_y });
 	setTextOrigin(_textOrigin);
@@ -364,8 +416,8 @@ void drft::gui::Grid::layoutChildren()
 
 	int col = 0;
 	int row = 0;
-	float x = _style.at(_state).innerPadding + _shape.getGlobalBounds().left;
-	float y = _style.at(_state).innerPadding + _shape.getGlobalBounds().top;
+	float x = _style.at(_state).innerPadding.x + _shape.getGlobalBounds().left;
+	float y = _style.at(_state).innerPadding.y + _shape.getGlobalBounds().top;
 
 	float widest_x = 0.0f;
 	float tallest_y = 0.0f;
@@ -381,14 +433,14 @@ void drft::gui::Grid::layoutChildren()
 		child->setPosition({ x, y });
 
 		++col;
-		x += widest_x + _style.at(_state).childPadding;
+		x += widest_x + _style.at(_state).childPadding.x;
 
 		if (col >= _numColumns)
 		{
 			col = 0;
 			++row;
-			x = _style.at(_state).innerPadding + _shape.getGlobalBounds().left;
-			y += tallest_y + _style.at(_state).childPadding;
+			x = _style.at(_state).innerPadding.x + _shape.getGlobalBounds().left;
+			y += tallest_y + _style.at(_state).childPadding.y;
 		}
 	}
 }
@@ -451,15 +503,9 @@ void drft::gui::Grid::moveCursorLeft()
 
 // PANEL
 
-bool drft::gui::Panel::handleEvent(const sf::Event& ev)
+bool drft::gui::Panel::onUpdate(const float dt)
 {
-	Element::handleEvent(ev);
-
-	return false;
-}
-
-void drft::gui::Panel::onUpdate(const float dt)
-{
+	return true;
 }
 
 void drft::gui::Panel::onRender(sf::RenderTarget& target)
@@ -469,11 +515,6 @@ void drft::gui::Panel::onRender(sf::RenderTarget& target)
 }
 
 // LABEL
-
-bool drft::gui::Label::handleEvent(const sf::Event& ev)
-{
-	return false;
-}
 
 sf::FloatRect drft::gui::Label::getGlobalBounds() const
 {
@@ -485,12 +526,14 @@ sf::FloatRect drft::gui::Label::getLocalBounds() const
 	return _text.getLocalBounds();
 }
 
-void drft::gui::Label::onUpdate(const float dt)
+bool drft::gui::Label::onUpdate(const float dt)
 {
 	const auto rect = getLocalBounds();
-	_shape.setSize({ rect.width + _style[_state].innerPadding, rect.height + _style[_state].innerPadding });
+	_shape.setSize({ rect.width + _style[_state].innerPadding.x, rect.height + _style[_state].innerPadding.y });
 	setOrigin(_origin);
 	setTextOrigin(_textOrigin);
+
+	return true;
 }
 
 void drft::gui::Label::onRender(sf::RenderTarget& target)
@@ -501,8 +544,9 @@ void drft::gui::Label::onRender(sf::RenderTarget& target)
 
 // BUTTON
 
-void drft::gui::Button::onUpdate(const float dt)
+bool drft::gui::Button::onUpdate(const float dt)
 {
+	return true;
 }
 
 void drft::gui::Button::onRender(sf::RenderTarget& target)
@@ -527,11 +571,12 @@ void drft::gui::Icon::init()
 	_sprite.scale({ scalingFactorX, scalingFactorY });
 }
 
-void drft::gui::Icon::onUpdate(const float dt)
+bool drft::gui::Icon::onUpdate(const float dt)
 {
 	_sprite.setColor(_style[_state].fillColor);
 	_sprite.setPosition(_shape.getPosition());
-	
+
+	return true;
 }
 
 void drft::gui::Icon::onRender(sf::RenderTarget& target)

@@ -9,10 +9,10 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 		.setPosition(VIEW.getCenter())
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color::Black,
-			.innerPadding = 160.f,
-			.childPadding = 64.f
+			.innerPadding = {0,0.f},
+			.childPadding = {0, 64.f}
 			});	
-	_mainMenuWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER);
+	_mainMenuWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER, {0, 32});
 
 	auto& cont = _mainMenuWindow.insert("Continue", gui::Button())
 		.setStyle(gui::ElementState::Idle, {

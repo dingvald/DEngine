@@ -6,7 +6,7 @@ drft::GameOverState::GameOverState(StateStack& stack, StateContext& context)
 {
 	const auto& VIEW = getContext().window.getView();
 
-	_gameOverPanel.setSize({ VIEW.getSize().x, VIEW.getSize().y / 5 })
+	_gameOverPanel.setSize({ VIEW.getSize().x, VIEW.getSize().y / 4 })
 		.setPosition(VIEW.getCenter())
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,0),
