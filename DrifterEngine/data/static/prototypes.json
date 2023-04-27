@@ -58,6 +58,7 @@
         {
           "Name": "Physical",
           "Data": {
+            "weight" : 400.0,
             "materials": [ "Wood" ]
           }
         },
@@ -110,6 +111,7 @@
         {
           "Name": "Physical",
           "Data": {
+            "weight": 80.0,
             "materials": [ "Corpse" ]
           }
         },
@@ -185,6 +187,7 @@
         {
           "Name": "Physical",
           "Data": {
+            "weight": 60.0,
             "materials": [ "Corpse" ]
           }
         },

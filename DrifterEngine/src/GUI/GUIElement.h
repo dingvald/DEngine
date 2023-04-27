@@ -42,7 +42,7 @@ namespace drft::gui
 		sf::Vector2f childPadding = { 0.f, 0.f }; // minimum distance between children
 
 		sf::Font* font = nullptr;
-		sf::Color textColor = {};
+		sf::Color textColor = sf::Color::White;
 		int textSize = 16;
 		sf::Vector2f textScale = { 1.f, 1.f };
 	};
@@ -324,6 +324,32 @@ namespace drft::gui
 			std::iter_swap(itr, _children.end() - 1);
 			_children.pop_back();
 		}
+		void remove(size_t index)
+		{
+			auto itr = _children.begin() + index;
+			int lastIndex = _children.size() - 1;
+			std::string name;
+			for (auto& [key, val] : _childrenMap)
+			{
+				if (val == index)
+				{
+					name = key;
+					break;
+				}
+			}
+			for (auto& [key, val] : _childrenMap)
+			{
+				if (val == lastIndex)
+				{
+					val = index;
+					break;
+				}
+			}
+
+			_childrenMap.erase(name);
+			std::iter_swap(itr, _children.end() - 1);
+			_children.pop_back();
+		}
 		bool isEmpty() const
 		{
 			return _children.empty();
@@ -503,12 +529,25 @@ namespace drft::gui
 		virtual void layoutChildren() = 0;
 	};
 
+
+	// General-purpose container that makes no attempt to control it's children.
+	// Will pass thorugh all event, update, and render calls.
+	class Blob : public Container
+	{
+	public:
+		void layoutChildren() override;
+
+	protected:
+		bool onHandleEvent(const sf::Event& ev) override;
+		bool onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
+	};
+
 	// Container where elements added will have hierachical control.
 	// (i.e. VISIBLE items added at the top can supersede items below)
 	class Stack : public Container
 	{
 	public:
-		
 		void layoutChildren() override;
 
 	protected:

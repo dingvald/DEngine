@@ -31,6 +31,7 @@
         {
           "Name": "Physical",
           "Data": {
+            "weight": 80.0,
             "materials": [ "Corpse" ]
           }
         },

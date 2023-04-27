@@ -21,6 +21,7 @@ namespace drft
 		void render(sf::RenderTarget& target);
 
 	private:
+		gui::Panel _pauseBackground;
 		gui::List _pauseWindow{ true };
 	};
 }

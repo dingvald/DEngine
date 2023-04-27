@@ -5,15 +5,20 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
     :State(stack, context)
 {
 	const auto& VIEW = getContext().window.getView();
-	_pauseWindow.setSize(VIEW.getSize())
+	_pauseBackground.setSize(VIEW.getSize())
 		.setPosition(VIEW.getCenter())
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,100),
 			.innerPadding = {0, 192.f},
 			.childPadding = {0, 64.f}
 			});
-	_pauseWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER, {0,32});
 
+	_pauseWindow.setSize(VIEW.getSize())
+		.setPosition(VIEW.getCenter())
+		.setStyle(gui::ElementState::Idle, {
+			.innerPadding = {0, 192.f},
+			.childPadding = {0, 64.f}
+			});
 	_pauseWindow.insert("Continue", gui::Button())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
@@ -64,11 +69,13 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 				return true;
 			});
 
+	_pauseWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER, { 0,32 });
 	_pauseWindow.layoutChildren();
 }
 
 bool drft::PauseState::handleEvent(const sf::Event& ev)
 {
+	_pauseBackground.handleEvent(ev);
 	_pauseWindow.handleEvent(ev);
 	switch (ev.type)
 	{
@@ -86,6 +93,7 @@ bool drft::PauseState::handleEvent(const sf::Event& ev)
 
 bool drft::PauseState::update(const float dt)
 {
+	_pauseBackground.update(dt);
 	_pauseWindow.update(dt);
 
 	return false;
@@ -93,6 +101,7 @@ bool drft::PauseState::update(const float dt)
 
 void drft::PauseState::render(sf::RenderTarget& target)
 {
+	_pauseBackground.render(target);
 	_pauseWindow.render(target);
 }
 

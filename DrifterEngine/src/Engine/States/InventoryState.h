@@ -26,6 +26,7 @@ namespace drft
 		std::vector<entt::entity> _sessionEntities;
 		gui::Panel _inventoryBackground;
 		gui::Stack _inventoryStack;
+		gui::Blob _inventoryBlob;
 	};
 }
 

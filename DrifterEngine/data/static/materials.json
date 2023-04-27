@@ -44,6 +44,13 @@
             "sprite": 7,
             "color": [ 88, 8, 8 ]
           }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 60.0,
+            "materials": [ "" ]
+          }
         }
       ]
     },
@@ -69,9 +76,17 @@
             "sprite": 14,
             "color": [ 68, 48, 40 ]
           }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 2.5,
+            "materials": [ "" ]
+          }
         }
       ]
     },
+    // Stone
     {
       "Name": "Stone",
       "Inherits": [
@@ -92,6 +107,13 @@
           "Data": {
             "sprite": 10,
             "color": [ 128, 132, 135 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 1.5,
+            "materials": [ "" ]
           }
         }
       ]

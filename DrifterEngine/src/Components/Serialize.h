@@ -26,7 +26,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, Physical& physical)
 	{
-		archive(physical.materials);
+		archive(physical.weight, physical.materials);
 	}
 
 	template<class Archive>

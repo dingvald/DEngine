@@ -28,6 +28,7 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Physical, PHYSICAL_STRING>()
 		.prop("serialize"_hs)
+		.data<&Physical::weight>("weight"_hs)
 		.data<&Physical::materials>("materials"_hs);
 
 	snapshot::reflectComponent<Actor, ACTOR_STRING>()

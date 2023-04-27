@@ -1,15 +1,64 @@
 #include "pch.h"
 #include "GUIElement.h"
 
+// BLOB
+
+void drft::gui::Blob::layoutChildren()
+{}
+
+bool drft::gui::Blob::onHandleEvent(const sf::Event& ev)
+{
+	for (auto& child : _children)
+	{
+		child->handleEvent(ev);
+	}
+	return true;
+}
+
+bool drft::gui::Blob::onUpdate(const float dt)
+{
+	for (auto& child : _children)
+	{
+		child->update(dt);
+	}
+
+	return true;
+}
+
+void drft::gui::Blob::onRender(sf::RenderTarget& target)
+{
+	for (auto& child : _children)
+	{
+		child->render(target);
+	}
+}
+
 // STACK
 
 bool drft::gui::Stack::onHandleEvent(const sf::Event& ev)
 {
+	bool propagate = true;
 	for (auto child = _children.rbegin(); child != _children.rend(); ++child)
 	{
-		if (!(*child)->handleEvent(ev)) return false;
+		if (!(*child)->handleEvent(ev))
+		{
+			propagate = false;
+			break;
+		}
 	}
-	return true;
+	switch (ev.type)
+	{
+	case sf::Event::KeyPressed:
+		if (ev.key.code == sf::Keyboard::Escape)
+		{
+			if (_children.empty()) return true;
+			remove(_children.size() - 1);
+			return false;
+		}
+		break;
+	}
+
+	return propagate;
 }
 
 void drft::gui::Stack::layoutChildren()
@@ -93,6 +142,7 @@ void drft::gui::List::init()
 
 bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 {
+	if (!_canInteract) return false;
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
@@ -109,11 +159,6 @@ bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 		if (ev.key.code == sf::Keyboard::Space)
 		{
 			_children[_cursorPosition]->onSelect();
-			return false;
-		}
-		if (ev.key.code == sf::Keyboard::Escape)
-		{
-			setVisibility(false);
 			return false;
 		}
 		break;
@@ -584,5 +629,3 @@ void drft::gui::Icon::onRender(sf::RenderTarget& target)
 	//target.draw(_shape);
 	target.draw(_sprite);
 }
-
-

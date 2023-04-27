@@ -27,6 +27,7 @@ namespace component
 
 	struct Physical
 	{
+		float weight = 0.0;
 		std::vector<std::string> materials = {};
 	};
 
