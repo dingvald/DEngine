@@ -19,6 +19,8 @@ namespace drft
 
 	private:
 		void setupPanels();
+		void setupInventoryGrid();
+		void setupEquipmentGrid();
 		void determineSessionEntities();
 		void shutdownSessionEntities();
 

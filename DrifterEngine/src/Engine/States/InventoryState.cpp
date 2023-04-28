@@ -3,9 +3,34 @@
 #include "Components/Components.h"
 #include "Utility/EntityHelpers.h"
 #include "Utility/ItemIDToEntityID.h"
+#include "Utility/SpriteIndexer.h"
 
 static constexpr int INVENTORY_WIDTH = 5;
 static constexpr int INVENTORY_HEIGHT = 6;
+
+static constexpr int EQUIPMENT_WIDTH = 3;
+static constexpr int EQUIPMENT_HEIGHT = 4;
+
+static const std::vector<std::string_view> PAPER_DOLL =
+{
+	"None",		"Head",		"None",
+	"HeldR",	"Body",		"HeldL",
+	"HandR",	"Legs",		"HandL",
+	"None",		"Feet",		"None"
+};
+
+static const std::map<std::string, drft::util::Sprite> PAPER_DOLL_SPRITES =
+{
+	{"Head", drft::util::Sprite::PaperDollHead},
+	{"HandR", drft::util::Sprite::PaperDollHandR},
+	{"HandL", drft::util::Sprite::PaperDollHandL},
+	{"Body", drft::util::Sprite::PaperDollBody},
+	{"HeldR", drft::util::Sprite::Sword},
+	{"HeldL", drft::util::Sprite::Sword},
+	{"Legs", drft::util::Sprite::PaperDollLegs},
+	{"Feet", drft::util::Sprite::PaperDollFeet}
+};
+
 
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
     : State(stack, context)
@@ -61,22 +86,36 @@ void drft::InventoryState::onPop()
 void drft::InventoryState::setupPanels()
 {
 	const auto& VIEW = getContext().window.getView();
-	
-#pragma region Background Setup
 
 	_inventoryBackground.setSize(VIEW.getSize());
 	_inventoryBackground.setPosition(VIEW.getCenter());
 	_inventoryBackground.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,100)
 			});
-
-#pragma endregion
 	
-#pragma region Grid Setup
+	setupInventoryGrid();
+	setupEquipmentGrid();
 
-	auto& inventoryGrid = _inventoryBlob.insert("Grid", gui::Grid(INVENTORY_WIDTH, INVENTORY_HEIGHT));
-	inventoryGrid = gui::Grid(INVENTORY_WIDTH, INVENTORY_HEIGHT);
-	inventoryGrid.setPosition(VIEW.getCenter());
+	_inventoryBlob.insert("ItemLabel", gui::Label());
+	_inventoryBlob["ItemLabel"]
+		.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
+		.setTextOrigin(gui::ElementPosition::CENTER)
+		.setStyle(gui::ElementState::Idle, {
+			.fillColor = sf::Color(0,0,0,255),
+			.outlineColor = sf::Color(255,255,255,150),
+			.outlineThickness = 0.f,
+			.innerPadding = {2.f, 2.f},
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White
+			});
+}
+
+void drft::InventoryState::setupInventoryGrid()
+{
+	const auto& VIEW = getContext().window.getView();
+
+	auto& inventoryGrid = _inventoryBlob.insert("InventoryGrid", gui::Grid(INVENTORY_WIDTH, INVENTORY_HEIGHT));
+	inventoryGrid.setPosition({ 2 * (VIEW.getSize().x / 3), VIEW.getCenter().y });
 	inventoryGrid.setStyle(gui::ElementState::Idle, {
 		.fillColor = sf::Color(0,0,0,100),
 		.outlineColor = sf::Color(255,255,255,100),
@@ -90,10 +129,14 @@ void drft::InventoryState::setupPanels()
 	inventoryGrid.setTextPosition(gui::ElementPosition::TOP_CENTER);
 	inventoryGrid.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
 
-	auto& entityContainer = getContext().registry.get<component::Container>(_sessionEntities.front());
+	const auto& entityContainer = getContext().registry.get<component::Container>(_sessionEntities.front());
 	inventoryGrid.registerCallback(gui::ElementCallbackType::OnUpdate,
 		[this, &entityContainer, &inventoryGrid]() -> bool
 		{
+			for (int i = 0; i < INVENTORY_WIDTH * INVENTORY_HEIGHT - 1; ++i)
+			{
+				inventoryGrid[i].clear();
+			}
 			int count = 0;
 			for (auto& item : entityContainer.contents)
 			{
@@ -103,7 +146,6 @@ void drft::InventoryState::setupPanels()
 
 				auto& container = inventoryGrid[count];
 				sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
-				container.clear();
 				container.insert("Icon", gui::Icon(sprite))
 					.setSize({ 32,32 })
 					.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
@@ -134,7 +176,7 @@ void drft::InventoryState::setupPanels()
 			container.setStyle(gui::ElementState::Focused, {
 				.fillColor = sf::Color(40,40,0,150),
 				.outlineColor = sf::Color::Yellow,
-				.outlineThickness = 2.f,
+				.outlineThickness = 1.f,
 				});
 			container.setStyle(gui::ElementState::Active, {
 				.fillColor = sf::Color(0,0,0,150),
@@ -165,8 +207,8 @@ void drft::InventoryState::setupPanels()
 					{
 						return false;
 					}
-					const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
-#pragma region Command List Setup
+					const auto itemID = entityContainer.contents.at(index);
+					const auto itemEntity = util::ItemIDToEntityID(itemID, getContext().registry);
 
 					auto& commandList = _inventoryStack.insert("CommandList", gui::List(true));
 					commandList
@@ -199,7 +241,7 @@ void drft::InventoryState::setupPanels()
 							[this, itemEntity]() -> bool
 							{
 								std::cout << "Using item " << util::getEntityName({ this->getContext().registry, itemEntity }) << std::endl;
-								return true;
+					return true;
 							});
 
 					commandList.insert("Swap", gui::Label())
@@ -219,7 +261,7 @@ void drft::InventoryState::setupPanels()
 							[this, itemEntity]() -> bool
 							{
 								std::cout << "Swapping item " << util::getEntityName({ this->getContext().registry, itemEntity }) << std::endl;
-								return true;
+					return true;
 							});
 
 					commandList.insert("Drop", gui::Label())
@@ -236,10 +278,26 @@ void drft::InventoryState::setupPanels()
 						.setTextString("drop")
 						.setTextOrigin(gui::ElementPosition::TOP_LEFT)
 						.registerCallback(gui::ElementCallbackType::OnSelect,
-							[this, itemEntity]() -> bool
+							[this, itemEntity, itemID]() -> bool
 							{
-								std::cout << "Dropping item " << util::getEntityName({ this->getContext().registry, itemEntity }) << std::endl;
-								return true;
+								auto sessionEntity = this->_sessionEntities.front();
+
+					if (getContext().registry.all_of<component::action::Drop>(sessionEntity))
+					{
+						getContext().registry.patch<component::action::Drop>(sessionEntity,
+							[itemID](component::action::Drop& drop)
+							{
+								drop.toDrop.push_back(itemID);
+							});
+					}
+					else
+					{
+						getContext().registry.emplace<component::action::Drop>(sessionEntity, std::vector<component::Item::ID>{itemID});
+					}
+
+					_inventoryStack.clear();
+
+					return true;
 							});
 
 					commandList.insert("Equip", gui::Label())
@@ -259,7 +317,7 @@ void drft::InventoryState::setupPanels()
 							[this, itemEntity]() -> bool
 							{
 								std::cout << "Equipping item " << util::getEntityName({ this->getContext().registry, itemEntity }) << std::endl;
-								return true;
+					return true;
 							});
 
 					commandList.insert("Info", gui::Label())
@@ -280,7 +338,6 @@ void drft::InventoryState::setupPanels()
 							{
 								auto& itemInfo = getContext().registry.get<component::Info>(itemEntity);
 								auto& itemPhysical = getContext().registry.get<component::Physical>(itemEntity);
-								std::cout << "Info for item " << itemInfo.name << std::endl;
 								_inventoryStack.insert("ItemList", gui::List(false));
 								_inventoryStack["ItemList"]
 									.setPosition(getContext().window.getView().getCenter())
@@ -323,9 +380,8 @@ void drft::InventoryState::setupPanels()
 									ss << itemPhysical.materials[i];
 									if (i < itemPhysical.materials.size() - 1)
 									{
-										ss << ",";
+										ss << ", ";
 									}
-									ss << "\n";
 								}
 								ss << "]";
 
@@ -340,11 +396,10 @@ void drft::InventoryState::setupPanels()
 								_inventoryStack["ItemList"].layoutChildren();
 
 								return true;
-							});
+					});
 
 					_inventoryStack["CommandList"].setPosition(container.getPosition() + sf::Vector2f{ 36,-1 });
 					_inventoryStack["CommandList"].layoutChildren();
-#pragma endregion
 
 					return true;
 				});
@@ -352,25 +407,108 @@ void drft::InventoryState::setupPanels()
 	}
 
 	inventoryGrid.layoutChildren();
+}
 
-#pragma endregion
-	
-#pragma region Item Label Setup
+void drft::InventoryState::setupEquipmentGrid()
+{
+	const auto& VIEW = getContext().window.getView();
 
-	_inventoryBlob.insert("ItemLabel", gui::Label());
-	_inventoryBlob["ItemLabel"]
-		.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
-		.setTextOrigin(gui::ElementPosition::CENTER)
-		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,255),
-			.outlineColor = sf::Color(255,255,255,150),
-			.outlineThickness = 0.f,
-			.innerPadding = {2.f, 2.f},
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White
+	auto& equipmentGrid = _inventoryBlob.insert("EquipmentGrid", gui::Grid(EQUIPMENT_WIDTH, EQUIPMENT_HEIGHT));
+	equipmentGrid.setPosition({ 1 * (VIEW.getSize().x / 3), VIEW.getCenter().y });
+	equipmentGrid.setStyle(gui::ElementState::Idle, {
+		.fillColor = sf::Color(0,0,0,100),
+		.outlineColor = sf::Color(255,255,255,100),
+		.outlineThickness = 1.f,
+		.innerPadding = {16.f, 16.f},
+		.childPadding = {8.f, 8.f},
+		.font = &getContext().fonts.get("Terminus"),
+		.textColor = sf::Color::White
+		});
+	equipmentGrid.setTextString(util::getEntityName({ getContext().registry, _sessionEntities.front() }) + "'s Equipment");
+	equipmentGrid.setTextPosition(gui::ElementPosition::TOP_CENTER);
+	equipmentGrid.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
+
+	const auto& entityBody = getContext().registry.get<component::Body>(_sessionEntities.front());
+	equipmentGrid.registerCallback(gui::ElementCallbackType::OnUpdate,
+		[this, &entityBody, &equipmentGrid]() -> bool
+		{
+			for (auto& slotName : PAPER_DOLL)
+			{
+
+				if (!slotName.compare("None"))
+				{
+					continue;
+				}
+				equipmentGrid[slotName.data()].clear();
+
+				const auto itemEntity = util::ItemIDToEntityID(entityBody.parts.at(slotName.data()), getContext().registry);
+				if (itemEntity != entt::null)
+				{
+					const auto& itemRender = getContext().registry.get<component::Render>(itemEntity);
+					const auto& sprites = getContext().textures.get("Sprites");
+
+					sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
+					equipmentGrid[slotName.data()].insert("Icon", gui::Icon(sprite))
+						.setSize({ 32,32 })
+						.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
+						.setStyle(gui::ElementState::Idle, {
+								.fillColor = itemRender.color
+							});
+				}
+				else
+				{
+					const auto& sprites = getContext().textures.get("Sprites");
+					sf::Sprite sprite = { sprites, util::SpriteIndexer::get(PAPER_DOLL_SPRITES.at(slotName.data()), sprites)};
+					equipmentGrid[slotName.data()].insert("Icon", gui::Icon(sprite))
+						.setSize({ 32,32 })
+						.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
+						.setStyle(gui::ElementState::Idle, {
+								.fillColor = sf::Color(80,80,80,150)
+							});
+				}
+
+				equipmentGrid[slotName.data()].layoutChildren();
+			}
+
+			return true;
+		});
+
+	int dummyCount = 0;
+	for (auto& slotName : PAPER_DOLL)
+	{
+
+		if (!slotName.compare("None"))
+		{
+			equipmentGrid.insert("Dummy" + std::to_string(dummyCount), gui::SingleContainer())
+				.setSize({ 32,32 })
+				.setOrigin(gui::ElementPosition::TOP_LEFT)
+				.registerCallback(gui::ElementCallbackType::OnIsSelectable, []() -> bool
+					{
+						return false;
+					});
+			++dummyCount;
+			continue;
+		}
+
+		auto& container = equipmentGrid.insert(slotName.data(), gui::SingleContainer());
+		container.setSize({ 32,32 });
+		container.setOrigin(gui::ElementPosition::TOP_LEFT);
+		container.setChildrenOrigin(gui::ElementPosition::CENTER);
+		container.setStyle(gui::ElementState::Idle, {
+		.fillColor = sf::Color(0,0,0,150),
+		.outlineColor = sf::Color(255,255,255,100),
+		.outlineThickness = 1.f
+			});
+		container.setStyle(gui::ElementState::Focused, {
+			.fillColor = sf::Color(40,40,0,150),
+			.outlineColor = sf::Color::Yellow,
+			.outlineThickness = 1.f,
 			});
 
-#pragma endregion
+		container.layoutChildren();
+	}
+
+	equipmentGrid.layoutChildren();
 }
 
 void drft::InventoryState::determineSessionEntities()

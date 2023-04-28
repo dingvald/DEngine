@@ -55,6 +55,11 @@ namespace component
 		int baseDamage = 1;
 	};
 
+	struct Body
+	{
+		std::unordered_map<std::string, unsigned long> parts;
+	};
+
 	struct Player
 	{
 		int sightRange = 10;
@@ -110,6 +115,11 @@ namespace component::action
 	struct SpendPoints
 	{
 		int amount = 0;
+	};
+
+	struct Drop
+	{
+		std::vector<Item::ID> toDrop;
 	};
 
 	struct Die

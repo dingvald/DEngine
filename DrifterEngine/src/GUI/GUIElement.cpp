@@ -106,6 +106,7 @@ bool drft::gui::SingleContainer::onHandleEvent(const sf::Event& ev)
 
 void drft::gui::SingleContainer::layoutChildren()
 {
+	if (_children.empty()) return;
 	_children.front()->setPosition(_shape.getPosition() + _childOrigin);
 }
 

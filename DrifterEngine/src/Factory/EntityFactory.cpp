@@ -132,6 +132,16 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 					{
 						meta.data(entt::hashed_string(memberName)).set(any, data.value.GetFloat());
 					}
+					else if (data.value.IsObject())
+					{
+						// HACKZ - assumes Body component
+						std::unordered_map<std::string, unsigned long> map;
+						for (auto&& mapData : component["Data"][memberName].GetObject())
+						{
+							map.emplace(mapData.name.GetString(), mapData.value.GetInt64());
+						}
+						meta.data(entt::hashed_string(memberName)).set(any, map);
+					}
 				}
 			}
 		}

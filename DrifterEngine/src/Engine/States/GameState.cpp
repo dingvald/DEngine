@@ -19,8 +19,10 @@
 #include "Systems/Core/ItemUniqueIDGenerator.h"
 #include "Systems/Core/TurnManager.h"
 #include "Systems/Core/WorldGridResolver.h"
+#include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/DamageSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
+#include "Systems/Gameplay/DropItemSystem.h"
 #include "Systems/Gameplay/MovementSystem.h"
 #include "Systems/Gameplay/PickUpSystem.h"
 #include "Systems/Gameplay/LaunchAttackSystem.h"
@@ -202,7 +204,9 @@ void drft::GameState::importSystems()
 	_systems->add<ArtificialInput>(			Phase::OnProcessInput);
 	_systems->add<MovementSystem>(			Phase::OnUpdate);
 	_systems->add<PickUpSystem>(			Phase::OnUpdate);
+	_systems->add<DropItemSystem>(			Phase::OnUpdate);
 	_systems->add<OpenInventorySystem>(		Phase::OnUpdate);
+	_systems->add<BodyPartSystem>(			Phase::OnUpdate);
 	_systems->add<LaunchAttackSystem>(		Phase::OnUpdate + 10);
 	_systems->add<DamageSystem>(			Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(				Phase::OnUpdate + 15);

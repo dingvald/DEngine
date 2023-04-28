@@ -51,3 +51,4 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/types/unordered_set.hpp>
+#include <Cereal/types/unordered_map.hpp>

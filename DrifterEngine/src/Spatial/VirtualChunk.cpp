@@ -34,7 +34,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	auto bounds = sf::Vector2i{ CHUNK_WIDTH, CHUNK_HEIGHT };
 	util::buildMany("Grass", 59, { origin.x, origin.y, bounds.x, bounds.y }, reg);
 	util::buildMany("Tree", 450, { origin.x, origin.y, bounds.x, bounds.y }, reg);
-	util::buildMany("Zombie", 7, { origin.x, origin.y, bounds.x, bounds.y }, reg);
+	util::buildMany("Zombie", 8, { origin.x, origin.y, bounds.x, bounds.y }, reg);
 	util::buildMany("Stone", 4, { origin.x, origin.y, bounds.x, bounds.y }, reg);
 	
 	setState(ChunkState::Built);

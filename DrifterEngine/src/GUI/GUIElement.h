@@ -621,7 +621,7 @@ namespace drft::gui
 		sf::Vector2i _cursorPosition = { 0, 0 };
 	};
 
-	// Element with a square and text
+	// Element with a shape and text
 	class Panel : public Element
 	{
 	protected:

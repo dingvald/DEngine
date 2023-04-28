@@ -48,6 +48,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, Body& body)
+	{
+		archive(body.parts);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Player& player)
 	{
 		archive(player.sightRange);

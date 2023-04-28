@@ -19,7 +19,13 @@ namespace drft::util
 		Axe,
 		Sword,
 		Material,
-		Heart
+		Heart,
+		PaperDollHead,
+		PaperDollBody,
+		PaperDollHandR,
+		PaperDollHandL,
+		PaperDollLegs,
+		PaperDollFeet
 	};
 
 	class SpriteIndexer

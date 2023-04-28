@@ -78,87 +78,43 @@
         }
       ]
     },
-    // NPC
+    // HumanBody
     {
-      "Name": "NPC",
+      "Name": "HumanBody",
       "Inherits": [
         ""
       ],
       "Components": [
         {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "NPC",
-            "extendedName": "",
-            "description": "Just a regular NPC."
-          }
-        },
-        {
           "Name": "Render",
           "Data": {
             "sprite": 1,
-            "color": [ 225, 50, 50 ]
+            "color": [ 150, 150, 150 ]
           }
         },
         {
-          "Name": "Position",
+          "Name": "Body",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "weight": 80.0,
-            "materials": [ "Corpse" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.0,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 8,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 10,
-            "current": 10
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 2
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
+            "parts": {
+              "Head": 0,
+              "Body": 0,
+              "HandR": 0,
+              "HeldR": 0,
+              "HandL": 0,
+              "HeldL": 0,
+              "Legs": 0,
+              "Feet": 0
+            }
           }
         }
+        
       ]
     },
     // Zombie
     {
       "Name": "Zombie",
       "Inherits": [
-        ""
+        "HumanBody"
       ],
       "Components": [
         {
