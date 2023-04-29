@@ -441,7 +441,22 @@ void drft::InventoryState::setupInventoryGrid()
 			break;
 			case SessionType::Equip:
 			{
-				
+				container.registerCallback(gui::ElementCallbackType::OnFocus,
+					[col, row, this, &entityContainer, &container]() -> bool
+					{
+						const int index = col + INVENTORY_WIDTH * row;
+						if (index >= entityContainer.contents.size())
+						{
+							_inventoryBlob["ItemLabel"].setTextString("");
+							_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+							return false;
+						}
+						const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
+						auto itemName = util::getEntityName({ getContext().registry, itemEntity });
+						_inventoryBlob["ItemLabel"].setTextString(std::move(itemName));
+						_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+						return true;
+					});
 			}
 			break;
 			}
