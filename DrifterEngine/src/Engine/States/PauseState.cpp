@@ -15,7 +15,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 
 	_pauseWindow.setSize(VIEW.getSize())
 		.setPosition(VIEW.getCenter())
-		.setStyle(gui::ElementState::Idle, {
+		.setStyle(gui::ElementState::Focused, {
 			.innerPadding = {0, 192.f},
 			.childPadding = {0, 64.f}
 			});
@@ -70,7 +70,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 			});
 
 	_pauseWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER, { 0,32 });
-	_pauseWindow.layoutChildren();
+	_pauseWindow.setState(gui::ElementState::Focused);
 }
 
 bool drft::PauseState::handleEvent(const sf::Event& ev)

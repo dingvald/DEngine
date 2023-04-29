@@ -122,9 +122,23 @@ namespace component::action
 		std::vector<Item::ID> toDrop;
 	};
 
+	struct Equip
+	{
+		Item::ID toEquip = 0;
+		std::string slotname = {};
+	};
+
+	struct Unequip
+	{
+		std::string slotname = {};
+	};
+
 	struct Die
 	{};
 
 	struct OpenInventory
+	{};
+
+	struct OpenEquipment
 	{};
 }

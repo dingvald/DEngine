@@ -86,33 +86,6 @@ namespace drft::gui
 			onRender(target);
 		}
 
-		void onSelect()
-		{
-			setState(ElementState::Active);
-			if (_callback.contains(ElementCallbackType::OnSelect)
-				&& _callback.at(ElementCallbackType::OnSelect))
-			{
-				_callback.at(ElementCallbackType::OnSelect)();
-			}
-		}
-		void onFocus()
-		{
-			setState(ElementState::Focused);
-			if (_callback.contains(ElementCallbackType::OnFocus)
-				&& _callback.at(ElementCallbackType::OnFocus))
-			{
-				_callback.at(ElementCallbackType::OnFocus)();
-			}
-		}
-		void onLeave()
-		{
-			setState(ElementState::Idle);
-			if (_callback.contains(ElementCallbackType::OnLeave)
-				&& _callback.at(ElementCallbackType::OnLeave))
-			{
-				_callback.at(ElementCallbackType::OnLeave)();
-			}
-		}
 		bool isSelectable()
 		{
 			if (_callback.contains(ElementCallbackType::OnIsSelectable)
@@ -406,7 +379,6 @@ namespace drft::gui
 
 			return *this;
 		}
-		virtual void layoutChildren() {};
 
 		Element& operator[](size_t index)
 		{
@@ -428,7 +400,20 @@ namespace drft::gui
 
 		void setState(ElementState state)
 		{
+			if (_state == state) return;
 			_state = state;
+			switch (state)
+			{
+			case ElementState::Idle:
+				onLeave();
+				break;
+			case ElementState::Focused:
+				onFocus();
+				break;
+			case ElementState::Active:
+				onSelect();
+				break;
+			}
 		}
 		ElementState getState() const
 		{
@@ -439,6 +424,31 @@ namespace drft::gui
 		virtual bool onHandleEvent(const sf::Event& ev) { return true; }
 		virtual bool onUpdate(const float dt) = 0;
 		virtual void onRender(sf::RenderTarget& target) = 0;
+		virtual void onSelect()
+		{
+			if (_callback.contains(ElementCallbackType::OnSelect)
+				&& _callback.at(ElementCallbackType::OnSelect))
+			{
+				_callback.at(ElementCallbackType::OnSelect)();
+			}
+		}
+		virtual void onFocus()
+		{
+			if (_callback.contains(ElementCallbackType::OnFocus)
+				&& _callback.at(ElementCallbackType::OnFocus))
+			{
+				_callback.at(ElementCallbackType::OnFocus)();
+			}
+		}
+		virtual void onLeave()
+		{
+			if (_callback.contains(ElementCallbackType::OnLeave)
+				&& _callback.at(ElementCallbackType::OnLeave))
+			{
+				_callback.at(ElementCallbackType::OnLeave)();
+			}
+		}
+		virtual void layoutChildren() {};
 
 	private:
 		virtual void applyStyle()
@@ -526,9 +536,26 @@ namespace drft::gui
 
 			return *this;
 		}
+
+	protected:
 		virtual void layoutChildren() = 0;
 	};
 
+	// Container that allows the calling code to control which child has priority.
+	class FlowControl : public Container
+	{
+	public:
+		void transferControlTo(std::string&& childname);
+		void layoutChildren() override;
+
+	protected:
+		bool onHandleEvent(const sf::Event& ev) override;
+		bool onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
+
+	private:
+		Element* _inControl = nullptr;
+	};
 
 	// General-purpose container that makes no attempt to control it's children.
 	// Will pass thorugh all event, update, and render calls.
@@ -575,10 +602,11 @@ namespace drft::gui
 	{
 	public:
 		List(bool canInteract);
-		void init() override;
 		void layoutChildren() override;
 
 	protected:
+		void onFocus() override;
+		void onLeave() override;
 		bool onHandleEvent(const sf::Event& ev) override;
 		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
@@ -590,7 +618,7 @@ namespace drft::gui
 		void moveCursorUp();
 
 	private:
-		int _cursorPosition = 0;
+		int _cursorPosition = -1;
 		bool _canInteract = false;
 	};
 
@@ -602,6 +630,8 @@ namespace drft::gui
 		void layoutChildren() override;
 
 	protected:
+		void onFocus() override;
+		void onLeave() override;
 		bool onHandleEvent(const sf::Event& ev) override;
 		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
@@ -618,7 +648,7 @@ namespace drft::gui
 		bool _isInitialized = false;
 		int _numColumns;
 		int _numRows;
-		sf::Vector2i _cursorPosition = { 0, 0 };
+		sf::Vector2i _cursorPosition = { -1, -1 };
 	};
 
 	// Element with a shape and text

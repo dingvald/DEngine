@@ -4,6 +4,12 @@
 
 namespace drft
 {
+	enum class SessionType
+	{
+		Equip,
+		Inventory
+	};
+
 	class InventoryState : public State
 	{
 	private:
@@ -26,7 +32,11 @@ namespace drft
 
 	private:
 		std::vector<entt::entity> _sessionEntities;
+		SessionType _sessionType = SessionType::Inventory;
+		unsigned long _currentItemID = 0; // Ugly hackz - should try to minimize state at this scope
+
 		gui::Panel _inventoryBackground;
+		gui::FlowControl _flowControl;
 		gui::Stack _inventoryStack;
 		gui::Blob _inventoryBlob;
 	};

@@ -98,9 +98,8 @@
             "parts": {
               "Head": 0,
               "Body": 0,
-              "HandR": 0,
+              "Hands": 0,
               "HeldR": 0,
-              "HandL": 0,
               "HeldL": 0,
               "Legs": 0,
               "Feet": 0

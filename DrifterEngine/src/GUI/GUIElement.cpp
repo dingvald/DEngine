@@ -1,6 +1,56 @@
 #include "pch.h"
 #include "GUIElement.h"
 
+// FlOWCONTROL
+
+void drft::gui::FlowControl::transferControlTo(std::string&& childname)
+{
+	_inControl = _children.at(_childrenMap.at(childname)).get();
+	for (auto& child : _children)
+	{
+		child->setState(gui::ElementState::Idle);
+	}
+	_inControl->setState(gui::ElementState::Focused);
+}
+
+void drft::gui::FlowControl::layoutChildren()
+{}
+
+bool drft::gui::FlowControl::onHandleEvent(const sf::Event& ev)
+{
+	bool propagate = true;
+	if (_inControl)
+	{
+		propagate = _inControl->handleEvent(ev);
+	}
+	else
+	{
+		for (auto& child : _children)
+		{
+			child->handleEvent(ev);
+		}
+	}
+	return propagate;
+}
+
+bool drft::gui::FlowControl::onUpdate(const float dt)
+{
+	for (auto& child : _children)
+	{
+		child->update(dt);
+	}
+
+	return true;
+}
+
+void drft::gui::FlowControl::onRender(sf::RenderTarget& target)
+{
+	for (auto& child : _children)
+	{
+		child->render(target);
+	}
+}
+
 // BLOB
 
 void drft::gui::Blob::layoutChildren()
@@ -71,6 +121,10 @@ void drft::gui::Stack::layoutChildren()
 
 bool drft::gui::Stack::onUpdate(const float dt)
 {
+	if (!_children.empty())
+	{
+		_children.back()->setState(gui::ElementState::Focused);
+	}
 	for (auto child = _children.rbegin(); child != _children.rend(); ++child)
 	{
 		if (!(*child)->update(dt)) break;
@@ -112,6 +166,7 @@ void drft::gui::SingleContainer::layoutChildren()
 
 bool drft::gui::SingleContainer::onUpdate(const float dt)
 {
+	layoutChildren();
 	for (auto& child : _children)
 	{
 		child->update(dt);
@@ -136,14 +191,21 @@ drft::gui::List::List(bool canInteract)
 	: _canInteract(canInteract)
 {}
 
-void drft::gui::List::init()
+void drft::gui::List::onFocus()
 {
+	Element::onFocus();
 	setStartingCursorPosition();
+}
+
+void drft::gui::List::onLeave()
+{
+	_cursorPosition = -1;
 }
 
 bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 {
 	if (!_canInteract) return false;
+	if (getState() != ElementState::Focused) return false;
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
@@ -159,7 +221,7 @@ bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 		}
 		if (ev.key.code == sf::Keyboard::Space)
 		{
-			_children[_cursorPosition]->onSelect();
+			_children[_cursorPosition]->setState(gui::ElementState::Active);
 			return false;
 		}
 		break;
@@ -170,6 +232,7 @@ bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 
 bool drft::gui::List::onUpdate(const float dt)
 {
+	layoutChildren();
 	int count = 0;
 	for (auto& child : _children)
 	{
@@ -315,8 +378,20 @@ drft::gui::Grid::Grid(int columns, int rows)
 	, _numRows(rows)
 {}
 
+void drft::gui::Grid::onFocus()
+{
+	Element::onFocus();
+	setStartingCursorPosition();
+}
+
+void drft::gui::Grid::onLeave()
+{
+	_cursorPosition = { -1,-1 };
+}
+
 bool drft::gui::Grid::onHandleEvent(const sf::Event& ev)
 {
+	if (getState() != ElementState::Focused) return true;
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
@@ -342,7 +417,7 @@ bool drft::gui::Grid::onHandleEvent(const sf::Event& ev)
 		}
 		if (ev.key.code == sf::Keyboard::Space)
 		{
-			_children.at(_cursorPosition.x + _numColumns*_cursorPosition.y)->onSelect();
+			_children.at(_cursorPosition.x + _numColumns*_cursorPosition.y)->setState(gui::ElementState::Active);
 			return false;
 		}
 		break;
@@ -353,12 +428,7 @@ bool drft::gui::Grid::onHandleEvent(const sf::Event& ev)
 
 bool drft::gui::Grid::onUpdate(const float dt)
 {
-	if (!_isInitialized)
-	{
-		setStartingCursorPosition();
-		_isInitialized = true;
-	}
-
+	layoutChildren();
 	int col = 0;
 	int row = 0;
 
@@ -379,7 +449,6 @@ bool drft::gui::Grid::onUpdate(const float dt)
 		if (_cursorPosition == sf::Vector2i(col, row))
 		{
 			child->setState(ElementState::Focused);
-			child->onFocus();
 		}
 
 		++col;
@@ -412,8 +481,8 @@ void drft::gui::Grid::setStartingCursorPosition()
 	{
 		for (int col = 0; col < _numColumns; ++col)
 		{
-			if ( (col + _numRows * row) >= _children.size()) return;
-			const auto& child = _children.at(col + _numRows * row);
+			if ((col + _numColumns * row) >= _children.size()) return;
+			const auto& child = _children.at(col + _numColumns * row);
 			const bool isSelectable = child->isSelectable();
 			if (isSelectable)
 			{

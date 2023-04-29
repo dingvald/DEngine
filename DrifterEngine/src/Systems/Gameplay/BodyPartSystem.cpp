@@ -14,9 +14,9 @@ void drft::system::BodyPartSystem::update(const float dt)
 
 	for (auto [entity, body, attack] : view.each())
 	{
-		if (body.parts.contains("HandR") && body.parts.at("HandR") != 0)
+		if (body.parts.contains("HeldR") && body.parts.at("HeldR") != 0)
 		{
-			const auto rightHandItem = util::ItemIDToEntityID(body.parts.at("HandR"), *registry);
+			const auto rightHandItem = util::ItemIDToEntityID(body.parts.at("HeldR"), *registry);
 			float weight = 0.0f;
 			if (auto physicalComp = registry->try_get<component::Physical>(rightHandItem))
 			{

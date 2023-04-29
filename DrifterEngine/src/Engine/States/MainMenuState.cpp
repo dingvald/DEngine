@@ -7,7 +7,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 	const auto& VIEW = getContext().window.getView();
 	_mainMenuWindow.setSize(VIEW.getSize())
 		.setPosition(VIEW.getCenter())
-		.setStyle(gui::ElementState::Idle, {
+		.setStyle(gui::ElementState::Focused, {
 			.fillColor = sf::Color::Black,
 			.innerPadding = {0,0.f},
 			.childPadding = {0, 64.f}
@@ -93,7 +93,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 				return true;
 			});
 	
-	_mainMenuWindow.layoutChildren();
+	_mainMenuWindow.setState(gui::ElementState::Focused);
 }
 
 bool drft::MainMenuState::handleEvent(const sf::Event& ev)

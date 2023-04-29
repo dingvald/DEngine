@@ -6,8 +6,7 @@
 #include "Utility/EntityHelpers.h"
 
 void drft::system::OpenInventorySystem::init()
-{
-}
+{}
 
 void drft::system::OpenInventorySystem::update(const float dt)
 {

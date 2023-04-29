@@ -168,6 +168,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\OpenEquipmentSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\EquipItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\BodyPartSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DropItemSystem.cpp" />
     <ClCompile Include="src\Engine\States\GameOverState.cpp" />
@@ -264,6 +266,8 @@
     <ClCompile Include="src\Engine\States\StateContext.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\OpenEquipmentSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\EquipItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\BodyPartSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DropItemSystem.h" />
     <ClInclude Include="src\Engine\States\GameOverState.h" />
