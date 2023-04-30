@@ -323,6 +323,7 @@ namespace drft::gui
 			std::iter_swap(itr, _children.end() - 1);
 			_children.pop_back();
 		}
+		void popBack();
 		bool isEmpty() const
 		{
 			return _children.empty();
@@ -669,6 +670,12 @@ namespace drft::gui
 	protected:
 		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
+	};
+
+	class PopupMessage : public Label
+	{
+	public:
+		bool onHandleEvent(const sf::Event& ev) override;
 	};
 
 	// Element that does nothing special... yet?

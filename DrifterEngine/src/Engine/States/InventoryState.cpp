@@ -405,7 +405,7 @@ void drft::InventoryState::setupInventoryGrid()
 												.font = &getContext().fonts.get("Terminus"),
 												.textSize = 16
 											})
-										.setTextString("Weight:\n" + std::to_string(itemPhysical.weight) + "kg")
+										.setTextString("Weight:\n" + std::format("{:.1f}", itemPhysical.weight) + "kg")
 										.setTextOrigin(gui::ElementPosition::TOP_LEFT);
 
 									std::stringstream ss;
@@ -557,9 +557,9 @@ void drft::InventoryState::setupEquipmentGrid()
 		container.setOrigin(gui::ElementPosition::TOP_LEFT);
 		container.setChildrenOrigin(gui::ElementPosition::CENTER);
 		container.setStyle(gui::ElementState::Unselectable, {
-		.fillColor = sf::Color(0,0,0,150),
-		.outlineColor = sf::Color(150,150,150,100),
-		.outlineThickness = 1.f
+			.fillColor = sf::Color(0,0,0,150),
+			.outlineColor = sf::Color(150,150,150,100),
+			.outlineThickness = 1.f
 			});
 		container.setStyle(gui::ElementState::Idle, {
 		.fillColor = sf::Color(0,0,0,150),
@@ -571,9 +571,6 @@ void drft::InventoryState::setupEquipmentGrid()
 			.outlineColor = sf::Color::Yellow,
 			.outlineThickness = 1.f,
 			});
-
-		auto itemInSlot = entityBody.parts.at(slotName.data());
-		auto itemEntity = util::ItemIDToEntityID(itemInSlot, getContext().registry);
 
 		switch (_sessionType)
 		{
@@ -599,13 +596,13 @@ void drft::InventoryState::setupEquipmentGrid()
 				return true;
 					});
 				container.registerCallback(gui::ElementCallbackType::OnSelect,
-					[this, itemEntity, slotName, &container]() -> bool
+					[this, slotName]() -> bool
 					{
 						auto sessionEntity = this->_sessionEntities.front();
 						const auto VIEW = getContext().window.getView();
 						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, _currentItemID, slotName.data());
 
-						_inventoryStack.insert("Message", gui::Label())
+						_inventoryStack.insert("Message", gui::PopupMessage())
 							.setPosition(VIEW.getCenter())
 							.setStyle(gui::ElementState::Focused, {
 								.fillColor = sf::Color(0,0,0,255),
@@ -616,7 +613,16 @@ void drft::InventoryState::setupEquipmentGrid()
 								.textColor = sf::Color::White
 								})
 							.setTextString(util::getEntityName({ getContext().registry, sessionEntity }) + " equipped the "
-								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_currentItemID, getContext().registry)}));
+								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_currentItemID, getContext().registry) }))
+							.registerCallback(gui::ElementCallbackType::OnLeave,
+								[this]() -> bool
+								{
+									_flowControl.transferControlTo("InventoryGrid");
+									_flowControl["InventoryGrid"].setVisibility(true);
+									_flowControl["EquipmentGrid"].setVisibility(false);
+
+									return true;
+								});
 
 						_currentItemID = 0;
 						return true;
@@ -626,16 +632,26 @@ void drft::InventoryState::setupEquipmentGrid()
 			case SessionType::Equip:
 				{
 				container.registerCallback(gui::ElementCallbackType::OnFocus,
-					[this, slotName, &container]() -> bool
+					[this, slotName, &container, &entityBody]() -> bool
 					{
-						_inventoryBlob["ItemLabel"].setTextString(slotName.data());
+						const auto itemInSlot = entityBody.parts.at(slotName.data());
+						const auto itemEntity = util::ItemIDToEntityID(itemInSlot, getContext().registry);
+						std::string labelString = slotName.data();
+						if (itemInSlot > 0)
+						{
+							labelString += ": " + util::getEntityName({ getContext().registry, itemEntity });
+						}
+
+						_inventoryBlob["ItemLabel"].setTextString(std::move(labelString));
 						_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
 
 						return true;
 					});
 				container.registerCallback(gui::ElementCallbackType::OnSelect,
-					[this, &container, itemEntity, itemInSlot, slotName]() -> bool
+					[this, slotName, &container, &entityBody]() -> bool
 					{
+						const auto itemInSlot = entityBody.parts.at(slotName.data());
+						const auto itemEntity = util::ItemIDToEntityID(itemInSlot, getContext().registry);
 						auto& commandList = _inventoryStack.insert("CommandList", gui::List(true))
 						.setSize({ 64,128 })
 						.setStyle(gui::ElementState::Focused, {
@@ -720,7 +736,7 @@ void drft::InventoryState::setupEquipmentGrid()
 													.font = &getContext().fonts.get("Terminus"),
 													.textSize = 16
 												})
-											.setTextString("Weight:\n" + std::to_string(itemPhysical.weight) + "kg")
+											.setTextString("Weight:\n" + std::format("{:.2f}", itemPhysical.weight) + "kg")
 											.setTextOrigin(gui::ElementPosition::TOP_LEFT);
 
 										std::stringstream ss;

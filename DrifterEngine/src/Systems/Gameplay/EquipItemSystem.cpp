@@ -5,6 +5,8 @@
 void drft::system::EquipItemSystem::init()
 {
 	registry->on_construct<component::action::Equip>().connect<&EquipItemSystem::onItemEquipped>(this);
+	registry->on_update<component::action::Equip>().connect<&EquipItemSystem::onItemEquipped>(this);
+
 	registry->on_construct<component::action::Unequip>().connect<&EquipItemSystem::onItemUnequipped>(this);
 	registry->on_update<component::action::Unequip>().connect<&EquipItemSystem::onItemUnequipped>(this);
 }
@@ -30,7 +32,7 @@ void drft::system::EquipItemSystem::update(const float dt)
 void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, entt::entity entity)
 {
 	auto& container = registry.get<component::Container>(entity);
-	auto& equipItem = registry.get<component::action::Equip>(entity);
+	const auto& equipItem = registry.get<component::action::Equip>(entity);
 	auto& body = registry.get<component::Body>(entity);
 
 	auto& currentlyEquipped = body.parts.at(equipItem.slotname);
@@ -48,15 +50,12 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 			body.parts.at(equipItem.slotname) = equipItem.toEquip;
 		}
 	}
-	
-
-	
 }
 
 void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, entt::entity entity)
 {
 	auto& container = registry.get<component::Container>(entity);
-	auto& unequipItem = registry.get<component::action::Unequip>(entity);
+	const auto& unequipItem = registry.get<component::action::Unequip>(entity);
 	auto& body = registry.get<component::Body>(entity);
 
 	if (body.parts.contains(unequipItem.slotname))

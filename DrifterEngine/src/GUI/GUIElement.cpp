@@ -102,7 +102,8 @@ bool drft::gui::Stack::onHandleEvent(const sf::Event& ev)
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
 			if (_children.empty()) return true;
-			remove(_children.size() - 1);
+			_children.back()->setState(gui::ElementState::Idle);
+			popBack();
 			return false;
 		}
 		break;
@@ -698,4 +699,14 @@ void drft::gui::Icon::onRender(sf::RenderTarget& target)
 {
 	//target.draw(_shape);
 	target.draw(_sprite);
+}
+
+void drft::gui::Element::popBack()
+{
+	remove(_children.size() - 1);
+}
+
+bool drft::gui::PopupMessage::onHandleEvent(const sf::Event& ev)
+{
+	return false;
 }
