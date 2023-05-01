@@ -706,6 +706,8 @@ void drft::gui::Element::popBack()
 	remove(_children.size() - 1);
 }
 
+// POPUP MESSAGE
+
 bool drft::gui::PopupMessage::onHandleEvent(const sf::Event& ev)
 {
 	return false;

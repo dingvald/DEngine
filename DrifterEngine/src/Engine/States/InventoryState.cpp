@@ -351,7 +351,7 @@ void drft::InventoryState::setupInventoryGrid()
 									_flowControl["InventoryGrid"].setVisibility(false);
 									_flowControl["EquipmentGrid"].setVisibility(true);
 									_inventoryBlob["ItemLabel"].setTextString("");
-									_currentItemID = itemID;
+									_sessionContext.setCurrentItem(itemID);
 									_inventoryStack.clear();
 							
 									return true;
@@ -455,6 +455,41 @@ void drft::InventoryState::setupInventoryGrid()
 						auto itemName = util::getEntityName({ getContext().registry, itemEntity });
 						_inventoryBlob["ItemLabel"].setTextString(std::move(itemName));
 						_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+						return true;
+					});
+				container.registerCallback(gui::ElementCallbackType::OnSelect,
+					[col, row, this, &entityContainer]() -> bool
+					{
+						auto sessionEntity = this->_sessionEntities.front();
+						const auto VIEW = getContext().window.getView();
+						const int index = col + INVENTORY_WIDTH * row;
+						const auto itemID = entityContainer.contents.at(index);
+
+						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, itemID, _sessionContext.getCurrentSlot());
+
+						_inventoryStack.insert("Message", gui::PopupMessage())
+							.setPosition(VIEW.getCenter())
+							.setStyle(gui::ElementState::Focused, {
+								.fillColor = sf::Color(0,0,0,255),
+								.outlineColor = sf::Color(255,255,255,150),
+								.outlineThickness = 1.f,
+								.innerPadding = {2.f, 2.f},
+								.font = &getContext().fonts.get("Terminus"),
+								.textColor = sf::Color::White
+								})
+							.setTextString(util::getEntityName({ getContext().registry, sessionEntity }) + " equipped the "
+								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(itemID, getContext().registry)}))
+							.registerCallback(gui::ElementCallbackType::OnLeave,
+								[this]() -> bool
+								{
+									_flowControl.transferControlTo("EquipmentGrid");
+									_flowControl["InventoryGrid"].setVisibility(false);
+									_flowControl["EquipmentGrid"].setVisibility(true);
+
+									return true;
+								});
+
+						_sessionContext.reset();
 						return true;
 					});
 			}
@@ -600,7 +635,7 @@ void drft::InventoryState::setupEquipmentGrid()
 					{
 						auto sessionEntity = this->_sessionEntities.front();
 						const auto VIEW = getContext().window.getView();
-						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, _currentItemID, slotName.data());
+						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, _sessionContext.getCurrentItem(), slotName.data());
 
 						_inventoryStack.insert("Message", gui::PopupMessage())
 							.setPosition(VIEW.getCenter())
@@ -613,7 +648,7 @@ void drft::InventoryState::setupEquipmentGrid()
 								.textColor = sf::Color::White
 								})
 							.setTextString(util::getEntityName({ getContext().registry, sessionEntity }) + " equipped the "
-								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_currentItemID, getContext().registry) }))
+								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_sessionContext.getCurrentItem(), getContext().registry)}))
 							.registerCallback(gui::ElementCallbackType::OnLeave,
 								[this]() -> bool
 								{
@@ -624,7 +659,7 @@ void drft::InventoryState::setupEquipmentGrid()
 									return true;
 								});
 
-						_currentItemID = 0;
+						_sessionContext.reset();
 						return true;
 					});
 				}
@@ -789,6 +824,7 @@ void drft::InventoryState::setupEquipmentGrid()
 										_flowControl["InventoryGrid"].setTextString("Equip what to " + std::string(slotName.data()));
 										_flowControl["InventoryGrid"].setVisibility(true);
 										_flowControl["EquipmentGrid"].setVisibility(false);
+										_sessionContext.setCurrentSlot(slotName.data());
 										_inventoryStack.clear();
 
 										return true;

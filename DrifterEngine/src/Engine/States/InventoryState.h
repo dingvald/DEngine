@@ -10,6 +10,25 @@ namespace drft
 		Inventory
 	};
 
+	struct SessionContext
+	{
+	public:
+		void setCurrentItem(unsigned long itemID) { _currentItemID = itemID; }
+		unsigned long getCurrentItem() const { return _currentItemID; }
+		void setCurrentSlot(std::string slotname) { _currentSlotName = slotname; }
+		const std::string& getCurrentSlot() const { return _currentSlotName; }
+
+		void reset()
+		{
+			_currentItemID = 0;
+			_currentSlotName = "None";
+		}
+
+	private:
+		unsigned long _currentItemID = 0;
+		std::string _currentSlotName = "None";
+	};
+
 	class InventoryState : public State
 	{
 	private:
@@ -33,7 +52,7 @@ namespace drft
 	private:
 		std::vector<entt::entity> _sessionEntities;
 		SessionType _sessionType = SessionType::Inventory;
-		unsigned long _currentItemID = 0; // Ugly hackz - should try to minimize state at this scope
+		SessionContext _sessionContext;
 
 		gui::Panel _inventoryBackground;
 		gui::FlowControl _flowControl;
