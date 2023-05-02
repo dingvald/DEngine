@@ -18,7 +18,7 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 {
 	using namespace rapidjson;
 
-	std::string filepath = ".\\data\\static\\" + filename;
+	std::string filepath = ".\\data\\static\\entities\\" + filename;
 
 	std::ifstream ifs{ filepath };
 

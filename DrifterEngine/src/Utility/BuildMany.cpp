@@ -5,7 +5,7 @@
 #include "Spatial/Conversions.h"
 #include "Factory/EntityFactory.h"
 
-void drft::util::buildMany(std::string entity, int number, sf::IntRect inArea, entt::registry& registry)
+void drft::util::buildMany(const std::string& entity, int number, sf::IntRect inArea, entt::registry& registry)
 {
 	auto& factory = registry.ctx().get<EntityFactory&>();
 
@@ -19,7 +19,6 @@ void drft::util::buildMany(std::string entity, int number, sf::IntRect inArea, e
 			.patch<component::Position>([&position](auto& pos)
 				{
 					pos.position = position;
-				}
-			);
+				});
 	}
 }

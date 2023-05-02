@@ -204,6 +204,18 @@
     <ClCompile Include="src\Systems\Gameplay\OpenEquipmentSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Random\PerlinNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\WorldGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Biome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random\RandomNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -887,6 +899,21 @@
     <ClInclude Include="src\Systems\Gameplay\OpenEquipmentSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Random\PerlinNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\WorldGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\BiomeTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Biome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random\RandomNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -895,11 +922,12 @@
     <None Include="src\Spatial\Grid.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="data\static\prototypes.json" />
+    <None Include="data\static\entities\prototypes.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
-    <None Include="data\static\player.json" />
-    <None Include="data\static\materials.json" />
+    <None Include="data\static\entities\player.json" />
+    <None Include="data\static\entities\materials.json" />
     <None Include="packages.config" />
+    <None Include="data\static\biomes\biomes.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">

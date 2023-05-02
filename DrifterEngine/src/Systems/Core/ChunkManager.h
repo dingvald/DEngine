@@ -1,6 +1,7 @@
 #pragma once
 #include "Systems/System.h"
 #include "Spatial/VirtualChunk.h"
+#include "ProcGen/WorldGenerator.h"
 
 namespace drft::system
 {
@@ -27,6 +28,7 @@ namespace drft::system
 		void process(std::queue<sf::Vector2i>& chunkQueue, ProcessType type);
 
 	private:
+		std::unique_ptr<gen::WorldGenerator> _generator = nullptr;
 		std::map<std::pair<int, int>, spatial::VirtualChunk> _chunks;
 
 		const int _activeChunkRadius = 2;

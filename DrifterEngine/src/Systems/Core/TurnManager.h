@@ -45,7 +45,7 @@ namespace drft::system
 	private:
 		std::unique_ptr<ActorQueue> _actorQueue;
 		std::set<entt::entity> _managedEntities;
-		entt::entity _timeKeeper;
+		entt::entity _timeKeeper = entt::null;
 
 		entt::entity _currentActor = entt::null;
 		entt::entity _previousActor = entt::null;

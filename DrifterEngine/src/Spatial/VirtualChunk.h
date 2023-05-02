@@ -2,6 +2,11 @@
 
 // TODO: Requires a refactor at some point...
 
+namespace drft::gen
+{
+	class WorldGenerator;
+}
+
 namespace drft::spatial
 {
 	enum class ioStatus
@@ -35,7 +40,7 @@ namespace drft::spatial
 		void setState(ChunkState state);
 		ChunkState getState() const;
 
-		ioStatus build(entt::registry& reg);
+		ioStatus build(const gen::WorldGenerator& generator, entt::registry& reg);
 		ioStatus save(entt::registry& reg, const char* filepath);
 		ioStatus load(entt::registry& reg, const char* filepath);
 

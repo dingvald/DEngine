@@ -6,6 +6,7 @@
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Events/RequestStateChange.h"
+#include "ProcGen/WorldGenerator.h"
 #pragma region System Includes
 #include "Systems/SystemScheduler.h"
 #include "Systems/Core/TileRenderer.h"

@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
+#include <numeric>
 #include <iostream>
 #include <fstream>
 #include <sstream>

@@ -168,6 +168,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ProcGen\Biome.cpp" />
+    <ClCompile Include="src\Random\PerlinNoise.cpp" />
+    <ClCompile Include="src\Random\RandomNoise.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenEquipmentSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\EquipItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\BodyPartSystem.cpp" />
@@ -264,8 +267,13 @@
     <ClCompile Include="src\Engine\StateStack.cpp" />
     <ClCompile Include="src\Engine\States\TitleScreenState.cpp" />
     <ClCompile Include="src\Engine\States\StateContext.cpp" />
+    <ClCompile Include="src\ProcGen\WorldGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ProcGen\Biome.h" />
+    <ClInclude Include="src\ProcGen\BiomeTypes.h" />
+    <ClInclude Include="src\Random\PerlinNoise.h" />
+    <ClInclude Include="src\Random\RandomNoise.h" />
     <ClInclude Include="src\Systems\Gameplay\OpenEquipmentSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\EquipItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\BodyPartSystem.h" />
@@ -493,11 +501,13 @@
     <ClInclude Include="src\Engine\StateStack.h" />
     <ClInclude Include="src\Engine\States\TitleScreenState.h" />
     <ClInclude Include="src\Engine\States\StateContext.h" />
+    <ClInclude Include="src\ProcGen\WorldGenerator.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\static\materials.json" />
-    <None Include="data\static\player.json" />
-    <None Include="data\static\prototypes.json" />
+    <None Include="data\static\biomes\biomes.json" />
+    <None Include="data\static\entities\materials.json" />
+    <None Include="data\static\entities\player.json" />
+    <None Include="data\static\entities\prototypes.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="packages.config" />
     <None Include="src\Spatial\Grid.inl" />

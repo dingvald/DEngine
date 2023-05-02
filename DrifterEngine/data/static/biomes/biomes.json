@@ -1,0 +1,63 @@
+{
+  "Biomes": {
+    "Forest": {
+      "Environmental": {
+        "Tree": 300,
+        "Stone": 10,
+        "Grass": 100
+      },
+      "Actors": {
+      }
+    },
+    "Mountain": {
+      "Environmental": {
+        "Boulder": 500,
+        "Tree": 10,
+        "Stone": 100,
+        "Grass": 40
+      },
+      "Actors": {
+
+      }
+    },
+    "Lake": {
+      "Environmental": {
+        "Stone": 10,
+        "Grass": 40,
+        "Water": 500
+      },
+      "Actors": {
+
+      }
+    },
+    "Swamp": {
+      "Environmental": {
+        "Grass": 300,
+        "Water": 400
+      },
+      "Actors": {
+
+      }
+    },
+    "Desert": {
+      "Environmental": {
+        "Stone": 100,
+        "Cactus": 30,
+        "Sand": 400
+      },
+      "Actors": {
+
+      }
+    },
+    "Grassland": {
+      "Environmental": {
+        "Tree": 20,
+        "Stone": 10,
+        "Grass": 400
+      },
+      "Actors": {
+
+      }
+    }
+  }
+}

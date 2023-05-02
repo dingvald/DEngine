@@ -32,6 +32,70 @@
         }
       ]
     },
+    // Sand
+    {
+      "Name": "Sand",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Sand",
+            "extendedName": "",
+            "description": "Just simple sand."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 24,
+            "color": [ 194, 178, 128 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        }
+      ]
+    },
+    // Water
+    {
+      "Name": "Water",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Water",
+            "extendedName": "",
+            "description": "Just simple water."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 25,
+            "color": [ 27, 149, 224 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        }
+      ]
+    },
     // Tree
     {
       "Name": "Tree",
@@ -58,7 +122,7 @@
         {
           "Name": "Physical",
           "Data": {
-            "weight" : 400.0,
+            "weight": 400.0,
             "materials": [ "Wood" ]
           }
         },
@@ -74,6 +138,98 @@
           "Data": {
             "max": 100,
             "current": 100
+          }
+        }
+      ]
+    },
+    // Cactus
+    {
+      "Name": "Cactus",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Cactus",
+            "extendedName": "",
+            "description": "A common desert succulent."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 26,
+            "color": [ 83, 113, 61 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 50.0,
+            "materials": ["Wood"]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 10.0, 10.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 40,
+            "current": 40
+          }
+        }
+      ]
+    },
+    // Boulder
+    {
+      "Name": "Boulder",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Boulder",
+            "extendedName": "",
+            "description": "A very large chunk of rock."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 23,
+            "color": [ 100, 100, 100 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 1000.0,
+            "materials": [ "Stone" ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 10.0, 10.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 500,
+            "current": 500
           }
         }
       ]
@@ -106,7 +262,7 @@
             }
           }
         }
-        
+
       ]
     },
     // Zombie

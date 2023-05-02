@@ -26,7 +26,8 @@ namespace drft::util
 		PaperDollHandL,
 		PaperDollLegs,
 		PaperDollFeet,
-		PaperDollHands
+		PaperDollHands,
+		Boulder
 	};
 
 	class SpriteIndexer

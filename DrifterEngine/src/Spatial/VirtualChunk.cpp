@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "VirtualChunk.h"
+#include "ProcGen/WorldGenerator.h"
 #include "Utility/CopyEntity.h"
 #include "Utility/BuildMany.h"
 #include "Utility/SaveRegistry.h"
-#include"Utility/LoadRegistry.h"
+#include "Utility/LoadRegistry.h"
 #include "Conversions.h"
 #include "WorldGrid.h"
 
@@ -22,7 +23,7 @@ ChunkState VirtualChunk::getState() const
 	return this->_state;
 }
 
-ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
+ioStatus drft::spatial::VirtualChunk::build(const gen::WorldGenerator& generator, entt::registry& reg)
 {
 	if (getState() == ChunkState::ToBuild)
 	{
@@ -30,12 +31,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 		setState(ChunkState::Building);
 	}
 
-	auto origin = toTileSpace(_coordinate);
-	auto bounds = sf::Vector2i{ CHUNK_WIDTH, CHUNK_HEIGHT };
-	util::buildMany("Grass", 59, { origin.x, origin.y, bounds.x, bounds.y }, reg);
-	util::buildMany("Tree", 450, { origin.x, origin.y, bounds.x, bounds.y }, reg);
-	util::buildMany("Zombie", 8, { origin.x, origin.y, bounds.x, bounds.y }, reg);
-	util::buildMany("Stone", 4, { origin.x, origin.y, bounds.x, bounds.y }, reg);
+	generator.buildChunk(_coordinate, reg);
 	
 	setState(ChunkState::Built);
 
