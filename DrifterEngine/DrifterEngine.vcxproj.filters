@@ -48,7 +48,7 @@
     <ClCompile Include="src\Components\Components.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utility\BuildMany.cpp">
+    <ClCompile Include="src\ProcGen\PlacementAlgorithms\RandomSpread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Spatial\WorldGrid.cpp">
@@ -216,6 +216,12 @@
     <ClCompile Include="src\Random\RandomNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\PlacementAlgorithms\Algorithms.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -254,7 +260,7 @@
     <ClInclude Include="src\Components\Components.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\BuildMany.h">
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\RandomSpread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\Grid.h">
@@ -914,6 +920,15 @@
     <ClInclude Include="src\Random\RandomNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\Algorithms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GenerationParameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -936,8 +951,5 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="src\Events\RequestStatePushEvent.xaml" />
   </ItemGroup>
 </Project>

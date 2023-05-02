@@ -15,6 +15,7 @@ namespace drft::gen
 
 	private:
 		BiomePair determineBiomeType(double temperature, double altitude, double moisture) const;
+		sf::Vector2<double> convertIntergerCoordinates(sf::Vector2i coord) const;
 
 	private:
 		unsigned int _seed = 0;

@@ -5,7 +5,7 @@ namespace drft::rng
 	{
 	public:
 		PerlinNoise(unsigned int seed = 0, int octaves = 8, float lacunarity = 2.0, float gain = 0.5);
-		double gen(int x, int y, int z) const;
+		double gen(double x, double y, double z = 0.0) const;
 
 	private:
 		double _gen(double x, double y, double z) const;

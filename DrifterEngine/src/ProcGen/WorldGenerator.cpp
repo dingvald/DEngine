@@ -5,7 +5,8 @@
 #include "Spatial/Conversions.h"
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
-#include "Utility/BuildMany.h"
+#include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
+#include "PlacementAlgorithms/Algorithms.h"
 
 // Temperature cutoffs
 static constexpr double TEMPERATURE_COLD = 0.4;
@@ -33,6 +34,10 @@ drft::gen::BiomePair drft::gen::WorldGenerator::determineBiomeType(double temper
         else if (moisture > MOISTURE_ARID)
         {
             result.secondary = BiomeType::Forest;
+        }
+        else
+        {
+            result.secondary = BiomeType::Desert;
         }
     }
     else if (altitude > ALTITUDE_LOW)
@@ -84,6 +89,14 @@ drft::gen::BiomePair drft::gen::WorldGenerator::determineBiomeType(double temper
         }
     }
 
+    return result;
+}
+
+sf::Vector2<double> drft::gen::WorldGenerator::convertIntergerCoordinates(sf::Vector2i coord) const
+{
+    sf::Vector2<double> result;
+    result.x = (static_cast<double>(coord.x) + 0.5) / 13;
+    result.y = (static_cast<double>(coord.y) + 0.5) / 13;
 
     return result;
 }
@@ -131,13 +144,15 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
         BiomeType type = gen::String2Biome.at(blueprint.name.GetString());
         for (auto& category : blueprint.value.GetObject())
         {
-            for (auto& entityPair : category.value.GetObject())
+            for (auto& entity : category.value.GetObject())
             {
-                std::pair<std::string, int> pair;
-                pair.first = entityPair.name.GetString();
-                pair.second = entityPair.value.GetInt();
+                EntityTriplet triplet;
+                auto numAlgo = entity.value.GetArray();
+                triplet.name = entity.name.GetString();
+                triplet.number = numAlgo[0].GetInt();
+                triplet.algorithm = numAlgo[1].GetString();
 
-                _biomes[type].prototypes[category.name.GetString()].push_back(pair);
+                _biomes[type].prototypes[category.name.GetString()].push_back(triplet);
             }
         }
     }
@@ -147,40 +162,44 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
 
 void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
-	double t_noise = _temperatureNoise->gen(coordinate.x, coordinate.y, 0);
-	double a_noise = _altitudeNoise->gen(coordinate.x, coordinate.y, 0);
-	double m_noise = _moistureNoise->gen(coordinate.x, coordinate.y, 0);
-	const auto biomeType = determineBiomeType(t_noise, a_noise, m_noise);
+    const auto biomeType = getBiomeType(coordinate);
 
     const auto& mainBiome = _biomes.at(biomeType.main);
     const auto& secondaryBiome = _biomes.at(biomeType.secondary);
 
     const auto tileCoord = spatial::toTileSpace(coordinate);
 
+    gen::GenerationParameters params;
+    params.params["Seed"] = static_cast<double>(coordinate.x + coordinate.y) / coordinate.y;
+
     for (auto& [category, entityList] : mainBiome.prototypes)
     {
-        for (auto& [entity, number] : entityList)
+        for (auto& [entity, number, algorithm] : entityList)
         {
-            // TODO: use custom placement function for each entity
-            util::buildMany(entity, number, 
-                {tileCoord.x, tileCoord.y, spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT }, registry);
+           auto positions = gen::String2Algorithm.at(algorithm)(number,
+               { spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT }, params);
+
+           gen::place(entity, spatial::toTileSpace(coordinate), positions, registry);
         }
     }
     for (auto& [category, entityList] : secondaryBiome.prototypes)
     {
-        for (auto& [entity, number] : entityList)
+        for (auto& [entity, number, algorithm] : entityList)
         {
-            // TODO: use custom placement function for each entity
-            util::buildMany(entity, number / 4,
-                { tileCoord.x, tileCoord.y, spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT }, registry);
+            auto positions = gen::String2Algorithm.at(algorithm)(number,
+                { spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT }, params);
+
+            gen::place(entity, spatial::toTileSpace(coordinate), positions, registry);
         }
     }
 }
 
 drft::gen::BiomePair drft::gen::WorldGenerator::getBiomeType(sf::Vector2i coordinate) const
 {
-    double t_noise = _temperatureNoise->gen(coordinate.x, coordinate.y, 0);
-    double a_noise = _altitudeNoise->gen(coordinate.x, coordinate.y, 0);
-    double m_noise = _moistureNoise->gen(coordinate.x, coordinate.y, 0);
+    auto dCoord = convertIntergerCoordinates(coordinate);
+    double t_noise = _temperatureNoise->gen(dCoord.x, dCoord.y, 0);
+    double a_noise = _altitudeNoise->gen(dCoord.x, dCoord.y, 0);
+    double m_noise = _moistureNoise->gen(dCoord.x, dCoord.y, 0);
+
     return determineBiomeType(t_noise, a_noise, m_noise);
 }

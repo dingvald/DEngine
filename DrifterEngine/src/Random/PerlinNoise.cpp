@@ -17,19 +17,15 @@ PerlinNoise::PerlinNoise(unsigned int seed, int octaves, float lacunarity, float
 	mPermutations.insert(mPermutations.end(), mPermutations.begin(), mPermutations.end());
 }
 
-double PerlinNoise::gen(int x, int y, int z) const
+double PerlinNoise::gen(double x, double y, double z) const
 {
-	auto dx = static_cast<double>(x) / static_cast<double>(std::numeric_limits<unsigned int>::max());
-	auto dy = static_cast<double>(y) / static_cast<double>(std::numeric_limits<unsigned int>::max());
-	auto dz = static_cast<double>(z) / static_cast<double>(std::numeric_limits<unsigned int>::max());
-
 	double amplitude = 1.0;
 	double frequency = 1.0;
 	double result = 0.0;
 	double max = 0.0;
 
 	for (int i = 0; i < mOctaves; ++i) {
-		result += amplitude * _gen(dx * frequency, dy * frequency, dz * frequency);
+		result += amplitude * _gen(x * frequency, y * frequency, z * frequency);
 		max += amplitude;
 		amplitude *= mGain;
 		frequency *= mLacunarity;
