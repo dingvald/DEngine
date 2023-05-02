@@ -170,6 +170,7 @@
   <ItemGroup>
     <ClCompile Include="src\ProcGen\Biome.cpp" />
     <ClCompile Include="src\ProcGen\PlacementAlgorithms\Algorithms.cpp" />
+    <ClCompile Include="src\ProcGen\PlacementAlgorithms\OrganicSpread.cpp" />
     <ClCompile Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.cpp" />
     <ClCompile Include="src\Random\PerlinNoise.cpp" />
     <ClCompile Include="src\Random\RandomNoise.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="src\ProcGen\BiomeTypes.h" />
     <ClInclude Include="src\ProcGen\PlacementAlgorithms\Algorithms.h" />
     <ClInclude Include="src\ProcGen\PlacementAlgorithms\GenerationParameters.h" />
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\OrganicSpread.h" />
     <ClInclude Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.h" />
     <ClInclude Include="src\Random\PerlinNoise.h" />
     <ClInclude Include="src\Random\RandomNoise.h" />

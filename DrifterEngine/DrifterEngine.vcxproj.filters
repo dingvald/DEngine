@@ -222,6 +222,9 @@
     <ClCompile Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\PlacementAlgorithms\OrganicSpread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -927,6 +930,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\OrganicSpread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

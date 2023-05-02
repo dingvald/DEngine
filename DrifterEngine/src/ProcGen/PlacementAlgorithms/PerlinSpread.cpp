@@ -3,22 +3,21 @@
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
 
-static constexpr double THRESHOLD = 0.6;
-
-std::vector<sf::Vector2i> drft::gen::perlinSpread(int number, sf::Vector2i bounds, GenerationParameters p)
+std::vector<sf::Vector2i> drft::gen::perlinSpread(int seed, sf::Vector2i bounds, GenerationParameters params)
 {
-	rng::PerlinNoise noise(rng::noise(p.params.at("Seed")));
+	rng::PerlinNoise noise(seed);
 	std::vector<sf::Vector2i> result;
+	float threshold = params.at("Threshold");
 
 	for (int y = 0; y < bounds.y; ++y)
 	{
 		for (int x = 0; x < bounds.x; ++x)
 		{
-			double dx = (static_cast<double>(x) - 0.5) / 32;
-			double dy = (static_cast<double>(y) - 0.5) / 32;
-			auto val = noise.gen(dx, dy);
+			const double dx = (static_cast<double>(x) - 0.5) / 32;
+			const double dy = (static_cast<double>(y) - 0.5) / 32;
+			const double val = noise.gen(dx, dy);
 
-			if (val > THRESHOLD)
+			if (val > threshold)
 			{
 				result.emplace_back(x, y);
 			}

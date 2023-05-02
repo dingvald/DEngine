@@ -4,8 +4,5 @@
 
 namespace drft::gen
 {
-	struct GenerationParameters
-	{
-		std::unordered_map<std::string, float> params;
-	};
+	using GenerationParameters = std::unordered_map<std::string, float>;
 }

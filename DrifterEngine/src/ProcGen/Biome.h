@@ -3,18 +3,17 @@
 
 namespace drft::gen
 {
-	struct EntityTriplet
+	struct BiomePrototype
 	{
 		std::string name;
-		int number;
 		std::string algorithm;
+		std::unordered_map<std::string, float> params;
 	};
 
 	struct Biome
 	{
 		BiomeType type;
-
-		using PrototypeList = std::vector<EntityTriplet>;
+		using PrototypeList = std::vector<BiomePrototype>;
 		std::unordered_map<std::string, PrototypeList> prototypes;
 	};
 }

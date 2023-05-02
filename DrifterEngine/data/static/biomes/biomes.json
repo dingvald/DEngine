@@ -2,19 +2,54 @@
   "Biomes": {
     "Forest": {
       "Environmental": {
-        "Tree": [ 300, "RandomSpread" ],
-        "Stone": [ 10, "RandomSpread" ],
-        "Grass": [ 300, "RandomSpread" ]
+        "Tree": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 300
+          }
+        },
+        "Stone": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 10
+          }
+        },
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 166
+          }
+        }
       },
       "Actors": {
       }
     },
     "Mountain": {
       "Environmental": {
-        "Boulder": [ 300, "PerlinSpread" ],
-        "Tree": [ 50, "RandomSpread" ],
-        "Stone": [ 300, "RandomSpread" ],
-        "Grass": [ 60, "RandomSpread" ]
+        "Tree": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 40
+          }
+        },
+        "Boulder": {
+          "Algorithm": "PerlinSpread",
+          "Params": {
+            "Threshold": 0.55
+          }
+        },
+        "Stone": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 100
+          }
+        },
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 50
+          }
+        }
       },
       "Actors": {
 
@@ -22,9 +57,24 @@
     },
     "Lake": {
       "Environmental": {
-        "Stone": [ 20, "RandomSpread" ],
-        "Grass": [ 300, "RandomSpread" ],
-        "Water": [ 500, "PerlinSpread" ]
+        "Stone": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 3
+          }
+        },
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 300
+          }
+        },
+        "Water": {
+          "Algorithm": "PerlinSpread",
+          "Params": {
+            "Threshold" : 0.5
+          }
+        }
       },
       "Actors": {
 
@@ -32,8 +82,18 @@
     },
     "Swamp": {
       "Environmental": {
-        "Grass": [ 300, "RandomSpread" ],
-        "Water": [ 300, "RandomSpread" ]
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 300
+          }
+        },
+        "Water": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 300
+          }
+        }
       },
       "Actors": {
 
@@ -41,18 +101,48 @@
     },
     "Desert": {
       "Environmental": {
-        "Stone": [ 20, "RandomSpread" ],
-        "Cactus": [ 75, "RandomSpread" ],
-        "Sand": [ 300, "PerlinSpread" ]
+        "Stone": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 5
+          }
+        },
+        "Cactus": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 50
+          }
+        },
+        "Sand": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 600
+          }
+        }
       },
       "Actors": {
       }
     },
     "Grassland": {
       "Environmental": {
-        "Tree": [ 20, "RandomSpread" ],
-        "Stone": [ 10, "RandomSpread" ],
-        "Grass": [ 300, "PerlinSpread" ]
+        "Tree": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 10
+          }
+        },
+        "Stone": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 7
+          }
+        },
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 600
+          }
+        }
       },
       "Actors": {
 
