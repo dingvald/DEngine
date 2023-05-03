@@ -11,10 +11,10 @@ namespace drft::gen
 		WorldGenerator(unsigned int seed);
 		bool loadBiomeBlueprints(std::string filename);
 		void buildChunk(sf::Vector2i coordinate, entt::registry& registry) const;
-		BiomePair getBiomeType(sf::Vector2i coordinate) const;
+		BiomeType getBiomeType(sf::Vector2i coordinate) const;
 
 	private:
-		BiomePair determineBiomeType(double temperature, double altitude, double moisture) const;
+		BiomeType determineBiomeType(double temperature, double altitude, double moisture) const;
 		sf::Vector2<double> convertIntergerCoordinates(sf::Vector2i coord) const;
 
 	private:

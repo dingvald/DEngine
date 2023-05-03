@@ -20,87 +20,6 @@ static constexpr double ALTITUDE_HIGH = 0.6;
 static constexpr double MOISTURE_ARID = 0.4;
 static constexpr double MOISTURE_HUMID = 0.6;
 
-drft::gen::BiomePair drft::gen::WorldGenerator::determineBiomeType(double temperature, double altitude, double moisture) const
-{
-    BiomePair result = { BiomeType::Forest, BiomeType::Forest };
-
-    if (altitude > ALTITUDE_HIGH)
-    {
-        result.main = BiomeType::Mountain;
-        if (moisture > MOISTURE_HUMID)
-        {
-            result.secondary = BiomeType::Lake;
-        }
-        else if (moisture > MOISTURE_ARID)
-        {
-            result.secondary = BiomeType::Forest;
-        }
-        else
-        {
-            result.secondary = BiomeType::Desert;
-        }
-    }
-    else if (altitude > ALTITUDE_LOW)
-    {
-        if (moisture > MOISTURE_HUMID)
-        {
-            result.main = BiomeType::Lake;
-            if (temperature > TEMPERATURE_HOT)
-            {
-                result.main = BiomeType::Swamp;
-            }
-            else
-            {
-                result.secondary = BiomeType::Swamp;
-            }
-        }
-        else if (moisture > MOISTURE_ARID)
-        {
-            result.main = BiomeType::Forest;
-        }
-        else
-        {
-            result.main = BiomeType::Desert;
-            result.secondary = BiomeType::Desert;
-        }
-    }
-    else
-    {
-        if (moisture > MOISTURE_HUMID)
-        {
-            result.main = BiomeType::Swamp;
-            if (temperature > TEMPERATURE_HOT)
-            {
-                result.main = BiomeType::Swamp;
-            }
-            else
-            {
-                result.secondary = BiomeType::Swamp;
-            }
-        }
-        else if (moisture > MOISTURE_ARID)
-        {
-            result.main = BiomeType::Grassland;
-        }
-        else
-        {
-            result.main = BiomeType::Desert;
-            result.secondary = BiomeType::Desert;
-        }
-    }
-
-    return result;
-}
-
-sf::Vector2<double> drft::gen::WorldGenerator::convertIntergerCoordinates(sf::Vector2i coord) const
-{
-    sf::Vector2<double> result;
-    result.x = (static_cast<double>(coord.x) + 0.5) / (13*64);
-    result.y = (static_cast<double>(coord.y) + 0.5) / (13*64);
-
-    return result;
-}
-
 drft::gen::WorldGenerator::WorldGenerator(unsigned int seed)
 	: _seed(seed)
 {
@@ -111,6 +30,88 @@ drft::gen::WorldGenerator::WorldGenerator(unsigned int seed)
 	_temperatureNoise = std::make_unique<rng::PerlinNoise>(temperatureSeed);
 	_altitudeNoise = std::make_unique<rng::PerlinNoise>(altitudeSeed);
 	_moistureNoise = std::make_unique<rng::PerlinNoise>(moistureSeed);
+}
+
+drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temperature, double altitude, double moisture) const
+{
+    if (altitude > ALTITUDE_HIGH)
+    {
+        return BiomeType::Mountain;
+    }
+    else if (altitude > ALTITUDE_LOW)
+    {
+        if (moisture > MOISTURE_HUMID)
+        {
+            if (temperature > TEMPERATURE_HOT)
+            {
+                return BiomeType::Jungle;
+            }
+            else if (temperature > TEMPERATURE_COLD)
+            {
+                return BiomeType::Lake;
+            }
+            else  if (temperature <= TEMPERATURE_COLD)
+            {
+                return BiomeType::Lake;
+            }
+        }
+        else if (moisture > MOISTURE_ARID)
+        {
+            if (temperature > TEMPERATURE_HOT)
+            {
+                return BiomeType::Jungle;
+            }
+            else if (temperature > TEMPERATURE_COLD)
+            {
+                return BiomeType::Forest;
+            }
+            else  if (temperature <= TEMPERATURE_COLD)
+            {
+                return BiomeType::Forest;
+            }
+        }
+        else if (moisture <= MOISTURE_ARID)
+        {
+            return BiomeType::Desert;
+        }
+    }
+    else if (altitude <= ALTITUDE_LOW)
+    {
+        if (moisture > MOISTURE_HUMID)
+        {
+            if (temperature > TEMPERATURE_HOT)
+            {
+                return BiomeType::Swamp;
+            }
+            else if (temperature > TEMPERATURE_COLD)
+            {
+                return BiomeType::Lake;
+            }
+            else if (temperature <= TEMPERATURE_COLD)
+            {
+                return BiomeType::Lake;
+            }
+        }
+        else if (moisture > MOISTURE_ARID)
+        {
+            return BiomeType::Grassland;
+        }
+        else if (moisture <= MOISTURE_ARID)
+        {
+            return BiomeType::Desert;
+        }
+    }
+
+    return BiomeType::Forest;
+}
+
+sf::Vector2<double> drft::gen::WorldGenerator::convertIntergerCoordinates(sf::Vector2i coord) const
+{
+    sf::Vector2<double> result;
+    result.x = (static_cast<double>(coord.x) + 0.5) / (13 * 64);
+    result.y = (static_cast<double>(coord.y) + 0.5) / (13 * 64);
+
+    return result;
 }
 
 bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
@@ -166,15 +167,14 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
 {
     const auto biomeType = getBiomeType(coordinate);
 
-    const auto& mainBiome = _biomes.at(biomeType.main);
-    const auto& secondaryBiome = _biomes.at(biomeType.secondary);
+    const auto& biome = _biomes.at(biomeType);
 
     const auto tileCoord = spatial::toTileSpace(coordinate);
 
-    const int LARGE_PRIME = 7919;
+    const int LARGE_PRIME = 7919; // not that large lol
     const int seed = rng::noise((coordinate.x + LARGE_PRIME + coordinate.y));
 
-    for (auto& [category, entityList] : mainBiome.prototypes)
+    for (auto& [category, entityList] : biome.prototypes)
     {
         for (auto& [entity, algorithm, params] : entityList)
         {
@@ -184,19 +184,9 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
            gen::place(entity, spatial::toTileSpace(coordinate), positions, registry);
         }
     }
-    for (auto& [category, entityList] : secondaryBiome.prototypes)
-    {
-        for (auto& [entity, algorithm, params] : entityList)
-        {
-            auto positions = gen::String2Algorithm.at(algorithm)( seed,
-                { spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT }, params);
-
-            gen::place(entity, spatial::toTileSpace(coordinate), positions, registry);
-        }
-    }
 }
 
-drft::gen::BiomePair drft::gen::WorldGenerator::getBiomeType(sf::Vector2i coordinate) const
+drft::gen::BiomeType drft::gen::WorldGenerator::getBiomeType(sf::Vector2i coordinate) const
 {
     auto dCoord = convertIntergerCoordinates(spatial::toTileSpace(coordinate));
     double t_noise = _temperatureNoise->gen(dCoord.x, dCoord.y, 0);
