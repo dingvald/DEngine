@@ -48,6 +48,9 @@ void drft::system::PlayerInput::init()
 	_actionMap.addAction(Key::E, [](entt::handle entity) {
 		entity.emplace<component::action::OpenEquipment>();
 		});
+	_actionMap.addAction(Key::M, [](entt::handle entity) {
+		entity.emplace<component::action::OpenWorldMap>();
+		});
 }
 
 void drft::system::PlayerInput::update(const float dt)

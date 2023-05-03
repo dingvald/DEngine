@@ -6,7 +6,7 @@
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Events/RequestStateChange.h"
-#include "ProcGen/WorldGenerator.h"
+
 #pragma region System Includes
 #include "Systems/SystemScheduler.h"
 #include "Systems/Core/TileRenderer.h"
@@ -31,6 +31,7 @@
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/OpenInventorySystem.h"
 #include "Systems/Gameplay/OpenEquipmentSystem.h"
+#include "Systems/Gameplay/OpenWorldMapSystem.h"
 #pragma endregion
 #pragma region Component Includes
 #include "Components/Components.h"
@@ -203,24 +204,29 @@ void drft::GameState::importSystems()
 	// Add an offset to adjust execution order of systems
 	_systems->add<RealityBubble>(			Phase::OnPreUpdate);
 	_systems->add<TurnManager>(				Phase::OnPreUpdate + 5);
+
 	_systems->add<PlayerInput>(				Phase::OnProcessInput);
 	_systems->add<ArtificialInput>(			Phase::OnProcessInput);
+
 	_systems->add<MovementSystem>(			Phase::OnUpdate);
 	_systems->add<PickUpSystem>(			Phase::OnUpdate);
 	_systems->add<DropItemSystem>(			Phase::OnUpdate);
 	_systems->add<EquipItemSystem>(			Phase::OnUpdate);
 	_systems->add<OpenInventorySystem>(		Phase::OnUpdate);
 	_systems->add<OpenEquipmentSystem>(		Phase::OnUpdate);
+	_systems->add<OpenWorldMapSystem>(		Phase::OnUpdate);
 	_systems->add<BodyPartSystem>(			Phase::OnUpdate);
 	_systems->add<LaunchAttackSystem>(		Phase::OnUpdate + 10);
 	_systems->add<DamageSystem>(			Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(				Phase::OnUpdate + 15);
+
 	_systems->add<Camera>(					Phase::OnPostUpdate);
 	_systems->add<ChunkManager>(			Phase::OnPostUpdate);
 	
 	_systems->add<TileRenderer>(			Phase::OnRender);
 	_systems->add<EntityRenderer>(			Phase::OnRender + 5);
 	_systems->add<HUD>(						Phase::OnRender + 10);
+
 	_systems->add<WorldGridResolver>(		Phase::Reactive);
 	_systems->add<FactionSystem>(			Phase::Reactive);
 	_systems->add<ItemUniqueIDGenerator>(	Phase::Reactive);

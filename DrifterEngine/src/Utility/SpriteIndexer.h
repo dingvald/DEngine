@@ -27,7 +27,11 @@ namespace drft::util
 		PaperDollLegs,
 		PaperDollFeet,
 		PaperDollHands,
-		Boulder
+		Boulder,
+		Sand,
+		Water,
+		Cactus,
+		Triangle
 	};
 
 	class SpriteIndexer

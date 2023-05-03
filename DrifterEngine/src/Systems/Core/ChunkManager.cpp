@@ -38,7 +38,7 @@ void drft::system::ChunkManager::update(const float dt)
 
 	auto biome = _generator->getBiomeType(cameraPosition);
 	service::DebugInfo::instance().putInfo("Virtual Chunks", std::to_string(_chunks.size()));
-	service::DebugInfo::instance().putInfo("Biome: ",
+	service::DebugInfo::instance().putInfo("Biome",
 		std::string(gen::Biome2String.at(biome.main).data()) + ", " + gen::Biome2String.at(biome.secondary).data());
 }
 

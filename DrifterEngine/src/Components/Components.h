@@ -141,4 +141,6 @@ namespace component::action
 
 	struct OpenEquipment
 	{};
+
+	struct OpenWorldMap {};
 }

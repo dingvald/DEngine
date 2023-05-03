@@ -11,6 +11,7 @@ namespace drft
 		Inventory,
 		Pause,
 		GameOver,
+		Map,
 		Total
 	};
 }

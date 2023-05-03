@@ -36,9 +36,9 @@ namespace drft
 	public:
 		InventoryState(StateStack& stack, StateContext& context);
 
-		bool handleEvent(const sf::Event& ev);
-		bool update(const float dt);
-		void render(sf::RenderTarget& target);
+		bool handleEvent(const sf::Event& ev) override;
+		bool update(const float dt) override;
+		void render(sf::RenderTarget& target) override;
 		void onPush() override;
 		void onPop() override;
 
