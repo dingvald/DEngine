@@ -9,6 +9,7 @@ namespace drft::gen
 		Mountain, // stones, boulders, trees, minerals, 
 		Lake, // Water, grass, 
 		Swamp, // Water, mud, trees, stones
+		Jungle, // Trees, roots, stones, vegetation
 		Desert, // Not much
 		Grassland // Grass
 	};
@@ -19,20 +20,21 @@ namespace drft::gen
 		{BiomeType::Mountain, util::Sprite::Triangle},
 		{BiomeType::Lake, util::Sprite::Water},
 		{BiomeType::Swamp, util::Sprite::Water},
+		{BiomeType::Jungle, util::Sprite::Tree},
 		{BiomeType::Desert, util::Sprite::Sand},
 		{BiomeType::Grassland, util::Sprite::Grass},
 	};
 
 	const std::unordered_map<BiomeType, sf::Color> BiomeColors =
 	{
-		{BiomeType::Forest, sf::Color(31, 51, 36)},
-		{BiomeType::Mountain, sf::Color(80,80,80)},
+		{BiomeType::Forest, sf::Color(65, 97, 63)},
+		{BiomeType::Mountain, sf::Color(80, 80, 80)},
 		{BiomeType::Lake, sf::Color(27, 149, 224)},
-		{BiomeType::Swamp, sf::Color(30,80,100)},
+		{BiomeType::Swamp, sf::Color(30, 80, 100)},
+		{BiomeType::Jungle, sf::Color(31, 51, 36)},
 		{BiomeType::Desert, sf::Color(194, 178, 128)},
-		{BiomeType::Grassland, sf::Color(72,111,56)},
+		{BiomeType::Grassland, sf::Color(72, 111, 56)},
 	};
-
 
 	const std::unordered_map<BiomeType, std::string_view> Biome2String =
 	{
@@ -40,6 +42,7 @@ namespace drft::gen
 		{BiomeType::Mountain, "Mountain"},
 		{BiomeType::Lake, "Lake"},
 		{BiomeType::Swamp, "Swamp"},
+		{BiomeType::Jungle, "Jungle"},
 		{BiomeType::Desert, "Desert"},
 		{BiomeType::Grassland, "Grassland"}
 	};
@@ -50,13 +53,8 @@ namespace drft::gen
 		{"Mountain", BiomeType::Mountain},
 		{"Lake", BiomeType::Lake},
 		{"Swamp", BiomeType::Swamp},
+		{"Jungle", BiomeType::Jungle},
 		{"Desert", BiomeType::Desert},
 		{"Grassland", BiomeType::Grassland}
-	};
-
-	struct BiomePair
-	{
-		BiomeType main;
-		BiomeType secondary;
 	};
 }

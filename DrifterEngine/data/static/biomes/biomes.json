@@ -3,9 +3,12 @@
     "Forest": {
       "Environmental": {
         "Tree": {
-          "Algorithm": "RandomSpread",
+          "Algorithm": "OrganicSpread",
           "Params": {
-            "Number": 300
+            "Generations": 3,
+            "StartingSeeds": 7,
+            "SeedsPerGeneration": 3,
+            "Radius": 9
           }
         },
         "Stone": {
@@ -17,7 +20,7 @@
         "Grass": {
           "Algorithm": "RandomSpread",
           "Params": {
-            "Number": 166
+            "Number": 500
           }
         }
       },
@@ -72,7 +75,7 @@
         "Water": {
           "Algorithm": "PerlinSpread",
           "Params": {
-            "Threshold" : 0.5
+            "Threshold": 0.4
           }
         }
       },
@@ -92,6 +95,25 @@
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 300
+          }
+        }
+      },
+      "Actors": {
+
+      }
+    },
+    "Jungle": {
+      "Environmental": {
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 300
+          }
+        },
+        "Tree": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 600
           }
         }
       },
