@@ -37,7 +37,10 @@ bool drft::TitleScreenState::update(const float dt)
 	const float f = 0.5f;
 	static float elapsed = 0.0f;
 	elapsed += dt;
-
+	if (elapsed > 10.0)
+	{
+		elapsed = 0.0;
+	}
 	alpha = 255 * ((std::sinf(twoPI * f * elapsed) + 1.f) / 2.f);
 
 	_pressAnyButtonText.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));

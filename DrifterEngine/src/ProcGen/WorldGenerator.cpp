@@ -20,16 +20,18 @@ static constexpr double ALTITUDE_HIGH = 0.6;
 static constexpr double MOISTURE_ARID = 0.4;
 static constexpr double MOISTURE_HUMID = 0.6;
 
-drft::gen::WorldGenerator::WorldGenerator(unsigned int seed)
-	: _seed(seed)
+void drft::gen::WorldGenerator::setSeed(unsigned int seed)
 {
-	unsigned int temperatureSeed = rng::noise(seed);
-	unsigned int altitudeSeed = rng::noise(temperatureSeed);
-	unsigned int moistureSeed = rng::noise(altitudeSeed);
+    _seed = seed;
+    _cachedBiomeTypes.clear();
 
-	_temperatureNoise = std::make_unique<rng::PerlinNoise>(temperatureSeed);
-	_altitudeNoise = std::make_unique<rng::PerlinNoise>(altitudeSeed);
-	_moistureNoise = std::make_unique<rng::PerlinNoise>(moistureSeed);
+    const unsigned int temperatureSeed = rng::noise(_seed);
+    const unsigned int altitudeSeed = rng::noise(temperatureSeed);
+    const unsigned int moistureSeed = rng::noise(altitudeSeed);
+
+    _temperatureNoise = std::make_unique<rng::PerlinNoise>(temperatureSeed);
+    _altitudeNoise = std::make_unique<rng::PerlinNoise>(altitudeSeed);
+    _moistureNoise = std::make_unique<rng::PerlinNoise>(moistureSeed);
 }
 
 drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temperature, double altitude, double moisture) const
@@ -166,13 +168,12 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
 void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
     const auto biomeType = getBiomeType(coordinate);
-
     const auto& biome = _biomes.at(biomeType);
 
     const auto tileCoord = spatial::toTileSpace(coordinate);
 
-    const int LARGE_PRIME = 7919; // not that large lol
-    const int seed = rng::noise((coordinate.x + LARGE_PRIME + coordinate.y));
+    const int LARGE_PRIME = 198491317;
+    const int seed = rng::noise((coordinate.x + LARGE_PRIME * coordinate.y));
 
     for (auto& [category, entityList] : biome.prototypes)
     {
@@ -188,10 +189,16 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
 
 drft::gen::BiomeType drft::gen::WorldGenerator::getBiomeType(sf::Vector2i coordinate) const
 {
+    if (_cachedBiomeTypes.contains({ coordinate.x, coordinate.y })) {
+        return _cachedBiomeTypes.at({ coordinate.x, coordinate.y });
+    }
     auto dCoord = convertIntergerCoordinates(spatial::toTileSpace(coordinate));
     double t_noise = _temperatureNoise->gen(dCoord.x, dCoord.y, 0);
     double a_noise = _altitudeNoise->gen(dCoord.x, dCoord.y, 0);
     double m_noise = _moistureNoise->gen(dCoord.x, dCoord.y, 0);
 
-    return determineBiomeType(t_noise, a_noise, m_noise);
+    auto biomeType = determineBiomeType(t_noise, a_noise, m_noise);
+    _cachedBiomeTypes[std::pair(coordinate.x, coordinate.y)] = biomeType;
+
+    return biomeType;
 }

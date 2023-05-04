@@ -1,9 +1,13 @@
 #include "pch.h"
 #include "MainMenuState.h"
+#include "ProcGen/WorldGenerator.h"
 
 drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
+	getContext().registry.ctx().emplace<gen::WorldGenerator>().loadBiomeBlueprints("biomes.json");
+	// TODO: Allow the world generator seed to be set from the main menu
+
 	const auto& VIEW = getContext().window.getView();
 	_mainMenuWindow.setSize(VIEW.getSize())
 		.setPosition(VIEW.getCenter())

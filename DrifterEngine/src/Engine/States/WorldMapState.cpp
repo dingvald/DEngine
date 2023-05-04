@@ -4,7 +4,6 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "ProcGen/WorldGenerator.h"
-#include "Random/RandomNumberGenerator.h"
 
 static constexpr float FLASH_RATE = 1.0;
 
@@ -20,7 +19,6 @@ drft::WorldMapState::WorldMapState(StateStack& stack, StateContext& context)
 		});
 
 	_map.setTexture(getContext().textures.get("Sprites"));
-	_generator = std::make_unique<gen::WorldGenerator>(rng::RandomNumberGenerator::getSeed());
 }
 
 bool drft::WorldMapState::handleEvent(const sf::Event& ev)
@@ -72,15 +70,18 @@ void drft::WorldMapState::onPush()
 		_currentPosition = spatial::toChunkCoordinate(pos.position);
 	}
 	auto surroundings = spatial::getIntPointsInRadius(_currentPosition, 15);
+	const auto& generator = getContext().registry.ctx().get<const gen::WorldGenerator&>();
 	for (auto pos : surroundings)
 	{
-		auto biomeType = _generator->getBiomeType(pos);
+		auto biomeType = generator.getBiomeType(pos);
 		_map.addSprite(static_cast<unsigned int>(util::Sprite::Square),
 			sf::Color::Black, sf::Vector2f((pos - _currentPosition) * spatial::TILE_WIDTH) + VIEW.getCenter());
-		_map.addSprite(static_cast<unsigned int>(gen::BiomeSprites.at(biomeType.main)), 
-			gen::BiomeColors.at(biomeType.main), sf::Vector2f((pos - _currentPosition) * spatial::TILE_WIDTH) + VIEW.getCenter());
+
+		_map.addSprite(static_cast<unsigned int>(gen::BiomeSprites.at(biomeType)), 
+			gen::BiomeColors.at(biomeType), sf::Vector2f((pos - _currentPosition) * spatial::TILE_WIDTH) + VIEW.getCenter());
 	
 	}
+
 	_currentPositionTile.setSize({ spatial::TILE_WIDTH, spatial::TILE_HEIGHT });
 	_currentPositionTile.setPosition((VIEW.getCenter()));
 	_currentPositionTile.setFillColor(sf::Color::White);

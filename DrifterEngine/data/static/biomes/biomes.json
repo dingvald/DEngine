@@ -110,7 +110,13 @@
             "Number": 300
           }
         },
-        "Tree": {
+        "Roots": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 200
+          }
+        },
+        "JungleTree": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 600

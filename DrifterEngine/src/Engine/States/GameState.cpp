@@ -6,6 +6,7 @@
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Events/RequestStateChange.h"
+#include "ProcGen/WorldGenerator.h"
 
 #pragma region System Includes
 #include "Systems/SystemScheduler.h"
@@ -133,6 +134,7 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace_as<sf::Texture&>("sprites"_hs, getContext().textures.get("Sprites"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
+	getContext().registry.ctx().get<gen::WorldGenerator&>().setSeed(rng::RandomNumberGenerator::getSeed());
 }
 
 void drft::GameState::loadRegistry()

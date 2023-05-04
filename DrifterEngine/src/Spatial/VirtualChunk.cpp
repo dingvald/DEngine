@@ -22,7 +22,7 @@ ChunkState VirtualChunk::getState() const
 	return this->_state;
 }
 
-ioStatus drft::spatial::VirtualChunk::build(const gen::WorldGenerator& generator, entt::registry& reg)
+ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 {
 	if (getState() == ChunkState::ToBuild)
 	{
@@ -30,8 +30,8 @@ ioStatus drft::spatial::VirtualChunk::build(const gen::WorldGenerator& generator
 		setState(ChunkState::Building);
 	}
 
-	generator.buildChunk(_coordinate, reg);
-	
+	reg.ctx().get<gen::WorldGenerator&>().buildChunk(_coordinate, reg);
+
 	setState(ChunkState::Built);
 
 	return ioStatus::Done;

@@ -4,6 +4,7 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Components/Components.h"
+#include "ProcGen/WorldGenerator.h"
 #include "Services/DebugInfo.h"
 #include "Random/RandomNumberGenerator.h"
 
@@ -14,8 +15,6 @@ static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\chunks\\
 
 void drft::system::ChunkManager::init()
 {
-	_generator = std::make_unique<gen::WorldGenerator>(rng::RandomNumberGenerator::getSeed());
-	_generator->loadBiomeBlueprints("biomes.json");
 }
 
 void drft::system::ChunkManager::update(const float dt)
@@ -36,7 +35,7 @@ void drft::system::ChunkManager::update(const float dt)
 
 	cleanUpChunks(cameraPosition);
 
-	auto biome = _generator->getBiomeType(cameraPosition);
+	auto biome = registry->ctx().get<gen::WorldGenerator>().getBiomeType(cameraPosition);
 	service::DebugInfo::instance().putInfo("Virtual Chunks", std::to_string(_chunks.size()));
 	service::DebugInfo::instance().putInfo("Biome", gen::Biome2String.at(biome).data());
 }
@@ -147,7 +146,7 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 	switch (type)
 	{
 	case BUILD:
-		status = _chunks.at(keyablePair).build(*_generator, *registry);
+		status = _chunks.at(keyablePair).build(*registry);
 		break;
 	case SAVE:
 		status = _chunks.at(keyablePair).asyncSave(*registry, CHUNK_SAVE_PATH.data());

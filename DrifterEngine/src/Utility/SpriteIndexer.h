@@ -31,7 +31,9 @@ namespace drft::util
 		Sand,
 		Water,
 		Cactus,
-		Triangle
+		Triangle,
+		JungleTree,
+		Roots
 	};
 
 	class SpriteIndexer

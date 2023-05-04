@@ -20,7 +20,7 @@ namespace drft::gen
 		{BiomeType::Mountain, util::Sprite::Triangle},
 		{BiomeType::Lake, util::Sprite::Water},
 		{BiomeType::Swamp, util::Sprite::Water},
-		{BiomeType::Jungle, util::Sprite::Tree},
+		{BiomeType::Jungle, util::Sprite::JungleTree},
 		{BiomeType::Desert, util::Sprite::Sand},
 		{BiomeType::Grassland, util::Sprite::Grass},
 	};

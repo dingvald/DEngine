@@ -96,6 +96,52 @@
         }
       ]
     },
+    // Roots
+    {
+      "Name": "Roots",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Roots",
+            "extendedName": "",
+            "description": "Roots of an old tree."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 29,
+            "color": [ 68, 48, 40 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 80.0,
+            "materials": [ "Wood" ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 20,
+            "current": 20
+          }
+        }
+      ]
+    },
     // Tree
     {
       "Name": "Tree",
@@ -116,7 +162,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 5,
-            "color": [ 31, 51, 36 ]
+            "color": [ 65, 97, 63 ]
           }
         },
         {
@@ -138,6 +184,52 @@
           "Data": {
             "max": 100,
             "current": 100
+          }
+        }
+      ]
+    },
+    // Jungle Tree
+    {
+      "Name": "JungleTree",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Jungle Tree",
+            "extendedName": "",
+            "description": "A tree found in tropical climates."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 28,
+            "color": [ 31, 51, 36 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 300.0,
+            "materials": [ "Wood" ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 10.0, 10.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 50,
+            "current": 50
           }
         }
       ]
@@ -169,7 +261,7 @@
           "Name": "Physical",
           "Data": {
             "weight": 50.0,
-            "materials": ["Wood"]
+            "materials": [ "Wood" ]
           }
         },
         {

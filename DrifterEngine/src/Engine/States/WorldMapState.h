@@ -5,11 +5,6 @@
 
 namespace drft
 {
-	namespace gen
-	{
-		class WorldGenerator;
-	}
-
 	class WorldMapState : public State
 	{
 	public:
@@ -24,7 +19,6 @@ namespace drft
 	private:
 		sf::Vector2i _currentPosition;
 		gui::Panel _mapBackground;
-		std::unique_ptr<gen::WorldGenerator> _generator;
 		sf::RectangleShape _currentPositionTile;
 		SpriteBatch _map;
 	};
