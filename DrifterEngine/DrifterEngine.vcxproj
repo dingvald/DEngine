@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ProcGen\PlacementAlgorithms\Fill.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenWorldMapSystem.cpp" />
     <ClCompile Include="src\ProcGen\Biome.cpp" />
     <ClCompile Include="src\ProcGen\PlacementAlgorithms\Algorithms.cpp" />
@@ -275,6 +276,7 @@
     <ClCompile Include="src\Engine\States\WorldMapState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\Fill.h" />
     <ClInclude Include="src\Systems\Gameplay\OpenWorldMapSystem.h" />
     <ClInclude Include="src\ProcGen\Biome.h" />
     <ClInclude Include="src\ProcGen\BiomeTypes.h" />

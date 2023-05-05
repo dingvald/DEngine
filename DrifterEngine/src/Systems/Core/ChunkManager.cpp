@@ -50,7 +50,7 @@ void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
 
 void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 {
-	auto activeCoords = spatial::getIntPointsInRadius(newPosition, _activeChunkRadius);
+	auto activeCoords = spatial::getIntCircleInRadius(newPosition, _activeChunkRadius);
 
 	// Ensure active chunks are active or will be built
 	for (auto coord : activeCoords)

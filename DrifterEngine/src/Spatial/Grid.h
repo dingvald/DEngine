@@ -11,6 +11,7 @@ namespace drft::spatial
 		Grid(int width, int height);
 
 		void resize(int width, int height);
+		void fill(T val);
 
 		T& at(int x, int y);
 		const T& at(int x, int y) const;

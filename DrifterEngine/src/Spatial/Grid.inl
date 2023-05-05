@@ -19,6 +19,12 @@ namespace drft::spatial
 	}
 
 	template<typename T>
+	inline void Grid<T>::fill(T val)
+	{
+		std::fill(_cells.begin(), _cells.end(), val);
+	}
+
+	template<typename T>
 	inline T& Grid<T>::at(int x, int y)
 	{
 		return _cells.at(y * _width + x);

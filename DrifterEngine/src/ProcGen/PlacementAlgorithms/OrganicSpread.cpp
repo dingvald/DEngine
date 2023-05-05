@@ -3,7 +3,7 @@
 #include "Spatial/Helpers.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::organicSpread(int seed, sf::Vector2i bounds, GenerationParameters params)
+std::vector<sf::Vector2i> drft::gen::organicSpread(int seed, const spatial::Grid<int>& grid, GenerationParameters params)
 {
 	std::vector<sf::Vector2i> positions;
 	const int generations = static_cast<int>(params.at("Generations"));
@@ -13,8 +13,8 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(int seed, sf::Vector2i bounds
 
 	for (int ss = 0; ss < startingSeeds; ++ss)
 	{
-		int randx = rng::RandomNumberGenerator::intInRange(0, bounds.x);
-		int randy = rng::RandomNumberGenerator::intInRange(0, bounds.y);
+		int randx = rng::RandomNumberGenerator::intInRange(0, grid.width());
+		int randy = rng::RandomNumberGenerator::intInRange(0, grid.height());
 		positions.emplace_back(randx, randy);
 	}
 
@@ -23,7 +23,7 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(int seed, sf::Vector2i bounds
 		std::vector<sf::Vector2i> positionsToAdd;
 		for (auto position : positions)
 		{
-			auto surroundings = spatial::getIntPointsInRadius(position, radius);
+			auto surroundings = spatial::getIntCircleInRadius(position, radius);
 			for (int spg = 0; spg < seedsPerGeneration; ++spg)
 			{
 				int index = rng::RandomNumberGenerator::intInRange(0, surroundings.size() - 1);

@@ -73,9 +73,8 @@
           }
         },
         "Water": {
-          "Algorithm": "PerlinSpread",
+          "Algorithm": "Fill",
           "Params": {
-            "Threshold": 0.4
           }
         }
       },

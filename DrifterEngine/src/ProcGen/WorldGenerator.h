@@ -3,8 +3,15 @@
 #include "BiomeTypes.h"
 #include "Random/PerlinNoise.h"
 
+namespace drft::spatial
+{
+	template<typename T>
+	class Grid;
+}
+
 namespace drft::gen
 {
+
 	class WorldGenerator
 	{
 	public:
@@ -16,7 +23,8 @@ namespace drft::gen
 	private:
 		BiomeType determineBiomeType(double temperature, double altitude, double moisture) const;
 		sf::Vector2<double> convertIntergerCoordinates(sf::Vector2i coord) const;
-		std::vector<sf::Vector2i> findGrouping(BiomeType biomeType) const;
+		std::vector<sf::Vector2i> determineOpenFaces(sf::Vector2i coord) const;
+		void determineAvailableSpaces(std::vector<sf::Vector2i> openFaces, spatial::Grid<int>& spaces, unsigned int seed) const;
 
 	private:
 		unsigned int _seed = 0;

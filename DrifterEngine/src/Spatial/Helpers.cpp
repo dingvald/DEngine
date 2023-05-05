@@ -2,7 +2,7 @@
 #include "Helpers.h"
 
 
-std::vector<sf::Vector2i> drft::spatial::getIntPointsInRadius(const sf::Vector2i centerPosition, const int radius)
+std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(const sf::Vector2i centerPosition, const int radius)
 {
 	std::vector<sf::Vector2i> result;
 
@@ -14,8 +14,23 @@ std::vector<sf::Vector2i> drft::spatial::getIntPointsInRadius(const sf::Vector2i
 
 			if (distance < radius)
 			{
-				result.push_back({ x,y });
+				result.emplace_back(x,y);
 			}
+		}
+	}
+
+	return result;
+}
+
+std::vector<sf::Vector2i> drft::spatial::getIntSquareInRadius(sf::Vector2i centerPosition, int radius)
+{
+	std::vector<sf::Vector2i> result;
+
+	for (int y = centerPosition.y - radius; y <= centerPosition.y + radius; ++y)
+	{
+		for (int x = centerPosition.x - radius; x <= centerPosition.x + radius; ++x)
+		{
+			result.emplace_back(x,y);
 		}
 	}
 

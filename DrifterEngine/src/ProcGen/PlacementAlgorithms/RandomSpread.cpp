@@ -2,7 +2,7 @@
 #include "RandomSpread.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::randomSpread(int, sf::Vector2i bounds, GenerationParameters params)
+std::vector<sf::Vector2i> drft::gen::randomSpread(int, const spatial::Grid<int>& grid, GenerationParameters params)
 {
 	int number = params.at("Number");
 
@@ -10,8 +10,8 @@ std::vector<sf::Vector2i> drft::gen::randomSpread(int, sf::Vector2i bounds, Gene
 	result.reserve(number);
 	for (int i = 0; i < number; ++i)
 	{
-		int x = rng::RandomNumberGenerator::intInRange(0, bounds.x - 1);
-		int y = rng::RandomNumberGenerator::intInRange(0, bounds.y - 1);
+		int x = rng::RandomNumberGenerator::intInRange(0, grid.width() - 1);
+		int y = rng::RandomNumberGenerator::intInRange(0, grid.height() - 1);
 		result.emplace_back(x, y);
 	}
 	return result;

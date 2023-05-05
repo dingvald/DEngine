@@ -3,6 +3,8 @@
 #include "Biome.h"
 #include "BiomeTypes.h"
 #include "Spatial/Conversions.h"
+#include "Spatial/Helpers.h"
+#include "Spatial/Grid.h"
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
 #include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
@@ -110,10 +112,146 @@ drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temper
 sf::Vector2<double> drft::gen::WorldGenerator::convertIntergerCoordinates(sf::Vector2i coord) const
 {
     sf::Vector2<double> result;
-    result.x = (static_cast<double>(coord.x) + 0.5) / (13 * 64);
-    result.y = (static_cast<double>(coord.y) + 0.5) / (13 * 64);
+    result.x = (static_cast<double>(coord.x) + 0.5) / (13 * 80);
+    result.y = (static_cast<double>(coord.y) + 0.5) / (13 * 80);
 
     return result;
+}
+
+std::vector<sf::Vector2i> drft::gen::WorldGenerator::determineOpenFaces(sf::Vector2i coord) const
+{
+    std::vector<sf::Vector2i> openFaces;
+    const auto myType = getBiomeType(coord);
+
+    // iterate each adjacent chunk
+    for (int y = -1; y <= 1; ++y)
+    {
+        for (int x = -1; x <= 1; ++x)
+        {
+            // skip diagonal chunks
+            if (x != 0 && y != 0) continue;
+            const auto otherType = getBiomeType({ coord.x + x, coord.y + y });
+            if (myType != otherType)
+            {
+                openFaces.emplace_back(x, y);
+            }
+        }
+    }
+
+    return openFaces;
+}
+
+void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2i> openFaces, spatial::Grid<int>& spaces, unsigned int seed) const
+{
+    const int BUFFER_SPACE = 5;
+    const int numOpenFaces = openFaces.size();
+
+    if (numOpenFaces == 0)
+    {
+        // surrounded
+        spaces.fill(1);
+    }
+    else if (numOpenFaces == 1)
+    {
+       // edge
+        const auto opposingFace = -1 * openFaces[0];
+        const int centerx = spaces.width() / 2;
+        const int centery = spaces.height() / 2;
+        const int squarex = centerx + opposingFace.x * BUFFER_SPACE;
+        const int squarey = centery + opposingFace.y * BUFFER_SPACE;
+
+        auto square = spatial::getIntSquareInRadius({ squarex, squarey }, centerx);
+        for (auto point : square)
+        {
+            if (point.x >= 0 && point.y >= 0 && point.x < spaces.width() && point.y < spaces.height())
+            {
+                spaces.at(point.x, point.y) = 1;
+            }
+        }
+    }
+    else if (numOpenFaces == 2)
+    {
+        // either edge or corner
+        if (openFaces[0].x == openFaces[1].x || openFaces[0].y == openFaces[1].y)
+        {
+            //edge
+            const auto opposingFace = -1 * openFaces[0];
+            const int centerx = spaces.width() / 2;
+            const int centery = spaces.height() / 2;
+            const int squarex = centerx + opposingFace.x * BUFFER_SPACE;
+            const int squarey = centery + opposingFace.y * BUFFER_SPACE;
+
+            auto square = spatial::getIntSquareInRadius({ squarex, squarey }, centerx);
+            for (auto point : square)
+            {
+                if (point.x >= 0 && point.y >= 0 && point.x < spaces.width() && point.y < spaces.height())
+                {
+                    spaces.at(point.x, point.y) = 1;
+                }
+            }
+        }
+        else
+        {
+            // corner
+
+            int centerx = spaces.width() / 2;
+            int centery = spaces.height() / 2;
+
+            const int square1x = centerx - openFaces[0].x * centerx;
+            const int square1y = centery - openFaces[0].y * centery;
+            const int square2x = centerx - openFaces[1].x * centerx;
+            const int square2y = centery - openFaces[1].y * centery;
+
+            auto square1 = spatial::getIntSquareInRadius({ square1x, square1y }, centerx - BUFFER_SPACE);
+            auto square2 = spatial::getIntSquareInRadius({ square2x, square2y }, centery - BUFFER_SPACE);
+            auto circle = spatial::getIntCircleInRadius({ centerx, centery }, centerx - BUFFER_SPACE);
+            circle.insert(circle.end(), square1.begin(), square1.end());
+            circle.insert(circle.end(), square2.begin(), square2.end());
+
+            for (auto point : circle)
+            {
+                if (point.x >= 0 && point.y >= 0 && point.x < spaces.width() && point.y < spaces.height())
+                {
+                    spaces.at(point.x, point.y) = 1;
+                }
+            }
+        }
+    }
+    else if (numOpenFaces == 3)
+    {
+        // peninsula
+        const auto closedFace = -1*(openFaces[0] + openFaces[1] + openFaces[2]);
+        const int centerx = spaces.width() / 2;
+        const int centery = spaces.height() / 2;
+        const int squarex = centerx + closedFace.x * centerx;
+        const int squarey = centery + closedFace.y * centery;
+
+        auto square = spatial::getIntSquareInRadius({ squarex, squarey }, centerx - BUFFER_SPACE);
+        auto circle = spatial::getIntCircleInRadius({ centerx, centery }, centerx - BUFFER_SPACE);
+        square.insert(square.end(), circle.begin(), circle.end());
+
+        for (auto point : square)
+        {
+            if (point.x >= 0 && point.y >= 0 && point.x < spaces.width() && point.y < spaces.height())
+            {
+                spaces.at(point.x, point.y) = 1;
+            }
+        }
+    }
+    else
+    {
+        // island
+        spaces.fill(0);
+        int centerx = spaces.width() / 2;
+        int centery = spaces.height() / 2;
+        auto circle = spatial::getIntCircleInRadius({ centerx, centery }, centerx - BUFFER_SPACE);
+
+        for (auto point : circle)
+        {
+            spaces.at(point.x, point.y) = 1;
+        }
+
+    }
 }
 
 bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
@@ -173,15 +311,15 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
     const auto tileCoord = spatial::toTileSpace(coordinate);
 
     const int LARGE_PRIME = 198491317;
-    const int seed = rng::noise((coordinate.x + LARGE_PRIME * coordinate.y));
+    const int seed = rng::noise(( coordinate.x + (LARGE_PRIME * coordinate.y) ));
+    spatial::Grid<int> mask{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
+    determineAvailableSpaces(determineOpenFaces(coordinate), mask, seed);
 
     for (auto& [category, entityList] : biome.prototypes)
     {
         for (auto& [entity, algorithm, params] : entityList)
         {
-           auto positions = gen::String2Algorithm.at(algorithm)( seed,
-               { spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT }, params);
-
+           const auto positions = gen::String2Algorithm.at(algorithm)( seed, mask, params);
            gen::place(entity, spatial::toTileSpace(coordinate), positions, registry);
         }
     }

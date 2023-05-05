@@ -231,6 +231,9 @@
     <ClCompile Include="src\Systems\Gameplay\OpenWorldMapSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\PlacementAlgorithms\Fill.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -945,6 +948,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\OpenWorldMapSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\Fill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
