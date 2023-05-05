@@ -12,16 +12,16 @@
 #include "PlacementAlgorithms/Algorithms.h"
 
 // Temperature cutoffs
-static constexpr double TEMPERATURE_COLD = 0.4;
-static constexpr double TEMPERATURE_HOT = 0.6;
+static constexpr double TEMPERATURE_COLD = 0.43;
+static constexpr double TEMPERATURE_HOT = 0.57;
 
 // Altitude cutoffs
-static constexpr double ALTITUDE_LOW = 0.4;
-static constexpr double ALTITUDE_HIGH = 0.6;
+static constexpr double ALTITUDE_LOW = 0.43;
+static constexpr double ALTITUDE_HIGH = 0.57;
 
 // Moisture cutoffs
-static constexpr double MOISTURE_ARID = 0.4;
-static constexpr double MOISTURE_HUMID = 0.6;
+static constexpr double MOISTURE_ARID = 0.43;
+static constexpr double MOISTURE_HUMID = 0.57;
 
 void drft::gen::WorldGenerator::setSeed(unsigned int seed)
 {

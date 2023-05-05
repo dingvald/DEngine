@@ -137,7 +137,7 @@
         "Cactus": {
           "Algorithm": "RandomSpread",
           "Params": {
-            "Number": 50
+            "Number": 21
           }
         },
         "Sand": {
