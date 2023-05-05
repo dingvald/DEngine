@@ -38,7 +38,7 @@
         "Boulder": {
           "Algorithm": "PerlinSpread",
           "Params": {
-            "Threshold": 0.55
+            "Threshold": 0.51
           }
         },
         "Stone": {

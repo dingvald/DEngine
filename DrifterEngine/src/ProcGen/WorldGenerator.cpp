@@ -194,20 +194,20 @@ void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2
             {
                 if (face.x == -1)
                 {
-                    std::iota(leftGrad.begin(), leftGrad.end(), centerx / 2);
+                    std::iota(leftGrad.begin(), leftGrad.end(), static_cast<double>(centerx) / 1.8f);
                 }
                 else
                 {
-                    std::iota(rightGrad.rbegin(), rightGrad.rend(), centerx / 2);
+                    std::iota(rightGrad.rbegin(), rightGrad.rend(), static_cast<double>(centerx) / 1.8f);
                 }
 
                 if (face.y == -1)
                 {
-                    std::iota(topGrad.begin(), topGrad.end(), centery / 2);
+                    std::iota(topGrad.begin(), topGrad.end(), static_cast<double>(centerx) / 1.8f);
                 }
                 else
                 {
-                    std::iota(bottomGrad.rbegin(), bottomGrad.rend(), centery / 2);
+                    std::iota(bottomGrad.rbegin(), bottomGrad.rend(), static_cast<double>(centerx) / 1.8f);
                 }
             }
         }
