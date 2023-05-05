@@ -1,5 +1,6 @@
 #pragma once
 #include "Grid.h"
+#include <algorithm>
 
 namespace drft::spatial
 {
@@ -8,6 +9,17 @@ namespace drft::spatial
 		: _width(width), _height(height)
 	{
 		_cells.resize(_width * _height);
+	}
+
+	template<typename T>
+	inline Grid<T>::Grid(int width, int height, std::initializer_list<T> list)
+		: _width(width)
+		, _height(height)
+	{
+		for (auto element : list)
+		{
+			_cells.emplace_back(element);
+		}
 	}
 
 	template<typename T>

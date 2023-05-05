@@ -8,6 +8,7 @@
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
 #include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
+#include "ProcGen/Helpers/Dilate.h"
 #include "PlacementAlgorithms/Algorithms.h"
 
 // Temperature cutoffs
@@ -128,8 +129,8 @@ std::vector<sf::Vector2i> drft::gen::WorldGenerator::determineOpenFaces(sf::Vect
     {
         for (int x = -1; x <= 1; ++x)
         {
-            // skip diagonal chunks
-            if (x != 0 && y != 0) continue;
+            // skip self
+            if (x == 0 && y == 0) continue;
             const auto otherType = getBiomeType({ coord.x + x, coord.y + y });
             if (myType != otherType)
             {
@@ -143,115 +144,93 @@ std::vector<sf::Vector2i> drft::gen::WorldGenerator::determineOpenFaces(sf::Vect
 
 void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2i> openFaces, spatial::Grid<int>& spaces, unsigned int seed) const
 {
-    const int BUFFER_SPACE = 5;
+    const double THRESHOLD = 1.31;
+    const double P_WEIGHT = 1.0;
+    const double G_WEIGHT = 1.3;
     const int numOpenFaces = openFaces.size();
+    rng::PerlinNoise noise(seed,8,3.0);
 
-    if (numOpenFaces == 0)
-    {
-        // surrounded
-        spaces.fill(1);
-    }
-    else if (numOpenFaces == 1)
-    {
-       // edge
-        const auto opposingFace = -1 * openFaces[0];
-        const int centerx = spaces.width() / 2;
-        const int centery = spaces.height() / 2;
-        const int squarex = centerx + opposingFace.x * BUFFER_SPACE;
-        const int squarey = centery + opposingFace.y * BUFFER_SPACE;
+    const int centerx = spaces.width() / 2;
+    const int centery = spaces.height() / 2;
 
-        auto square = spatial::getIntSquareInRadius({ squarex, squarey }, centerx);
-        for (auto point : square)
+    std::vector<int> topGrad(centery, centery);
+    std::vector<int> bottomGrad(centery, centery);
+    std::vector<int> leftGrad(centerx, centerx);
+    std::vector<int> rightGrad(centery, centerx);
+
+    for (auto face : openFaces)
+    {
+        if (std::abs(face.x) != std::abs(face.y))
         {
-            if (point.x >= 0 && point.y >= 0 && point.x < spaces.width() && point.y < spaces.height())
+            if (face.x != 0)
             {
-                spaces.at(point.x, point.y) = 1;
-            }
-        }
-    }
-    else if (numOpenFaces == 2)
-    {
-        // either edge or corner
-        if (openFaces[0].x == openFaces[1].x || openFaces[0].y == openFaces[1].y)
-        {
-            //edge
-            const auto opposingFace = -1 * openFaces[0];
-            const int centerx = spaces.width() / 2;
-            const int centery = spaces.height() / 2;
-            const int squarex = centerx + opposingFace.x * BUFFER_SPACE;
-            const int squarey = centery + opposingFace.y * BUFFER_SPACE;
-
-            auto square = spatial::getIntSquareInRadius({ squarex, squarey }, centerx);
-            for (auto point : square)
-            {
-                if (point.x >= 0 && point.y >= 0 && point.x < spaces.width() && point.y < spaces.height())
+                if (face.x == -1)
                 {
-                    spaces.at(point.x, point.y) = 1;
+                    std::iota(leftGrad.begin(), leftGrad.end(), 1);
+                }
+                else
+                {
+                    std::iota(rightGrad.rbegin(), rightGrad.rend(), 1);
+                }
+            }
+            else
+            {
+                if (face.y == -1)
+                {
+                    std::iota(topGrad.begin(), topGrad.end(), 1);
+                }
+                else
+                {
+                    std::iota(bottomGrad.rbegin(), bottomGrad.rend(), 1);
                 }
             }
         }
         else
         {
-            // corner
+            auto adjacent1 = std::find(openFaces.begin(), openFaces.end(), sf::Vector2i(face.x, 0));
+            auto adjacent2 = std::find(openFaces.begin(), openFaces.end(), sf::Vector2i(0, face.y));
 
-            int centerx = spaces.width() / 2;
-            int centery = spaces.height() / 2;
-
-            const int square1x = centerx - openFaces[0].x * centerx;
-            const int square1y = centery - openFaces[0].y * centery;
-            const int square2x = centerx - openFaces[1].x * centerx;
-            const int square2y = centery - openFaces[1].y * centery;
-
-            auto square1 = spatial::getIntSquareInRadius({ square1x, square1y }, centerx - BUFFER_SPACE);
-            auto square2 = spatial::getIntSquareInRadius({ square2x, square2y }, centery - BUFFER_SPACE);
-            auto circle = spatial::getIntCircleInRadius({ centerx, centery }, centerx - BUFFER_SPACE);
-            circle.insert(circle.end(), square1.begin(), square1.end());
-            circle.insert(circle.end(), square2.begin(), square2.end());
-
-            for (auto point : circle)
+            if (adjacent1 == openFaces.end() && adjacent2 == openFaces.end())
             {
-                if (point.x >= 0 && point.y >= 0 && point.x < spaces.width() && point.y < spaces.height())
+                if (face.x == -1)
                 {
-                    spaces.at(point.x, point.y) = 1;
+                    std::iota(leftGrad.begin(), leftGrad.end(), centerx / 2);
+                }
+                else
+                {
+                    std::iota(rightGrad.rbegin(), rightGrad.rend(), centerx / 2);
+                }
+
+                if (face.y == -1)
+                {
+                    std::iota(topGrad.begin(), topGrad.end(), centery / 2);
+                }
+                else
+                {
+                    std::iota(bottomGrad.rbegin(), bottomGrad.rend(), centery / 2);
                 }
             }
         }
-    }
-    else if (numOpenFaces == 3)
+    }  
+    std::vector<int> xGrad(leftGrad);
+    std::vector<int> yGrad(topGrad);
+
+    xGrad.insert(xGrad.end(), rightGrad.begin(), rightGrad.end());
+    yGrad.insert(yGrad.end(), bottomGrad.begin(), bottomGrad.end());
+
+    for (int row = 0; row < spaces.height(); ++row)
     {
-        // peninsula
-        const auto closedFace = -1*(openFaces[0] + openFaces[1] + openFaces[2]);
-        const int centerx = spaces.width() / 2;
-        const int centery = spaces.height() / 2;
-        const int squarex = centerx + closedFace.x * centerx;
-        const int squarey = centery + closedFace.y * centery;
-
-        auto square = spatial::getIntSquareInRadius({ squarex, squarey }, centerx - BUFFER_SPACE);
-        auto circle = spatial::getIntCircleInRadius({ centerx, centery }, centerx - BUFFER_SPACE);
-        square.insert(square.end(), circle.begin(), circle.end());
-
-        for (auto point : square)
+        for (int col = 0; col < spaces.width(); ++col)
         {
-            if (point.x >= 0 && point.y >= 0 && point.x < spaces.width() && point.y < spaces.height())
+            const double perlinContribution = noise.gen((col + 0.5) / spaces.width(), (row + 0.5) / spaces.height());
+            const double gradientContribution = 0.5 * ((static_cast<double>(xGrad[col]) / centerx) + (static_cast<double>(yGrad[row]) / centery));
+            if ( (P_WEIGHT * perlinContribution + G_WEIGHT * gradientContribution) > THRESHOLD)
             {
-                spaces.at(point.x, point.y) = 1;
+                spaces.at(col, row) = 1;
             }
         }
     }
-    else
-    {
-        // island
-        spaces.fill(0);
-        int centerx = spaces.width() / 2;
-        int centery = spaces.height() / 2;
-        auto circle = spatial::getIntCircleInRadius({ centerx, centery }, centerx - BUFFER_SPACE);
 
-        for (auto point : circle)
-        {
-            spaces.at(point.x, point.y) = 1;
-        }
-
-    }
 }
 
 bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)

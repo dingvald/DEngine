@@ -6,6 +6,8 @@ namespace drft::spatial
 	std::vector<sf::Vector2i> getIntCircleInRadius(sf::Vector2i centerPosition, int radius);
 
 	std::vector<sf::Vector2i> getIntSquareInRadius(sf::Vector2i centerPosition, int radius);
+
+	std::vector<sf::Vector2i> getIntRectAroundOrigin(sf::Vector2i origin, int width, int height);
 	// Returns the distance bewteen two points.
 	float distance(sf::Vector2i pt1, sf::Vector2i pt2);
 	// Returns the distance bewteen two points.

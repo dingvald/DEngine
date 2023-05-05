@@ -37,6 +37,21 @@ std::vector<sf::Vector2i> drft::spatial::getIntSquareInRadius(sf::Vector2i cente
 	return result;
 }
 
+std::vector<sf::Vector2i> drft::spatial::getIntRectAroundOrigin(sf::Vector2i origin, int width, int height)
+{
+	std::vector<sf::Vector2i> result;
+
+	for (int y = origin.y - height/2; y <= origin.y + height/2; ++y)
+	{
+		for (int x = origin.x - width/2; x <= origin.x + width/2; ++x)
+		{
+			result.emplace_back(x, y);
+		}
+	}
+
+	return result;
+}
+
 float drft::spatial::distance(sf::Vector2i pt1, sf::Vector2i pt2)
 {
 	auto delta = pt1 - pt2;

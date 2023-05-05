@@ -9,6 +9,7 @@ namespace drft::spatial
 	public:
 		Grid() = default;
 		Grid(int width, int height);
+		Grid(int width, int height, std::initializer_list<T> list);
 
 		void resize(int width, int height);
 		void fill(T val);

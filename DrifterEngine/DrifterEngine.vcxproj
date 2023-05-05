@@ -168,6 +168,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ProcGen\Helpers\Dilate.cpp" />
+    <ClCompile Include="src\ProcGen\Helpers\Erode.cpp" />
     <ClCompile Include="src\ProcGen\PlacementAlgorithms\Fill.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenWorldMapSystem.cpp" />
     <ClCompile Include="src\ProcGen\Biome.cpp" />
@@ -276,6 +278,9 @@
     <ClCompile Include="src\Engine\States\WorldMapState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ProcGen\Helpers\Dilate.h" />
+    <ClInclude Include="src\ProcGen\Helpers\Erode.h" />
+    <ClInclude Include="src\ProcGen\Helpers\Kernels.h" />
     <ClInclude Include="src\ProcGen\PlacementAlgorithms\Fill.h" />
     <ClInclude Include="src\Systems\Gameplay\OpenWorldMapSystem.h" />
     <ClInclude Include="src\ProcGen\Biome.h" />
