@@ -150,6 +150,11 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 	return true;
 }
 
+const entt::registry& drft::EntityFactory::prototypes() const
+{
+	return _protoRegistry;
+}
+
 entt::handle drft::EntityFactory::build(const std::string& name, entt::registry& registry) const
 {
 	if (!_prototypes.contains(name))
