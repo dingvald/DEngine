@@ -153,10 +153,8 @@ void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2
     const int centerx = spaces.width() / 2;
     const int centery = spaces.height() / 2;
 
-    std::vector<int> topGrad(centery, centery);
-    std::vector<int> bottomGrad(centery, centery);
-    std::vector<int> leftGrad(centerx, centerx);
-    std::vector<int> rightGrad(centery, centerx);
+    std::vector<int> xGrad(spaces.width(), centerx);
+    std::vector<int> yGrad(spaces.height(), centery);
 
     for (auto face : openFaces)
     {
@@ -166,22 +164,22 @@ void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2
             {
                 if (face.x == -1)
                 {
-                    std::iota(leftGrad.begin(), leftGrad.end(), 1);
+                    std::iota(xGrad.begin(), xGrad.begin() + centerx, 1);
                 }
                 else
                 {
-                    std::iota(rightGrad.rbegin(), rightGrad.rend(), 1);
+                    std::iota(xGrad.rbegin(), xGrad.rbegin() + centerx, 1);
                 }
             }
             else
             {
                 if (face.y == -1)
                 {
-                    std::iota(topGrad.begin(), topGrad.end(), 1);
+                    std::iota(yGrad.begin(), yGrad.begin() + centery, 1);
                 }
                 else
                 {
-                    std::iota(bottomGrad.rbegin(), bottomGrad.rend(), 1);
+                    std::iota(yGrad.rbegin(), yGrad.rbegin() + centery, 1);
                 }
             }
         }
@@ -194,29 +192,24 @@ void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2
             {
                 if (face.x == -1)
                 {
-                    std::iota(leftGrad.begin(), leftGrad.end(), static_cast<double>(centerx) / 1.8f);
+                    std::iota(xGrad.begin(), xGrad.begin() + centerx, static_cast<double>(centerx) / 1.8f);
                 }
                 else
                 {
-                    std::iota(rightGrad.rbegin(), rightGrad.rend(), static_cast<double>(centerx) / 1.8f);
+                    std::iota(xGrad.rbegin(), xGrad.rbegin() + centerx, static_cast<double>(centerx) / 1.8f);
                 }
 
                 if (face.y == -1)
                 {
-                    std::iota(topGrad.begin(), topGrad.end(), static_cast<double>(centerx) / 1.8f);
+                    std::iota(yGrad.begin(), yGrad.begin() + centery, static_cast<double>(centerx) / 1.8f);
                 }
                 else
                 {
-                    std::iota(bottomGrad.rbegin(), bottomGrad.rend(), static_cast<double>(centerx) / 1.8f);
+                    std::iota(yGrad.rbegin(), yGrad.rbegin() + centery, static_cast<double>(centerx) / 1.8f);
                 }
             }
         }
     }  
-    std::vector<int> xGrad(leftGrad);
-    std::vector<int> yGrad(topGrad);
-
-    xGrad.insert(xGrad.end(), rightGrad.begin(), rightGrad.end());
-    yGrad.insert(yGrad.end(), bottomGrad.begin(), bottomGrad.end());
 
     for (int row = 0; row < spaces.height(); ++row)
     {
