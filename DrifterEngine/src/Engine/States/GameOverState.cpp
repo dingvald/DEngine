@@ -41,7 +41,6 @@ bool drft::GameOverState::update(const float dt)
 	_gameOverPanel.update(dt);
 
 	static float elapsedTime = 0.0f;
-
 	if (elapsedTime > 0.1)
 	{
 		auto& style = _gameOverPanel.modifyStyle(_gameOverPanel.getState());

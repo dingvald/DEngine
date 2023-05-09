@@ -22,7 +22,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 	for (auto [entity, attack] : launchAttackView.each())
 	{
 		const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
-		auto& posComp = registry->get<component::Position>(entity);
+		const auto& posComp = registry->get<component::Position>(entity);
 		sf::Vector2i targetPosition = spatial::toTileSpace(posComp.position) + attack.direction;
 
 		const auto targets = grid.entitiesAt(targetPosition, spatial::Layer::Blocking);

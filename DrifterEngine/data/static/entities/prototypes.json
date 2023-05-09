@@ -415,8 +415,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 10,
-            "current": 10
+            "max": 20,
+            "current": 20
           }
         },
         {
@@ -495,6 +495,66 @@
             "recipe": {
               "Stone": 2,
               "Wood": 1
+            }
+          }
+        }
+      ]
+    },
+    // Raft
+    {
+      "Name": "Raft",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Raft",
+            "extendedName": "",
+            "description": "Allows the owner to float."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 30,
+            "color": [ 68, 48, 40 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 30.0,
+            "materials": [ "Wood" ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 10,
+            "current": 10
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Wood": 10
             }
           }
         }

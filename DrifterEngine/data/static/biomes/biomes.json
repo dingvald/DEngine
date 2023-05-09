@@ -123,7 +123,12 @@
         }
       },
       "Actors": {
-
+        "Zombie": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 10
+          }
+        }
       }
     },
     "Desert": {

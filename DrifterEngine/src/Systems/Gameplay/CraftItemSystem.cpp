@@ -36,6 +36,7 @@ void drft::system::CraftItemSystem::onCraftItem(entt::registry& registry, entt::
 			if (matName.compare(util::getEntityName({ registry, itemEntity })) == 0)
 			{
 				toRemove.push_back(item);
+				registry.destroy(itemEntity);
 				++count;
 			}
 

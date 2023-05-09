@@ -73,7 +73,7 @@ void drft::CraftingState::onPush()
 	_craftingWindow.setSize({ CRAFTING_WINDOW_WIDTH, CRAFTING_WINDOW_HEIGHT });
 	_craftingWindow.setPosition(VIEW.getCenter());
 	_craftingWindow.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,100),
+		.fillColor = sf::Color(0,0,0,150),
 		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {24.f, 24.f},
@@ -111,16 +111,14 @@ void drft::CraftingState::setupCraftingList()
 	_craftingList.setPosition(VIEW.getCenter() - sf::Vector2f{128,0});
 	_craftingList.setSize({ 64, CRAFTING_WINDOW_HEIGHT});
 	_craftingList.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,50),
 		.innerPadding = {16.f, 16.f},
-		.childPadding = {0.f, 8.f},
+		.childPadding = {0.f, 24.f},
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color(150,150,150)
 		});
 	_craftingList.setStyle(gui::ElementState::Focused, {
-		.fillColor = sf::Color(0,0,0,100),
 		.innerPadding = {16.f, 16.f},
-		.childPadding = {0.f, 8.f},
+		.childPadding = {0.f, 24.f},
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color::White
 		});
@@ -131,18 +129,16 @@ void drft::CraftingState::setupCraftingList()
 	_requiresList.setOrigin(gui::ElementPosition::CENTER_LEFT);
 	_requiresList.setSize({ (CRAFTING_WINDOW_WIDTH / 2) + 32, CRAFTING_WINDOW_HEIGHT });
 	_requiresList.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,50),
 		.innerPadding = {16.f, 16.f},
-		.childPadding = {0.f, 8.f},
+		.childPadding = {0.f, 24.f},
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color(150,150,150)
 		});
 	_requiresList.setStyle(gui::ElementState::Focused, {
-		.fillColor = sf::Color(0,0,0,100),
 		.outlineColor = sf::Color(100,100,100,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
-		.childPadding = {0.f, 8.f},
+		.childPadding = {0.f, 24.f},
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color::White
 		});
@@ -194,16 +190,16 @@ void drft::CraftingState::refreshCraftingList()
 			std::string str = std::to_string(count);
 			_craftingList.insert(str.data(), gui::DualContainer())
 				.setStyle(gui::ElementState::Idle, {
-						.childPadding = {20, 0}
+						.childPadding = {12, 0}
 					})
 				.setStyle(gui::ElementState::Focused, {
-						.childPadding = {20, 0}
+						.childPadding = {12, 0}
 					})
 				.setStyle(gui::ElementState::Unselectable, {
-						.childPadding = {20, 0}
+						.childPadding = {12, 0}
 					})
 				.setStyle(gui::ElementState::FocusedUnselectable, {
-						.childPadding = {20, 0}
+						.childPadding = {12, 0}
 					})
 				.registerCallback(gui::ElementCallbackType::OnIsSelectable,
 					[count, numCraftables]() {
@@ -231,7 +227,7 @@ void drft::CraftingState::refreshCraftingList()
 								.textColor = sf::Color::White
 								})
 							.setTextString(util::getEntityName({ getContext().registry, _sessionEntity }) + " crafted the "
-								+ craftableName);
+								+ craftableName + ".");
 
 						return true;
 					});
@@ -239,7 +235,7 @@ void drft::CraftingState::refreshCraftingList()
 					const auto& itemRender = prototypeReg.get<component::Render>(craftable);
 					sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
 					_craftingList[str.data()].insert("Icon", gui::Icon(sprite))
-						.setSize({ 32, 32 })
+						.setSize({ 16, 16 })
 						.setStyle(gui::ElementState::Idle, {
 							.fillColor = itemRender.color
 							})

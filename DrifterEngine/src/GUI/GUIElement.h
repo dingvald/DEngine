@@ -76,6 +76,7 @@ namespace drft::gui
 				_callback.at(ElementCallbackType::OnUpdate)();
 			}
 			bool canPropagate = onUpdate(dt);
+			applyStyle();
 
 			return canPropagate;
 		}

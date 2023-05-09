@@ -19,6 +19,7 @@ void drft::system::BodyPartSystem::update(const float dt)
 			const auto rightHandItem = util::ItemIDToEntityID(body.parts.at("HeldR"), *registry);
 			float weight = 0.0f;
 			float sharpness = 1.f;
+
 			if (auto physicalComp = registry->try_get<component::Physical>(rightHandItem))
 			{
 				weight += physicalComp->weight;

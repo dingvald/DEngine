@@ -5,6 +5,7 @@
 #include "Events/RequestStateChange.h"
 #include "Engine/States/StateIdentifiers.h"
 #include "Spatial/Conversions.h"
+#include "Random/RandomNumberGenerator.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::DeathSystem::init()
@@ -24,7 +25,7 @@ void drft::system::DeathSystem::update(const float dt)
 			dropped.patch<component::Position>([&pos](auto& position)
 				{
 					position.position = pos.position;
-					position.depth = spatial::Layer::Item;
+			position.depth = spatial::Layer::Item;
 				});
 		}
 		if (registry->any_of<component::Player>(entity))

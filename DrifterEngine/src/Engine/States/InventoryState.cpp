@@ -141,7 +141,7 @@ void drft::InventoryState::setupInventoryGrid()
 		});
 	inventoryGrid.setStyle(gui::ElementState::Focused, {
 		.fillColor = sf::Color(0,0,0,100),
-		.outlineColor = sf::Color(255,255,255,100),
+		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {24.f, 24.f},
 		.childPadding = {8.f, 8.f},
@@ -192,7 +192,7 @@ void drft::InventoryState::setupInventoryGrid()
 			container.setChildrenOrigin(gui::ElementPosition::CENTER);
 			container.setStyle(gui::ElementState::Idle, {
 				.fillColor = sf::Color(0,0,0,150),
-				.outlineColor = sf::Color(255,255,255,100),
+				.outlineColor = sf::Color(150,150,150,100),
 				.outlineThickness = 1.f
 				});
 			container.setStyle(gui::ElementState::Focused, {
@@ -478,7 +478,7 @@ void drft::InventoryState::setupInventoryGrid()
 								.textColor = sf::Color::White
 								})
 							.setTextString(util::getEntityName({ getContext().registry, sessionEntity }) + " equipped the "
-								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(itemID, getContext().registry)}))
+								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(itemID, getContext().registry)}) + ".")
 							.registerCallback(gui::ElementCallbackType::OnLeave,
 								[this]() -> bool
 								{
@@ -516,7 +516,7 @@ void drft::InventoryState::setupEquipmentGrid()
 		});
 	equipmentGrid.setStyle(gui::ElementState::Focused, {
 		.fillColor = sf::Color(0,0,0,100),
-		.outlineColor = sf::Color(255,255,255,100),
+		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {24.f, 24.f},
 		.childPadding = {8.f, 8.f},
@@ -594,12 +594,12 @@ void drft::InventoryState::setupEquipmentGrid()
 		container.setChildrenOrigin(gui::ElementPosition::CENTER);
 		container.setStyle(gui::ElementState::Unselectable, {
 			.fillColor = sf::Color(0,0,0,150),
-			.outlineColor = sf::Color(150,150,150,100),
+			.outlineColor = sf::Color(80,80,80,100),
 			.outlineThickness = 1.f
 			});
 		container.setStyle(gui::ElementState::Idle, {
 		.fillColor = sf::Color(0,0,0,150),
-		.outlineColor = sf::Color(255,255,255,100),
+		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f
 			});
 		container.setStyle(gui::ElementState::Focused, {
@@ -649,7 +649,7 @@ void drft::InventoryState::setupEquipmentGrid()
 								.textColor = sf::Color::White
 								})
 							.setTextString(util::getEntityName({ getContext().registry, sessionEntity }) + " equipped the "
-								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_sessionContext.getCurrentItem(), getContext().registry)}))
+								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_sessionContext.getCurrentItem(), getContext().registry)}) + ".")
 							.registerCallback(gui::ElementCallbackType::OnLeave,
 								[this]() -> bool
 								{

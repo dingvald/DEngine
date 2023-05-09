@@ -33,7 +33,8 @@ namespace drft::util
 		Cactus,
 		Triangle,
 		JungleTree,
-		Roots
+		Roots,
+		Raft
 	};
 
 	class SpriteIndexer
