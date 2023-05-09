@@ -9,6 +9,7 @@ constexpr std::string_view PHYSICAL_STRING = "Physical";
 constexpr std::string_view ACTOR_STRING = "Actor";
 constexpr std::string_view HEALTH_STRING = "Health";
 constexpr std::string_view ATTACKER_STRING = "Attacker";
+constexpr std::string_view SHARP_STRING = "Sharp";
 constexpr std::string_view BODY_STRING = "Body";
 constexpr std::string_view PLAYER_STRING = "Player";
 constexpr std::string_view AI_STRING = "AI";
@@ -16,7 +17,6 @@ constexpr std::string_view FACTION_STRING = "Faction";
 constexpr std::string_view ITEM_STRING = "Item";
 constexpr std::string_view CONTAINER_STRING = "Container";
 constexpr std::string_view CRAFTABLE_STRING = "Craftable";
-constexpr std::string_view CRAFTABLE_ITEMS_STRING = "MyCraftableItems";
 
 namespace component
 {

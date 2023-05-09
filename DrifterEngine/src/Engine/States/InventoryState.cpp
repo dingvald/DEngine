@@ -579,6 +579,7 @@ void drft::InventoryState::setupEquipmentGrid()
 			equipmentGrid.insert("Dummy" + std::to_string(dummyCount), gui::SingleContainer())
 				.setSize({ 32,32 })
 				.setOrigin(gui::ElementPosition::TOP_LEFT)
+				.setStyle(gui::ElementState::Unselectable, {})
 				.registerCallback(gui::ElementCallbackType::OnIsSelectable, []() -> bool
 					{
 						return false;

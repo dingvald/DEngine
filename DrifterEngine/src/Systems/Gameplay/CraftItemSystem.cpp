@@ -1,0 +1,66 @@
+#include "pch.h"
+#include "CraftItemSystem.h"
+#include "Components/Components.h"
+#include "Factory/EntityFactory.h"
+#include "Utility/ItemIDToEntityID.h"
+#include "Utility/EntityHelpers.h"
+
+void drft::system::CraftItemSystem::init()
+{
+	registry->on_construct<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
+	registry->on_update<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
+}
+
+void drft::system::CraftItemSystem::update(const float dt)
+{
+	auto equipView = registry->view<component::action::Craft>();
+
+	for (auto entity : equipView)
+	{
+		registry->remove<component::action::Craft>(entity);
+	}
+}
+
+void drft::system::CraftItemSystem::onCraftItem(entt::registry& registry, entt::entity entity)
+{
+	auto& container = registry.get<component::Container>(entity);
+	auto& craft = registry.get<component::action::Craft>(entity);
+
+	std::vector<component::Item::ID> toRemove;
+	for (auto [matName, amount] : craft.recipe)
+	{
+		int count = 0;
+		for (auto item : container.contents)
+		{
+			auto itemEntity = util::ItemIDToEntityID(item, registry);
+			if (matName.compare(util::getEntityName({ registry, itemEntity })) == 0)
+			{
+				toRemove.push_back(item);
+				++count;
+			}
+
+			if (count == amount) break;
+		}
+	}
+
+	registry.patch<component::Container>(entity,
+		[&toRemove](component::Container& cont)
+		{
+			for (auto item : toRemove)
+			{
+				cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), item), cont.contents.end());
+			}
+		});
+
+	const auto& factory = registry.ctx().get<const EntityFactory&>();
+
+	auto newItem = factory.build(craft.itemName, registry);
+	newItem.remove<component::Position>();
+	auto& itemComp = newItem.get<component::Item>();
+
+	registry.patch<component::Container>(entity,
+		[&toRemove, &itemComp](component::Container& cont)
+		{
+			cont.contents.push_back(itemComp.id);
+		});
+}

@@ -7,7 +7,6 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void update(const float dt) override;
 
 	private:
 		void onContainerUpdated(entt::registry& registry, entt::entity entity);

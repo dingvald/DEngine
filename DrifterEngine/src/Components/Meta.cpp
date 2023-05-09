@@ -46,6 +46,10 @@ void component::Meta::initialize()
 		.prop("serialize"_hs)
 		.data<&Attacker::baseDamage>("baseDamage"_hs);
 
+	snapshot::reflectComponent<Sharp, SHARP_STRING>()
+		.prop("serialize"_hs)
+		.data<&Sharp::sharpness>("sharpness"_hs);
+
 	snapshot::reflectComponent<Body, BODY_STRING>()
 		.prop("serialize"_hs)
 		.data<&Body::parts>("parts"_hs);
@@ -73,7 +77,4 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Craftable, CRAFTABLE_STRING>()
 		.prop("serialize"_hs)
 		.data<&Craftable::recipe>("recipe"_hs);
-
-	snapshot::reflectComponent<MyCraftableItems, CRAFTABLE_ITEMS_STRING>()
-		.prop("serialize"_hs);
 }

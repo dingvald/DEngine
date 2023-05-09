@@ -249,6 +249,9 @@
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\CraftItemSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -984,6 +987,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\CraftItemSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

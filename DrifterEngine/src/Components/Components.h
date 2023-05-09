@@ -55,6 +55,11 @@ namespace component
 		int baseDamage = 1;
 	};
 
+	struct Sharp
+	{
+		int sharpness = 1;
+	};
+
 	struct Body
 	{
 		std::unordered_map<std::string, unsigned long> parts;
@@ -142,6 +147,12 @@ namespace component::action
 	struct Unequip
 	{
 		std::string slotname = {};
+	};
+
+	struct Craft
+	{
+		std::string itemName;
+		std::unordered_map<std::string, int> recipe;
 	};
 
 	struct Die {};

@@ -7,11 +7,8 @@
 
 void drft::system::DetermineCraftableItemsSystem::init()
 {
+	registry->on_construct<component::Container>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
 	registry->on_update<component::Container>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
-}
-
-void drft::system::DetermineCraftableItemsSystem::update(const float dt)
-{
 }
 
 void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::registry& registry, entt::entity entity)

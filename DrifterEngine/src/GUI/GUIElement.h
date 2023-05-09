@@ -76,7 +76,6 @@ namespace drft::gui
 				_callback.at(ElementCallbackType::OnUpdate)();
 			}
 			bool canPropagate = onUpdate(dt);
-			applyStyle();
 
 			return canPropagate;
 		}
@@ -418,6 +417,7 @@ namespace drft::gui
 				onSelect();
 				break;
 			}
+			applyStyle();
 		}
 		ElementState getState() const
 		{
@@ -457,6 +457,8 @@ namespace drft::gui
 	private:
 		virtual void applyStyle()
 		{
+			if (!_style.contains(_state)) return;
+
 			_shape.setFillColor(_style[_state].fillColor);
 			_shape.setOutlineColor(_style[_state].outlineColor);
 			_shape.setOutlineThickness(_style[_state].outlineThickness);
@@ -610,6 +612,12 @@ namespace drft::gui
 		void onSelect() override;
 		void onFocus() override;
 		void onLeave() override;
+	};
+
+	class MultiContainer : public DualContainer
+	{
+	public:
+		void layoutChildren() override;
 	};
 
 	// Container where items added will be ordered in an auto-sizing list from top -> down.

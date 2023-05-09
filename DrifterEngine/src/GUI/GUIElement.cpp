@@ -213,8 +213,8 @@ bool drft::gui::DualContainer::onUpdate(const float dt)
 	layoutChildren();
 	for (auto& child : _children)
 	{
+		child->setState(_state);
 		child->update(dt);
-		break;
 	}
 	return true;
 }
@@ -256,6 +256,20 @@ void drft::gui::DualContainer::onLeave()
 	}
 }
 
+// MULTI CONTAINER
+
+void drft::gui::MultiContainer::layoutChildren()
+{
+	if (_children.empty()) return;
+
+	int count = 0;
+	for (auto& child : _children)
+	{
+		child->setPosition(_shape.getPosition() + _childOrigin + (static_cast<float>(count) * _style[_state].childPadding));
+		++count;
+	}
+}
+
 // LIST
 
 drft::gui::List::List(bool canInteract)
@@ -294,7 +308,7 @@ bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 		{
 			if (_cursorPosition >= 0 || _cursorPosition < _children.size())
 			{
-				if (_children[_cursorPosition]->isSelectable())
+				if (!_children.empty() && _children[_cursorPosition]->isSelectable())
 				{
 					_children[_cursorPosition]->setState(gui::ElementState::Active);
 					return false;
@@ -304,7 +318,7 @@ bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 		break;
 	}
 
-	return false;
+	return true;
 }
 
 bool drft::gui::List::onUpdate(const float dt)
@@ -313,34 +327,35 @@ bool drft::gui::List::onUpdate(const float dt)
 	int count = 0;
 	for (auto& child : _children)
 	{
+		if (_canInteract)
+		{
+			const bool isSelectable = child->isSelectable();
+			if (isSelectable)
+			{
+				if (_cursorPosition == count)
+				{
+					child->setState(ElementState::Focused);
+				}
+				else
+				{
+					child->setState(ElementState::Idle);
+				}
+			}
+			else
+			{
+				if (_cursorPosition == count)
+				{
+					child->setState(ElementState::FocusedUnselectable);
+				}
+				else
+				{
+					child->setState(ElementState::Unselectable);
+				}
+			}
+			++count;
+		}
+		
 		child->update(dt);
-		if (!_canInteract) continue;
-		const bool isSelectable = child->isSelectable();
-		if (isSelectable)
-		{
-			if (_cursorPosition == count)
-			{
-				child->setState(ElementState::Focused);
-			}
-			else
-			{
-				child->setState(ElementState::Idle);
-			}
-		}
-		else
-		{
-			if (_cursorPosition == count)
-			{
-				child->setState(ElementState::FocusedUnselectable);
-			}
-			else
-			{
-				child->setState(ElementState::Unselectable);
-			}
-		}
-		
-		
-		++count;
 	}
 
 	return true;

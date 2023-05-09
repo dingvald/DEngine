@@ -48,6 +48,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, Sharp& sharp)
+	{
+		archive(sharp.sharpness);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Body& body)
 	{
 		archive(body.parts);

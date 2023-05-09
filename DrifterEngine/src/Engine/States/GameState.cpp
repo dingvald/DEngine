@@ -26,6 +26,7 @@
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/DropItemSystem.h"
 #include "Systems/Gameplay/EquipItemSystem.h"
+#include "Systems/Gameplay/CraftItemSystem.h"
 #include "Systems/Gameplay/MovementSystem.h"
 #include "Systems/Gameplay/PickUpSystem.h"
 #include "Systems/Gameplay/LaunchAttackSystem.h"
@@ -216,6 +217,7 @@ void drft::GameState::importSystems()
 	_systems->add<PickUpSystem>(					Phase::OnUpdate);
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
 	_systems->add<EquipItemSystem>(					Phase::OnUpdate);
+	_systems->add<CraftItemSystem>(					Phase::OnUpdate);
 	_systems->add<OpenInventorySystem>(				Phase::OnUpdate);
 	_systems->add<OpenEquipmentSystem>(				Phase::OnUpdate);
 	_systems->add<OpenWorldMapSystem>(				Phase::OnUpdate);

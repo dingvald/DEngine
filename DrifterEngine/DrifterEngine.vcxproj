@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\CraftItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
     <ClCompile Include="src\Engine\States\CraftingState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenCraftingSystem.cpp" />
@@ -281,6 +282,7 @@
     <ClCompile Include="src\Engine\States\WorldMapState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\CraftItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
     <ClInclude Include="src\Engine\States\CraftingState.h" />
     <ClInclude Include="src\Systems\Gameplay\OpenCraftingSystem.h" />
