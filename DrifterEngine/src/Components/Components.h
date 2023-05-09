@@ -86,6 +86,17 @@ namespace component
 	{
 		std::vector<Item::ID> contents;
 	};
+
+	struct Craftable
+	{
+		std::unordered_map<std::string, unsigned long> recipe;
+	};
+
+	struct MyCraftableItems
+	{
+		std::vector<entt::entity> craftables;
+		std::vector<entt::entity> partialCraftables;
+	};
 }
 
 namespace component::action
@@ -133,14 +144,13 @@ namespace component::action
 		std::string slotname = {};
 	};
 
-	struct Die
-	{};
+	struct Die {};
 
-	struct OpenInventory
-	{};
+	struct OpenInventory {};
 
-	struct OpenEquipment
-	{};
+	struct OpenEquipment {};
 
 	struct OpenWorldMap {};
+
+	struct OpenCrafting {};
 }

@@ -134,7 +134,6 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 					}
 					else if (data.value.IsObject())
 					{
-						// HACKZ - assumes Body component
 						std::unordered_map<std::string, unsigned long> map;
 						for (auto&& mapData : component["Data"][memberName].GetObject())
 						{
@@ -148,6 +147,11 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 	}
 
 	return true;
+}
+
+entt::entity drft::EntityFactory::get(std::string name) const
+{
+	return _prototypes.at(name);
 }
 
 const entt::registry& drft::EntityFactory::prototypes() const

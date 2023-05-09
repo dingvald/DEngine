@@ -46,7 +46,11 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 		}
 		else
 		{
-			container.contents.erase(itemItr);
+			registry.patch<component::Container>(entity, [itemItr](component::Container& cont)
+				{
+					cont.contents.erase(itemItr);
+				});
+			
 			body.parts.at(equipItem.slotname) = equipItem.toEquip;
 		}
 	}
@@ -60,7 +64,11 @@ void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, e
 
 	if (body.parts.contains(unequipItem.slotname))
 	{
-		container.contents.push_back(body.parts.at(unequipItem.slotname));
+		registry.patch<component::Container>(entity, [&body, &unequipItem](component::Container& cont)
+			{
+				cont.contents.push_back(body.parts.at(unequipItem.slotname));
+			});
+		
 		body.parts.at(unequipItem.slotname) = 0;
 	}
 }

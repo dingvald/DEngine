@@ -6,6 +6,7 @@ namespace drft::gui
 	enum class ElementState
 	{
 		Unselectable,
+		FocusedUnselectable,
 		Idle,
 		Focused,
 		Active
@@ -29,7 +30,8 @@ namespace drft::gui
 		OnSelect,
 		OnFocus,
 		OnLeave,
-		OnIsSelectable
+		OnIsSelectable,
+		OnRefresh
 	};
 
 	struct Style
@@ -73,7 +75,6 @@ namespace drft::gui
 			{
 				_callback.at(ElementCallbackType::OnUpdate)();
 			}
-
 			bool canPropagate = onUpdate(dt);
 			applyStyle();
 
@@ -160,6 +161,7 @@ namespace drft::gui
 		{
 			return _shape.getLocalBounds();
 		}
+		virtual void layoutChildren() {};
 
 		// Sets the text displayed by the element string
 		Element& setTextString(std::string&& string)
@@ -182,31 +184,31 @@ namespace drft::gui
 			switch (position)
 			{
 			case ElementPosition::TOP_RIGHT:
-				_text.setPosition({ SHAPE_RIGHT, SHAPE_TOP });
+				_text.setPosition(sf::Vector2f{ SHAPE_RIGHT, SHAPE_TOP });
 				break;
 			case ElementPosition::TOP_LEFT:
-				_text.setPosition({ SHAPE_LEFT, SHAPE_TOP});
+				_text.setPosition(sf::Vector2f{ SHAPE_LEFT, SHAPE_TOP});
 				break;
 			case ElementPosition::TOP_CENTER:
-				_text.setPosition({ SHAPE_CENTER_X, SHAPE_TOP });
+				_text.setPosition(sf::Vector2f{ SHAPE_CENTER_X, SHAPE_TOP });
 				break;
 			case ElementPosition::BOTTOM_CENTER:
-				_text.setPosition({ SHAPE_CENTER_X, SHAPE_BOTTOM });
+				_text.setPosition(sf::Vector2f{ SHAPE_CENTER_X, SHAPE_BOTTOM });
 				break;
 			case ElementPosition::BOTTOM_LEFT:
-				_text.setPosition({ SHAPE_LEFT, SHAPE_BOTTOM});
+				_text.setPosition(sf::Vector2f{ SHAPE_LEFT, SHAPE_BOTTOM});
 				break;
 			case ElementPosition::BOTTOM_RIGHT:
-				_text.setPosition({ SHAPE_RIGHT, SHAPE_BOTTOM});
+				_text.setPosition(sf::Vector2f{ SHAPE_RIGHT, SHAPE_BOTTOM});
 				break;
 			case ElementPosition::CENTER_LEFT:
-				_text.setPosition({ SHAPE_LEFT, SHAPE_CENTER_Y });
+				_text.setPosition(sf::Vector2f{ SHAPE_LEFT, SHAPE_CENTER_Y });
 				break;
 			case ElementPosition::CENTER_RIGHT:
-				_text.setPosition({ SHAPE_RIGHT, SHAPE_CENTER_Y });
+				_text.setPosition(sf::Vector2f{ SHAPE_RIGHT, SHAPE_CENTER_Y });
 				break;
 			case ElementPosition::CENTER:
-				_text.setPosition({ SHAPE_CENTER_X, SHAPE_CENTER_Y });
+				_text.setPosition(sf::Vector2f{ SHAPE_CENTER_X, SHAPE_CENTER_Y });
 				break;
 			}
 
@@ -398,6 +400,7 @@ namespace drft::gui
 		{
 			_isVisible = isVisible;
 		}
+		
 
 		void setState(ElementState state)
 		{
@@ -449,7 +452,7 @@ namespace drft::gui
 				_callback.at(ElementCallbackType::OnLeave)();
 			}
 		}
-		virtual void layoutChildren() {};
+		
 
 	private:
 		virtual void applyStyle()
@@ -537,9 +540,7 @@ namespace drft::gui
 
 			return *this;
 		}
-
-	protected:
-		virtual void layoutChildren() = 0;
+		virtual void layoutChildren() = 0;	
 	};
 
 	// Container that allows the calling code to control which child has priority.
@@ -588,7 +589,17 @@ namespace drft::gui
 	class SingleContainer : public Container
 	{
 	public:
-		void init() override;
+		void layoutChildren() override;
+
+	protected:
+		bool onHandleEvent(const sf::Event& ev) override;
+		bool onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
+	};
+
+	class DualContainer : public Container
+	{
+	public:
 		void layoutChildren() override;
 
 	protected:
@@ -596,6 +607,9 @@ namespace drft::gui
 		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
 
+		void onSelect() override;
+		void onFocus() override;
+		void onLeave() override;
 	};
 
 	// Container where items added will be ordered in an auto-sizing list from top -> down.
@@ -621,6 +635,13 @@ namespace drft::gui
 	private:
 		int _cursorPosition = -1;
 		bool _canInteract = false;
+	};
+
+	class ScrollingList : public List
+	{
+	public:
+		ScrollingList(bool canInteract);
+		void layoutChildren() override;
 	};
 
 	// Container where items added will be organized into an auto-sizing grid with a width & height.

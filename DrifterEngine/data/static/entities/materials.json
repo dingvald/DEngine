@@ -33,7 +33,7 @@
           "Name": "Info",
           "Data": {
             "prototype": "PROTOTYPE",
-            "name": "corpse",
+            "name": "Corpse",
             "extendedName": "",
             "description": "A corpse"
           }
@@ -65,7 +65,7 @@
           "Name": "Info",
           "Data": {
             "prototype": "PROTOTYPE",
-            "name": "wood",
+            "name": "Wood",
             "extendedName": "",
             "description": "A chunk of wood"
           }
@@ -97,7 +97,7 @@
           "Name": "Info",
           "Data": {
             "prototype": "PROTOTYPE",
-            "name": "stone",
+            "name": "Stone",
             "extendedName": "",
             "description": "A small rock."
           }

@@ -4,6 +4,7 @@
 #include "States/TitleScreenState.h"
 #include "States/MainMenuState.h"
 #include "States/InventoryState.h"
+#include "States/CraftingState.h"
 #include "States/PauseState.h"
 #include "States/GameOverState.h"
 #include "States/WorldMapState.h"
@@ -58,6 +59,7 @@ void drft::Engine::registerStates()
 	_stateStack.registerState<MainMenuState>(States::MainMenu);
 	_stateStack.registerState<GameState>(States::Game);
 	_stateStack.registerState<InventoryState>(States::Inventory);
+	_stateStack.registerState<CraftingState>(States::Crafting);
 	_stateStack.registerState<WorldMapState>(States::Map);
 	_stateStack.registerState<PauseState>(States::Pause);
 	_stateStack.registerState<GameOverState>(States::GameOver);

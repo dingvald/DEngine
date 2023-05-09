@@ -432,6 +432,62 @@
           }
         }
       ]
+    },
+    // Axe
+    {
+      "Name": "Axe",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Axe",
+            "extendedName": "",
+            "description": "A simple axe for chopping."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 12,
+            "color": [ 120, 120, 120 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 1.5,
+            "materials": [ "Stone", "Wood" ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 10,
+            "current": 10
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Stone": 2,
+              "Wood": 1
+            }
+          }
+        }
+      ]
     }
+
   ]
 }

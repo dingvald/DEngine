@@ -34,6 +34,11 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 			.textColor = sf::Color(50,50,50),
 			.textSize = 32
 		}) 
+		.setStyle(gui::ElementState::FocusedUnselectable, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color(100,100,100),
+			.textSize = 32
+			})
 		.setTextString("Continue")
 		.registerCallback(gui::ElementCallbackType::OnIsSelectable, [this]()
 		{

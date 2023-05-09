@@ -82,6 +82,18 @@ namespace cereal
 	{
 		archive(container.contents);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Craftable& craftable)
+	{
+		archive(craftable.recipe);
+	}
+
+	template<class Archive>
+	void serialize(Archive& archive, MyCraftableItems& craftableItems)
+	{
+		archive(craftableItems.craftables, craftableItems.partialCraftables);
+	}
 }
 
 

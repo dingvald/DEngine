@@ -38,7 +38,12 @@ void drft::system::PickUpSystem::update(const float dt)
 			registry->remove<component::Position>(pickupItem);
 			std::cout << util::getEntityName({ *registry, entity }) 
 				<< " picked up a " << util::getEntityName({ *registry, pickupItem }) << std::endl;
-			container.contents.push_back(itemComp->id);
+
+			registry->patch<component::Container>(entity,
+				[itemComp](component::Container& cont)
+				{
+					cont.contents.push_back(itemComp->id);
+				});
 
 			const int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Act);
 			registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);

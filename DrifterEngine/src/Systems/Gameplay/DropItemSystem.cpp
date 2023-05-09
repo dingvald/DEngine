@@ -36,7 +36,11 @@ void drft::system::DropItemSystem::onItemDropped(entt::registry& registry, entt:
 		auto itemItr = std::find(container.contents.begin(), container.contents.end(), item);
 		if (itemItr != container.contents.end())
 		{
-			container.contents.erase(itemItr);
+			registry.patch<component::Container>(entity,
+				[itemItr](component::Container& cont)
+				{
+					cont.contents.erase(itemItr);
+				});
 		}
 	}
 }

@@ -14,6 +14,8 @@ namespace drft
 		// Load entity prototypes from the given JSON file into the given registry.
 		bool loadPrototypes(std::string JSONfilename);
 
+		entt::entity get(std::string name) const;
+
 		// Access the prototype registry (read-only).
 		const entt::registry& prototypes() const;
 

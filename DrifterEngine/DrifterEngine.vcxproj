@@ -168,6 +168,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
+    <ClCompile Include="src\Engine\States\CraftingState.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\OpenCraftingSystem.cpp" />
     <ClCompile Include="src\ProcGen\Helpers\Dilate.cpp" />
     <ClCompile Include="src\ProcGen\Helpers\Erode.cpp" />
     <ClCompile Include="src\ProcGen\PlacementAlgorithms\Fill.cpp" />
@@ -278,6 +281,9 @@
     <ClCompile Include="src\Engine\States\WorldMapState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
+    <ClInclude Include="src\Engine\States\CraftingState.h" />
+    <ClInclude Include="src\Systems\Gameplay\OpenCraftingSystem.h" />
     <ClInclude Include="src\ProcGen\Helpers\Dilate.h" />
     <ClInclude Include="src\ProcGen\Helpers\Erode.h" />
     <ClInclude Include="src\ProcGen\Helpers\Kernels.h" />

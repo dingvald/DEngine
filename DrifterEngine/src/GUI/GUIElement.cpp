@@ -54,7 +54,12 @@ void drft::gui::FlowControl::onRender(sf::RenderTarget& target)
 // BLOB
 
 void drft::gui::Blob::layoutChildren()
-{}
+{
+	for (auto& child : _children)
+	{
+		child->setPosition(getPosition() + child->getPosition() + _childOrigin + _childOffset);
+	}
+}
 
 bool drft::gui::Blob::onHandleEvent(const sf::Event& ev)
 {
@@ -67,6 +72,8 @@ bool drft::gui::Blob::onHandleEvent(const sf::Event& ev)
 
 bool drft::gui::Blob::onUpdate(const float dt)
 {
+	layoutChildren();
+
 	for (auto& child : _children)
 	{
 		child->update(dt);
@@ -145,10 +152,6 @@ void drft::gui::Stack::onRender(sf::RenderTarget& target)
 
 // SINGLE CONTAINER
 
-void drft::gui::SingleContainer::init()
-{
-}
-
 bool drft::gui::SingleContainer::onHandleEvent(const sf::Event& ev)
 {
 	for (auto& child : _children)
@@ -183,6 +186,73 @@ void drft::gui::SingleContainer::onRender(sf::RenderTarget& target)
 	{
 		child->render(target);
 		break;
+	}
+}
+
+// DUAL CONTAINER
+
+void drft::gui::DualContainer::layoutChildren()
+{
+	if (_children.empty()) return;
+	_children.front()->setPosition(_shape.getPosition() + _childOrigin);
+	_children.back()->setPosition(_shape.getPosition() + _childOrigin + _style[_state].childPadding);
+}
+
+bool drft::gui::DualContainer::onHandleEvent(const sf::Event& ev)
+{
+	for (auto& child : _children)
+	{
+		child->handleEvent(ev);
+	}
+
+	return true;
+}
+
+bool drft::gui::DualContainer::onUpdate(const float dt)
+{
+	layoutChildren();
+	for (auto& child : _children)
+	{
+		child->update(dt);
+		break;
+	}
+	return true;
+}
+
+void drft::gui::DualContainer::onRender(sf::RenderTarget& target)
+{
+	target.draw(_shape);
+	for (auto& child : _children)
+	{
+		child->render(target);
+	}
+}
+
+void drft::gui::DualContainer::onSelect()
+{
+	Element::onSelect();
+	for (auto& child : _children)
+	{
+		child->setState(ElementState::Active);
+	}
+}
+
+void drft::gui::DualContainer::onFocus()
+{
+	Element::onFocus();
+	for (auto& child : _children)
+	{
+		child->setState(ElementState::Focused);
+	}
+}
+
+void drft::gui::DualContainer::onLeave()
+{
+	Element::onLeave();
+
+	for (auto& child : _children)
+	{
+		child->setState(ElementState::Idle);
 	}
 }
 
@@ -222,8 +292,14 @@ bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 		}
 		if (ev.key.code == sf::Keyboard::Space)
 		{
-			_children[_cursorPosition]->setState(gui::ElementState::Active);
-			return false;
+			if (_cursorPosition >= 0 || _cursorPosition < _children.size())
+			{
+				if (_children[_cursorPosition]->isSelectable())
+				{
+					_children[_cursorPosition]->setState(gui::ElementState::Active);
+					return false;
+				}
+			}
 		}
 		break;
 	}
@@ -242,17 +318,28 @@ bool drft::gui::List::onUpdate(const float dt)
 		const bool isSelectable = child->isSelectable();
 		if (isSelectable)
 		{
-			child->setState(ElementState::Idle);
+			if (_cursorPosition == count)
+			{
+				child->setState(ElementState::Focused);
+			}
+			else
+			{
+				child->setState(ElementState::Idle);
+			}
 		}
 		else
 		{
-			child->setState(ElementState::Unselectable);
+			if (_cursorPosition == count)
+			{
+				child->setState(ElementState::FocusedUnselectable);
+			}
+			else
+			{
+				child->setState(ElementState::Unselectable);
+			}
 		}
 		
-		if (_cursorPosition == count)
-		{
-			child->setState(ElementState::Focused);
-		}
+		
 		++count;
 	}
 
@@ -339,6 +426,7 @@ void drft::gui::List::layoutChildren()
 		}
 
 		child->setPosition({ x + _childOrigin.x, y + _childOrigin.y });
+		child->layoutChildren();
 		y += rect.height + _style.at(_state).childPadding.y;
 		maxWidth = std::max(maxWidth, rect.width + _style.at(_state).childPadding.y);
 	}
@@ -346,30 +434,20 @@ void drft::gui::List::layoutChildren()
 
 void drft::gui::List::moveCursorDown()
 {
-	int safetyCount = 0;
-	do 
+	++_cursorPosition;
+	if (_cursorPosition >= _children.size())
 	{
-		++_cursorPosition;
-		if (_cursorPosition >= _children.size())
-		{
-			_cursorPosition = 0;
-		}
-		++safetyCount;
-	} while (!_children.at(_cursorPosition)->isSelectable() && safetyCount < _children.size());
+		_cursorPosition = 0;
+	}
 }
 
 void drft::gui::List::moveCursorUp()
 {
-	int safetyCount = 0;
-	do
+	--_cursorPosition;
+	if (_cursorPosition < 0)
 	{
-		--_cursorPosition;
-		if (_cursorPosition < 0)
-		{
-			_cursorPosition = _children.size() - 1;
-		}
-		++safetyCount;
-	} while (!_children.at(_cursorPosition)->isSelectable() && safetyCount < _children.size());
+		_cursorPosition = _children.size() - 1;
+	}
 }
 
 // GRID
@@ -699,6 +777,7 @@ void drft::gui::Icon::onRender(sf::RenderTarget& target)
 {
 	//target.draw(_shape);
 	target.draw(_sprite);
+	target.draw(_text);
 }
 
 void drft::gui::Element::popBack()
@@ -712,3 +791,36 @@ bool drft::gui::PopupMessage::onHandleEvent(const sf::Event& ev)
 {
 	return false;
 }
+
+// SCROLLING LIST
+
+drft::gui::ScrollingList::ScrollingList(bool canInteract)
+	: List(canInteract)
+{
+}
+
+void drft::gui::ScrollingList::layoutChildren()
+{
+	float x = _style.at(_state).innerPadding.x;
+	float y = _style.at(_state).innerPadding.y;
+	float maxWidth = 0;
+
+	for (auto& child : _children)
+	{
+		auto rect = child->getGlobalBounds();
+
+		if (y + rect.height > _shape.getSize().y)
+		{
+			x += maxWidth;
+			y = 0;
+			maxWidth = 0;
+		}
+
+		child->setPosition({ x + _childOrigin.x, y + _childOrigin.y });
+		child->layoutChildren();
+		y += rect.height + _style.at(_state).childPadding.y;
+		maxWidth = std::max(maxWidth, rect.width + _style.at(_state).childPadding.y);
+	}
+}
+
+

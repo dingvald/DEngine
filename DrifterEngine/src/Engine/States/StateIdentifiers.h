@@ -12,6 +12,7 @@ namespace drft
 		Pause,
 		GameOver,
 		Map,
+		Crafting,
 		Total
 	};
 }
