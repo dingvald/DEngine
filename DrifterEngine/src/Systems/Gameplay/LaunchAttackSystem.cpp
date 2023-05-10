@@ -18,12 +18,11 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		attack.damage += attacker.baseDamage;
 	}
 
-	auto launchAttackView = registry->view<component::action::LaunchAttack, component::tag::Active>();
-	for (auto [entity, attack] : launchAttackView.each())
+	auto launchAttackView = registry->view<component::action::LaunchAttack, component::Position, component::tag::Active>();
+	for (auto [entity, attack, pos] : launchAttackView.each())
 	{
 		const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
-		const auto& posComp = registry->get<component::Position>(entity);
-		sf::Vector2i targetPosition = spatial::toTileSpace(posComp.position) + attack.direction;
+		sf::Vector2i targetPosition = spatial::toTileSpace(pos.position) + attack.direction;
 
 		const auto targets = grid.entitiesAt(targetPosition, spatial::Layer::Blocking);
 		for (auto target : targets)
