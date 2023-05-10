@@ -3,6 +3,7 @@
 namespace drft::spatial
 {
 	// Spatial conversion functions //
+
 	const int CHUNK_WIDTH = 64;
 	const int CHUNK_HEIGHT = 64;
 	const int TILE_WIDTH = 16;
