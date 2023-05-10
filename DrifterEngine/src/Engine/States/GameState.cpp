@@ -133,7 +133,7 @@ void drft::GameState::setupRegistryContext()
 	using namespace entt::literals;
 
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(*_world);
-	getContext().registry.ctx().emplace<sf::Window&>(getContext().window);
+	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace_as<sf::Texture&>("sprites"_hs, getContext().textures.get("Sprites"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
