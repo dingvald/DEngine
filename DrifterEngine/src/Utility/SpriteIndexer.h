@@ -35,7 +35,9 @@ namespace drft::util
 		JungleTree,
 		Roots,
 		Raft,
-		PlantFibre
+		PlantFibre,
+		Twine,
+		ZolGibbon
 	};
 
 	class SpriteIndexer

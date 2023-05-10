@@ -469,7 +469,7 @@
         {
           "Name": "Physical",
           "Data": {
-            "weight": 1.5,
+            "weight": 2.1,
             "materials": [ "Stone", "Wood" ]
           }
         },
@@ -563,6 +563,82 @@
               "Wood": 8,
               "Twine": 2
             }
+          }
+        }
+      ]
+    },
+    // Zol Gibbon
+    {
+      "Name": "Zol Gibbon",
+      "Inherits": [
+        "HumanBody"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Zol Gibbon",
+            "extendedName": "",
+            "description": " A terrifying jungle creature."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 33,
+            "color": [ 54, 6, 22 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 60.0,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 1.2,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 10,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 12,
+            "current": 12
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 4
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
           }
         }
       ]

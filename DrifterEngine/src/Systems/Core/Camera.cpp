@@ -45,8 +45,8 @@ void drft::system::Camera::update(const float dt)
 		if (!target) continue;
 
 
-		pos.position.x = std::lerp(pos.position.x, target->position.x, std::clamp(CAMERA_SPEED * dt, 0.f, 2.f));
-		pos.position.y = std::lerp(pos.position.y, target->position.y, std::clamp(CAMERA_SPEED * dt, 0.f, 2.f));
+		pos.position.x = std::lerp(pos.position.x, target->position.x, std::clamp(CAMERA_SPEED * dt, 0.f, 1.f));
+		pos.position.y = std::lerp(pos.position.y, target->position.y, std::clamp(CAMERA_SPEED * dt, 0.f, 1.f));
 
 		if (spatial::distance(pos.position, target->position) < 0.5)
 		{
