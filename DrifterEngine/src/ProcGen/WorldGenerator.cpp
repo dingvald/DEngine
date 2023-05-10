@@ -49,7 +49,7 @@ drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temper
         {
             if (temperature > TEMPERATURE_HOT)
             {
-                return BiomeType::Jungle;
+                return BiomeType::Swamp;
             }
             else if (temperature > TEMPERATURE_COLD)
             {
