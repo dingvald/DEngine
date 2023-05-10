@@ -126,7 +126,7 @@
             "Number": 300
           }
         },
-        "Roots": {
+        "Brambles": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 200
@@ -141,6 +141,12 @@
       },
       "Actors": {
         "Zol Gibbon": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 4
+          }
+        },
+        "Snake": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 10

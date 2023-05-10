@@ -142,6 +142,54 @@
         }
       ]
     },
+    // Brambles
+    {
+      "Name": "Brambles",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Brambles",
+            "extendedName": "",
+            "description": "A spiky plant."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 37,
+            "color": [ 3, 64, 16 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 5.0,
+            "materials": [
+              "Plant Fibre"
+            ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 20,
+            "current": 20
+          }
+        }
+      ]
+    },
     // Tree
     {
       "Name": "Tree",
@@ -625,8 +673,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 12,
-            "current": 12
+            "max": 25,
+            "current": 25
           }
         },
         {
@@ -785,6 +833,82 @@
           "Name": "Attacker",
           "Data": {
             "baseDamage": 5
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Snake
+    {
+      "Name": "Snake",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Snake",
+            "extendedName": "",
+            "description": "A fearsome reptile with no legs."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 36,
+            "color": [ 48, 96, 72 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 40,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 1.5,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 8,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 12,
+            "current": 12
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 3
           }
         },
         {

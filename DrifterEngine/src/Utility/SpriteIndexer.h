@@ -39,7 +39,9 @@ namespace drft::util
 		Twine,
 		ZolGibbon,
 		Mosquito,
-		Alligator
+		Alligator,
+		Snake,
+		Brambles
 	};
 
 	class SpriteIndexer

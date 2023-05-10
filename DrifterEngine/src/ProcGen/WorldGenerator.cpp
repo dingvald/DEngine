@@ -8,7 +8,6 @@
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
 #include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
-#include "ProcGen/Helpers/Dilate.h"
 #include "PlacementAlgorithms/Algorithms.h"
 
 // Temperature cutoffs
