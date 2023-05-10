@@ -19,14 +19,20 @@ void drft::system::DeathSystem::update(const float dt)
 	for (auto [entity, physical] : view.each())
 	{
 		auto& pos = registry->get<component::Position>(entity);
+		int chance = 100;
 		for (auto matName : physical.materials)
 		{
-			auto dropped = factory.build(matName, *registry);
-			dropped.patch<component::Position>([&pos](auto& position)
-				{
-					position.position = pos.position;
-			position.depth = spatial::Layer::Item;
-				});
+			int roll = rng::RandomNumberGenerator::intInRange(0, 100);
+			if (roll <= chance)
+			{
+				auto dropped = factory.build(matName, *registry);
+				dropped.patch<component::Position>([&pos](auto& position)
+					{
+						position.position = pos.position;
+				position.depth = spatial::Layer::Item;
+					});
+			}
+			chance *= 0.5;
 		}
 		if (registry->any_of<component::Player>(entity))
 		{
