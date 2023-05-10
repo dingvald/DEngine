@@ -26,6 +26,7 @@
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/DropItemSystem.h"
 #include "Systems/Gameplay/EquipItemSystem.h"
+#include "Systems/Gameplay/HitEffectSystem.h"
 #include "Systems/Gameplay/CraftItemSystem.h"
 #include "Systems/Gameplay/MovementSystem.h"
 #include "Systems/Gameplay/PickUpSystem.h"
@@ -170,6 +171,12 @@ bool drft::GameState::update(const float dt)
 	return true;
 }
 
+bool drft::GameState::fixedUpdate()
+{
+	_systems->fixedUpdate();
+	return true;
+}
+
 void drft::GameState::render(sf::RenderTarget& target)
 {	
 	_systems->render(target);
@@ -230,6 +237,8 @@ void drft::GameState::importSystems()
 	_systems->add<Camera>(							Phase::OnPostUpdate);
 	_systems->add<ChunkManager>(					Phase::OnPostUpdate);
 	
+	_systems->add<HitEffectSystem>(					Phase::OnFixedUpdate);
+
 	_systems->add<TileRenderer>(					Phase::OnRender);
 	_systems->add<EntityRenderer>(					Phase::OnRender + 5);
 	_systems->add<HUD>(								Phase::OnRender + 10);

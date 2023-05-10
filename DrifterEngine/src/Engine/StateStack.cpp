@@ -17,6 +17,16 @@ void StateStack::update(const float dt)
 	applyPendingChanges();
 }
 
+void drft::StateStack::fixedUpdate()
+{
+	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
+	{
+		if (!(*state)->fixedUpdate()) break;
+	}
+
+	applyPendingChanges();
+}
+
 void StateStack::render(sf::RenderTarget& target)
 {
 	for (auto& state : _stack)

@@ -93,6 +93,15 @@ void drft::Engine::update(const float dt)
 	service::DebugInfo::instance().putInfo("dt", std::to_string(dt));
 
 	_stateStack.update(dt);
+	
+	static float dtSinceFixedUpdate = 0.0f;
+	dtSinceFixedUpdate += dt;
+	if (dtSinceFixedUpdate >= (1.0f / TARGET_FPS))
+	{
+		_stateStack.fixedUpdate();
+		dtSinceFixedUpdate = 0.0f;
+	}
+
 }
 
 void drft::Engine::render(const float dt)

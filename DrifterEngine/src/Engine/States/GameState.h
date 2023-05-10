@@ -27,6 +27,7 @@ namespace drft
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;
+		bool fixedUpdate() override;
 		void render(sf::RenderTarget& target) override;
 		void onPop() override;
 

@@ -18,6 +18,7 @@ namespace drft
 
 		virtual bool handleEvent(const sf::Event& ev);
 		virtual bool update(const float dt) = 0;
+		virtual bool fixedUpdate();
 		virtual void render(sf::RenderTarget& target) = 0;
 
 		virtual void onPush();
