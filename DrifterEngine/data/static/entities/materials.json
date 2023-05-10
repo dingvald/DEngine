@@ -35,7 +35,7 @@
             "prototype": "PROTOTYPE",
             "name": "Corpse",
             "extendedName": "",
-            "description": "A corpse"
+            "description": "A corpse."
           }
         },
         {
@@ -67,7 +67,7 @@
             "prototype": "PROTOTYPE",
             "name": "Wood",
             "extendedName": "",
-            "description": "A chunk of wood"
+            "description": "A chunk of wood."
           }
         },
         {
@@ -170,7 +170,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 32,
-            "color": [ 191, 144, 96 ]
+            "color": [ 186, 161, 127 ]
           }
         },
         {

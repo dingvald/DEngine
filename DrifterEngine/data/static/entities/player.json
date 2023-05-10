@@ -59,7 +59,7 @@
         {
           "Name": "Attacker",
           "Data": {
-            "baseDamage": 2
+            "baseDamage": 1
           }
         },
         {

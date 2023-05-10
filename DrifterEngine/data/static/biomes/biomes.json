@@ -25,6 +25,12 @@
         }
       },
       "Actors": {
+        "Mosquito": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 4
+          }
+        }
       }
     },
     "Mountain": {
@@ -98,7 +104,18 @@
         }
       },
       "Actors": {
-
+        "Mosquito": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 30
+          }
+        },
+        "Alligator": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 3
+          }
+        }
       }
     },
     "Jungle": {

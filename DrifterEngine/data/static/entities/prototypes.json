@@ -587,7 +587,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 33,
-            "color": [ 54, 6, 22 ]
+            "color": [ 60, 60, 60 ]
           }
         },
         {
@@ -633,6 +633,158 @@
           "Name": "Attacker",
           "Data": {
             "baseDamage": 4
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Mosquito
+    {
+      "Name": "Mosquito",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Mosquito",
+            "extendedName": "",
+            "description": "The most annoying thing alive."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 34,
+            "color": [ 129, 114, 101 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 0.1,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 2,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 15,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 1,
+            "current": 1
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 1
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Alligator
+    {
+      "Name": "Alligator",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Alligator",
+            "extendedName": "",
+            "description": "A fearsome reptile."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 35,
+            "color": [ 48, 96, 72 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 150,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 1.0,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 8,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 30,
+            "current": 30
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 5
           }
         },
         {
