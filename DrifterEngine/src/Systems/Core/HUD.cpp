@@ -36,6 +36,10 @@ void drft::system::HUD::update(const float dt)
 		_healthBar.setSize({ (static_cast<float>(health->current) / static_cast<float>(health->max)) 
 			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER)-2.0f, 6.f });
 	}
+	else
+	{
+		_healthBar.setSize({ 0.f, 6.f });
+	}
 }
 
 void drft::system::HUD::render(sf::RenderTarget& target)
