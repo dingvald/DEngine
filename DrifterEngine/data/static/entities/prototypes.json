@@ -169,7 +169,10 @@
           "Name": "Physical",
           "Data": {
             "weight": 400.0,
-            "materials": [ "Wood" ]
+            "materials": [
+              "Wood",
+              "Plant Fibre"
+            ]
           }
         },
         {
@@ -534,7 +537,10 @@
           "Name": "Physical",
           "Data": {
             "weight": 30.0,
-            "materials": [ "Wood" ]
+            "materials": [
+              "Wood",
+              "Twine"
+            ]
           }
         },
         {
@@ -554,7 +560,8 @@
           "Name": "Craftable",
           "Data": {
             "recipe": {
-              "Wood": 10
+              "Wood": 8,
+              "Twine": 2
             }
           }
         }

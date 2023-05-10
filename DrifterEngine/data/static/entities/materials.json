@@ -117,6 +117,78 @@
           }
         }
       ]
+    },
+    // PlantFibre
+    {
+      "Name": "Plant Fibre",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Plant Fibre",
+            "extendedName": "",
+            "description": "Tough planty material."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 31,
+            "color": [ 1, 50, 35 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 0.25,
+            "materials": [ "Plant Fibre" ]
+          }
+        }
+      ]
+    },
+    // Twine
+    {
+      "Name": "Twine",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Twine",
+            "extendedName": "",
+            "description": "Versatile and durable."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 32,
+            "color": [ 191, 144, 96 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 0.5,
+            "materials": [ "Plant Fibre" ]
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Plant Fibre": 4
+            }
+          }
+        }
+      ]
     }
   ]
 }
