@@ -37,7 +37,9 @@ namespace drft::util
 		Raft,
 		PlantFibre,
 		Twine,
-		ZolGibbon
+		ZolGibbon,
+		Mosquito,
+		Alligator
 	};
 
 	class SpriteIndexer
