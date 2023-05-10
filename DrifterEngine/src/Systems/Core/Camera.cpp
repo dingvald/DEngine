@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Components/Components.h"
 #include "Spatial/Conversions.h"
+#include "Spatial/Helpers.h"
 #include "Services/DebugInfo.h"
 
 static const float CAMERA_SPEED = 5.0f;
@@ -14,8 +15,8 @@ void drft::system::Camera::init()
 void drft::system::Camera::onStart()
 {
 	_camera = registry->create();
-	int viewportWidth = registry->ctx().get<sf::Window>().getSize().x;
-	int viewportHeight = registry->ctx().get<sf::Window>().getSize().y;
+	int viewportWidth = registry->ctx().get<const sf::RenderWindow&>().getView().getSize().x;
+	int viewportHeight = registry->ctx().get<const sf::RenderWindow&>().getView().getSize().y;
 	registry->emplace<component::Position>(_camera, sf::Vector2f(0, 0), (int)spatial::Layer::Camera);
 	registry->emplace<component::Camera>(_camera, sf::FloatRect(0, 0, viewportWidth, viewportHeight), entt::null);
 }
@@ -43,21 +44,13 @@ void drft::system::Camera::update(const float dt)
 
 		if (!target) continue;
 
-		if (std::abs(pos.position.x - target->position.x) < 0.5f)
+
+		pos.position.x = std::lerp(pos.position.x, target->position.x, std::clamp(CAMERA_SPEED * dt, 0.f, 2.f));
+		pos.position.y = std::lerp(pos.position.y, target->position.y, std::clamp(CAMERA_SPEED * dt, 0.f, 2.f));
+
+		if (spatial::distance(pos.position, target->position) < 0.5)
 		{
-			pos.position.x = target->position.x;
-		}
-		else
-		{
-			pos.position.x = std::lerp(pos.position.x, target->position.x, CAMERA_SPEED * dt);
-		}
-		if (std::abs(pos.position.y - target->position.y) < 0.5f)
-		{
-			pos.position.y = target->position.y;
-		}
-		else
-		{
-			pos.position.y = std::lerp(pos.position.y, target->position.y, CAMERA_SPEED * dt);
+			pos.position = target->position;
 		}
 
 		camera.viewport.left = pos.position.x - (camera.viewport.width / 2);
