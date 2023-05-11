@@ -41,7 +41,10 @@ namespace drft::util
 		Mosquito,
 		Alligator,
 		Snake,
-		Brambles
+		Brambles,
+		Flower,
+		Herb,
+		Poultice
 	};
 
 	class SpriteIndexer

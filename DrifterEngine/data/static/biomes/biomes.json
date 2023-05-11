@@ -58,6 +58,12 @@
           "Params": {
             "Number": 50
           }
+        },
+        "Mountain Flower": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 1
+          }
         }
       },
       "Actors": {
@@ -196,6 +202,12 @@
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 600
+          }
+        },
+        "Herb": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 20
           }
         }
       },

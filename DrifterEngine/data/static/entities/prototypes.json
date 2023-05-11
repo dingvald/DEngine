@@ -96,6 +96,132 @@
         }
       ]
     },
+    // Mountain Flower
+    {
+      "Name": "Mountain Flower",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Mountain Flower",
+            "extendedName": "",
+            "description": "A beautiful, fragile flower."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 38,
+            "color": [ 27, 55, 184 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 0.2,
+            "materials": [ "Plant Fibre" ]
+          }
+        }
+      ]
+    },
+    // Herb
+    {
+      "Name": "Herb",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Herb",
+            "extendedName": "",
+            "description": "A common herb."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 39,
+            "color": [ 98, 118, 73 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 0.2,
+            "materials": [ "Plant Fibre" ]
+          }
+        }
+      ]
+    },
+    // Potion
+    {
+      "Name": "Potion",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Potion",
+            "extendedName": "",
+            "description": "Restores a small amount of health."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 40,
+            "color": [ 98, 118, 73 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 0.6,
+            "materials": [ "" ]
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Herb": 3,
+              "Mountain Flower": 1
+            }
+          }
+        }
+      ]
+    },
     // Roots
     {
       "Name": "Roots",
