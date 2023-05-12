@@ -281,6 +281,7 @@
     <ClCompile Include="src\Engine\States\StateContext.cpp" />
     <ClCompile Include="src\ProcGen\WorldGenerator.cpp" />
     <ClCompile Include="src\Engine\States\WorldMapState.cpp" />
+    <ClCompile Include="src\Utility\stdHashing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Systems\Gameplay\HitEffectSystem.h" />
@@ -530,6 +531,7 @@
     <ClInclude Include="src\Engine\States\StateContext.h" />
     <ClInclude Include="src\ProcGen\WorldGenerator.h" />
     <ClInclude Include="src\Engine\States\WorldMapState.h" />
+    <ClInclude Include="src\Utility\stdHashing.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\biomes\biomes.json" />

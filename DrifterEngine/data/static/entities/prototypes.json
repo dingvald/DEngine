@@ -782,7 +782,7 @@
           "Name": "Actor",
           "Data": {
             "ap": 0,
-            "moveSpeed": 1.2,
+            "moveSpeed": 1.0,
             "actSpeed": 1.0
           }
         },

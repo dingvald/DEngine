@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Helpers.h"
 
-
 std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(const sf::Vector2i centerPosition, const int radius)
 {
 	std::vector<sf::Vector2i> result;

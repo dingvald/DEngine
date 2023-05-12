@@ -2,6 +2,7 @@
 #include "WorldChunk.h"
 #include "WorldGrid.h"
 #include "Spatial/Conversions.h"
+#include "Utility/stdHashing.h"
 
 using namespace drft::spatial;
 
@@ -99,7 +100,6 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 	{
 		sf::Vector2i value;
 		int distance = 0;
-		int heuristic = 0;
 		int cost = 0;
 
 		bool operator<(const Node& rhs) const
@@ -121,24 +121,10 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 			}
 		}
 	};
-	struct pair_hash
-	{
-		size_t operator() (const sf::Vector2i& pos) const
-		{
-			size_t combine = static_cast<size_t>(pos.x);
-			combine ^= static_cast<size_t>(pos.y) + 0x9e3779b9 + (static_cast<size_t>(pos.x) << 6) + (static_cast<size_t>(pos.y) >> 2);
-			return std::hash<size_t>()(combine);
-		}
-	};
 
-	auto checkBlocked = [this](sf::Vector2i position) -> bool
-	{
-		return (!entitiesAt(position, spatial::Layer::Blocking).empty());
-	};
-	
-	std::unordered_set<sf::Vector2i, pair_hash> closedSet;
+	std::unordered_set<sf::Vector2i> closedSet;
 	std::set<Node> openSet;
-	std::unordered_map<sf::Vector2i, sf::Vector2i, pair_hash> cameFrom;
+	std::unordered_map<sf::Vector2i, sf::Vector2i> cameFrom;
 	auto constructPath = [&cameFrom](sf::Vector2i endPosition) -> std::deque<sf::Vector2i>
 	{
 		sf::Vector2i currentPosition = endPosition;
@@ -151,8 +137,12 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 
 		return path;
 	};
+	auto checkBlocked = [this](sf::Vector2i position) -> bool
+	{
+		return (!entitiesAt(position, spatial::Layer::Blocking).empty());
+	};
 	
-	openSet.emplace(Node(pt1,0,0,0));
+	openSet.emplace(Node(pt1,0,0));
 	cameFrom[pt1] = pt1;
 
 	while (!openSet.empty())
@@ -176,11 +166,10 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 					else continue;
 				}
 
-				int g = currentNode.distance + 1;
-				int h = std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2) + costFunc(*this, { x,y });
-				int f = g + h;
+				int distance = currentNode.distance + 1;
+				int cost = distance + std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2) + costFunc(*this, { x,y });
 
-				Node neighbor = Node({ x,y }, g, h, f);
+				Node neighbor = Node({ x,y }, distance, cost);
 
 				auto inOpenSet = openSet.find(neighbor);
 				if (inOpenSet == openSet.end())
@@ -189,7 +178,7 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 				}
 				else
 				{
-					if (inOpenSet->distance > g)
+					if (inOpenSet->distance > distance)
 					{
 						openSet.erase(inOpenSet);
 						openSet.emplace(neighbor);

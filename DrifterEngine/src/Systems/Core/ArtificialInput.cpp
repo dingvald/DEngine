@@ -18,11 +18,11 @@ void drft::system::ArtificialInput::update(const float dt)
 	auto view = registry->view<component::AI, const component::Position, component::tag::CurrentActor>();
 	for (auto [entity, ai, myPos] : view.each())
 	{
-		if (ai.target != entt::null)
+		const auto target = registry->try_get<component::Position>(ai.target);
+		if (target)
 		{
-			const auto target = registry->get<component::Position>(ai.target);
 			const auto myTilePosition = spatial::toTileSpace(myPos.position);
-			const auto targetTilePosition = spatial::toTileSpace(target.position);
+			const auto targetTilePosition = spatial::toTileSpace(target->position);
 
 			if (spatial::distance(myTilePosition, targetTilePosition) <= ai.sightRange)
 			{
@@ -38,6 +38,7 @@ void drft::system::ArtificialInput::update(const float dt)
 			}
 			else
 			{
+				clearPathCache(entity);
 				ai.target = entt::null;
 			}
 		}
@@ -46,7 +47,6 @@ void drft::system::ArtificialInput::update(const float dt)
 			ai.target = findTarget({ *registry, entity });
 			randomMove({ *registry, entity });
 		}
-			
 	}
 }
 
