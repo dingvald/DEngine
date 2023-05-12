@@ -92,3 +92,112 @@ EntityList drft::spatial::WorldGrid::getAllEntities(const sf::Vector2i coordinat
 	}
 	return std::vector<entt::entity>();
 }
+
+std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf::Vector2i pt2, heuristic costFunc) const
+{
+	struct Node
+	{
+		sf::Vector2i value;
+		int distance = 0;
+		int heuristic = 0;
+		int cost = 0;
+
+		bool operator<(const Node& rhs) const
+		{
+			if (cost == rhs.cost)
+			{
+				if (value.x == rhs.value.x)
+				{
+					return value.y < rhs.value.y;
+				}
+				else
+				{
+					return value.x < rhs.value.x;
+				}
+			}
+			else
+			{
+				return cost < rhs.cost;
+			}
+		}
+	};
+	struct pair_hash
+	{
+		size_t operator() (const sf::Vector2i& pos) const
+		{
+			size_t combine = static_cast<size_t>(pos.x);
+			combine ^= static_cast<size_t>(pos.y) + 0x9e3779b9 + (static_cast<size_t>(pos.x) << 6) + (static_cast<size_t>(pos.y) >> 2);
+			return std::hash<size_t>()(combine);
+		}
+	};
+
+	auto checkBlocked = [this](sf::Vector2i position) -> bool
+	{
+		return (!entitiesAt(position, spatial::Layer::Blocking).empty());
+	};
+	
+	std::unordered_set<sf::Vector2i, pair_hash> closedSet;
+	std::set<Node> openSet;
+	std::unordered_map<sf::Vector2i, sf::Vector2i, pair_hash> cameFrom;
+	auto constructPath = [&cameFrom](sf::Vector2i endPosition) -> std::deque<sf::Vector2i>
+	{
+		sf::Vector2i currentPosition = endPosition;
+		std::deque<sf::Vector2i> path;
+		while (currentPosition != cameFrom[currentPosition])
+		{
+			path.push_front(currentPosition);
+			currentPosition = cameFrom[currentPosition];
+		}
+
+		return path;
+	};
+	
+	openSet.emplace(Node(pt1,0,0,0));
+	cameFrom[pt1] = pt1;
+
+	while (!openSet.empty())
+	{
+		auto currentNode = *(openSet.begin());
+		if (currentNode.value == pt2) return constructPath(currentNode.value);
+		openSet.erase(openSet.begin());
+		closedSet.emplace(currentNode.value);
+
+		// check neighbors
+		for (int y = currentNode.value.y - 1; y <= currentNode.value.y + 1; ++y)
+		{
+			for (int x = currentNode.value.x - 1; x <= currentNode.value.x + 1; ++x)
+			{
+				
+				if (closedSet.contains({x,y})) continue;
+				cameFrom[{x, y}] = currentNode.value;
+				if (checkBlocked({ x,y }))
+				{
+					if (sf::Vector2i(x, y) == pt2) return constructPath({ x,y });
+					else continue;
+				}
+
+				int g = currentNode.distance + 1;
+				int h = std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2) + costFunc(*this, { x,y });
+				int f = g + h;
+
+				Node neighbor = Node({ x,y }, g, h, f);
+
+				auto inOpenSet = openSet.find(neighbor);
+				if (inOpenSet == openSet.end())
+				{
+					openSet.emplace(neighbor);
+				}
+				else
+				{
+					if (inOpenSet->distance > g)
+					{
+						openSet.erase(inOpenSet);
+						openSet.emplace(neighbor);
+					}
+				}
+			}
+		}
+	}
+
+	return std::deque<sf::Vector2i>();
+}

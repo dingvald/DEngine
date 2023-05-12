@@ -48,15 +48,15 @@ drft::system::Relationship drft::system::FactionSystem::resolveRelationship(cons
 	
 	if (faction1 == faction2)
 	{
-		return Relationship::Friend;
+		return Relationship::Friendly;
 	}
 	if (closeness < ENEMY_CLOSENESS)
 	{
-		return Relationship::Enemy;
+		return Relationship::Hostile;
 	}
 	else if (closeness > FRIEND_CLOSENESS)
 	{
-		return Relationship::Friend;
+		return Relationship::Friendly;
 	}
 	else
 	{

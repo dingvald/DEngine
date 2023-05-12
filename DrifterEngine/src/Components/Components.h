@@ -74,6 +74,7 @@ namespace component
 	{
 		int sightRange = 0;
 		std::unordered_set<std::string> goals;
+		entt::entity target = entt::null;
 	};
 
 	struct Faction

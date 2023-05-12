@@ -3,6 +3,7 @@
 #include "Components/Components.h"
 #include "Components/Tags.h"
 #include "Random/RandomNumberGenerator.h"
+#include "Spatial/WorldGrid.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/Conversions.h"
 #include "Systems/Gameplay/FactionSystem.h"
@@ -17,15 +18,35 @@ void drft::system::ArtificialInput::update(const float dt)
 	auto view = registry->view<component::AI, const component::Position, component::tag::CurrentActor>();
 	for (auto [entity, ai, myPos] : view.each())
 	{
-		auto target = findTarget({ *registry, entity });
-		if (target != entt::null && ai.goals.contains("kill_target"))
+		if (ai.target != entt::null)
 		{
-			moveToTarget({ *registry, entity }, target);
+			const auto target = registry->get<component::Position>(ai.target);
+			const auto myTilePosition = spatial::toTileSpace(myPos.position);
+			const auto targetTilePosition = spatial::toTileSpace(target.position);
+
+			if (spatial::distance(myTilePosition, targetTilePosition) <= ai.sightRange)
+			{
+				if (hasLineOfSight(myTilePosition, targetTilePosition))
+				{
+					clearPathCache(entity);
+					moveToTarget(entity, myTilePosition, targetTilePosition);
+				}
+				else
+				{
+					pathToTarget(entity, myTilePosition, targetTilePosition);
+				}
+			}
+			else
+			{
+				ai.target = entt::null;
+			}
 		}
 		else
 		{
+			ai.target = findTarget({ *registry, entity });
 			randomMove({ *registry, entity });
 		}
+			
 	}
 }
 
@@ -36,9 +57,9 @@ entt::entity drft::system::ArtificialInput::findTarget(entt::handle entity) cons
 		return entt::null;
 	}
 
-	auto faction = entity.get<component::Faction>();
-	auto ai = entity.get<component::AI>();
-	auto pos = entity.get<component::Position>();
+	const auto& faction = entity.get<component::Faction>();
+	const auto& ai = entity.get<component::AI>();
+	const auto& pos = entity.get<component::Position>();
 
 	float closestRange = 1000;
 	entt::entity closestTarget = entt::null;
@@ -46,40 +67,87 @@ entt::entity drft::system::ArtificialInput::findTarget(entt::handle entity) cons
 	auto factionView = registry->view<const component::Faction, const component::Position, component::tag::Active>();
 	for (auto [otherEnt, otherfaction, otherPos] : factionView.each())
 	{
-		if (FactionSystem::resolveRelationship(faction.name, otherfaction.name) == Relationship::Enemy)
+		if (FactionSystem::resolveRelationship(faction.name, otherfaction.name) == Relationship::Hostile)
 		{
-			float distance = spatial::distance(spatial::toTileSpace(pos.position), spatial::toTileSpace(otherPos.position));
+			const float distance = spatial::distance(spatial::toTileSpace(pos.position), spatial::toTileSpace(otherPos.position));
 			if (distance < ai.sightRange && distance < closestRange)
 			{
-				closestRange = distance;
-				closestTarget = otherEnt;
+				if (hasLineOfSight(spatial::toTileSpace(pos.position), spatial::toTileSpace(otherPos.position)))
+				{
+					closestRange = distance;
+					closestTarget = otherEnt;
+				}
 			}
 		}
 	}
-	if (closestTarget != entt::null)
+	
+	return closestTarget;
+}
+
+bool drft::system::ArtificialInput::hasLineOfSight(sf::Vector2i myPosition, sf::Vector2i targetPosition) const
+{
+	auto tilesInLOS = spatial::getIntPointsAlongLine(myPosition, targetPosition);
+	const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
+	for (auto tile : tilesInLOS)
 	{
-		return closestTarget;
+		auto entities = grid.entitiesAt(tile, spatial::Layer::Blocking);
+		if (!entities.empty()) return false;
 	}
-	return entt::null;
+
+	return true;
 }
 
 void drft::system::ArtificialInput::randomMove(entt::handle entity) const
 {
 	int randx = rng::RandomNumberGenerator::intInRange(-1, 1);
 	int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
-
-
+	const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
+	const auto& tilepos = spatial::toTileSpace(entity.get<component::Position>().position);
+	auto blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), spatial::Layer::Blocking);
+	
+	int safetyCount = 0; // in case entity is surrounded
+	while (safetyCount < 8 && !blockers.empty())
+	{
+		randx = rng::RandomNumberGenerator::intInRange(-1, 1);
+		randy = rng::RandomNumberGenerator::intInRange(-1, 1);
+		blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), spatial::Layer::Blocking);
+		++safetyCount;
+	}
+	
 	entity.emplace<component::action::Move>(sf::Vector2i(randx, randy));
 }
 
-void drft::system::ArtificialInput::moveToTarget(entt::handle entity, entt::entity target) const
+void drft::system::ArtificialInput::moveToTarget(entt::entity ai, sf::Vector2i myPosition, sf::Vector2i targetPosition) const
 {
-	auto targetPos = registry->get<component::Position>(target);
-	auto myPos = entity.get<component::Position>();
-
-	auto delta = spatial::toTileSpace(myPos.position - targetPos.position);
+	auto line = spatial::getIntPointsAlongLine(myPosition, targetPosition);
+	sf::Vector2i delta;
+	if (line.empty())
+	{
+		delta = myPosition - targetPosition;
+	}
+	else
+	{
+		delta = myPosition - line.front();
+	}
 	int xMove = delta.x == 0 ? 0 : -(delta.x / abs(delta.x));
 	int yMove = delta.y == 0 ? 0 : -(delta.y / abs(delta.y));
 
-	entity.emplace<component::action::Move>(sf::Vector2i{ xMove, yMove });
+	registry->emplace<component::action::Move>(ai, sf::Vector2i{ xMove, yMove });
+}
+
+void drft::system::ArtificialInput::pathToTarget(entt::entity ai, sf::Vector2i myPosition, sf::Vector2i targetPosition) const
+{
+	if (!_cachedPaths.contains(ai) || _cachedPaths.at(ai).empty())
+	{
+		const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
+		_cachedPaths[ai] = grid.getPath(myPosition, targetPosition);
+	}
+	moveToTarget(ai, myPosition, _cachedPaths.at(ai).front());
+	_cachedPaths.at(ai).pop_front();
+}
+
+void drft::system::ArtificialInput::clearPathCache(entt::entity entity) const
+{
+	if (!_cachedPaths.contains(entity)) return;
+	_cachedPaths.erase(entity);
 }

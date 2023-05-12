@@ -5,9 +5,9 @@ namespace drft::system
 {
 	enum class Relationship
 	{
-		Friend,
-		Enemy,
-		Neutral
+		Friendly,
+		Neutral,
+		Hostile
 	};
 	using Closeness = int;
 
