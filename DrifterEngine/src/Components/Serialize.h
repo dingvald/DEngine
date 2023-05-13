@@ -24,6 +24,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, LightSource& source)
+	{
+		archive(source.radius, source.dropOff, source.color.r, source.color.g, source.color.b);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Physical& physical)
 	{
 		archive(physical.weight, physical.materials);

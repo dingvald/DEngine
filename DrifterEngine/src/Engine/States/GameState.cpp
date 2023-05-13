@@ -12,6 +12,7 @@
 #include "Systems/SystemScheduler.h"
 #include "Systems/Core/TileRenderer.h"
 #include "Systems/Core/EntityRenderer.h"
+#include "Systems/Core/LightingSystem.h"
 #include "Systems/Core/HUD.h"
 #include "Systems/Core/RealityBubble.h"
 #include "Systems/Core/PlayerInput.h"
@@ -238,7 +239,7 @@ void drft::GameState::importSystems()
 	_systems->add<ChunkManager>(					Phase::OnPostUpdate);
 	
 	_systems->add<HitEffectSystem>(					Phase::OnFixedUpdate);
-
+	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<TileRenderer>(					Phase::OnRender);
 	_systems->add<EntityRenderer>(					Phase::OnRender + 5);
 	_systems->add<HUD>(								Phase::OnRender + 10);

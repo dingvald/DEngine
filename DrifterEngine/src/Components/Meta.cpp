@@ -26,6 +26,12 @@ void component::Meta::initialize()
 		.data<&Render::sprite>("sprite"_hs)
 		.data<&Render::color>("color"_hs);
 
+	snapshot::reflectComponent<LightSource, LIGHTSOURCE_STRING>()
+		.prop("serialize"_hs)
+		.data<&LightSource::radius>("radius"_hs)
+		.data<&LightSource::dropOff>("dropOff"_hs)
+		.data<&LightSource::color>("color"_hs);
+
 	snapshot::reflectComponent<Physical, PHYSICAL_STRING>()
 		.prop("serialize"_hs)
 		.data<&Physical::weight>("weight"_hs)

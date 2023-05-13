@@ -22,6 +22,14 @@
           }
         },
         {
+          "Name": "LightSource",
+          "Data": {
+            "radius": 14,
+            "dropOff": 0.0,
+            "color": [ 255, 255, 255 ]
+          }
+        },
+        {
           "Name": "Position",
           "Data": {
             "position": [ 0.0, 0.0 ],

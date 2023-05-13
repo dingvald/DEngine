@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Core\LightingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HitEffectSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\CraftItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
@@ -284,6 +285,7 @@
     <ClCompile Include="src\Utility\stdHashing.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Core\LightingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\HitEffectSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\CraftItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />

@@ -21,8 +21,20 @@ namespace component
 
 	struct Render
 	{
-		unsigned int sprite = { 4 };
-		sf::Color color = { sf::Color::Magenta };
+		unsigned int sprite = 4;
+		sf::Color color = sf::Color::Magenta;
+	};
+
+	struct Lit
+	{
+		sf::Color color = sf::Color::Black;
+	};
+
+	struct LightSource
+	{
+		float radius = 1;
+		float dropOff = 0.1;
+		sf::Color color = sf::Color::White;
 	};
 
 	struct Physical
