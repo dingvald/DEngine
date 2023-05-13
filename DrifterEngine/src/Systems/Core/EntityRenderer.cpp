@@ -39,9 +39,9 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		auto tempLit = lit;
 		registry->remove<component::Lit>(entity);
 		if (!bufferdViewport.contains(pos.position)) continue;
-		sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(ren.color.r * static_cast<float>(tempLit.color.r / 255), 0.f, 255.f));
-		sf::Uint8 g = static_cast<sf::Uint8>(std::clamp(ren.color.g * static_cast<float>(tempLit.color.g / 255), 0.f, 255.f));
-		sf::Uint8 b = static_cast<sf::Uint8>(std::clamp(ren.color.b * static_cast<float>(tempLit.color.b / 255), 0.f, 255.f));
+		sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(ren.color.r * (static_cast<float>(tempLit.color.r) / 255.f), 0.f, 255.f));
+		sf::Uint8 g = static_cast<sf::Uint8>(std::clamp(ren.color.g * (static_cast<float>(tempLit.color.g) / 255.f), 0.f, 255.f));
+		sf::Uint8 b = static_cast<sf::Uint8>(std::clamp(ren.color.b * (static_cast<float>(tempLit.color.b) / 255.f), 0.f, 255.f));
 		float x = std::round(pos.position.x - viewport.left);
 		float y = std::round(pos.position.y - viewport.top);
 		_spriteLayers[pos.depth].addSprite(ren.sprite, sf::Color(r,g,b,ren.color.a), {x, y});
