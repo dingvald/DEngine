@@ -19,4 +19,5 @@ namespace drft::gen
 	};
 
 	void place(const std::string& name, sf::Vector2i origin, const std::vector<sf::Vector2i>& positions, entt::registry& reg);
+	void fastFill(const std::string& name, sf::Vector2i origin, entt::registry& reg);
 }

@@ -274,7 +274,6 @@
     <ClCompile Include="src\Spatial\WorldChunk.cpp" />
     <ClCompile Include="src\Systems\Core\WorldGridResolver.cpp" />
     <ClCompile Include="src\Systems\Core\Camera.cpp" />
-    <ClCompile Include="src\Systems\Rendering\TileRenderer.cpp" />
     <ClCompile Include="src\Systems\Core\TurnManager.cpp" />
     <ClCompile Include="src\Spatial\Conversions.cpp" />
     <ClCompile Include="src\Components\Tags.cpp" />
@@ -528,7 +527,6 @@
     <ClInclude Include="src\Spatial\WorldChunk.h" />
     <ClInclude Include="src\Systems\Core\WorldGridResolver.h" />
     <ClInclude Include="src\Systems\Core\Camera.h" />
-    <ClInclude Include="src\Systems\Rendering\TileRenderer.h" />
     <ClInclude Include="src\Systems\Core\TurnManager.h" />
     <ClInclude Include="src\Spatial\Conversions.h" />
     <ClInclude Include="src\Components\Tags.h" />

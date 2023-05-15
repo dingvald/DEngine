@@ -280,12 +280,11 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
     const auto& biome = _biomes.at(biomeType);
 
     const auto tileCoord = spatial::toTileSpace(coordinate);
-
     const int LARGE_PRIME = 198491317;
     const int seed = rng::noise(( coordinate.x + (LARGE_PRIME * coordinate.y) ));
+    gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
     spatial::Grid<int> mask{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
     determineAvailableSpaces(determineOpenFaces(coordinate), mask, seed);
-
     for (auto& [category, entityList] : biome.prototypes)
     {
         for (auto& [entity, algorithm, params] : entityList)

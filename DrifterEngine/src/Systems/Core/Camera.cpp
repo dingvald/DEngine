@@ -5,7 +5,7 @@
 #include "Spatial/Helpers.h"
 #include "Services/DebugInfo.h"
 
-static const float CAMERA_SPEED = 5.0f;
+static const float CAMERA_SPEED = 7.0f;
 
 void drft::system::Camera::init()
 {

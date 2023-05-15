@@ -11,7 +11,7 @@ namespace drft::spatial
 
 	enum Layer
 	{
-		Tile,
+		Tiles,
 		Item,
 		Blocking,
 		Effect,

@@ -15,17 +15,17 @@ private:
 		Slope(Slope&&) = default;
 		Slope& operator=(Slope&&) = default;
 
-		bool greater(unsigned int x, unsigned int y) { return Y * x > X * y; }
-		bool greaterOrEqual(unsigned int x, unsigned int y) { return Y * x >= X * y; }
-		bool less(unsigned int x, unsigned int y) { return Y * x < X* y; }
+		bool greater(unsigned int x, unsigned int y) const { return Y * x > X * y; }
+		bool greaterOrEqual(unsigned int x, unsigned int y) const { return Y * x >= X * y; }
+		bool less(unsigned int x, unsigned int y) const { return Y * x < X* y; }
 
 		unsigned int X;
 		unsigned int Y;
 	};
 
-	void compute(unsigned int octant, sf::Vector2i origin, int radius, unsigned int x, Slope top, Slope bottom);
-	bool blocksLight(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin);
-	void setVisible(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin);
+	void compute(unsigned int octant, sf::Vector2i origin, int radius, unsigned int x, Slope top, Slope bottom) const;
+	bool blocksLight(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin) const;
+	void setVisible(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin) const;
 
 private:
 	std::function<bool(sf::Vector2i)> _blocksLight;

@@ -1,5 +1,28 @@
 {
   "Prototypes": [
+    // Tile
+    {
+      "Name": "Tile",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 3,
+            "color": [ 75, 75, 75 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 0
+          }
+        }
+      ]
+    },
     // Grass
     {
       "Name": "Grass",
@@ -450,7 +473,7 @@
           "Name": "Physical",
           "Data": {
             "weight": 50.0,
-            "materials": [ "Wood" ]
+            "materials": [ "Plant Fibre" ]
           }
         },
         {
@@ -668,7 +691,11 @@
           "Name": "Physical",
           "Data": {
             "weight": 2.1,
-            "materials": [ "Stone", "Wood" ]
+            "materials": [
+              "Stone",
+              "Wood",
+              "Twine"
+            ]
           }
         },
         {
@@ -842,6 +869,90 @@
         }
       ]
     },
+    // Firefly
+    {
+      "Name": "Firefly",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Firefly",
+            "extendedName": "",
+            "description": "A bug that lights up."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 41,
+            "color": [ 200, 200, 100 ]
+          }
+        },
+        {
+          "Name": "LightSource",
+          "Data": {
+            "radius": 3,
+            "dropOff": 0.1,
+            "color": [ 200, 200, 0 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 0.1,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 1.0,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 15,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 1,
+            "current": 1
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 1
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "neutral"
+          }
+        }
+      ]
+    },
     // Mosquito
     {
       "Name": "Mosquito",
@@ -863,14 +974,6 @@
           "Data": {
             "sprite": 34,
             "color": [ 129, 114, 101 ]
-          }
-        },
-        {
-          "Name": "LightSource",
-          "Data": {
-            "radius": 2,
-            "dropOff": 0.1,
-            "color": [200,200,0]
           }
         },
         {
@@ -1022,7 +1125,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 36,
-            "color": [ 48, 96, 72 ]
+            "color": [ 186, 84, 4 ]
           }
         },
         {

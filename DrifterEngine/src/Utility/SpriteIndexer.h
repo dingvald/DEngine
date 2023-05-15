@@ -44,7 +44,8 @@ namespace drft::util
 		Brambles,
 		Flower,
 		Herb,
-		Poultice
+		Poultice,
+		Firefly
 	};
 
 	class SpriteIndexer

@@ -16,7 +16,7 @@ void Visibility::compute(sf::Vector2i origin, int radius)
 	}
 }
 
-void Visibility::compute(unsigned int octant, sf::Vector2i origin, int radius, unsigned int x, Slope top, Slope bottom)
+void Visibility::compute(unsigned int octant, sf::Vector2i origin, int radius, unsigned int x, Slope top, Slope bottom) const
 {
 	for (; x < static_cast<unsigned int>(radius); ++x)
 	{
@@ -114,7 +114,7 @@ void Visibility::compute(unsigned int octant, sf::Vector2i origin, int radius, u
     }
 }
 
-bool Visibility::blocksLight(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin)
+bool Visibility::blocksLight(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin) const
 {
 	int nx = origin.x;
 	int ny = origin.y;
@@ -134,7 +134,7 @@ bool Visibility::blocksLight(unsigned int x, unsigned int y, unsigned int octant
 	return _blocksLight(sf::Vector2i(nx, ny));
 }
 
-void Visibility::setVisible(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin)
+void Visibility::setVisible(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin) const
 {
 	int nx = origin.x;
 	int ny = origin.y;

@@ -29,9 +29,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 		std::cout << "Building " << toString() << std::endl;
 		setState(ChunkState::Building);
 	}
-
 	reg.ctx().get<gen::WorldGenerator&>().buildChunk(_coordinate, reg);
-
 	setState(ChunkState::Built);
 
 	return ioStatus::Done;

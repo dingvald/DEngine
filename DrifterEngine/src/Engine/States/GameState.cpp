@@ -11,7 +11,6 @@
 #pragma region System Includes
 #include "Systems/SystemScheduler.h"
 #include "Systems/Rendering/CullingSystem.h"
-#include "Systems/Rendering/TileRenderer.h"
 #include "Systems/Rendering/EntityRenderer.h"
 #include "Systems/Rendering/LightingSystem.h"
 #include "Systems/Rendering/RenderingCleanup.h"
@@ -243,10 +242,9 @@ void drft::GameState::importSystems()
 	_systems->add<HitEffectSystem>(					Phase::OnFixedUpdate);
 	_systems->add<CullingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
-	_systems->add<TileRenderer>(					Phase::OnRender);
-	_systems->add<EntityRenderer>(					Phase::OnRender + 5);
-	_systems->add<HUD>(								Phase::OnRender + 10);
-	_systems->add<RenderingCleanup>(				Phase::OnRender + 20);
+	_systems->add<EntityRenderer>(					Phase::OnRender);
+	_systems->add<HUD>(								Phase::OnRender + 5);
+	_systems->add<RenderingCleanup>(				Phase::OnRender + 10);
 
 	_systems->add<WorldGridResolver>(				Phase::Reactive);
 	_systems->add<FactionSystem>(					Phase::Reactive);

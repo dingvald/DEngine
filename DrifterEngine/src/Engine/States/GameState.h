@@ -18,6 +18,8 @@ namespace drft
 	namespace spatial
 	{
 		class WorldGrid;
+		template<typename T>
+		class Grid;
 	}
 
 	class GameState : public State

@@ -30,6 +30,12 @@
           "Params": {
             "Number": 4
           }
+        },
+        "Firefly": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 1
+          }
         }
       }
     },
@@ -182,6 +188,12 @@
         }
       },
       "Actors": {
+        "Firefly": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 2
+          }
+        }
       }
     },
     "Grassland": {

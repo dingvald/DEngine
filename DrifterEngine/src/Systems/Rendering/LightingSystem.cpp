@@ -6,17 +6,20 @@
 #include "Spatial/Conversions.h"
 #include "Utility/Visibility.h"
 #include "Spatial/WorldGrid.h"
+#include "Spatial/Grid.h"
 
 void drft::system::LightingSystem::init()
 {
-	const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
+	using namespace entt::literals;
+	auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+
 	auto blocksLight = [this](sf::Vector2i position) -> bool
 	{
 		return _lightBlockingPositions.contains(position);
 	};
 	auto setVisible = [this, &grid](sf::Vector2i position)
 	{
-		auto entities = grid.entitiesAt(position);
+		const auto entities = grid.entitiesAt(position);
 		_toLight.insert(_toLight.end(), entities.begin(), entities.end());
 	};
 	auto getDistance = [](sf::Vector2i position) -> int
@@ -29,19 +32,19 @@ void drft::system::LightingSystem::init()
 
 void drft::system::LightingSystem::fixedUpdate()
 {
-	auto lighting = registry->view<const component::LightSource, const component::Position, component::tag::InViewport>();
 	auto positions = registry->view<const component::Position, component::tag::InViewport>();
+	_lightBlockingPositions.reserve(positions.size_hint());
 	for (auto [entity, pos] : positions.each())
 	{
 		if (registry->any_of<component::LightBlocking>(entity))
 		{
-			_lightBlockingPositions.insert(spatial::toTileSpace(pos.position));
+			_lightBlockingPositions.emplace(spatial::toTileSpace(pos.position));
 		}
 	}
+	auto lighting = registry->view<const component::LightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : lighting.each())
 	{
 		_fov->compute(spatial::toTileSpace(lightpos.position), light.radius);
-
 		for (auto entity : _toLight)
 		{
 			if (auto lit = registry->try_get<component::Lit>(entity))
@@ -57,6 +60,5 @@ void drft::system::LightingSystem::fixedUpdate()
 		}
 		_toLight.clear();
 	}
-
 	_lightBlockingPositions.clear();
 }

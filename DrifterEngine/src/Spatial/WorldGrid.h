@@ -50,7 +50,6 @@ namespace drft::spatial
 		using heuristic = std::function<int(const WorldGrid&, sf::Vector2i)>;
 		std::deque<sf::Vector2i> getPath(sf::Vector2i pt1, sf::Vector2i pt2, heuristic h = [](const WorldGrid&, sf::Vector2i){return 0;}) const;
 
-
 	private:
 		std::map<std::pair<int, int>, std::unique_ptr<WorldChunk>> _chunks;
 		std::unordered_map<entt::entity, sf::Vector3i> _entityPositions;

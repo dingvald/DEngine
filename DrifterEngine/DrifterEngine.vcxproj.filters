@@ -75,9 +75,6 @@
     <ClCompile Include="src\Systems\Core\ChunkManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Rendering\TileRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Factory\EntityFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -336,9 +333,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Core\ChunkManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Rendering\TileRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Factory\EntityFactory.h">
