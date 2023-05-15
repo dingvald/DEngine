@@ -30,6 +30,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, LightBlocking& lightBlocking)
+	{
+		archive(lightBlocking.opacity);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Physical& physical)
 	{
 		archive(physical.weight, physical.materials);

@@ -32,6 +32,10 @@ void component::Meta::initialize()
 		.data<&LightSource::dropOff>("dropOff"_hs)
 		.data<&LightSource::color>("color"_hs);
 
+	snapshot::reflectComponent<LightBlocking, LIGHT_BLOCKING_STRING>()
+		.prop("serialize"_hs)
+		.data<&LightBlocking::opacity>("opacity"_hs);
+
 	snapshot::reflectComponent<Physical, PHYSICAL_STRING>()
 		.prop("serialize"_hs)
 		.data<&Physical::weight>("weight"_hs)

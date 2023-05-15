@@ -77,6 +77,25 @@ const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i worldPo
 	return _chunks.at(keyablePair)->entitiesAt(localPosition, layer);
 }
 
+const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition) const
+{
+	auto chunkCoordinate = toChunkCoordinate(tilePosition);
+	auto localPosition = toLocalChunkSpace(tilePosition);
+	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
+
+	if (!_chunks.contains(keyablePair)) {
+		return EntityList{};
+	}
+	EntityList entities;
+	for (int layer = 0; layer < Layer::Total; ++layer)
+	{
+		auto e = _chunks.at(keyablePair)->entitiesAt(localPosition, layer);
+		entities.insert(entities.end(), e.begin(), e.end());
+	}
+
+	return entities;
+}
+
 void drft::spatial::WorldGrid::removeChunk(const sf::Vector2i coordinate)
 {
 	if (_chunks.contains({ coordinate.x, coordinate.y }))

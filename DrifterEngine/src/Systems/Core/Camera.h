@@ -12,7 +12,7 @@ namespace drft::system
 		void shutdown() override;
 
 	private:
-		entt::entity _camera;
+		entt::entity _camera = entt::null;
 	};
 
 }

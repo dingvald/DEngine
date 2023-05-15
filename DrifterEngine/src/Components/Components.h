@@ -37,6 +37,11 @@ namespace component
 		sf::Color color = sf::Color::White;
 	};
 
+	struct LightBlocking
+	{
+		float opacity = 1.0;
+	};
+
 	struct Physical
 	{
 		float weight = 0.0;

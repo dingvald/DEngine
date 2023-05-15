@@ -36,6 +36,7 @@ namespace drft::spatial
 
 		// Returns all entities at the given world tile position.
 		const EntityList entitiesAt(const sf::Vector2i tilePosition, const int layer) const;
+		const EntityList entitiesAt(const sf::Vector2i tilePosition) const;
 
 		// Chunks //
 

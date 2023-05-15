@@ -350,6 +350,12 @@
           }
         },
         {
+          "Name": "LightBlocking",
+          "Data": {
+            "opacity": 1.0
+          }
+        },
+        {
           "Name": "Position",
           "Data": {
             "position": [ 10.0, 10.0 ],
@@ -393,6 +399,12 @@
           "Data": {
             "weight": 300.0,
             "materials": [ "Wood" ]
+          }
+        },
+        {
+          "Name": "LightBlocking",
+          "Data": {
+            "opacity": 1.0
           }
         },
         {
@@ -442,6 +454,12 @@
           }
         },
         {
+          "Name": "LightBlocking",
+          "Data": {
+            "opacity": 1.0
+          }
+        },
+        {
           "Name": "Position",
           "Data": {
             "position": [ 10.0, 10.0 ],
@@ -485,6 +503,12 @@
           "Data": {
             "weight": 1000.0,
             "materials": [ "Stone" ]
+          }
+        },
+        {
+          "Name": "LightBlocking",
+          "Data": {
+            "opacity": 1.0
           }
         },
         {
@@ -846,7 +870,7 @@
           "Data": {
             "radius": 2,
             "dropOff": 0.1,
-            "color": [255,255,255]
+            "color": [200,200,0]
           }
         },
         {
