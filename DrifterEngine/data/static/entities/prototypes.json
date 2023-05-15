@@ -671,7 +671,8 @@
           "Data": {
             "recipe": {
               "Stone": 2,
-              "Wood": 1
+              "Wood": 1,
+              "Twine": 1
             }
           }
         }

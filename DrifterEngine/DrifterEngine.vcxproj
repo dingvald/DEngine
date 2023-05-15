@@ -168,7 +168,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Systems\Core\LightingSystem.cpp" />
+    <ClCompile Include="src\Systems\Rendering\RenderingCleanup.cpp" />
+    <ClCompile Include="src\Systems\Rendering\CullingSystem.cpp" />
+    <ClCompile Include="src\Systems\Rendering\LightingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HitEffectSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\CraftItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
@@ -261,7 +263,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Systems\Core\EntityRenderer.cpp" />
+    <ClCompile Include="src\Systems\Rendering\EntityRenderer.cpp" />
     <ClCompile Include="src\Systems\System.cpp" />
     <ClCompile Include="src\Systems\SystemScheduler.cpp" />
     <ClCompile Include="src\Utility\SaveRegistry.cpp" />
@@ -272,7 +274,7 @@
     <ClCompile Include="src\Spatial\WorldChunk.cpp" />
     <ClCompile Include="src\Systems\Core\WorldGridResolver.cpp" />
     <ClCompile Include="src\Systems\Core\Camera.cpp" />
-    <ClCompile Include="src\Systems\Core\TileRenderer.cpp" />
+    <ClCompile Include="src\Systems\Rendering\TileRenderer.cpp" />
     <ClCompile Include="src\Systems\Core\TurnManager.cpp" />
     <ClCompile Include="src\Spatial\Conversions.cpp" />
     <ClCompile Include="src\Components\Tags.cpp" />
@@ -285,7 +287,9 @@
     <ClCompile Include="src\Utility\stdHashing.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Systems\Core\LightingSystem.h" />
+    <ClInclude Include="src\Systems\Rendering\RenderingCleanup.h" />
+    <ClInclude Include="src\Systems\Rendering\CullingSystem.h" />
+    <ClInclude Include="src\Systems\Rendering\LightingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\HitEffectSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\CraftItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
@@ -510,7 +514,7 @@
     <ClInclude Include="src\Engine\States\GameState.h" />
     <ClInclude Include="src\Engine\States\State.h" />
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Systems\Core\EntityRenderer.h" />
+    <ClInclude Include="src\Systems\Rendering\EntityRenderer.h" />
     <ClInclude Include="src\Systems\System.h" />
     <ClInclude Include="src\Systems\SystemScheduler.h" />
     <ClInclude Include="src\Utility\ResourceHolder.h" />
@@ -523,7 +527,7 @@
     <ClInclude Include="src\Spatial\WorldChunk.h" />
     <ClInclude Include="src\Systems\Core\WorldGridResolver.h" />
     <ClInclude Include="src\Systems\Core\Camera.h" />
-    <ClInclude Include="src\Systems\Core\TileRenderer.h" />
+    <ClInclude Include="src\Systems\Rendering\TileRenderer.h" />
     <ClInclude Include="src\Systems\Core\TurnManager.h" />
     <ClInclude Include="src\Spatial\Conversions.h" />
     <ClInclude Include="src\Components\Tags.h" />

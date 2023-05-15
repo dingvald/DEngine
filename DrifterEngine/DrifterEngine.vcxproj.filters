@@ -36,7 +36,7 @@
     <ClCompile Include="src\Utility\SpriteIndexer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Core\EntityRenderer.cpp">
+    <ClCompile Include="src\Systems\Rendering\EntityRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\System.cpp">
@@ -75,7 +75,7 @@
     <ClCompile Include="src\Systems\Core\ChunkManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Core\TileRenderer.cpp">
+    <ClCompile Include="src\Systems\Rendering\TileRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Factory\EntityFactory.cpp">
@@ -258,7 +258,13 @@
     <ClCompile Include="src\Utility\stdHashing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Core\LightingSystem.cpp">
+    <ClCompile Include="src\Systems\Rendering\LightingSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Rendering\CullingSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Rendering\RenderingCleanup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -287,7 +293,7 @@
     <ClInclude Include="src\Utility\SpriteIndexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Core\EntityRenderer.h">
+    <ClInclude Include="src\Systems\Rendering\EntityRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\System.h">
@@ -329,7 +335,7 @@
     <ClInclude Include="src\Systems\Core\ChunkManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Core\TileRenderer.h">
+    <ClInclude Include="src\Systems\Rendering\TileRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Factory\EntityFactory.h">
@@ -1007,7 +1013,13 @@
     <ClInclude Include="src\Utility\stdHashing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Core\LightingSystem.h">
+    <ClInclude Include="src\Systems\Rendering\LightingSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Rendering\CullingSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Rendering\RenderingCleanup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
