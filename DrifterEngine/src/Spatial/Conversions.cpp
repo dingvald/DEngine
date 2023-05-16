@@ -5,7 +5,7 @@ using namespace drft::spatial;
 
 drft::spatial::Layer drft::spatial::toLayer(const int depth)
 {
-	assert(depth > 0);
+	assert(depth >= 0);
 	assert(depth < (int)Layer::Total);
 
 	return (Layer)depth;

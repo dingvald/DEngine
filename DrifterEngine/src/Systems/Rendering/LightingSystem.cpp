@@ -47,15 +47,25 @@ void drft::system::LightingSystem::fixedUpdate()
 		_fov->compute(spatial::toTileSpace(lightpos.position), light.radius);
 		for (auto entity : _toLight)
 		{
+			auto pos = registry->get<component::Position>(entity);
+			auto tileDistance = spatial::distance(spatial::toTileSpace(pos.position), spatial::toTileSpace(lightpos.position));
+			float denom = (tileDistance / light.radius) + (1.f*light.dropOff);
+			float i = std::clamp( 1 / (denom*denom), 0.0f, 1.0f);
+			sf::Color lightColor = 
+			{
+				static_cast<sf::Uint8>(light.color.r * i),
+				static_cast<sf::Uint8>(light.color.r * i),
+				static_cast<sf::Uint8>(light.color.r * i)
+			};
 			if (auto lit = registry->try_get<component::Lit>(entity))
 			{
-				lit->color.r = std::clamp((lit->color.r + light.color.r) / 2, 0, 255);
-				lit->color.g = std::clamp((lit->color.g + light.color.g) / 2, 0, 255);
-				lit->color.b = std::clamp((lit->color.b + light.color.b) / 2, 0, 255);
+				lit->color.r = std::clamp((lit->color.r + lightColor.r) / 2, 0, 255);
+				lit->color.g = std::clamp((lit->color.g + lightColor.g) / 2, 0, 255);
+				lit->color.b = std::clamp((lit->color.b + lightColor.b) / 2, 0, 255);
 			}
 			else
 			{
-				registry->emplace<component::Lit>(entity, light.color);
+				registry->emplace<component::Lit>(entity, lightColor);
 			}
 		}
 		_toLight.clear();
