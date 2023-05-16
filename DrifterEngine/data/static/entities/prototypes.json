@@ -194,6 +194,15 @@
             "weight": 0.2,
             "materials": [ "Plant Fibre" ]
           }
+        },
+        {
+          "Name": "Usable",
+          "Data": {
+            "action": "Heal",
+            "params": {
+              "Amount": 1.0
+            }
+          }
         }
       ]
     },
@@ -240,6 +249,15 @@
             "recipe": {
               "Herb": 3,
               "Mountain Flower": 1
+            }
+          }
+        },
+        {
+          "Name": "Usable",
+          "Data": {
+            "action": "Heal",
+            "params": {
+              "Amount": 10.0
             }
           }
         }

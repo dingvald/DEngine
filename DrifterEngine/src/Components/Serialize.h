@@ -112,6 +112,12 @@ namespace cereal
 	{
 		archive(craftableItems.craftables, craftableItems.partialCraftables);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Usable& usable)
+	{
+		archive(usable.action, usable.params);
+	}
 }
 
 

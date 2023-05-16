@@ -250,25 +250,30 @@ void drft::InventoryState::setupInventoryGrid()
 
 						commandList.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
-						commandList.insert("Use", gui::Label())
-							.setStyle(gui::ElementState::Idle, {
-								.font = &getContext().fonts.get("Terminus"),
-								.textColor = sf::Color::White,
-								.textSize = 16
-								})
-							.setStyle(gui::ElementState::Focused, {
-								.font = &getContext().fonts.get("Terminus"),
-								.textColor = sf::Color::Yellow,
-								.textSize = 16
-								})
-							.setTextString("use")
-							.setTextOrigin(gui::ElementPosition::TOP_LEFT)
-							.registerCallback(gui::ElementCallbackType::OnSelect,
-								[this, itemEntity]() -> bool
-								{
-									std::cout << "Using item " << util::getEntityName({ this->getContext().registry, itemEntity }) << std::endl;
-									return true;
-								});
+						if (auto usable = getContext().registry.try_get<component::Usable>(itemEntity))
+						{
+							commandList.insert("Use", gui::Label())
+								.setStyle(gui::ElementState::Idle, {
+									.font = &getContext().fonts.get("Terminus"),
+									.textColor = sf::Color::White,
+									.textSize = 16
+									})
+								.setStyle(gui::ElementState::Focused, {
+									.font = &getContext().fonts.get("Terminus"),
+									.textColor = sf::Color::Yellow,
+									.textSize = 16
+									})
+								.setTextString("use")
+								.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+								.registerCallback(gui::ElementCallbackType::OnSelect,
+									[this, itemEntity, itemID]() -> bool
+									{
+										getContext().registry.emplace_or_replace<component::action::Use>(_sessionEntities.front(), itemEntity, itemID);
+										_inventoryStack.clear();
+										requestStackPop();
+										return true;
+									});
+						}
 
 						commandList.insert("Swap", gui::Label())
 							.setStyle(gui::ElementState::Idle, {

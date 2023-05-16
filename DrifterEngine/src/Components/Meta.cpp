@@ -87,4 +87,9 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Craftable, CRAFTABLE_STRING>()
 		.prop("serialize"_hs)
 		.data<&Craftable::recipe>("recipe"_hs);
+
+	snapshot::reflectComponent<Usable, USABLE_STRING>()
+		.prop("serialize"_hs)
+		.data<&Usable::action>("action"_hs)
+		.data<&Usable::params>("params"_hs);
 }

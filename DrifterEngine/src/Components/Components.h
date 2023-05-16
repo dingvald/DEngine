@@ -120,6 +120,12 @@ namespace component
 		std::vector<entt::entity> craftables;
 		std::vector<entt::entity> partialCraftables;
 	};
+
+	struct Usable
+	{
+		std::string action;
+		std::unordered_map<std::string, float> params;
+	};
 }
 
 namespace component::action
@@ -171,6 +177,12 @@ namespace component::action
 	{
 		std::string itemName;
 		std::unordered_map<std::string, int> recipe;
+	};
+
+	struct Use
+	{
+		entt::entity entity;
+		Item::ID item;
 	};
 
 	struct Die {};

@@ -19,11 +19,13 @@ void drft::system::DamageSystem::update(const float dt)
 		health->current -= damage.amount;
 		std::cout << "The " << util::getEntityName(handle) << " takes " << damage.amount << " damage!" << std::endl;
 
-		if (health->current <= 0)
+		health->current = std::clamp(health->current, 0, health->max);
+
+		if (health->current == 0)
 		{
 			handle.emplace<component::action::Die>();
 		}
-
+		
 		handle.remove<component::action::TakeDamage>();
 	}
 }

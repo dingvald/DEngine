@@ -29,8 +29,20 @@ void drft::system::DeathSystem::update(const float dt)
 				dropped.patch<component::Position>([&pos](auto& position)
 					{
 						position.position = pos.position;
-				position.depth = spatial::Layer::Item;
+						position.depth = spatial::Layer::Item;
 					});
+				if (matName.compare("Corpse") == 0)
+				{
+					auto entityName = util::getEntityName({ *registry, entity });
+					dropped.patch<component::Physical>([&physical](component::Physical& phy)
+						{
+							phy.weight = physical.weight;
+						});
+					dropped.patch<component::Info>([entityName, matName](component::Info& info)
+						{
+							info.name = entityName + "'s " + matName;
+						});
+				}
 			}
 			chance *= 0.5;
 		}

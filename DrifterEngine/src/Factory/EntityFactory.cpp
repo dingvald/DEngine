@@ -134,12 +134,24 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 					}
 					else if (data.value.IsObject())
 					{
-						std::unordered_map<std::string, unsigned long> map;
-						for (auto&& mapData : component["Data"][memberName].GetObject())
+						if (component["Data"][memberName].GetObject().begin()->value.IsInt64())
 						{
-							map.emplace(mapData.name.GetString(), mapData.value.GetInt64());
+							std::unordered_map<std::string, unsigned long> map;
+							for (auto&& mapData : component["Data"][memberName].GetObject())
+							{
+								map.emplace(mapData.name.GetString(), mapData.value.GetInt64());
+							}
+							meta.data(entt::hashed_string(memberName)).set(any, map);
 						}
-						meta.data(entt::hashed_string(memberName)).set(any, map);
+						else if (component["Data"][memberName].GetObject().begin()->value.IsFloat())
+						{
+							std::unordered_map<std::string, float> map;
+							for (auto&& mapData : component["Data"][memberName].GetObject())
+							{
+								map.emplace(mapData.name.GetString(), mapData.value.GetFloat());
+							}
+							meta.data(entt::hashed_string(memberName)).set(any, map);
+						}
 					}
 				}
 			}

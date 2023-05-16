@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp" />
     <ClCompile Include="src\Systems\Rendering\RenderingCleanup.cpp" />
     <ClCompile Include="src\Systems\Rendering\CullingSystem.cpp" />
     <ClCompile Include="src\Systems\Rendering\LightingSystem.cpp" />
@@ -285,8 +286,10 @@
     <ClCompile Include="src\Engine\States\WorldMapState.cpp" />
     <ClCompile Include="src\Utility\stdHashing.cpp" />
     <ClCompile Include="src\Utility\Visibility.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\UseItemSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.h" />
     <ClInclude Include="src\Systems\Rendering\RenderingCleanup.h" />
     <ClInclude Include="src\Systems\Rendering\CullingSystem.h" />
     <ClInclude Include="src\Systems\Rendering\LightingSystem.h" />
@@ -538,6 +541,7 @@
     <ClInclude Include="src\Engine\States\WorldMapState.h" />
     <ClInclude Include="src\Utility\stdHashing.h" />
     <ClInclude Include="src\Utility\Visibility.h" />
+    <ClInclude Include="src\Systems\Gameplay\UseItemSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\biomes\biomes.json" />

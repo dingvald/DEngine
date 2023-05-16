@@ -267,6 +267,12 @@
     <ClCompile Include="src\Utility\Visibility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UseItemSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1020,6 +1026,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Visibility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UseItemSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -39,6 +39,7 @@
 #include "Systems/Gameplay/OpenCraftingSystem.h"
 #include "Systems/Gameplay/OpenWorldMapSystem.h"
 #include "Systems/Gameplay/DetermineCraftableItemsSystem.h"
+#include "Systems/Gameplay/UseItemSystem.h"
 #pragma endregion
 #pragma region Component Includes
 #include "Components/Components.h"
@@ -227,6 +228,7 @@ void drft::GameState::importSystems()
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
 	_systems->add<EquipItemSystem>(					Phase::OnUpdate);
 	_systems->add<CraftItemSystem>(					Phase::OnUpdate);
+	_systems->add<UseItemSystem>(					Phase::OnUpdate);
 	_systems->add<OpenInventorySystem>(				Phase::OnUpdate);
 	_systems->add<OpenEquipmentSystem>(				Phase::OnUpdate);
 	_systems->add<OpenWorldMapSystem>(				Phase::OnUpdate);

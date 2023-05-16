@@ -11,7 +11,8 @@ namespace drft::system
 
 	private:
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
-		void queueHitEffect(sf::Vector2f position);
+		void onDie(entt::registry& registry, entt::entity entity);
+		void queueHitEffect(sf::Vector2f position, sf::Color color);
 
 	private:
 		std::vector<entt::entity> _hitEffects;

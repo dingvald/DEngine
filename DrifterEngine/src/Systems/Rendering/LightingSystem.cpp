@@ -10,7 +10,6 @@
 
 void drft::system::LightingSystem::init()
 {
-	using namespace entt::literals;
 	auto& grid = registry->ctx().get<spatial::WorldGrid&>();
 
 	auto blocksLight = [this](sf::Vector2i position) -> bool
