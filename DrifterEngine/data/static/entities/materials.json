@@ -118,6 +118,38 @@
         }
       ]
     },
+    // Iron
+    {
+      "Name": "Iron",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Iron",
+            "extendedName": "",
+            "description": "A common metal."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 43,
+            "color": [ 161, 157, 148 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 2.0,
+            "materials": [ "Iron" ]
+          }
+        }
+      ]
+    },
     // PlantFibre
     {
       "Name": "Plant Fibre",

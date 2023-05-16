@@ -14,6 +14,7 @@ namespace drft::spatial
 		Tiles,
 		Item,
 		Blocking,
+		Prop,
 		Effect,
 		Camera,
 		Total

@@ -17,7 +17,7 @@ namespace drft::util
 		Rock,
 		Zombie,
 		Axe,
-		Sword,
+		Machete,
 		Material,
 		Heart,
 		PaperDollHead,
@@ -45,7 +45,9 @@ namespace drft::util
 		Flower,
 		Herb,
 		Poultice,
-		Firefly
+		Firefly,
+		OreDeposit,
+		Ore
 	};
 
 	class SpriteIndexer

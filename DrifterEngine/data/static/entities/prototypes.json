@@ -568,6 +568,63 @@
         }
       ]
     },
+    // Iron Deposit
+    {
+      "Name": "IronDeposit",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Iron Deposit",
+            "extendedName": "",
+            "description": "A deposit of iron ore."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 42,
+            "color": [ 161, 157, 148 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 1000.0,
+            "materials": [
+              "Stone",
+              "Iron"
+            ]
+          }
+        },
+        {
+          "Name": "LightSource",
+          "Data": {
+            "radius": 3,
+            "dropOff": 0.4,
+            "color": [ 170, 170, 200 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 10.0, 10.0 ],
+            "depth": 2
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 650,
+            "current": 650
+          }
+        }
+      ]
+    },
     // HumanBody
     {
       "Name": "HumanBody",
@@ -742,6 +799,74 @@
               "Stone": 2,
               "Wood": 1,
               "Twine": 1
+            }
+          }
+        }
+      ]
+    },
+    // Machete
+    {
+      "Name": "Machete",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Machete",
+            "extendedName": "",
+            "description": "A broad blade used for hacking."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 13,
+            "color": [ 161, 157, 148 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ],
+            "depth": 1
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "weight": 1.3,
+            "materials": [
+              "Iron"
+            ]
+          }
+        },
+        {
+          "Name": "Sharp",
+          "Data": {
+            "sharpness": 6
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 30,
+            "current": 30
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Iron": 4
             }
           }
         }

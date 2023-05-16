@@ -31,7 +31,8 @@ void drft::system::MovementSystem::update(const float dt)
 		sf::Vector2i targetPosition = spatial::toTileSpace(posComp.position) + move.direction;
 
 		const auto blockers = grid.entitiesAt(targetPosition, spatial::Layer::Blocking);
-		if (blockers.empty())
+		const auto props = grid.entitiesAt(targetPosition, spatial::Layer::Prop);
+		if (blockers.empty() && props.empty())
 		{
 			registry->patch<component::Position>(entity,
 				[&targetPosition](component::Position& pos)
@@ -48,7 +49,6 @@ void drft::system::MovementSystem::update(const float dt)
 			registry->emplace_or_replace<component::action::LaunchAttack>(entity, move.direction);
 		}
 
-		// Move should be handled this frame
 		registry->remove<component::action::Move>(entity);
 	}
 

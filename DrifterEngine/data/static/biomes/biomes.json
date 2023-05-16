@@ -53,6 +53,15 @@
             "Threshold": 0.51
           }
         },
+        "IronDeposit": {
+          "Algorithm": "OrganicSpread",
+          "Params": {
+            "Generations": 2,
+            "StartingSeeds": 1,
+            "SeedsPerGeneration": 2,
+            "Radius": 2
+          }
+        },
         "Stone": {
           "Algorithm": "RandomSpread",
           "Params": {

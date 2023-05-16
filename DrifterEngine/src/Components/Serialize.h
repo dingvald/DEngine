@@ -38,7 +38,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, Physical& physical)
 	{
-		archive(physical.weight, physical.materials);
+		archive(physical.blocks, physical.weight, physical.materials);
 	}
 
 	template<class Archive>

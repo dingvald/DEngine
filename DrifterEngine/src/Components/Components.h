@@ -44,6 +44,7 @@ namespace component
 
 	struct Physical
 	{
+		bool blocks = false;
 		float weight = 0.0;
 		std::vector<std::string> materials = {};
 	};

@@ -468,8 +468,9 @@ void drft::InventoryState::setupInventoryGrid()
 						auto sessionEntity = this->_sessionEntities.front();
 						const auto VIEW = getContext().window.getView();
 						const int index = col + INVENTORY_WIDTH * row;
-						const auto itemID = entityContainer.contents.at(index);
+						if (index >= entityContainer.contents.size()) return true;
 
+						const auto itemID = entityContainer.contents.at(index);
 						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, itemID, _sessionContext.getCurrentSlot());
 
 						_inventoryStack.insert("Message", gui::PopupMessage())

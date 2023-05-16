@@ -49,15 +49,15 @@ void drft::system::SystemScheduler::update(const float dt) const
 	{
 		system->update(dt);
 	}
-	for (auto& [system, _] : _systems.at(PhaseCategory::OnRender))
-	{
-		system->update(dt);
-	}
 }
 
 void drft::system::SystemScheduler::fixedUpdate() const
 {
 	for (auto& [system, _] : _systems.at(PhaseCategory::OnFixedUpdate))
+	{
+		system->fixedUpdate();
+	}
+	for (auto& [system, _] : _systems.at(PhaseCategory::OnRender))
 	{
 		system->fixedUpdate();
 	}

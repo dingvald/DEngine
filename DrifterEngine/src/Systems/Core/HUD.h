@@ -7,7 +7,7 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void update(const float dt) override;
+		void fixedUpdate() override;
 		void render(sf::RenderTarget& target) override;
 
 	private:

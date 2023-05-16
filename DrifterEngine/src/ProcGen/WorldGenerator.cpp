@@ -10,6 +10,9 @@
 #include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
 #include "PlacementAlgorithms/Algorithms.h"
 
+// Perlin noise cutoffs:
+//------------------------------------------
+
 // Temperature cutoffs
 static constexpr double TEMPERATURE_COLD = 0.43;
 static constexpr double TEMPERATURE_HOT = 0.57;
@@ -21,6 +24,8 @@ static constexpr double ALTITUDE_HIGH = 0.57;
 // Moisture cutoffs
 static constexpr double MOISTURE_ARID = 0.43;
 static constexpr double MOISTURE_HUMID = 0.57;
+
+//--------------------------------------------
 
 void drft::gen::WorldGenerator::setSeed(unsigned int seed)
 {
@@ -282,7 +287,9 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
     const auto tileCoord = spatial::toTileSpace(coordinate);
     const int LARGE_PRIME = 198491317;
     const int seed = rng::noise(( coordinate.x + (LARGE_PRIME * coordinate.y) ));
+
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+
     spatial::Grid<int> mask{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
     determineAvailableSpaces(determineOpenFaces(coordinate), mask, seed);
     for (auto& [category, entityList] : biome.prototypes)
@@ -301,6 +308,7 @@ drft::gen::BiomeType drft::gen::WorldGenerator::getBiomeType(sf::Vector2i coordi
         return _cachedBiomeTypes.at({ coordinate.x, coordinate.y });
     }
     auto dCoord = convertIntergerCoordinates(spatial::toTileSpace(coordinate));
+
     double t_noise = _temperatureNoise->gen(dCoord.x, dCoord.y, 0);
     double a_noise = _altitudeNoise->gen(dCoord.x, dCoord.y, 0);
     double m_noise = _moistureNoise->gen(dCoord.x, dCoord.y, 0);
