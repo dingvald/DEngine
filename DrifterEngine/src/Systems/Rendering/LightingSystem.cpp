@@ -53,8 +53,8 @@ void drft::system::LightingSystem::fixedUpdate()
 			sf::Color lightColor = 
 			{
 				static_cast<sf::Uint8>(light.color.r * i),
-				static_cast<sf::Uint8>(light.color.r * i),
-				static_cast<sf::Uint8>(light.color.r * i)
+				static_cast<sf::Uint8>(light.color.g * i),
+				static_cast<sf::Uint8>(light.color.b * i)
 			};
 			if (auto lit = registry->try_get<component::Lit>(entity))
 			{

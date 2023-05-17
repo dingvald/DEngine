@@ -617,7 +617,7 @@
           "Data": {
             "radius": 3,
             "dropOff": 0.4,
-            "color": [ 170, 170, 200 ]
+            "color": [ 180, 180, 180 ]
           }
         },
         {
@@ -1056,7 +1056,7 @@
           "Name": "LightSource",
           "Data": {
             "radius": 3,
-            "dropOff": 0.1,
+            "dropOff": 0.3,
             "color": [ 255, 255, 0 ]
           }
         },

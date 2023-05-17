@@ -108,6 +108,7 @@ void drft::system::ArtificialInput::randomMove(entt::handle entity) const
 	int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
 	const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
 	const auto& tilepos = spatial::toTileSpace(entity.get<component::Position>().position);
+
 	auto blockerFilter = [this](entt::entity entity) -> bool
 	{
 		if (auto physical = registry->try_get<component::Physical>(entity))
