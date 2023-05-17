@@ -65,7 +65,7 @@ void drft::system::HitEffectSystem::onDie(entt::registry& registry, entt::entity
 void drft::system::HitEffectSystem::queueHitEffect(sf::Vector2f position, sf::Color color)
 {
 	auto effect = entt::handle{ *registry, registry->create() };
-	effect.emplace<component::Render>(static_cast<unsigned int>(util::Sprite::Square), color);
-	effect.emplace<component::Position>(position, static_cast<int>(spatial::Layer::Effect));
+	effect.emplace<component::Render>(static_cast<unsigned int>(util::Sprite::Square), 4u, color);
+	effect.emplace<component::Position>(position);
 	_hitEffects.push_back(effect);
 }

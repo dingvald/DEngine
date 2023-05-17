@@ -90,7 +90,12 @@ bool drft::system::ArtificialInput::hasLineOfSight(sf::Vector2i myPosition, sf::
 	const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
 	for (auto tile : tilesInLOS)
 	{
-		auto entities = grid.entitiesAt(tile, spatial::Layer::Blocking);
+		auto entities = grid.entitiesAt(tile,
+			[this](entt::entity entity) -> bool
+			{
+				return registry->any_of<component::LightBlocking>(entity);
+			});
+
 		if (!entities.empty()) return false;
 	}
 
@@ -103,14 +108,23 @@ void drft::system::ArtificialInput::randomMove(entt::handle entity) const
 	int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
 	const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
 	const auto& tilepos = spatial::toTileSpace(entity.get<component::Position>().position);
-	auto blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), spatial::Layer::Blocking);
+	auto blockerFilter = [this](entt::entity entity) -> bool
+	{
+		if (auto physical = registry->try_get<component::Physical>(entity))
+		{
+			return physical->blocks;
+		}
+		return false;
+	};
+
+	auto blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
 	
 	int safetyCount = 0; // in case entity is surrounded
 	while (safetyCount < 8 && !blockers.empty())
 	{
 		randx = rng::RandomNumberGenerator::intInRange(-1, 1);
 		randy = rng::RandomNumberGenerator::intInRange(-1, 1);
-		blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), spatial::Layer::Blocking);
+		blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
 		++safetyCount;
 	}
 	
@@ -140,7 +154,18 @@ void drft::system::ArtificialInput::pathToTarget(entt::entity ai, sf::Vector2i m
 	if (!_cachedPaths.contains(ai) || _cachedPaths.at(ai).empty())
 	{
 		const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
-		_cachedPaths[ai] = grid.getPath(myPosition, targetPosition);
+		_cachedPaths[ai] = grid.getPath(myPosition, targetPosition, 
+			[this](const std::vector<entt::entity>& entities) -> int
+			{
+				for (auto entity : entities)
+				{
+					if (auto physical = registry->try_get<component::Physical>(entity))
+					{
+						if (physical->blocks) return 10000;
+					}
+				}
+				return 0;
+			});
 	}
 	moveToTarget(ai, myPosition, _cachedPaths.at(ai).front());
 	_cachedPaths.at(ai).pop_front();

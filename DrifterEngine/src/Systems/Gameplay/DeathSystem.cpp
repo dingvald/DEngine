@@ -29,7 +29,6 @@ void drft::system::DeathSystem::update(const float dt)
 				dropped.patch<component::Position>([&pos](auto& position)
 					{
 						position.position = pos.position;
-						position.depth = spatial::Layer::Item;
 					});
 				if (matName.compare("Corpse") == 0)
 				{

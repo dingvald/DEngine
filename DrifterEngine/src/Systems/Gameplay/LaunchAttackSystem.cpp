@@ -24,15 +24,26 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
 		sf::Vector2i targetPosition = spatial::toTileSpace(pos.position) + attack.direction;
 
-		const auto targets = grid.entitiesAt(targetPosition, spatial::Layer::Blocking);
+		bool attacked = false;
+		const auto targets = grid.entitiesAt(targetPosition);
 		for (auto target : targets)
 		{
-			std::cout << "The " << util::getEntityName({ *registry, entity }) << " attacks the " << util::getEntityName({ *registry, target }) << std::endl;
-			registry->emplace_or_replace<component::action::TakeDamage>(target, attack.damage);
+			if (auto physical = registry->try_get<component::Physical>(target))
+			{
+				if (physical->blocks)
+				{
+					std::cout << "The " << util::getEntityName({ *registry, entity }) << " attacks the " << util::getEntityName({ *registry, target }) << std::endl;
+					registry->emplace_or_replace<component::action::TakeDamage>(target, attack.damage);
+					attacked = true;
+				}
+			}
+		}
+		if (attacked)
+		{
+			int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Act);
+			registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);
 		}
 		
-		int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Act);
-		registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);
 		registry->remove<component::action::LaunchAttack>(entity);
 	}
 }

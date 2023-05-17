@@ -3,14 +3,6 @@
 
 using namespace drft::spatial;
 
-drft::spatial::Layer drft::spatial::toLayer(const int depth)
-{
-	assert(depth >= 0);
-	assert(depth < (int)Layer::Total);
-
-	return (Layer)depth;
-}
-
 sf::Vector2i drft::spatial::toTileSpace(const sf::Vector2f worldPosition)
 {
 	int x = static_cast<int>(std::floor(worldPosition.x / TILE_WIDTH));

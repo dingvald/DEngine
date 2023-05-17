@@ -23,6 +23,7 @@ void drft::spatial::WorldGrid::placeEntity(const entt::entity entity, const sf::
 void drft::spatial::WorldGrid::removeEntity(const entt::entity entity)
 {
 	if (entity == entt::null) return;
+	if (!_entityPositions.contains(entity)) return;
 
 	sf::Vector2i worldPosition = getPosition(entity);
 
@@ -30,10 +31,8 @@ void drft::spatial::WorldGrid::removeEntity(const entt::entity entity)
 	auto localPosition = toLocalChunkSpace(worldPosition);
 	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
 
-	if (!_chunks.contains(keyablePair))
-	{
-		assert(false);
-	}
+	if (!_chunks.contains(keyablePair)) return;
+
 	_chunks.at(keyablePair)->removeEntity(entity, localPosition);
 	_entityPositions.erase(entity);
 }
@@ -62,6 +61,28 @@ const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePos
 	}
 
 	return _chunks.at(keyablePair)->entitiesAt(localPosition);;
+}
+
+const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const
+{
+	auto chunkCoordinate = toChunkCoordinate(tilePosition);
+	auto localPosition = toLocalChunkSpace(tilePosition);
+	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
+
+	if (!_chunks.contains(keyablePair)) {
+		return EntityList{};
+	}
+	std::vector<entt::entity> result;
+	const auto entities = _chunks.at(keyablePair)->entitiesAt(localPosition);
+	for (auto entity : entities)
+	{
+		if (filterFunc(entity))
+		{
+			result.emplace_back(entity);
+		}
+	}
+
+	return result;
 }
 
 void drft::spatial::WorldGrid::removeChunk(const sf::Vector2i coordinate)
@@ -142,12 +163,14 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 			{
 				if (closedSet.contains({x,y})) continue;
 				cameFrom[{x, y}] = currentNode.value;
-				if (currentNode.value == pt2) return constructPath(currentNode.value);
+				if (sf::Vector2i(x,y) == pt2) return constructPath(sf::Vector2i(x,y));
 
-				int distance = currentNode.distance + 1;
-				int cost = distance + std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2) + costFunc(*this, { x,y });
+				int distanceSoFar = currentNode.distance + 1;
+				int distanceFromTarget = static_cast<int>(std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2));
+				const auto entities = entitiesAt({ x,y });
+				int cost = distanceSoFar + distanceFromTarget + costFunc(entities);
 
-				Node neighbor = Node({ x,y }, distance, cost);
+				Node neighbor = Node({ x,y }, distanceSoFar, cost);
 
 				auto inOpenSet = openSet.find(neighbor);
 				if (inOpenSet == openSet.end())
@@ -156,7 +179,7 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 				}
 				else
 				{
-					if (inOpenSet->distance > distance)
+					if (inOpenSet->distance > distanceSoFar)
 					{
 						openSet.erase(inOpenSet);
 						openSet.emplace(neighbor);

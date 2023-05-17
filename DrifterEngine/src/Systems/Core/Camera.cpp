@@ -17,8 +17,9 @@ void drft::system::Camera::onStart()
 	_camera = registry->create();
 	int viewportWidth = registry->ctx().get<const sf::RenderWindow&>().getView().getSize().x;
 	int viewportHeight = registry->ctx().get<const sf::RenderWindow&>().getView().getSize().y;
-	registry->emplace<component::Position>(_camera, sf::Vector2f(0, 0), (int)spatial::Layer::Camera);
+	// component order matters for camera because it determines order of component destruction.
 	registry->emplace<component::Camera>(_camera, sf::FloatRect(0, 0, viewportWidth, viewportHeight), entt::null);
+	registry->emplace<component::Position>(_camera, sf::Vector2f(0, 0));
 }
 
 void drft::system::Camera::update(const float dt)

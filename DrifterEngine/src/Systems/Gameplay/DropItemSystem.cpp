@@ -19,7 +19,7 @@ void drft::system::DropItemSystem::update(const float dt)
 		for (auto item : items.toDrop)
 		{
 			auto itemEntity = util::ItemIDToEntityID(item, *registry);
-			registry->emplace<component::Position>(itemEntity, pos.position, static_cast<int>(spatial::Layer::Item));
+			registry->emplace<component::Position>(itemEntity, pos.position);
 		}
 
 		registry->remove<component::action::Drop>(entity);

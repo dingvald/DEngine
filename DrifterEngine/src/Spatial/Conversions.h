@@ -9,19 +9,6 @@ namespace drft::spatial
 	const int TILE_WIDTH = 16;
 	const int TILE_HEIGHT = 16;
 
-	enum Layer
-	{
-		Tiles,
-		Item,
-		Blocking,
-		Prop,
-		Effect,
-		Camera,
-		Total
-	};
-
-	// Converts an int to a layer on the grid.
-	Layer toLayer(const int depth);
 
 	// Converts a position in world space into a position in tile space.
 	sf::Vector2i toTileSpace(const sf::Vector2f worldPosition);

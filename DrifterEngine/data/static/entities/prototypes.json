@@ -18,8 +18,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 0
+            "position": [ 0.0, 0.0 ]
           }
         }
       ]
@@ -51,8 +50,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         }
       ]
@@ -84,8 +82,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         }
       ]
@@ -117,8 +114,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         }
       ]
@@ -150,8 +146,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -184,14 +179,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 39,
+            "layer": 1,
             "color": [ 98, 118, 73 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -233,14 +228,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 40,
+            "layer": 1,
             "color": [ 98, 118, 73 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -291,6 +286,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 29,
+            "layer": 2,
             "color": [ 68, 48, 40 ]
           }
         },
@@ -305,8 +301,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -338,6 +333,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 37,
+            "layer": 1,
             "color": [ 3, 64, 16 ]
           }
         },
@@ -354,8 +350,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -387,6 +382,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 5,
+            "layer": 2,
             "color": [ 65, 97, 63 ]
           }
         },
@@ -410,8 +406,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 10.0, 10.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -443,6 +438,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 28,
+            "layer": 2,
             "color": [ 31, 51, 36 ]
           }
         },
@@ -463,8 +459,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 10.0, 10.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -496,6 +491,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 26,
+            "layer": 2,
             "color": [ 83, 113, 61 ]
           }
         },
@@ -516,8 +512,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 10.0, 10.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -549,6 +544,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 23,
+            "layer": 2,
             "color": [ 100, 100, 100 ]
           }
         },
@@ -569,8 +565,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 10.0, 10.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -602,6 +597,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 42,
+            "layer": 3,
             "color": [ 161, 157, 148 ]
           }
         },
@@ -627,8 +623,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 10.0, 10.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -651,6 +646,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 1,
+            "layer": 2,
             "color": [ 150, 150, 150 ]
           }
         },
@@ -691,14 +687,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 11,
+            "layer": 2,
             "color": [ 122, 122, 88 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -768,14 +764,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 12,
+            "layer": 1,
             "color": [ 120, 120, 120 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -841,14 +837,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 13,
+            "layer": 1,
             "color": [ 161, 157, 148 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -910,14 +906,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 30,
+            "layer": 1,
             "color": [ 68, 48, 40 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -975,14 +971,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 33,
+            "layer": 2,
             "color": [ 60, 60, 60 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -1052,6 +1048,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 41,
+            "layer": 2,
             "color": [ 200, 200, 100 ]
           }
         },
@@ -1066,8 +1063,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -1137,14 +1133,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 34,
+            "layer": 2,
             "color": [ 129, 114, 101 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -1214,14 +1210,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 35,
+            "layer": 2,
             "color": [ 48, 96, 72 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -1291,14 +1287,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 36,
+            "layer": 2,
             "color": [ 186, 84, 4 ]
           }
         },
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {

@@ -34,6 +34,8 @@ namespace drft::spatial
 		// Returns all entities at the given world tile position.
 		const EntityList entitiesAt(const sf::Vector2i tilePosition) const;
 
+		const EntityList entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const;
+
 		// Chunks //
 
 		// Clears the chunk of all entities and removes the chunk.
@@ -43,8 +45,8 @@ namespace drft::spatial
 		EntityList getAllEntities(const sf::Vector2i coordinate) const;
 
 		// Pathfinding
-		using heuristic = std::function<int(const WorldGrid&, sf::Vector2i)>;
-		std::deque<sf::Vector2i> getPath(sf::Vector2i pt1, sf::Vector2i pt2, heuristic h = [](const WorldGrid&, sf::Vector2i){return 0;}) const;
+		using heuristic = std::function<int(const std::vector<entt::entity>&)>;
+		std::deque<sf::Vector2i> getPath(sf::Vector2i pt1, sf::Vector2i pt2, heuristic h = [](const std::vector<entt::entity>&){return 0;}) const;
 
 	private:
 		std::map<std::pair<int, int>, std::unique_ptr<WorldChunk>> _chunks;
