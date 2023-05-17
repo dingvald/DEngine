@@ -6,7 +6,7 @@
 
 using namespace drft::spatial;
 
-void drft::spatial::WorldGrid::placeEntity(const entt::entity entity, const sf::Vector2i worldPosition, int layer)
+void drft::spatial::WorldGrid::placeEntity(const entt::entity entity, const sf::Vector2i worldPosition)
 {
 	auto chunkCoordinate = toChunkCoordinate(worldPosition);
 	auto localPosition = toLocalChunkSpace(worldPosition);
@@ -16,18 +16,15 @@ void drft::spatial::WorldGrid::placeEntity(const entt::entity entity, const sf::
 	{
 		_chunks[keyablePair] = std::make_unique<WorldChunk>(CHUNK_WIDTH, CHUNK_HEIGHT);
 	}
-	_chunks[keyablePair]->placeEntity(entity, localPosition, layer);
-	_entityPositions[entity] = { worldPosition.x, worldPosition.y, layer };
+	_chunks[keyablePair]->placeEntity(entity, localPosition);
+	_entityPositions[entity] = worldPosition;
 }
 
-entt::entity drft::spatial::WorldGrid::removeEntity(const entt::entity entity)
+void drft::spatial::WorldGrid::removeEntity(const entt::entity entity)
 {
-	if (entity == entt::null) return entity;
-
-	entt::entity result = entt::null;
+	if (entity == entt::null) return;
 
 	sf::Vector2i worldPosition = getPosition(entity);
-	int layer = static_cast<int>(getLayer(entity));
 
 	auto chunkCoordinate = toChunkCoordinate(worldPosition);
 	auto localPosition = toLocalChunkSpace(worldPosition);
@@ -36,45 +33,22 @@ entt::entity drft::spatial::WorldGrid::removeEntity(const entt::entity entity)
 	if (!_chunks.contains(keyablePair))
 	{
 		assert(false);
-		return result;
 	}
-	result = _chunks.at(keyablePair)->removeEntity(entity, localPosition, layer);
+	_chunks.at(keyablePair)->removeEntity(entity, localPosition);
 	_entityPositions.erase(entity);
-
-	return result;
 }
 
-bool drft::spatial::WorldGrid::moveEntity(const entt::entity entity, const sf::Vector2i toWorldPosition, int layer)
+bool drft::spatial::WorldGrid::moveEntity(const entt::entity entity, const sf::Vector2i toWorldPosition)
 {
 	this->removeEntity(entity);
-	this->placeEntity(entity, toWorldPosition, layer);
+	this->placeEntity(entity, toWorldPosition);
 
 	return true;
 }
 
 const sf::Vector2i drft::spatial::WorldGrid::getPosition(const entt::entity entity) const
 {
-	auto vec3 = _entityPositions.at(entity);
-	return { vec3.x, vec3.y };
-}
-
-const int drft::spatial::WorldGrid::getLayer(const entt::entity entity) const
-{
-	auto vec3 = _entityPositions.at(entity);
-	return vec3.z;
-}
-
-const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i worldPosition, const int layer) const
-{
-	auto chunkCoordinate = toChunkCoordinate(worldPosition);
-	auto localPosition = toLocalChunkSpace(worldPosition);
-	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
-
-	if (!_chunks.contains(keyablePair)) {
-		return EntityList{};
-	}
-
-	return _chunks.at(keyablePair)->entitiesAt(localPosition, layer);
+	return _entityPositions.at(entity);
 }
 
 const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition) const
@@ -86,14 +60,8 @@ const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePos
 	if (!_chunks.contains(keyablePair)) {
 		return EntityList{};
 	}
-	EntityList entities;
-	for (int layer = 0; layer < Layer::Total; ++layer)
-	{
-		auto e = _chunks.at(keyablePair)->entitiesAt(localPosition, layer);
-		entities.insert(entities.end(), e.begin(), e.end());
-	}
 
-	return entities;
+	return _chunks.at(keyablePair)->entitiesAt(localPosition);;
 }
 
 void drft::spatial::WorldGrid::removeChunk(const sf::Vector2i coordinate)
@@ -156,10 +124,6 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 
 		return path;
 	};
-	auto checkBlocked = [this](sf::Vector2i position) -> bool
-	{
-		return (!entitiesAt(position, spatial::Layer::Blocking).empty());
-	};
 	
 	openSet.emplace(Node(pt1,0,0));
 	cameFrom[pt1] = pt1;
@@ -176,14 +140,9 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 		{
 			for (int x = currentNode.value.x - 1; x <= currentNode.value.x + 1; ++x)
 			{
-				
 				if (closedSet.contains({x,y})) continue;
 				cameFrom[{x, y}] = currentNode.value;
-				if (checkBlocked({ x,y }))
-				{
-					if (sf::Vector2i(x, y) == pt2) return constructPath({ x,y });
-					else continue;
-				}
+				if (currentNode.value == pt2) return constructPath(currentNode.value);
 
 				int distance = currentNode.distance + 1;
 				int cost = distance + std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2) + costFunc(*this, { x,y });

@@ -153,6 +153,10 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 							meta.data(entt::hashed_string(memberName)).set(any, map);
 						}
 					}
+					else if (data.value.IsBool())
+					{
+						meta.data(entt::hashed_string(memberName)).set(any, data.value.GetBool());
+					}
 				}
 			}
 		}

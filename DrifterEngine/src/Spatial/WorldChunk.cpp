@@ -6,41 +6,34 @@ drft::spatial::WorldChunk::WorldChunk(int width, int height)
 	_grid.resize(width, height);
 }
 
-void drft::spatial::WorldChunk::placeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition, int layer)
+void drft::spatial::WorldChunk::placeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition)
 {
 	auto &cell = _grid.at(chunkPosition.x, chunkPosition.y);
-	cell.placeEntity(entity, layer);
+	cell.placeEntity(entity);
 	_entities.insert(entity);
 }
 
-entt::entity drft::spatial::WorldChunk::removeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition, int layer)
+void drft::spatial::WorldChunk::removeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition)
 {
-	entt::entity result = entt::null;
-
 	auto& cell = _grid.at(chunkPosition.x, chunkPosition.y);
-	result = cell.removeEntity(entity, layer);
+	cell.removeEntity(entity);
 	_entities.erase(entity);
-
-	return result;
 }
 
-bool drft::spatial::WorldChunk::moveEntity(const entt::entity entity, const sf::Vector2i fromChunkPosition, const sf::Vector2i toChunkPosition, int layer)
+bool drft::spatial::WorldChunk::moveEntity(const entt::entity entity, const sf::Vector2i fromChunkPosition, const sf::Vector2i toChunkPosition)
 {
 	auto& fromCell = _grid.at(fromChunkPosition.x, fromChunkPosition.y);
-
-	entt::entity e = fromCell.removeEntity(entity, layer);
-	if (e == entt::null) return false;
-
+	fromCell.removeEntity(entity);
 	auto& toCell = _grid.at(toChunkPosition.x, toChunkPosition.y);
-	toCell.placeEntity(e, layer);
+	toCell.placeEntity(entity);
 
 	return true;
 }
 
-std::vector<entt::entity> drft::spatial::WorldChunk::entitiesAt(sf::Vector2i chunkPosition, int layer) const
+std::vector<entt::entity> drft::spatial::WorldChunk::entitiesAt(sf::Vector2i chunkPosition) const
 {
 	auto& cell = _grid.at(chunkPosition.x, chunkPosition.y);
-	return cell.at(layer);;
+	return cell.getEntities();
 }
 
 std::vector<entt::entity> drft::spatial::WorldChunk::getAllEntities()

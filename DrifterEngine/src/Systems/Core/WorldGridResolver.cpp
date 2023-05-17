@@ -14,27 +14,27 @@ void drft::system::WorldGridResolver::init()
 
 void drft::system::WorldGridResolver::onPositionAdd(entt::registry& registry, entt::entity entity)
 {
-	auto& pos = registry.get<component::Position>(entity);
-	if (spatial::toLayer(pos.depth) == spatial::Layer::Camera) return;
-	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
+	if (registry.any_of<component::Camera>(entity)) return;
 
-	grid.placeEntity(entity, spatial::toTileSpace(pos.position), pos.depth);
+	auto& pos = registry.get<component::Position>(entity);
+	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
+	grid.placeEntity(entity, spatial::toTileSpace(pos.position));
 }
 
 void drft::system::WorldGridResolver::onPositionUpdate(entt::registry& registry, entt::entity entity)
 {
-	auto& pos = registry.get<component::Position>(entity);
-	if (spatial::toLayer(pos.depth) == spatial::Layer::Camera) return;
-	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
+	if (registry.any_of<component::Camera>(entity)) return;
 
-	grid.moveEntity(entity, spatial::toTileSpace(pos.position), pos.depth);
+	auto& pos = registry.get<component::Position>(entity);
+	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
+	grid.moveEntity(entity, spatial::toTileSpace(pos.position));
 }
 
 void drft::system::WorldGridResolver::onPositionRemove(entt::registry& registry, entt::entity entity)
 {
-	auto& pos = registry.get<component::Position>(entity);
-	if (spatial::toLayer(pos.depth) == spatial::Layer::Camera) return;
-	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
+	if (registry.any_of<component::Camera>(entity)) return;
 
+	auto& pos = registry.get<component::Position>(entity);
+	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
 	grid.removeEntity(entity);
 }

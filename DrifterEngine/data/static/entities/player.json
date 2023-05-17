@@ -18,6 +18,7 @@
           "Name": "Render",
           "Data": {
             "sprite": 1,
+            "layer": 2,
             "color": [ 120, 120, 120 ]
           }
         },
@@ -32,13 +33,13 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 2
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
           "Name": "Physical",
           "Data": {
+            "blocks": true,
             "weight": 80.0,
             "materials": [ "Corpse" ]
           }

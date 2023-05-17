@@ -30,25 +30,30 @@ void drft::system::MovementSystem::update(const float dt)
 		auto& posComp = registry->get<component::Position>(entity);
 		sf::Vector2i targetPosition = spatial::toTileSpace(posComp.position) + move.direction;
 
-		const auto blockers = grid.entitiesAt(targetPosition, spatial::Layer::Blocking);
-		const auto props = grid.entitiesAt(targetPosition, spatial::Layer::Prop);
-		if (blockers.empty() && props.empty())
+		const auto blockers = grid.entitiesAt(targetPosition);
+		bool canMove = true;
+		for (auto blocker : blockers)
+		{
+			if (auto physical = registry->try_get<component::Physical>(blocker))
+			{
+				if (physical->blocks)
+				{
+					registry->emplace_or_replace<component::action::LaunchAttack>(entity, move.direction);
+					canMove = false;
+				}
+			}
+		}
+		if (canMove)
 		{
 			registry->patch<component::Position>(entity,
 				[&targetPosition](component::Position& pos)
 				{
 					pos.position = spatial::toWorldSpace(targetPosition);
-				}
-			);
-
+				});
 			const int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Move);
 			registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);
 		}
-		else
-		{
-			registry->emplace_or_replace<component::action::LaunchAttack>(entity, move.direction);
-		}
-
+		
 		registry->remove<component::action::Move>(entity);
 	}
 

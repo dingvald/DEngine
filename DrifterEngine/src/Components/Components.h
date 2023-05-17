@@ -16,12 +16,12 @@ namespace component
 	struct Position
 	{
 		sf::Vector2f position = { 0,0 };
-		int depth = { 0 };
 	};
 
 	struct Render
 	{
 		unsigned int sprite = 4;
+		unsigned int layer = 0;
 		sf::Color color = sf::Color::Magenta;
 	};
 

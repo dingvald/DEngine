@@ -19,23 +19,19 @@ namespace drft::spatial
 		// Entities //
 
 		// Places entity in world tile position.
-		void placeEntity(const entt::entity entity, const sf::Vector2i tilePosition, int layer);
+		void placeEntity(const entt::entity entity, const sf::Vector2i tilePosition);
 
 		// Removes entity from given world tile position and returns that entity.
-		entt::entity removeEntity(const entt::entity entity);
+		void removeEntity(const entt::entity entity);
 
 		// Moves entity from one world tile position to another and returns if successful.
-		bool moveEntity(const entt::entity, const sf::Vector2i toTilePosition, int layer);
+		bool moveEntity(const entt::entity, const sf::Vector2i toTilePosition);
 
 		// Gets the world tile position of the given entity.
 
 		const sf::Vector2i getPosition(const entt::entity entity) const;
 
-		// Gets the current layer of the given entity.
-		const int getLayer(const entt::entity entity) const;
-
 		// Returns all entities at the given world tile position.
-		const EntityList entitiesAt(const sf::Vector2i tilePosition, const int layer) const;
 		const EntityList entitiesAt(const sf::Vector2i tilePosition) const;
 
 		// Chunks //
@@ -52,7 +48,7 @@ namespace drft::spatial
 
 	private:
 		std::map<std::pair<int, int>, std::unique_ptr<WorldChunk>> _chunks;
-		std::unordered_map<entt::entity, sf::Vector3i> _entityPositions;
+		std::unordered_map<entt::entity, sf::Vector2i> _entityPositions;
 	};
 
 } // Namespace drft::spatial

@@ -12,12 +12,12 @@ namespace drft::spatial
 		WorldChunk(int width, int height);
 
 		// Places entity in chunk tile position.
-		void placeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition, int layer);
+		void placeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition);
 		// Removes entity from given chunk tile position and returns that entity.
-		entt::entity removeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition, int layer);
+		void removeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition);
 		// Moves entity from one chunk tile position to another and returns if successful.
-		bool moveEntity(const entt::entity, const sf::Vector2i fromChunkPosition, const sf::Vector2i toChunkPosition, int layer);
-		std::vector<entt::entity> entitiesAt(sf::Vector2i chunkPosition, int layer) const;
+		bool moveEntity(const entt::entity, const sf::Vector2i fromChunkPosition, const sf::Vector2i toChunkPosition);
+		std::vector<entt::entity> entitiesAt(sf::Vector2i chunkPosition) const;
 		std::vector<entt::entity> getAllEntities();
 		// Checks if the chunk contains no entities
 		bool empty() const;

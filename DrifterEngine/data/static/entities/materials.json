@@ -10,8 +10,7 @@
         {
           "Name": "Position",
           "Data": {
-            "position": [ 0.0, 0.0 ],
-            "depth": 1
+            "position": [ 0.0, 0.0 ]
           }
         },
         {
@@ -42,12 +41,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 7,
+            "layer": 1,
             "color": [ 88, 8, 8 ]
           }
         },
         {
           "Name": "Physical",
           "Data": {
+            "blocks": false,
             "weight": 60.0,
             "materials": [ "Corpse" ]
           }
@@ -74,12 +75,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 14,
+            "layer": 1,
             "color": [ 68, 48, 40 ]
           }
         },
         {
           "Name": "Physical",
           "Data": {
+            "blocks": false,
             "weight": 2.5,
             "materials": [ "Wood" ]
           }
@@ -106,12 +109,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 10,
+            "layer": 1,
             "color": [ 128, 132, 135 ]
           }
         },
         {
           "Name": "Physical",
           "Data": {
+            "blocks": false,
             "weight": 1.5,
             "materials": [ "Stone" ]
           }
@@ -138,12 +143,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 43,
+            "layer": 1,
             "color": [ 161, 157, 148 ]
           }
         },
         {
           "Name": "Physical",
           "Data": {
+            "blocks": false,
             "weight": 2.0,
             "materials": [ "Iron" ]
           }
@@ -170,12 +177,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 31,
+            "layer": 1,
             "color": [ 1, 50, 35 ]
           }
         },
         {
           "Name": "Physical",
           "Data": {
+            "blocks": false,
             "weight": 0.25,
             "materials": [ "Plant Fibre" ]
           }
@@ -202,12 +211,14 @@
           "Name": "Render",
           "Data": {
             "sprite": 32,
+            "layer": 1,
             "color": [ 186, 161, 127 ]
           }
         },
         {
           "Name": "Physical",
           "Data": {
+            "blocks": false,
             "weight": 0.5,
             "materials": [ "Plant Fibre" ]
           }

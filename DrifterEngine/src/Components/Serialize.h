@@ -14,13 +14,13 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, Position& pos)
 	{
-		archive(pos.position.x, pos.position.y, pos.depth);
+		archive(pos.position.x, pos.position.y);
 	}
 
 	template<class Archive>
 	void serialize(Archive& archive, Render& render)
 	{
-		archive(render.sprite, render.color.r, render.color.g, render.color.b);
+		archive(render.sprite, render.layer, render.color.r, render.color.g, render.color.b);
 	}
 
 	template<class Archive>

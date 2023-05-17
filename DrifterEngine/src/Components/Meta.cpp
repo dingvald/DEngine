@@ -18,12 +18,12 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Position, POSITION_STRING>()
 		.prop("serialize"_hs)
-		.data<&Position::position>("position"_hs)
-		.data<&Position::depth>("depth"_hs);
+		.data<&Position::position>("position"_hs);
 
 	snapshot::reflectComponent<Render, RENDER_STRING>()
 		.prop("serialize"_hs)
 		.data<&Render::sprite>("sprite"_hs)
+		.data<&Render::layer>("layer"_hs)
 		.data<&Render::color>("color"_hs);
 
 	snapshot::reflectComponent<LightSource, LIGHTSOURCE_STRING>()
