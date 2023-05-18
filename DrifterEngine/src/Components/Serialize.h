@@ -118,6 +118,12 @@ namespace cereal
 	{
 		archive(usable.action, usable.params);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Horror& horror)
+	{
+		archive(horror.standin);
+	}
 }
 
 

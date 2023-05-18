@@ -2,6 +2,7 @@
 #include "TurnManager.h"
 #include "Components/Components.h"
 #include "Components/Tags.h"
+#include "Events/GameTickEvent.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::TurnManager::init()
@@ -134,6 +135,8 @@ entt::entity drft::system::ActorQueue::front() const
 void drft::system::ActorQueue::tick()
 {
 	std::cout << "Tick!" << std::endl;
+	auto& dispatcher = registry.ctx().get<entt::dispatcher&>();
+	dispatcher.trigger(events::GameTickEvent());
 	for (auto& e : _queue)
 	{
 		if (e == _sentinel) continue;

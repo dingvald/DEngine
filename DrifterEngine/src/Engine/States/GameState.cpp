@@ -11,6 +11,7 @@
 #pragma region System Includes
 #include "Systems/SystemScheduler.h"
 #include "Systems/Rendering/CullingSystem.h"
+#include "Systems/Rendering/PlayerFOVSystem.h"
 #include "Systems/Rendering/EntityRenderer.h"
 #include "Systems/Rendering/LightingSystem.h"
 #include "Systems/Rendering/RenderingCleanup.h"
@@ -25,10 +26,12 @@
 #include "Systems/Core/WorldGridResolver.h"
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/DamageSystem.h"
+#include "Systems/Gameplay/DayNightCycleSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/DropItemSystem.h"
 #include "Systems/Gameplay/EquipItemSystem.h"
 #include "Systems/Gameplay/HitEffectSystem.h"
+#include "Systems/Gameplay/HorrorSpawningSystem.h"
 #include "Systems/Gameplay/CraftItemSystem.h"
 #include "Systems/Gameplay/MovementSystem.h"
 #include "Systems/Gameplay/PickUpSystem.h"
@@ -223,6 +226,7 @@ void drft::GameState::importSystems()
 	_systems->add<PlayerInput>(						Phase::OnProcessInput);
 	_systems->add<ArtificialInput>(					Phase::OnProcessInput);
 
+	_systems->add<HorrorSpawningSystem>(			Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<PickUpSystem>(					Phase::OnUpdate);
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
@@ -241,9 +245,11 @@ void drft::GameState::importSystems()
 	_systems->add<Camera>(							Phase::OnPostUpdate);
 	_systems->add<ChunkManager>(					Phase::OnPostUpdate);
 	
+	_systems->add<DayNightCycleSystem>(				Phase::OnFixedUpdate);
 	_systems->add<HitEffectSystem>(					Phase::OnFixedUpdate);
 	_systems->add<CullingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
+	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate);
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<HUD>(								Phase::OnRender + 5);
 	_systems->add<RenderingCleanup>(				Phase::OnRender + 10);

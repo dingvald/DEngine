@@ -15,7 +15,7 @@ namespace drft::util
 		Hit_1,
 		Hit_2,
 		Rock,
-		Zombie,
+		BirdMan,
 		Axe,
 		Machete,
 		Material,
@@ -47,7 +47,8 @@ namespace drft::util
 		Poultice,
 		Firefly,
 		OreDeposit,
-		Ore
+		Ore,
+		Skeleton
 	};
 
 	class SpriteIndexer

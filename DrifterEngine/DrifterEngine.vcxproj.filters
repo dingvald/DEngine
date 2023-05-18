@@ -267,10 +267,22 @@
     <ClCompile Include="src\Utility\Visibility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UseItemSystem.cpp">
+    <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp">
+    <ClCompile Include="src\Systems\Gameplay\UseItemSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\DayNightCycleSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Rendering\PlayerFOVSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\SmoothTransition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\HorrorSpawningSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1028,10 +1040,31 @@
     <ClInclude Include="src\Utility\Visibility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UseItemSystem.h">
+    <ClInclude Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.h">
+    <ClInclude Include="src\Systems\Gameplay\UseItemSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\GameTickEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\DayNightCycleSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Rendering\PlayerFOVSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\SmoothTransition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\DayStartEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\NightStartEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\HorrorSpawningSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

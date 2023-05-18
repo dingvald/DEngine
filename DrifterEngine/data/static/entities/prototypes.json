@@ -667,28 +667,19 @@
 
       ]
     },
-    // Zombie
+    // Horror
     {
-      "Name": "Zombie",
+      "Name": "Horror",
       "Inherits": [
-        "HumanBody"
+        ""
       ],
       "Components": [
         {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Zombie",
-            "extendedName": "",
-            "description": "The walking dead."
-          }
-        },
-        {
           "Name": "Render",
           "Data": {
-            "sprite": 11,
+            "sprite": 0,
             "layer": 2,
-            "color": [ 122, 122, 88 ]
+            "color": [ 20, 20, 20 ]
           }
         },
         {
@@ -698,19 +689,31 @@
           }
         },
         {
-          "Name": "Physical",
+          "Name": "Body",
           "Data": {
-            "blocks": true,
-            "weight": 60.0,
-            "materials": [ "Corpse" ]
+            "parts": {
+              "Head": 0,
+              "Body": 0,
+              "Hands": 0,
+              "HeldR": 0,
+              "HeldL": 0,
+              "Legs": 0,
+              "Feet": 0
+            }
           }
         },
         {
-          "Name": "Actor",
+          "Name": "LightSource",
           "Data": {
-            "ap": 0,
-            "moveSpeed": 0.8,
-            "actSpeed": 1.6
+            "radius": 4,
+            "dropOff": 0.3,
+            "color": [ 200, 30, 30 ]
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
           }
         },
         {
@@ -721,25 +724,6 @@
               "random_move",
               "kill_target"
             ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 20,
-            "current": 20
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 2
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
           }
         }
       ]
@@ -1334,6 +1318,219 @@
           "Name": "Attacker",
           "Data": {
             "baseDamage": 3
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Birdman Horror
+    {
+      "Name": "Birdman Horror",
+      "Inherits": [
+        "Horror"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Birdman Horror",
+            "extendedName": "",
+            "description": " An inexplicable horror."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 11,
+            "layer": 2,
+            "color": [ 30, 30, 30 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": true,
+            "weight": 100.0,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 1.0,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 12,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 75,
+            "current": 75
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 5
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Skeletal Horror
+    {
+      "Name": "Skeletal Horror",
+      "Inherits": [
+        "Horror"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Skeletal Horror",
+            "extendedName": "",
+            "description": " An inexplicable horror."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 44,
+            "layer": 2,
+            "color": [ 30, 30, 30 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": true,
+            "weight": 20.0,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 0.7,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 20,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 100,
+            "current": 100
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 8
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Unknown Horror
+    {
+      "Name": "Unknown Horror",
+      "Inherits": [
+        "Horror"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Unknown Horror",
+            "extendedName": "",
+            "description": " An inexplicable horror."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 33,
+            "layer": 2,
+            "color": [ 30, 30, 30 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": true,
+            "weight": 200.0,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 0.5,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 20,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 150,
+            "current": 150
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 10
           }
         },
         {

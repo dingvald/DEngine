@@ -37,6 +37,11 @@ namespace component
 		sf::Color color = sf::Color::White;
 	};
 
+	struct GlobalLightSource
+	{
+		sf::Color color = sf::Color::White;
+	};
+
 	struct LightBlocking
 	{
 		float opacity = 1.0;
@@ -126,6 +131,11 @@ namespace component
 	{
 		std::string action;
 		std::unordered_map<std::string, float> params;
+	};
+
+	struct Horror
+	{
+		bool standin = false;
 	};
 }
 

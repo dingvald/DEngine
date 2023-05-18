@@ -6,6 +6,9 @@ namespace component::tag
 	struct Active
 	{};
 
+	struct InPlayerFOV
+	{};
+
 	struct InViewport
 	{};
 

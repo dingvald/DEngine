@@ -1,0 +1,111 @@
+#include "pch.h"
+#include "DayNightCycleSystem.h"
+#include "Components/Components.h"
+#include "Events/DayStartEvent.h"
+#include "Events/NightStartEvent.h"
+#include "Utility/SmoothTransition.h"
+
+void drft::system::DayNightCycleSystem::init()
+{
+	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	dispatcher.sink<events::GameTickEvent>().connect<&DayNightCycleSystem::onGameTickEvent>(this);
+}
+
+void drft::system::DayNightCycleSystem::onStart()
+{
+
+}
+
+void drft::system::DayNightCycleSystem::fixedUpdate()
+{
+	const auto color = determineSunColor();
+	auto cameraView = registry->view<component::Camera>();
+	for (auto entity : cameraView)
+	{
+		registry->emplace_or_replace<component::GlobalLightSource>(entity, color);
+	}
+}
+
+void drft::system::DayNightCycleSystem::save(cereal::JSONOutputArchive& oarchive)
+{
+	oarchive(cereal::make_nvp("Days", _days));
+	oarchive(cereal::make_nvp("Hours", _hours));
+	oarchive(cereal::make_nvp("Minutes", _minutes));
+	oarchive(cereal::make_nvp("Seconds", _seconds));
+}
+
+void drft::system::DayNightCycleSystem::load(cereal::JSONInputArchive& iarchive)
+{
+	iarchive(cereal::make_nvp("Days", _days));
+	iarchive(cereal::make_nvp("Hours", _hours));
+	iarchive(cereal::make_nvp("Minutes", _minutes));
+	iarchive(cereal::make_nvp("Seconds", _seconds));
+}
+
+void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEvent& ev)
+{
+	_seconds += 30;
+	if (_seconds >= 60)
+	{
+		++_minutes;
+		_seconds -= 60;
+	}
+	if (_minutes >= 60)
+	{
+		++_hours;
+		_minutes = 0;
+	}
+	if (_hours >= 24)
+	{
+		++_days;
+		_hours = 0;
+	}
+
+	if (_hours == 22 && _minutes == 0 && _seconds == 0)
+	{
+		auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+		dispatcher.trigger(events::NightStartEvent());
+	}
+	else if (_hours == 5 && _minutes == 0 && _seconds == 0)
+	{
+		auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+		dispatcher.trigger(events::DayStartEvent());
+	}
+}
+
+sf::Color drft::system::DayNightCycleSystem::determineSunColor() const
+{
+	sf::Color result = { sf::Color::White };
+
+	// Night
+	if ((_hours >= 22 && _hours < 24) || (_hours >= 0 && _hours < 5))
+	{
+		result = sf::Color(40, 40, 100);
+	}
+	// First Dawn
+	else if (_hours >= 5 && _hours < 8)
+	{
+		util::SmoothColorTransition color({ 50,50,110 }, { 150,150,255 }, 5*60, 7*60);
+		result = color.compute(_hours*60 + _minutes);
+	}
+	// Early Dawn
+	else if (_hours >= 8 && _hours < 10)
+	{
+		util::SmoothColorTransition color({ 150,150,255 }, { 255,255,255 }, 8*60, 9*60);
+		result = color.compute(_hours*60 + _minutes);
+	}
+	// Early Dusk
+	else if (_hours >= 18 && _hours < 20)
+	{
+		util::SmoothColorTransition color({ 255,255,255 }, { 255,200,100 }, 18*60, 19*60);
+		result = color.compute(_hours*60 + _minutes);
+	}
+	// late Dusk
+	else if (_hours >= 20 && _hours < 22)
+	{
+		util::SmoothColorTransition color({ 255,200,100 }, { 40,40,100 }, 20*60, 21*60);
+		result = color.compute(_hours*60 + _minutes);
+	}
+
+	return result;
+}

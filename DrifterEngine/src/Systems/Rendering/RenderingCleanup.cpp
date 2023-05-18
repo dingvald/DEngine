@@ -11,4 +11,5 @@ void drft::system::RenderingCleanup::render(sf::RenderTarget& target)
 {
 	registry->clear<component::Lit>();
 	registry->clear<component::tag::InViewport>();
+	registry->clear<component::tag::InPlayerFOV>();
 }

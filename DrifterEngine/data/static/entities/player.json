@@ -23,14 +23,6 @@
           }
         },
         {
-          "Name": "LightSource",
-          "Data": {
-            "radius": 20,
-            "dropOff": 0.3,
-            "color": [ 255, 255, 255]
-          }
-        },
-        {
           "Name": "Position",
           "Data": {
             "position": [ 0.0, 0.0 ]
@@ -62,7 +54,7 @@
         {
           "Name": "Player",
           "Data": {
-            "sightRange": 10
+            "sightRange": 24
           }
         },
         {

@@ -93,4 +93,7 @@ void component::Meta::initialize()
 		.prop("serialize"_hs)
 		.data<&Usable::action>("action"_hs)
 		.data<&Usable::params>("params"_hs);
+
+	snapshot::reflectComponent<Horror, HORROR_STRING>()
+		.prop("serialize"_hs);
 }
