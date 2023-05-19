@@ -3,11 +3,14 @@
 
 namespace drft::system
 {
-	class RenderingCleanup : public System
+	class LightSourceSystem : public System
 	{
 	public:
 		void init() override;
-		void render(sf::RenderTarget& target) override;
+		void fixedUpdate() override;
+		void onFixedUpdateEnd() override;
 	};
 }
+
+
 

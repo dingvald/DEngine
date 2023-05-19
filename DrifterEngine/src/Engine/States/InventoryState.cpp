@@ -174,7 +174,26 @@ void drft::InventoryState::setupInventoryGrid()
 					.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
 					.setStyle(gui::ElementState::Idle, {
 							.fillColor = itemRender.color
+						})
+					.setStyle(gui::ElementState::Focused, {
+								.fillColor = itemRender.color
 						});
+
+				if (auto health = getContext().registry.try_get<component::Health>(itemEntity))
+				{
+					float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
+					container.insert("Health", gui::Panel())
+						.setSize({ 32, (32 - 32 * scalingFactor) })
+						.setPosition({ 0, 32 })
+						.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
+						.setStyle(gui::ElementState::Idle, {
+							.fillColor = sf::Color(255,0,0,100)
+							})
+						.setStyle(gui::ElementState::Focused, {
+							.fillColor = sf::Color(255,0,0,100)
+							});
+				}
+
 				++count;
 			}
 			return true;
@@ -185,7 +204,7 @@ void drft::InventoryState::setupInventoryGrid()
 		for (int col = 0; col < INVENTORY_WIDTH; ++col)
 		{
 			std::string elementName = std::to_string(col) + "-" + std::to_string(row);
-			auto& container = inventoryGrid.insert(std::move(elementName), gui::SingleContainer());
+			auto& container = inventoryGrid.insert(std::move(elementName), gui::DualContainer());
 
 			container.setSize({ 32, 32 });
 			container.setOrigin(gui::ElementPosition::TOP_LEFT);
@@ -558,6 +577,20 @@ void drft::InventoryState::setupEquipmentGrid()
 						.setStyle(gui::ElementState::Idle, {
 								.fillColor = itemRender.color
 							});
+					if (auto health = getContext().registry.try_get<component::Health>(itemEntity))
+					{
+						float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
+						equipmentGrid[slotName.data()].insert("Health", gui::Panel())
+							.setSize({ 32, (32 - 32 * scalingFactor) })
+							.setPosition({ 0, 32 })
+							.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
+							.setStyle(gui::ElementState::Idle, {
+								.fillColor = sf::Color(255,0,0,100)
+								})
+							.setStyle(gui::ElementState::Focused, {
+								.fillColor = sf::Color(255,0,0,100)
+								});
+					}
 				}
 				else
 				{
@@ -582,7 +615,7 @@ void drft::InventoryState::setupEquipmentGrid()
 	{
 		if (!slotName.compare("None"))
 		{
-			equipmentGrid.insert("Dummy" + std::to_string(dummyCount), gui::SingleContainer())
+			equipmentGrid.insert("Dummy" + std::to_string(dummyCount), gui::DualContainer())
 				.setSize({ 32,32 })
 				.setOrigin(gui::ElementPosition::TOP_LEFT)
 				.setStyle(gui::ElementState::Unselectable, {})
@@ -594,7 +627,7 @@ void drft::InventoryState::setupEquipmentGrid()
 			continue;
 		}
 
-		auto& container = equipmentGrid.insert(slotName.data(), gui::SingleContainer());
+		auto& container = equipmentGrid.insert(slotName.data(), gui::DualContainer());
 		container.setSize({ 32,32 });
 		container.setOrigin(gui::ElementPosition::TOP_LEFT);
 		container.setChildrenOrigin(gui::ElementPosition::CENTER);

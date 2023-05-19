@@ -157,6 +157,40 @@
         }
       ]
     },
+    // Flint
+    {
+      "Name": "Flint",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Flint",
+            "extendedName": "",
+            "description": "Used to start fires."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 43,
+            "layer": 1,
+            "color": [ 40, 40, 40 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 1.0,
+            "materials": [ "Flint" ]
+          }
+        }
+      ]
+    },
     // PlantFibre
     {
       "Name": "Plant Fibre",

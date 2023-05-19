@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "EquipItemSystem.h"
+#include "Utility/ItemIDToEntityID.h"
 #include "Components/Components.h"
 
 void drft::system::EquipItemSystem::init()

@@ -52,3 +52,8 @@ void drft::system::PlayerFOVSystem::fixedUpdate()
 	}
 	_lightBlockingPositions.clear();
 }
+
+void drft::system::PlayerFOVSystem::onFixedUpdateEnd()
+{
+	registry->clear<component::tag::InPlayerFOV>();
+}

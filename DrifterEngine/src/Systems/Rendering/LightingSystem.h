@@ -10,6 +10,7 @@ namespace drft::system
 	public:
 		void init() override;
 		void fixedUpdate() override;
+		void onFixedUpdateEnd() override;
 
 	private:
 		std::unique_ptr<Visibility> _fov;

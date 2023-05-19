@@ -10,9 +10,8 @@ void drft::system::BodyPartSystem::init()
 
 void drft::system::BodyPartSystem::update(const float dt)
 {
-	auto view = registry->view<component::Body, component::action::LaunchAttack, component::tag::Active>();
-
-	for (auto [entity, body, attack] : view.each())
+	auto attackView = registry->view<component::Body, component::action::LaunchAttack, component::tag::Active>();
+	for (auto [entity, body, attack] : attackView.each())
 	{
 		if (body.parts.contains("HeldR") && body.parts.at("HeldR") != 0)
 		{
@@ -27,6 +26,10 @@ void drft::system::BodyPartSystem::update(const float dt)
 			if (auto sharpComp = registry->try_get<component::Sharp>(rightHandItem))
 			{
 				sharpness += ((sharpComp->sharpness * sharpComp->sharpness) * 0.5);
+			}
+			if (auto healthComp = registry->try_get<component::Health>(rightHandItem))
+			{
+				registry->emplace<component::action::TakeDamage>(rightHandItem, 1);
 			}
 
 			const float force = weight * sharpness;

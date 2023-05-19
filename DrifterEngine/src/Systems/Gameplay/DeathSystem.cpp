@@ -7,6 +7,7 @@
 #include "Spatial/Conversions.h"
 #include "Random/RandomNumberGenerator.h"
 #include "Utility/EntityHelpers.h"
+#include "Events/ItemBreakEvent.h"
 
 void drft::system::DeathSystem::init()
 {
@@ -15,10 +16,9 @@ void drft::system::DeathSystem::init()
 void drft::system::DeathSystem::update(const float dt)
 {
 	const auto& factory = registry->ctx().get<EntityFactory&>();
-	auto view = registry->view<component::action::Die, component::Physical>();
-	for (auto [entity, physical] : view.each())
+	auto view = registry->view<component::action::Die, component::Physical, component::Position>();
+	for (auto [entity, physical, pos] : view.each())
 	{
-		auto& pos = registry->get<component::Position>(entity);
 		int chance = 100;
 		for (auto matName : physical.materials)
 		{
@@ -51,6 +51,15 @@ void drft::system::DeathSystem::update(const float dt)
 			auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 			dispatcher.trigger(events::RequestStateStackPush(States::GameOver));
 		}
+		registry->destroy(entity);
+	}
+
+	// Equipped item breaking
+	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	auto itemView = registry->view<component::action::Die, component::Item>(entt::exclude<component::Position>);
+	for (auto [entity, item] : itemView.each())
+	{
+		dispatcher.trigger(events::ItemBreakEvent(item.id));
 		registry->destroy(entity);
 	}
 }

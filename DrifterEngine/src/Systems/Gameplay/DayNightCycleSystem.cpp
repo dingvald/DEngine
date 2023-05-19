@@ -80,12 +80,12 @@ sf::Color drft::system::DayNightCycleSystem::determineSunColor() const
 	// Night
 	if ((_hours >= 22 && _hours < 24) || (_hours >= 0 && _hours < 5))
 	{
-		result = sf::Color(40, 40, 100);
+		result = sf::Color(20, 20, 40);
 	}
 	// First Dawn
 	else if (_hours >= 5 && _hours < 8)
 	{
-		util::SmoothColorTransition color({ 50,50,110 }, { 150,150,255 }, 5*60, 7*60);
+		util::SmoothColorTransition color({ 20,20,40 }, { 150,150,255 }, 5*60, 7*60);
 		result = color.compute(_hours*60 + _minutes);
 	}
 	// Early Dawn
@@ -100,10 +100,10 @@ sf::Color drft::system::DayNightCycleSystem::determineSunColor() const
 		util::SmoothColorTransition color({ 255,255,255 }, { 255,200,100 }, 18*60, 19*60);
 		result = color.compute(_hours*60 + _minutes);
 	}
-	// late Dusk
+	// Late Dusk
 	else if (_hours >= 20 && _hours < 22)
 	{
-		util::SmoothColorTransition color({ 255,200,100 }, { 40,40,100 }, 20*60, 21*60);
+		util::SmoothColorTransition color({ 255,200,100 }, { 20,20,40 }, 20*60, 21*60);
 		result = color.compute(_hours*60 + _minutes);
 	}
 

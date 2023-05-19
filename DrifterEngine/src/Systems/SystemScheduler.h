@@ -82,7 +82,9 @@ namespace drft::system
 		}
 
 		void update(const float dt) const;
+		void updateEnd() const;
 		void fixedUpdate() const;
+		void fixedUpdateEnd() const;
 		void render(sf::RenderTarget& target) const;
 
 		void saveAll(cereal::JSONOutputArchive& oarchive);

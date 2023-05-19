@@ -8,7 +8,7 @@
 #include "Spatial/Conversions.h"
 #include "Factory/EntityFactory.h"
 
-static constexpr int CHANCE_TO_SPAWN_HORROR = 5;
+static constexpr int CHANCE_TO_SPAWN_HORROR = 10;
 
 void drft::system::HorrorSpawningSystem::init()
 {
@@ -60,9 +60,8 @@ void drft::system::HorrorSpawningSystem::spawnHorror() const
 	for (auto [entity, player, pos] : playerView.each())
 	{
 		const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
-		auto possiblePositions = spatial::getIntCircleInRadius(spatial::toTileSpace(pos.position), 128);
-		int index = rng::RandomNumberGenerator::intInRange(0, possiblePositions.size() - 1);
-		auto position = possiblePositions.at(index);
+		
+		auto position = rng::RandomNumberGenerator::positionInCircle(spatial::toTileSpace(pos.position), 96);
 		auto isBlocking = [this](entt::entity entity) -> bool
 		{
 			if (auto physical = registry->try_get<component::Physical>(entity))
@@ -75,8 +74,7 @@ void drft::system::HorrorSpawningSystem::spawnHorror() const
 		auto blockers = grid.entitiesAt(position, isBlocking);
 		while (!blockers.empty())
 		{
-			index = rng::RandomNumberGenerator::intInRange(0, possiblePositions.size() - 1);
-			position = possiblePositions.at(index);
+			position = rng::RandomNumberGenerator::positionInCircle(spatial::toTileSpace(pos.position), 96);
 			blockers = grid.entitiesAt(position, isBlocking);
 		}
 

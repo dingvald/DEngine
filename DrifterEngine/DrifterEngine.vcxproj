@@ -168,11 +168,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\ItemDurabilitySystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HorrorSpawningSystem.cpp" />
     <ClCompile Include="src\Systems\Rendering\PlayerFOVSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DayNightCycleSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp" />
-    <ClCompile Include="src\Systems\Rendering\RenderingCleanup.cpp" />
     <ClCompile Include="src\Systems\Rendering\CullingSystem.cpp" />
     <ClCompile Include="src\Systems\Rendering\LightingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HitEffectSystem.cpp" />
@@ -293,6 +294,9 @@
     <ClCompile Include="src\Systems\Gameplay\UseItemSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\ItemDurabilitySystem.h" />
+    <ClInclude Include="src\Events\ItemBreakEvent.h" />
+    <ClInclude Include="src\Systems\Gameplay\LightSourceSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\HorrorSpawningSystem.h" />
     <ClInclude Include="src\Events\DayStartEvent.h" />
     <ClInclude Include="src\Events\NightStartEvent.h" />
@@ -300,7 +304,6 @@
     <ClInclude Include="src\Systems\Gameplay\DayNightCycleSystem.h" />
     <ClInclude Include="src\Events\GameTickEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.h" />
-    <ClInclude Include="src\Systems\Rendering\RenderingCleanup.h" />
     <ClInclude Include="src\Systems\Rendering\CullingSystem.h" />
     <ClInclude Include="src\Systems\Rendering\LightingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\HitEffectSystem.h" />

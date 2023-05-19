@@ -33,3 +33,8 @@ void drft::system::CullingSystem::fixedUpdate()
 		}
 	}
 }
+
+void drft::system::CullingSystem::onFixedUpdateEnd()
+{
+	registry->clear<component::tag::InViewport>();
+}

@@ -68,6 +68,15 @@
             "Number": 100
           }
         },
+        "Flint": {
+          "Algorithm": "OrganicSpread",
+          "Params": {
+            "Generations": 2,
+            "StartingSeeds": 3,
+            "SeedsPerGeneration": 1,
+            "Radius": 2
+          }
+        },
         "Grass": {
           "Algorithm": "RandomSpread",
           "Params": {

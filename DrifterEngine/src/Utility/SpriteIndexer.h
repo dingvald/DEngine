@@ -48,7 +48,8 @@ namespace drft::util
 		Firefly,
 		OreDeposit,
 		Ore,
-		Skeleton
+		Skeleton,
+		Torch
 	};
 
 	class SpriteIndexer

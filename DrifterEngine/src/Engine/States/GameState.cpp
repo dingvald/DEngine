@@ -14,7 +14,6 @@
 #include "Systems/Rendering/PlayerFOVSystem.h"
 #include "Systems/Rendering/EntityRenderer.h"
 #include "Systems/Rendering/LightingSystem.h"
-#include "Systems/Rendering/RenderingCleanup.h"
 #include "Systems/Core/HUD.h"
 #include "Systems/Core/RealityBubble.h"
 #include "Systems/Core/PlayerInput.h"
@@ -30,12 +29,14 @@
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/DropItemSystem.h"
 #include "Systems/Gameplay/EquipItemSystem.h"
+#include "Systems/Gameplay/ItemDurabilitySystem.h"
 #include "Systems/Gameplay/HitEffectSystem.h"
 #include "Systems/Gameplay/HorrorSpawningSystem.h"
 #include "Systems/Gameplay/CraftItemSystem.h"
 #include "Systems/Gameplay/MovementSystem.h"
 #include "Systems/Gameplay/PickUpSystem.h"
 #include "Systems/Gameplay/LaunchAttackSystem.h"
+#include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/OpenInventorySystem.h"
 #include "Systems/Gameplay/OpenEquipmentSystem.h"
@@ -174,6 +175,7 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 bool drft::GameState::update(const float dt)
 {
 	_systems->update(dt);
+	_systems->updateEnd();
 	return true;
 }
 
@@ -186,6 +188,7 @@ bool drft::GameState::fixedUpdate()
 void drft::GameState::render(sf::RenderTarget& target)
 {	
 	_systems->render(target);
+	_systems->fixedUpdateEnd();
 }
 
 void drft::GameState::onPop()
@@ -240,6 +243,7 @@ void drft::GameState::importSystems()
 	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
 	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
 	_systems->add<DamageSystem>(					Phase::OnUpdate + 10);
+	_systems->add<ItemDurabilitySystem>(			Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);
 
 	_systems->add<Camera>(							Phase::OnPostUpdate);
@@ -248,11 +252,11 @@ void drft::GameState::importSystems()
 	_systems->add<DayNightCycleSystem>(				Phase::OnFixedUpdate);
 	_systems->add<HitEffectSystem>(					Phase::OnFixedUpdate);
 	_systems->add<CullingSystem>(					Phase::OnFixedUpdate);
+	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate);
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<HUD>(								Phase::OnRender + 5);
-	_systems->add<RenderingCleanup>(				Phase::OnRender + 10);
 
 	_systems->add<WorldGridResolver>(				Phase::Reactive);
 	_systems->add<FactionSystem>(					Phase::Reactive);

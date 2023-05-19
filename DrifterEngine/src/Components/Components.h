@@ -42,6 +42,13 @@ namespace component
 		sf::Color color = sf::Color::White;
 	};
 
+	struct TempLightSource
+	{
+		float radius = 1;
+		float dropOff = 0.1;
+		sf::Color color = sf::Color::White;
+	};
+
 	struct LightBlocking
 	{
 		float opacity = 1.0;

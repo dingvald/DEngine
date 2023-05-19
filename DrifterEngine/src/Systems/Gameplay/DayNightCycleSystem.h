@@ -20,7 +20,7 @@ namespace drft::system
 	private:
 		int _seconds = 0;
 		int _minutes = 0;
-		int _hours = 20;
+		int _hours = 7;
 		int _days = 0;
 	};
 }

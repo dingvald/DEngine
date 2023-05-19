@@ -37,6 +37,14 @@ void drft::system::System::render(sf::RenderTarget& target)
 {
 }
 
+void drft::system::System::onUpdateEnd()
+{
+}
+
+void drft::system::System::onFixedUpdateEnd()
+{
+}
+
 void drft::system::System::shutdown()
 {
 }

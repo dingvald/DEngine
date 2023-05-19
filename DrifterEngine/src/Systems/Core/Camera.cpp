@@ -42,14 +42,13 @@ void drft::system::Camera::update(const float dt)
 	for (auto [entity, camera, pos] : cameraView.each())
 	{
 		const auto& target = registry->try_get<const component::Position>(camera.target);
-
 		if (!target) continue;
 
+		const auto normalizedTargetPosition = target->position - pos.position;
+		pos.position.x += std::lerp(0, normalizedTargetPosition.x, std::clamp(CAMERA_SPEED * dt, 0.f, 1.f));
+		pos.position.y += std::lerp(0, normalizedTargetPosition.y, std::clamp(CAMERA_SPEED * dt, 0.f, 1.f));
 
-		pos.position.x = std::lerp(pos.position.x, target->position.x, std::clamp(CAMERA_SPEED * dt, 0.f, 1.f));
-		pos.position.y = std::lerp(pos.position.y, target->position.y, std::clamp(CAMERA_SPEED * dt, 0.f, 1.f));
-
-		if (spatial::distance(pos.position, target->position) < 0.5)
+		if (spatial::distance({0,0}, normalizedTargetPosition) < 0.5)
 		{
 			pos.position = target->position;
 		}

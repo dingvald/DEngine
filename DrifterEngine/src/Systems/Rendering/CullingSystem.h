@@ -9,6 +9,7 @@ namespace drft::system
 	public:
 		void init() override;
 		void fixedUpdate() override;
+		void onFixedUpdateEnd() override;
 	};
 }
 

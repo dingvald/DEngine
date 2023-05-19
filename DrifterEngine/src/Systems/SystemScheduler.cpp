@@ -44,10 +44,20 @@ void drft::system::SystemScheduler::loadAll(cereal::JSONInputArchive& iarchive)
 
 void drft::system::SystemScheduler::update(const float dt) const
 {
-
 	for (auto& [system, _] : _systems.at(PhaseCategory::OnUpdate))
 	{
 		system->update(dt);
+	}
+}
+
+void drft::system::SystemScheduler::updateEnd() const
+{
+	for (auto& [_, systems] : _systems)
+	{
+		for (auto& [system, _] : systems)
+		{
+			system->onUpdateEnd();
+		}
 	}
 }
 
@@ -60,6 +70,17 @@ void drft::system::SystemScheduler::fixedUpdate() const
 	for (auto& [system, _] : _systems.at(PhaseCategory::OnRender))
 	{
 		system->fixedUpdate();
+	}
+}
+
+void drft::system::SystemScheduler::fixedUpdateEnd() const
+{
+	for (auto& [_, systems] : _systems)
+	{
+		for (auto& [system, _] : systems)
+		{
+			system->onFixedUpdateEnd();
+		}
 	}
 }
 

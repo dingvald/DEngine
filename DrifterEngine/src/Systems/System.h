@@ -30,6 +30,8 @@ namespace drft::system
 		virtual void update(const float dt);
 		virtual void fixedUpdate();
 		virtual void render(sf::RenderTarget& target);
+		virtual void onUpdateEnd();
+		virtual void onFixedUpdateEnd();
 
 		virtual void shutdown();
 
