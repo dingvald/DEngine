@@ -3,6 +3,7 @@
 #include "Components/Components.h"
 #include "Components/Tags.h"
 #include "Utility/ItemIDToEntityID.h"
+#include "Random/RandomNumberGenerator.h"
 
 void drft::system::BodyPartSystem::init()
 {
@@ -29,7 +30,11 @@ void drft::system::BodyPartSystem::update(const float dt)
 			}
 			if (auto healthComp = registry->try_get<component::Health>(rightHandItem))
 			{
-				registry->emplace<component::action::TakeDamage>(rightHandItem, 1);
+				const int roll = rng::RandomNumberGenerator::intInRange(0, 100);
+				if (roll < 30)
+				{
+					registry->emplace<component::action::TakeDamage>(rightHandItem, 1);
+				}
 			}
 
 			const float force = weight * sharpness;

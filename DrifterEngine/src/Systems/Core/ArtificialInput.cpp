@@ -168,8 +168,15 @@ void drft::system::ArtificialInput::pathToTarget(entt::entity ai, sf::Vector2i m
 				return 0;
 			});
 	}
-	moveToTarget(ai, myPosition, _cachedPaths.at(ai).front());
-	_cachedPaths.at(ai).pop_front();
+	if (_cachedPaths.at(ai).empty())
+	{
+		moveToTarget(ai, myPosition, targetPosition);
+	}
+	else
+	{
+		moveToTarget(ai, myPosition, _cachedPaths.at(ai).front());
+		_cachedPaths.at(ai).pop_front();
+	}
 }
 
 void drft::system::ArtificialInput::clearPathCache(entt::entity entity) const

@@ -37,6 +37,7 @@
 #include "Systems/Gameplay/PickUpSystem.h"
 #include "Systems/Gameplay/LaunchAttackSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
+#include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/OpenInventorySystem.h"
 #include "Systems/Gameplay/OpenEquipmentSystem.h"
@@ -252,9 +253,11 @@ void drft::GameState::importSystems()
 	_systems->add<DayNightCycleSystem>(				Phase::OnFixedUpdate);
 	_systems->add<HitEffectSystem>(					Phase::OnFixedUpdate);
 	_systems->add<CullingSystem>(					Phase::OnFixedUpdate);
+	_systems->add<LiquidSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
-	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate);
+	
+	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 15);
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<HUD>(								Phase::OnRender + 5);
 

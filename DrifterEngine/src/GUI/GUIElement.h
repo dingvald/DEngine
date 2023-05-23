@@ -108,6 +108,15 @@ namespace drft::gui
 		{
 			return _shape.getPosition();
 		}
+		Element& setLocalPosition(sf::Vector2f position)
+		{
+			_localPosition = position;
+			return *this;
+		}
+		sf::Vector2f getLocalPosition() const
+		{
+			return _localPosition;
+		}
 		Element& setOrigin(ElementPosition origin)
 		{
 			_origin = origin;
@@ -487,6 +496,7 @@ namespace drft::gui
 		ElementPosition _childAlignment = ElementPosition::CENTER;
 		sf::Vector2f _childOffset = { 0,0 };
 		sf::Vector2f _childOrigin;
+		sf::Vector2f _localPosition = { 0,0 };
 
 	private:
 		std::unordered_map<ElementCallbackType, std::function<bool()> > _callback;

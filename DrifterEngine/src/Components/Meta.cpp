@@ -42,6 +42,10 @@ void component::Meta::initialize()
 		.data<&Physical::weight>("weight"_hs)
 		.data<&Physical::materials>("materials"_hs);
 
+	snapshot::reflectComponent<Liquid, LIQUID_STRING>()
+		.prop("serialize"_hs)
+		.data<&Liquid::volume>("volume"_hs);
+
 	snapshot::reflectComponent<Actor, ACTOR_STRING>()
 		.prop("serialize"_hs)
 		.data<&Actor::ap>("ap"_hs)
@@ -60,6 +64,10 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Sharp, SHARP_STRING>()
 		.prop("serialize"_hs)
 		.data<&Sharp::sharpness>("sharpness"_hs);
+
+	snapshot::reflectComponent<Flying, FLYING_STRING>()
+		.prop("serialize"_hs)
+		.data<&Flying::standin>("standin"_hs);
 
 	snapshot::reflectComponent<Body, BODY_STRING>()
 		.prop("serialize"_hs)

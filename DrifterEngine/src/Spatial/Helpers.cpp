@@ -52,18 +52,17 @@ std::vector<sf::Vector2i> drft::spatial::getIntPointsAlongLine(sf::Vector2i pt1,
 
 	while (true)
 	{
+		if (x == pt2.x && y == pt2.y) break;
 		e2 = 2 * err;
 		if (e2 >= dy)
 		{
 			err += dy;
 			x += sx;
-			if (x == pt2.x) break;
 		}
 		if (e2 <= dx)
 		{
 			err += dx;
 			y += sy;
-			if (y == pt2.y) break;
 		}
 		result.emplace_back(x, y);
 	}

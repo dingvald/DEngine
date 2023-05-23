@@ -11,7 +11,6 @@ namespace drft::spatial
 
 namespace drft::gen
 {
-
 	class WorldGenerator
 	{
 	public:

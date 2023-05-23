@@ -55,6 +55,40 @@
         }
       ]
     },
+    // Ash
+    {
+      "Name": "Ash",
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Ash",
+            "extendedName": "",
+            "description": "The remains of something burned."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 47,
+            "layer": 1,
+            "color": [ 225, 225, 225 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 0.0,
+            "materials": [ "Ash" ]
+          }
+        }
+      ]
+    },
     // Wood
     {
       "Name": "Wood",

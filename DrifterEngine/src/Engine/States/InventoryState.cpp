@@ -85,6 +85,38 @@ void drft::InventoryState::onPop()
 	shutdownSessionEntities();
 }
 
+void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity item)
+{
+	const auto& itemRender = getContext().registry.get<component::Render>(item);
+	const auto& sprites = getContext().textures.get("Sprites");
+
+	sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
+	container.insert("Icon", gui::Icon(sprite))
+		.setSize({ 32,32 })
+		.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
+		.setStyle(gui::ElementState::Idle, {
+				.fillColor = itemRender.color
+			})
+		.setStyle(gui::ElementState::Focused, {
+					.fillColor = itemRender.color
+			});
+
+	if (auto health = getContext().registry.try_get<component::Health>(item))
+	{
+		float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
+		container.insert("Health", gui::Panel())
+			.setSize({ 32, (32 - 32 * scalingFactor) })
+			.setLocalPosition({ 0, 16})
+			.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
+			.setStyle(gui::ElementState::Idle, {
+				.fillColor = sf::Color(255,0,0,30)
+				})
+			.setStyle(gui::ElementState::Focused, {
+				.fillColor = sf::Color(255,0,0,30)
+				});
+	}
+}
+
 void drft::InventoryState::setupPanels()
 {
 	const auto& VIEW = getContext().window.getView();
@@ -163,36 +195,9 @@ void drft::InventoryState::setupInventoryGrid()
 			int count = 0;
 			for (auto& item : entityContainer.contents)
 			{
-				const auto itemEntity = util::ItemIDToEntityID(item, getContext().registry);
-				const auto& itemRender = getContext().registry.get<component::Render>(itemEntity);
-				const auto& sprites = getContext().textures.get("Sprites");
-
 				auto& container = inventoryGrid[count];
-				sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
-				container.insert("Icon", gui::Icon(sprite))
-					.setSize({ 32,32 })
-					.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-					.setStyle(gui::ElementState::Idle, {
-							.fillColor = itemRender.color
-						})
-					.setStyle(gui::ElementState::Focused, {
-								.fillColor = itemRender.color
-						});
-
-				if (auto health = getContext().registry.try_get<component::Health>(itemEntity))
-				{
-					float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
-					container.insert("Health", gui::Panel())
-						.setSize({ 32, (32 - 32 * scalingFactor) })
-						.setPosition({ 0, 32 })
-						.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
-						.setStyle(gui::ElementState::Idle, {
-							.fillColor = sf::Color(255,0,0,100)
-							})
-						.setStyle(gui::ElementState::Focused, {
-							.fillColor = sf::Color(255,0,0,100)
-							});
-				}
+				const auto itemEntity = util::ItemIDToEntityID(item, getContext().registry);
+				addItemIcon(container, itemEntity);
 
 				++count;
 			}
@@ -569,28 +574,7 @@ void drft::InventoryState::setupEquipmentGrid()
 				{
 					const auto& itemRender = getContext().registry.get<component::Render>(itemEntity);
 					const auto& sprites = getContext().textures.get("Sprites");
-
-					sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
-					equipmentGrid[slotName.data()].insert("Icon", gui::Icon(sprite))
-						.setSize({ 32,32 })
-						.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-						.setStyle(gui::ElementState::Idle, {
-								.fillColor = itemRender.color
-							});
-					if (auto health = getContext().registry.try_get<component::Health>(itemEntity))
-					{
-						float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
-						equipmentGrid[slotName.data()].insert("Health", gui::Panel())
-							.setSize({ 32, (32 - 32 * scalingFactor) })
-							.setPosition({ 0, 32 })
-							.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
-							.setStyle(gui::ElementState::Idle, {
-								.fillColor = sf::Color(255,0,0,100)
-								})
-							.setStyle(gui::ElementState::Focused, {
-								.fillColor = sf::Color(255,0,0,100)
-								});
-					}
+					addItemIcon(equipmentGrid[slotName.data()], itemEntity);
 				}
 				else
 				{
@@ -600,6 +584,9 @@ void drft::InventoryState::setupEquipmentGrid()
 						.setSize({ 32,32 })
 						.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
 						.setStyle(gui::ElementState::Idle, {
+								.fillColor = sf::Color(80,80,80,150)
+							})
+						.setStyle(gui::ElementState::Focused, {
 								.fillColor = sf::Color(80,80,80,150)
 							});
 				}
@@ -739,7 +726,7 @@ void drft::InventoryState::setupEquipmentGrid()
 						.setOrigin(gui::ElementPosition::TOP_LEFT);
 						commandList.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
-						if (itemInSlot > 0)
+						if (itemInSlot > component::Item::NONE)
 						{
 							commandList.insert("Remove", gui::Label())
 								.setStyle(gui::ElementState::Idle, {

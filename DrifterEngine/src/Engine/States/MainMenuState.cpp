@@ -66,6 +66,7 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
 			{
 				std::filesystem::remove_all(".\\data\\savegame\\");
+				std::filesystem::create_directory(".\\data\\savegame\\");
 				this->requestStackClear();
 				this->requestStackPush(States::Game);
 				return true;

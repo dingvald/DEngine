@@ -22,7 +22,7 @@ void drft::system::ItemDurabilitySystem::onItemBreakEvent(events::ItemBreakEvent
 		{
 			if (itemID == ev.itemID)
 			{
-				itemID = 0;
+				itemID = component::Item::NONE;
 				return;
 			}
 		}

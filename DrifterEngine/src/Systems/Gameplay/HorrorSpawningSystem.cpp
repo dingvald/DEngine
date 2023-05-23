@@ -54,7 +54,7 @@ void drft::system::HorrorSpawningSystem::onGameTickEvent(events::GameTickEvent& 
 
 void drft::system::HorrorSpawningSystem::spawnHorror() const
 {
-	std::cout << "SPAWING A HORROR OHH NOOOO" << std::endl;
+	std::cout << "SPAWING A HORROR OHH NOOOO!" << std::endl;
 
 	auto playerView = registry->view<component::Player, component::Position>();
 	for (auto [entity, player, pos] : playerView.each())
@@ -72,7 +72,7 @@ void drft::system::HorrorSpawningSystem::spawnHorror() const
 		};
 
 		auto blockers = grid.entitiesAt(position, isBlocking);
-		while (!blockers.empty())
+		while (!blockers.empty() && spatial::distance(position, spatial::toTileSpace(pos.position)) < 16)
 		{
 			position = rng::RandomNumberGenerator::positionInCircle(spatial::toTileSpace(pos.position), 96);
 			blockers = grid.entitiesAt(position, isBlocking);

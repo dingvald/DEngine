@@ -22,6 +22,12 @@
           "Params": {
             "Number": 500
           }
+        },
+        "Herb": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 20
+          }
         }
       },
       "Actors": {
@@ -130,6 +136,12 @@
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 300
+          }
+        },
+        "Roots": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 100
           }
         }
       },
@@ -242,7 +254,12 @@
         }
       },
       "Actors": {
-
+        "Butterfly": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 6
+          }
+        }
       }
     }
   }

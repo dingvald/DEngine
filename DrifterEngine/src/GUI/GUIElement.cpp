@@ -194,8 +194,8 @@ void drft::gui::SingleContainer::onRender(sf::RenderTarget& target)
 void drft::gui::DualContainer::layoutChildren()
 {
 	if (_children.empty()) return;
-	_children.front()->setPosition(_shape.getPosition() + _childOrigin);
-	_children.back()->setPosition(_shape.getPosition() + _childOrigin + _style[_state].childPadding);
+	_children.front()->setPosition(_shape.getPosition() + _children.front()->getLocalPosition() + _childOrigin);
+	_children.back()->setPosition(_shape.getPosition() + _children.back()->getLocalPosition() + _childOrigin + _style[_state].childPadding);
 }
 
 bool drft::gui::DualContainer::onHandleEvent(const sf::Event& ev)

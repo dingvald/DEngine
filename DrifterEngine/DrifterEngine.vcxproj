@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\LiquidSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ItemDurabilitySystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HorrorSpawningSystem.cpp" />
@@ -294,6 +295,7 @@
     <ClCompile Include="src\Systems\Gameplay\UseItemSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\LiquidSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\ItemDurabilitySystem.h" />
     <ClInclude Include="src\Events\ItemBreakEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\LightSourceSystem.h" />

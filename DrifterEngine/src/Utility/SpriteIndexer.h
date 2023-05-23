@@ -49,7 +49,11 @@ namespace drft::util
 		OreDeposit,
 		Ore,
 		Skeleton,
-		Torch
+		Torch,
+		Barricade,
+		Ash,
+		InLiquidEffect,
+		Butterfly
 	};
 
 	class SpriteIndexer

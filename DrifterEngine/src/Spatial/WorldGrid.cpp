@@ -149,7 +149,9 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 	openSet.emplace(Node(pt1,0,0));
 	cameFrom[pt1] = pt1;
 
-	while (!openSet.empty())
+	const int limit = 50;
+	int passes = 0;
+	while (!openSet.empty() && passes < limit)
 	{
 		auto currentNode = *(openSet.begin());
 		if (currentNode.value == pt2) return constructPath(currentNode.value);
@@ -166,7 +168,7 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 				if (sf::Vector2i(x,y) == pt2) return constructPath(sf::Vector2i(x,y));
 
 				int distanceSoFar = currentNode.distance + 1;
-				int distanceFromTarget = static_cast<int>(std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2));
+				int distanceFromTarget = static_cast<int>(std::sqrtf(std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2)));
 				const auto entities = entitiesAt({ x,y });
 				int cost = distanceSoFar + distanceFromTarget + costFunc(entities);
 
@@ -187,6 +189,13 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 				}
 			}
 		}
+
+		++passes;
+	}
+
+	if (!openSet.empty())
+	{
+		return constructPath(openSet.begin()->value);
 	}
 
 	return std::deque<sf::Vector2i>();

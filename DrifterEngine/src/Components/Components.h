@@ -61,6 +61,11 @@ namespace component
 		std::vector<std::string> materials = {};
 	};
 
+	struct Liquid
+	{
+		float volume = 0.0; // Litres
+	};
+
 	struct Camera
 	{
 		sf::FloatRect viewport = { 0,0,0,0 };
@@ -90,6 +95,11 @@ namespace component
 		int sharpness = 1;
 	};
 
+	struct Flying
+	{
+		int standin = 0;
+	};
+
 	struct Body
 	{
 		std::unordered_map<std::string, unsigned long> parts;
@@ -115,6 +125,7 @@ namespace component
 	struct Item
 	{
 		using ID = unsigned long;
+		static const ID NONE = 0;
 		ID id = 0;
 	};
 

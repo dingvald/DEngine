@@ -5,9 +5,10 @@
 void drft::util::saveRegistryToFile(const entt::registry& reg, std::string dirPath, std::string filename, SerializeOption option)
 {
 	using namespace snapshot;
-	std::filesystem::create_directory(dirPath);
 
+	std::filesystem::create_directory(dirPath);
 	std::string fullpath = dirPath + filename;
+
 	{
 		switch (option)
 		{

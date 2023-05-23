@@ -42,6 +42,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, Liquid& liquid)
+	{
+		archive(liquid.volume);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Actor& actor)
 	{
 		archive(actor.ap, actor.moveSpeed, actor.actSpeed);
@@ -63,6 +69,12 @@ namespace cereal
 	void serialize(Archive& archive, Sharp& sharp)
 	{
 		archive(sharp.sharpness);
+	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Flying& flying)
+	{
+		archive(flying.standin);
 	}
 
 	template<class Archive>

@@ -39,11 +39,25 @@ void drft::system::PickUpSystem::update(const float dt)
 			std::cout << util::getEntityName({ *registry, entity }) 
 				<< " picked up a " << util::getEntityName({ *registry, pickupItem }) << std::endl;
 
-			registry->patch<component::Container>(entity,
-				[itemComp](component::Container& cont)
+			bool putDirectlyInHand = false;
+			// try to put in right hand first (NOT LEFT HAND!)
+			if (auto body = registry->try_get<component::Body>(entity))
+			{
+				if (body->parts.contains("HeldR") && body->parts.at("HeldR") == component::Item::NONE)
 				{
-					cont.contents.push_back(itemComp->id);
-				});
+					body->parts.at("HeldR") = itemComp->id;
+					putDirectlyInHand = true;
+				}
+			}
+			// otherwise put into inventory
+			if (!putDirectlyInHand)
+			{
+				registry->patch<component::Container>(entity,
+					[itemComp](component::Container& cont)
+					{
+						cont.contents.push_back(itemComp->id);
+					});
+			}
 
 			const int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Act);
 			registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);
