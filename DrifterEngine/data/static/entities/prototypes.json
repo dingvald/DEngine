@@ -1542,14 +1542,14 @@
           "Name": "Actor",
           "Data": {
             "ap": 0,
-            "moveSpeed": 0.7,
+            "moveSpeed": 1.2,
             "actSpeed": 1.0
           }
         },
         {
           "Name": "AI",
           "Data": {
-            "sightRange": 12,
+            "sightRange": 20,
             "goals": [
               "random_move",
               "kill_target"
@@ -1559,8 +1559,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 75,
-            "current": 75
+            "max": 100,
+            "current": 100
           }
         },
         {
@@ -1613,7 +1613,7 @@
           "Name": "Actor",
           "Data": {
             "ap": 0,
-            "moveSpeed": 0.7,
+            "moveSpeed": 1.2,
             "actSpeed": 1.0
           }
         },
@@ -1684,7 +1684,7 @@
           "Name": "Actor",
           "Data": {
             "ap": 0,
-            "moveSpeed": 0.7,
+            "moveSpeed": 1.2,
             "actSpeed": 1.0
           }
         },
