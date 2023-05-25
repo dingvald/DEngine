@@ -48,6 +48,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, InLiquid& inLiquid)
+	{
+		archive(inLiquid.liquidPrototype, inLiquid.volume);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Actor& actor)
 	{
 		archive(actor.ap, actor.moveSpeed, actor.actSpeed);

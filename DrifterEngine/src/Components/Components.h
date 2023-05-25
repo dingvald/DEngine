@@ -66,6 +66,12 @@ namespace component
 		float volume = 0.0; // Litres
 	};
 
+	struct InLiquid
+	{
+		std::string liquidPrototype;
+		float volume = 0.0;
+	};
+
 	struct Camera
 	{
 		sf::FloatRect viewport = { 0,0,0,0 };

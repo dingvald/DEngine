@@ -9,6 +9,7 @@ constexpr std::string_view LIGHTSOURCE_STRING = "LightSource";
 constexpr std::string_view LIGHT_BLOCKING_STRING = "LightBlocking";
 constexpr std::string_view PHYSICAL_STRING = "Physical";
 constexpr std::string_view LIQUID_STRING = "Liquid";
+constexpr std::string_view IN_LIQUID_STRING = "InLiquid";
 constexpr std::string_view ACTOR_STRING = "Actor";
 constexpr std::string_view HEALTH_STRING = "Health";
 constexpr std::string_view STAMINA_STRING = "Stamina";

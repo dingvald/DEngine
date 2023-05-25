@@ -14,7 +14,4 @@ namespace component::tag
 
 	struct CurrentActor
 	{};
-
-	struct InLiquid
-	{};
 }

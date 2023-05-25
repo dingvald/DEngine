@@ -47,6 +47,9 @@ void component::Meta::initialize()
 		.prop("serialize"_hs)
 		.data<&Liquid::volume>("volume"_hs);
 
+	snapshot::reflectComponent<InLiquid, IN_LIQUID_STRING>()
+		.prop("serialize"_hs);
+
 	snapshot::reflectComponent<Actor, ACTOR_STRING>()
 		.prop("serialize"_hs)
 		.data<&Actor::ap>("ap"_hs)

@@ -12,8 +12,10 @@ void drft::system::LiquidSystem::init()
 	_grid = &(registry->ctx().get<spatial::WorldGrid&>());
 	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::EnterTileEvent>().connect<&LiquidSystem::onEnterTileEvent>(this);
-	dispatcher.sink<events::LeaveTileEvent>().connect<&LiquidSystem::onLeaveTileEvent>(this);
 	dispatcher.sink<events::TurnEndEvent>().connect<&LiquidSystem::onTurnEndEvent>(this);
+
+	registry->on_construct<component::InLiquid>().connect<&LiquidSystem::onUpdateInLiquid>(this);
+	registry->on_destroy<component::InLiquid>().connect<&LiquidSystem::onRemoveInLiquid>(this);
 }
 
 void drft::system::LiquidSystem::fixedUpdate()
@@ -33,6 +35,20 @@ void drft::system::LiquidSystem::fixedUpdate()
 			{
 				addInLiquidEffect(pos.position, render.color);
 			}
+		}
+	}
+
+	auto inLiquidView = registry->view<component::InLiquid, component::Position>();
+	for (auto [entity, inLiquid, pos] : inLiquidView.each())
+	{
+		auto liquids = _grid->entitiesAt(spatial::toTileSpace(pos.position),
+			[this](auto entity) -> bool
+			{
+				return registry->any_of<component::Liquid>(entity);
+			});
+		if (liquids.empty())
+		{
+			registry->remove<component::InLiquid>(entity);
 		}
 	}
 }
@@ -73,48 +89,41 @@ void drft::system::LiquidSystem::onEnterTileEvent(events::EnterTileEvent& ev) co
 		{
 			return registry->any_of<component::Liquid>(entity);
 		});
-	if (auto stamina = registry->try_get<component::Stamina>(ev.entity))
-	{
-		if (!liquids.empty() && isAffectedByLiquids(ev.entity))
-		{
-			stamina->baseConsumption += 2;
-		}
-	}
-}
 
-void drft::system::LiquidSystem::onLeaveTileEvent(events::LeaveTileEvent& ev) const
-{
-	auto liquids = _grid->entitiesAt(ev.tilePosition,
-		[this](auto entity) -> bool
-		{
-			return registry->any_of<component::Liquid>(entity);
-		});
-	if (auto stamina = registry->try_get<component::Stamina>(ev.entity))
+	if (!liquids.empty() && isAffectedByLiquids(ev.entity))
 	{
-		if (!liquids.empty() && isAffectedByLiquids(ev.entity))
-		{
-			stamina->baseConsumption -= 2;
-		}
+		auto liquid = registry->get<component::Liquid>(liquids.front());
+		auto info = registry->get<component::Info>(liquids.front());
+		registry->emplace_or_replace<component::InLiquid>(ev.entity, info.prototype, liquid.volume);
 	}
 }
 
 void drft::system::LiquidSystem::onTurnEndEvent(events::TurnEndEvent& ev) const
 {
-	if (auto pos = registry->try_get<component::Position>(ev.entity))
-	{
-		auto health = registry->try_get<component::Health>(ev.entity);
-		auto stamina = registry->try_get<component::Stamina>(ev.entity);
-		auto liquids = _grid->entitiesAt(spatial::toTileSpace(pos->position),
-			[this](auto entity) -> bool
-			{
-				return registry->any_of<component::Liquid>(entity);
-			});
+	auto health = registry->try_get<component::Health>(ev.entity);
+	auto stamina = registry->try_get<component::Stamina>(ev.entity);
+	auto isInLiquid = registry->all_of<component::InLiquid>(ev.entity);
 
-		if (health && stamina && !liquids.empty() 
-			&& isAffectedByLiquids(ev.entity) 
-			&& stamina->current <= 0)
-		{
-			registry->emplace_or_replace<component::action::TakeDamage>(ev.entity, health->max / 10);
-		}
+	if (health && stamina && isInLiquid 
+		&& isAffectedByLiquids(ev.entity) 
+		&& stamina->current <= 0)
+	{
+		registry->emplace_or_replace<component::action::TakeDamage>(ev.entity, health->max / 10);
+	}
+}
+
+void drft::system::LiquidSystem::onUpdateInLiquid(entt::registry& registry, entt::entity entity)
+{
+	if (auto stamina = registry.try_get<component::Stamina>(entity))
+	{
+		stamina->baseConsumption += 2;
+	}
+}
+
+void drft::system::LiquidSystem::onRemoveInLiquid(entt::registry& registry, entt::entity entity)
+{
+	if (auto stamina = registry.try_get<component::Stamina>(entity))
+	{
+		stamina->baseConsumption -= 2;
 	}
 }

@@ -22,9 +22,11 @@ namespace drft::system
 	private:
 		bool isAffectedByLiquids(entt::entity entity) const;
 		void addInLiquidEffect(sf::Vector2f position, sf::Color color);
+
 		void onEnterTileEvent(events::EnterTileEvent& ev) const;
-		void onLeaveTileEvent(events::LeaveTileEvent& ev) const;
 		void onTurnEndEvent(events::TurnEndEvent& ev) const;
+		void onUpdateInLiquid(entt::registry& registry, entt::entity entity);
+		void onRemoveInLiquid(entt::registry& registry, entt::entity entity);
 
 	private:
 		spatial::WorldGrid* _grid;
