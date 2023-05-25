@@ -16,8 +16,18 @@ namespace drft::system
 		void createStaminaBar();
 		void createInHandsDisplay();
 		void addItemIcon(gui::Element& container, entt::entity item);
+		void queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl);
+
+		void onTakeDamage(entt::registry& registry, entt::entity entity);
+		void onConsumeStamina(entt::registry& registry, entt::entity entity);
 
 	private:
+		struct FlashEffect
+		{
+			sf::RectangleShape shape;
+			int ttl = 0; // in frames
+		};
+
 		sf::RectangleShape _healthBar{};
 		sf::RectangleShape _healthBarContainer{};
 		sf::Sprite _heartIcon{};
@@ -27,6 +37,8 @@ namespace drft::system
 		sf::Sprite _staminaIcon{};
 
 		gui::DualContainer _inHandsDisplay;
+
+		std::vector<FlashEffect> _flashEffects;
 	};
 }
 

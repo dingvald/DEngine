@@ -18,6 +18,8 @@ void drft::system::HUD::init()
 	createHealthBar();
 	createStaminaBar();
 	createInHandsDisplay();
+	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
+	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
 }
 
 void drft::system::HUD::fixedUpdate()
@@ -37,9 +39,9 @@ void drft::system::HUD::fixedUpdate()
 
 	if (auto stamina = player.try_get<component::Stamina>())
 	{
-		_staminaBarContainer.setSize({ static_cast<float>(stamina->max * HEALTHBAR_WIDTH_MULTIPLIER), HEALTHBAR_HEIGHT + 2.f });
+		_staminaBarContainer.setSize({ static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER), STAMINABAR_HEIGHT + 2.f });
 		_staminaBar.setSize({ (static_cast<float>(stamina->current) / static_cast<float>(stamina->max))
-			* static_cast<float>(stamina->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT });
+			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT });
 	}
 	else
 	{
@@ -88,6 +90,20 @@ void drft::system::HUD::fixedUpdate()
 	}
 
 	_inHandsDisplay.update(0.f);
+
+	auto it = _flashEffects.begin();
+	while (it != _flashEffects.end())
+	{
+		--(it->ttl);
+		if (it->ttl <= 0)
+		{
+			it = _flashEffects.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 void drft::system::HUD::render(sf::RenderTarget& target)
@@ -101,6 +117,11 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 	target.draw(_staminaIcon);
 
 	_inHandsDisplay.render(target);
+
+	for (auto effect : _flashEffects)
+	{
+		target.draw(effect.shape);
+	}
 }
 
 void drft::system::HUD::createHealthBar()
@@ -195,5 +216,41 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 			.setStyle(gui::ElementState::Focused, {
 				.fillColor = sf::Color(255,0,0,30)
 				});
+	}
+}
+
+void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl)
+{
+	sf::RectangleShape shape;
+	shape.setPosition(position);
+	shape.setSize(size);
+	shape.setFillColor(sf::Color::White);
+
+	_flashEffects.emplace_back(shape, ttl);
+}
+
+void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)
+{
+	if (!registry.all_of<component::Player>(entity)) return;
+	if (auto health = registry.try_get<component::Health>(entity))
+	{
+		sf::Vector2f size = { (static_cast<float>(health->current) / static_cast<float>(health->max))
+			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT };
+		queueFlashEffect(HEALTHBAR_POSITION, size, 10);
+	}
+}
+
+void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity entity)
+{
+	if (!registry.all_of<component::Player>(entity)) return;
+	if (auto stamina = registry.try_get<component::Stamina>(entity))
+	{
+		auto consume = registry.get<component::action::ConsumeStamina>(entity);
+		if (stamina->baseConsumption + consume.amount > 0)
+		{
+			sf::Vector2f size = { (static_cast<float>(stamina->current) / static_cast<float>(stamina->max))
+			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT };
+			queueFlashEffect(STAMINABAR_POSITION, size, 10);
+		}
 	}
 }
