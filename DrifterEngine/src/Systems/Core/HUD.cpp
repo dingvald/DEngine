@@ -246,7 +246,7 @@ void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity 
 	if (auto stamina = registry.try_get<component::Stamina>(entity))
 	{
 		auto consume = registry.get<component::action::ConsumeStamina>(entity);
-		if (stamina->baseConsumption + consume.amount > 0)
+		if (stamina->baseConsumption + consume.amount > 0.f)
 		{
 			sf::Vector2f size = { (static_cast<float>(stamina->current) / static_cast<float>(stamina->max))
 			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT };

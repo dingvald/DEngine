@@ -26,6 +26,7 @@
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/DamageSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
+#include "Systems/Gameplay/SprintingSystem.h"
 #include "Systems/Gameplay/DayNightCycleSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/DropItemSystem.h"
@@ -196,6 +197,7 @@ void drft::GameState::render(sf::RenderTarget& target)
 
 void drft::GameState::onPop()
 {
+	_systems->shutdownAll();
 	const bool isPlayerAlive = getContext().registry.valid(_player.entity());
 	// Save game state
 	if (isPlayerAlive)
@@ -209,7 +211,6 @@ void drft::GameState::onPop()
 			_systems->saveAll(oarchive);
 		}
 	}
-	_systems->shutdownAll();
 	if (isPlayerAlive)
 	{
 		util::saveRegistryToFile(getContext().registry, SAVE_DIRECTORY.data(), "registry", util::SerializeOption::JSON);
@@ -255,13 +256,14 @@ void drft::GameState::importSystems()
 	_systems->add<ChunkManager>(					Phase::OnPostUpdate);
 	
 	_systems->add<DayNightCycleSystem>(				Phase::OnFixedUpdate);
+	_systems->add<SprintingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<HitEffectSystem>(					Phase::OnFixedUpdate);
 	_systems->add<CullingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LiquidSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
-	
-	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 15);
+	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 5);
+
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<HUD>(								Phase::OnRender + 5);
 

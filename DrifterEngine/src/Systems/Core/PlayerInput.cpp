@@ -54,6 +54,9 @@ void drft::system::PlayerInput::init()
 	_actionMap.addAction(Key::C, [](entt::handle entity) {
 		entity.emplace<component::action::OpenCrafting>();
 		});
+	_actionMap.addAction(Key::S, [](entt::handle entity) {
+		entity.emplace<component::action::ToggleSprint>();
+		});
 }
 
 void drft::system::PlayerInput::update(const float dt)

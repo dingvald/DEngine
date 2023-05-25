@@ -45,7 +45,7 @@ void drft::system::MovementSystem::update(const float dt)
 				{
 					pos.position = spatial::toWorldSpace(targetPosition);
 				});
-			registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -1);
+			registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
 			spendActionPoints(*registry, entity, ActionType::Move);
 		}
 		else

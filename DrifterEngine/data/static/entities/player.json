@@ -54,8 +54,8 @@
         {
           "Name": "Stamina",
           "Data": {
-            "max": 20,
-            "current": 20
+            "max": 25.0,
+            "current": 25.0
           }
         },
         {

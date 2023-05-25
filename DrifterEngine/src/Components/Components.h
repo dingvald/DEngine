@@ -93,9 +93,9 @@ namespace component
 
 	struct Stamina
 	{
-		int max = 10;
-		int current = 10;
-		int baseConsumption = 0;
+		float max = 10.f;
+		float current = 10.f;
+		float baseConsumption = 0.f;
 	};
 
 	struct Attacker
@@ -111,6 +111,12 @@ namespace component
 	struct Flying
 	{
 		int standin = 0;
+	};
+
+	struct Sprinting
+	{
+		sf::Vector2i direction = { 0,0 };
+		bool hasBeenApplied = false;
 	};
 
 	struct Body
@@ -184,6 +190,8 @@ namespace component::action
 		int damage = 0;
 	};
 
+	struct ToggleSprint {};
+
 	struct Wait
 	{};
 
@@ -240,6 +248,6 @@ namespace component::action
 
 	struct ConsumeStamina
 	{
-		int amount = 0;
+		float amount = 0.f;
 	};
 }

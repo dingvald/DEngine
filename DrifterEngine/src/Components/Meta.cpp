@@ -79,6 +79,9 @@ void component::Meta::initialize()
 		.prop("serialize"_hs)
 		.data<&Flying::standin>("standin"_hs);
 
+	snapshot::reflectComponent<Sprinting, SPRINTING_STRING>()
+		.prop("serialize"_hs);
+
 	snapshot::reflectComponent<Body, BODY_STRING>()
 		.prop("serialize"_hs)
 		.data<&Body::parts>("parts"_hs);

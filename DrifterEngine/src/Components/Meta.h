@@ -16,6 +16,7 @@ constexpr std::string_view STAMINA_STRING = "Stamina";
 constexpr std::string_view ATTACKER_STRING = "Attacker";
 constexpr std::string_view SHARP_STRING = "Sharp";
 constexpr std::string_view FLYING_STRING = "Flying";
+constexpr std::string_view SPRINTING_STRING = "Sprinting";
 constexpr std::string_view BODY_STRING = "Body";
 constexpr std::string_view PLAYER_STRING = "Player";
 constexpr std::string_view AI_STRING = "AI";

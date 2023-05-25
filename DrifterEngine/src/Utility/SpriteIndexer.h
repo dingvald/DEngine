@@ -54,7 +54,8 @@ namespace drft::util
 		Ash,
 		InLiquidEffect,
 		Butterfly,
-		Diamond
+		Diamond,
+		StatusEffect
 	};
 
 	class SpriteIndexer

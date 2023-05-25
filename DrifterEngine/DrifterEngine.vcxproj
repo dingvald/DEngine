@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\SprintingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LiquidSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ItemDurabilitySystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp" />
@@ -298,6 +299,7 @@
     <ClCompile Include="src\Systems\Gameplay\WaitingSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\SprintingSystem.h" />
     <ClInclude Include="src\Events\LeaveTileEvent.h" />
     <ClInclude Include="src\Events\EnterTileEvent.h" />
     <ClInclude Include="src\Events\TurnEndEvent.h" />

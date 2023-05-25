@@ -12,7 +12,7 @@ void drft::system::StaminaSystem::update(const float dt)
 	auto spendStaminaView = registry->view<component::Stamina, component::action::ConsumeStamina>();
 	for (auto [entity, stamina, staminaSpend] : spendStaminaView.each())
 	{
-		stamina.current = std::clamp(stamina.current - (stamina.baseConsumption + staminaSpend.amount), 0, stamina.max);
+		stamina.current = std::clamp(stamina.current - (stamina.baseConsumption + staminaSpend.amount), 0.f, stamina.max);
 	}
 }
 

@@ -106,7 +106,7 @@ void drft::system::LiquidSystem::onTurnEndEvent(events::TurnEndEvent& ev) const
 
 	if (health && stamina && isInLiquid 
 		&& isAffectedByLiquids(ev.entity) 
-		&& stamina->current <= 0)
+		&& stamina->current <= 0.f)
 	{
 		registry->emplace_or_replace<component::action::TakeDamage>(ev.entity, health->max / 10);
 	}
@@ -116,7 +116,7 @@ void drft::system::LiquidSystem::onUpdateInLiquid(entt::registry& registry, entt
 {
 	if (auto stamina = registry.try_get<component::Stamina>(entity))
 	{
-		stamina->baseConsumption += 2;
+		stamina->baseConsumption += 1.f;
 	}
 }
 
@@ -124,6 +124,6 @@ void drft::system::LiquidSystem::onRemoveInLiquid(entt::registry& registry, entt
 {
 	if (auto stamina = registry.try_get<component::Stamina>(entity))
 	{
-		stamina->baseConsumption -= 2;
+		stamina->baseConsumption -= 1.f;
 	}
 }
