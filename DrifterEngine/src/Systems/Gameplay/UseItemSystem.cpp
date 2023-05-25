@@ -22,10 +22,13 @@ void drft::system::UseItemSystem::onUseItem(entt::registry& registry, entt::enti
 	auto& useAction = registry.get<component::action::Use>(entity);
 	auto& usableComp = registry.get<component::Usable>(useAction.entity);
 	String2UseFunc.at(usableComp.action)(registry, entity, usableComp.params);
-	registry.patch<component::Container>(entity,
-		[useAction](component::Container& cont)
-		{
-			cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), useAction.item), cont.contents.end());
-		});
+	if (usableComp.consumes)
+	{
+		registry.patch<component::Container>(entity,
+			[useAction](component::Container& cont)
+			{
+				cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), useAction.item), cont.contents.end());
+			});
+	}
 	registry.remove<component::action::Use>(entity);
 }

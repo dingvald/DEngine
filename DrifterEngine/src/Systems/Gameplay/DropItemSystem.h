@@ -8,6 +8,7 @@ namespace drft::system
 	public:
 		void init() override;
 		void update(const float dt) override;
+		void onUpdateEnd() override;
 
 	private:
 		void onItemDropped(entt::registry&, entt::entity);

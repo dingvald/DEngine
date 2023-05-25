@@ -58,5 +58,4 @@ void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::regis
 	}
 
 	registry.emplace_or_replace<component::MyCraftableItems>(entity, craftables, partialCraftables);
-
 }

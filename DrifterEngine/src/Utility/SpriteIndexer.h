@@ -53,7 +53,8 @@ namespace drft::util
 		Barricade,
 		Ash,
 		InLiquidEffect,
-		Butterfly
+		Butterfly,
+		Diamond
 	};
 
 	class SpriteIndexer

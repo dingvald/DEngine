@@ -9,6 +9,7 @@ using namespace entt::literals;
 void component::Meta::initialize()
 {
 	// Meta types initialized here. Use the current ones as examples to 'meta' new compenents
+
 	snapshot::reflectComponent<Info, INFO_STRING>()
 		.prop("serialize"_hs)
 		.data<&Info::prototype>("prototype"_hs)
@@ -57,6 +58,12 @@ void component::Meta::initialize()
 		.data<&Health::max>("max"_hs)
 		.data<&Health::current>("current"_hs);
 
+	snapshot::reflectComponent<Stamina, STAMINA_STRING>()
+		.prop("serialize"_hs)
+		.data<&Stamina::max>("max"_hs)
+		.data<&Stamina::current>("current"_hs)
+		.data<&Stamina::baseConsumption>("baseConsumption"_hs);
+
 	snapshot::reflectComponent<Attacker, ATTACKER_STRING>()
 		.prop("serialize"_hs)
 		.data<&Attacker::baseDamage>("baseDamage"_hs);
@@ -100,7 +107,8 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Usable, USABLE_STRING>()
 		.prop("serialize"_hs)
 		.data<&Usable::action>("action"_hs)
-		.data<&Usable::params>("params"_hs);
+		.data<&Usable::params>("params"_hs)
+		.data<&Usable::consumes>("consumes"_hs);
 
 	snapshot::reflectComponent<Horror, HORROR_STRING>()
 		.prop("serialize"_hs);

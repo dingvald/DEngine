@@ -40,12 +40,19 @@
           "Name": "Actor",
           "Data": {
             "ap": 0,
-            "moveSpeed": 1.05,
+            "moveSpeed": 1.0,
             "actSpeed": 1.0
           }
         },
         {
           "Name": "Health",
+          "Data": {
+            "max": 20,
+            "current": 20
+          }
+        },
+        {
+          "Name": "Stamina",
           "Data": {
             "max": 20,
             "current": 20

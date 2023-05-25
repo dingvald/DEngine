@@ -7,7 +7,7 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void update(const float dt) override;
+		void onUpdateEnd() override;
 
 	private:
 		void onItemEquipped(entt::registry& registry, entt::entity entity);

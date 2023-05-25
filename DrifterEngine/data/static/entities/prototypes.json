@@ -209,7 +209,8 @@
             "action": "Heal",
             "params": {
               "Amount": 1.0
-            }
+            },
+            "consumes": true
           }
         }
       ]
@@ -267,7 +268,8 @@
             "action": "Heal",
             "params": {
               "Amount": 10.0
-            }
+            },
+            "consumes": true
           }
         }
       ]
@@ -1205,7 +1207,7 @@
           "Data": {
             "sprite": 49,
             "layer": 2,
-            "color": [ 255, 80, 30 ]
+            "color": [ 100, 30, 150 ]
           }
         },
         {

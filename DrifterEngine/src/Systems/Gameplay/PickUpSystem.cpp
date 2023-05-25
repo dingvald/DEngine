@@ -3,6 +3,7 @@
 #include "Components/Components.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
+#include "Systems/Helpers/SpendActionPoints.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::PickUpSystem::init()
@@ -16,28 +17,23 @@ void drft::system::PickUpSystem::update(const float dt)
 	for (auto [entity, pos, container] : view.each())
 	{
 		const auto myTilePosition = spatial::toTileSpace(pos.position);
-		const auto items = grid.entitiesAt(myTilePosition);
-
-		component::Item* itemComp = nullptr;
-		entt::entity pickupItem = entt::null;
-
-		for (auto item : items)
-		{
-			if (itemComp = registry->try_get<component::Item>(item))
+		const auto items = grid.entitiesAt(myTilePosition,
+			[this](entt::entity entity) -> bool
 			{
-				pickupItem = item;
-				break;
-			}
-		}
-		if (!itemComp)
+				return registry->all_of<component::Item>(entity);
+			});
+
+		if (items.empty())
 		{
 			std::cout << "Nothing to pick up." << std::endl;
 		}
 		else
 		{
-			registry->remove<component::Position>(pickupItem);
+			registry->remove<component::Position>(items.front());
 			std::cout << util::getEntityName({ *registry, entity }) 
-				<< " picked up a " << util::getEntityName({ *registry, pickupItem }) << std::endl;
+				<< " picked up a " << util::getEntityName({ *registry, items.front()}) << std::endl;
+
+			auto item = registry->get<component::Item>(items.front());
 
 			bool putDirectlyInHand = false;
 			// try to put in right hand first (NOT LEFT HAND!)
@@ -45,7 +41,7 @@ void drft::system::PickUpSystem::update(const float dt)
 			{
 				if (body->parts.contains("HeldR") && body->parts.at("HeldR") == component::Item::NONE)
 				{
-					body->parts.at("HeldR") = itemComp->id;
+					body->parts.at("HeldR") = item.id;
 					putDirectlyInHand = true;
 				}
 			}
@@ -53,16 +49,17 @@ void drft::system::PickUpSystem::update(const float dt)
 			if (!putDirectlyInHand)
 			{
 				registry->patch<component::Container>(entity,
-					[itemComp](component::Container& cont)
+					[item](component::Container& cont)
 					{
-						cont.contents.push_back(itemComp->id);
+						cont.contents.push_back(item.id);
 					});
 			}
-
-			const int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Act);
-			registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);
+			spendActionPoints(*registry, entity, ActionType::Act);
 		}
-
-		registry->remove<component::action::PickUp>(entity);
 	}
+}
+
+void drft::system::PickUpSystem::onUpdateEnd()
+{
+	registry->clear<component::action::PickUp>();
 }

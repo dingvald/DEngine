@@ -11,6 +11,7 @@ constexpr std::string_view PHYSICAL_STRING = "Physical";
 constexpr std::string_view LIQUID_STRING = "Liquid";
 constexpr std::string_view ACTOR_STRING = "Actor";
 constexpr std::string_view HEALTH_STRING = "Health";
+constexpr std::string_view STAMINA_STRING = "Stamina";
 constexpr std::string_view ATTACKER_STRING = "Attacker";
 constexpr std::string_view SHARP_STRING = "Sharp";
 constexpr std::string_view FLYING_STRING = "Flying";
@@ -23,7 +24,6 @@ constexpr std::string_view CONTAINER_STRING = "Container";
 constexpr std::string_view CRAFTABLE_STRING = "Craftable";
 constexpr std::string_view USABLE_STRING = "Usable";
 constexpr std::string_view HORROR_STRING = "Horror";
-
 
 namespace component
 {

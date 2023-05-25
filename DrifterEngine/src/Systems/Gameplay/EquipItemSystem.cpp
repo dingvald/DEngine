@@ -12,22 +12,10 @@ void drft::system::EquipItemSystem::init()
 	registry->on_update<component::action::Unequip>().connect<&EquipItemSystem::onItemUnequipped>(this);
 }
 
-void drft::system::EquipItemSystem::update(const float dt)
+void drft::system::EquipItemSystem::onUpdateEnd()
 {
-	auto equipView = registry->view<component::action::Equip>();
-
-	for (auto entity : equipView)
-	{
-		registry->remove<component::action::Equip>(entity);
-	}
-
-	auto unequipView = registry->view<component::action::Unequip>();
-
-	for (auto entity : unequipView)
-	{
-
-		registry->remove<component::action::Unequip>(entity);
-	}
+	registry->clear<component::action::Equip>();
+	registry->clear<component::action::Unequip>();
 }
 
 void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, entt::entity entity)

@@ -102,12 +102,6 @@
     },
     "Lake": {
       "Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 3
-          }
-        },
         "Grass": {
           "Algorithm": "RandomSpread",
           "Params": {

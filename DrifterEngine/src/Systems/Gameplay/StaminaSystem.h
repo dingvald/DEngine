@@ -1,9 +1,9 @@
-#pragma	once
+#pragma once
 #include "Systems/System.h"
 
 namespace drft::system
 {
-	class MovementSystem : public System
+	class StaminaSystem : public System
 	{
 	public:
 		void init() override;
@@ -11,3 +11,5 @@ namespace drft::system
 		void onUpdateEnd() override;
 	};
 }
+
+

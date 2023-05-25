@@ -172,6 +172,7 @@
     <ClCompile Include="src\Systems\Gameplay\ItemDurabilitySystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HorrorSpawningSystem.cpp" />
+    <ClCompile Include="src\Systems\Helpers\SpendActionPoints.cpp" />
     <ClCompile Include="src\Systems\Rendering\PlayerFOVSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DayNightCycleSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp" />
@@ -293,8 +294,14 @@
     <ClCompile Include="src\Utility\stdHashing.cpp" />
     <ClCompile Include="src\Utility\Visibility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\UseItemSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\StaminaSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\WaitingSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Events\LeaveTileEvent.h" />
+    <ClInclude Include="src\Events\EnterTileEvent.h" />
+    <ClInclude Include="src\Events\TurnEndEvent.h" />
+    <ClInclude Include="src\Events\TurnStartEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\LiquidSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\ItemDurabilitySystem.h" />
     <ClInclude Include="src\Events\ItemBreakEvent.h" />
@@ -302,6 +309,7 @@
     <ClInclude Include="src\Systems\Gameplay\HorrorSpawningSystem.h" />
     <ClInclude Include="src\Events\DayStartEvent.h" />
     <ClInclude Include="src\Events\NightStartEvent.h" />
+    <ClInclude Include="src\Systems\Helpers\SpendActionPoints.h" />
     <ClInclude Include="src\Systems\Rendering\PlayerFOVSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DayNightCycleSystem.h" />
     <ClInclude Include="src\Events\GameTickEvent.h" />
@@ -558,6 +566,8 @@
     <ClInclude Include="src\Utility\stdHashing.h" />
     <ClInclude Include="src\Utility\Visibility.h" />
     <ClInclude Include="src\Systems\Gameplay\UseItemSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\StaminaSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\WaitingSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\biomes\biomes.json" />

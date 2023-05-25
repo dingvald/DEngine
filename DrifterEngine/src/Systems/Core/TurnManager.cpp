@@ -3,6 +3,8 @@
 #include "Components/Components.h"
 #include "Components/Tags.h"
 #include "Events/GameTickEvent.h"
+#include "Events/TurnStartEvent.h"
+#include "Events/TurnEndEvent.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::TurnManager::init()
@@ -32,9 +34,18 @@ void drft::system::TurnManager::update(const float)
 
 	if (_currentActor != _previousActor)
 	{
-
+		auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+		if (_previousActor != _timeKeeper)
+		{
+			dispatcher.trigger(events::TurnEndEvent(_previousActor));
+		}
+		if (_currentActor != _timeKeeper)
+		{
+			dispatcher.trigger(events::TurnStartEvent(_currentActor));
+		}
 	}
 
+	_previousActor = _currentActor;
 	if (_currentActor == _timeKeeper)
 	{
 		_actorQueue->tick();
@@ -43,7 +54,6 @@ void drft::system::TurnManager::update(const float)
 		return;
 	}
 	registry->emplace_or_replace<component::tag::CurrentActor>(_currentActor);
-	_previousActor = _currentActor;
 }
 
 void drft::system::TurnManager::shutdown()

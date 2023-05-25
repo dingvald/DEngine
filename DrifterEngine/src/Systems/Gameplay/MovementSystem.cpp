@@ -4,6 +4,7 @@
 #include "Spatial/Conversions.h"
 #include "Components/Components.h"
 #include "Components/Tags.h"
+#include "Systems/Helpers/SpendActionPoints.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::MovementSystem::init()
@@ -12,13 +13,10 @@ void drft::system::MovementSystem::init()
 
 void drft::system::MovementSystem::update(const float dt)
 {
-	auto moveView = registry->view<component::action::Move, component::tag::Active>();
-	for (auto [entity, move] : moveView.each())
+	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+	auto moveView = registry->view<component::action::Move, component::Position, component::tag::Active>();
+	for (auto [entity, move, pos] : moveView.each())
 	{
-		if (!registry->all_of<component::Position>(entity)) {
-			registry->remove<component::action::Move>(entity);
-			continue;
-		}
 		if (move.direction == sf::Vector2i{ 0,0 })
 		{
 			registry->emplace_or_replace<component::action::Wait>(entity);
@@ -26,41 +24,38 @@ void drft::system::MovementSystem::update(const float dt)
 			continue;
 		}
 
-		const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
-		auto& posComp = registry->get<component::Position>(entity);
-		sf::Vector2i targetPosition = spatial::toTileSpace(posComp.position) + move.direction;
-
-		const auto blockers = grid.entitiesAt(targetPosition);
-		bool canMove = true;
-		for (auto blocker : blockers)
-		{
-			if (auto physical = registry->try_get<component::Physical>(blocker))
+		sf::Vector2i targetPosition = spatial::toTileSpace(pos.position) + move.direction;
+		const auto blockers = grid.entitiesAt(targetPosition,
+			[this](entt::entity entity) -> bool
 			{
-				if (physical->blocks)
+				if (auto physical = registry->try_get<component::Physical>(entity))
 				{
-					registry->emplace_or_replace<component::action::LaunchAttack>(entity, move.direction);
-					canMove = false;
+					if (physical->blocks)
+					{
+						return true;
+					}
 				}
-			}
-		}
-		if (canMove)
+				return false;
+			});
+
+		if (blockers.empty())
 		{
 			registry->patch<component::Position>(entity,
 				[&targetPosition](component::Position& pos)
 				{
 					pos.position = spatial::toWorldSpace(targetPosition);
 				});
-			const int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Move);
-			registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);
+			registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -1);
+			spendActionPoints(*registry, entity, ActionType::Move);
 		}
-		
-		registry->remove<component::action::Move>(entity);
+		else
+		{
+			registry->emplace_or_replace<component::action::LaunchAttack>(entity, move.direction);
+		}
 	}
+}
 
-	auto waitView = registry->view<component::action::Wait, component::tag::Active>();
-	for (auto entity : waitView)
-	{
-		registry->emplace_or_replace<component::action::SpendPoints>(entity, 100);
-		registry->remove<component::action::Wait>(entity);
-	}
+void drft::system::MovementSystem::onUpdateEnd()
+{
+	registry->clear<component::action::Move>();
 }

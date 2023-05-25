@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "LaunchAttackSystem.h"
+#include "Systems/Helpers/SpendActionPoints.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Components/Components.h"
@@ -24,26 +25,27 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
 		sf::Vector2i targetPosition = spatial::toTileSpace(pos.position) + attack.direction;
 
-		bool attacked = false;
-		const auto targets = grid.entitiesAt(targetPosition);
+		const auto targets = grid.entitiesAt(targetPosition,
+			[this](entt::entity entity) -> bool
+			{
+				if (auto physical = registry->try_get<component::Physical>(entity))
+				{
+					if (physical->blocks) return true;
+				}
+				return false;
+			});
+
+		if (targets.empty()) continue;
 		for (auto target : targets)
 		{
-			if (auto physical = registry->try_get<component::Physical>(target))
-			{
-				if (physical->blocks)
-				{
-					std::cout << "The " << util::getEntityName({ *registry, entity }) << " attacks the " << util::getEntityName({ *registry, target }) << std::endl;
-					registry->emplace_or_replace<component::action::TakeDamage>(target, attack.damage);
-					attacked = true;
-				}
-			}
+			std::cout << "The " << util::getEntityName({ *registry, entity }) << " attacks the " << util::getEntityName({ *registry, target }) << std::endl;
+			registry->emplace_or_replace<component::action::TakeDamage>(target, attack.damage);
 		}
-		if (attacked)
-		{
-			int actionCost = util::getActionCost({ *registry, entity }, 100, util::ActionType::Act);
-			registry->emplace_or_replace<component::action::SpendPoints>(entity, actionCost);
-		}
-		
-		registry->remove<component::action::LaunchAttack>(entity);
+		spendActionPoints(*registry, entity, ActionType::Act);
 	}
+}
+
+void drft::system::LaunchAttackSystem::onUpdateEnd()
+{
+	registry->clear<component::action::LaunchAttack>();
 }

@@ -25,6 +25,7 @@
 #include "Systems/Core/WorldGridResolver.h"
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/DamageSystem.h"
+#include "Systems/Gameplay/StaminaSystem.h"
 #include "Systems/Gameplay/DayNightCycleSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/DropItemSystem.h"
@@ -34,6 +35,7 @@
 #include "Systems/Gameplay/HorrorSpawningSystem.h"
 #include "Systems/Gameplay/CraftItemSystem.h"
 #include "Systems/Gameplay/MovementSystem.h"
+#include "Systems/Gameplay/WaitingSystem.h"
 #include "Systems/Gameplay/PickUpSystem.h"
 #include "Systems/Gameplay/LaunchAttackSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
@@ -232,6 +234,7 @@ void drft::GameState::importSystems()
 
 	_systems->add<HorrorSpawningSystem>(			Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
+	_systems->add<WaitingSystem>(					Phase::OnUpdate);
 	_systems->add<PickUpSystem>(					Phase::OnUpdate);
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
 	_systems->add<EquipItemSystem>(					Phase::OnUpdate);
@@ -244,6 +247,7 @@ void drft::GameState::importSystems()
 	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
 	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
 	_systems->add<DamageSystem>(					Phase::OnUpdate + 10);
+	_systems->add<StaminaSystem>(					Phase::OnUpdate + 10);
 	_systems->add<ItemDurabilitySystem>(			Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);
 

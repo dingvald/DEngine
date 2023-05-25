@@ -12,11 +12,20 @@ namespace drft::system
 		void render(sf::RenderTarget& target) override;
 
 	private:
+		void createHealthBar();
+		void createStaminaBar();
+		void createInHandsDisplay();
 		void addItemIcon(gui::Element& container, entt::entity item);
+
 	private:
 		sf::RectangleShape _healthBar{};
 		sf::RectangleShape _healthBarContainer{};
 		sf::Sprite _heartIcon{};
+
+		sf::RectangleShape _staminaBar{};
+		sf::RectangleShape _staminaBarContainer{};
+		sf::Sprite _staminaIcon{};
+
 		gui::DualContainer _inHandsDisplay;
 	};
 }

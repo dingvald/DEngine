@@ -21,9 +21,12 @@ void drft::system::DropItemSystem::update(const float dt)
 			auto itemEntity = util::ItemIDToEntityID(item, *registry);
 			registry->emplace<component::Position>(itemEntity, pos.position);
 		}
-
-		registry->remove<component::action::Drop>(entity);
 	}
+}
+
+void drft::system::DropItemSystem::onUpdateEnd()
+{
+	registry->clear<component::action::Drop>();
 }
 
 void drft::system::DropItemSystem::onItemDropped(entt::registry& registry, entt::entity entity)

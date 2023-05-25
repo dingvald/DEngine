@@ -85,6 +85,13 @@ namespace component
 		int current = 10;
 	};
 
+	struct Stamina
+	{
+		int max = 10;
+		int current = 10;
+		int baseConsumption = 0;
+	};
+
 	struct Attacker
 	{
 		int baseDamage = 1;
@@ -149,6 +156,7 @@ namespace component
 	{
 		std::string action;
 		std::unordered_map<std::string, float> params;
+		bool consumes = false;
 	};
 
 	struct Horror
@@ -223,4 +231,9 @@ namespace component::action
 	struct OpenWorldMap {};
 
 	struct OpenCrafting {};
+
+	struct ConsumeStamina
+	{
+		int amount = 0;
+	};
 }

@@ -572,8 +572,6 @@ void drft::InventoryState::setupEquipmentGrid()
 				const auto itemEntity = util::ItemIDToEntityID(entityBody.parts.at(slotName.data()), getContext().registry);
 				if (itemEntity != entt::null)
 				{
-					const auto& itemRender = getContext().registry.get<component::Render>(itemEntity);
-					const auto& sprites = getContext().textures.get("Sprites");
 					addItemIcon(equipmentGrid[slotName.data()], itemEntity);
 				}
 				else
@@ -587,7 +585,10 @@ void drft::InventoryState::setupEquipmentGrid()
 								.fillColor = sf::Color(80,80,80,150)
 							})
 						.setStyle(gui::ElementState::Focused, {
-								.fillColor = sf::Color(80,80,80,150)
+								.fillColor = sf::Color(120,120,120,150)
+							})
+						.setStyle(gui::ElementState::Unselectable, {
+								.fillColor = sf::Color(40,40,40,150)
 							});
 				}
 			}
