@@ -12,7 +12,7 @@ void drft::system::Camera::init()
 	
 }
 
-void drft::system::Camera::onStart()
+void drft::system::Camera::onStart(bool)
 {
 	_camera = registry->create();
 	int viewportWidth = registry->ctx().get<const sf::RenderWindow&>().getView().getSize().x;

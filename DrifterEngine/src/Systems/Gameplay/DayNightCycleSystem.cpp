@@ -14,11 +14,6 @@ void drft::system::DayNightCycleSystem::init()
 	dispatcher.sink<events::GameTickEvent>().connect<&DayNightCycleSystem::onGameTickEvent>(this);
 }
 
-void drft::system::DayNightCycleSystem::onStart()
-{
-
-}
-
 void drft::system::DayNightCycleSystem::fixedUpdate()
 {
 	const auto color = determineSunColor();

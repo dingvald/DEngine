@@ -8,7 +8,6 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void onStart() override;
 		void fixedUpdate() override;
 		void save(cereal::JSONOutputArchive& oarchive) override;
 		void load(cereal::JSONInputArchive& iarchive) override;

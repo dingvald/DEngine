@@ -31,7 +31,7 @@ namespace drft::system
 	public:
 		SystemScheduler(entt::registry& registry) : _registry(registry) {}
 
-		void startAll() const;
+		void startAll(bool isNewGame) const;
 		void initAll() const;
 		void loadAll(cereal::JSONInputArchive& iarchive);
 

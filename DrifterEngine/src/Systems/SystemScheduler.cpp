@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "SystemScheduler.h"
 
-void drft::system::SystemScheduler::startAll() const
+void drft::system::SystemScheduler::startAll(bool isNewGame) const
 {
 	std::cout << "Starting Systems..." << std::endl;
 	for (auto& [_, systems] : _systems)
 	{
 		for (auto& [system, _] : systems)
 		{
-			system->onStart();
+			system->onStart(isNewGame);
 			std::string typeName = typeid(*system).name();
 			std::cout << "Starting " << typeName << "..." << std::endl;
 		}

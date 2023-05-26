@@ -33,7 +33,7 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void onStart() override;
+		void onStart(bool isNewGame) override;
 		void update(const float dt) override;
 		void shutdown() override;
 
@@ -46,7 +46,6 @@ namespace drft::system
 		std::unique_ptr<ActorQueue> _actorQueue;
 		std::set<entt::entity> _managedEntities;
 		entt::entity _timeKeeper = entt::null;
-
 		entt::entity _currentActor = entt::null;
 		entt::entity _previousActor = entt::null;
 	};

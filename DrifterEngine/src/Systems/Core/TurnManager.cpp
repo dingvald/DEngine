@@ -15,7 +15,7 @@ void drft::system::TurnManager::init()
 	_actorQueue = std::make_unique<ActorQueue>(*registry);
 }
 
-void drft::system::TurnManager::onStart()
+void drft::system::TurnManager::onStart(bool)
 {
 	_timeKeeper = registry->create();
 	registry->emplace<component::Actor>(_timeKeeper, 0, 1.0f, 1.0f);

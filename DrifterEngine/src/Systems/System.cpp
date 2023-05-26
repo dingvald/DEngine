@@ -13,7 +13,7 @@ void drft::system::System::setScheduler(system::SystemScheduler& scheduler)
 	this->_scheduler = &scheduler;
 }
 
-void drft::system::System::onStart()
+void drft::system::System::onStart(bool)
 {
 }
 

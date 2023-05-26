@@ -21,7 +21,7 @@ namespace drft::system
 
 		void setRegistry(entt::registry& registry);
 		void setScheduler(system::SystemScheduler& scheduler);
-		virtual void onStart();
+		virtual void onStart(bool isNewGame);
 		virtual void init() = 0;
 
 		virtual void save(cereal::JSONOutputArchive& oarchive);

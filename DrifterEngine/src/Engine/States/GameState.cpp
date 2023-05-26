@@ -41,6 +41,7 @@
 #include "Systems/Gameplay/LaunchAttackSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
+#include "Systems/Gameplay/QuestingSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/OpenInventorySystem.h"
 #include "Systems/Gameplay/OpenEquipmentSystem.h"
@@ -88,10 +89,10 @@ void drft::GameState::init()
 	importSystems();
 	loadEntityPrototypes();
 	loadRegistry();
-	loadOrCreatePlayer();
+	bool isNewGame = loadOrCreatePlayer();
 
 	std::cout << "Starting Gamestate" << std::endl;
-	_systems->startAll();
+	_systems->startAll(isNewGame);
 }
 
 void drft::GameState::connectEventHandlers()
@@ -117,7 +118,7 @@ void drft::GameState::loadOrCreateGameSeed()
 	}
 }
 
-void drft::GameState::loadOrCreatePlayer()
+bool drft::GameState::loadOrCreatePlayer()
 {
 	std::string playerDataPath = std::string(SAVE_DIRECTORY.data()) + PLAYER_FILE_NAME.data() + ".json";
 
@@ -125,12 +126,15 @@ void drft::GameState::loadOrCreatePlayer()
 	{
 		_player = { getContext().registry, getContext().registry.create()};
 		_player = util::loadEntityFromFile(_player, SAVE_DIRECTORY.data(), PLAYER_FILE_NAME.data(), util::SerializeOption::JSON);
+		return false;
 	}
 	else
 	{
 		assert(_factory->has("Player"), "No player prototype found - is JSON loaded?");
 		_player = _factory->build("Player", getContext().registry);
+		return true;
 	}
+	return true;
 }
 
 void drft::GameState::loadEntityPrototypes()
@@ -263,6 +267,7 @@ void drft::GameState::importSystems()
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 5);
+	_systems->add<QuestingSystem>(					Phase::OnFixedUpdate + 10);
 
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<HUD>(								Phase::OnRender + 5);
