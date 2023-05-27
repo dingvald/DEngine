@@ -166,8 +166,9 @@ namespace component
 
 	struct Usable
 	{
+		using Parameters = std::unordered_map<std::string, std::string>;
 		std::string action;
-		std::unordered_map<std::string, float> params;
+		Parameters params;
 		bool consumes = false;
 	};
 
@@ -249,5 +250,10 @@ namespace component::action
 	struct ConsumeStamina
 	{
 		float amount = 0.f;
+	};
+
+	struct DisplayText
+	{
+		std::unordered_map<std::string, std::string> parameters;
 	};
 }

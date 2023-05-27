@@ -55,7 +55,10 @@ namespace drft::util
 		InLiquidEffect,
 		Butterfly,
 		Diamond,
-		StatusEffect
+		StatusEffect,
+		Ephemera,
+		X,
+		DungeonKey
 	};
 
 	class SpriteIndexer

@@ -208,7 +208,7 @@
           "Data": {
             "action": "Heal",
             "params": {
-              "Amount": 1.0
+              "Amount": "1"
             },
             "consumes": true
           }
@@ -267,7 +267,7 @@
           "Data": {
             "action": "Heal",
             "params": {
-              "Amount": 10.0
+              "Amount": "10"
             },
             "consumes": true
           }
@@ -949,6 +949,121 @@
               "Twine": 1,
               "Flint": 1
             }
+          }
+        }
+      ]
+    },
+    // Ephemera
+    {
+      "Name": "Ephemera",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Ephemera",
+            "extendedName": "",
+            "description": "Old paper containing old words."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 52,
+            "layer": 1,
+            "color": [ 224, 201, 166 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 0.3,
+            "materials": [
+              "Plant Fibre"
+            ]
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Usable",
+          "Data": {
+            "action": "Read",
+            "params": {
+              "Type": "Text",
+              "Content": ""
+            },
+            "consumes": false
+          }
+        }
+      ]
+    },
+    // Dungeon Key
+    {
+      "Name": "Dungeon Key",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Dungeon Key",
+            "extendedName": "",
+            "description": "A mysterious key. What does it open?"
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 54,
+            "layer": 1,
+            "color": [ 212, 175, 55 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 0.3,
+            "materials": [
+              "Gold"
+            ]
+          }
+        },
+        {
+          "Name": "LightSource",
+          "Data": {
+            "radius": 6,
+            "dropOff": 0.2,
+            "color": [ 255, 255, 0 ]
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
           }
         }
       ]

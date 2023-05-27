@@ -152,6 +152,15 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 							}
 							meta.data(entt::hashed_string(memberName)).set(any, map);
 						}
+						else if (component["Data"][memberName].GetObject().begin()->value.IsString())
+						{
+							std::unordered_map<std::string, std::string> map;
+							for (auto&& mapData : component["Data"][memberName].GetObject())
+							{
+								map.emplace(mapData.name.GetString(), mapData.value.GetString());
+							}
+							meta.data(entt::hashed_string(memberName)).set(any, map);
+						}
 					}
 					else if (data.value.IsBool())
 					{

@@ -168,11 +168,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Engine\States\DisplayTextState.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\QuestingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\SprintingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LiquidSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ItemDurabilitySystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HorrorSpawningSystem.cpp" />
+    <ClCompile Include="src\Systems\Helpers\AddToContainer.cpp" />
     <ClCompile Include="src\Systems\Helpers\SpendActionPoints.cpp" />
     <ClCompile Include="src\Systems\Rendering\PlayerFOVSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DayNightCycleSystem.cpp" />
@@ -299,6 +302,8 @@
     <ClCompile Include="src\Systems\Gameplay\WaitingSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\States\DisplayTextState.h" />
+    <ClInclude Include="src\Systems\Gameplay\QuestingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\SprintingSystem.h" />
     <ClInclude Include="src\Events\LeaveTileEvent.h" />
     <ClInclude Include="src\Events\EnterTileEvent.h" />
@@ -311,6 +316,7 @@
     <ClInclude Include="src\Systems\Gameplay\HorrorSpawningSystem.h" />
     <ClInclude Include="src\Events\DayStartEvent.h" />
     <ClInclude Include="src\Events\NightStartEvent.h" />
+    <ClInclude Include="src\Systems\Helpers\AddToContainer.h" />
     <ClInclude Include="src\Systems\Helpers\SpendActionPoints.h" />
     <ClInclude Include="src\Systems\Rendering\PlayerFOVSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DayNightCycleSystem.h" />

@@ -292,9 +292,9 @@ void drft::InventoryState::setupInventoryGrid()
 								.registerCallback(gui::ElementCallbackType::OnSelect,
 									[this, itemEntity, itemID]() -> bool
 									{
-										getContext().registry.emplace_or_replace<component::action::Use>(_sessionEntities.front(), itemEntity, itemID);
-										_inventoryStack.clear();
 										requestStackPop();
+										getContext().registry.emplace_or_replace<component::action::Use>(_sessionEntities.front(), itemEntity, itemID);
+										
 										return true;
 									});
 						}

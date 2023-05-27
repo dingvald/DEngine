@@ -69,7 +69,7 @@ void drft::WorldMapState::onPush()
 	{
 		_currentPosition = spatial::toChunkCoordinate(pos.position);
 	}
-	auto surroundings = spatial::getIntCircleInRadius(_currentPosition, 15);
+	const auto surroundings = spatial::getIntCircleInRadius(_currentPosition, 15);
 	const auto& generator = getContext().registry.ctx().get<const gen::WorldGenerator&>();
 	for (auto pos : surroundings)
 	{

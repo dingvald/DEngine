@@ -17,6 +17,11 @@ void drft::system::UseItemSystem::update(const float dt)
 	}
 }
 
+void drft::system::UseItemSystem::onUpdateEnd()
+{
+	registry->clear<component::action::Use>();
+}
+
 void drft::system::UseItemSystem::onUseItem(entt::registry& registry, entt::entity entity)
 {
 	auto& useAction = registry.get<component::action::Use>(entity);
@@ -30,5 +35,4 @@ void drft::system::UseItemSystem::onUseItem(entt::registry& registry, entt::enti
 				cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), useAction.item), cont.contents.end());
 			});
 	}
-	registry.remove<component::action::Use>(entity);
 }
