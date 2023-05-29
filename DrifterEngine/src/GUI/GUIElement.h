@@ -1,6 +1,18 @@
 #pragma once
 #include "Utility/SpriteIndexer.h"
 
+/*
+Things I apologize for in the following code:
+
+- All derived classes are in the same file
+- Most code is located in the header
+- Multiple classes that are only used for specific things
+- Not the cleanest interface
+- Using an "onUpdate" callback to inject runtime logic into concrete classes
+
+Sorry.
+*/
+
 namespace drft::gui
 {
 	enum class ElementState
@@ -63,7 +75,6 @@ namespace drft::gui
 		}
 		bool update(const float dt)
 		{
-			if (!_isVisible) return true;
 			if (!_isInitialized)
 			{
 				init();
@@ -462,7 +473,6 @@ namespace drft::gui
 				_callback.at(ElementCallbackType::OnLeave)();
 			}
 		}
-		
 
 	private:
 		virtual void applyStyle()

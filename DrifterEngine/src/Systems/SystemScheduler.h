@@ -44,7 +44,6 @@ namespace drft::system
 			{
 				_systems[PhaseCategory::OnRender].push_back({ std::make_unique<T>(), priority });
 				_systems[PhaseCategory::OnRender].back().system->setRegistry(_registry);
-				_systems[PhaseCategory::OnRender].back().system->setScheduler(*this);
 				std::stable_sort(_systems[PhaseCategory::OnRender].begin(), _systems[PhaseCategory::OnRender].end(),
 					[](const SystemPriorityPair& lhs, const SystemPriorityPair& rhs)
 					{
@@ -55,13 +54,11 @@ namespace drft::system
 			{
 				_systems[PhaseCategory::Reactive].push_back({ std::make_unique<T>(), priority });
 				_systems[PhaseCategory::Reactive].back().system->setRegistry(_registry);
-				_systems[PhaseCategory::Reactive].back().system->setScheduler(*this);
 			}
 			else if (priority < static_cast<int>(Phase::OnFixedUpdate))
 			{
 				_systems[PhaseCategory::OnUpdate].push_back({ std::make_unique<T>(), priority });
 				_systems[PhaseCategory::OnUpdate].back().system->setRegistry(_registry);
-				_systems[PhaseCategory::OnUpdate].back().system->setScheduler(*this);
 				std::stable_sort(_systems[PhaseCategory::OnUpdate].begin(), _systems[PhaseCategory::OnUpdate].end(),
 					[](const SystemPriorityPair& lhs, const SystemPriorityPair& rhs)
 					{
@@ -72,7 +69,6 @@ namespace drft::system
 			{
 				_systems[PhaseCategory::OnFixedUpdate].push_back({ std::make_unique<T>(), priority });
 				_systems[PhaseCategory::OnFixedUpdate].back().system->setRegistry(_registry);
-				_systems[PhaseCategory::OnFixedUpdate].back().system->setScheduler(*this);
 				std::stable_sort(_systems[PhaseCategory::OnFixedUpdate].begin(), _systems[PhaseCategory::OnFixedUpdate].end(),
 					[](const SystemPriorityPair& lhs, const SystemPriorityPair& rhs)
 					{

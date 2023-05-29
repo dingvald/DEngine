@@ -20,9 +20,9 @@ namespace drft::system
 		virtual ~System() = default;
 
 		void setRegistry(entt::registry& registry);
-		void setScheduler(system::SystemScheduler& scheduler);
-		virtual void onStart(bool isNewGame);
+
 		virtual void init() = 0;
+		virtual void onStart(bool isNewGame);
 
 		virtual void save(cereal::JSONOutputArchive& oarchive);
 		virtual void load(cereal::JSONInputArchive& iarchive);
@@ -37,9 +37,6 @@ namespace drft::system
 
 	protected:
 		entt::registry* registry = nullptr;
-
-	private:
-		SystemScheduler* _scheduler = nullptr;
 	};
 
 } // namespace drft::system
