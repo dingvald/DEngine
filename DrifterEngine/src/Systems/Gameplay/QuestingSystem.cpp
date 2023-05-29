@@ -76,7 +76,7 @@ void drft::system::QuestingSystem::setNewGoalPosition(sf::Vector2i currentCoordi
 	const auto& generator = registry->ctx().get<const gen::WorldGenerator&>();
 	_goalPosition = rng::RandomNumberGenerator::positionInCircle(currentCoordinate, MAXIMUM_GOAL_DISTANCE);
 	while (spatial::distance(currentCoordinate, _goalPosition) < MINIMUM_GOAL_DISTANCE
-		&& generator.getBiomeType(_goalPosition) == gen::BiomeType::Lake)
+		|| generator.getBiomeType(_goalPosition) == gen::BiomeType::Lake)
 	{
 		_goalPosition = rng::RandomNumberGenerator::positionInCircle(currentCoordinate, MAXIMUM_GOAL_DISTANCE);
 	}
