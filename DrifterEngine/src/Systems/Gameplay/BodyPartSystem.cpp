@@ -26,7 +26,7 @@ void drft::system::BodyPartSystem::update(const float dt)
 			}
 			if (auto sharpComp = registry->try_get<component::Sharp>(rightHandItem))
 			{
-				sharpness += ((sharpComp->sharpness * sharpComp->sharpness) * 0.5);
+				sharpness += ((sharpComp->sharpness * sharpComp->sharpness) * 0.5f);
 			}
 			if (auto healthComp = registry->try_get<component::Health>(rightHandItem))
 			{

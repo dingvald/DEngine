@@ -3,7 +3,7 @@
 #include "Components/Components.h"
 #include "Utility/SpriteIndexer.h"
 
-static constexpr float PI = 3.141592;
+static constexpr float PI = 3.141592f;
 
 void drft::system::SprintingSystem::init()
 {

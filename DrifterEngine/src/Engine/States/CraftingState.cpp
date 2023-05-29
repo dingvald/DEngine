@@ -288,7 +288,7 @@ void drft::CraftingState::refreshCraftingList()
 						sf::Sprite matSprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(matRender.sprite), sprites) };
 						std::string matstr = std::to_string(matCount);
 						sf::Color numberColor = sf::Color::White;
-						if (materialCount[matName] < amount)
+						if (materialCount[matName] < static_cast<int>(amount))
 						{
 							numberColor = sf::Color(80, 80, 80);
 						}

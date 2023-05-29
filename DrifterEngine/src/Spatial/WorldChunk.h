@@ -19,7 +19,7 @@ namespace drft::spatial
 		bool moveEntity(const entt::entity, const sf::Vector2i fromChunkPosition, const sf::Vector2i toChunkPosition);
 		std::vector<entt::entity> entitiesAt(sf::Vector2i chunkPosition) const;
 		std::vector<entt::entity> getAllEntities();
-		// Checks if the chunk contains no entities
+		// Checks if the chunk contains any entities
 		bool empty() const;
 
 	private:

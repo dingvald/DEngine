@@ -31,12 +31,12 @@ void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::regis
 	{
 		bool hasSome = false;
 		bool hasAll = true;
-		for (auto&& [matName, quant] : craftable.recipe)
+		for (auto&& [matName, quantity] : craftable.recipe)
 		{
 			if (inventoryContents.contains(matName))
 			{
 				hasSome = true;
-				if (inventoryContents.at(matName) < quant)
+				if (inventoryContents.at(matName) < static_cast<int>(quantity))
 				{
 					hasAll = false;
 				}

@@ -97,7 +97,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\deps\SFML-2.5.1\include;$(SolutionDir)DrifterEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
@@ -120,6 +120,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,7 +141,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\deps\SFML-2.5.1\include;$(SolutionDir)DrifterEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
@@ -163,6 +164,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

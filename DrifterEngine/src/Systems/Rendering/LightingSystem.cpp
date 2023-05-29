@@ -61,7 +61,7 @@ void drft::system::LightingSystem::fixedUpdate()
 	auto lighting = registry->view<const component::LightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : lighting.each())
 	{
-		_fov->compute(spatial::toTileSpace(lightpos.position), light.radius);
+		_fov->compute(spatial::toTileSpace(lightpos.position), static_cast<int>(light.radius));
 		for (auto entity : _toLight)
 		{
 			auto pos = registry->get<component::Position>(entity);
@@ -91,7 +91,7 @@ void drft::system::LightingSystem::fixedUpdate()
 	auto tempLighting = registry->view<const component::TempLightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : tempLighting.each())
 	{
-		_fov->compute(spatial::toTileSpace(lightpos.position), light.radius);
+		_fov->compute(spatial::toTileSpace(lightpos.position), static_cast<int>(light.radius));
 		for (auto entity : _toLight)
 		{
 			auto pos = registry->get<component::Position>(entity);
