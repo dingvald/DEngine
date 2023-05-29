@@ -8,6 +8,11 @@
 static constexpr int DAY_START_HOUR = 5;
 static constexpr int NIGHT_START_HOUR = 23;
 
+static constexpr int SECONDS_PER_TICK = 30;
+static constexpr int SECONDS_PER_MINUTE = 60;
+static constexpr int MINUTES_PER_HOUR = 60;
+static constexpr int HOURS_PER_DAY = 24;
+
 void drft::system::DayNightCycleSystem::init()
 {
 	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
@@ -42,18 +47,18 @@ void drft::system::DayNightCycleSystem::load(cereal::JSONInputArchive& iarchive)
 
 void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEvent& ev)
 {
-	_seconds += 30;
-	if (_seconds >= 60)
+	_seconds += SECONDS_PER_TICK;
+	if (_seconds >= SECONDS_PER_MINUTE)
 	{
 		++_minutes;
-		_seconds -= 60;
+		_seconds -= SECONDS_PER_MINUTE;
 	}
-	if (_minutes >= 60)
+	if (_minutes >= MINUTES_PER_HOUR)
 	{
 		++_hours;
 		_minutes = 0;
 	}
-	if (_hours >= 24)
+	if (_hours >= HOURS_PER_DAY)
 	{
 		++_days;
 		_hours = 0;
@@ -83,26 +88,30 @@ sf::Color drft::system::DayNightCycleSystem::determineSunColor() const
 	// First Dawn
 	else if (_hours >= DAY_START_HOUR && _hours < 8)
 	{
-		util::SmoothColorTransition color({ 20,20,40 }, { 150,150,255 }, 5*60, 7*60);
-		result = color.compute(_hours*60 + _minutes);
+		util::SmoothColorTransition color({ 20,20,40 }, { 150,150,255 }, 
+			DAY_START_HOUR * MINUTES_PER_HOUR, 7 * MINUTES_PER_HOUR);
+		result = color.compute(_hours * MINUTES_PER_HOUR + _minutes);
 	}
 	// Early Dawn
 	else if (_hours >= 8 && _hours < 10)
 	{
-		util::SmoothColorTransition color({ 150,150,255 }, { 255,255,255 }, 8*60, 9*60);
-		result = color.compute(_hours*60 + _minutes);
+		util::SmoothColorTransition color({ 150,150,255 }, { 255,255,255 }, 
+			8*MINUTES_PER_HOUR, 9*MINUTES_PER_HOUR);
+		result = color.compute(_hours * MINUTES_PER_HOUR + _minutes);
 	}
 	// Early Dusk
 	else if (_hours >= 18 && _hours < 20)
 	{
-		util::SmoothColorTransition color({ 255,255,255 }, { 255,200,100 }, 18*60, 19*60);
-		result = color.compute(_hours*60 + _minutes);
+		util::SmoothColorTransition color({ 255,255,255 }, { 255,200,100 }, 
+			18 * MINUTES_PER_HOUR, 19 * MINUTES_PER_HOUR);
+		result = color.compute(_hours * MINUTES_PER_HOUR + _minutes);
 	}
 	// Late Dusk
 	else if (_hours >= 20 && _hours < NIGHT_START_HOUR)
 	{
-		util::SmoothColorTransition color({ 255,200,100 }, { 30,30,50 }, 20*60, 21*60);
-		result = color.compute(_hours*60 + _minutes);
+		util::SmoothColorTransition color({ 255,200,100 }, { 30,30,50 }, 
+			20 * MINUTES_PER_HOUR, 22 * MINUTES_PER_HOUR);
+		result = color.compute(_hours * MINUTES_PER_HOUR + _minutes);
 	}
 
 	return result;
