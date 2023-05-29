@@ -21,7 +21,7 @@ namespace drft::spatial
 		// Places entity in world tile position.
 		void placeEntity(const entt::entity entity, const sf::Vector2i tilePosition);
 
-		// Removes entity from given world tile position and returns that entity.
+		// Removes entity from given world tile position.
 		void removeEntity(const entt::entity entity);
 
 		// Moves entity from one world tile position to another and returns if successful.
@@ -33,7 +33,6 @@ namespace drft::spatial
 
 		// Returns all entities at the given world tile position.
 		const EntityList entitiesAt(const sf::Vector2i tilePosition) const;
-
 		const EntityList entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const;
 
 		// Chunks //

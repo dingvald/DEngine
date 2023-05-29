@@ -8,6 +8,7 @@ using namespace drft::spatial;
 
 void drft::spatial::WorldGrid::placeEntity(const entt::entity entity, const sf::Vector2i worldPosition)
 {
+	if (entity == entt::null) return;
 	auto chunkCoordinate = toChunkCoordinate(worldPosition);
 	auto localPosition = toLocalChunkSpace(worldPosition);
 	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
@@ -95,15 +96,17 @@ void drft::spatial::WorldGrid::removeChunk(const sf::Vector2i coordinate)
 
 EntityList drft::spatial::WorldGrid::getAllEntities(const sf::Vector2i coordinate) const
 {
-	if (_chunks.contains({ coordinate.x, coordinate.y }))
+	if (!_chunks.contains({ coordinate.x, coordinate.y }))
 	{
-		return _chunks.at({ coordinate.x, coordinate.y })->getAllEntities();
+		return EntityList{};
 	}
-	return std::vector<entt::entity>();
+	return _chunks.at({ coordinate.x, coordinate.y })->getAllEntities();
 }
 
 std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf::Vector2i pt2, heuristic costFunc) const
 {
+	// A* 
+
 	struct Node
 	{
 		sf::Vector2i value;

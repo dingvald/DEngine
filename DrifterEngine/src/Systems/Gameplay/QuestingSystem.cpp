@@ -35,6 +35,7 @@ void drft::system::QuestingSystem::onStart(bool isNewGame)
 			});
 		map.patch<component::Usable>([this](component::Usable& usable)
 			{
+				usable.action = "Read";
 				usable.params["Type"] = "map"; 
 				usable.params["X"] = std::to_string(_goalPosition.x);
 				usable.params["Y"] = std::to_string(_goalPosition.y);
