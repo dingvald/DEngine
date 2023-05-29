@@ -15,13 +15,13 @@ namespace component
 
 	struct Position
 	{
-		sf::Vector2f position = { 0,0 };
+		sf::Vector2f position = { 0.f,0.f };
 	};
 
 	struct Render
 	{
-		unsigned int sprite = 4;
-		unsigned int layer = 0;
+		unsigned int sprite = 4u;
+		unsigned int layer = 0u;
 		sf::Color color = sf::Color::Magenta;
 	};
 
@@ -32,8 +32,8 @@ namespace component
 
 	struct LightSource
 	{
-		float radius = 1;
-		float dropOff = 0.1;
+		float radius = 1.f;
+		float dropOff = 0.1f;
 		sf::Color color = sf::Color::White;
 	};
 
@@ -44,37 +44,37 @@ namespace component
 
 	struct TempLightSource
 	{
-		float radius = 1;
-		float dropOff = 0.1;
+		float radius = 1.f;
+		float dropOff = 0.1f;
 		sf::Color color = sf::Color::White;
 	};
 
 	struct LightBlocking
 	{
-		float opacity = 1.0;
+		float opacity = 1.0f;
 	};
 
 	struct Physical
 	{
 		bool blocks = false;
-		float weight = 0.0;
+		float weight = 0.0f;
 		std::vector<std::string> materials = {};
 	};
 
 	struct Liquid
 	{
-		float volume = 0.0; // Litres
+		float volume = 0.0f; // Litres
 	};
 
 	struct InLiquid
 	{
 		std::string liquidPrototype;
-		float volume = 0.0;
+		float volume = 0.0f;
 	};
 
 	struct Camera
 	{
-		sf::FloatRect viewport = { 0,0,0,0 };
+		sf::FloatRect viewport = { 0.f,0.f,0.f,0.f };
 		entt::entity target = { entt::null };
 	};
 
@@ -116,7 +116,6 @@ namespace component
 	struct Sprinting
 	{
 		sf::Vector2i direction = { 0,0 };
-		bool hasBeenApplied = false;
 	};
 
 	struct Body
@@ -193,16 +192,14 @@ namespace component::action
 
 	struct ToggleSprint {};
 
-	struct Wait
-	{};
+	struct Wait {};
 
 	struct TakeDamage
 	{
 		int amount = 0;
 	};
 
-	struct PickUp
-	{};
+	struct PickUp {};
 
 	struct SpendPoints
 	{

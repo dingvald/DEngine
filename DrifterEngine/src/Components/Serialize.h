@@ -92,7 +92,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, Sprinting& sprinting)
 	{
-		archive(sprinting.direction.x, sprinting.direction.y, sprinting.hasBeenApplied);
+		archive(sprinting.direction.x, sprinting.direction.y);
 	}
 
 	template<class Archive>
