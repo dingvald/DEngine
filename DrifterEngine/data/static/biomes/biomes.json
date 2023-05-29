@@ -34,10 +34,22 @@
         "Mosquito": {
           "Algorithm": "RandomSpread",
           "Params": {
-            "Number": 4
+            "Number": 5
           }
         },
         "Firefly": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 1
+          }
+        },
+        "Rat": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 3
+          }
+        },
+        "Cougar": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 1
@@ -97,7 +109,12 @@
         }
       },
       "Actors": {
-
+        "Golem": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 1
+          }
+        }
       }
     },
     "Lake": {
@@ -149,7 +166,7 @@
         "Alligator": {
           "Algorithm": "RandomSpread",
           "Params": {
-            "Number": 3
+            "Number": 4
           }
         }
       }
@@ -176,7 +193,7 @@
         }
       },
       "Actors": {
-        "Zol Gibbon": {
+        "Panther": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 4
@@ -215,7 +232,19 @@
         "Firefly": {
           "Algorithm": "RandomSpread",
           "Params": {
-            "Number": 2
+            "Number": 4
+          }
+        },
+        "Rattler": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 5
+          }
+        },
+        "Vulture": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 1
           }
         }
       }
@@ -252,6 +281,12 @@
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 6
+          }
+        },
+        "Rat": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 5
           }
         }
       }

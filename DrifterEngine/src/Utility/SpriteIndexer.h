@@ -58,7 +58,11 @@ namespace drft::util
 		StatusEffect,
 		Ephemera,
 		X,
-		DungeonKey
+		DungeonKey,
+		Rat,
+		Vulture,
+		Cougar,
+		Golem
 	};
 
 	class SpriteIndexer

@@ -208,7 +208,7 @@
           "Data": {
             "action": "Heal",
             "params": {
-              "Amount": "1"
+              "Amount": "2"
             },
             "consumes": true
           }
@@ -1443,8 +1443,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 1,
-            "current": 1
+            "max": 2,
+            "current": 2
           }
         },
         {
@@ -1463,6 +1463,269 @@
           "Name": "Faction",
           "Data": {
             "name": "bad"
+          }
+        }
+      ]
+    },
+    // Vulture
+    {
+      "Name": "Vulture",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Vulture",
+            "extendedName": "",
+            "description": "Carrion bird with sharp beak and talons."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 56,
+            "layer": 2,
+            "color": [ 80, 50, 50 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": true,
+            "weight": 3,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 1.8,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 16,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 30,
+            "current": 30
+          }
+        },
+        {
+          "Name": "Flying",
+          "Data": {
+            "standin": 0
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 4
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Rat
+    {
+      "Name": "Rat",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Rat",
+            "extendedName": "",
+            "description": "A small mammal with big ears."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 55,
+            "layer": 2,
+            "color": [ 140, 140, 140 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": true,
+            "weight": 5.0,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 1.0,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 12,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 10,
+            "current": 10
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 2
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Cougar
+    {
+      "Name": "Cougar",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Cougar",
+            "extendedName": "",
+            "description": "A fearsome mammal that stalks its prey."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 57,
+            "layer": 2,
+            "color": [ 255, 177, 51 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": true,
+            "weight": 90.0,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 2.0,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 12,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 60,
+            "current": 60
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 7
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
+    // Panther
+    {
+      "Name": "Panther",
+      "Inherits": [
+        "Cougar"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Panther",
+            "extendedName": "",
+            "description": "A fearsome mammal that stalks its prey."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 57,
+            "layer": 2,
+            "color": [ 40, 40, 40 ]
           }
         }
       ]
@@ -1544,6 +1807,83 @@
         }
       ]
     },
+    // Golum
+    {
+      "Name": "Golem",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Golem",
+            "extendedName": "",
+            "description": "A powerful mythical creature."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 58,
+            "layer": 2,
+            "color": [ 115, 105, 103 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": true,
+            "weight": 500.0,
+            "materials": [ "Corpse" ]
+          }
+        },
+        {
+          "Name": "Actor",
+          "Data": {
+            "ap": 0,
+            "moveSpeed": 0.7,
+            "actSpeed": 1.0
+          }
+        },
+        {
+          "Name": "AI",
+          "Data": {
+            "sightRange": 8,
+            "goals": [
+              "random_move",
+              "kill_target"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 80,
+            "current": 80
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 6
+          }
+        },
+        {
+          "Name": "Faction",
+          "Data": {
+            "name": "bad"
+          }
+        }
+      ]
+    },
     // Snake
     {
       "Name": "Snake",
@@ -1603,20 +1943,59 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 12,
-            "current": 12
+            "max": 30,
+            "current": 30
           }
         },
         {
           "Name": "Attacker",
           "Data": {
-            "baseDamage": 3
+            "baseDamage": 5
           }
         },
         {
           "Name": "Faction",
           "Data": {
             "name": "bad"
+          }
+        }
+      ]
+    },
+    // Rattler
+    {
+      "Name": "Rattler",
+      "Inherits": [
+        "Snake"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Rattler",
+            "extendedName": "",
+            "description": "If you can hear it it's too late'."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 36,
+            "layer": 2,
+            "color": [ 127, 118, 103 ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 20,
+            "current": 20
+          }
+        },
+        {
+          "Name": "Attacker",
+          "Data": {
+            "baseDamage": 6
           }
         }
       ]

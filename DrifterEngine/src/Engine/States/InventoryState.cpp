@@ -109,10 +109,10 @@ void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity ite
 			.setLocalPosition({ 0, 16})
 			.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
 			.setStyle(gui::ElementState::Idle, {
-				.fillColor = sf::Color(255,0,0,30)
+				.fillColor = sf::Color(255,0,0,60)
 				})
 			.setStyle(gui::ElementState::Focused, {
-				.fillColor = sf::Color(255,0,0,30)
+				.fillColor = sf::Color(255,0,0,60)
 				});
 	}
 }

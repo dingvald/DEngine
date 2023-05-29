@@ -10,8 +10,8 @@
 #include "Random/RandomNumberGenerator.h"
 
 
-static constexpr int MAXIMUM_GOAL_DISTANCE = 16;
-static constexpr int MINIMUM_GOAL_DISTANCE = 13;
+static constexpr int MAXIMUM_GOAL_DISTANCE = 18;
+static constexpr int MINIMUM_GOAL_DISTANCE = 15;
 
 void drft::system::QuestingSystem::init()
 {
@@ -22,7 +22,7 @@ void drft::system::QuestingSystem::onStart(bool isNewGame)
 {
 	if (isNewGame)
 	{
-		setNewGoalPosition();
+		setNewGoalPosition({0,0});
 
 		const auto& factory = registry->ctx().get<const EntityFactory&>();
 		auto player = registry->view<component::Player>();
@@ -69,15 +69,15 @@ void drft::system::QuestingSystem::load(cereal::JSONInputArchive& iarchive)
 	iarchive(cereal::make_nvp("Goal Position Y", _goalPosition.y));
 }
 
-void drft::system::QuestingSystem::setNewGoalPosition()
+void drft::system::QuestingSystem::setNewGoalPosition(sf::Vector2i currentCoordinate)
 {
 	_isGoalBuilt = false;
 	const auto& generator = registry->ctx().get<const gen::WorldGenerator&>();
-	_goalPosition = rng::RandomNumberGenerator::positionInCircle({ 0,0 }, MAXIMUM_GOAL_DISTANCE);
-	while (spatial::distance({ 0,0 }, _goalPosition) < MINIMUM_GOAL_DISTANCE
-		&& generator.getBiomeType(_goalPosition) != gen::BiomeType::Lake)
+	_goalPosition = rng::RandomNumberGenerator::positionInCircle(currentCoordinate, MAXIMUM_GOAL_DISTANCE);
+	while (spatial::distance(currentCoordinate, _goalPosition) < MINIMUM_GOAL_DISTANCE
+		&& generator.getBiomeType(_goalPosition) == gen::BiomeType::Lake)
 	{
-		_goalPosition = rng::RandomNumberGenerator::positionInCircle({ 0,0 }, MAXIMUM_GOAL_DISTANCE);
+		_goalPosition = rng::RandomNumberGenerator::positionInCircle(currentCoordinate, MAXIMUM_GOAL_DISTANCE);
 	}
 }
 
