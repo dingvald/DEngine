@@ -27,6 +27,9 @@ void component::Meta::initialize()
 		.data<&Render::layer>("layer"_hs)
 		.data<&Render::color>("color"_hs);
 
+	snapshot::reflectComponent<PlayerHasSeen, PLAYER_SEEN_STRING>()
+		.prop("serialize"_hs);
+
 	snapshot::reflectComponent<LightSource, LIGHTSOURCE_STRING>()
 		.prop("serialize"_hs)
 		.data<&LightSource::radius>("radius"_hs)

@@ -5,6 +5,7 @@
 constexpr std::string_view INFO_STRING = "Info";
 constexpr std::string_view POSITION_STRING = "Position";
 constexpr std::string_view RENDER_STRING = "Render";
+constexpr std::string_view PLAYER_SEEN_STRING = "PlayerHasSeen";
 constexpr std::string_view LIGHTSOURCE_STRING = "LightSource";
 constexpr std::string_view LIGHT_BLOCKING_STRING = "LightBlocking";
 constexpr std::string_view PHYSICAL_STRING = "Physical";

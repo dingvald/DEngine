@@ -25,6 +25,11 @@ namespace component
 		sf::Color color = sf::Color::Magenta;
 	};
 
+	struct PlayerHasSeen
+	{
+		bool standin = false;
+	};
+
 	struct Lit
 	{
 		sf::Color color = sf::Color::Black;
