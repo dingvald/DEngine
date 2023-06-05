@@ -38,6 +38,14 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(r,g,b, ren.color.a), {x, y});
 	}
 
+	const auto seenView = registry->view< const component::Position, const component::Render, const component::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
+	for (auto const& [entity, pos, ren, seen] : seenView.each())
+	{
+		float x = std::round(pos.position.x - viewport.left);
+		float y = std::round(pos.position.y - viewport.top);
+		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(15,15,15), { x, y });
+	}
+
 	for (auto& [layer, batch] : _spriteLayers)
 	{
 		target.draw(batch);

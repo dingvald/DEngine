@@ -47,6 +47,10 @@ void drft::system::PlayerFOVSystem::fixedUpdate()
 		for (auto entity : _toLight)
 		{
 			registry->emplace_or_replace<component::tag::InPlayerFOV>(entity);
+			if (!registry->all_of<component::Actor>(entity) && registry->all_of<component::tag::InViewport>(entity))
+			{
+				registry->emplace_or_replace<component::PlayerHasSeen>(entity);
+			}
 		}
 		_toLight.clear();
 	}
