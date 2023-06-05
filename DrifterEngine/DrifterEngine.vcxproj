@@ -217,6 +217,7 @@
     <ClCompile Include="src\Systems\Gameplay\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
+    <ClCompile Include="src\Utility\Statistics.cpp" />
     <ClCompile Include="src\Utility\SaveEntity.cpp" />
     <ClCompile Include="src\Utility\LoadRegistry.cpp" />
     <ClCompile Include="src\Engine\States\PauseState.cpp" />
@@ -363,6 +364,7 @@
     <ClInclude Include="src\Systems\Gameplay\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />
+    <ClInclude Include="src\Utility\Statistics.h" />
     <ClInclude Include="src\Utility\SaveEntity.h" />
     <ClInclude Include="src\Utility\LoadRegistry.h" />
     <ClInclude Include="src\Engine\States\PauseState.h" />

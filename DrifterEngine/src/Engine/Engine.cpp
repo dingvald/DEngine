@@ -91,8 +91,13 @@ void drft::Engine::handleEvents()
 void drft::Engine::update(const float dt)
 {
 	float fps = 1.0f / dt;
-	service::DebugInfo::instance().putInfo("FPS", std::to_string(fps));
-	service::DebugInfo::instance().putInfo("dt", std::to_string(dt));
+	_fpsStats.sample(fps);
+	_dtStats.sample(dt);
+	service::DebugInfo::instance().putInfo("Avg FPS", std::to_string(_fpsStats.average()));
+	service::DebugInfo::instance().putInfo("Min FPS", std::to_string(_fpsStats.min()));
+
+	service::DebugInfo::instance().putInfo("Avg dt", std::to_string(_dtStats.average()));
+	service::DebugInfo::instance().putInfo("Max dt", std::to_string(_dtStats.max()));
 
 	_stateStack.update(dt);
 	

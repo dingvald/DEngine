@@ -1,6 +1,7 @@
 #pragma once
 #include "Utility/ResourceHolder.h"
 #include "StateStack.h"
+#include "Utility/Statistics.h"
 
 namespace drft
 {
@@ -25,6 +26,8 @@ namespace drft
 		ResourceHolder<sf::Texture, std::string> _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
 		StateStack _stateStack{ StateContext{_window, _registry, _textures, _fonts} };
+		util::Statistics _fpsStats{ 100000 };
+		util::Statistics _dtStats{ 100000 };
 
 		bool _showDebug;
 	};
