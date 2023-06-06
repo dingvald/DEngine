@@ -128,6 +128,12 @@ namespace component
 		std::unordered_map<std::string, unsigned long> parts;
 	};
 
+	struct Wearable
+	{
+		std::string slot = "";
+		int protection = 0;
+	};
+
 	struct Player
 	{
 		int sightRange = 10;

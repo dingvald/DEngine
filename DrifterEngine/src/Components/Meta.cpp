@@ -106,6 +106,11 @@ void component::Meta::initialize()
 		.prop("serialize"_hs)
 		.data<&Item::id>("id"_hs);
 
+	snapshot::reflectComponent<Wearable, WEARABLE_STRING>()
+		.prop("serialize"_hs)
+		.data<&Wearable::slot>("slot"_hs)
+		.data<&Wearable::protection>("protection"_hs);
+
 	snapshot::reflectComponent<Container, CONTAINER_STRING>()
 		.prop("serialize"_hs);
 

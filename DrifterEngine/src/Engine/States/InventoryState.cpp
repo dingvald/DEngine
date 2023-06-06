@@ -643,12 +643,22 @@ void drft::InventoryState::setupEquipmentGrid()
 					[this, slotName, &container]() -> bool
 					{
 						std::string slotNameString = slotName.data();
+						auto itemID = _sessionContext.getCurrentItem();
+						auto itemEntity = util::ItemIDToEntityID(itemID, this->getContext().registry);
 
-				if (slotNameString.compare("HeldR") == 0 || slotNameString.compare("HeldL") == 0)
-				{
-					return true;
-				}
-				return false;
+						if (auto wearable = this->getContext().registry.try_get<component::Wearable>(itemEntity))
+						{
+							if (slotNameString.compare(wearable->slot) == 0)
+							{
+								return true;
+							}
+						}
+
+						if (slotNameString.compare("HeldR") == 0 || slotNameString.compare("HeldL") == 0)
+						{
+							return true;
+						}
+						return false;
 					});
 				container.registerCallback(gui::ElementCallbackType::OnFocus,
 					[this, slotName, &container]() -> bool

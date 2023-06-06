@@ -132,6 +132,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, Wearable& wearable)
+	{
+		archive(wearable.slot, wearable.protection);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Container& container)
 	{
 		archive(container.contents);

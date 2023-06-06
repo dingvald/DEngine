@@ -27,7 +27,21 @@ void drft::system::BodyPartSystem::update(const float dt)
 	for (auto [entity, body, damage] : damageView.each())
 	{
 		if (damage.amount <= 0) continue;
-		auto& part = determinePartHit(body.parts);
+		auto part = determinePartHit(body.parts);
+		std::cout << part + " hit!" << std::endl;
+		auto itemHit = body.parts.at(part);
+		auto itemEntity = util::ItemIDToEntityID(itemHit, *registry);
+		if (itemEntity != entt::null)
+		{
+			if (auto health = registry->try_get<component::Health>(itemEntity))
+			{
+				registry->emplace<component::action::TakeDamage>(itemEntity, damage.amount);
+			}
+			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
+			{
+				damage.amount = std::clamp(damage.amount - wearable->protection, 0, damage.amount);
+			}
+		}
 	}
 }
 
@@ -61,7 +75,7 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(unsigned long item
 	return 0;
 }
 
-std::string& drft::system::BodyPartSystem::determinePartHit(std::unordered_map<std::string, unsigned long>& parts)
+std::string drft::system::BodyPartSystem::determinePartHit(std::unordered_map<std::string, unsigned long>& parts)
 {
 	std::unordered_map<int, std::string> relativeSize;
 	int sum = 0;

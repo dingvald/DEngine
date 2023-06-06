@@ -11,7 +11,7 @@ namespace drft::system
 
 	private:
 		int calculateDamageFromEquipped(unsigned long itemID);
-		std::string& determinePartHit(std::unordered_map<std::string, unsigned long>& parts);
+		std::string determinePartHit(std::unordered_map<std::string, unsigned long>& parts);
 	};
 
 }

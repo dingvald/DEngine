@@ -878,6 +878,77 @@
         }
       ]
     },
+    // Breastplate
+    {
+      "Name": "Breastplate",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Breastplate",
+            "extendedName": "",
+            "description": "A solid metal armor for the chest."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 59,
+            "layer": 1,
+            "color": [ 161, 157, 148 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 12.0,
+            "materials": [
+              "Iron"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 80,
+            "current": 80
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Iron": 6,
+              "Twine": 3
+            }
+          }
+        },
+        {
+          "Name": "Wearable",
+          "Data": {
+            "slot": "Body",
+            "protection": 5
+          }
+        }
+      ]
+    },
     // Torch
     {
       "Name": "Torch",

@@ -62,7 +62,8 @@ namespace drft::util
 		Rat,
 		Vulture,
 		Cougar,
-		Golem
+		Golem,
+		Breastplate
 	};
 
 	class SpriteIndexer
