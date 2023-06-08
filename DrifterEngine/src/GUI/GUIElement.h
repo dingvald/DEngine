@@ -437,6 +437,8 @@ namespace drft::gui
 			case ElementState::Active:
 				onSelect();
 				break;
+			default:
+				break;
 			}
 			applyStyle();
 		}
@@ -679,6 +681,7 @@ namespace drft::gui
 	public:
 		Grid(int columns, int rows);
 		void layoutChildren() override;
+		void setStartingCursorPosition();
 
 	protected:
 		void onFocus() override;
@@ -688,7 +691,6 @@ namespace drft::gui
 		void onRender(sf::RenderTarget& target) override;
 
 	private:
-		void setStartingCursorPosition();
 		void autoSize();
 		void moveCursorDown();
 		void moveCursorUp();

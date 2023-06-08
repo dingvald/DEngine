@@ -8,7 +8,6 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void update(const float dt) override;
 
 	private:
 		void onItemBreakEvent(events::ItemBreakEvent& ev);

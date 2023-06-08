@@ -41,15 +41,16 @@ void drft::system::PlayerFOVSystem::fixedUpdate()
 	}
 
 	auto playerView = registry->view<component::Player, component::Position>();
-	for (auto [entity, player, pos] : playerView.each())
+	for (auto [_, player, pos] : playerView.each())
 	{
 		_fov->compute(spatial::toTileSpace(pos.position), player.sightRange);
-		for (auto entity : _toLight)
+		for (auto entityToLight : _toLight)
 		{
-			registry->emplace_or_replace<component::tag::InPlayerFOV>(entity);
-			if (!registry->all_of<component::Actor>(entity) && registry->all_of<component::tag::InViewport>(entity))
+			registry->emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);
+			if (!registry->all_of<component::Actor>(entityToLight) 
+				&& registry->all_of<component::tag::InViewport>(entityToLight))
 			{
-				registry->emplace_or_replace<component::PlayerHasSeen>(entity);
+				registry->emplace_or_replace<component::PlayerHasSeen>(entityToLight);
 			}
 		}
 		_toLight.clear();

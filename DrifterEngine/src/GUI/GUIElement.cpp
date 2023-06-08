@@ -570,7 +570,7 @@ void drft::gui::Grid::onRender(sf::RenderTarget& target)
 void drft::gui::Grid::setStartingCursorPosition()
 {
 	bool isSelectionFound = false;
-
+	_cursorPosition = { 0,0 };
 	for (int row = 0; row < _numRows; ++row)
 	{
 		for (int col = 0; col < _numColumns; ++col)
@@ -656,58 +656,51 @@ void drft::gui::Grid::layoutChildren()
 
 void drft::gui::Grid::moveCursorDown()
 {
-	do
+	++_cursorPosition.y;
+	if (_cursorPosition.y >= _numRows || (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
 	{
-		++_cursorPosition.y;
-		if (_cursorPosition.y >= _numRows || (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
+		_cursorPosition.y = 0;
+		while (_cursorPosition.x + (_cursorPosition.y * _numColumns) < 0)
 		{
-			_cursorPosition.y = 0;
+			++_cursorPosition.y;
 		}
-	} while (!_children.at(_cursorPosition.x + _numColumns*_cursorPosition.y)->isSelectable());
+	}
+
 }
 
 void drft::gui::Grid::moveCursorUp()
 {
-	do
+	--_cursorPosition.y;
+	if (_cursorPosition.y < 0)
 	{
-		--_cursorPosition.y;
-		if (_cursorPosition.y < 0)
+		_cursorPosition.y = _numRows - 1;
+		while (_cursorPosition.x + (_cursorPosition.y * _numColumns) > (_children.size()-1))
 		{
-			_cursorPosition.y = _numRows - 1;
-			while (_cursorPosition.x + (_cursorPosition.y * _numColumns) > (_children.size()-1))
-			{
-				--_cursorPosition.y;
-			}
+			--_cursorPosition.y;
 		}
-	} while (!_children.at(_cursorPosition.x + _numColumns * _cursorPosition.y)->isSelectable());
+	}
 }
 
 void drft::gui::Grid::moveCursorRight()
 {
-	do
+	++_cursorPosition.x;
+	if (_cursorPosition.x >= _numColumns || (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
 	{
-		++_cursorPosition.x;
-		if (_cursorPosition.x >= _numColumns || (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
-		{
-			_cursorPosition.x = 0;
-		}
-	} while (!_children.at(_cursorPosition.x + _numColumns * _cursorPosition.y)->isSelectable());
+		_cursorPosition.x = 0;
+	}
 }
 
 void drft::gui::Grid::moveCursorLeft()
 {
-	do
+	--_cursorPosition.x;
+	if (_cursorPosition.x < 0)
 	{
-		--_cursorPosition.x;
-		if (_cursorPosition.x < 0)
+		_cursorPosition.x = _numColumns - 1;
+		while (_cursorPosition.x + (_cursorPosition.y * _numColumns) > (_children.size() - 1))
 		{
-			_cursorPosition.x = _numColumns - 1;
-			while (_cursorPosition.x + (_cursorPosition.y * _numColumns) > (_children.size() - 1))
-			{
-				--_cursorPosition.x;
-			}
+			--_cursorPosition.x;
 		}
-	} while (!_children.at(_cursorPosition.x + _numColumns * _cursorPosition.y)->isSelectable());
+	}
 }
 
 // PANEL

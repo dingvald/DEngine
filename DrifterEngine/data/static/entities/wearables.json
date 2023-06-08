@@ -287,6 +287,76 @@
         }
       ]
     },
+    // Wood Shield
+    {
+      "Name": "Wood Shield",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Wood Shield",
+            "extendedName": "Wood Shield",
+            "description": "A solid wooden shield."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 65,
+            "layer": 1,
+            "color": [ 68, 48, 40 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 6.0,
+            "materials": [
+              "Wood"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 30,
+            "current": 30
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Wood": 4
+            }
+          }
+        },
+        {
+          "Name": "Wearable",
+          "Data": {
+            "slot": "HeldL",
+            "protection": 2
+          }
+        }
+      ]
+    },
     // Woven Hood
     {
       "Name": "Woven Hood",
@@ -422,6 +492,76 @@
           "Name": "Wearable",
           "Data": {
             "slot": "Feet",
+            "protection": 1
+          }
+        }
+      ]
+    },
+    // Woven Bracers
+    {
+      "Name": "Woven Bracers",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Woven Bracers",
+            "extendedName": "",
+            "description": "Bracers woven together from various plant fibres."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 64,
+            "layer": 1,
+            "color": [ 186, 161, 127 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 1.0,
+            "materials": [
+              "Plant Fibre"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 20,
+            "current": 20
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Plant Fibre": 2
+            }
+          }
+        },
+        {
+          "Name": "Wearable",
+          "Data": {
+            "slot": "Hands",
             "protection": 1
           }
         }

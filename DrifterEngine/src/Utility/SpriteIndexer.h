@@ -68,7 +68,8 @@ namespace drft::util
 		TatteredVest,
 		Legplates,
 		Sandals,
-		Bracers
+		Bracers,
+		Shield
 	};
 
 	class SpriteIndexer

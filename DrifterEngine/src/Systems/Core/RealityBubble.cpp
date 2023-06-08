@@ -20,13 +20,13 @@ void drft::system::RealityBubble::init()
 
 void drft::system::RealityBubble::update(const float)
 {
-	auto cameraView = registry->view<component::Camera, component::Position>();
+	auto cameraView = registry->view<const component::Camera, const component::Position>();
 	for (auto&& [entity, camera, position] : cameraView.each())
 	{
 		_cameraPosition = spatial::toTileSpace(position.position);
 	}
 
-	auto actorView = registry->view<component::Actor, component::Position>();
+	auto actorView = registry->view<const component::Actor, const component::Position>();
 	for (auto&& [entity, actor, pos] : actorView.each())
 	{
 		const auto actorPosition = spatial::toTileSpace(pos.position);

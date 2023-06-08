@@ -63,7 +63,7 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(unsigned long item
 		}
 		if (auto sharpComp = registry->try_get<component::Sharp>(rightHandItem))
 		{
-			sharpness += std::powf(sharpComp->sharpness, 2.f) * 0.5f;
+			sharpness += std::powf(static_cast<float>(sharpComp->sharpness), 2.f) * 0.5f;
 		}
 		if (auto healthComp = registry->try_get<component::Health>(rightHandItem))
 		{
@@ -85,6 +85,20 @@ std::string drft::system::BodyPartSystem::determinePartHit(std::unordered_map<st
 	int sum = 0;
 	for (auto [part, item] : parts)
 	{
+
+		if (part.compare("HeldL") == 0)
+		{
+			// Some type of shield
+			auto itemEntity = util::ItemIDToEntityID(item, *registry);
+			if (registry->all_of<component::Wearable>(itemEntity))
+			{
+				relativeSize[++sum] = part;
+				relativeSize[++sum] = part;
+				relativeSize[++sum] = part;
+				relativeSize[++sum] = part;
+				relativeSize[++sum] = part;
+			}
+		}
 		if (part.compare("Body") == 0)
 		{
 			relativeSize[++sum] = part;

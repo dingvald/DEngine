@@ -39,7 +39,7 @@ bool drft::WorldMapState::handleEvent(const sf::Event& ev)
 
 bool drft::WorldMapState::update(const float dt)
 {
-	const float twoPI = 2.0f * 3.14152;
+	const float twoPI = 2.0f * 3.14152f;
 	const float f = 0.5f;
 	static float elapsed = 0.0f;
 	elapsed += dt;

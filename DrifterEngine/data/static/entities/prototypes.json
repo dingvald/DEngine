@@ -1841,7 +1841,7 @@
         }
       ]
     },
-    // Golum
+    // Golem
     {
       "Name": "Golem",
       "Inherits": [
@@ -1890,7 +1890,7 @@
         {
           "Name": "AI",
           "Data": {
-            "sightRange": 8,
+            "sightRange": 12,
             "goals": [
               "random_move",
               "kill_target"

@@ -99,6 +99,12 @@ void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity ite
 			})
 		.setStyle(gui::ElementState::Focused, {
 					.fillColor = itemRender.color
+			})
+		.setStyle(gui::ElementState::Unselectable, {
+				.fillColor = sf::Color(30,30,30,200)
+			})
+		.setStyle(gui::ElementState::FocusedUnselectable, {
+				.fillColor = sf::Color(60,60,60,200)
 			});
 
 	if (auto health = getContext().registry.try_get<component::Health>(item))
@@ -227,6 +233,16 @@ void drft::InventoryState::setupInventoryGrid()
 			container.setStyle(gui::ElementState::Active, {
 				.fillColor = sf::Color(0,0,0,150),
 				.outlineColor = sf::Color::Red,
+				.outlineThickness = 1.f
+				});
+			container.setStyle(gui::ElementState::Unselectable, {
+				.fillColor = sf::Color(0,0,0,80),
+				.outlineColor = sf::Color(150,150,150,80),
+				.outlineThickness = 1.f
+				});
+			container.setStyle(gui::ElementState::FocusedUnselectable, {
+				.fillColor = sf::Color(0,0,0,120),
+				.outlineColor = sf::Color(150,150,150,120),
 				.outlineThickness = 1.f
 				});
 
@@ -486,15 +502,55 @@ void drft::InventoryState::setupInventoryGrid()
 						_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
 						return true;
 					});
-				container.registerCallback(gui::ElementCallbackType::OnSelect,
-					[col, row, this, &entityContainer]() -> bool
+				container.registerCallback(gui::ElementCallbackType::OnIsSelectable,
+					[col, row, this, &entityContainer, &container]() -> bool
 					{
-						auto sessionEntity = this->_sessionEntities.front();
+						const int index = col + INVENTORY_WIDTH * row;
+						if (index >= entityContainer.contents.size())
+						{
+							return false;
+						}
+						if (_sessionContext.getCurrentSlot().compare("HeldR") == 0
+							|| _sessionContext.getCurrentSlot().compare("HeldL") == 0)
+						{
+							return true;
+						}
+						const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
+						if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
+						{
+							if (wearable->slot == _sessionContext.getCurrentSlot())
+							{
+								return true;
+							}
+						}
+
+						return false;
+					});
+				container.registerCallback(gui::ElementCallbackType::OnSelect,
+					[col, row, this, &entityContainer, &container]() -> bool
+					{
 						const auto VIEW = getContext().window.getView();
+						auto sessionEntity = this->_sessionEntities.front();
 						const int index = col + INVENTORY_WIDTH * row;
 						if (index >= entityContainer.contents.size()) return true;
 
 						const auto itemID = entityContainer.contents.at(index);
+						if (!container.isSelectable())
+						{
+							_inventoryStack.insert("Message", gui::PopupMessage())
+								.setPosition(VIEW.getCenter())
+								.setStyle(gui::ElementState::Focused, {
+									.fillColor = sf::Color(0,0,0,255),
+									.outlineColor = sf::Color(255,255,255,150),
+									.outlineThickness = 1.f,
+									.innerPadding = {2.f, 2.f},
+									.font = &getContext().fonts.get("Terminus"),
+									.textColor = sf::Color::White
+									})
+								.setTextString("Cannot equip the "
+									+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(itemID, getContext().registry) }) + ".");
+							return true;
+						}
 						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, itemID, _sessionContext.getCurrentSlot());
 
 						_inventoryStack.insert("Message", gui::PopupMessage())
@@ -669,10 +725,26 @@ void drft::InventoryState::setupEquipmentGrid()
 				return true;
 					});
 				container.registerCallback(gui::ElementCallbackType::OnSelect,
-					[this, slotName]() -> bool
+					[this, slotName, &container]() -> bool
 					{
 						auto sessionEntity = this->_sessionEntities.front();
 						const auto VIEW = getContext().window.getView();
+						if (!container.isSelectable())
+						{
+							_inventoryStack.insert("Message", gui::PopupMessage())
+								.setPosition(VIEW.getCenter())
+								.setStyle(gui::ElementState::Focused, {
+									.fillColor = sf::Color(0,0,0,255),
+									.outlineColor = sf::Color(255,255,255,150),
+									.outlineThickness = 1.f,
+									.innerPadding = {2.f, 2.f},
+									.font = &getContext().fonts.get("Terminus"),
+									.textColor = sf::Color::White
+									})
+								.setTextString("Cannot equip the "
+									+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_sessionContext.getCurrentItem(), getContext().registry) }) + ".");
+							return true;
+						}
 						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, _sessionContext.getCurrentItem(), slotName.data());
 
 						_inventoryStack.insert("Message", gui::PopupMessage())
@@ -737,7 +809,7 @@ void drft::InventoryState::setupEquipmentGrid()
 						.setOrigin(gui::ElementPosition::TOP_LEFT);
 						commandList.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
-						if (itemInSlot > component::Item::NONE)
+						if (itemInSlot != component::Item::NONE)
 						{
 							commandList.insert("Remove", gui::Label())
 								.setStyle(gui::ElementState::Idle, {
@@ -863,6 +935,7 @@ void drft::InventoryState::setupEquipmentGrid()
 										_flowControl["InventoryGrid"].setVisibility(true);
 										_flowControl["EquipmentGrid"].setVisibility(false);
 										_sessionContext.setCurrentSlot(slotName.data());
+										dynamic_cast<gui::Grid&>(_flowControl["InventoryGrid"]).setStartingCursorPosition();
 										_inventoryStack.clear();
 
 										return true;

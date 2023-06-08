@@ -12,7 +12,7 @@ drft::TitleScreenState::TitleScreenState(StateStack& stack, StateContext& contex
 	_pressAnyButtonText.setFont(getContext().fonts.get("Terminus"));
 	_pressAnyButtonText.setFillColor(sf::Color::White);
 	_pressAnyButtonText.setString("Press any button...");
-	float textWidth = _pressAnyButtonText.getCharacterSize() * _pressAnyButtonText.getString().getSize();
+	float textWidth = static_cast<float>(_pressAnyButtonText.getCharacterSize() * _pressAnyButtonText.getString().getSize());
 	_pressAnyButtonText.setOrigin({ textWidth / 4.f, 0.f });
 	_pressAnyButtonText.setPosition(textPosition);
 }
@@ -33,7 +33,7 @@ bool drft::TitleScreenState::handleEvent(const sf::Event& ev)
 bool drft::TitleScreenState::update(const float dt)
 {
 	float alpha = 255;
-	const float twoPI = 2.0f * 3.14152;
+	const float twoPI = 2.0f * 3.14152f;
 	const float f = 0.5f;
 	static float elapsed = 0.0f;
 	elapsed += dt;

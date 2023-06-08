@@ -4,7 +4,7 @@
 
 std::vector<sf::Vector2i> drft::gen::randomSpread(int, const spatial::Grid<int>& grid, GenerationParameters params)
 {
-	int number = params.at("Number");
+	int number = static_cast<int>(params.at("Number"));
 
 	std::vector<sf::Vector2i> result;
 	result.reserve(number);

@@ -8,10 +8,6 @@ void drft::system::ItemDurabilitySystem::init()
 	dispatcher.sink<events::ItemBreakEvent>().connect<&ItemDurabilitySystem::onItemBreakEvent>(this);
 }
 
-void drft::system::ItemDurabilitySystem::update(const float dt)
-{
-}
-
 void drft::system::ItemDurabilitySystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
 	// find owner

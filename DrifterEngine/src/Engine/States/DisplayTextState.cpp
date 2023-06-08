@@ -29,6 +29,9 @@ bool drft::DisplayTextState::handleEvent(const sf::Event& ev)
 			return false;
 		}
 		break;
+	default:
+		return false;
+		break;
 	}
 
 	return false;

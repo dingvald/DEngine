@@ -171,7 +171,7 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 				if (sf::Vector2i(x,y) == pt2) return constructPath(sf::Vector2i(x,y));
 
 				int distanceSoFar = currentNode.distance + 1;
-				int distanceFromTarget = static_cast<int>(std::sqrtf(std::pow(pt2.x - x, 2) + std::pow(pt2.y - y, 2)));
+				int distanceFromTarget = static_cast<int>(std::sqrtf(std::pow(pt2.x - x, 2.f) + std::pow(pt2.y - y, 2.f)));
 				const auto entities = entitiesAt({ x,y });
 				int cost = distanceSoFar + distanceFromTarget + costFunc(entities);
 

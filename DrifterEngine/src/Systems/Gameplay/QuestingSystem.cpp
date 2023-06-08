@@ -103,7 +103,7 @@ void drft::system::QuestingSystem::buildGoalEntity()
 		localPosition.x = rng::RandomNumberGenerator::intInRange(0, spatial::CHUNK_WIDTH);
 		localPosition.y = rng::RandomNumberGenerator::intInRange(0, spatial::CHUNK_HEIGHT);
 		tilePosition = spatial::toTileSpace(_goalPosition) + localPosition;
-		auto entities = grid.entitiesAt(tilePosition,
+		entities = grid.entitiesAt(tilePosition,
 			[this](auto entity) -> bool
 			{
 				return registry->any_of<component::Physical>(entity);

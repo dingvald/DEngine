@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(push, 0)
 
 #include <cstdlib>
 #include <utility>
@@ -53,3 +54,5 @@
 #include <cereal/types/vector.hpp>
 #include <cereal/types/unordered_set.hpp>
 #include <Cereal/types/unordered_map.hpp>
+
+#pragma warning(pop)

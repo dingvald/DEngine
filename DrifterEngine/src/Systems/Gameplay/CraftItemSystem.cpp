@@ -60,7 +60,7 @@ void drft::system::CraftItemSystem::onCraftItem(entt::registry& registry, entt::
 	auto& itemComp = newItem.get<component::Item>();
 
 	registry.patch<component::Container>(entity,
-		[&toRemove, &itemComp](component::Container& cont)
+		[&itemComp](component::Container& cont)
 		{
 			cont.contents.push_back(itemComp.id);
 		});

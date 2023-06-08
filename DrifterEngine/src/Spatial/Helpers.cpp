@@ -39,7 +39,7 @@ std::vector<sf::Vector2i> drft::spatial::getIntPointsAlongLine(sf::Vector2i pt1,
 {
 	// Bresenham's algorithm
 	std::vector<sf::Vector2i> result;
-	result.reserve(spatial::distance(pt1, pt2));
+	result.reserve(static_cast<size_t>(spatial::distance(pt1, pt2)));
 
 	int dx = std::abs(pt2.x - pt1.x);
 	int dy = -std::abs(pt2.y - pt1.y);
@@ -73,7 +73,7 @@ std::vector<sf::Vector2i> drft::spatial::getIntPointsAlongLine(sf::Vector2i pt1,
 float drft::spatial::distance(sf::Vector2i pt1, sf::Vector2i pt2)
 {
 	const auto delta = pt1 - pt2;
-	return std::hypotf(static_cast<float>(delta.x), static_cast<int>(delta.y));
+	return std::hypotf(static_cast<float>(delta.x), static_cast<float>(delta.y));
 }
 
 float drft::spatial::distance(sf::Vector2f pt1, sf::Vector2f pt2)

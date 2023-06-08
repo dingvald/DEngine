@@ -37,7 +37,7 @@ void drft::system::HitEffectSystem::onTakeDamage(entt::registry& registry, entt:
 		
 		const auto& damage = registry.get<component::action::TakeDamage>(entity);
 
-		auto fadeFunc = [this](entt::registry& registry, entt::entity effect) -> bool
+		auto fadeFunc = [](entt::registry& registry, entt::entity effect) -> bool
 		{
 			auto& render = registry.get<component::Render>(effect);
 			float alpha = static_cast<float>(render.color.a);
@@ -52,7 +52,7 @@ void drft::system::HitEffectSystem::onTakeDamage(entt::registry& registry, entt:
 			}
 			return true;
 		};
-		auto halfFadeFunc = [this](entt::registry& registry, entt::entity effect) -> bool
+		auto halfFadeFunc = [](entt::registry& registry, entt::entity effect) -> bool
 		{
 			auto& render = registry.get<component::Render>(effect);
 			float alpha = static_cast<float>(render.color.a);
@@ -81,7 +81,7 @@ void drft::system::HitEffectSystem::onTakeDamage(entt::registry& registry, entt:
 
 		if (const auto incoming = registry.try_get<component::action::IncomingDamage>(entity))
 		{
-			if ((incoming->amount < incoming->originalAmount)) // Must have been mitigated
+			if ((incoming->amount < incoming->originalAmount)) // Damage must have been mitigated
 			{
 				unsigned int sprite = static_cast<unsigned int>(util::Sprite::Square);
 				queueEffect(pos->position, sprite, sf::Color::Blue, halfFadeFunc);
