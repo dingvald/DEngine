@@ -67,10 +67,25 @@ void drft::system::HitEffectSystem::onTakeDamage(entt::registry& registry, entt:
 			}
 			return true;
 		};
+		auto quarterFadeFunc = [](entt::registry& registry, entt::entity effect) -> bool
+		{
+			auto& render = registry.get<component::Render>(effect);
+			float alpha = static_cast<float>(render.color.a);
+			alpha -= (ALPHA_DROP_RATE / 4);
+			if (alpha <= 0)
+			{
+				return false;
+			}
+			else
+			{
+				render.color.a = static_cast<sf::Uint8>(alpha);
+			}
+			return true;
+		};
 
 		if (damage.amount < 0)
 		{
-			queueEffect(pos->position, static_cast<unsigned int>(util::Sprite::Square), sf::Color::Green, fadeFunc);
+			queueEffect(pos->position, static_cast<unsigned int>(util::Sprite::Square), sf::Color::Green, quarterFadeFunc);
 				
 		}
 		else if (damage.amount > 0)
@@ -81,7 +96,7 @@ void drft::system::HitEffectSystem::onTakeDamage(entt::registry& registry, entt:
 
 		if (const auto incoming = registry.try_get<component::action::IncomingDamage>(entity))
 		{
-			if ((incoming->amount < incoming->originalAmount)) // Damage must have been mitigated
+			if ((incoming->amount < (incoming->originalAmount / 2)) || incoming->amount == 0) // Most/all of the damage has been mitigated
 			{
 				unsigned int sprite = static_cast<unsigned int>(util::Sprite::Square);
 				queueEffect(pos->position, sprite, sf::Color::Blue, halfFadeFunc);
@@ -98,7 +113,7 @@ void drft::system::HitEffectSystem::onDie(entt::registry& registry, entt::entity
 		{
 			auto& render = registry.get<component::Render>(effect);
 			float alpha = static_cast<float>(render.color.a);
-			alpha -= ALPHA_DROP_RATE;
+			alpha -= ALPHA_DROP_RATE/4;
 			if (alpha <= 0)
 			{
 				return false;
