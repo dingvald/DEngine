@@ -145,77 +145,6 @@
         }
       ]
     },
-    // Wood Legplates
-    {
-      "Name": "Wood Legplates",
-      "Inherits": [
-        ""
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Wood Legplates",
-            "extendedName": "Wood Legplates",
-            "description": "A solid wood armor for the legs."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 62,
-            "layer": 1,
-            "color": [ 68, 48, 40 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 6.0,
-            "materials": [
-              "Wood"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 50,
-            "current": 50
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 5,
-              "Twine": 1
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Legs",
-            "protection": 2
-          }
-        }
-      ]
-    },
     // Wood Breastplate
     {
       "Name": "Wood Breastplate",
@@ -283,6 +212,77 @@
           "Data": {
             "slot": "Body",
             "protection": 3
+          }
+        }
+      ]
+    },
+    // Wood Legplates
+    {
+      "Name": "Wood Legplates",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Wood Legplates",
+            "extendedName": "Wood Legplates",
+            "description": "A solid wood armor for the legs."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 62,
+            "layer": 1,
+            "color": [ 68, 48, 40 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 6.0,
+            "materials": [
+              "Wood"
+            ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 50,
+            "current": 50
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Wood": 5,
+              "Twine": 1
+            }
+          }
+        },
+        {
+          "Name": "Wearable",
+          "Data": {
+            "slot": "Legs",
+            "protection": 2
           }
         }
       ]
