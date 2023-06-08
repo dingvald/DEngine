@@ -63,7 +63,12 @@ namespace drft::util
 		Vulture,
 		Cougar,
 		Golem,
-		Breastplate
+		Breastplate,
+		Hood,
+		TatteredVest,
+		Legplates,
+		Sandals,
+		Bracers
 	};
 
 	class SpriteIndexer

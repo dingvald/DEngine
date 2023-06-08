@@ -112,7 +112,8 @@ void component::Meta::initialize()
 		.data<&Wearable::protection>("protection"_hs);
 
 	snapshot::reflectComponent<Container, CONTAINER_STRING>()
-		.prop("serialize"_hs);
+		.prop("serialize"_hs)
+		.data<&Container::capacity>("capacity"_hs);
 
 	snapshot::reflectComponent<Craftable, CRAFTABLE_STRING>()
 		.prop("serialize"_hs)

@@ -161,6 +161,7 @@ namespace component
 	struct Container
 	{
 		std::vector<Item::ID> contents;
+		unsigned int capacity = 0;
 	};
 
 	struct Craftable
@@ -204,6 +205,12 @@ namespace component::action
 	struct ToggleSprint {};
 
 	struct Wait {};
+
+	struct IncomingDamage
+	{
+		int originalAmount = 0;
+		int amount = 0;
+	};
 
 	struct TakeDamage
 	{

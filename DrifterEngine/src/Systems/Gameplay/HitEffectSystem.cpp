@@ -14,27 +14,19 @@ void drft::system::HitEffectSystem::init()
 
 void drft::system::HitEffectSystem::fixedUpdate()
 {
-	if (_hitEffects.empty()) return;
+	if (_effects.empty()) return;
 
 	std::vector<entt::entity> toRemove;
-	for (auto effect : _hitEffects)
+	for (auto effect : _effects)
 	{
-		auto& render = registry->get<component::Render>(effect);
-		float alpha = static_cast<float>(render.color.a);
-		alpha -= ALPHA_DROP_RATE;
-		if (alpha <= 0)
+		if (!_effectUpdateFunctions.at(effect)(*registry, effect))
 		{
-			registry->destroy(effect);
 			toRemove.push_back(effect);
-		}
-		else
-		{
-			render.color.a = static_cast<sf::Uint8>(alpha);
 		}
 	}
 	for (auto effect : toRemove)
 	{
-		_hitEffects.erase(std::remove(_hitEffects.begin(), _hitEffects.end(), effect), _hitEffects.end());
+		removeEffect(effect);
 	}
 }
 
@@ -42,14 +34,58 @@ void drft::system::HitEffectSystem::onTakeDamage(entt::registry& registry, entt:
 {
 	if (const auto& pos = registry.try_get<component::Position>(entity))
 	{
+		
 		const auto& damage = registry.get<component::action::TakeDamage>(entity);
+
+		auto fadeFunc = [this](entt::registry& registry, entt::entity effect) -> bool
+		{
+			auto& render = registry.get<component::Render>(effect);
+			float alpha = static_cast<float>(render.color.a);
+			alpha -= ALPHA_DROP_RATE;
+			if (alpha <= 0)
+			{
+				return false;
+			}
+			else
+			{
+				render.color.a = static_cast<sf::Uint8>(alpha);
+			}
+			return true;
+		};
+		auto halfFadeFunc = [this](entt::registry& registry, entt::entity effect) -> bool
+		{
+			auto& render = registry.get<component::Render>(effect);
+			float alpha = static_cast<float>(render.color.a);
+			alpha -= (ALPHA_DROP_RATE/2);
+			if (alpha <= 0)
+			{
+				return false;
+			}
+			else
+			{
+				render.color.a = static_cast<sf::Uint8>(alpha);
+			}
+			return true;
+		};
+
 		if (damage.amount < 0)
 		{
-			queueHitEffect(pos->position, sf::Color::Green);
+			queueEffect(pos->position, static_cast<unsigned int>(util::Sprite::Square), sf::Color::Green, fadeFunc);
+				
 		}
-		else
+		else if (damage.amount > 0)
 		{
-			queueHitEffect(pos->position, sf::Color::White);
+			unsigned int sprite = static_cast<unsigned int>(util::Sprite::Square);
+			queueEffect(pos->position, sprite, sf::Color::White, fadeFunc);
+		}
+
+		if (const auto incoming = registry.try_get<component::action::IncomingDamage>(entity))
+		{
+			if ((incoming->amount < incoming->originalAmount)) // Must have been mitigated
+			{
+				unsigned int sprite = static_cast<unsigned int>(util::Sprite::Square);
+				queueEffect(pos->position, sprite, sf::Color::Blue, halfFadeFunc);
+			}
 		}
 	}
 }
@@ -58,14 +94,37 @@ void drft::system::HitEffectSystem::onDie(entt::registry& registry, entt::entity
 {
 	if (const auto& pos = registry.try_get<component::Position>(entity))
 	{
-		queueHitEffect(pos->position, sf::Color::Red);
+		auto fadeFunc = [this](entt::registry& registry, entt::entity effect) -> bool
+		{
+			auto& render = registry.get<component::Render>(effect);
+			float alpha = static_cast<float>(render.color.a);
+			alpha -= ALPHA_DROP_RATE;
+			if (alpha <= 0)
+			{
+				return false;
+			}
+			else
+			{
+				render.color.a = static_cast<sf::Uint8>(alpha);
+			}
+			return true;
+		};
+		queueEffect(pos->position, static_cast<unsigned int>(util::Sprite::Square), sf::Color::Red, fadeFunc);
 	}
 }
 
-void drft::system::HitEffectSystem::queueHitEffect(sf::Vector2f position, sf::Color color)
+void drft::system::HitEffectSystem::queueEffect(sf::Vector2f position, unsigned int sprite, sf::Color color, std::function<bool(entt::registry& registry, entt::entity)> effectUpdateFunc)
 {
 	auto effect = entt::handle{ *registry, registry->create() };
-	effect.emplace<component::Render>(static_cast<unsigned int>(util::Sprite::Square), 4u, color);
+	effect.emplace<component::Render>(sprite, 4u, color);
 	effect.emplace<component::Position>(position);
-	_hitEffects.push_back(effect);
+	_effects.emplace_back(effect.entity());
+	_effectUpdateFunctions.emplace(effect.entity(), effectUpdateFunc);
+}
+
+void drft::system::HitEffectSystem::removeEffect(entt::entity effect)
+{
+	registry->destroy(effect);
+	_effects.erase(std::remove(_effects.begin(), _effects.end(), effect), _effects.end());
+	_effectUpdateFunctions.erase(effect);
 }

@@ -39,7 +39,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		for (auto target : targets)
 		{
 			std::cout << "The " << util::getEntityName({ *registry, entity }) << " attacks the " << util::getEntityName({ *registry, target }) << std::endl;
-			registry->emplace_or_replace<component::action::TakeDamage>(target, attack.damage);
+			registry->emplace_or_replace<component::action::IncomingDamage>(target, attack.damage, attack.damage);
 		}
 		spendActionPoints(*registry, entity, ActionType::Act);
 	}

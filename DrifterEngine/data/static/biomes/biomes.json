@@ -86,15 +86,6 @@
             "Number": 100
           }
         },
-        "Flint": {
-          "Algorithm": "OrganicSpread",
-          "Params": {
-            "Generations": 2,
-            "StartingSeeds": 3,
-            "SeedsPerGeneration": 1,
-            "Radius": 2
-          }
-        },
         "Grass": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -112,7 +103,13 @@
         "Golem": {
           "Algorithm": "RandomSpread",
           "Params": {
-            "Number": 1
+            "Number": 4
+          }
+        },
+        "Mountain Lion": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 2
           }
         }
       }
@@ -226,7 +223,14 @@
           "Params": {
             "Number": 600
           }
+        },
+        "Flint": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 4
+          }
         }
+
       },
       "Actors": {
         "Firefly": {

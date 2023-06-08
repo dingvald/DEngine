@@ -592,6 +592,7 @@
     <None Include="data\static\entities\materials.json" />
     <None Include="data\static\entities\player.json" />
     <None Include="data\static\entities\prototypes.json" />
+    <None Include="data\static\entities\wearables.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="packages.config" />
     <None Include="src\Spatial\Grid.inl" />

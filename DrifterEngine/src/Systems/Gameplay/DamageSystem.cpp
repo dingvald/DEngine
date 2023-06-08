@@ -9,6 +9,13 @@ void drft::system::DamageSystem::init()
 
 void drft::system::DamageSystem::update(const float dt)
 {
+	// This sepration of incoming / taking damage allows for event handlers to react to the events separately
+	auto incomingDamageView = registry->view<component::action::IncomingDamage>();
+	for (auto [entity, incoming] : incomingDamageView.each())
+	{
+		registry->emplace<component::action::TakeDamage>(entity, incoming.amount);
+	}
+
 	auto damageView = registry->view<component::action::TakeDamage>();
 	for (auto [entity, damage] : damageView.each())
 	{
@@ -25,7 +32,11 @@ void drft::system::DamageSystem::update(const float dt)
 		{
 			handle.emplace<component::action::Die>();
 		}
-		
-		handle.remove<component::action::TakeDamage>();
 	}
+}
+
+void drft::system::DamageSystem::onUpdateEnd()
+{
+	registry->clear<component::action::IncomingDamage>();
+	registry->clear<component::action::TakeDamage>();
 }

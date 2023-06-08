@@ -872,79 +872,9 @@
           "Name": "Craftable",
           "Data": {
             "recipe": {
-              "Iron": 4
+              "Iron": 4,
+              "Flint": 1
             }
-          }
-        }
-      ]
-    },
-    // Breastplate
-    {
-      "Name": "Breastplate",
-      "Inherits": [
-        ""
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Breastplate",
-            "extendedName": "",
-            "description": "A solid metal armor for the chest."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 59,
-            "layer": 1,
-            "color": [ 161, 157, 148 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 12.0,
-            "materials": [
-              "Iron"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 80,
-            "current": 80
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Iron": 6,
-              "Twine": 3
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Body",
-            "protection": 5
           }
         }
       ]
@@ -1764,7 +1694,7 @@
         {
           "Name": "Attacker",
           "Data": {
-            "baseDamage": 7
+            "baseDamage": 3
           }
         },
         {
@@ -1797,6 +1727,39 @@
             "sprite": 57,
             "layer": 2,
             "color": [ 40, 40, 40 ]
+          }
+        }
+      ]
+    },
+    // Mountain Lion
+    {
+      "Name": "Mountain Lion",
+      "Inherits": [
+        "Cougar"
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Mountain Lion",
+            "extendedName": "",
+            "description": "If you see it, it's too late."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 57,
+            "layer": 2,
+            "color": [ 186, 161, 127 ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 85,
+            "current": 85
           }
         }
       ]

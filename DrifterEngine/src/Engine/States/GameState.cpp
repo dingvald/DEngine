@@ -141,6 +141,7 @@ void drft::GameState::loadEntityPrototypes()
 {
 	_factory->loadPrototypes("materials.json");
 	_factory->loadPrototypes("prototypes.json");
+	_factory->loadPrototypes("wearables.json");
 	_factory->loadPrototypes("player.json");
 }
 
@@ -250,8 +251,8 @@ void drft::GameState::importSystems()
 	_systems->add<OpenWorldMapSystem>(				Phase::OnUpdate);
 	_systems->add<OpenCraftingSystem>(				Phase::OnUpdate);
 	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
-	_systems->add<DamageSystem>(					Phase::OnUpdate + 5);
 	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
+	_systems->add<DamageSystem>(					Phase::OnUpdate + 10);
 	_systems->add<StaminaSystem>(					Phase::OnUpdate + 10);
 	_systems->add<ItemDurabilitySystem>(			Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);

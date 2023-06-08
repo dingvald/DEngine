@@ -6,7 +6,7 @@
 #include "Utility/ItemIDToEntityID.h"
 
 
-static constexpr float CRAFTING_WINDOW_WIDTH = 320.f;
+static constexpr float CRAFTING_WINDOW_WIDTH = 352.f;
 static constexpr float CRAFTING_WINDOW_HEIGHT = 256.f;
 
 drft::CraftingState::CraftingState(StateStack& stack, StateContext& context)
@@ -85,7 +85,6 @@ void drft::CraftingState::onPush()
 	_craftingWindow.setTextPosition(gui::ElementPosition::TOP_CENTER);
 	_craftingWindow.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
 
-
 	setupCraftingList();
 }
 
@@ -108,7 +107,7 @@ void drft::CraftingState::shutdownSessionEntities()
 void drft::CraftingState::setupCraftingList()
 {
 	const auto& VIEW = getContext().window.getView();
-	_craftingList.setPosition(VIEW.getCenter() - sf::Vector2f{128,0});
+	_craftingList.setPosition(VIEW.getCenter() - sf::Vector2f{146,0});
 	_craftingList.setSize({ 64, CRAFTING_WINDOW_HEIGHT});
 	_craftingList.setStyle(gui::ElementState::Idle, {
 		.innerPadding = {16.f, 16.f},
@@ -125,9 +124,9 @@ void drft::CraftingState::setupCraftingList()
 	_craftingList.setState(gui::ElementState::Focused);
 	_craftingList.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
-	_requiresList.setPosition(VIEW.getCenter() - sf::Vector2f(32,0));
+	_requiresList.setPosition(VIEW.getCenter());
 	_requiresList.setOrigin(gui::ElementPosition::CENTER_LEFT);
-	_requiresList.setSize({ (CRAFTING_WINDOW_WIDTH / 2) + 32, CRAFTING_WINDOW_HEIGHT });
+	_requiresList.setSize({ (CRAFTING_WINDOW_WIDTH / 2), CRAFTING_WINDOW_HEIGHT });
 	_requiresList.setStyle(gui::ElementState::Idle, {
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {0.f, 24.f},

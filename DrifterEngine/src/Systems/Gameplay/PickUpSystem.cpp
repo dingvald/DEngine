@@ -29,6 +29,11 @@ void drft::system::PickUpSystem::update(const float dt)
 		}
 		else
 		{
+			if (container.contents.size() >= container.capacity)
+			{
+				std::cout << "Cannot pickup, inventory full." << std::endl;
+				continue;
+			}
 			registry->remove<component::Position>(items.front());
 			std::cout << util::getEntityName({ *registry, entity }) 
 				<< " picked up a " << util::getEntityName({ *registry, items.front()}) << std::endl;

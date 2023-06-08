@@ -234,9 +234,13 @@ void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity enti
 	if (!registry.all_of<component::Player>(entity)) return;
 	if (auto health = registry.try_get<component::Health>(entity))
 	{
-		sf::Vector2f size = { (static_cast<float>(health->current) / static_cast<float>(health->max))
+		auto& damage = registry.get<component::action::TakeDamage>(entity);
+		if (damage.amount != 0)
+		{
+			sf::Vector2f size = { (static_cast<float>(health->current) / static_cast<float>(health->max))
 			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT + 2.f };
-		queueFlashEffect(HEALTHBAR_POSITION, size, 10);
+			queueFlashEffect(HEALTHBAR_POSITION, size, 10);
+		}
 	}
 }
 

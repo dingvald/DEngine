@@ -9,6 +9,7 @@ static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 30;
 
 void drft::system::BodyPartSystem::init()
 {
+	registry->on_construct<component::action::IncomingDamage>().connect<&BodyPartSystem::onIncomingDamage>(this);
 }
 
 void drft::system::BodyPartSystem::update(const float dt)
@@ -22,24 +23,27 @@ void drft::system::BodyPartSystem::update(const float dt)
 			attack.damage += weaponDamage;
 		}
 	}
+}
 
-	auto damageView = registry->view<component::Body, component::action::TakeDamage, component::tag::Active>();
-	for (auto [entity, body, damage] : damageView.each())
+void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, entt::entity entity)
+{
+	if (auto body = registry.try_get<component::Body>(entity))
 	{
-		if (damage.amount <= 0) continue;
-		auto part = determinePartHit(body.parts);
+		auto& incomingDamage = registry.get<component::action::IncomingDamage>(entity);
+		if (incomingDamage.amount <= 0) return;
+		auto part = determinePartHit(body->parts);
 		std::cout << part + " hit!" << std::endl;
-		auto itemHit = body.parts.at(part);
-		auto itemEntity = util::ItemIDToEntityID(itemHit, *registry);
+		auto itemHit = body->parts.at(part);
+		auto itemEntity = util::ItemIDToEntityID(itemHit, registry);
 		if (itemEntity != entt::null)
 		{
-			if (auto health = registry->try_get<component::Health>(itemEntity))
+			if (auto health = registry.try_get<component::Health>(itemEntity))
 			{
-				registry->emplace<component::action::TakeDamage>(itemEntity, damage.amount);
+				registry.emplace<component::action::IncomingDamage>(itemEntity, incomingDamage.amount, incomingDamage.amount);
 			}
-			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
+			if (auto wearable = registry.try_get<component::Wearable>(itemEntity))
 			{
-				damage.amount = std::clamp(damage.amount - wearable->protection, 0, damage.amount);
+				incomingDamage.amount = std::clamp(incomingDamage.amount - wearable->protection, 0, incomingDamage.amount);
 			}
 		}
 	}
@@ -84,6 +88,11 @@ std::string drft::system::BodyPartSystem::determinePartHit(std::unordered_map<st
 		if (part.compare("Body") == 0)
 		{
 			relativeSize[++sum] = part;
+			relativeSize[++sum] = part;
+			relativeSize[++sum] = part;
+		}
+		else if (part.compare("Legs") == 0)
+		{
 			relativeSize[++sum] = part;
 			relativeSize[++sum] = part;
 		}
