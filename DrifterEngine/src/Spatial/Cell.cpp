@@ -16,7 +16,7 @@ std::vector<entt::entity> drft::spatial::Cell::getEntities() const
 	return _entities;
 }
 
-bool drft::spatial::Cell::empty()
+bool drft::spatial::Cell::isEmpty() const
 {
 	return _entities.empty();
 }

@@ -9,7 +9,6 @@ namespace drft::spatial
 	class WorldGrid
 	{
 	public:
-		// Creates a world grid containing chunks with the given dimensions.
 		WorldGrid() = default;
 		WorldGrid(const WorldGrid&) = delete;
 		WorldGrid& operator=(const WorldGrid&) = delete;
@@ -25,15 +24,14 @@ namespace drft::spatial
 		void removeEntity(const entt::entity entity);
 
 		// Moves entity from one world tile position to another and returns if successful.
-		bool moveEntity(const entt::entity, const sf::Vector2i toTilePosition);
+		void moveEntity(const entt::entity, const sf::Vector2i toTilePosition);
 
 		// Gets the world tile position of the given entity.
-
-		const sf::Vector2i getPosition(const entt::entity entity) const;
+		sf::Vector2i getPosition(const entt::entity entity) const;
 
 		// Returns all entities at the given world tile position.
-		const EntityList entitiesAt(const sf::Vector2i tilePosition) const;
-		const EntityList entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const;
+		EntityList entitiesAt(const sf::Vector2i tilePosition) const;
+		EntityList entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const;
 
 		// Chunks //
 
@@ -45,6 +43,7 @@ namespace drft::spatial
 
 		// Pathfinding
 		using heuristic = std::function<int(const std::vector<entt::entity>&)>;
+		// Produces a path from pt1 to pt2.
 		std::deque<sf::Vector2i> getPath(sf::Vector2i pt1, sf::Vector2i pt2, heuristic h = [](const std::vector<entt::entity>&){return 0;}) const;
 
 	private:

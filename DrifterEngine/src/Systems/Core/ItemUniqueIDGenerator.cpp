@@ -2,6 +2,8 @@
 #include "ItemUniqueIDGenerator.h"
 #include "Components/Components.h"
 
+std::unordered_map<unsigned long, entt::entity> drft::system::ItemUniqueIDGenerator::_itemToEntityCache;
+
 void drft::system::ItemUniqueIDGenerator::init()
 {
 	registry->on_construct<component::Item>().connect<&ItemUniqueIDGenerator::onItemAdd>(this);
@@ -24,4 +26,5 @@ void drft::system::ItemUniqueIDGenerator::onItemAdd(entt::registry& registry, en
 	{
 		item.id = _nextAvailableID++;
 	}
+	ItemUniqueIDGenerator::_itemToEntityCache[item.id] = entity;
 }

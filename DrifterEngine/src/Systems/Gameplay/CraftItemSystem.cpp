@@ -2,7 +2,7 @@
 #include "CraftItemSystem.h"
 #include "Components/Components.h"
 #include "Factory/EntityFactory.h"
-#include "Utility/ItemIDToEntityID.h"
+#include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::CraftItemSystem::init()
@@ -32,7 +32,7 @@ void drft::system::CraftItemSystem::onCraftItem(entt::registry& registry, entt::
 		int count = 0;
 		for (auto item : container.contents)
 		{
-			auto itemEntity = util::ItemIDToEntityID(item, registry);
+			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			if (matName.compare(util::getEntityName({ registry, itemEntity })) == 0)
 			{
 				toRemove.push_back(item);

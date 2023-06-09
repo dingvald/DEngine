@@ -2,7 +2,7 @@
 #include "DetermineCraftableItemsSystem.h"
 #include "Components/Components.h"
 #include "Factory/EntityFactory.h"
-#include "Utility/ItemIDToEntityID.h"
+#include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::DetermineCraftableItemsSystem::init()
@@ -23,7 +23,7 @@ void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::regis
 
 	for (auto itemID : container.contents)
 	{
-		auto itemEntity = util::ItemIDToEntityID(itemID, registry);
+		auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
 		++inventoryContents[util::getEntityName({ registry, itemEntity })];
 	}
 

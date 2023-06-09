@@ -2,7 +2,7 @@
 #include "HUD.h"
 #include "Spatial/Conversions.h"
 #include "Utility/SpriteIndexer.h"
-#include "Utility/ItemIDToEntityID.h"
+#include "Systems/Helpers/ItemDatabase.h"
 #include "Components/Components.h"
 
 static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 16.f };
@@ -55,7 +55,7 @@ void drft::system::HUD::fixedUpdate()
 	{
 		if (body->parts.contains("HeldR") && body->parts.at("HeldR") != component::Item::NONE)
 		{
-			entt::entity rightHandItem = util::ItemIDToEntityID(body->parts.at("HeldR"), *registry);
+			entt::entity rightHandItem = ItemDatabase::getEntityFromItemID(body->parts.at("HeldR"));
 			addItemIcon(_inHandsDisplay["RightHandContainer"]["Item"], rightHandItem);
 		}
 		else
@@ -72,7 +72,7 @@ void drft::system::HUD::fixedUpdate()
 		}
 		if (body->parts.contains("HeldL") && body->parts.at("HeldL") != component::Item::NONE)
 		{
-			entt::entity leftHandItem = util::ItemIDToEntityID(body->parts.at("HeldL"), *registry);
+			entt::entity leftHandItem = ItemDatabase::getEntityFromItemID(body->parts.at("HeldL"));
 			addItemIcon(_inHandsDisplay["LeftHandContainer"]["Item"], leftHandItem);
 		}
 		else

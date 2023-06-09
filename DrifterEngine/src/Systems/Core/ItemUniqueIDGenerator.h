@@ -1,5 +1,6 @@
 #pragma once
 #include "Systems/System.h"
+#include "Systems/Helpers/ItemDatabase.h"
 
 namespace drft::system
 {
@@ -15,7 +16,9 @@ namespace drft::system
 		void onItemAdd(entt::registry& registry, entt::entity);
 
 	private:
+		friend class ItemDatabase;
 		unsigned long _nextAvailableID = 1;
+		static std::unordered_map<unsigned long, entt::entity> _itemToEntityCache;
 	};
 }
 

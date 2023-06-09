@@ -38,20 +38,18 @@ void drft::spatial::WorldGrid::removeEntity(const entt::entity entity)
 	_entityPositions.erase(entity);
 }
 
-bool drft::spatial::WorldGrid::moveEntity(const entt::entity entity, const sf::Vector2i toWorldPosition)
+void drft::spatial::WorldGrid::moveEntity(const entt::entity entity, const sf::Vector2i toWorldPosition)
 {
 	this->removeEntity(entity);
 	this->placeEntity(entity, toWorldPosition);
-
-	return true;
 }
 
-const sf::Vector2i drft::spatial::WorldGrid::getPosition(const entt::entity entity) const
+sf::Vector2i drft::spatial::WorldGrid::getPosition(const entt::entity entity) const
 {
 	return _entityPositions.at(entity);
 }
 
-const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition) const
+EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition) const
 {
 	auto chunkCoordinate = toChunkCoordinate(tilePosition);
 	auto localPosition = toLocalChunkSpace(tilePosition);
@@ -64,7 +62,7 @@ const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePos
 	return _chunks.at(keyablePair)->entitiesAt(localPosition);;
 }
 
-const EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const
+EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const
 {
 	auto chunkCoordinate = toChunkCoordinate(tilePosition);
 	auto localPosition = toLocalChunkSpace(tilePosition);
@@ -152,9 +150,9 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 	openSet.emplace(Node(pt1,0,0));
 	cameFrom[pt1] = pt1;
 
-	const int limit = 50;
+	const int LIMIT = 50;
 	int passes = 0;
-	while (!openSet.empty() && passes < limit)
+	while (!openSet.empty() && passes < LIMIT)
 	{
 		auto currentNode = *(openSet.begin());
 		if (currentNode.value == pt2) return constructPath(currentNode.value);
@@ -171,7 +169,7 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 				if (sf::Vector2i(x,y) == pt2) return constructPath(sf::Vector2i(x,y));
 
 				int distanceSoFar = currentNode.distance + 1;
-				int distanceFromTarget = static_cast<int>(std::sqrtf(std::pow(pt2.x - x, 2.f) + std::pow(pt2.y - y, 2.f)));
+				int distanceFromTarget = static_cast<int>(std::sqrtf(std::powf(pt2.x - x, 2.f) + std::powf(pt2.y - y, 2.f)));
 				const auto entities = entitiesAt({ x,y });
 				int cost = distanceSoFar + distanceFromTarget + costFunc(entities);
 

@@ -2,7 +2,7 @@
 #include "InventoryState.h"
 #include "Components/Components.h"
 #include "Utility/EntityHelpers.h"
-#include "Utility/ItemIDToEntityID.h"
+#include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/SpriteIndexer.h"
 
 static constexpr int INVENTORY_WIDTH = 5;
@@ -202,7 +202,7 @@ void drft::InventoryState::setupInventoryGrid()
 			for (auto& item : entityContainer.contents)
 			{
 				auto& container = inventoryGrid[count];
-				const auto itemEntity = util::ItemIDToEntityID(item, getContext().registry);
+				const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 				addItemIcon(container, itemEntity);
 
 				++count;
@@ -260,7 +260,7 @@ void drft::InventoryState::setupInventoryGrid()
 							_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
 							return false;
 						}
-						const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
+						const auto itemEntity = ItemDatabase::getEntityFromItemID(entityContainer.contents.at(index));
 						auto itemName = util::getEntityName({ getContext().registry, itemEntity });
 						_inventoryBlob["ItemLabel"].setTextString(std::move(itemName));
 						_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
@@ -275,7 +275,7 @@ void drft::InventoryState::setupInventoryGrid()
 							return false;
 						}
 						const auto itemID = entityContainer.contents.at(index);
-						const auto itemEntity = util::ItemIDToEntityID(itemID, getContext().registry);
+						const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
 
 						auto& commandList = _inventoryStack.insert("CommandList", gui::List(true))
 							.setSize({ 64,128 })
@@ -496,7 +496,7 @@ void drft::InventoryState::setupInventoryGrid()
 							_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
 							return false;
 						}
-						const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
+						const auto itemEntity = ItemDatabase::getEntityFromItemID(entityContainer.contents.at(index));
 						auto itemName = util::getEntityName({ getContext().registry, itemEntity });
 						_inventoryBlob["ItemLabel"].setTextString(std::move(itemName));
 						_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
@@ -515,7 +515,7 @@ void drft::InventoryState::setupInventoryGrid()
 						{
 							return true;
 						}
-						const auto itemEntity = util::ItemIDToEntityID(entityContainer.contents.at(index), getContext().registry);
+						const auto itemEntity = ItemDatabase::getEntityFromItemID(entityContainer.contents.at(index));
 						if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
 						{
 							if (wearable->slot == _sessionContext.getCurrentSlot())
@@ -548,7 +548,7 @@ void drft::InventoryState::setupInventoryGrid()
 									.textColor = sf::Color::White
 									})
 								.setTextString("Cannot equip the "
-									+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(itemID, getContext().registry) }) + ".");
+									+ util::getEntityName({ getContext().registry, ItemDatabase::getEntityFromItemID(itemID) }) + ".");
 							return true;
 						}
 						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, itemID, _sessionContext.getCurrentSlot());
@@ -564,7 +564,7 @@ void drft::InventoryState::setupInventoryGrid()
 								.textColor = sf::Color::White
 								})
 							.setTextString(util::getEntityName({ getContext().registry, sessionEntity }) + " equipped the "
-								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(itemID, getContext().registry)}) + ".")
+								+ util::getEntityName({ getContext().registry, ItemDatabase::getEntityFromItemID(itemID) }) + ".")
 							.registerCallback(gui::ElementCallbackType::OnLeave,
 								[this]() -> bool
 								{
@@ -625,7 +625,7 @@ void drft::InventoryState::setupEquipmentGrid()
 				}
 				equipmentGrid[slotName.data()].clear();
 
-				const auto itemEntity = util::ItemIDToEntityID(entityBody.parts.at(slotName.data()), getContext().registry);
+				const auto itemEntity = ItemDatabase::getEntityFromItemID(entityBody.parts.at(slotName.data()));
 				if (itemEntity != entt::null)
 				{
 					addItemIcon(equipmentGrid[slotName.data()], itemEntity);
@@ -700,7 +700,7 @@ void drft::InventoryState::setupEquipmentGrid()
 					{
 						std::string slotNameString = slotName.data();
 						auto itemID = _sessionContext.getCurrentItem();
-						auto itemEntity = util::ItemIDToEntityID(itemID, this->getContext().registry);
+						auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
 
 						if (auto wearable = this->getContext().registry.try_get<component::Wearable>(itemEntity))
 						{
@@ -742,7 +742,7 @@ void drft::InventoryState::setupEquipmentGrid()
 									.textColor = sf::Color::White
 									})
 								.setTextString("Cannot equip the "
-									+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_sessionContext.getCurrentItem(), getContext().registry) }) + ".");
+									+ util::getEntityName({ getContext().registry, ItemDatabase::getEntityFromItemID(_sessionContext.getCurrentItem()) }) + ".");
 							return true;
 						}
 						getContext().registry.emplace_or_replace<component::action::Equip>(sessionEntity, _sessionContext.getCurrentItem(), slotName.data());
@@ -758,7 +758,7 @@ void drft::InventoryState::setupEquipmentGrid()
 								.textColor = sf::Color::White
 								})
 							.setTextString(util::getEntityName({ getContext().registry, sessionEntity }) + " equipped the "
-								+ util::getEntityName({ getContext().registry, util::ItemIDToEntityID(_sessionContext.getCurrentItem(), getContext().registry)}) + ".")
+								+ util::getEntityName({ getContext().registry, ItemDatabase::getEntityFromItemID(_sessionContext.getCurrentItem())}) + ".")
 							.registerCallback(gui::ElementCallbackType::OnLeave,
 								[this]() -> bool
 								{
@@ -780,7 +780,7 @@ void drft::InventoryState::setupEquipmentGrid()
 					[this, slotName, &container, &entityBody]() -> bool
 					{
 						const auto itemInSlot = entityBody.parts.at(slotName.data());
-						const auto itemEntity = util::ItemIDToEntityID(itemInSlot, getContext().registry);
+						const auto itemEntity = ItemDatabase::getEntityFromItemID(itemInSlot);
 						std::string labelString = slotName.data();
 						if (itemInSlot > 0)
 						{
@@ -796,7 +796,7 @@ void drft::InventoryState::setupEquipmentGrid()
 					[this, slotName, &container, &entityBody]() -> bool
 					{
 						const auto itemInSlot = entityBody.parts.at(slotName.data());
-						const auto itemEntity = util::ItemIDToEntityID(itemInSlot, getContext().registry);
+						const auto itemEntity = ItemDatabase::getEntityFromItemID(itemInSlot);
 						auto& commandList = _inventoryStack.insert("CommandList", gui::List(true))
 						.setSize({ 64,128 })
 						.setStyle(gui::ElementState::Focused, {

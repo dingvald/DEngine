@@ -2,7 +2,7 @@
 #include "DropItemSystem.h"
 #include "Components/Components.h"
 #include "Spatial/Conversions.h"
-#include "Utility/ItemIDToEntityID.h"
+#include "Systems/Helpers/ItemDatabase.h"
 
 void drft::system::DropItemSystem::init()
 {
@@ -18,7 +18,7 @@ void drft::system::DropItemSystem::update(const float dt)
 	{
 		for (auto item : items.toDrop)
 		{
-			auto itemEntity = util::ItemIDToEntityID(item, *registry);
+			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			registry->emplace<component::Position>(itemEntity, pos.position);
 		}
 	}

@@ -2,7 +2,7 @@
 #include "LightSourceSystem.h"
 #include "Components/Components.h"
 #include "Components/Tags.h"
-#include "Utility/ItemIDToEntityID.h"
+#include "Systems/Helpers/ItemDatabase.h"
 
 void drft::system::LightSourceSystem::init()
 {
@@ -16,7 +16,7 @@ void drft::system::LightSourceSystem::fixedUpdate()
 	{
 		for (const auto& [slotname, itemID] : body.parts)
 		{
-			const auto itemEntity = util::ItemIDToEntityID(itemID, *registry);
+			const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
 			if (const auto light = registry->try_get<component::LightSource>(itemEntity))
 			{
 				if (auto tempLight = registry->try_get<component::TempLightSource>(entity))

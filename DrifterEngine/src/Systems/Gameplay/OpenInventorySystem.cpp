@@ -2,7 +2,6 @@
 #include "OpenInventorySystem.h"
 #include "Components/Components.h"
 #include "Events/RequestStateChange.h"
-#include "Utility/ItemIDToEntityID.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::OpenInventorySystem::init()

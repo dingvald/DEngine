@@ -27,7 +27,7 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 	auto& prototypeStorage = fromRegistry.view<component::Prototype>().storage();
 	for (auto [id, fromStorage] : fromRegistry.storage())
 	{
-		if (fromStorage.contains(from) && fromStorage.type() != prototypeStorage.type())
+		if (fromStorage.type() != prototypeStorage.type() && fromStorage.contains(from))
 		{
 			auto toStorage = toRegistry.storage(id);
 			if (!toStorage)

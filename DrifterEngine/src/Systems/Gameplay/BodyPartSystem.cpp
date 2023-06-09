@@ -2,7 +2,7 @@
 #include "BodyPartSystem.h"
 #include "Components/Components.h"
 #include "Components/Tags.h"
-#include "Utility/ItemIDToEntityID.h"
+#include "Systems/Helpers/ItemDatabase.h"
 #include "Random/RandomNumberGenerator.h"
 
 static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 30;
@@ -34,7 +34,7 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 		auto part = determinePartHit(body->parts);
 		std::cout << part + " hit!" << std::endl;
 		auto itemHit = body->parts.at(part);
-		auto itemEntity = util::ItemIDToEntityID(itemHit, registry);
+		auto itemEntity = ItemDatabase::getEntityFromItemID(itemHit);
 		if (itemEntity != entt::null)
 		{
 			if (auto health = registry.try_get<component::Health>(itemEntity))
@@ -53,7 +53,7 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(unsigned long item
 {
 	if (itemID != component::Item::NONE)
 	{
-		const auto rightHandItem = util::ItemIDToEntityID(itemID, *registry);
+		const auto rightHandItem = ItemDatabase::getEntityFromItemID(itemID);
 		float weight = 0.0f;
 		float sharpness = 1.f;
 
@@ -89,7 +89,7 @@ std::string drft::system::BodyPartSystem::determinePartHit(std::unordered_map<st
 		if (part.compare("HeldL") == 0)
 		{
 			// Some type of shield
-			auto itemEntity = util::ItemIDToEntityID(item, *registry);
+			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			if (registry->all_of<component::Wearable>(itemEntity))
 			{
 				relativeSize[++sum] = part;

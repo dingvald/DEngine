@@ -69,7 +69,8 @@ namespace drft::util
 		Legplates,
 		Sandals,
 		Bracers,
-		Shield
+		Shield,
+		ShortSword
 	};
 
 	class SpriteIndexer

@@ -8,12 +8,12 @@ namespace drft::spatial
 		void placeEntity(entt::entity entity);
 		void removeEntity(entt::entity entity);
 		std::vector<entt::entity> getEntities() const;
-		bool empty();
+		bool isEmpty() const;
 
 	private:
 		std::vector<entt::entity> _entities;
 	};
 
-} // namespace drft::spatial
+}
 
 

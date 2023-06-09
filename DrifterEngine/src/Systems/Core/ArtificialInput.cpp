@@ -93,7 +93,8 @@ bool drft::system::ArtificialInput::hasLineOfSight(sf::Vector2i myPosition, sf::
 		auto entities = grid.entitiesAt(tile,
 			[this](entt::entity entity) -> bool
 			{
-				return registry->any_of<component::LightBlocking>(entity);
+				const bool blocksLight = registry->any_of<component::LightBlocking>(entity);
+				return blocksLight;
 			});
 
 		if (!entities.empty()) return false;
@@ -162,7 +163,7 @@ void drft::system::ArtificialInput::pathToTarget(entt::entity ai, sf::Vector2i m
 				{
 					if (auto physical = registry->try_get<component::Physical>(entity))
 					{
-						if (physical->blocks) return 10000;
+						if (physical->blocks) return 1000;
 					}
 				}
 				return 0;

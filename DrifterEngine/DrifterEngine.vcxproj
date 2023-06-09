@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Helpers\ItemDatabase.cpp" />
     <ClCompile Include="src\Engine\States\DisplayTextState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\QuestingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\SprintingSystem.cpp" />
@@ -217,7 +218,6 @@
     <ClCompile Include="src\GUI\GUIElement.cpp" />
     <ClCompile Include="src\Engine\States\InventoryState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenInventorySystem.cpp" />
-    <ClCompile Include="src\Utility\ItemIDToEntityID.cpp" />
     <ClCompile Include="src\Systems\Gameplay\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
@@ -315,6 +315,7 @@
     <ClCompile Include="src\Systems\Gameplay\WaitingSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Helpers\ItemDatabase.h" />
     <ClInclude Include="src\Engine\States\DisplayTextState.h" />
     <ClInclude Include="src\Systems\Gameplay\QuestingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\SprintingSystem.h" />
@@ -364,7 +365,6 @@
     <ClInclude Include="src\Engine\States\InventoryState.h" />
     <ClInclude Include="src\Events\RequestStateChange.h" />
     <ClInclude Include="src\Systems\Gameplay\OpenInventorySystem.h" />
-    <ClInclude Include="src\Utility\ItemIDToEntityID.h" />
     <ClInclude Include="src\Systems\Gameplay\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />

@@ -809,6 +809,75 @@
         }
       ]
     },
+    // Wooden Sword
+    {
+      "Name": "Wooden Sword",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Wooden Sword",
+            "extendedName": "",
+            "description": "A simple sword usually used for training."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 66,
+            "layer": 1,
+            "color": [ 68, 48, 40 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 1.8,
+            "materials": [
+              "Wood"
+            ]
+          }
+        },
+        {
+          "Name": "Sharp",
+          "Data": {
+            "sharpness": 2
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 60,
+            "current": 60
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Wood": 2
+            }
+          }
+        }
+      ]
+    },
     // Machete
     {
       "Name": "Machete",
@@ -1593,7 +1662,7 @@
           "Name": "Actor",
           "Data": {
             "ap": 0,
-            "moveSpeed": 1.0,
+            "moveSpeed": 1.1,
             "actSpeed": 1.0
           }
         },
@@ -1610,8 +1679,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 10,
-            "current": 10
+            "max": 25,
+            "current": 25
           }
         },
         {

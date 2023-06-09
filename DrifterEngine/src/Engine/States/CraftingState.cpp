@@ -3,7 +3,7 @@
 #include "Components/Components.h"
 #include "Factory/EntityFactory.h"
 #include "Utility/EntityHelpers.h"
-#include "Utility/ItemIDToEntityID.h"
+#include "Systems/Helpers/ItemDatabase.h"
 
 
 static constexpr float CRAFTING_WINDOW_WIDTH = 352.f;
@@ -163,7 +163,7 @@ void drft::CraftingState::refreshCraftingList()
 		const auto& container = getContext().registry.get<component::Container>(_sessionEntity);
 		for (auto itemID : container.contents)
 		{
-			auto itemEntity = util::ItemIDToEntityID(itemID, getContext().registry);
+			auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
 			++materialCount[util::getEntityName({ getContext().registry, itemEntity })];
 		}
 

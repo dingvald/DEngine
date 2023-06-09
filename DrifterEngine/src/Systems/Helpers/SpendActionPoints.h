@@ -2,7 +2,7 @@
 
 namespace drft::system
 {
-	const int BASE_ACTION_COST = 100;
+	static constexpr int BASE_ACTION_COST = 100;
 
 	enum class ActionType
 	{
