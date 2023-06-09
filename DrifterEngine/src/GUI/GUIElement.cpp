@@ -811,24 +811,90 @@ void drft::gui::ScrollingList::layoutChildren()
 {
 	float x = _style.at(_state).innerPadding.x;
 	float y = _style.at(_state).innerPadding.y;
-	float maxWidth = 0;
+	float maxHeight = 0.f;
 
-	for (auto& child : _children)
+	for (int i = _firstDisplayableIndex; i < _firstDisplayableIndex + _numDisplayableChildren; ++i)
 	{
-		auto rect = child->getGlobalBounds();
-
-		if (y + rect.height > _shape.getSize().y)
-		{
-			x += maxWidth;
-			y = 0;
-			maxWidth = 0;
-		}
-
-		child->setPosition({ x + _childOrigin.x, y + _childOrigin.y });
-		child->layoutChildren();
+		if (i >= _children.size()) break;
+		auto rect = _children[i]->getGlobalBounds();
+		maxHeight = std::max(maxHeight, rect.height + _style.at(_state).childPadding.y);
+		_children[i]->setPosition({ x + _childOrigin.x, y + _childOrigin.y });
+		_children[i]->layoutChildren();
 		y += rect.height + _style.at(_state).childPadding.y;
-		maxWidth = std::max(maxWidth, rect.width + _style.at(_state).childPadding.y);
 	}
+	determineNumberOfDisplayableChildren(maxHeight);
+}
+
+bool drft::gui::ScrollingList::onUpdate(const float dt)
+{
+	List::onUpdate(dt);
+	setScrollBarSizeAndPosition();
+
+	return false;
+}
+
+void drft::gui::ScrollingList::onRender(sf::RenderTarget& target)
+{
+	target.draw(_shape);
+	target.draw(_text);
+	if (_children.size() > _numDisplayableChildren)
+	{
+		target.draw(_scrollBar);
+	}
+	for (int i = _firstDisplayableIndex; i < _firstDisplayableIndex + _numDisplayableChildren; ++i)
+	{
+		if (i < _children.size())
+		{
+			_children[i]->render(target);
+		}
+	}
+}
+
+void drft::gui::ScrollingList::moveCursorUp()
+{
+	--_cursorPosition;
+	if (_cursorPosition < 0)
+	{
+		_cursorPosition = _children.size() - 1;
+		_firstDisplayableIndex = _children.size() - _numDisplayableChildren;
+	}
+	if (_cursorPosition < _firstDisplayableIndex)
+	{
+		--_firstDisplayableIndex;
+	}
+}
+
+void drft::gui::ScrollingList::moveCursorDown()
+{
+	++_cursorPosition;
+	if (_cursorPosition >= _children.size())
+	{
+		_cursorPosition = 0;
+		_firstDisplayableIndex = 0;
+	}
+	if (_cursorPosition >= _firstDisplayableIndex + _numDisplayableChildren)
+	{
+		++_firstDisplayableIndex;
+	}
+}
+
+void drft::gui::ScrollingList::setScrollBarSizeAndPosition()
+{
+	if (_children.empty()) return;
+
+	auto height = _shape.getSize().y;
+	auto heightPrime = height * (static_cast<float>(_numDisplayableChildren) / _children.size());
+	float right = _shape.getGlobalBounds().left + _shape.getSize().x;
+	float offset = (static_cast<float>(_firstDisplayableIndex) / (_children.size() - _numDisplayableChildren)) * (height-heightPrime);
+
+	_scrollBar.setFillColor(sf::Color(80, 80, 80, 200));
+	_scrollBar.setSize({ 4,heightPrime });
+	_scrollBar.setPosition({ right - _scrollBar.getSize().x, _shape.getGlobalBounds().top + offset});
+}
+
+void drft::gui::ScrollingList::determineNumberOfDisplayableChildren(float largestChildHeight)
+{
+	_numDisplayableChildren = static_cast<int>(_shape.getSize().y / largestChildHeight);
 }
 
 

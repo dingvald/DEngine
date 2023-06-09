@@ -26,7 +26,6 @@ namespace drft
 		gui::Panel _craftingBackground;
 		gui::Panel _craftingWindow;
 		gui::ScrollingList _craftingList{ true };
-		gui::ScrollingList _requiresList{ false };
 		gui::Stack _popupStack;
 		bool _requiresRefresh = false;
 	};

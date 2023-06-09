@@ -656,15 +656,16 @@ namespace drft::gui
 		bool onHandleEvent(const sf::Event& ev) override;
 		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
+		virtual void moveCursorDown();
+		virtual void moveCursorUp();
+		virtual void setStartingCursorPosition();
 
 	private:
 		void autoSize();
-		void setStartingCursorPosition();
-		void moveCursorDown();
-		void moveCursorUp();
-
+		
+	protected:
+		int _cursorPosition = 0;
 	private:
-		int _cursorPosition = -1;
 		bool _canInteract = false;
 	};
 
@@ -673,6 +674,19 @@ namespace drft::gui
 	public:
 		ScrollingList(bool canInteract);
 		void layoutChildren() override;
+		bool onUpdate(const float dt) override;
+		void onRender(sf::RenderTarget& target) override;
+
+	private:
+		void moveCursorUp() override;
+		void moveCursorDown() override;
+		void setScrollBarSizeAndPosition();
+		void determineNumberOfDisplayableChildren(float largestChildHeight);
+
+	private:
+		int _firstDisplayableIndex = 0;
+		int _numDisplayableChildren = 1;
+		sf::RectangleShape _scrollBar;
 	};
 
 	// Container where items added will be organized into an auto-sizing grid with a width & height.

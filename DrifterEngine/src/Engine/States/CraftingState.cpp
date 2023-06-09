@@ -8,6 +8,7 @@
 
 static constexpr float CRAFTING_WINDOW_WIDTH = 352.f;
 static constexpr float CRAFTING_WINDOW_HEIGHT = 256.f;
+static constexpr float DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS = 180.f;
 
 drft::CraftingState::CraftingState(StateStack& stack, StateContext& context)
     : State(stack, context)
@@ -44,7 +45,6 @@ bool drft::CraftingState::update(const float dt)
 	if (!_craftingBackground.update(dt)) return false;
 	if (!_craftingWindow.update(dt)) return false;
 	if (!_craftingList.update(dt)) return false;
-	if (!_requiresList.update(dt)) return false;
 
     return false;
 }
@@ -54,7 +54,6 @@ void drft::CraftingState::render(sf::RenderTarget& target)
 	_craftingBackground.render(target);
 	_craftingWindow.render(target);
 	_craftingList.render(target);
-	_requiresList.render(target);
 	_popupStack.render(target);
 }
 
@@ -107,8 +106,8 @@ void drft::CraftingState::shutdownSessionEntities()
 void drft::CraftingState::setupCraftingList()
 {
 	const auto& VIEW = getContext().window.getView();
-	_craftingList.setPosition(VIEW.getCenter() - sf::Vector2f{146,0});
-	_craftingList.setSize({ 64, CRAFTING_WINDOW_HEIGHT});
+	_craftingList.setPosition(VIEW.getCenter());
+	_craftingList.setSize({ CRAFTING_WINDOW_WIDTH, CRAFTING_WINDOW_HEIGHT});
 	_craftingList.setStyle(gui::ElementState::Idle, {
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {0.f, 24.f},
@@ -124,33 +123,12 @@ void drft::CraftingState::setupCraftingList()
 	_craftingList.setState(gui::ElementState::Focused);
 	_craftingList.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
-	_requiresList.setPosition(VIEW.getCenter());
-	_requiresList.setOrigin(gui::ElementPosition::CENTER_LEFT);
-	_requiresList.setSize({ (CRAFTING_WINDOW_WIDTH / 2), CRAFTING_WINDOW_HEIGHT });
-	_requiresList.setStyle(gui::ElementState::Idle, {
-		.innerPadding = {16.f, 16.f},
-		.childPadding = {0.f, 24.f},
-		.font = &getContext().fonts.get("Terminus"),
-		.textColor = sf::Color(150,150,150)
-		});
-	_requiresList.setStyle(gui::ElementState::Focused, {
-		.outlineColor = sf::Color(100,100,100,100),
-		.outlineThickness = 1.f,
-		.innerPadding = {16.f, 16.f},
-		.childPadding = {0.f, 24.f},
-		.font = &getContext().fonts.get("Terminus"),
-		.textColor = sf::Color::White
-		});
-	_requiresList.setState(gui::ElementState::Focused);
-	_requiresList.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
-
 	refreshCraftingList();
 }
 
 void drft::CraftingState::refreshCraftingList()
 {
 	_craftingList.clear();
-	_requiresList.clear();
 
 	const auto craftableItems = getContext().registry.try_get<component::MyCraftableItems>(_sessionEntity);
 	const auto& factory = getContext().registry.ctx().get<const EntityFactory&>();
@@ -186,19 +164,19 @@ void drft::CraftingState::refreshCraftingList()
 			const auto craftableName = util::getEntityName({ prototypeReg, craftable });
 			const auto& recipe = prototypeReg.get<component::Craftable>(factory.get(craftableName)).recipe;
 
-			std::string str = std::to_string(count);
-			_craftingList.insert(str.data(), gui::DualContainer())
+			std::string countStr = std::to_string(count);
+			_craftingList.insert(countStr.data(), gui::DualContainer())
 				.setStyle(gui::ElementState::Idle, {
-						.childPadding = {12, 0}
+						.childPadding = {DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS, 0}
 					})
 				.setStyle(gui::ElementState::Focused, {
-						.childPadding = {12, 0}
+						.childPadding = {DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS, 0}
 					})
 				.setStyle(gui::ElementState::Unselectable, {
-						.childPadding = {12, 0}
+						.childPadding = {DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS, 0}
 					})
 				.setStyle(gui::ElementState::FocusedUnselectable, {
-						.childPadding = {12, 0}
+						.childPadding = {DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS, 0}
 					})
 				.registerCallback(gui::ElementCallbackType::OnIsSelectable,
 					[count, numCraftables]() {
@@ -231,89 +209,122 @@ void drft::CraftingState::refreshCraftingList()
 						return true;
 					});
 
-					const auto& itemRender = prototypeReg.get<component::Render>(craftable);
-					sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
-					_craftingList[str.data()].insert("Icon", gui::Icon(sprite))
-						.setSize({ 16, 16 })
-						.setStyle(gui::ElementState::Idle, {
-							.fillColor = itemRender.color
-							})
-						.setStyle(gui::ElementState::Focused, {
-							.fillColor = itemRender.color
-							})
-						.setStyle(gui::ElementState::Unselectable, {
-							.fillColor = itemRender.color
-							})
-						.setStyle(gui::ElementState::FocusedUnselectable, {
-							.fillColor = itemRender.color
-							});
 
+			const auto& itemRender = prototypeReg.get<component::Render>(craftable);
+			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
+			_craftingList[countStr.data()].insert("Item", gui::DualContainer())
+				.setStyle(gui::ElementState::Idle, {
+						.childPadding = {16.f, 0.f}
+					})
+				.setStyle(gui::ElementState::Focused, {
+						.childPadding = {16.f, 0.f}
+					})
+				.setStyle(gui::ElementState::Unselectable, {
+						.childPadding = {16.f, 0.f}
+					})
+				.setStyle(gui::ElementState::FocusedUnselectable, {
+						.childPadding = {16.f, 0.f}
+					});
 
-					_craftingList[str.data()].insert("Label", gui::Label())
-						.setStyle(gui::ElementState::Idle, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = craftableIdle,
-							.textSize = 16
-							})
-						.setStyle(gui::ElementState::Focused, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = craftableFocused,
-							.textSize = 16
-							})
-						.setStyle(gui::ElementState::Unselectable, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = uncraftableIdle,
-							.textSize = 16
-							})
-						.setStyle(gui::ElementState::FocusedUnselectable, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = uncraftableFocused,
-							.textSize = 16
-							})
-						.setTextString(craftableName.data())
-						.setTextOrigin(gui::ElementPosition::CENTER_LEFT);
+			_craftingList[countStr.data()].insert("Requires", gui::MultiContainer())
+				.setStyle(gui::ElementState::Idle, {
+						.childPadding = {48, 0}
+					})
+				.setStyle(gui::ElementState::Focused, {
+						.childPadding = {48, 0}
+					})
+				.setStyle(gui::ElementState::Unselectable, {
+						.childPadding = {48, 0}
+					})
+				.setStyle(gui::ElementState::FocusedUnselectable, {
+						.childPadding = {48, 0}
+					});
 
-					_requiresList.insert(str.data(), gui::MultiContainer())
-						.setStyle(gui::ElementState::Idle, {
-								.childPadding = {48, 0}
-							})
-						.setStyle(gui::ElementState::Focused, {
-								.childPadding = {48, 0}
-							});
+			_craftingList[countStr.data()]["Item"].insert("Icon", gui::Icon(sprite))
+				.setSize({ 16, 16 })
+				.setStyle(gui::ElementState::Idle, {
+					.fillColor = itemRender.color
+					})
+				.setStyle(gui::ElementState::Focused, {
+					.fillColor = itemRender.color
+					})
+				.setStyle(gui::ElementState::Unselectable, {
+					.fillColor = itemRender.color
+					})
+				.setStyle(gui::ElementState::FocusedUnselectable, {
+					.fillColor = itemRender.color
+					});
 
-					for (auto [matName, amount] : recipe)
-					{
-						const auto& matRender = prototypeReg.get<component::Render>(factory.get(matName));
-						sf::Sprite matSprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(matRender.sprite), sprites) };
-						std::string matstr = std::to_string(matCount);
-						sf::Color numberColor = sf::Color::White;
-						if (materialCount[matName] < static_cast<int>(amount))
-						{
-							numberColor = sf::Color(80, 80, 80);
-						}
-						_requiresList[str.data()].insert(matstr.data(), gui::Icon(matSprite))
-							.setSize({ 16, 16 })
-							.setStyle(gui::ElementState::Idle, {
-								.fillColor = matRender.color,
-								.font = &getContext().fonts.get("Terminus"),
-								.textColor = numberColor,
-								.textSize = 16
-								})
-							.setStyle(gui::ElementState::Focused, {
-								.fillColor = matRender.color,
-								.font = &getContext().fonts.get("Terminus"),
-								.textColor = numberColor,
-								.textSize = 16
-								})
-							.setTextString(std::format("{}/{}", materialCount[matName], amount))
-							.setTextOrigin(gui::ElementPosition::CENTER_LEFT)
-							.setTextPosition(gui::ElementPosition::CENTER_RIGHT)
-							.setState(gui::ElementState::Idle);
+			_craftingList[countStr.data()]["Item"].insert("Label", gui::Label())
+				.setStyle(gui::ElementState::Idle, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = craftableIdle,
+					.textSize = 16
+					})
+				.setStyle(gui::ElementState::Focused, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = craftableFocused,
+					.textSize = 16
+					})
+				.setStyle(gui::ElementState::Unselectable, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = uncraftableIdle,
+					.textSize = 16
+					})
+				.setStyle(gui::ElementState::FocusedUnselectable, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = uncraftableFocused,
+					.textSize = 16
+					})
+				.setTextString(craftableName.data())
+				.setTextOrigin(gui::ElementPosition::CENTER_LEFT);
+				
 
-						++matCount;
-					}
+			for (auto [matName, amount] : recipe)
+			{
+				const auto& matRender = prototypeReg.get<component::Render>(factory.get(matName));
+				sf::Sprite matSprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(matRender.sprite), sprites) };
+				std::string matstr = std::to_string(matCount);
+				sf::Color numberColor = sf::Color::White;
+				if (materialCount[matName] < static_cast<int>(amount))
+				{
+					numberColor = sf::Color(80, 80, 80);
+				}
+				_craftingList[countStr.data()]["Requires"].insert(matstr.data(), gui::Icon(matSprite))
+					.setSize({ 16, 16 })
+					.setStyle(gui::ElementState::Idle, {
+						.fillColor = matRender.color,
+						.font = &getContext().fonts.get("Terminus"),
+						.textColor = numberColor,
+						.textSize = 16
+						})
+					.setStyle(gui::ElementState::Focused, {
+						.fillColor = matRender.color,
+						.font = &getContext().fonts.get("Terminus"),
+						.textColor = numberColor,
+						.textSize = 16
+						})
+					.setStyle(gui::ElementState::Unselectable, {
+						.fillColor = matRender.color,
+						.font = &getContext().fonts.get("Terminus"),
+						.textColor = numberColor,
+						.textSize = 16
+						})
+					.setStyle(gui::ElementState::FocusedUnselectable, {
+						.fillColor = matRender.color,
+						.font = &getContext().fonts.get("Terminus"),
+						.textColor = numberColor,
+						.textSize = 16
+						})
+					.setTextString(std::format("{}/{}", materialCount[matName], amount))
+					.setTextOrigin(gui::ElementPosition::CENTER_LEFT)
+					.setTextPosition(gui::ElementPosition::CENTER_RIGHT)
+					.setState(gui::ElementState::Idle);
 
-					++count;
+				++matCount;
+			}
+
+			++count;
 		}
 	}
 	else
