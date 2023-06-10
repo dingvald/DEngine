@@ -15,6 +15,13 @@ namespace drft::system
 		void createHealthBar();
 		void createStaminaBar();
 		void createInHandsDisplay();
+		void createItemsOnGroundDisplay();
+
+		void updateHealthBar(entt::const_handle player);
+		void updateStaminaBar(entt::const_handle player);
+		void updateItemsOnGround(entt::const_handle player);
+		void updateInHandsDisplay(entt::const_handle player);
+		void updateFlashEffects();
 		void addItemIcon(gui::Element& container, entt::entity item);
 		void queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl);
 
@@ -37,6 +44,7 @@ namespace drft::system
 		sf::Sprite _staminaIcon{};
 
 		gui::DualContainer _inHandsDisplay;
+		gui::List _itemsOnGround{ false };
 
 		std::vector<FlashEffect> _flashEffects;
 	};

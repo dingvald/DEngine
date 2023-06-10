@@ -37,14 +37,15 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 		auto itemEntity = ItemDatabase::getEntityFromItemID(itemHit);
 		if (itemEntity != entt::null)
 		{
-			if (auto health = registry.try_get<component::Health>(itemEntity))
-			{
-				registry.emplace<component::action::IncomingDamage>(itemEntity, incomingDamage.amount, incomingDamage.amount);
-			}
 			if (auto wearable = registry.try_get<component::Wearable>(itemEntity))
 			{
 				incomingDamage.amount = std::clamp(incomingDamage.amount - wearable->protection, 0, incomingDamage.amount);
+				if (auto health = registry.try_get<component::Health>(itemEntity))
+				{
+					registry.emplace<component::action::IncomingDamage>(itemEntity, wearable->protection, wearable->protection);
+				}
 			}
+			
 		}
 	}
 }

@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "HUD.h"
 #include "Spatial/Conversions.h"
+#include "Spatial/WorldGrid.h"
 #include "Utility/SpriteIndexer.h"
+#include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Components/Components.h"
 
@@ -18,6 +20,7 @@ void drft::system::HUD::init()
 	createHealthBar();
 	createStaminaBar();
 	createInHandsDisplay();
+	createItemsOnGroundDisplay();
 	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
 }
@@ -26,84 +29,15 @@ void drft::system::HUD::fixedUpdate()
 {
 	auto view = registry->view<component::Player>();
 	auto player = entt::handle(*registry, view.front());
-	if (auto health = player.try_get<component::Health>())
-	{
-		_healthBarContainer.setSize({ static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER), HEALTHBAR_HEIGHT + 2.f });
-		_healthBar.setSize({ (static_cast<float>(health->current) / static_cast<float>(health->max)) 
-			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER)-2.0f, HEALTHBAR_HEIGHT });
-	}
-	else
-	{
-		_healthBar.setSize({ 0.f, HEALTHBAR_HEIGHT });
-	}
 
-	if (auto stamina = player.try_get<component::Stamina>())
-	{
-		_staminaBarContainer.setSize({ static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER), STAMINABAR_HEIGHT + 2.f });
-		_staminaBar.setSize({ (static_cast<float>(stamina->current) / static_cast<float>(stamina->max))
-			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT });
-	}
-	else
-	{
-		_staminaBar.setSize({ 0.f, HEALTHBAR_HEIGHT });
-	}
+	// Player relevant displays
+	updateHealthBar(player);
+	updateStaminaBar(player);
+	updateInHandsDisplay(player);
+	updateItemsOnGround(player);
 
-	_inHandsDisplay["RightHandContainer"]["Item"].clear();
-	_inHandsDisplay["LeftHandContainer"]["Item"].clear();
-
-	if (auto body = player.try_get<component::Body>())
-	{
-		if (body->parts.contains("HeldR") && body->parts.at("HeldR") != component::Item::NONE)
-		{
-			entt::entity rightHandItem = ItemDatabase::getEntityFromItemID(body->parts.at("HeldR"));
-			addItemIcon(_inHandsDisplay["RightHandContainer"]["Item"], rightHandItem);
-		}
-		else
-		{
-			using namespace entt::literals;
-			const auto& sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
-			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(util::Sprite::PaperDollHandR, sprites) };
-			_inHandsDisplay["RightHandContainer"]["Item"].insert("Icon", gui::Icon(sprite))
-				.setSize({ 32,32 })
-				.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-				.setStyle(gui::ElementState::Idle, {
-						.fillColor = sf::Color(80,80,80,150)
-					});
-		}
-		if (body->parts.contains("HeldL") && body->parts.at("HeldL") != component::Item::NONE)
-		{
-			entt::entity leftHandItem = ItemDatabase::getEntityFromItemID(body->parts.at("HeldL"));
-			addItemIcon(_inHandsDisplay["LeftHandContainer"]["Item"], leftHandItem);
-		}
-		else
-		{
-			using namespace entt::literals;
-			const auto& sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
-			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(util::Sprite::PaperDollHandL, sprites) };
-			_inHandsDisplay["LeftHandContainer"]["Item"].insert("Icon", gui::Icon(sprite))
-				.setSize({ 32,32 })
-				.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-				.setStyle(gui::ElementState::Idle, {
-						.fillColor = sf::Color(80,80,80,150)
-					});
-		}
-	}
-
-	_inHandsDisplay.update(0.f);
-
-	auto it = _flashEffects.begin();
-	while (it != _flashEffects.end())
-	{
-		--(it->ttl);
-		if (it->ttl <= 0)
-		{
-			it = _flashEffects.erase(it);
-		}
-		else
-		{
-			++it;
-		}
-	}
+	// Effects
+	updateFlashEffects();
 }
 
 void drft::system::HUD::render(sf::RenderTarget& target)
@@ -117,6 +51,7 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 	target.draw(_staminaIcon);
 
 	_inHandsDisplay.render(target);
+	_itemsOnGround.render(target);
 
 	for (auto effect : _flashEffects)
 	{
@@ -184,6 +119,145 @@ void drft::system::HUD::createInHandsDisplay()
 			.outlineThickness = 1.f
 			})
 		.insert("Item", gui::DualContainer());
+}
+
+void drft::system::HUD::createItemsOnGroundDisplay()
+{
+	using namespace entt::literals;
+	const auto viewport = registry->ctx().get<sf::RenderWindow&>().getView().getCenter();
+	_itemsOnGround.setPosition({ viewport.x, viewport.y })
+		.setStyle(gui::ElementState::Idle, {
+			.fillColor = sf::Color::Magenta,
+			.outlineColor = sf::Color(255,255,255,150),
+			.outlineThickness = 1.f,
+			.innerPadding = {8.f, 8.f},
+			.childPadding = {0.f, 8.f},
+			.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+			.textSize = 16
+			})
+		.setStyle(gui::ElementState::Focused, {
+			.fillColor = sf::Color::Magenta,
+			.outlineColor = sf::Color(255,255,255,150),
+			.outlineThickness = 1.f,
+			.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+			.textSize = 16
+			})
+		.setTextString("On Ground:")
+		.setTextPosition(gui::ElementPosition::TOP_CENTER)
+		.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER)
+		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+}
+
+void drft::system::HUD::updateHealthBar(entt::const_handle player)
+{
+	if (auto health = player.try_get<component::Health>())
+	{
+		_healthBarContainer.setSize({ static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER), HEALTHBAR_HEIGHT + 2.f });
+		_healthBar.setSize({ (static_cast<float>(health->current) / static_cast<float>(health->max))
+			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT });
+	}
+	else
+	{
+		_healthBar.setSize({ 0.f, HEALTHBAR_HEIGHT });
+	}
+}
+
+void drft::system::HUD::updateStaminaBar(entt::const_handle player)
+{
+	if (auto stamina = player.try_get<component::Stamina>())
+	{
+		_staminaBarContainer.setSize({ static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER), STAMINABAR_HEIGHT + 2.f });
+		_staminaBar.setSize({ (static_cast<float>(stamina->current) / static_cast<float>(stamina->max))
+			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT });
+	}
+	else
+	{
+		_staminaBar.setSize({ 0.f, HEALTHBAR_HEIGHT });
+	}
+}
+
+void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
+{
+	using namespace entt::literals;
+	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+	_itemsOnGround.clear();
+	auto pos = player.get<component::Position>();
+	auto entities = grid.entitiesAt(spatial::toTileSpace(pos.position));
+	int count = 0;
+	for (auto entity : entities)
+	{
+		_itemsOnGround.insert(std::to_string(count), gui::Label())
+			.setStyle(gui::ElementState::Idle, {
+				.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+				.textSize = 16
+				})
+			.setOrigin(gui::ElementPosition::CENTER_LEFT)
+			.setTextString(util::getEntityName({ *registry, entity }));
+	}
+	_itemsOnGround.update(0.f);
+}
+
+void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
+{
+	_inHandsDisplay["RightHandContainer"]["Item"].clear();
+	_inHandsDisplay["LeftHandContainer"]["Item"].clear();
+
+	if (auto body = player.try_get<component::Body>())
+	{
+		if (body->parts.contains("HeldR") && body->parts.at("HeldR") != component::Item::NONE)
+		{
+			entt::entity rightHandItem = ItemDatabase::getEntityFromItemID(body->parts.at("HeldR"));
+			addItemIcon(_inHandsDisplay["RightHandContainer"]["Item"], rightHandItem);
+		}
+		else
+		{
+			using namespace entt::literals;
+			const auto& sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
+			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(util::Sprite::PaperDollHandR, sprites) };
+			_inHandsDisplay["RightHandContainer"]["Item"].insert("Icon", gui::Icon(sprite))
+				.setSize({ 32,32 })
+				.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
+				.setStyle(gui::ElementState::Idle, {
+						.fillColor = sf::Color(80,80,80,150)
+					});
+		}
+		if (body->parts.contains("HeldL") && body->parts.at("HeldL") != component::Item::NONE)
+		{
+			entt::entity leftHandItem = ItemDatabase::getEntityFromItemID(body->parts.at("HeldL"));
+			addItemIcon(_inHandsDisplay["LeftHandContainer"]["Item"], leftHandItem);
+		}
+		else
+		{
+			using namespace entt::literals;
+			const auto& sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
+			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(util::Sprite::PaperDollHandL, sprites) };
+			_inHandsDisplay["LeftHandContainer"]["Item"].insert("Icon", gui::Icon(sprite))
+				.setSize({ 32,32 })
+				.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
+				.setStyle(gui::ElementState::Idle, {
+						.fillColor = sf::Color(80,80,80,150)
+					});
+		}
+	}
+
+	_inHandsDisplay.update(0.f);
+}
+
+void drft::system::HUD::updateFlashEffects()
+{
+	auto it = _flashEffects.begin();
+	while (it != _flashEffects.end())
+	{
+		--(it->ttl);
+		if (it->ttl <= 0)
+		{
+			it = _flashEffects.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
