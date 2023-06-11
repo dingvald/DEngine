@@ -35,13 +35,11 @@ void drft::system::HUD::fixedUpdate()
 	auto player = entt::handle(*registry, view.front());
 
 	// Player relevant displays
-	if (player.valid())
-	{
-		updateHealthBar(player);
-		updateStaminaBar(player);
-		updateInHandsDisplay(player);
-		updateItemsOnGround(player);
-	}
+	updateHealthBar(player);
+	updateStaminaBar(player);
+	updateInHandsDisplay(player);
+	updateItemsOnGround(player);
+
 	// Effects
 	updateFlashEffects();
 }
@@ -184,29 +182,33 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
 
 	_itemsOnGround.clear();
-	auto pos = player.get<component::Position>();
-	auto entities = grid.entitiesAt(spatial::toTileSpace(pos.position), 
-		[this](entt::entity entity) -> bool
-		{
-			if (registry->all_of<component::Info>(entity) 
-			&& !registry->any_of<component::Player>(entity))
-			{
-				return true;
-			}
-			return false;
-		});
-	int count = 0;
-	for (auto entity : entities)
+
+	if (auto pos = player.try_get<component::Position>())
 	{
-		_itemsOnGround.insert(std::to_string(count), gui::Label())
-			.setStyle(gui::ElementState::Idle, {
-				.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
-				.textColor = sf::Color(150,150,150,150),
-				.textSize = 16
-				})
-			.setOrigin(gui::ElementPosition::CENTER_LEFT)
-			.setTextString(util::getEntityName({ *registry, entity }));
+		auto entities = grid.entitiesAt(spatial::toTileSpace(pos->position),
+			[this](entt::entity entity) -> bool
+			{
+				if (registry->all_of<component::Info>(entity)
+				&& !registry->any_of<component::Player>(entity))
+				{
+					return true;
+				}
+		return false;
+			});
+		int count = 0;
+		for (auto entity : entities)
+		{
+			_itemsOnGround.insert(std::to_string(count), gui::Label())
+				.setStyle(gui::ElementState::Idle, {
+					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+					.textColor = sf::Color(150,150,150,150),
+					.textSize = 16
+					})
+				.setOrigin(gui::ElementPosition::CENTER_LEFT)
+				.setTextString(util::getEntityName({ *registry, entity }));
+		}
 	}
+	
 	_itemsOnGround.update(0.f);
 }
 
