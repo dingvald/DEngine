@@ -5,6 +5,7 @@
 #include "Utility/SpriteIndexer.h"
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
+#include "Systems/Helpers/FindItemOwner.h"
 #include "Components/Components.h"
 
 static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 16.f };
@@ -21,6 +22,9 @@ void drft::system::HUD::init()
 	createStaminaBar();
 	createInHandsDisplay();
 	createItemsOnGroundDisplay();
+
+	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	dispatcher.sink<events::ItemBreakEvent>().connect<&HUD::onItemBreakEvent>(this);
 	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
 }
@@ -31,11 +35,13 @@ void drft::system::HUD::fixedUpdate()
 	auto player = entt::handle(*registry, view.front());
 
 	// Player relevant displays
-	updateHealthBar(player);
-	updateStaminaBar(player);
-	updateInHandsDisplay(player);
-	updateItemsOnGround(player);
-
+	if (player.valid())
+	{
+		updateHealthBar(player);
+		updateStaminaBar(player);
+		updateInHandsDisplay(player);
+		updateItemsOnGround(player);
+	}
 	// Effects
 	updateFlashEffects();
 }
@@ -124,15 +130,15 @@ void drft::system::HUD::createInHandsDisplay()
 void drft::system::HUD::createItemsOnGroundDisplay()
 {
 	using namespace entt::literals;
-	const auto viewport = registry->ctx().get<sf::RenderWindow&>().getView().getCenter();
-	_itemsOnGround.setPosition({ viewport.x, viewport.y })
+	const auto view = registry->ctx().get<sf::RenderWindow&>().getView();
+	_itemsOnGround.setPosition({ view.getCenter().x + (view.getSize().x / 2) - 80, view.getCenter().y + (view.getSize().y / 2) - 64 })
 		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color::Magenta,
-			.outlineColor = sf::Color(255,255,255,150),
+			.fillColor = sf::Color(0,0,0,100),
 			.outlineThickness = 1.f,
 			.innerPadding = {8.f, 8.f},
 			.childPadding = {0.f, 8.f},
 			.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+			.textColor = sf::Color(200,200,200,200),
 			.textSize = 16
 			})
 		.setStyle(gui::ElementState::Focused, {
@@ -142,9 +148,6 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 			.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
 			.textSize = 16
 			})
-		.setTextString("On Ground:")
-		.setTextPosition(gui::ElementPosition::TOP_CENTER)
-		.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER)
 		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 }
 
@@ -166,9 +169,8 @@ void drft::system::HUD::updateStaminaBar(entt::const_handle player)
 {
 	if (auto stamina = player.try_get<component::Stamina>())
 	{
-		_staminaBarContainer.setSize({ static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER), STAMINABAR_HEIGHT + 2.f });
-		_staminaBar.setSize({ (static_cast<float>(stamina->current) / static_cast<float>(stamina->max))
-			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT });
+		_staminaBarContainer.setSize({ stamina->max * STAMINABAR_WIDTH_MULTIPLIER, STAMINABAR_HEIGHT + 2.f });
+		_staminaBar.setSize({ (stamina->current / stamina->max) * (stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.f, STAMINABAR_HEIGHT });
 	}
 	else
 	{
@@ -180,15 +182,26 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 {
 	using namespace entt::literals;
 	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+
 	_itemsOnGround.clear();
 	auto pos = player.get<component::Position>();
-	auto entities = grid.entitiesAt(spatial::toTileSpace(pos.position));
+	auto entities = grid.entitiesAt(spatial::toTileSpace(pos.position), 
+		[this](entt::entity entity) -> bool
+		{
+			if (registry->all_of<component::Info>(entity) 
+			&& !registry->any_of<component::Player>(entity))
+			{
+				return true;
+			}
+			return false;
+		});
 	int count = 0;
 	for (auto entity : entities)
 	{
 		_itemsOnGround.insert(std::to_string(count), gui::Label())
 			.setStyle(gui::ElementState::Idle, {
 				.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+				.textColor = sf::Color(150,150,150,150),
 				.textSize = 16
 				})
 			.setOrigin(gui::ElementPosition::CENTER_LEFT)
@@ -301,6 +314,13 @@ void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f siz
 	shape.setFillColor(sf::Color::White);
 
 	_flashEffects.emplace_back(shape, ttl);
+}
+
+void drft::system::HUD::onItemBreakEvent(events::ItemBreakEvent& ev)
+{
+	if (!registry->all_of<component::Player>(ev.owner)) return;
+
+	std::cout << "Item breaks!!" << std::endl;
 }
 
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)

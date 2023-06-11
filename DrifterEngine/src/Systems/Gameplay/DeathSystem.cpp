@@ -5,6 +5,7 @@
 #include "Events/RequestStateChange.h"
 #include "Engine/States/StateIdentifiers.h"
 #include "Spatial/Conversions.h"
+#include "Systems/Helpers/FindItemOwner.h"
 #include "Random/RandomNumberGenerator.h"
 #include "Utility/EntityHelpers.h"
 #include "Events/ItemBreakEvent.h"
@@ -59,7 +60,8 @@ void drft::system::DeathSystem::update(const float dt)
 	auto itemView = registry->view<component::action::Die, component::Item>(entt::exclude<component::Position>);
 	for (auto [entity, item] : itemView.each())
 	{
-		dispatcher.trigger(events::ItemBreakEvent(item.id));
+		auto owner = findItemOwner(*registry, item.id, WhereToLook::Bodies);
+		dispatcher.trigger(events::ItemBreakEvent(item.id, owner));
 		registry->destroy(entity);
 	}
 }

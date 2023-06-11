@@ -1,6 +1,7 @@
 #pragma once
 #include "Systems/System.h"
 #include "GUI/GUIElement.h"
+#include "Events/ItemBreakEvent.h"
 
 namespace drft::system
 {
@@ -25,6 +26,7 @@ namespace drft::system
 		void addItemIcon(gui::Element& container, entt::entity item);
 		void queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl);
 
+		void onItemBreakEvent(events::ItemBreakEvent& ev);
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
 		void onConsumeStamina(entt::registry& registry, entt::entity entity);
 

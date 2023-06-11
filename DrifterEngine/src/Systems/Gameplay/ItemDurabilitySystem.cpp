@@ -10,17 +10,13 @@ void drft::system::ItemDurabilitySystem::init()
 
 void drft::system::ItemDurabilitySystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
-	// find owner
-	auto bodyView = registry->view<component::Body>();
-	for (auto [entity, body] : bodyView.each())
+	auto& body = registry->get<component::Body>(ev.owner);
+	for (auto& [slotname, itemID] : body.parts)
 	{
-		for (auto& [slotname, itemID] : body.parts)
+		if (itemID == ev.itemID)
 		{
-			if (itemID == ev.itemID)
-			{
-				itemID = component::Item::NONE;
-				return;
-			}
+			itemID = component::Item::NONE;
+			return;
 		}
 	}
 }
