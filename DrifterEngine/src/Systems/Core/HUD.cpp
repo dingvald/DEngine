@@ -4,8 +4,10 @@
 #include "Spatial/WorldGrid.h"
 #include "Utility/SpriteIndexer.h"
 #include "Utility/EntityHelpers.h"
+#include "Utility/GetTextCenter.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Systems/Helpers/FindItemOwner.h"
+#include "Systems/Helpers/GetCurrentCameraOrigin.h"
 #include "Components/Components.h"
 
 static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 16.f };
@@ -16,12 +18,15 @@ static const sf::Vector2f STAMINABAR_POSITION = HEALTHBAR_POSITION + sf::Vector2
 static constexpr float STAMINABAR_HEIGHT = HEALTHBAR_HEIGHT;
 static constexpr int STAMINABAR_WIDTH_MULTIPLIER = HEALTHBAR_WIDTH_MULTIPLIER;
 
+static constexpr int MESSAGE_LIFETIME = 80; // frames
+
 void drft::system::HUD::init()
 {
 	createHealthBar();
 	createStaminaBar();
 	createInHandsDisplay();
 	createItemsOnGroundDisplay();
+	createFloatingMessagesDisplay();
 
 	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::ItemBreakEvent>().connect<&HUD::onItemBreakEvent>(this);
@@ -39,6 +44,7 @@ void drft::system::HUD::fixedUpdate()
 	updateStaminaBar(player);
 	updateInHandsDisplay(player);
 	updateItemsOnGround(player);
+	updateFloatingMessagesDisplay(player);
 
 	// Effects
 	updateFlashEffects();
@@ -56,6 +62,11 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 
 	_inHandsDisplay.render(target);
 	_itemsOnGround.render(target);
+	
+	for (auto& message : _floatingMessages)
+	{
+		target.draw(message.text);
+	}
 
 	for (auto effect : _flashEffects)
 	{
@@ -133,20 +144,18 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,100),
 			.outlineThickness = 1.f,
-			.innerPadding = {8.f, 8.f},
-			.childPadding = {0.f, 8.f},
+			.innerPadding = {0.f, 0.f},
+			.childPadding = {0.f, 4.f},
 			.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
 			.textColor = sf::Color(200,200,200,200),
 			.textSize = 16
 			})
-		.setStyle(gui::ElementState::Focused, {
-			.fillColor = sf::Color::Magenta,
-			.outlineColor = sf::Color(255,255,255,150),
-			.outlineThickness = 1.f,
-			.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
-			.textSize = 16
-			})
 		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+}
+
+void drft::system::HUD::createFloatingMessagesDisplay()
+{
+	
 }
 
 void drft::system::HUD::updateHealthBar(entt::const_handle player)
@@ -258,6 +267,31 @@ void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
 	_inHandsDisplay.update(0.f);
 }
 
+void drft::system::HUD::updateFloatingMessagesDisplay(entt::const_handle player)
+{
+	const auto cameraOrigin = getCurrentCameraOrigin(*registry);
+
+	auto it = _floatingMessages.begin();
+	while (it != _floatingMessages.end())
+	{
+		auto pos = it->position - cameraOrigin;
+		it->text.setPosition(pos);
+		--(it->position.y);
+		--(it->ttl);
+		sf::Color color = it->text.getFillColor();
+		color.a = std::min(255, it->ttl*3);
+		it->text.setFillColor(color);
+		if (it->ttl <= 0)
+		{
+			it = _floatingMessages.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
+
 void drft::system::HUD::updateFlashEffects()
 {
 	auto it = _flashEffects.begin();
@@ -308,6 +342,18 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 	}
 }
 
+void drft::system::HUD::queueFloatingMessage(std::string&& message, sf::Color color, sf::Vector2f position, int ttl)
+{
+	using namespace entt::literals;
+	const auto& font = registry->ctx().get<sf::Font&>("terminus"_hs);
+
+	_floatingMessages.emplace_back(sf::Text(message, font), position + sf::Vector2f(spatial::TILE_WIDTH/2, 0), ttl);
+	auto& newMessage = _floatingMessages.back();
+	newMessage.text.setFillColor(color);
+	newMessage.text.setCharacterSize(16);
+	newMessage.text.setOrigin(util::getTextCenter(newMessage.text));
+}
+
 void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl)
 {
 	sf::RectangleShape shape;
@@ -321,16 +367,37 @@ void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f siz
 void drft::system::HUD::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
 	if (!registry->all_of<component::Player>(ev.owner)) return;
-
-	std::cout << "Item breaks!!" << std::endl;
+	if (auto pos = registry->try_get<component::Position>(ev.owner))
+	{
+		auto itemName = util::getEntityName({ *registry, ItemDatabase::getEntityFromItemID(ev.itemID) });
+		queueFloatingMessage(itemName + " broke!", sf::Color::Yellow, pos->position, MESSAGE_LIFETIME*2);
+	}
 }
 
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)
 {
-	if (!registry.all_of<component::Player>(entity)) return;
-	if (auto health = registry.try_get<component::Health>(entity))
+	auto& damage = registry.get<component::action::TakeDamage>(entity);
+	// queue damage numbers
+	if (auto pos = registry.try_get<component::Position>(entity))
 	{
-		auto& damage = registry.get<component::action::TakeDamage>(entity);
+		if (damage.amount > 0)
+		{
+			queueFloatingMessage(std::to_string(damage.amount), sf::Color::White, pos->position, MESSAGE_LIFETIME);
+		}
+		else if (damage.amount < 0)
+		{
+			queueFloatingMessage(std::to_string(std::abs(damage.amount)), sf::Color::Green, pos->position, MESSAGE_LIFETIME);
+		}
+		else
+		{
+			queueFloatingMessage(std::to_string(damage.amount), sf::Color::Blue, pos->position, MESSAGE_LIFETIME);
+		}
+	}
+	// Flash health bar
+	if (auto health = registry.try_get<component::Health>(entity);
+		registry.all_of<component::Player>(entity))
+	{
+		
 		if (damage.amount != 0)
 		{
 			sf::Vector2f size = { (static_cast<float>(health->current) / static_cast<float>(health->max))

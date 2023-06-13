@@ -6,7 +6,7 @@
 #include "Spatial/Helpers.h"
 #include "Services/DebugInfo.h"
 
-static const int REALITY_RADIUS = 64; // in tiles
+static const int REALITY_RADIUS = 80; // in tiles
 
 void drft::system::RealityBubble::init()
 {

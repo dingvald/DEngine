@@ -5,6 +5,7 @@
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/SpriteIndexer.h"
 
+//TODO: width and height should depend on player's container size
 static constexpr int INVENTORY_WIDTH = 5;
 static constexpr int INVENTORY_HEIGHT = 6;
 
@@ -666,7 +667,8 @@ void drft::InventoryState::setupEquipmentGrid()
 				.registerCallback(gui::ElementCallbackType::OnIsSelectable, []() -> bool
 					{
 						return false;
-					});
+					})
+				.setVisibility(false);
 			++dummyCount;
 			continue;
 		}

@@ -11,6 +11,14 @@ namespace drft::spatial
 
 namespace drft::gen
 {
+	enum class GenerationLayer
+	{
+		Environmentals,
+		Actors,
+		Structures,
+		Props
+	};
+
 	class WorldGenerator
 	{
 	public:

@@ -181,6 +181,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Systems\Helpers\FindItemOwner.cpp" />
+    <ClCompile Include="src\Systems\Helpers\GetCurrentCameraOrigin.cpp" />
     <ClCompile Include="src\Systems\Helpers\ItemDatabase.cpp" />
     <ClCompile Include="src\Engine\States\DisplayTextState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\QuestingSystem.cpp" />
@@ -221,6 +222,7 @@
     <ClCompile Include="src\Systems\Gameplay\OpenInventorySystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
+    <ClCompile Include="src\Utility\GetTextCenter.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
     <ClCompile Include="src\Utility\Statistics.cpp" />
     <ClCompile Include="src\Utility\SaveEntity.cpp" />
@@ -317,6 +319,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Systems\Helpers\FindItemOwner.h" />
+    <ClInclude Include="src\Systems\Helpers\GetCurrentCameraOrigin.h" />
     <ClInclude Include="src\Systems\Helpers\ItemDatabase.h" />
     <ClInclude Include="src\Engine\States\DisplayTextState.h" />
     <ClInclude Include="src\Systems\Gameplay\QuestingSystem.h" />
@@ -369,6 +372,7 @@
     <ClInclude Include="src\Systems\Gameplay\OpenInventorySystem.h" />
     <ClInclude Include="src\Systems\Gameplay\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
+    <ClInclude Include="src\Utility\GetTextCenter.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />
     <ClInclude Include="src\Utility\Statistics.h" />
     <ClInclude Include="src\Utility\SaveEntity.h" />

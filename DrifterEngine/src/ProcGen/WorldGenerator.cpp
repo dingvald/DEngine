@@ -227,7 +227,6 @@ void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2
             }
         }
     }
-
 }
 
 bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
@@ -290,13 +289,14 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
 
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
 
-    spatial::Grid<int> mask{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
-    determineAvailableSpaces(determineOpenFaces(coordinate), mask, seed);
+    spatial::Grid<int> freeSpaces{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
+
+    determineAvailableSpaces(determineOpenFaces(coordinate), freeSpaces, seed);
     for (auto& [category, entityList] : biome.prototypes)
     {
         for (auto& [entity, algorithm, params] : entityList)
         {
-           const auto positions = gen::String2Algorithm.at(algorithm)( seed, mask, params);
+           const auto positions = gen::String2Algorithm.at(algorithm)( seed, freeSpaces, params);
            gen::place(entity, spatial::toTileSpace(coordinate), positions, registry);
         }
     }

@@ -657,7 +657,8 @@ void drft::gui::Grid::layoutChildren()
 void drft::gui::Grid::moveCursorDown()
 {
 	++_cursorPosition.y;
-	if (_cursorPosition.y >= _numRows || (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
+	if (_cursorPosition.y >= _numRows 
+		|| (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
 	{
 		_cursorPosition.y = 0;
 		while (_cursorPosition.x + (_cursorPosition.y * _numColumns) < 0)
@@ -684,7 +685,8 @@ void drft::gui::Grid::moveCursorUp()
 void drft::gui::Grid::moveCursorRight()
 {
 	++_cursorPosition.x;
-	if (_cursorPosition.x >= _numColumns || (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
+	if (_cursorPosition.x >= _numColumns 
+		|| (_cursorPosition.x + _numColumns * _cursorPosition.y) >= _children.size())
 	{
 		_cursorPosition.x = 0;
 	}

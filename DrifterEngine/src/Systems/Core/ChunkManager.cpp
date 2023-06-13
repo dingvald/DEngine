@@ -13,6 +13,9 @@ using namespace drft::system;
 // TODO: Move save directory to state context
 static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\chunks\\";
 
+static constexpr int ACTIVE_CHUNK_RADIUS = 2;
+static constexpr int TO_SAVE_CHUNK_RADIUS = ACTIVE_CHUNK_RADIUS + 1;
+
 void drft::system::ChunkManager::init()
 {
 }
@@ -34,10 +37,6 @@ void drft::system::ChunkManager::update(const float dt)
 	process(_toSave, SAVE);
 
 	cleanUpChunks(cameraPosition);
-
-	auto biome = registry->ctx().get<gen::WorldGenerator>().getBiomeType(cameraPosition);
-	service::DebugInfo::instance().putInfo("Virtual Chunks", std::to_string(_chunks.size()));
-	service::DebugInfo::instance().putInfo("Biome", gen::Biome2String.at(biome).data());
 }
 
 void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
@@ -50,7 +49,7 @@ void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
 
 void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 {
-	auto activeCoords = spatial::getIntCircleInRadius(newPosition, _activeChunkRadius);
+	auto activeCoords = spatial::getIntCircleInRadius(newPosition, ACTIVE_CHUNK_RADIUS);
 
 	// Ensure active chunks are active or will be built
 	for (auto coord : activeCoords)
@@ -100,7 +99,7 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 		}
 		float distance = std::hypotf(static_cast<float>((newPosition.x - coord.first)),
 									static_cast<float>((newPosition.y - coord.second)));
-		if (distance > _toSaveRadius)
+		if (distance > TO_SAVE_CHUNK_RADIUS)
 		{
 			_toSave.push({ coord.first, coord.second });
 			chunk.setState(spatial::ChunkState::ToSave);
@@ -119,7 +118,7 @@ void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
 		}
 		float distance = std::hypotf(static_cast<float>((newPosition.x - coord.first)),
 									static_cast<float>((newPosition.y - coord.second)));
-		if (distance > _toSaveRadius)
+		if (distance > TO_SAVE_CHUNK_RADIUS)
 		{
 			toDelete.push_back(coord);
 		}
