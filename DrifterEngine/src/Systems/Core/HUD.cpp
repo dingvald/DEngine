@@ -386,7 +386,7 @@ void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity enti
 		}
 		else if (damage.amount < 0)
 		{
-			queueFloatingMessage(std::to_string(std::abs(damage.amount)), sf::Color::Green, pos->position, MESSAGE_LIFETIME);
+			queueFloatingMessage("+" + std::to_string(std::abs(damage.amount)), sf::Color::Green, pos->position, MESSAGE_LIFETIME);
 		}
 		else
 		{
