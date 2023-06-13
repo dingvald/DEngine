@@ -262,7 +262,7 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
         {
             for (auto& entity : category.value.GetObject())
             {
-                BiomePrototype prototype;
+                WildernessPrototype prototype;
                 auto entityObj = entity.value.GetObject();
                 prototype.name = entity.name.GetString();
                 prototype.algorithm = entityObj["Algorithm"].GetString();

@@ -3,7 +3,7 @@
 
 namespace drft::gen
 {
-	struct BiomePrototype
+	struct WildernessPrototype
 	{
 		std::string name;
 		std::string algorithm;
@@ -13,7 +13,7 @@ namespace drft::gen
 	struct Biome
 	{
 		BiomeType type;
-		using PrototypeList = std::vector<BiomePrototype>;
+		using PrototypeList = std::vector<WildernessPrototype>;
 		std::unordered_map<std::string, PrototypeList> prototypes;
 	};
 }
