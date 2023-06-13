@@ -5,6 +5,7 @@
 #include "Utility/SpriteIndexer.h"
 #include "Utility/EntityHelpers.h"
 #include "Utility/GetTextCenter.h"
+#include "Utility/SmoothTransition.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Systems/Helpers/FindItemOwner.h"
 #include "Systems/Helpers/GetCurrentCameraOrigin.h"
@@ -276,10 +277,11 @@ void drft::system::HUD::updateFloatingMessagesDisplay(entt::const_handle player)
 	{
 		auto pos = it->position - cameraOrigin;
 		it->text.setPosition(pos);
+		util::SmoothTransition transition(0, 255, 0, MESSAGE_LIFETIME);
+		sf::Color color = it->text.getFillColor();
+		color.a = static_cast<sf::Uint8>(transition.compute(static_cast<float>(it->ttl)));
 		--(it->position.y);
 		--(it->ttl);
-		sf::Color color = it->text.getFillColor();
-		color.a = std::min(255, it->ttl*3);
 		it->text.setFillColor(color);
 		if (it->ttl <= 0)
 		{
