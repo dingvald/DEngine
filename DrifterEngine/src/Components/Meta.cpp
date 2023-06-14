@@ -127,4 +127,8 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Horror, HORROR_STRING>()
 		.prop("serialize"_hs);
+
+	snapshot::reflectComponent<Door, DOOR_STRING>()
+		.prop("serialize"_hs)
+		.data<&Door::keyName>("keyName"_hs);
 }

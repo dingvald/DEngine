@@ -24,7 +24,7 @@ namespace drft::system
 
     private:
         sf::Texture _sprites;
-        std::map<int, SpriteBatch> _spriteLayers;
+        std::unordered_map<int, SpriteBatch> _spriteLayers;
     };
 
 } // namespace system

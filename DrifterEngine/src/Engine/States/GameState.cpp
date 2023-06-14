@@ -38,6 +38,7 @@
 #include "Systems/Gameplay/MovementSystem.h"
 #include "Systems/Gameplay/WaitingSystem.h"
 #include "Systems/Gameplay/PickUpSystem.h"
+#include "Systems/Gameplay/InteractionSystem.h"
 #include "Systems/Gameplay/LaunchAttackSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
@@ -241,6 +242,7 @@ void drft::GameState::importSystems()
 
 	_systems->add<HorrorSpawningSystem>(			Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
+	_systems->add<InteractionSystem>(				Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
 	_systems->add<PickUpSystem>(					Phase::OnUpdate);
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);

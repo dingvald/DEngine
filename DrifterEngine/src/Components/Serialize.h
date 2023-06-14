@@ -166,6 +166,12 @@ namespace cereal
 	{
 		archive(horror.standin);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Door& door)
+	{
+		archive(door.keyName);
+	}
 }
 
 

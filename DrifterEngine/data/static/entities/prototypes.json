@@ -2344,7 +2344,7 @@
           "Name": "Physical",
           "Data": {
             "blocks": true,
-            "weight": 400.0,
+            "weight": 20.0,
             "materials": [
               "Wood"
             ]
@@ -2354,6 +2354,81 @@
           "Name": "LightBlocking",
           "Data": {
             "opacity": 1.0
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 200,
+            "current": 200
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Wood": 4
+            }
+          }
+        }
+      ]
+    },
+    // Wood Door
+    {
+      "Name": "Wood Door",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Wood Door",
+            "extendedName": "",
+            "description": "A wooden structure used to allow selective passage."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 67,
+            "layer": 2,
+            "color": [ 121, 92, 50 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": true,
+            "weight": 20.0,
+            "materials": [
+              "Wood"
+            ]
+          }
+        },
+        {
+          "Name": "LightBlocking",
+          "Data": {
+            "opacity": 1.0
+          }
+        },
+        {
+          "Name": "Door",
+          "Data": {
+            "keyName": ""
           }
         },
         {

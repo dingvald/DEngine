@@ -57,6 +57,9 @@ void drft::system::PlayerInput::init()
 	_actionMap.addAction(Key::S, [](entt::handle entity) {
 		entity.emplace<component::action::ToggleSprint>();
 		});
+	_actionMap.addAction(Key::Space, [](entt::handle entity) {
+		entity.emplace<component::action::Interact>();
+		});
 }
 
 void drft::system::PlayerInput::update(const float dt)

@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\InteractionSystem.cpp" />
     <ClCompile Include="src\ProcGen\Machine.cpp" />
     <ClCompile Include="src\Systems\Helpers\FindItemOwner.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetCurrentCameraOrigin.cpp" />
@@ -319,6 +320,7 @@
     <ClCompile Include="src\Systems\Gameplay\WaitingSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\InteractionSystem.h" />
     <ClInclude Include="src\ProcGen\Machine.h" />
     <ClInclude Include="src\Systems\Helpers\FindItemOwner.h" />
     <ClInclude Include="src\Systems\Helpers\GetCurrentCameraOrigin.h" />

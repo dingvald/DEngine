@@ -193,8 +193,8 @@ entt::handle drft::EntityFactory::build(const std::string& name, entt::registry&
 	}
 	entt::entity newEntity = registry.create();
 	util::copyEntity(newEntity, _prototypes.at(name), registry, _protoRegistry);
-	auto info = registry.try_get<component::Info>(newEntity);
-	if (info)
+
+	if (auto info = registry.try_get<component::Info>(newEntity))
 	{
 		info->prototype = name;
 	}

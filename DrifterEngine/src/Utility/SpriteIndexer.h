@@ -70,7 +70,9 @@ namespace drft::util
 		Sandals,
 		Bracers,
 		Shield,
-		ShortSword
+		ShortSword,
+		Door,
+		DoorOpen
 	};
 
 	class SpriteIndexer

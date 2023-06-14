@@ -4,6 +4,5 @@
 int main()
 {
 	drft::Engine engine;
-
 	engine.run();
 }

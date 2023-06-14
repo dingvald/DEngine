@@ -187,6 +187,11 @@ namespace component
 	{
 		bool standin = false;
 	};
+
+	struct Door
+	{
+		std::string keyName = "";
+	};
 }
 
 namespace component::action
@@ -205,6 +210,8 @@ namespace component::action
 	struct ToggleSprint {};
 
 	struct Wait {};
+
+	struct Interact {};
 
 	struct IncomingDamage
 	{

@@ -2,6 +2,7 @@
 #include "EntityRenderer.h"
 #include "Components/Components.h"
 #include "Components/Tags.h"
+#include "Systems/Helpers/GetCurrentCameraOrigin.h"
 #include "Utility/SpriteBatch.h"
 #include "Spatial/Conversions.h"
 
@@ -18,14 +19,7 @@ void drft::system::EntityRenderer::init()
 
 void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
-	sf::FloatRect viewport;
-	const auto camera = registry->view<const component::Camera, const component::Position>();
-
-	// assumes only one camera, otherwise will just use the last one's position
-	for (auto const& [entity, cam, pos] : camera.each())
-	{
-		viewport = cam.viewport;
-	}
+	sf::Vector2f cameraOrigin = getCurrentCameraOrigin(*registry);
 
 	const auto view = registry->view< const component::Position, const component::Render, const component::Lit, const component::tag::InPlayerFOV, component::tag::InViewport>();
 	for (auto const & [entity, pos, ren, lit] : view.each())
@@ -33,17 +27,15 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(ren.color.r * (static_cast<float>(lit.color.r) / 255.f), 0.f, 255.f));
 		sf::Uint8 g = static_cast<sf::Uint8>(std::clamp(ren.color.g * (static_cast<float>(lit.color.g) / 255.f), 0.f, 255.f));
 		sf::Uint8 b = static_cast<sf::Uint8>(std::clamp(ren.color.b * (static_cast<float>(lit.color.b) / 255.f), 0.f, 255.f));
-		float x = std::round(pos.position.x - viewport.left);
-		float y = std::round(pos.position.y - viewport.top);
-		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(r,g,b, ren.color.a), {x, y});
+		sf::Vector2f renderPosition = pos.position - cameraOrigin;
+		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(r,g,b, ren.color.a), renderPosition);
 	}
 
 	const auto seenView = registry->view< const component::Position, const component::Render, const component::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren, seen] : seenView.each())
 	{
-		float x = std::round(pos.position.x - viewport.left);
-		float y = std::round(pos.position.y - viewport.top);
-		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(15,15,15), { x, y });
+		sf::Vector2f renderPosition = pos.position - cameraOrigin;
+		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(15,15,15), renderPosition);
 	}
 
 	for (auto& [layer, batch] : _spriteLayers)
