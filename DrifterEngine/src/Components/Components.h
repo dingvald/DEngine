@@ -190,6 +190,7 @@ namespace component
 
 	struct Door
 	{
+		bool isOpen = false;
 		std::string keyName = "";
 	};
 }
@@ -211,7 +212,20 @@ namespace component::action
 
 	struct Wait {};
 
-	struct Interact {};
+	struct TryInteract {};
+
+	struct DoInteract 
+	{
+		entt::entity actor;
+		entt::entity subject;
+	};
+
+	struct SelectDirection
+	{
+		std::function<bool(sf::Vector2i)> onDirectionSelect;
+	};
+
+	struct ToggleDoor {};
 
 	struct IncomingDamage
 	{

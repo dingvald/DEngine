@@ -58,7 +58,7 @@ void drft::system::PlayerInput::init()
 		entity.emplace<component::action::ToggleSprint>();
 		});
 	_actionMap.addAction(Key::Space, [](entt::handle entity) {
-		entity.emplace<component::action::Interact>();
+		entity.emplace<component::action::TryInteract>();
 		});
 }
 

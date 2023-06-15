@@ -1,6 +1,6 @@
 #pragma once
 #include "Systems/System.h"
-#include "UseItemFunctions/UseItemFunctions.h"
+#include "Systems/Gameplay/UseItemFunctions/UseItemFunctions.h"
 
 
 namespace drft::system

@@ -14,6 +14,7 @@ namespace drft
 		Map,
 		Crafting,
 		DisplayText,
+		SelectDirection,
 		Total
 	};
 }

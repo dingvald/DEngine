@@ -170,7 +170,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, Door& door)
 	{
-		archive(door.keyName);
+		archive(door.isOpen, door.keyName);
 	}
 }
 

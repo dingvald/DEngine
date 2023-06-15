@@ -9,6 +9,7 @@
 #include "States/GameOverState.h"
 #include "States/WorldMapState.h"
 #include "States/DisplayTextState.h"
+#include "States/SelectDirectionState.h"
 #include "Services/DebugInfo.h"
 
 using namespace drft;
@@ -65,6 +66,7 @@ void drft::Engine::registerStates()
 	_stateStack.registerState<PauseState>(States::Pause);
 	_stateStack.registerState<GameOverState>(States::GameOver);
 	_stateStack.registerState<DisplayTextState>(States::DisplayText);
+	_stateStack.registerState<SelectDirectionState>(States::SelectDirection);
 }
 
 void drft::Engine::handleEvents()

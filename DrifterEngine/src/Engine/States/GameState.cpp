@@ -26,30 +26,32 @@
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/DamageSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
-#include "Systems/Gameplay/SprintingSystem.h"
+#include "Systems/Gameplay/Actions/SprintingSystem.h"
 #include "Systems/Gameplay/DayNightCycleSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
-#include "Systems/Gameplay/DropItemSystem.h"
-#include "Systems/Gameplay/EquipItemSystem.h"
+#include "Systems/Gameplay/Actions/DropItemSystem.h"
+#include "Systems/Gameplay/Actions/EquipItemSystem.h"
 #include "Systems/Gameplay/ItemDurabilitySystem.h"
 #include "Systems/Gameplay/HitEffectSystem.h"
 #include "Systems/Gameplay/HorrorSpawningSystem.h"
-#include "Systems/Gameplay/CraftItemSystem.h"
-#include "Systems/Gameplay/MovementSystem.h"
-#include "Systems/Gameplay/WaitingSystem.h"
-#include "Systems/Gameplay/PickUpSystem.h"
-#include "Systems/Gameplay/InteractionSystem.h"
-#include "Systems/Gameplay/LaunchAttackSystem.h"
+#include "Systems/Gameplay/Actions/CraftItemSystem.h"
+#include "Systems/Gameplay/Actions/MovementSystem.h"
+#include "Systems/Gameplay/Actions/WaitingSystem.h"
+#include "Systems/Gameplay/Actions/PickUpSystem.h"
+#include "Systems/Gameplay/Actions/InteractionSystem.h"
+#include "Systems/Gameplay/Actions/LaunchAttackSystem.h"
+#include "Systems/Gameplay/Actions/DoorToggleSystem.h"
+#include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/QuestingSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
-#include "Systems/Gameplay/OpenInventorySystem.h"
-#include "Systems/Gameplay/OpenEquipmentSystem.h"
-#include "Systems/Gameplay/OpenCraftingSystem.h"
-#include "Systems/Gameplay/OpenWorldMapSystem.h"
+#include "Systems/Gameplay/Actions/OpenInventorySystem.h"
+#include "Systems/Gameplay/Actions/OpenEquipmentSystem.h"
+#include "Systems/Gameplay/Actions/OpenCraftingSystem.h"
+#include "Systems/Gameplay/Actions/OpenWorldMapSystem.h"
 #include "Systems/Gameplay/DetermineCraftableItemsSystem.h"
-#include "Systems/Gameplay/UseItemSystem.h"
+#include "Systems/Gameplay/Actions/UseItemSystem.h"
 #pragma endregion
 #pragma region Component Includes
 #include "Components/Components.h"
@@ -243,6 +245,8 @@ void drft::GameState::importSystems()
 	_systems->add<HorrorSpawningSystem>(			Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
+	_systems->add<DoorToggleSystem>(				Phase::OnUpdate);
+	_systems->add<SelectDirectionSystem>(			Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
 	_systems->add<PickUpSystem>(					Phase::OnUpdate);
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
