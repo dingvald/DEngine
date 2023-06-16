@@ -12,7 +12,6 @@ void drft::system::PlayerInput::init()
 {
 	using Key = sf::Keyboard;
 
-#pragma region Movement Actions
 	_actionMap.addAction(Key::Numpad1, [](entt::handle entity) {
 		entity.emplace<component::action::Move>(sf::Vector2i(-1, 1)); 
 		});
@@ -40,7 +39,6 @@ void drft::system::PlayerInput::init()
 	_actionMap.addAction(Key::Numpad5, [](entt::handle entity) {
 		entity.emplace<component::action::Wait>(); 
 		});
-#pragma endregion
 
 	_actionMap.addAction(Key::G, [](entt::handle entity) {
 		entity.emplace<component::action::PickUp>(); 
@@ -87,11 +85,7 @@ void drft::system::PlayerInput::update(const float dt)
 				_keyState[key].timeHeld -= REFRACTORY_PERIOD;
 			}
 
-			_keyState[key].timeHeld += dt;
-			if (_keyState[key].timeHeld > HOLD_TIME)
-			{
-				_keyState[key].timeHeld = HOLD_TIME;
-			}
+			_keyState[key].timeHeld = std::min(_keyState[key].timeHeld + dt, HOLD_TIME);
 
 			if (_keyState[key].active && _bufferedActions.size() < INPUT_BUFFER_MAX_SIZE)
 			{
