@@ -18,6 +18,9 @@ namespace drft
 
 		void onPush() override;
 		void onPop() override;
+
+	private:
+		gui::Label _displayText;
 	};
 }
 

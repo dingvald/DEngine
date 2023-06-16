@@ -4,11 +4,21 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Components/Components.h"
+#include "Utility/GetTextCenter.h"
 
 drft::SelectDirectionState::SelectDirectionState(StateStack& stack, StateContext& context)
     : State(stack, context)
 {
-
+	_displayText.setStyle(gui::ElementState::Idle, {
+			.fillColor = sf::Color(0,0,0,100),
+			.innerPadding = {4.f, 4.f},
+			.font = &context.fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 16
+		});
+	_displayText.setTextString("Which direction?");
+	_displayText.setOrigin(gui::ElementPosition::CENTER);
+	_displayText.setPosition(context.window.getView().getCenter() + sf::Vector2f(8.f, -64.f));
 }
 
 bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
@@ -103,12 +113,13 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 
 bool drft::SelectDirectionState::update(const float dt)
 {
+	_displayText.update(dt);
     return false;
 }
 
 void drft::SelectDirectionState::render(sf::RenderTarget& target)
 {
-
+	_displayText.render(target);
 }
 
 void drft::SelectDirectionState::onPush()
