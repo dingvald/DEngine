@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "Systems/Helpers/InputBuffer.h"
 
 namespace drft
 {
@@ -45,6 +46,7 @@ namespace drft
 		void onRequestStatePush(const drft::events::RequestStateStackPush& ev);
 
 	private:
+		system::InputBuffer _inputBuffer{ 2 };
 		std::unique_ptr<system::SystemScheduler> _systems;
 		std::unique_ptr<spatial::WorldGrid> _world;
 		std::unique_ptr<EntityFactory> _factory;

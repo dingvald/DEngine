@@ -2,8 +2,11 @@
 #include "PlayerInput.h"
 #include "Components/Components.h"
 #include "Components/Tags.h"
+#include "Systems/Helpers/InputBuffer.h"
 
 static constexpr unsigned int INPUT_BUFFER_MAX_SIZE = 2;
+static constexpr float REFRACTORY_PERIOD = 0.10f; // sec
+static constexpr float HOLD_TIME = 0.5f; // sec
 
 void drft::system::PlayerInput::init()
 {
@@ -64,66 +67,71 @@ void drft::system::PlayerInput::init()
 
 void drft::system::PlayerInput::update(const float dt)
 {
-	auto view = registry->view<component::Player>();
-	for (auto entity : view)
+	auto& inputBuffer = registry->ctx().get<InputBuffer&>();
+	if (!inputBuffer.isEmpty())
 	{
-		for (auto&& [key, action] : _actionMap.iterate())
+		const auto key = inputBuffer.popKey();
+		if (_actionMap.contains(key))
 		{
-			if (sf::Keyboard::isKeyPressed(key))
+			_keyState[key].active = false;
+			if (_keyState[key].timeHeld <= std::numeric_limits<float>::epsilon())
 			{
-				_keyState[key].active = false;
-				if (_keyState[key].timeHeld <= std::numeric_limits<float>::epsilon())
-				{
-					// Just pressed
-					_keyState[key].active = true;
-					_keyState[key].timeHeld = 0.0f;
-				}
-				else if (_keyState[key].timeHeld >= _holdTime)
-				{
-					// Held key long enough
-					_keyState[key].active = true;
-					_keyState[key].timeHeld -= _refractoryPeriod;
-				}
-
-				_keyState[key].timeHeld += dt;
-				if (_keyState[key].timeHeld > _holdTime)
-				{
-					_keyState[key].timeHeld = _holdTime;
-				}
-			}
-			else
-			{
+				// Just pressed
+				_keyState[key].active = true;
 				_keyState[key].timeHeld = 0.0f;
-				_keyState[key].active = false;
+			}
+			else if (_keyState[key].timeHeld >= HOLD_TIME)
+			{
+				// Held key long enough
+				_keyState[key].active = true;
+				_keyState[key].timeHeld -= REFRACTORY_PERIOD;
 			}
 
-			if (_keyState[key].active)
+			_keyState[key].timeHeld += dt;
+			if (_keyState[key].timeHeld > HOLD_TIME)
 			{
-				if (_bufferedActions[entity].size() < INPUT_BUFFER_MAX_SIZE)
-				{
-					_bufferedActions[entity].push(_actionMap[key]);
-				}
+				_keyState[key].timeHeld = HOLD_TIME;
 			}
+
+			if (_keyState[key].active && _bufferedActions.size() < INPUT_BUFFER_MAX_SIZE)
+			{
+				_bufferedActions.push(_actionMap[key]);
+			}
+
+			for (auto& [otherKey, keyState] : _keyState)
+			{
+				if (otherKey == key) continue;
+				keyState.timeHeld = 0.0f;
+				keyState.active = false;
+			}
+		}
+	}
+	else
+	{
+		for (auto& [otherKey, keyState] : _keyState)
+		{
+			keyState.timeHeld = 0.0f;
+			keyState.active = false;
 		}
 	}
 
 	auto turnView = registry->view<component::Player, component::tag::CurrentActor>();
 	for (auto entity : turnView)
 	{
-		if (_bufferedActions[entity].empty()) continue;
-		// emplaces buffered action component in entity
-		_bufferedActions[entity].front()({ *registry, entity });
-		_bufferedActions[entity].pop();
-		if (_bufferedActions[entity].empty())
-		{
-			_bufferedActions.erase(entity);
-		}
+		if (_bufferedActions.empty()) continue;
+		_bufferedActions.front()({ *registry, entity });
+		_bufferedActions.pop();
 	}
 }
 
 void drft::system::ActionMap::addAction(sf::Keyboard::Key key, emplaceFunc func)
 {
 	_map[key] = func;
+}
+
+bool drft::system::ActionMap::contains(sf::Keyboard::Key key) const
+{
+	return _map.contains(key);
 }
 
 drft::system::ActionMap::emplaceFunc drft::system::ActionMap::operator[](sf::Keyboard::Key key)

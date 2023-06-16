@@ -152,6 +152,7 @@ void drft::GameState::setupRegistryContext()
 {
 	using namespace entt::literals;
 
+	getContext().registry.ctx().emplace<system::InputBuffer&>(_inputBuffer);
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(*_world);
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace_as<sf::Texture&>("sprites"_hs, getContext().textures.get("Sprites"));
@@ -174,12 +175,15 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 		case sf::Event::KeyPressed:
+		{
 			if (ev.key.code == sf::Keyboard::Escape)
 			{
 				requestStackPush(States::Pause);
 				return false;
 			}
-			break;
+			_inputBuffer.pushKey(ev.key.code);
+		}
+		break;
 	}
 
 	return false;

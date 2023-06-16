@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Helpers\InputBuffer.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\DoorToggleSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\InteractionSystem.cpp" />
@@ -324,6 +325,7 @@
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Helpers\InputBuffer.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\DoorToggleSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\InteractionSystem.h" />

@@ -19,6 +19,7 @@ namespace drft::system
 	public:
 		using emplaceFunc = std::function<void(entt::handle)>;
 		void addAction(sf::Keyboard::Key key, emplaceFunc);
+		bool contains(sf::Keyboard::Key key) const;
 		emplaceFunc operator[](sf::Keyboard::Key key);
 		std::unordered_map<sf::Keyboard::Key, emplaceFunc>& iterate();
 	private:
@@ -34,9 +35,7 @@ namespace drft::system
 	private:
 		std::unordered_map<sf::Keyboard::Key, KeyState> _keyState;
 		ActionMap _actionMap;
-		std::unordered_map<entt::entity, std::queue<ActionMap::emplaceFunc>> _bufferedActions;
-		float _refractoryPeriod = 0.05f; // sec
-		float _holdTime = 0.4f; // sec
+		std::queue<ActionMap::emplaceFunc> _bufferedActions;
 	};
 
 }
