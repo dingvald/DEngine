@@ -46,6 +46,7 @@
 #include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/QuestingSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
+#include "Systems/Gameplay/TickingLifetimeSystem.h"
 #include "Systems/Gameplay/Actions/OpenInventorySystem.h"
 #include "Systems/Gameplay/Actions/OpenEquipmentSystem.h"
 #include "Systems/Gameplay/Actions/OpenCraftingSystem.h"
@@ -288,6 +289,7 @@ void drft::GameState::importSystems()
 	_systems->add<FactionSystem>(					Phase::Reactive);
 	_systems->add<ItemUniqueIDGenerator>(			Phase::Reactive);
 	_systems->add<DetermineCraftableItemsSystem>(	Phase::Reactive);
+	_systems->add<TickingLifetimeSystem>(			Phase::Reactive);
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{
