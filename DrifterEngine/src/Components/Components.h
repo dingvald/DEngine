@@ -193,6 +193,11 @@ namespace component
 		bool isOpen = false;
 		std::string keyName = "";
 	};
+
+	struct TickingLifetime
+	{
+		int ticksRemaining = 0;
+	};
 }
 
 namespace component::action

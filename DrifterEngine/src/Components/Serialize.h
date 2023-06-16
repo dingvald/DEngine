@@ -172,6 +172,12 @@ namespace cereal
 	{
 		archive(door.isOpen, door.keyName);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, TickingLifetime& tickingLifetime)
+	{
+		archive(tickingLifetime.ticksRemaining);
+	}
 }
 
 

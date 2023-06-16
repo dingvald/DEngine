@@ -131,4 +131,8 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Door, DOOR_STRING>()
 		.prop("serialize"_hs)
 		.data<&Door::keyName>("keyName"_hs);
+
+	snapshot::reflectComponent<TickingLifetime, TICKING_LIFETIME_STRING>()
+		.prop("serialize"_hs)
+		.data<&TickingLifetime::ticksRemaining>("ticksRemaining"_hs);
 }
