@@ -6,6 +6,7 @@
 #include "Utility/SpriteBatch.h"
 #include "Spatial/Conversions.h"
 
+static const sf::Color seenTileColor = sf::Color(10, 10, 10);
 
 void drft::system::EntityRenderer::init()
 {
@@ -35,7 +36,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 	for (auto const& [entity, pos, ren, seen] : seenView.each())
 	{
 		sf::Vector2f renderPosition = pos.position - cameraOrigin;
-		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(15,15,15), renderPosition);
+		_spriteLayers[ren.layer].addSprite(ren.sprite, seenTileColor, renderPosition);
 	}
 
 	for (auto& [layer, batch] : _spriteLayers)
