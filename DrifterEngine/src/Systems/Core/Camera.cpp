@@ -50,7 +50,8 @@ void drft::system::Camera::update(const float dt)
 
 		if (spatial::distance({0,0}, normalizedTargetPosition) < 0.5f)
 		{
-			pos.position = target->position;
+			pos.position.x = std::floor(target->position.x);
+			pos.position.y = std::floor(target->position.y);
 		}
 
 		camera.viewport.left = pos.position.x - (camera.viewport.width / 2.f);
