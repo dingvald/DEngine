@@ -86,6 +86,12 @@
             "weight": 0.0,
             "materials": [ "Ash" ]
           }
+        },
+        {
+          "Name": "TickingLifetime",
+          "Data": {
+            "ticksRemaining": 1000
+          }
         }
       ]
     },

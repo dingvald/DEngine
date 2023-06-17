@@ -323,6 +323,7 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\WaitingSystem.cpp" />
     <ClCompile Include="src\Engine\States\SelectDirectionState.cpp" />
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Systems\Helpers\InputBuffer.h" />
@@ -610,6 +611,7 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\WaitingSystem.h" />
     <ClInclude Include="src\Engine\States\SelectDirectionState.h" />
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h" />
+    <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\biomes\biomes.json" />
