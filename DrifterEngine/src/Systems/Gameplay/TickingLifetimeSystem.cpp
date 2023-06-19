@@ -10,8 +10,8 @@ void drft::system::TickingLifetimeSystem::init()
 
 void drft::system::TickingLifetimeSystem::onGameTickEvent(events::GameTickEvent& ev)
 {
-	auto view = registry->view<component::TickingLifetime>();
-	for (auto [entity, lifetime] : view.each())
+	auto view = registry->view<component::TickingLifetime, component::Position>();
+	for (auto [entity, lifetime, pos] : view.each())
 	{
 		--lifetime.ticksRemaining;
 		if (lifetime.ticksRemaining <= 0)
