@@ -736,9 +736,9 @@
         }
       ]
     },
-    // Axe
+    // Wooden Axe
     {
-      "Name": "Axe",
+      "Name": "Wooden Axe",
       "Inherits": [
         ""
       ],
@@ -747,7 +747,7 @@
           "Name": "Info",
           "Data": {
             "prototype": "PROTOTYPE",
-            "name": "Axe",
+            "name": "Wooden Axe",
             "extendedName": "",
             "description": "A simple axe for chopping."
           }
@@ -757,7 +757,7 @@
           "Data": {
             "sprite": 12,
             "layer": 1,
-            "color": [ 120, 120, 120 ]
+            "color": [ 68, 48, 40 ]
           }
         },
         {
@@ -772,7 +772,6 @@
             "blocks": false,
             "weight": 2.1,
             "materials": [
-              "Stone",
               "Wood",
               "Twine"
             ]
@@ -781,7 +780,7 @@
         {
           "Name": "Sharp",
           "Data": {
-            "sharpness": 3
+            "sharpness": 2
           }
         },
         {
@@ -801,8 +800,7 @@
           "Name": "Craftable",
           "Data": {
             "recipe": {
-              "Stone": 2,
-              "Wood": 1,
+              "Wood": 2,
               "Twine": 1
             }
           }
@@ -821,7 +819,7 @@
           "Data": {
             "prototype": "PROTOTYPE",
             "name": "Wooden Sword",
-            "extendedName": "",
+            "extendedName": "Wooden Sword",
             "description": "A simple sword usually used for training."
           }
         },
@@ -843,7 +841,7 @@
           "Name": "Physical",
           "Data": {
             "blocks": false,
-            "weight": 1.8,
+            "weight": 1.5,
             "materials": [
               "Wood"
             ]
@@ -852,7 +850,7 @@
         {
           "Name": "Sharp",
           "Data": {
-            "sharpness": 2
+            "sharpness": 3
           }
         },
         {
@@ -872,7 +870,8 @@
           "Name": "Craftable",
           "Data": {
             "recipe": {
-              "Wood": 2
+              "Wood": 2,
+              "Twine": 1
             }
           }
         }
@@ -1013,6 +1012,79 @@
             "recipe": {
               "Iron": 4,
               "Flint": 1
+            }
+          }
+        }
+      ]
+    },
+    // Iron Axe
+    {
+      "Name": "Iron Axe",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Iron Axe",
+            "extendedName": "",
+            "description": "A solid axe for chopping."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 12,
+            "layer": 1,
+            "color": [ 161, 157, 148 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 2.1,
+            "materials": [
+              "Iron",
+              "Wood",
+              "Twine"
+            ]
+          }
+        },
+        {
+          "Name": "Sharp",
+          "Data": {
+            "sharpness": 5
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 80,
+            "current": 80
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Iron": 2,
+              "Flint": 1,
+              "Wooden Axe": 1
             }
           }
         }
