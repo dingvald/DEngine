@@ -878,6 +878,76 @@
         }
       ]
     },
+    // Ashen Sword
+    {
+      "Name": "Ashen Sword",
+      "Inherits": [
+        ""
+      ],
+      "Components": [
+        {
+          "Name": "Info",
+          "Data": {
+            "prototype": "PROTOTYPE",
+            "name": "Ashen Sword",
+            "extendedName": "",
+            "description": "A sword covered in a strange ash."
+          }
+        },
+        {
+          "Name": "Render",
+          "Data": {
+            "sprite": 69,
+            "layer": 1,
+            "color": [ 178, 190, 181 ]
+          }
+        },
+        {
+          "Name": "Position",
+          "Data": {
+            "position": [ 0.0, 0.0 ]
+          }
+        },
+        {
+          "Name": "Physical",
+          "Data": {
+            "blocks": false,
+            "weight": 2.0,
+            "materials": [
+              "Wood"
+            ]
+          }
+        },
+        {
+          "Name": "Sharp",
+          "Data": {
+            "sharpness": 7
+          }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 666,
+            "current": 666
+          }
+        },
+        {
+          "Name": "Item",
+          "Data": {
+            "id": 0
+          }
+        },
+        {
+          "Name": "Craftable",
+          "Data": {
+            "recipe": {
+              "Ash": 27,
+              "Wooden Sword": 1
+            }
+          }
+        }
+      ]
+    },
     // Machete
     {
       "Name": "Machete",
@@ -2379,7 +2449,8 @@
           "Name": "Craftable",
           "Data": {
             "recipe": {
-              "Wood": 4
+              "Wood": 4,
+              "Twine": 1
             }
           }
         }
