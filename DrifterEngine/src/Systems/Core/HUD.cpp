@@ -33,6 +33,7 @@ void drft::system::HUD::init()
 	dispatcher.sink<events::ItemBreakEvent>().connect<&HUD::onItemBreakEvent>(this);
 	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
+	registry->on_construct<component::action::LevelUp>().connect<&HUD::onLevelUp>(this);
 }
 
 void drft::system::HUD::fixedUpdate()
@@ -421,5 +422,13 @@ void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity 
 			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT + 2.f };
 			queueFlashEffect(STAMINABAR_POSITION, size, 10);
 		}
+	}
+}
+
+void drft::system::HUD::onLevelUp(entt::registry& registry, entt::entity entity)
+{
+	if (auto pos = registry.try_get<component::Position>(entity))
+	{
+		queueFloatingMessage("LEVEL UP", sf::Color::Magenta, pos->position, MESSAGE_LIFETIME);
 	}
 }

@@ -19,7 +19,7 @@ void drft::system::BodyPartSystem::update(const float dt)
 	{
 		if (body.parts.contains("HeldR"))
 		{
-			const int weaponDamage = calculateDamageFromEquipped(body.parts.at("HeldR"));
+			const int weaponDamage = calculateDamageFromEquipped(entity, body.parts.at("HeldR"));
 			attack.damage += weaponDamage;
 		}
 	}
@@ -50,12 +50,13 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 	}
 }
 
-int drft::system::BodyPartSystem::calculateDamageFromEquipped(unsigned long itemID)
+int drft::system::BodyPartSystem::calculateDamageFromEquipped(entt::entity attacker, unsigned long itemID)
 {
 	if (itemID != component::Item::NONE)
 	{
 		const auto rightHandItem = ItemDatabase::getEntityFromItemID(itemID);
 		float weight = 0.0f;
+		float power = 0.0f;
 		float sharpness = 1.f;
 
 		if (auto physicalComp = registry->try_get<component::Physical>(rightHandItem))
@@ -64,8 +65,16 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(unsigned long item
 		}
 		if (auto sharpComp = registry->try_get<component::Sharp>(rightHandItem))
 		{
-			sharpness += std::powf(static_cast<float>(sharpComp->sharpness), 2.f) * 0.5f;
+			sharpness += sharpComp->sharpness;
 		}
+		
+		if (auto stats = registry->try_get<component::BaseStats>(attacker))
+		{
+			float strengthContribution = std::max(0.f, (stats->strength - weight)*weight);
+			float agilityContribution = 3.f*(sqrtf(powf(stats->agility, 2.f) / weight));
+			power = sqrtf(strengthContribution * agilityContribution);
+		}
+
 		if (auto healthComp = registry->try_get<component::Health>(rightHandItem))
 		{
 			const int roll = rng::RandomNumberGenerator::intInRange(0, 100);
@@ -75,7 +84,7 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(unsigned long item
 			}
 		}
 
-		return static_cast<int>(std::ceil(weight * sharpness));
+		return sqrtf(power * sharpness);
 	}
 	return 0;
 }

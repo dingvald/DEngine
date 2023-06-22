@@ -12,7 +12,7 @@ namespace drft::system
 	private:
 		void onIncomingDamage(entt::registry& registry, entt::entity entity);
 
-		int calculateDamageFromEquipped(unsigned long itemID);
+		int calculateDamageFromEquipped(entt::entity attacker, unsigned long itemID);
 		std::string determinePartHit(std::unordered_map<std::string, unsigned long>& parts);
 	};
 

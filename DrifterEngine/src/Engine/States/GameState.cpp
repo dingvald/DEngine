@@ -46,6 +46,7 @@
 #include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/QuestingSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
+#include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
 #include "Systems/Gameplay/Actions/OpenInventorySystem.h"
 #include "Systems/Gameplay/Actions/OpenEquipmentSystem.h"
@@ -268,6 +269,7 @@ void drft::GameState::importSystems()
 	_systems->add<StaminaSystem>(					Phase::OnUpdate + 10);
 	_systems->add<ItemDurabilitySystem>(			Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);
+	_systems->add<LevelingSystem>(					Phase::OnUpdate + 20);
 
 	_systems->add<Camera>(							Phase::OnPostUpdate);
 	_systems->add<ChunkManager>(					Phase::OnPostUpdate);

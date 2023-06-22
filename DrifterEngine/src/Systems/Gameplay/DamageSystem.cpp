@@ -2,6 +2,7 @@
 #include "DamageSystem.h"
 #include "Components/Components.h"
 #include "Utility/EntityHelpers.h"
+#include "Systems/Helpers/GetExperienceFromKilling.h"
 
 void drft::system::DamageSystem::init()
 {
@@ -13,24 +14,17 @@ void drft::system::DamageSystem::update(const float dt)
 	auto incomingDamageView = registry->view<component::action::IncomingDamage>();
 	for (auto [entity, incoming] : incomingDamageView.each())
 	{
-		registry->emplace<component::action::TakeDamage>(entity, incoming.amount);
+		registry->emplace<component::action::TakeDamage>(entity, incoming.amount, incoming.source);
 	}
 
-	auto damageView = registry->view<component::action::TakeDamage>();
-	for (auto [entity, damage] : damageView.each())
+	auto damageView = registry->view<component::action::TakeDamage, component::Health>();
+	for (auto [entity, damage, health] : damageView.each())
 	{
-		entt::handle handle = { *registry, entity };
-		auto health = handle.try_get<component::Health>();
-		if (!health) continue;
-		
-		health->current -= damage.amount;
-		std::cout << "The " << util::getEntityName(handle) << " takes " << damage.amount << " damage!" << std::endl;
-
-		health->current = std::clamp(health->current, 0, health->max);
-
-		if (health->current == 0)
+		health.current = std::clamp(health.current - damage.amount, 0, health.max);
+		if (health.current == 0)
 		{
-			handle.emplace<component::action::Die>();
+			registry->emplace<component::action::Die>(entity);
+			registry->emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(entity, *registry));
 		}
 	}
 }

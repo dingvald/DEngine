@@ -27,6 +27,12 @@ void component::Meta::initialize()
 		.data<&Render::layer>("layer"_hs)
 		.data<&Render::color>("color"_hs);
 
+	snapshot::reflectComponent<BaseStats, BASE_STATS_STRING>()
+		.prop("serialize"_hs)
+		.data<&BaseStats::strength>("strength"_hs)
+		.data<&BaseStats::agility>("agility"_hs)
+		.data<&BaseStats::vitality>("vitality"_hs);
+
 	snapshot::reflectComponent<PlayerHasSeen, PLAYER_SEEN_STRING>()
 		.prop("serialize"_hs);
 
@@ -135,4 +141,8 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<TickingLifetime, TICKING_LIFETIME_STRING>()
 		.prop("serialize"_hs)
 		.data<&TickingLifetime::ticksRemaining>("ticksRemaining"_hs);
+
+	snapshot::reflectComponent<Leveling, LEVELING_STRING>()
+		.prop("serialize"_hs)
+		.data<&Leveling::currentLevel>("currentLevel"_hs);
 }

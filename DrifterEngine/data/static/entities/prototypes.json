@@ -780,7 +780,7 @@
         {
           "Name": "Sharp",
           "Data": {
-            "sharpness": 2
+            "sharpness": 1
           }
         },
         {
@@ -850,7 +850,7 @@
         {
           "Name": "Sharp",
           "Data": {
-            "sharpness": 3
+            "sharpness": 1
           }
         },
         {
@@ -1510,6 +1510,12 @@
           "Data": {
             "name": "neutral"
           }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 0
+          }
         }
       ]
     },
@@ -1592,6 +1598,12 @@
           "Name": "Faction",
           "Data": {
             "name": "neutral"
+          }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 1
           }
         }
       ]
@@ -1676,6 +1688,12 @@
           "Data": {
             "name": "bad"
           }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 1
+          }
         }
       ]
     },
@@ -1759,6 +1777,12 @@
           "Data": {
             "name": "bad"
           }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 3
+          }
         }
       ]
     },
@@ -1836,6 +1860,12 @@
           "Data": {
             "name": "bad"
           }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 2
+          }
         }
       ]
     },
@@ -1912,6 +1942,12 @@
           "Name": "Faction",
           "Data": {
             "name": "bad"
+          }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 3
           }
         }
       ]
@@ -2049,6 +2085,12 @@
           "Data": {
             "name": "bad"
           }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 3
+          }
         }
       ]
     },
@@ -2125,6 +2167,12 @@
           "Name": "Faction",
           "Data": {
             "name": "bad"
+          }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 4
           }
         }
       ]
@@ -2203,6 +2251,12 @@
           "Data": {
             "name": "bad"
           }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 3
+          }
         }
       ]
     },
@@ -2241,6 +2295,12 @@
           "Name": "Attacker",
           "Data": {
             "baseDamage": 6
+          }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 3
           }
         }
       ]

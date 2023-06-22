@@ -25,6 +25,13 @@ namespace component
 		sf::Color color = sf::Color::Magenta;
 	};
 
+	struct BaseStats
+	{
+		int strength = 10;
+		int agility = 10;
+		int vitality = 10;
+	};
+
 	struct PlayerHasSeen
 	{
 		bool standin = false;
@@ -198,6 +205,13 @@ namespace component
 	{
 		int ticksRemaining = 0;
 	};
+
+	struct Leveling
+	{
+		unsigned int currentLevel = 0;
+		unsigned int currentXP = 0;
+		unsigned int neededXP = 100;
+	};
 }
 
 namespace component::action
@@ -236,11 +250,13 @@ namespace component::action
 	{
 		int originalAmount = 0;
 		int amount = 0;
+		entt::entity source = entt::null;
 	};
 
 	struct TakeDamage
 	{
 		int amount = 0;
+		entt::entity source = entt::null;
 	};
 
 	struct PickUp {};
@@ -292,6 +308,13 @@ namespace component::action
 	{
 		float amount = 0.f;
 	};
+
+	struct GainExperience
+	{
+		unsigned int amount = 0;
+	};
+
+	struct LevelUp {};
 
 	struct DisplayText
 	{

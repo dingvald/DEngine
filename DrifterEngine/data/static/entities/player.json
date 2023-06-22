@@ -29,6 +29,14 @@
           }
         },
         {
+          "Name": "BaseStats",
+          "Data": {
+            "strength": 10,
+            "agility": 10,
+            "vitality": 10
+          }
+        },
+        {
           "Name": "Physical",
           "Data": {
             "blocks": true,
@@ -80,6 +88,12 @@
           "Name": "Container",
           "Data": {
             "capacity": 30
+          }
+        },
+        {
+          "Name": "Leveling",
+          "Data": {
+            "currentLevel": 0
           }
         }
       ]

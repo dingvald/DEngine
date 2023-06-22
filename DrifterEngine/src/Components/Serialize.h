@@ -178,6 +178,18 @@ namespace cereal
 	{
 		archive(tickingLifetime.ticksRemaining);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Leveling& leveling)
+	{
+		archive(leveling.currentLevel, leveling.currentXP, leveling.neededXP);
+	}
+
+	template<class Archive>
+	void serialize(Archive& archive, BaseStats baseStats)
+	{
+		archive(baseStats.strength, baseStats.agility, baseStats.vitality);
+	}
 }
 
 

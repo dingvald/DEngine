@@ -33,6 +33,7 @@ namespace drft::system
 		void onItemBreakEvent(events::ItemBreakEvent& ev);
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
 		void onConsumeStamina(entt::registry& registry, entt::entity entity);
+		void onLevelUp(entt::registry& registry, entt::entity entity);
 
 	private:
 		struct FlashEffect
