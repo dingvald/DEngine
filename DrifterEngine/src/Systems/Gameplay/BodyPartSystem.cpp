@@ -17,9 +17,9 @@ void drft::system::BodyPartSystem::update(const float dt)
 	auto attackView = registry->view<component::Body, component::action::LaunchAttack, component::tag::Active>();
 	for (auto [entity, body, attack] : attackView.each())
 	{
-		if (body.parts.contains("HeldR"))
+		if (body.parts.contains("HeldR") || body.parts.contains("HeldL"))
 		{
-			const int weaponDamage = calculateDamageFromEquipped(entity, body.parts.at("HeldR"));
+			const int weaponDamage = calculateDamageFromEquipped(entity, body.parts.at("HeldR"), body.parts.at("HeldL"));
 			attack.damage += weaponDamage;
 		}
 	}
@@ -50,14 +50,16 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 	}
 }
 
-int drft::system::BodyPartSystem::calculateDamageFromEquipped(entt::entity attacker, unsigned long itemID)
+int drft::system::BodyPartSystem::calculateDamageFromEquipped(entt::entity attacker, unsigned long itemR, unsigned long itemL)
 {
-	if (itemID != component::Item::NONE)
+	if (itemR != component::Item::NONE)
 	{
-		const auto rightHandItem = ItemDatabase::getEntityFromItemID(itemID);
+		const auto rightHandItem = ItemDatabase::getEntityFromItemID(itemR);
 		float weight = 0.0f;
 		float power = 0.0f;
-		float sharpness = 1.f;
+		float speed = 0.0f;
+		float sharpness = 0.f;
+		bool isLeftHandEmpty = (itemL == component::Item::NONE);
 
 		if (auto physicalComp = registry->try_get<component::Physical>(rightHandItem))
 		{
@@ -67,14 +69,12 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(entt::entity attac
 		{
 			sharpness += sharpComp->sharpness;
 		}
-		
 		if (auto stats = registry->try_get<component::BaseStats>(attacker))
 		{
-			float strengthContribution = std::max(0.f, (stats->strength - weight)*weight);
-			float agilityContribution = 3.f*(sqrtf(powf(stats->agility, 2.f) / weight));
-			power = sqrtf(strengthContribution * agilityContribution);
+			power = std::max(0.f, stats->strength * ((-(1/powf(stats->strength,2.f)) * powf(weight - (stats->strength), 2.f) + 1.f)));
+			power = isLeftHandEmpty ? power * 2.f : power;
+			speed = std::min(static_cast<float>(stats->agility), std::max(0.f, (2.f*stats->agility) / weight));
 		}
-
 		if (auto healthComp = registry->try_get<component::Health>(rightHandItem))
 		{
 			const int roll = rng::RandomNumberGenerator::intInRange(0, 100);
@@ -84,7 +84,9 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(entt::entity attac
 			}
 		}
 
-		return sqrtf(power * sharpness);
+		float damage = rng::RandomNumberGenerator::realInRange(sqrtf(speed * weight) + sharpness, sqrtf(speed * power * weight));
+
+		return std::ceilf(damage);
 	}
 	return 0;
 }
