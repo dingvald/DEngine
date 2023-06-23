@@ -84,7 +84,9 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(entt::entity attac
 			}
 		}
 
-		float damage = rng::RandomNumberGenerator::realInRange(sqrtf(speed * weight) + sharpness, sqrtf(speed * power * weight));
+		float minDamage = std::floorf(sqrtf(speed * weight) + sharpness);
+		float maxDamage = std::ceil(sqrtf(speed * power * weight));
+		float damage = rng::RandomNumberGenerator::realInRange(minDamage, maxDamage);
 
 		return std::ceilf(damage);
 	}
