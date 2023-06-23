@@ -31,9 +31,9 @@
         {
           "Name": "BaseStats",
           "Data": {
-            "strength": 10,
-            "agility": 10,
-            "vitality": 10
+            "strength": 5,
+            "agility": 5,
+            "vitality": 5
           }
         },
         {
@@ -55,8 +55,9 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 30,
-            "current": 30
+            "max": 30.0,
+            "current": 30.0,
+            "recovery": 0.05
           }
         },
         {

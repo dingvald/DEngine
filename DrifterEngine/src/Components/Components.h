@@ -99,8 +99,9 @@ namespace component
 
 	struct Health
 	{
-		int max = 10;
-		int current = 10;
+		float max = 10.f;
+		float current = 10.f;
+		float recovery = 0.f;
 	};
 
 	struct Stamina
