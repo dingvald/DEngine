@@ -68,7 +68,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, Health& health)
 	{
-		archive(health.max, health.current);
+		archive(health.max, health.current, health.recovery);
 	}
 
 	template<class Archive>

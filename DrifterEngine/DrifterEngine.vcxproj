@@ -243,7 +243,7 @@
     <ClCompile Include="src\Systems\Gameplay\DeathSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\LaunchAttackSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\MovementSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\DamageSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\HealthSystem.cpp" />
     <ClCompile Include="src\Components\Serialize.cpp" />
     <ClCompile Include="src\Snapshot\Archive.cpp" />
     <ClCompile Include="src\Snapshot\Reflection.cpp" />
@@ -404,7 +404,7 @@
     <ClInclude Include="src\Systems\Gameplay\DeathSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\LaunchAttackSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\MovementSystem.h" />
-    <ClInclude Include="src\Systems\Gameplay\DamageSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\HealthSystem.h" />
     <ClInclude Include="src\Components\Serialize.h" />
     <ClInclude Include="src\Snapshot\Archive.h" />
     <ClInclude Include="src\Snapshot\EnTTSnapshot.h" />

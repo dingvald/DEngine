@@ -117,7 +117,7 @@
     <ClCompile Include="src\Spatial\VirtualChunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\DamageSystem.cpp">
+    <ClCompile Include="src\Systems\Gameplay\HealthSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\Actions\MovementSystem.cpp">
@@ -941,7 +941,7 @@
     <ClInclude Include="src\Spatial\VirtualChunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\DamageSystem.h">
+    <ClInclude Include="src\Systems\Gameplay\HealthSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\MovementSystem.h">

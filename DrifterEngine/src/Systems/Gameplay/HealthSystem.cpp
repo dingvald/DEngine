@@ -41,6 +41,6 @@ void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)
 {
 	if (auto health = registry->try_get<component::Health>(ev.entity))
 	{
-		health->current = std::clamp(health->current + health->recovery, 0.f, health->max);
+		health->current = std::clamp(health->current + health->recovery, 1.f, health->max);
 	}
 }

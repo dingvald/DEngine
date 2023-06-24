@@ -111,7 +111,7 @@ void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity ite
 
 	if (auto health = getContext().registry.try_get<component::Health>(item))
 	{
-		float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
+		float scalingFactor = health->current / health->max;
 		container.insert("Health", gui::Panel())
 			.setSize({ 32, (32 - 32 * scalingFactor) })
 			.setLocalPosition({ 0, 16})

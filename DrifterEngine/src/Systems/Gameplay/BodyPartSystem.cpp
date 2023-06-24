@@ -71,8 +71,8 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(entt::entity attac
 		}
 		if (auto stats = registry->try_get<component::BaseStats>(attacker))
 		{
-			power = std::max(0.f, stats->strength * ((-(1/powf(stats->strength,2.f)) * powf(weight - (stats->strength), 2.f) + 1.f)));
-			power = isLeftHandEmpty ? power * 2.f : power;
+			float effectiveStrength = isLeftHandEmpty ? stats->strength * 2.f : stats->strength;
+			power = std::max(0.f, effectiveStrength * ((-(1/powf((effectiveStrength),2.f)) * powf(weight - (effectiveStrength/2), 2.f) + 1.f)));
 			speed = std::min(static_cast<float>(stats->agility), std::max(0.f, (2.f*stats->agility) / weight));
 		}
 		if (auto healthComp = registry->try_get<component::Health>(rightHandItem))
@@ -84,8 +84,8 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(entt::entity attac
 			}
 		}
 
-		float minDamage = std::floorf(sqrtf(speed * weight) + sharpness);
 		float maxDamage = std::ceil(sqrtf(speed * power * weight));
+		float minDamage = std::min(maxDamage, std::floorf(sqrtf(speed * weight) + powf(sharpness, 2.f)));
 		float damage = rng::RandomNumberGenerator::realInRange(minDamage, maxDamage);
 
 		return std::ceilf(damage);

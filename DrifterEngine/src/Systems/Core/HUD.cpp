@@ -164,9 +164,9 @@ void drft::system::HUD::updateHealthBar(entt::const_handle player)
 {
 	if (auto health = player.try_get<component::Health>())
 	{
-		_healthBarContainer.setSize({ static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER), HEALTHBAR_HEIGHT + 2.f });
-		_healthBar.setSize({ (static_cast<float>(health->current) / static_cast<float>(health->max))
-			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT });
+		_healthBarContainer.setSize({health->max * HEALTHBAR_WIDTH_MULTIPLIER, HEALTHBAR_HEIGHT + 2.f });
+		_healthBar.setSize({ (health->current / health->max)
+			* (health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT });
 	}
 	else
 	{
@@ -331,7 +331,7 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 
 	if (auto health = registry->try_get<component::Health>(item))
 	{
-		float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
+		float scalingFactor = health->current / health->max;
 		container.insert("Health", gui::Panel())
 			.setSize({ 32, (32 - 32 * scalingFactor) })
 			.setLocalPosition({ 0, 16 })
@@ -403,8 +403,8 @@ void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity enti
 		
 		if (damage.amount != 0)
 		{
-			sf::Vector2f size = { (static_cast<float>(health->current) / static_cast<float>(health->max))
-			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT + 2.f };
+			sf::Vector2f size = { (health->current / health->max)
+			* (health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT + 2.f };
 			queueFlashEffect(HEALTHBAR_POSITION, size, 10);
 		}
 	}

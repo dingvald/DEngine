@@ -68,7 +68,8 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Health, HEALTH_STRING>()
 		.prop("serialize"_hs)
 		.data<&Health::max>("max"_hs)
-		.data<&Health::current>("current"_hs);
+		.data<&Health::current>("current"_hs)
+		.data<&Health::recovery>("recovery"_hs);
 
 	snapshot::reflectComponent<Stamina, STAMINA_STRING>()
 		.prop("serialize"_hs)

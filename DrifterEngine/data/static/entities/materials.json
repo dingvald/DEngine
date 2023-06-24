@@ -18,6 +18,13 @@
           "Data": {
             "id": 0
           }
+        },
+        {
+          "Name": "Health",
+          "Data": {
+            "max": 5,
+            "current": 5
+          }
         }
       ]
     },

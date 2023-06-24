@@ -1935,7 +1935,7 @@
         {
           "Name": "Attacker",
           "Data": {
-            "baseDamage": 3
+            "baseDamage": 5
           }
         },
         {
@@ -2070,8 +2070,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 30,
-            "current": 30
+            "max": 100,
+            "current": 100
           }
         },
         {
@@ -2153,8 +2153,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 80,
-            "current": 80
+            "max": 120,
+            "current": 120
           }
         },
         {
@@ -2226,7 +2226,7 @@
         {
           "Name": "AI",
           "Data": {
-            "sightRange": 8,
+            "sightRange": 9,
             "goals": [
               "random_move",
               "kill_target"
@@ -2236,8 +2236,8 @@
         {
           "Name": "Health",
           "Data": {
-            "max": 30,
-            "current": 30
+            "max": 40,
+            "current": 40
           }
         },
         {
@@ -2294,7 +2294,7 @@
         {
           "Name": "Attacker",
           "Data": {
-            "baseDamage": 6
+            "baseDamage": 7
           }
         },
         {
