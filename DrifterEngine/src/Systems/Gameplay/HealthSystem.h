@@ -12,5 +12,6 @@ namespace drft::system
 
 	private:
 		void onTurnStartEvent(events::TurnStartEvent& ev);
+		void onLevelUp(entt::registry& registry, entt::entity entity);
 	};
 }

@@ -8,6 +8,7 @@ void drft::system::HealthSystem::init()
 {
 	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
+	registry->on_update<component::BaseStats>().connect<&HealthSystem::onLevelUp>(this);
 }
 
 void drft::system::HealthSystem::update(const float dt)
@@ -42,5 +43,13 @@ void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)
 	if (auto health = registry->try_get<component::Health>(ev.entity))
 	{
 		health->current = std::clamp(health->current + health->recovery, 1.f, health->max);
+	}
+}
+
+void drft::system::HealthSystem::onLevelUp(entt::registry& registry, entt::entity entity)
+{
+	if (auto health = registry.try_get<component::Health>(entity))
+	{
+		health->current = health->max;
 	}
 }

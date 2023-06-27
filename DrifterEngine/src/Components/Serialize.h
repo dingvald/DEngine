@@ -186,7 +186,7 @@ namespace cereal
 	}
 
 	template<class Archive>
-	void serialize(Archive& archive, BaseStats baseStats)
+	void serialize(Archive& archive, BaseStats& baseStats)
 	{
 		archive(baseStats.strength, baseStats.agility, baseStats.vitality);
 	}

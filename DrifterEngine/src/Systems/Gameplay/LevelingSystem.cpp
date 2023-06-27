@@ -27,7 +27,7 @@ void drft::system::LevelingSystem::onXPGained(entt::registry& registry, entt::en
 			// level up
 			++leveling->currentLevel;
 			leveling->currentXP -= leveling->neededXP;
-			leveling->neededXP *= 2; // TODO: balance leveling speed
+			leveling->neededXP *= 2.5; // TODO: balance leveling speed
 			std::cout << util::getEntityName({ registry, entity }) << " is now level " << leveling->currentLevel << std::endl;
 			registry.emplace<component::action::LevelUp>(entity);
 		}

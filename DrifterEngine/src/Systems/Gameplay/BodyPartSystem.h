@@ -12,7 +12,8 @@ namespace drft::system
 	private:
 		void onIncomingDamage(entt::registry& registry, entt::entity entity);
 
-		int calculateDamageFromEquipped(entt::entity attacker, unsigned long itemR, unsigned long itemL);
+		int calculateDamageFromHeld(entt::entity attacker, unsigned long itemR, unsigned long itemL);
+		int calculateMitigationFromWorn(entt::entity defender);
 		std::string determinePartHit(std::unordered_map<std::string, unsigned long>& parts);
 	};
 

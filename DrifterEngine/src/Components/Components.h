@@ -27,9 +27,9 @@ namespace component
 
 	struct BaseStats
 	{
-		int strength = 10;
-		int agility = 10;
-		int vitality = 10;
+		int strength = 1;
+		int agility = 1;
+		int vitality = 1;
 	};
 
 	struct PlayerHasSeen
