@@ -315,7 +315,10 @@ namespace component::action
 		unsigned int amount = 0;
 	};
 
-	struct LevelUp {};
+	struct LevelUp 
+	{
+		std::unordered_map<std::string, int> statChanges;
+	};
 
 	struct DisplayText
 	{

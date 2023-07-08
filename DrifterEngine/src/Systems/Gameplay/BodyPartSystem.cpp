@@ -32,7 +32,6 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 		auto& incomingDamage = registry.get<component::action::IncomingDamage>(entity);
 		if (incomingDamage.amount <= 0) return;
 		auto part = determinePartHit(body->parts);
-		std::cout << part + " hit!" << std::endl;
 		auto itemHit = body->parts.at(part);
 		auto itemEntity = ItemDatabase::getEntityFromItemID(itemHit);
 		if (itemEntity != entt::null)
@@ -45,8 +44,8 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 				}
 			}
 		}
-
-		incomingDamage.amount = std::clamp(incomingDamage.amount - calculateMitigationFromWorn(entity), 0, incomingDamage.amount);
+		int mitigation = calculateMitigationFromWorn(entity, itemHit);
+		incomingDamage.amount = std::clamp(incomingDamage.amount - mitigation, 0, incomingDamage.amount);
 	}
 }
 
@@ -93,24 +92,30 @@ int drft::system::BodyPartSystem::calculateDamageFromHeld(entt::entity attacker,
 	return std::ceilf(damage);
 }
 
-int drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender)
+int drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, unsigned long partHit)
 {
-	float sum = 0;
+	float sum = 0.f;
+	float fromHit = 0.f;
 	int count = 0;
 	if (auto body = registry->try_get<component::Body>(defender))
 	{
 		for (auto&& [partName, itemID] : body->parts)
 		{
+			++count;
 			auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
 			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
 			{
+				if (itemID == partHit)
+				{
+					fromHit = wearable->protection;
+				}
 				sum += wearable->protection;
-				++count;
 			}
 		}
 	}
-	count = std::min(1, count - 2);
-	return static_cast<int>(std::ceil(sum / count));
+	count = std::max(1, count);
+	float average = sum / count;
+	return static_cast<int>(std::ceil(average + fromHit));
 }
 
 std::string drft::system::BodyPartSystem::determinePartHit(std::unordered_map<std::string, unsigned long>& parts)

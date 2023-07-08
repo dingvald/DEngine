@@ -44,4 +44,11 @@ void drft::system::LevelingSystem::onLevelUp(entt::registry& registry, entt::ent
 			stats.vitality++;
 			});
 	}
+	registry.patch<component::action::LevelUp>(entity,
+		[](component::action::LevelUp& levelUp)
+		{
+			levelUp.statChanges.emplace("strength", 1);
+			levelUp.statChanges.emplace("agility", 1);
+			levelUp.statChanges.emplace("vitality", 1);
+		});
 }

@@ -8,7 +8,7 @@ void drft::system::HealthSystem::init()
 {
 	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
-	registry->on_update<component::BaseStats>().connect<&HealthSystem::onLevelUp>(this);
+	registry->on_update<component::action::LevelUp>().connect<&HealthSystem::onLevelUp>(this);
 }
 
 void drft::system::HealthSystem::update(const float dt)
@@ -50,6 +50,11 @@ void drft::system::HealthSystem::onLevelUp(entt::registry& registry, entt::entit
 {
 	if (auto health = registry.try_get<component::Health>(entity))
 	{
+		const auto& levelUp = registry.get<component::action::LevelUp>(entity);
+		if (levelUp.statChanges.contains("vitality"))
+		{
+			health->max += levelUp.statChanges.at("vitality");
+		}
 		health->current = health->max;
 	}
 }
