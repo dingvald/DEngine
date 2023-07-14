@@ -1,2770 +1,1589 @@
 {
-  "Prototypes": [
-    // Tile
-    {
-      "Name": "Tile",
+  "Prototypes": {
+    "Tile": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 3,
-            "layer": 0,
-            "color": [ 75, 75, 75 ]
-          }
+      "Components": {
+        "Render": {
+          "sprite": 3,
+          "layer": 0,
+          "color": [ 75, 75, 75 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         }
-      ]
+      }
     },
-    // Grass
-    {
-      "Name": "Grass",
+    "Grass": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Grass",
-            "extendedName": "",
-            "description": "Just simple grass."
-          }
+      "Components": {
+        "Info": {
+          "name": "Grass",
+          "extendedName": "",
+          "description": "Just simple grass."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 6,
-            "layer": 1,
-            "color": [ 72, 111, 56 ]
-          }
+        "Render": {
+          "sprite": 6,
+          "layer": 1,
+          "color": [ 72, 111, 56 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         }
-      ]
+      }
     },
-    // Sand
-    {
-      "Name": "Sand",
+    "Sand": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Sand",
-            "extendedName": "",
-            "description": "Just simple sand."
-          }
+      "Components": {
+        "Info": {
+          "name": "Sand",
+          "extendedName": "",
+          "description": "Just simple sand."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 24,
-            "layer": 1,
-            "color": [ 194, 178, 128 ]
-          }
+        "Render": {
+          "sprite": 24,
+          "layer": 1,
+          "color": [ 194, 178, 128 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         }
-      ]
+      }
     },
-    // Water
-    {
-      "Name": "Water",
+    "Water": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Water",
-            "extendedName": "",
-            "description": "Just simple water."
-          }
+      "Components": {
+        "Info": {
+          "name": "Water",
+          "extendedName": "",
+          "description": "Just simple water."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 25,
-            "layer": 1,
-            "color": [ 27, 149, 224 ]
-          }
+        "Render": {
+          "sprite": 25,
+          "layer": 1,
+          "color": [ 27, 149, 224 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Liquid",
-          "Data": {
-            "volume": 1000.0
-          }
+        "Liquid": {
+          "volume": 1000.0
         }
-      ]
+      }
     },
-    // Mountain Flower
-    {
-      "Name": "Mountain Flower",
+    "Mountain Flower": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Mountain Flower",
-            "extendedName": "",
-            "description": "A beautiful, fragile flower."
-          }
+      "Components": {
+        "Info": {
+          "name": "Mountain Flower",
+          "extendedName": "",
+          "description": "A beautiful, fragile flower."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 38,
-            "layer": 1,
-            "color": [ 27, 55, 184 ]
-          }
+        "Render": {
+          "sprite": 38,
+          "layer": 1,
+          "color": [ 27, 55, 184 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 0.2,
-            "materials": [ "Plant Fibre" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 0.2,
+          "materials": [ "Plant Fibre" ]
         }
-      ]
+      }
     },
-    // Herb
-    {
-      "Name": "Herb",
+    "Herb": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Herb",
-            "extendedName": "",
-            "description": "A common herb."
-          }
+      "Components": {
+        "Info": {
+          "name": "Herb",
+          "extendedName": "",
+          "description": "A common herb."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 39,
-            "layer": 1,
-            "color": [ 98, 118, 73 ]
-          }
+        "Render": {
+          "sprite": 39,
+          "layer": 1,
+          "color": [ 98, 118, 73 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 0.2,
-            "materials": [ "Plant Fibre" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 0.2,
+          "materials": [ "Plant Fibre" ]
         },
-        {
-          "Name": "Usable",
-          "Data": {
-            "action": "Heal",
-            "params": {
-              "Amount": "2"
-            },
-            "consumes": true
-          }
+        "Usable": {
+          "action": "Heal",
+          "params": {
+            "Amount": "2"
+          },
+          "consumes": true
         }
-      ]
+      }
     },
-    // Potion
-    {
-      "Name": "Potion",
+    "Potion": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Potion",
-            "extendedName": "",
-            "description": "Restores a small amount of health."
+      "Components": {
+        "Info": {
+          "name": "Potion",
+          "extendedName": "",
+          "description": "Restores a small amount of health."
+        },
+        "Render": {
+          "sprite": 40,
+          "layer": 1,
+          "color": [ 98, 118, 73 ]
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 0.6,
+          "materials": [ "Herb" ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Herb": 3,
+            "Mountain Flower": 1
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 40,
-            "layer": 1,
-            "color": [ 98, 118, 73 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 0.6,
-            "materials": [ "" ]
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Herb": 3,
-              "Mountain Flower": 1
-            }
-          }
-        },
-        {
-          "Name": "Usable",
-          "Data": {
-            "action": "Heal",
-            "params": {
-              "Amount": "10"
-            },
-            "consumes": true
-          }
+        "Usable": {
+          "action": "Heal",
+          "params": {
+            "Amount": "10"
+          },
+          "consumes": true
         }
-      ]
+      }
     },
-    // Roots
-    {
-      "Name": "Roots",
+    "Roots": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Roots",
-            "extendedName": "",
-            "description": "Roots of an old tree."
-          }
+      "Components": {
+        "Info": {
+          "name": "Roots",
+          "extendedName": "",
+          "description": "Roots of an old tree."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 29,
-            "layer": 2,
-            "color": [ 68, 48, 40 ]
-          }
+        "Render": {
+          "sprite": 29,
+          "layer": 2,
+          "color": [ 68, 48, 40 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 80.0,
-            "materials": [ "Wood" ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 80.0,
+          "materials": [ "Wood" ]
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 20,
-            "current": 20
-          }
+        "Health": {
+          "max": 20.0,
+          "current": 20.0
         }
-      ]
+      }
     },
-    // Brambles
-    {
-      "Name": "Brambles",
+    "Brambles": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Brambles",
-            "extendedName": "",
-            "description": "A spiky plant."
-          }
+      "Components": {
+        "Info": {
+          "name": "Brambles",
+          "extendedName": "",
+          "description": "A spiky plant."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 37,
-            "layer": 1,
-            "color": [ 3, 64, 16 ]
-          }
+        "Render": {
+          "sprite": 37,
+          "layer": 1,
+          "color": [ 3, 64, 16 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 5.0,
-            "materials": [
-              "Plant Fibre"
-            ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 5.0,
+          "materials": [
+            "Plant Fibre"
+          ]
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 20,
-            "current": 20
-          }
+        "Health": {
+          "max": 20.0,
+          "current": 20.0
         }
-      ]
+      }
     },
-    // Tree
-    {
-      "Name": "Tree",
+    "Tree": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Tree",
-            "extendedName": "",
-            "description": "A wooden trunk with many leaves."
-          }
+      "Components": {
+        "Info": {
+          "name": "Tree",
+          "extendedName": "",
+          "description": "A wooden trunk with many leaves."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 5,
-            "layer": 2,
-            "color": [ 65, 97, 63 ]
-          }
+        "Render": {
+          "sprite": 5,
+          "layer": 2,
+          "color": [ 65, 97, 63 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 400.0,
-            "materials": [
-              "Wood",
-              "Plant Fibre"
-            ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "LightBlocking",
-          "Data": {
-            "opacity": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 400.0,
+          "materials": [
+            "Wood",
+            "Plant Fibre"
+          ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Health": {
+          "max": 70.0,
+          "current": 70.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 75,
-            "current": 75
-          }
+        "LightBlocking": {
+          "opacity": 1.0
         }
-      ]
+      }
     },
-    // Jungle Tree
-    {
-      "Name": "JungleTree",
+    "Jungle Tree": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Jungle Tree",
-            "extendedName": "",
-            "description": "A tree found in tropical climates."
-          }
+      "Components": {
+        "Info": {
+          "name": "Jungle Tree",
+          "extendedName": "",
+          "description": "A tree found in tropical climates."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 28,
-            "layer": 2,
-            "color": [ 31, 51, 36 ]
-          }
+        "Render": {
+          "sprite": 28,
+          "layer": 2,
+          "color": [ 31, 51, 36 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 300.0,
-            "materials": [ "Wood" ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "LightBlocking",
-          "Data": {
-            "opacity": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 300.0,
+          "materials": [
+            "Wood",
+            "Plant Fibre"
+          ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Health": {
+          "max": 50.0,
+          "current": 50.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 50,
-            "current": 50
-          }
+        "LightBlocking": {
+          "opacity": 1.0
         }
-      ]
+      }
     },
-    // Cactus
-    {
-      "Name": "Cactus",
+    "Cactus": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Cactus",
-            "extendedName": "",
-            "description": "A common desert succulent."
-          }
+      "Components": {
+        "Info": {
+          "name": "Cactus",
+          "extendedName": "",
+          "description": "A common desert succulent."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 26,
-            "layer": 2,
-            "color": [ 83, 113, 61 ]
-          }
+        "Render": {
+          "sprite": 26,
+          "layer": 2,
+          "color": [ 83, 113, 61 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 50.0,
-            "materials": [ "Plant Fibre" ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "LightBlocking",
-          "Data": {
-            "opacity": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 50.0,
+          "materials": [ "Plant Fibre" ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 40,
-            "current": 40
-          }
+        "Health": {
+          "max": 40.0,
+          "current": 40.0
         }
-      ]
+      }
     },
-    // Boulder
-    {
-      "Name": "Boulder",
+    "Boulder": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Boulder",
-            "extendedName": "",
-            "description": "A very large chunk of rock."
-          }
+      "Components": {
+        "Info": {
+          "name": "Boulder",
+          "extendedName": "",
+          "description": "A very large chunk of rock."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 23,
-            "layer": 2,
-            "color": [ 100, 100, 100 ]
-          }
+        "Render": {
+          "sprite": 23,
+          "layer": 2,
+          "color": [ 100, 100, 100 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 1000.0,
-            "materials": [ "Stone" ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "LightBlocking",
-          "Data": {
-            "opacity": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 1000.0,
+          "materials": [ "Stone" ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Health": {
+          "max": 500.0,
+          "current": 500.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 500,
-            "current": 500
-          }
+        "LightBlocking": {
+          "opacity": 1.0
         }
-      ]
+      }
     },
-    // Iron Deposit
-    {
-      "Name": "IronDeposit",
+    "Iron Deposit": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Iron Deposit",
-            "extendedName": "",
-            "description": "A deposit of iron ore."
-          }
+      "Components": {
+        "Info": {
+          "name": "Iron Deposit",
+          "extendedName": "",
+          "description": "A deposit of iron ore."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 42,
-            "layer": 3,
-            "color": [ 161, 157, 148 ]
-          }
+        "Render": {
+          "sprite": 42,
+          "layer": 3,
+          "color": [ 161, 157, 148 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 1000.0,
-            "materials": [
-              "Stone",
-              "Iron"
-            ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "LightSource",
-          "Data": {
-            "radius": 3,
-            "dropOff": 0.4,
-            "color": [ 180, 180, 180 ]
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 800.0,
+          "materials": [
+            "Stone",
+            "Iron"
+          ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Health": {
+          "max": 300.0,
+          "current": 300.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 300,
-            "current": 300
-          }
+        "LightBlocking": {
+          "opacity": 1.0
+        },
+        "LightSource": {
+          "radius": 3,
+          "dropOff": 0.4,
+          "color": [ 180, 180, 180 ]
         }
-      ]
+      }
     },
-    // HumanBody
-    {
-      "Name": "HumanBody",
+    "Human Body": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 1,
-            "layer": 2,
-            "color": [ 150, 150, 150 ]
-          }
+      "Components": {
+        "Render": {
+          "sprite": 1,
+          "layer": 2,
+          "color": [ 150, 150, 150 ]
         },
-        {
-          "Name": "Body",
-          "Data": {
-            "parts": {
-              "Head": 0,
-              "Body": 0,
-              "Hands": 0,
-              "HeldR": 0,
-              "HeldL": 0,
-              "Legs": 0,
-              "Feet": 0
-            }
+        "Body": {
+          "parts": {
+            "Head": 0,
+            "Body": 0,
+            "Hands": 0,
+            "HeldR": 0,
+            "HeldL": 0,
+            "Legs": 0,
+            "Feet": 0
           }
         }
-
-      ]
+      }
     },
-    // Quadruped
-    {
-      "Name": "Quadruped",
+    "Quadruped": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Body",
-          "Data": {
-            "parts": {
-              "Head": 0,
-              "Body": 0,
-              "FrontLegs": 0,
-              "HeldR": 0,
-              "HeldL": 0,
-              "BackLegs": 0
-            }
+      "Components": {
+        "Body": {
+          "parts": {
+            "Head": 0,
+            "Body": 0,
+            "FrontLegs": 0,
+            "HeldR": 0,
+            "HeldL": 0,
+            "BackLegs": 0
           }
         }
-
-      ]
+      }
     },
-    // Horror
-    {
-      "Name": "Horror",
+    "Wooden Axe": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 0,
-            "layer": 2,
-            "color": [ 20, 20, 20 ]
-          }
+      "Components": {
+        "Info": {
+          "name": "Wooden Axe",
+          "extendedName": "",
+          "description": "A simple axe for chopping."
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Render": {
+          "sprite": 12,
+          "layer": 1,
+          "color": [ 68, 48, 40 ]
         },
-        {
-          "Name": "Body",
-          "Data": {
-            "parts": {
-              "Head": 0,
-              "Body": 0,
-              "Hands": 0,
-              "HeldR": 0,
-              "HeldL": 0,
-              "Legs": 0,
-              "Feet": 0
-            }
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "LightSource",
-          "Data": {
-            "radius": 4,
-            "dropOff": 0.3,
-            "color": [ 200, 30, 30 ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 1.8,
+          "materials": [
+            "Wood",
+            "Twine"
+          ]
         },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
+        "Health": {
+          "max": 80.0,
+          "current": 80.0
         },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 10,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
+        "Sharp": {
+          "sharpness": 1
+        },
+        "Item": {
+          "id": 0
+        },
+        "Craftable": {
+          "recipe": {
+            "Wood": 2,
+            "Twine": 1
           }
         }
-      ]
+      }
     },
-    // Wooden Axe
-    {
-      "Name": "Wooden Axe",
+    "Wooden Sword": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Wooden Axe",
-            "extendedName": "",
-            "description": "A simple axe for chopping."
-          }
+      "Components": {
+        "Info": {
+          "name": "Wooden Sword",
+          "extendedName": "Wooden Sword",
+          "description": "A simple sword usually used for training."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 12,
-            "layer": 1,
-            "color": [ 68, 48, 40 ]
-          }
+        "Render": {
+          "sprite": 66,
+          "layer": 1,
+          "color": [ 68, 48, 40 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 1.8,
-            "materials": [
-              "Wood",
-              "Twine"
-            ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 2.5,
+          "materials": [
+            "Wood",
+            "Twine"
+          ]
         },
-        {
-          "Name": "Sharp",
-          "Data": {
-            "sharpness": 1
-          }
+        "Health": {
+          "max": 60.0,
+          "current": 60.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 80,
-            "current": 80
-          }
+        "Sharp": {
+          "sharpness": 2
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 2,
-              "Twine": 1
-            }
+        "Craftable": {
+          "recipe": {
+            "Wood": 2,
+            "Twine": 1
           }
         }
-      ]
+      }
     },
-    // Wooden Sword
-    {
-      "Name": "Wooden Sword",
+    "Ashen Sword": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Wooden Sword",
-            "extendedName": "Wooden Sword",
-            "description": "A simple sword usually used for training."
-          }
+      "Components": {
+        "Info": {
+          "name": "Ashen Sword",
+          "extendedName": "",
+          "description": "A sword covered in a strange ash."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 66,
-            "layer": 1,
-            "color": [ 68, 48, 40 ]
-          }
+        "Render": {
+          "sprite": 69,
+          "layer": 1,
+          "color": [ 178, 190, 181 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 2.5,
-            "materials": [
-              "Wood"
-            ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 2.0,
+          "materials": [
+            "Wood",
+            "Ash"
+          ]
         },
-        {
-          "Name": "Sharp",
-          "Data": {
-            "sharpness": 1
-          }
+        "Health": {
+          "max": 666.0,
+          "current": 666.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 60,
-            "current": 60
-          }
+        "Sharp": {
+          "sharpness": 3
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 2,
-              "Twine": 1
-            }
+        "Craftable": {
+          "recipe": {
+            "Ash": 27,
+            "Wooden Sword": 1
           }
         }
-      ]
+      }
     },
-    // Ashen Sword
-    {
-      "Name": "Ashen Sword",
+    "Machete": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Ashen Sword",
-            "extendedName": "",
-            "description": "A sword covered in a strange ash."
-          }
+      "Components": {
+        "Info": {
+          "name": "Machete",
+          "extendedName": "",
+          "description": "A broad blade used for hacking."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 69,
-            "layer": 1,
-            "color": [ 178, 190, 181 ]
-          }
+        "Render": {
+          "sprite": 13,
+          "layer": 1,
+          "color": [ 161, 157, 148 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 2.0,
-            "materials": [
-              "Wood"
-            ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 1.3,
+          "materials": [
+            "Iron"
+          ]
         },
-        {
-          "Name": "Sharp",
-          "Data": {
-            "sharpness": 7
-          }
+        "Health": {
+          "max": 150.0,
+          "current": 150.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 666,
-            "current": 666
-          }
+        "Sharp": {
+          "sharpness": 3
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Ash": 27,
-              "Wooden Sword": 1
-            }
+        "Craftable": {
+          "recipe": {
+            "Iron": 4,
+            "Flint": 1
           }
         }
-      ]
+      }
     },
-    // Machete
-    {
-      "Name": "Machete",
+    "Torch": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Machete",
-            "extendedName": "",
-            "description": "A broad blade used for hacking."
-          }
+      "Components": {
+        "Info": {
+          "name": "Torch",
+          "extendedName": "",
+          "description": "Used to provide light."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 13,
-            "layer": 1,
-            "color": [ 161, 157, 148 ]
-          }
+        "Render": {
+          "sprite": 45,
+          "layer": 1,
+          "color": [ 253, 146, 87 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 1.3,
-            "materials": [
-              "Iron"
-            ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 1.3,
+          "materials": [
+            "Wood",
+            "Twine",
+            "Flint"
+          ]
         },
-        {
-          "Name": "Sharp",
-          "Data": {
-            "sharpness": 3
-          }
+        "Health": {
+          "max": 30.0,
+          "current": 30.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 150,
-            "current": 150
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "LightSource": {
+          "radius": 10,
+          "dropOff": 0.4,
+          "color": [ 255, 223, 205 ]
         },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Iron": 4,
-              "Flint": 1
-            }
+        "Craftable": {
+          "recipe": {
+            "Wood": 1,
+            "Twine": 1,
+            "Flint": 1
           }
         }
-      ]
+      }
     },
-    // Iron Axe
-    {
-      "Name": "Iron Axe",
+    "Ephemera": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Iron Axe",
-            "extendedName": "",
-            "description": "A solid axe for chopping."
-          }
+      "Components": {
+        "Info": {
+          "name": "Ephemera",
+          "extendedName": "",
+          "description": "Old paper containing old words."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 12,
-            "layer": 1,
-            "color": [ 161, 157, 148 ]
-          }
+        "Render": {
+          "sprite": 52,
+          "layer": 1,
+          "color": [ 224, 201, 166 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 2.1,
-            "materials": [
-              "Iron",
-              "Wood",
-              "Twine"
-            ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 0.3,
+          "materials": [
+            "Plant Fibre"
+          ]
         },
-        {
-          "Name": "Sharp",
-          "Data": {
-            "sharpness": 5
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 80,
-            "current": 80
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Iron": 2,
-              "Flint": 1,
-              "Wooden Axe": 1
-            }
-          }
+        "Usable": {
+          "action": "Read",
+          "params": {
+            "Type": "Text",
+            "Content": ""
+          },
+          "consumes": false
         }
-      ]
+      }
     },
-    // Torch
-    {
-      "Name": "Torch",
+    "Dungeon Key": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Torch",
-            "extendedName": "",
-            "description": "Used to provide light."
-          }
+      "Components": {
+        "Info": {
+          "name": "Dungeon Key",
+          "extendedName": "",
+          "description": "A mysterious key. What does it open?"
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 45,
-            "layer": 1,
-            "color": [ 253, 146, 87 ]
-          }
+        "Render": {
+          "sprite": 54,
+          "layer": 1,
+          "color": [ 212, 175, 55 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 1.3,
-            "materials": [
-              "Wood",
-              "Twine",
-              "Flint"
-            ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 0.3,
+          "materials": [
+            "Gold"
+          ]
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 30,
-            "current": 30
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "LightSource": {
+          "radius": 6,
+          "dropOff": 0.2,
+          "color": [ 255, 255, 0 ]
         },
-        {
-          "Name": "LightSource",
-          "Data": {
-            "radius": 10,
-            "dropOff": 0.4,
-            "color": [ 255, 223, 205 ]
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 1,
-              "Twine": 1,
-              "Flint": 1
-            }
-          }
+        "Usable": {
+          "action": "Read",
+          "params": {
+            "Type": "Text",
+            "Content": ""
+          },
+          "consumes": false
         }
-      ]
+      }
     },
-    // Ephemera
-    {
-      "Name": "Ephemera",
+    "Firefly": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Ephemera",
-            "extendedName": "",
-            "description": "Old paper containing old words."
-          }
+      "Components": {
+        "Info": {
+          "name": "Firefly",
+          "extendedName": "",
+          "description": "A bug that lights up."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 52,
-            "layer": 1,
-            "color": [ 224, 201, 166 ]
-          }
+        "Render": {
+          "sprite": 41,
+          "layer": 2,
+          "color": [ 200, 200, 100 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 0.3,
-            "materials": [
-              "Plant Fibre"
-            ]
-          }
+        "BaseStats": {
+          "strength": 1,
+          "agility": 1,
+          "vitality": 1
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 0.1,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "Usable",
-          "Data": {
-            "action": "Read",
-            "params": {
-              "Type": "Text",
-              "Content": ""
-            },
-            "consumes": false
-          }
+        "Actor": {
+          "moveSpeed": 1.0,
+          "actSpeed": 1.0
+        },
+        "Health": {
+          "max": 5.0,
+          "current": 5.0
+        },
+        "Flying": {
+          "standin": 0
+        },
+        "Attacker": {
+          "baseDamage": 1
+        },
+        "Faction": {
+          "name": "neutral"
+        },
+        "Leveling": {
+          "currentLevel": 0
+        },
+        "LightSource": {
+          "radius": 4,
+          "dropOff": 0.3,
+          "color": [ 255, 255, 0 ]
+        },
+        "AI": {
+          "sightRange": 15,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Dungeon Key
-    {
-      "Name": "Dungeon Key",
+    "Butterfly": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Dungeon Key",
-            "extendedName": "",
-            "description": "A mysterious key. What does it open?"
-          }
+      "Components": {
+        "Info": {
+          "name": "Butterfly",
+          "extendedName": "",
+          "description": "A colorful flying insect."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 54,
-            "layer": 1,
-            "color": [ 212, 175, 55 ]
-          }
+        "Render": {
+          "sprite": 49,
+          "layer": 2,
+          "color": [ 100, 30, 150 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 0.3,
-            "materials": [
-              "Gold"
-            ]
-          }
+        "BaseStats": {
+          "strength": 1,
+          "agility": 1,
+          "vitality": 1
         },
-        {
-          "Name": "LightSource",
-          "Data": {
-            "radius": 6,
-            "dropOff": 0.2,
-            "color": [ 255, 255, 0 ]
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 0.1,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Actor": {
+          "moveSpeed": 2.0,
+          "actSpeed": 1.0
+        },
+        "Flying": {
+          "standin": 0
+        },
+        "Health": {
+          "max": 5.0,
+          "current": 5.0
+        },
+        "Attacker": {
+          "baseDamage": 1
+        },
+        "Faction": {
+          "name": "neutral"
+        },
+        "Leveling": {
+          "currentLevel": 0
+        },
+        "AI": {
+          "sightRange": 10,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Raft
-    {
-      "Name": "Raft",
+    "Mosquito": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Raft",
-            "extendedName": "",
-            "description": "Allows the owner to float."
-          }
+      "Components": {
+        "Info": {
+          "name": "Mosquito",
+          "extendedName": "",
+          "description": "The most annoying thing alive."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 30,
-            "layer": 1,
-            "color": [ 68, 48, 40 ]
-          }
+        "Render": {
+          "sprite": 34,
+          "layer": 2,
+          "color": [ 129, 114, 101 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 30.0,
-            "materials": [
-              "Wood",
-              "Twine"
-            ]
-          }
+        "BaseStats": {
+          "strength": 1,
+          "agility": 1,
+          "vitality": 1
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 10,
-            "current": 10
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 0.1,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Actor": {
+          "moveSpeed": 2.0,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 8,
-              "Twine": 2
-            }
-          }
+        "Flying": {
+          "standin": 0
+        },
+        "Health": {
+          "max": 5.0,
+          "current": 5.0
+        },
+        "Attacker": {
+          "baseDamage": 2
+        },
+        "Faction": {
+          "name": "bad"
+        },
+        "Leveling": {
+          "currentLevel": 1
+        },
+        "AI": {
+          "sightRange": 10,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Zol Gibbon
-    {
-      "Name": "Zol Gibbon",
-      "Inherits": [
-        "HumanBody"
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Zol Gibbon",
-            "extendedName": "",
-            "description": " A terrifying jungle creature."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 33,
-            "layer": 2,
-            "color": [ 60, 60, 60 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 60.0,
-            "materials": [ "Corpse" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.0,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 10,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 25,
-            "current": 25
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 4
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
-        }
-      ]
-    },
-    // Firefly
-    {
-      "Name": "Firefly",
+    "Vulture": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Firefly",
-            "extendedName": "",
-            "description": "A bug that lights up."
-          }
+      "Components": {
+        "Info": {
+          "name": "Vulture",
+          "extendedName": "",
+          "description": "Carrion bird with sharp beak and talons."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 41,
-            "layer": 2,
-            "color": [ 200, 200, 100 ]
-          }
+        "Render": {
+          "sprite": 56,
+          "layer": 2,
+          "color": [ 80, 50, 50 ]
         },
-        {
-          "Name": "LightSource",
-          "Data": {
-            "radius": 3,
-            "dropOff": 0.3,
-            "color": [ 255, 255, 0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "BaseStats": {
+          "strength": 3,
+          "agility": 3,
+          "vitality": 3
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 0.1,
-            "materials": [ "Corpse" ]
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 0.1,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.0,
-            "actSpeed": 1.0
-          }
+        "Actor": {
+          "moveSpeed": 1.8,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 15,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
+        "Flying": {
+          "standin": 0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 1,
-            "current": 1
-          }
+        "Health": {
+          "max": 30.0,
+          "current": 30.0
         },
-        {
-          "Name": "Flying",
-          "Data": {
-            "standin": 0
-          }
+        "Attacker": {
+          "baseDamage": 4
         },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 1
-          }
+        "Faction": {
+          "name": "bad"
         },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "neutral"
-          }
+        "Leveling": {
+          "currentLevel": 3
         },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 0
-          }
+        "AI": {
+          "sightRange": 16,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Butterfly
-    {
-      "Name": "Butterfly",
+    "Rat": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Butterfly",
-            "extendedName": "",
-            "description": "A colorful flying insect."
-          }
+      "Components": {
+        "Info": {
+          "name": "Rat",
+          "extendedName": "",
+          "description": "A small mammal with big ears."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 49,
-            "layer": 2,
-            "color": [ 100, 30, 150 ]
-          }
+        "Render": {
+          "sprite": 55,
+          "layer": 2,
+          "color": [ 140, 140, 140 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 0.1,
-            "materials": [ "Corpse" ]
-          }
+        "BaseStats": {
+          "strength": 2,
+          "agility": 5,
+          "vitality": 5
         },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.5,
-            "actSpeed": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 5.0,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 15,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
+        "Actor": {
+          "moveSpeed": 1.2,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 5,
-            "current": 5
-          }
+        "Health": {
+          "max": 25.0,
+          "current": 25.0
         },
-        {
-          "Name": "Flying",
-          "Data": {
-            "standin": 0
-          }
+        "Attacker": {
+          "baseDamage": 2
         },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 1
-          }
+        "Faction": {
+          "name": "bad"
         },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "neutral"
-          }
+        "Leveling": {
+          "currentLevel": 2
         },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 1
-          }
+        "AI": {
+          "sightRange": 12,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Mosquito
-    {
-      "Name": "Mosquito",
-      "Inherits": [
-        ""
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Mosquito",
-            "extendedName": "",
-            "description": "The most annoying thing alive."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 34,
-            "layer": 2,
-            "color": [ 129, 114, 101 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 0.1,
-            "materials": [ "Corpse" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 2,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 15,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 2,
-            "current": 2
-          }
-        },
-        {
-          "Name": "Flying",
-          "Data": {
-            "standin": 0
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 2
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
-        },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 1
-          }
-        },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 1,
-            "agility": 1,
-            "vitality": 1
-          }
-        }
-      ]
-    },
-    // Vulture
-    {
-      "Name": "Vulture",
-      "Inherits": [
-        ""
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Vulture",
-            "extendedName": "",
-            "description": "Carrion bird with sharp beak and talons."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 56,
-            "layer": 2,
-            "color": [ 80, 50, 50 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 3,
-            "materials": [ "Corpse" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.8,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 16,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 30,
-            "current": 30
-          }
-        },
-        {
-          "Name": "Flying",
-          "Data": {
-            "standin": 0
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 4
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
-        },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 3
-          }
-        },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 3,
-            "agility": 3,
-            "vitality": 3
-          }
-        }
-      ]
-    },
-    // Rat
-    {
-      "Name": "Rat",
+    "Cougar": {
       "Inherits": [
         "Quadruped"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Rat",
-            "extendedName": "",
-            "description": "A small mammal with big ears."
-          }
+      "Components": {
+        "Info": {
+          "name": "Cougar",
+          "extendedName": "",
+          "description": "A fearsome mammal that stalks its prey."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 55,
-            "layer": 2,
-            "color": [ 140, 140, 140 ]
-          }
+        "Render": {
+          "sprite": 57,
+          "layer": 2,
+          "color": [ 255, 177, 51 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 5.0,
-            "materials": [ "Corpse" ]
-          }
+        "BaseStats": {
+          "strength": 7,
+          "agility": 8,
+          "vitality": 5
         },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.1,
-            "actSpeed": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 90.0,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 12,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
+        "Actor": {
+          "moveSpeed": 2.0,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 25,
-            "current": 25
-          }
+        "Health": {
+          "max": 45.0,
+          "current": 45.0
         },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 2
-          }
+        "Attacker": {
+          "baseDamage": 3
         },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
+        "Faction": {
+          "name": "bad"
         },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 2
-          }
+        "Leveling": {
+          "currentLevel": 4
         },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 2,
-            "agility": 5,
-            "vitality": 5
-          }
+        "AI": {
+          "sightRange": 12,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Cougar
-    {
-      "Name": "Cougar",
-      "Inherits": [
-        "Quadruped"
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Cougar",
-            "extendedName": "",
-            "description": "A fearsome mammal that stalks its prey."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 57,
-            "layer": 2,
-            "color": [ 255, 177, 51 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 90.0,
-            "materials": [ "Corpse" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 2.0,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 12,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 45,
-            "current": 45
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 3
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
-        },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 3
-          }
-        },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 7,
-            "agility": 8,
-            "vitality": 5
-          }
-        }
-      ]
-    },
-    // Panther
-    {
-      "Name": "Panther",
+    "Panther": {
       "Inherits": [
         "Cougar"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Panther",
-            "extendedName": "",
-            "description": "A fearsome mammal that stalks its prey."
-          }
+      "Components": {
+        "Info": {
+          "name": "Panther",
+          "extendedName": "",
+          "description": "A fearsome mammal that stalks its prey."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 57,
-            "layer": 2,
-            "color": [ 40, 40, 40 ]
-          }
+        "Render": {
+          "sprite": 57,
+          "layer": 2,
+          "color": [ 40, 40, 40 ]
         }
-      ]
+      }
     },
-    // Mountain Lion
-    {
-      "Name": "Mountain Lion",
+    "Mountain Lion": {
       "Inherits": [
         "Cougar"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Mountain Lion",
-            "extendedName": "",
-            "description": "If you see it, it's too late."
-          }
+      "Components": {
+        "Info": {
+          "name": "Mountain Lion",
+          "extendedName": "",
+          "description": "If you see it, it's too late."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 57,
-            "layer": 2,
-            "color": [ 186, 161, 127 ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 55,
-            "current": 55
-          }
+        "Render": {
+          "sprite": 57,
+          "layer": 2,
+          "color": [ 186, 161, 127 ]
         }
-      ]
+      }
     },
-    // Alligator
-    {
-      "Name": "Alligator",
+    "Alligator": {
       "Inherits": [
         "Quadruped"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Alligator",
-            "extendedName": "",
-            "description": "A fearsome reptile."
-          }
+      "Components": {
+        "Info": {
+          "name": "Alligator",
+          "extendedName": "",
+          "description": "A fearsome reptile."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 35,
-            "layer": 2,
-            "color": [ 48, 96, 72 ]
-          }
+        "Render": {
+          "sprite": 35,
+          "layer": 2,
+          "color": [ 48, 96, 72 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 150,
-            "materials": [ "Corpse" ]
-          }
+        "BaseStats": {
+          "strength": 8,
+          "agility": 3,
+          "vitality": 7
         },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.0,
-            "actSpeed": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 150,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 8,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
+        "Actor": {
+          "moveSpeed": 1.0,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 100,
-            "current": 100
-          }
+        "Health": {
+          "max": 100.0,
+          "current": 100.0
         },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 5
-          }
+        "Attacker": {
+          "baseDamage": 5
         },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
+        "Faction": {
+          "name": "bad"
         },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 3
-          }
+        "Leveling": {
+          "currentLevel": 4
         },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 8,
-            "agility": 3,
-            "vitality": 7
-          }
+        "AI": {
+          "sightRange": 12,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Golem
-    {
-      "Name": "Golem",
+    "Golem": {
+      "Inherits": [
+        "Quadruped"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Golem",
+          "extendedName": "",
+          "description": "A powerful mythical creature."
+        },
+        "Render": {
+          "sprite": 58,
+          "layer": 2,
+          "color": [ 115, 105, 103 ]
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "BaseStats": {
+          "strength": 10,
+          "agility": 2,
+          "vitality": 10
+        },
+        "Physical": {
+          "blocks": true,
+          "weight": 500.0,
+          "materials": [ "Corpse" ]
+        },
+        "Actor": {
+          "moveSpeed": 0.7,
+          "actSpeed": 1.0
+        },
+        "Health": {
+          "max": 120.0,
+          "current": 120.0
+        },
+        "Attacker": {
+          "baseDamage": 6
+        },
+        "Faction": {
+          "name": "bad"
+        },
+        "Leveling": {
+          "currentLevel": 5
+        },
+        "AI": {
+          "sightRange": 16,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
+        }
+      }
+    },
+    "Snake": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Golem",
-            "extendedName": "",
-            "description": "A powerful mythical creature."
-          }
+      "Components": {
+        "Info": {
+          "name": "Snake",
+          "extendedName": "",
+          "description": "A fearsome reptile with no legs."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 58,
-            "layer": 2,
-            "color": [ 115, 105, 103 ]
-          }
+        "Render": {
+          "sprite": 36,
+          "layer": 2,
+          "color": [ 186, 84, 4 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 500.0,
-            "materials": [ "Corpse" ]
-          }
+        "BaseStats": {
+          "strength": 3,
+          "agility": 8,
+          "vitality": 8
         },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 0.7,
-            "actSpeed": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 40,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 12,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
+        "Actor": {
+          "moveSpeed": 1.5,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 120,
-            "current": 120
-          }
+        "Health": {
+          "max": 50.0,
+          "current": 50.0
         },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 6
-          }
+        "Attacker": {
+          "baseDamage": 4
         },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
+        "Faction": {
+          "name": "bad"
         },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 7
-          }
+        "Leveling": {
+          "currentLevel": 4
         },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 10,
-            "agility": 2,
-            "vitality": 10
-          }
+        "AI": {
+          "sightRange": 10,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Snake
-    {
-      "Name": "Snake",
-      "Inherits": [
-        ""
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Snake",
-            "extendedName": "",
-            "description": "A fearsome reptile with no legs."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 36,
-            "layer": 2,
-            "color": [ 186, 84, 4 ]
-          }
-        },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 40,
-            "materials": [ "Corpse" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.5,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 9,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 40,
-            "current": 40
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 4
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
-        },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 4
-          }
-        },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 3,
-            "agility": 8,
-            "vitality": 8
-          }
-        }
-      ]
-    },
-    // Rattler
-    {
-      "Name": "Rattler",
+    "Rattler": {
       "Inherits": [
         "Snake"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Rattler",
-            "extendedName": "",
-            "description": "If you can hear it it's too late'."
-          }
+      "Components": {
+        "Info": {
+          "name": "Rattler",
+          "extendedName": "",
+          "description": "If you can hear it it's too late'."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 36,
-            "layer": 2,
-            "color": [ 127, 118, 103 ]
-          }
+        "Render": {
+          "sprite": 36,
+          "layer": 2,
+          "color": [ 127, 118, 103 ]
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 20,
-            "current": 20
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 4
-          }
+        "Actor": {
+          "moveSpeed": 2.0,
+          "actSpeed": 2.0
         },
-        {
-          "Name": "Leveling",
-          "Data": {
-            "currentLevel": 4
-          }
+        "Health": {
+          "max": 20.0,
+          "current": 20.0
+        },
+        "AI": {
+          "sightRange": 6,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Birdman Horror
-    {
-      "Name": "Birdman Horror",
-      "Inherits": [
-        "Horror"
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Birdman Horror",
-            "extendedName": "",
-            "description": " An inexplicable horror."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 11,
-            "layer": 2,
-            "color": [ 60, 50, 50 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 100.0,
-            "materials": [ "Ash" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.2,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 20,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 100,
-            "current": 100
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 5
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
-        },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 10,
-            "agility": 10,
-            "vitality": 10
-          }
-        }
-      ]
-    },
-    // Skeletal Horror
-    {
-      "Name": "Skeletal Horror",
-      "Inherits": [
-        "Horror"
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Skeletal Horror",
-            "extendedName": "",
-            "description": " An inexplicable horror."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 44,
-            "layer": 2,
-            "color": [ 60, 50, 50 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 20.0,
-            "materials": [ "Ash" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.2,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 20,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 100,
-            "current": 100
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 8
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
-        },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 10,
-            "agility": 10,
-            "vitality": 10
-          }
-        }
-      ]
-    },
-    // Unknown Horror
-    {
-      "Name": "Unknown Horror",
-      "Inherits": [
-        "Horror"
-      ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Unknown Horror",
-            "extendedName": "",
-            "description": " An inexplicable horror."
-          }
-        },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 33,
-            "layer": 2,
-            "color": [ 60, 50, 50 ]
-          }
-        },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 200.0,
-            "materials": [ "Ash" ]
-          }
-        },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.2,
-            "actSpeed": 1.0
-          }
-        },
-        {
-          "Name": "AI",
-          "Data": {
-            "sightRange": 20,
-            "goals": [
-              "random_move",
-              "kill_target"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 150,
-            "current": 150
-          }
-        },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 10
-          }
-        },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "bad"
-          }
-        },
-        {
-          "Name": "BaseStats",
-          "Data": {
-            "strength": 10,
-            "agility": 10,
-            "vitality": 10
-          }
-        }
-      ]
-    },
-    // Barricade
-    {
-      "Name": "Barricade",
+    "Birdman Horror": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Barricade",
-            "extendedName": "",
-            "description": "A wooden structure used to prevent passage."
-          }
+      "Components": {
+        "Info": {
+          "name": "Birdman Horror",
+          "extendedName": "",
+          "description": " An inexplicable horror."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 46,
-            "layer": 2,
-            "color": [ 121, 92, 50 ]
-          }
+        "Render": {
+          "sprite": 11,
+          "layer": 2,
+          "color": [ 60, 50, 50 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 20.0,
-            "materials": [
-              "Wood"
-            ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "LightBlocking",
-          "Data": {
-            "opacity": 1.0
-          }
+        "BaseStats": {
+          "strength": 10,
+          "agility": 10,
+          "vitality": 10
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 100.0,
+          "materials": [ "Ash" ]
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 200,
-            "current": 200
-          }
+        "LightSource": {
+          "radius": 6,
+          "dropOff": 0.3,
+          "color": [ 255, 0, 0 ]
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Actor": {
+          "moveSpeed": 1.2,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 4,
-              "Twine": 1
-            }
-          }
+        "Health": {
+          "max": 100.0,
+          "current": 100.0
+        },
+        "Attacker": {
+          "baseDamage": 5
+        },
+        "Faction": {
+          "name": "bad"
+        },
+        "Leveling": {
+          "currentLevel": 4
+        },
+        "AI": {
+          "sightRange": 10,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
         }
-      ]
+      }
     },
-    // Wood Door
-    {
-      "Name": "Wood Door",
+    "Skeletal Horror": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Wood Door",
-            "extendedName": "",
-            "description": "A wooden structure used to allow selective passage."
-          }
+      "Components": {
+        "Info": {
+          "name": "Skeletal Horror",
+          "extendedName": "",
+          "description": " An inexplicable horror."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 67,
-            "layer": 2,
-            "color": [ 121, 92, 50 ]
-          }
+        "Render": {
+          "sprite": 44,
+          "layer": 2,
+          "color": [ 60, 50, 50 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 20.0,
-            "materials": [
-              "Wood"
-            ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "LightBlocking",
-          "Data": {
-            "opacity": 1.0
-          }
+        "BaseStats": {
+          "strength": 10,
+          "agility": 10,
+          "vitality": 10
         },
-        {
-          "Name": "Door",
-          "Data": {
-            "keyName": ""
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 50.0,
+          "materials": [ "Ash" ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "LightSource": {
+          "radius": 6,
+          "dropOff": 0.3,
+          "color": [ 255, 0, 0 ]
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 200,
-            "current": 200
-          }
+        "Actor": {
+          "moveSpeed": 1.2,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Health": {
+          "max": 100.0,
+          "current": 100.0
         },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 4
-            }
+        "Attacker": {
+          "baseDamage": 5
+        },
+        "Faction": {
+          "name": "bad"
+        },
+        "Leveling": {
+          "currentLevel": 4
+        },
+        "AI": {
+          "sightRange": 10,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
+        }
+      }
+    },
+    "Unknown Horror": {
+      "Inherits": [
+        ""
+      ],
+      "Components": {
+        "Info": {
+          "name": "Unknown Horror",
+          "extendedName": "",
+          "description": " An inexplicable horror."
+        },
+        "Render": {
+          "sprite": 33,
+          "layer": 2,
+          "color": [ 60, 50, 50 ]
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "BaseStats": {
+          "strength": 10,
+          "agility": 10,
+          "vitality": 10
+        },
+        "Physical": {
+          "blocks": true,
+          "weight": 100.0,
+          "materials": [ "Ash" ]
+        },
+        "LightSource": {
+          "radius": 6,
+          "dropOff": 0.3,
+          "color": [ 255, 0, 0 ]
+        },
+        "Actor": {
+          "moveSpeed": 1.2,
+          "actSpeed": 1.0
+        },
+        "Health": {
+          "max": 100.0,
+          "current": 100.0
+        },
+        "Attacker": {
+          "baseDamage": 5
+        },
+        "Faction": {
+          "name": "bad"
+        },
+        "Leveling": {
+          "currentLevel": 4
+        },
+        "AI": {
+          "sightRange": 10,
+          "goals": [
+            "random_move",
+            "kill_target"
+          ]
+        }
+      }
+    },
+    "Barricade": {
+      "Inherits": [
+        ""
+      ],
+      "Components": {
+        "Info": {
+          "name": "Barricade",
+          "extendedName": "",
+          "description": "A wooden structure used to prevent passage."
+        },
+        "Render": {
+          "sprite": 46,
+          "layer": 2,
+          "color": [ 121, 92, 50 ]
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Physical": {
+          "blocks": true,
+          "weight": 50.0,
+          "materials": [
+            "Wood"
+          ]
+        },
+        "Health": {
+          "max": 200.0,
+          "current": 200.0
+        },
+        "LightBlocking": {
+          "opacity": 1.0
+        },
+        "Item": {
+          "id": 0
+        },
+        "Craftable": {
+          "recipe": {
+            "Wood": 4,
+            "Twine": 1
           }
         }
-      ]
+      }
+    },
+    "Wood Door": {
+      "Inherits": [
+        ""
+      ],
+      "Components": {
+        "Info": {
+          "name": "Wood Door",
+          "extendedName": "",
+          "description": "A wooden structure used to allow selective passage."
+        },
+        "Render": {
+          "sprite": 67,
+          "layer": 2,
+          "color": [ 121, 92, 50 ]
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Physical": {
+          "blocks": true,
+          "weight": 30.0,
+          "materials": [
+            "Wood"
+          ]
+        },
+        "Health": {
+          "max": 200.0,
+          "current": 200.0
+        },
+        "LightBlocking": {
+          "opacity": 1.0
+        },
+        "Item": {
+          "id": 0
+        },
+        "Craftable": {
+          "recipe": {
+            "Wood": 4
+          }
+        },
+        "Door": {
+          "keyName": ""
+        }
+      }
     }
-  ]
+  }
 }

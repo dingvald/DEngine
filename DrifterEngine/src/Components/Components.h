@@ -7,7 +7,7 @@ namespace component
 
 	struct Info
 	{
-		std::string prototype = { "" };
+		std::string prototype = { "PROTOTYPE" };
 		std::string name = { "" };
 		std::string extendedName = { "" };
 		std::string description = { "" };

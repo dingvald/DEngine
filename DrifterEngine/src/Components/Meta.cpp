@@ -12,7 +12,6 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Info, INFO_STRING>()
 		.prop("serialize"_hs)
-		.data<&Info::prototype>("prototype"_hs)
 		.data<&Info::name>("name"_hs)
 		.data<&Info::extendedName>("extendedName"_hs)
 		.data<&Info::description>("description"_hs);
@@ -61,7 +60,6 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Actor, ACTOR_STRING>()
 		.prop("serialize"_hs)
-		.data<&Actor::ap>("ap"_hs)
 		.data<&Actor::moveSpeed>("moveSpeed"_hs)
 		.data<&Actor::actSpeed>("actSpeed"_hs);
 

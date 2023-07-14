@@ -1,318 +1,205 @@
 {
-  "Prototypes": [
-    // Base Material
-    {
-      "Name": "BaseMaterial",
+  "Prototypes": {
+    "BaseMaterial": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+      "Components": {
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 5,
-            "current": 5
-          }
+        "Health": {
+          "max": 5,
+          "current": 5
         }
-      ]
+      }
     },
-    // Corpse
-    {
-      "Name": "Corpse",
+    "Corpse": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Corpse",
-            "extendedName": "",
-            "description": "A corpse."
-          }
+      "Components": {
+        "Info": {
+          "name": "Corpse",
+          "extendedName": "",
+          "description": "A corpse."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 7,
-            "layer": 1,
-            "color": [ 88, 8, 8 ]
-          }
+        "Render": {
+          "sprite": 7,
+          "layer": 1,
+          "color": [ 88, 8, 8 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 60.0,
-            "materials": [ "Corpse" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 60.0,
+          "materials": [ "Corpse" ]
         }
-      ]
+      }
     },
-    // Ash
-    {
-      "Name": "Ash",
+    "Ash": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Ash",
-            "extendedName": "",
-            "description": "The remains of something burned."
-          }
+      "Components": {
+        "Info": {
+          "name": "Ash",
+          "extendedName": "",
+          "description": "The remains of something burned."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 47,
-            "layer": 1,
-            "color": [ 225, 225, 225 ]
-          }
+        "Render": {
+          "sprite": 47,
+          "layer": 1,
+          "color": [ 225, 225, 225 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 0.0,
-            "materials": [ "Ash" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 0.0,
+          "materials": [ "Ash" ]
         },
-        {
-          "Name": "TickingLifetime",
-          "Data": {
-            "ticksRemaining": 1000
-          }
+        "TickingLifetime": {
+          "ticksRemaining": 1000
         }
-      ]
+      }
     },
-    // Wood
-    {
-      "Name": "Wood",
+    "Wood": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Wood",
-            "extendedName": "",
-            "description": "A chunk of wood."
-          }
+      "Components": {
+        "Info": {
+          "name": "Wood",
+          "extendedName": "",
+          "description": "A chunk of wood."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 14,
-            "layer": 1,
-            "color": [ 68, 48, 40 ]
-          }
+        "Render": {
+          "sprite": 14,
+          "layer": 1,
+          "color": [ 68, 48, 40 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 2.5,
-            "materials": [ "Wood" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 2.5,
+          "materials": [ "Wood" ]
         }
-      ]
+      }
     },
-    // Stone
-    {
-      "Name": "Stone",
+    "Stone": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Stone",
-            "extendedName": "",
-            "description": "A small rock."
-          }
+      "Components": {
+        "Info": {
+          "name": "Stone",
+          "extendedName": "",
+          "description": "A small rock."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 10,
-            "layer": 1,
-            "color": [ 128, 132, 135 ]
-          }
+        "Render": {
+          "sprite": 10,
+          "layer": 1,
+          "color": [ 128, 132, 135 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 1.5,
-            "materials": [ "Stone" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 1.5,
+          "materials": [ "Stone" ]
         }
-      ]
+      }
     },
-    // Iron
-    {
-      "Name": "Iron",
+    "Iron": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Iron",
-            "extendedName": "",
-            "description": "A common metal."
-          }
+      "Components": {
+        "Info": {
+          "name": "Iron",
+          "extendedName": "",
+          "description": "A common metal."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 43,
-            "layer": 1,
-            "color": [ 161, 157, 148 ]
-          }
+        "Render": {
+          "sprite": 43,
+          "layer": 1,
+          "color": [ 161, 157, 148 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 2.0,
-            "materials": [ "Iron" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 2.0,
+          "materials": [ "Iron" ]
         }
-      ]
+      }
     },
-    // Flint
-    {
-      "Name": "Flint",
+    "Flint": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Flint",
-            "extendedName": "",
-            "description": "Used to start fires."
-          }
+      "Components": {
+        "Info": {
+          "name": "Flint",
+          "extendedName": "",
+          "description": "Used to start fires."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 43,
-            "layer": 1,
-            "color": [ 40, 40, 40 ]
-          }
+        "Render": {
+          "sprite": 43,
+          "layer": 1,
+          "color": [ 40, 40, 40 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 1.0,
-            "materials": [ "Flint" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 1.0,
+          "materials": [ "Flint" ]
         }
-      ]
+      }
     },
-    // PlantFibre
-    {
-      "Name": "Plant Fibre",
+    "Plant Fibre": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Plant Fibre",
-            "extendedName": "",
-            "description": "Tough planty material."
-          }
+      "Components": {
+        "Info": {
+          "name": "Plant Fibre",
+          "extendedName": "",
+          "description": "Tough planty material."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 31,
-            "layer": 1,
-            "color": [ 1, 50, 35 ]
-          }
+        "Render": {
+          "sprite": 31,
+          "layer": 1,
+          "color": [ 1, 50, 35 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 0.25,
-            "materials": [ "Plant Fibre" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 0.25,
+          "materials": [ "Plant Fibre" ]
         }
-      ]
+      }
     },
-    // Twine
-    {
-      "Name": "Twine",
+    "Twine": {
       "Inherits": [
         "BaseMaterial"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Twine",
-            "extendedName": "",
-            "description": "Versatile and durable."
-          }
+      "Components": {
+        "Info": {
+          "name": "Twine",
+          "extendedName": "",
+          "description": "Versatile and durable."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 32,
-            "layer": 1,
-            "color": [ 186, 161, 127 ]
-          }
+        "Render": {
+          "sprite": 32,
+          "layer": 1,
+          "color": [ 186, 161, 127 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 0.5,
-            "materials": [ "Plant Fibre" ]
-          }
+        "Physical": {
+          "blocks": false,
+          "weight": 0.5,
+          "materials": [ "Plant Fibre" ]
         },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Plant Fibre": 2
-            }
+        "Craftable": {
+          "recipe": {
+            "Plant Fibre": 2
           }
         }
-      ]
+      }
     }
-  ]
+  }
 }

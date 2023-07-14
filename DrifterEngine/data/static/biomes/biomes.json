@@ -71,7 +71,7 @@
             "Threshold": 0.51
           }
         },
-        "IronDeposit": {
+        "Iron Deposit": {
           "Algorithm": "OrganicSpread",
           "Params": {
             "Generations": 2,
@@ -182,7 +182,7 @@
             "Number": 200
           }
         },
-        "JungleTree": {
+        "Jungle Tree": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 600
@@ -230,7 +230,6 @@
             "Number": 4
           }
         }
-
       },
       "Actors": {
         "Firefly": {

@@ -1,571 +1,355 @@
 {
-  "Prototypes": [
-    // Iron Breastplate
-    {
-      "Name": "Iron Breastplate",
+  "Prototypes": {
+    "Iron Breastplate": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Iron Breastplate",
-            "extendedName": "Iron Breastplate",
-            "description": "A solid metal armor for the chest."
+      "Components": {
+        "Info": {
+          "name": "Iron Breastplate",
+          "extendedName": "Iron Breastplate",
+          "description": "A solid metal armor for the chest."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 59,
+          "layer": 1,
+          "color": [ 161, 157, 148 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 12.0,
+          "materials": [
+            "Iron",
+            "Twine"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Iron": 6,
+            "Twine": 2,
+            "Flint": 1
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 59,
-            "layer": 1,
-            "color": [ 161, 157, 148 ]
-          }
+        "Health": {
+          "max": 80,
+          "current": 80
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 12.0,
-            "materials": [
-              "Iron",
-              "Twine"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 80,
-            "current": 80
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Iron": 6,
-              "Twine": 2,
-              "Flint": 1
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Body",
-            "protection": 5
-          }
+        "Wearable": {
+          "slot": "Body",
+          "protection": 5
         }
-      ]
+      }
     },
-    // Iron Legplates
-    {
-      "Name": "Iron Legplates",
+    "Iron Legplates": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Iron Legplates",
-            "extendedName": "Iron Legplates",
-            "description": "A solid iron armor for the legs."
+      "Components": {
+        "Info": {
+          "name": "Iron Legplates",
+          "extendedName": "Iron Legplates",
+          "description": "A solid iron armor for the legs."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 62,
+          "layer": 1,
+          "color": [ 161, 157, 148 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 8.0,
+          "materials": [
+            "Iron"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Iron": 5,
+            "Twine": 1,
+            "Flint": 1
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 62,
-            "layer": 1,
-            "color": [ 161, 157, 148 ]
-          }
+        "Health": {
+          "max": 60,
+          "current": 60
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 8.0,
-            "materials": [
-              "Iron"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 60,
-            "current": 60
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Iron": 5,
-              "Twine": 1,
-              "Flint": 1
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Legs",
-            "protection": 4
-          }
+        "Wearable": {
+          "slot": "Legs",
+          "protection": 4
         }
-      ]
+      }
     },
-    // Wood Breastplate
-    {
-      "Name": "Wood Breastplate",
+    "Wood Breastplate": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Wood Breastplate",
-            "extendedName": "Wood Breastplate",
-            "description": "A solid wood armor for the chest."
+      "Components": {
+        "Info": {
+          "name": "Wood Breastplate",
+          "extendedName": "Wood Breastplate",
+          "description": "A solid wood armor for the chest."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 59,
+          "layer": 1,
+          "color": [ 68, 48, 40 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 8.0,
+          "materials": [
+            "Wood"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Wood": 6,
+            "Twine": 2
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 59,
-            "layer": 1,
-            "color": [ 68, 48, 40 ]
-          }
+        "Health": {
+          "max": 60,
+          "current": 60
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 8.0,
-            "materials": [
-              "Wood"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 60,
-            "current": 60
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 6,
-              "Twine": 2
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Body",
-            "protection": 3
-          }
+        "Wearable": {
+          "slot": "Body",
+          "protection": 3
         }
-      ]
+      }
     },
-    // Wood Legplates
-    {
-      "Name": "Wood Legplates",
+    "Wood Legplates": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Wood Legplates",
-            "extendedName": "Wood Legplates",
-            "description": "A solid wood armor for the legs."
+      "Components": {
+        "Info": {
+          "name": "Wood Legplates",
+          "extendedName": "Wood Legplates",
+          "description": "A solid wood armor for the legs."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 62,
+          "layer": 1,
+          "color": [ 68, 48, 40 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 6.0,
+          "materials": [
+            "Wood"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Wood": 5,
+            "Twine": 1
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 62,
-            "layer": 1,
-            "color": [ 68, 48, 40 ]
-          }
+        "Health": {
+          "max": 50,
+          "current": 50
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 6.0,
-            "materials": [
-              "Wood"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 50,
-            "current": 50
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 5,
-              "Twine": 1
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Legs",
-            "protection": 2
-          }
+        "Wearable": {
+          "slot": "Legs",
+          "protection": 2
         }
-      ]
+      }
     },
-    // Wood Shield
-    {
-      "Name": "Wood Shield",
+    "Wood Shield": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Wood Shield",
-            "extendedName": "Wood Shield",
-            "description": "A solid wooden shield."
+      "Components": {
+        "Info": {
+          "name": "Wood Shield",
+          "extendedName": "Wood Shield",
+          "description": "A solid wooden shield."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 65,
+          "layer": 1,
+          "color": [ 68, 48, 40 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 6.0,
+          "materials": [
+            "Wood"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Wood": 4
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 65,
-            "layer": 1,
-            "color": [ 68, 48, 40 ]
-          }
+        "Health": {
+          "max": 30,
+          "current": 30
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 6.0,
-            "materials": [
-              "Wood"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 30,
-            "current": 30
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Wood": 4
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "HeldL",
-            "protection": 2
-          }
+        "Wearable": {
+          "slot": "HeldL",
+          "protection": 2
         }
-      ]
+      }
     },
-    // Woven Hood
-    {
-      "Name": "Woven Hood",
+    "Woven Hood": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Woven Hood",
-            "extendedName": "",
-            "description": "A hood woven together from various plant fibres."
+      "Components": {
+        "Info": {
+          "name": "Woven Hood",
+          "extendedName": "",
+          "description": "A hood woven together from various plant fibres."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 60,
+          "layer": 1,
+          "color": [ 186, 161, 127 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 1.0,
+          "materials": [
+            "Plant Fibre"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Plant Fibre": 3
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 60,
-            "layer": 1,
-            "color": [ 186, 161, 127 ]
-          }
+        "Health": {
+          "max": 15,
+          "current": 15
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 1.0,
-            "materials": [
-              "Plant Fibre"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 15,
-            "current": 15
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Plant Fibre": 3
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Head",
-            "protection": 1
-          }
+        "Wearable": {
+          "slot": "Head",
+          "protection": 1
         }
-      ]
+      }
     },
-    // Woven Sandals
-    {
-      "Name": "Woven Sandals",
+    "Woven Sandals": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Woven Sandals",
-            "extendedName": "",
-            "description": "Sandals woven together from various plant fibres."
+      "Components": {
+        "Info": {
+          "name": "Woven Sandals",
+          "extendedName": "",
+          "description": "Sandals woven together from various plant fibres."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 63,
+          "layer": 1,
+          "color": [ 186, 161, 127 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 2.0,
+          "materials": [
+            "Plant Fibre"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Plant Fibre": 2
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 63,
-            "layer": 1,
-            "color": [ 186, 161, 127 ]
-          }
+        "Health": {
+          "max": 15,
+          "current": 15
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 2.0,
-            "materials": [
-              "Plant Fibre"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 15,
-            "current": 15
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Plant Fibre": 2
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Feet",
-            "protection": 1
-          }
+        "Wearable": {
+          "slot": "Feet",
+          "protection": 1
         }
-      ]
+      }
     },
-    // Woven Bracers
-    {
-      "Name": "Woven Bracers",
+    "Woven Bracers": {
       "Inherits": [
         ""
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "prototype": "PROTOTYPE",
-            "name": "Woven Bracers",
-            "extendedName": "",
-            "description": "Bracers woven together from various plant fibres."
+      "Components": {
+        "Info": {
+          "name": "Woven Sandals",
+          "extendedName": "",
+          "description": "Sandals woven together from various plant fibres."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 64,
+          "layer": 1,
+          "color": [ 186, 161, 127 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 2.0,
+          "materials": [
+            "Plant Fibre"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Plant Fibre": 2
           }
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 64,
-            "layer": 1,
-            "color": [ 186, 161, 127 ]
-          }
+        "Health": {
+          "max": 15,
+          "current": 15
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Item": {
+          "id": 0
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": false,
-            "weight": 1.0,
-            "materials": [
-              "Plant Fibre"
-            ]
-          }
-        },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 15,
-            "current": 15
-          }
-        },
-        {
-          "Name": "Item",
-          "Data": {
-            "id": 0
-          }
-        },
-        {
-          "Name": "Craftable",
-          "Data": {
-            "recipe": {
-              "Plant Fibre": 2
-            }
-          }
-        },
-        {
-          "Name": "Wearable",
-          "Data": {
-            "slot": "Hands",
-            "protection": 1
-          }
+        "Wearable": {
+          "slot": "Hands",
+          "protection": 1
         }
-      ]
+      }
     }
-  ]
+  }
 }
