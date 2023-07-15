@@ -74,7 +74,7 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 				// Iterate component data
 				for (auto&& data : component.value.GetObject())
 				{
-					auto memberName = data.name.GetString();
+					const auto memberName = data.name.GetString();
 					if (data.value.IsArray())
 					{
 						// HACKZZ: Inflexible - assumes certain types in arrays
