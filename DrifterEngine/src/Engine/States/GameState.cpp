@@ -144,6 +144,7 @@ bool drft::GameState::loadOrCreatePlayer()
 
 void drft::GameState::loadEntityPrototypes()
 {
+	_factory->loadPrototypes("bases.json");
 	_factory->loadPrototypes("materials.json");
 	_factory->loadPrototypes("prototypes.json");
 	_factory->loadPrototypes("wearables.json");

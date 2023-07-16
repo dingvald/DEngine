@@ -1235,6 +1235,7 @@
     <None Include="packages.config" />
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\wearables.json" />
+    <None Include="data\static\entities\bases.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">
