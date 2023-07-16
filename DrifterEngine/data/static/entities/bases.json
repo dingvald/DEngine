@@ -1,0 +1,25 @@
+{
+  "Prototypes": {
+    "BaseItem": {
+      "Components": {
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Item": {
+          "id": 0
+        }
+      }
+    },
+    "BaseMaterial": {
+      "Inherits": [
+        "BaseItem"
+      ],
+      "Components": {
+        "Health": {
+          "max": 5,
+          "current": 5
+        }
+      }
+    }
+  }
+}

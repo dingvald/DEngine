@@ -1,22 +1,5 @@
 {
   "Prototypes": {
-    "BaseMaterial": {
-      "Inherits": [
-        ""
-      ],
-      "Components": {
-        "Position": {
-          "position": [ 0.0, 0.0 ]
-        },
-        "Item": {
-          "id": 0
-        },
-        "Health": {
-          "max": 5,
-          "current": 5
-        }
-      }
-    },
     "Corpse": {
       "Inherits": [
         "BaseMaterial"

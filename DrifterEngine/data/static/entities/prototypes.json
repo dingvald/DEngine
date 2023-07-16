@@ -446,7 +446,7 @@
     },
     "Wooden Axe": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -458,9 +458,6 @@
           "sprite": 12,
           "layer": 1,
           "color": [ 68, 48, 40 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Physical": {
           "blocks": false,
@@ -477,9 +474,6 @@
         "Sharp": {
           "sharpness": 1
         },
-        "Item": {
-          "id": 0
-        },
         "Craftable": {
           "recipe": {
             "Wood": 2,
@@ -490,7 +484,7 @@
     },
     "Wooden Sword": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -502,9 +496,6 @@
           "sprite": 66,
           "layer": 1,
           "color": [ 68, 48, 40 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Physical": {
           "blocks": false,
@@ -521,9 +512,6 @@
         "Sharp": {
           "sharpness": 2
         },
-        "Item": {
-          "id": 0
-        },
         "Craftable": {
           "recipe": {
             "Wood": 2,
@@ -534,7 +522,7 @@
     },
     "Ashen Sword": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -546,9 +534,6 @@
           "sprite": 69,
           "layer": 1,
           "color": [ 178, 190, 181 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Physical": {
           "blocks": false,
@@ -565,9 +550,6 @@
         "Sharp": {
           "sharpness": 3
         },
-        "Item": {
-          "id": 0
-        },
         "Craftable": {
           "recipe": {
             "Ash": 27,
@@ -578,7 +560,7 @@
     },
     "Machete": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -590,9 +572,6 @@
           "sprite": 13,
           "layer": 1,
           "color": [ 161, 157, 148 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Physical": {
           "blocks": false,
@@ -608,9 +587,6 @@
         "Sharp": {
           "sharpness": 3
         },
-        "Item": {
-          "id": 0
-        },
         "Craftable": {
           "recipe": {
             "Iron": 4,
@@ -621,7 +597,7 @@
     },
     "Torch": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -633,9 +609,6 @@
           "sprite": 45,
           "layer": 1,
           "color": [ 253, 146, 87 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Physical": {
           "blocks": false,
@@ -649,9 +622,6 @@
         "Health": {
           "max": 30.0,
           "current": 30.0
-        },
-        "Item": {
-          "id": 0
         },
         "LightSource": {
           "radius": 10,
@@ -669,7 +639,7 @@
     },
     "Ephemera": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -682,18 +652,12 @@
           "layer": 1,
           "color": [ 224, 201, 166 ]
         },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
-        },
         "Physical": {
           "blocks": false,
           "weight": 0.3,
           "materials": [
             "Plant Fibre"
           ]
-        },
-        "Item": {
-          "id": 0
         },
         "Usable": {
           "action": "Read",
@@ -707,7 +671,7 @@
     },
     "Dungeon Key": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -720,18 +684,12 @@
           "layer": 1,
           "color": [ 212, 175, 55 ]
         },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
-        },
         "Physical": {
           "blocks": false,
           "weight": 0.3,
           "materials": [
             "Gold"
           ]
-        },
-        "Item": {
-          "id": 0
         },
         "LightSource": {
           "radius": 6,
@@ -1499,7 +1457,7 @@
     },
     "Barricade": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -1542,7 +1500,7 @@
     },
     "Wood Door": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -1554,9 +1512,6 @@
           "sprite": 67,
           "layer": 2,
           "color": [ 121, 92, 50 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Physical": {
           "blocks": true,
@@ -1571,9 +1526,6 @@
         },
         "LightBlocking": {
           "opacity": 1.0
-        },
-        "Item": {
-          "id": 0
         },
         "Craftable": {
           "recipe": {

@@ -2,16 +2,13 @@
   "Prototypes": {
     "Iron Breastplate": {
       "Inherits": [
-        ""
+        "Base Item"
       ],
       "Components": {
         "Info": {
           "name": "Iron Breastplate",
           "extendedName": "Iron Breastplate",
           "description": "A solid metal armor for the chest."
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Render": {
           "sprite": 59,
@@ -37,9 +34,6 @@
           "max": 80,
           "current": 80
         },
-        "Item": {
-          "id": 0
-        },
         "Wearable": {
           "slot": "Body",
           "protection": 5
@@ -48,16 +42,13 @@
     },
     "Iron Legplates": {
       "Inherits": [
-        ""
+        "Base Item"
       ],
       "Components": {
         "Info": {
           "name": "Iron Legplates",
           "extendedName": "Iron Legplates",
           "description": "A solid iron armor for the legs."
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Render": {
           "sprite": 62,
@@ -82,9 +73,6 @@
           "max": 60,
           "current": 60
         },
-        "Item": {
-          "id": 0
-        },
         "Wearable": {
           "slot": "Legs",
           "protection": 4
@@ -93,7 +81,7 @@
     },
     "Wood Breastplate": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -314,9 +302,9 @@
       ],
       "Components": {
         "Info": {
-          "name": "Woven Sandals",
+          "name": "Woven Bracers",
           "extendedName": "",
-          "description": "Sandals woven together from various plant fibres."
+          "description": "Bracers woven together from various plant fibres."
         },
         "Position": {
           "position": [ 0.0, 0.0 ]
