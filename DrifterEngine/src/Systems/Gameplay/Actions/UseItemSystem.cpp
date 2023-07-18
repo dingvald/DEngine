@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "UseItemSystem.h"
 #include "Components/Components.h"
+#include "Systems/Helpers/RemoveFromContainer.h"
 
 void drft::system::UseItemSystem::init()
 {
@@ -20,11 +21,6 @@ void drft::system::UseItemSystem::onUseItem(entt::registry& registry, entt::enti
 	String2UseFunc.at(usableComp.action)(registry, entity, useAction.entity, usableComp.params);
 	if (usableComp.consumes && useAction.item != component::Item::NONE)
 	{
-		registry.patch<component::Container>(entity,
-			[useAction](component::Container& cont)
-			{
-				cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), useAction.item), cont.contents.end());
-			});
-		registry.destroy(useAction.entity);
+		removeFromContainer(registry, entity, useAction.entity, true);
 	}
 }
