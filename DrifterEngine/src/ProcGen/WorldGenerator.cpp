@@ -5,6 +5,7 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/Grid.h"
+#include "Random/RandomNumberGenerator.h"
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
 #include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
@@ -26,6 +27,12 @@ static constexpr double MOISTURE_ARID = 0.43;
 static constexpr double MOISTURE_HUMID = 0.57;
 
 //--------------------------------------------
+
+drft::gen::WorldGenerator::WorldGenerator()
+{
+    _machineFactory.loadPrototypes("generic.json");
+    _machineFactory.loadPrototypes("faction.json");
+}
 
 void drft::gen::WorldGenerator::setSeed(unsigned int seed)
 {
@@ -146,8 +153,9 @@ std::vector<sf::Vector2i> drft::gen::WorldGenerator::determineOpenFaces(sf::Vect
     return openFaces;
 }
 
-void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2i> openFaces, spatial::Grid<int>& spaces, unsigned int seed) const
+void drft::gen::WorldGenerator::addErodedEdges(std::vector<sf::Vector2i> openFaces, spatial::Grid<CellState>& spaces, unsigned int seed) const
 {
+    // Erode edges where there is a biome boundary
     const double THRESHOLD = 1.31;
     const double P_WEIGHT = 1.0;
     const double G_WEIGHT = 1.3;
@@ -221,10 +229,24 @@ void drft::gen::WorldGenerator::determineAvailableSpaces(std::vector<sf::Vector2
         {
             const double perlinContribution = noise.gen((col + 0.5) / spaces.width(), (row + 0.5) / spaces.height());
             const double gradientContribution = 0.5 * ((static_cast<double>(xGrad[col]) / centerx) + (static_cast<double>(yGrad[row]) / centery));
-            if ( (P_WEIGHT * perlinContribution + G_WEIGHT * gradientContribution) > THRESHOLD)
+            if ( (P_WEIGHT * perlinContribution + G_WEIGHT * gradientContribution) < THRESHOLD)
             {
-                spaces.at(col, row) = 1;
+                if (spaces.at(col, row) == CellState::Free)
+                {
+                    spaces.at(col, row) = CellState::Eroded;
+                }
             }
+        }
+    }
+}
+
+void drft::gen::WorldGenerator::reserveMachineBounds(spatial::Grid<CellState>& spaces, sf::IntRect bounds) const
+{
+    for (int row = bounds.top; row < bounds.height; ++row)
+    {
+        for (int col = bounds.left; col < bounds.width; ++col)
+        {
+            spaces.at(col, row) = CellState::Machine;
         }
     }
 }
@@ -255,22 +277,43 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
 
     std::cout << "Parsing " << filename << "..." << std::endl;
 
-    for (auto& blueprint : doc["Biomes"].GetObject())
+    for (auto& biome : doc["Biomes"].GetObject())
     {
-        BiomeType type = gen::String2Biome.at(blueprint.name.GetString());
-        for (auto& category : blueprint.value.GetObject())
+        BiomeType type = gen::String2Biome.at(biome.name.GetString());
+        const auto biomeObject = biome.value.GetObject();
+        auto& environmental = biomeObject["Environmental"];
+        auto& wilderness = biomeObject["Wilderness"];
+       
+        for (auto& entity : environmental.GetObject())
         {
-            for (auto& entity : category.value.GetObject())
+            WildernessPrototype prototype;
+            auto entityObj = entity.value.GetObject();
+            prototype.name = entity.name.GetString();
+            prototype.algorithm = entityObj["Algorithm"].GetString();
+            for (auto& [name, value] : entityObj["Params"].GetObject())
             {
-                WildernessPrototype prototype;
-                auto entityObj = entity.value.GetObject();
-                prototype.name = entity.name.GetString();
-                prototype.algorithm = entityObj["Algorithm"].GetString();
-                for (auto& [name, value] : entityObj["Params"].GetObject())
-                {
-                    prototype.params[name.GetString()] = value.GetFloat();
-                }
-                _biomes[type].prototypes[category.name.GetString()].push_back(prototype);
+                prototype.params[name.GetString()] = value.GetFloat();
+            }
+            _biomes[type].prototypes["Environmental"].push_back(prototype);
+        }
+        for (auto& entity : wilderness.GetObject())
+        {
+            WildernessPrototype prototype;
+            auto entityObj = entity.value.GetObject();
+            prototype.name = entity.name.GetString();
+            prototype.algorithm = entityObj["Algorithm"].GetString();
+            for (auto& [name, value] : entityObj["Params"].GetObject())
+            {
+                prototype.params[name.GetString()] = value.GetFloat();
+            }
+            _biomes[type].prototypes["Environmental"].push_back(prototype);
+        }
+        if (biomeObject.HasMember("Machines"))
+        {
+            auto& machines = biomeObject["Machines"];
+            for (auto& machine : machines.GetObject())
+            {
+                _biomes[type].machines[machine.name.GetString()] = machine.value.GetFloat();
             }
         }
     }
@@ -280,6 +323,9 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
 
 void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
+    // Always place tiles
+    gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+
     const auto biomeType = getBiomeType(coordinate);
     const auto& biome = _biomes.at(biomeType);
 
@@ -287,11 +333,21 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
     const int LARGE_PRIME = 198491317;
     const int seed = rng::noise(( coordinate.x + (LARGE_PRIME * coordinate.y) ));
 
-    gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+    spatial::Grid<CellState> freeSpaces{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
 
-    spatial::Grid<int> freeSpaces{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
+    // Maybe pick a machine to throw in
+    auto pickedMachine = biome.pickMachine(seed);
+    if (pickedMachine.has_value())
+    {
+        const auto& machine = _machineFactory.build(pickedMachine.value());
+        auto randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - machine.getBounds().x
+                                                                          ,spatial::CHUNK_HEIGHT - machine.getBounds().y});
+        machine.place(tileCoord + randomPosition, registry);
+        reserveMachineBounds(freeSpaces, { randomPosition.x, randomPosition.y, machine.getBounds().x, machine.getBounds().y });
+    }
 
-    determineAvailableSpaces(determineOpenFaces(coordinate), freeSpaces, seed);
+    // Randomly round edges for lakes and mountains
+    addErodedEdges(determineOpenFaces(coordinate), freeSpaces, seed);
     for (auto& [category, entityList] : biome.prototypes)
     {
         for (auto& [entity, algorithm, params] : entityList)

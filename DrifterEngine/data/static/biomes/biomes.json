@@ -30,7 +30,7 @@
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Mosquito": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -55,6 +55,9 @@
             "Number": 1
           }
         }
+      },
+      "Machines": {
+        "Chest": 0.2
       }
     },
     "Mountain": {
@@ -99,7 +102,7 @@
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Golem": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -128,7 +131,7 @@
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
 
       }
     },
@@ -153,7 +156,7 @@
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Mosquito": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -189,7 +192,7 @@
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Panther": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -231,7 +234,7 @@
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Firefly": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -279,7 +282,7 @@
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Butterfly": {
           "Algorithm": "RandomSpread",
           "Params": {
