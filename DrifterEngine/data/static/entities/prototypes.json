@@ -1532,7 +1532,51 @@
             "Wood": 4
           }
         },
-        "Door": {
+        "Usable": {
+          "action": "Open",
+          "params": {},
+          "consumes": false
+        },
+        "Openable": {
+          "keyName": ""
+        }
+      }
+    },
+    "Chest": {
+      "Inherits": [
+        "BaseItem"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Chest",
+          "extendedName": "",
+          "description": "A container holding valuables."
+        },
+        "Render": {
+          "sprite": 70,
+          "layer": 2,
+          "color": [ 121, 92, 50 ]
+        },
+        "Physical": {
+          "blocks": true,
+          "weight": 30.0,
+          "materials": [
+            "Wood"
+          ]
+        },
+        "Health": {
+          "max": 200.0,
+          "current": 200.0
+        },
+        "Container": {
+          "capacity": 10
+        },
+        "Usable": {
+          "action": "Open",
+          "params": {},
+          "consumes": false
+        },
+        "Openable": {
           "keyName": ""
         }
       }

@@ -180,13 +180,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Factory\MachineFactory.cpp" />
+    <ClCompile Include="src\Machine\Machine.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp" />
+    <ClCompile Include="src\Systems\Helpers\ContainerHasItem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp" />
     <ClCompile Include="src\Systems\Helpers\InputBuffer.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\Actions\DoorToggleSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\InteractionSystem.cpp" />
-    <ClCompile Include="src\ProcGen\Machine.cpp" />
     <ClCompile Include="src\Systems\Helpers\FindItemOwner.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetCurrentCameraOrigin.cpp" />
     <ClCompile Include="src\Systems\Helpers\ItemDatabase.cpp" />
@@ -209,8 +210,6 @@
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
     <ClCompile Include="src\Engine\States\CraftingState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.cpp" />
-    <ClCompile Include="src\ProcGen\Helpers\Dilate.cpp" />
-    <ClCompile Include="src\ProcGen\Helpers\Erode.cpp" />
     <ClCompile Include="src\ProcGen\PlacementAlgorithms\Fill.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.cpp" />
     <ClCompile Include="src\ProcGen\Biome.cpp" />
@@ -328,13 +327,15 @@
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Factory\MachineFactory.h" />
+    <ClInclude Include="src\Machine\Machine.h" />
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GridEnums.h" />
     <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h" />
+    <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h" />
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h" />
     <ClInclude Include="src\Systems\Helpers\InputBuffer.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.h" />
-    <ClInclude Include="src\Systems\Gameplay\Actions\DoorToggleSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\InteractionSystem.h" />
-    <ClInclude Include="src\ProcGen\Machine.h" />
     <ClInclude Include="src\Systems\Helpers\FindItemOwner.h" />
     <ClInclude Include="src\Systems\Helpers\GetCurrentCameraOrigin.h" />
     <ClInclude Include="src\Systems\Helpers\ItemDatabase.h" />
@@ -365,9 +366,6 @@
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
     <ClInclude Include="src\Engine\States\CraftingState.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h" />
-    <ClInclude Include="src\ProcGen\Helpers\Dilate.h" />
-    <ClInclude Include="src\ProcGen\Helpers\Erode.h" />
-    <ClInclude Include="src\ProcGen\Helpers\Kernels.h" />
     <ClInclude Include="src\ProcGen\PlacementAlgorithms\Fill.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.h" />
     <ClInclude Include="src\ProcGen\Biome.h" />
@@ -624,6 +622,8 @@
     <None Include="data\static\entities\player.json" />
     <None Include="data\static\entities\prototypes.json" />
     <None Include="data\static\entities\wearables.json" />
+    <None Include="data\static\machines\faction.json" />
+    <None Include="data\static\machines\generic.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="packages.config" />
     <None Include="src\Spatial\Grid.inl" />

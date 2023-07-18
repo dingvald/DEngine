@@ -40,7 +40,6 @@
 #include "Systems/Gameplay/Actions/PickUpSystem.h"
 #include "Systems/Gameplay/Actions/InteractionSystem.h"
 #include "Systems/Gameplay/Actions/LaunchAttackSystem.h"
-#include "Systems/Gameplay/Actions/DoorToggleSystem.h"
 #include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
@@ -252,7 +251,6 @@ void drft::GameState::importSystems()
 	_systems->add<HorrorSpawningSystem>(			Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
-	_systems->add<DoorToggleSystem>(				Phase::OnUpdate);
 	_systems->add<SelectDirectionSystem>(			Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
 	_systems->add<PickUpSystem>(					Phase::OnUpdate);

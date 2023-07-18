@@ -196,7 +196,7 @@ namespace component
 		bool standin = false;
 	};
 
-	struct Door
+	struct Openable
 	{
 		bool isOpen = false;
 		std::string keyName = "";

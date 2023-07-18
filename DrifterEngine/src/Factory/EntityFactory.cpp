@@ -132,6 +132,7 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 					}
 					else if (data.value.IsObject())
 					{
+						if (data.value.GetObject().MemberCount() == 0) continue;
 						if (data.value.GetObject().begin()->value.IsInt64())
 						{
 							std::unordered_map<std::string, unsigned long> map;

@@ -168,9 +168,9 @@ namespace cereal
 	}
 
 	template<class Archive>
-	void serialize(Archive& archive, Door& door)
+	void serialize(Archive& archive, Openable& openable)
 	{
-		archive(door.isOpen, door.keyName);
+		archive(openable.isOpen, openable.keyName);
 	}
 
 	template<class Archive>

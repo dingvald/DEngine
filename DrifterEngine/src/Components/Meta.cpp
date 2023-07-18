@@ -133,9 +133,9 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Horror, HORROR_STRING>()
 		.prop("serialize"_hs);
 
-	snapshot::reflectComponent<Door, DOOR_STRING>()
+	snapshot::reflectComponent<Openable, OPENABLE_STRING>()
 		.prop("serialize"_hs)
-		.data<&Door::keyName>("keyName"_hs);
+		.data<&Openable::keyName>("keyName"_hs);
 
 	snapshot::reflectComponent<TickingLifetime, TICKING_LIFETIME_STRING>()
 		.prop("serialize"_hs)
