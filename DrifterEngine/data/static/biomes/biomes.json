@@ -62,7 +62,9 @@
         }
       },
       "Machines": {
-        "Chest": 1.0
+        "Chest": 0.1,
+        "Heart Shrine": 0.08,
+        "Wilderness Horde": 0.2
       }
     },
     "Mountain": {
@@ -124,6 +126,11 @@
             "Number": 2
           }
         }
+      },
+      "Machines": {
+        "Chest": 0.2,
+        "Heart Shrine": 0.1,
+        "Wilderness Horde": 0.08
       }
     },
     "Lake": {

@@ -31,8 +31,9 @@ namespace drft::gen
 		BiomeType getBiomeType(sf::Vector2i coordinate) const;
 
 	private:
+		void registerMachines();
 		BiomeType determineBiomeType(double temperature, double altitude, double moisture) const;
-		sf::Vector2<double> convertIntergerCoordinates(sf::Vector2i coord) const;
+		sf::Vector2<double> convertIntergerCoordinatesToDouble(sf::Vector2i coord) const;
 		std::vector<sf::Vector2i> determineOpenFaces(sf::Vector2i coord) const;
 		void addErodedEdges(std::vector<sf::Vector2i> openFaces, spatial::Grid<CellState>& spaces, unsigned int seed) const;
 		void reserveMachineBounds(spatial::Grid<CellState>& spaces, sf::IntRect bounds) const;

@@ -32,10 +32,10 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(int seed, const spatial::Grid
 		std::vector<sf::Vector2i> positionsToAdd;
 		for (auto position : positions)
 		{
-			auto surroundings = spatial::getIntCircleInRadius(position, radius);
+			const auto surroundings = spatial::getIntCircleInRadius(position, radius);
 			for (int spg = 0; spg < seedsPerGeneration; ++spg)
 			{
-				int index = rng::RandomNumberGenerator::intInRange(0, surroundings.size() - 1);
+				const int index = rng::RandomNumberGenerator::intInRange(0, surroundings.size() - 1);
 				positionsToAdd.emplace_back(surroundings.at(index));
 			}
 		}

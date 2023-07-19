@@ -75,7 +75,8 @@ namespace drft::util
 		DoorOpen,
 		Katana,
 		ChestClosed,
-		ChestOpen
+		ChestOpen,
+		HeartShrine
 	};
 
 	class SpriteIndexer

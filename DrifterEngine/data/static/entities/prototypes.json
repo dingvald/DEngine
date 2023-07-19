@@ -1580,6 +1580,46 @@
           "keyName": ""
         }
       }
+    },
+    "Heart Shrine": {
+      "Inherits": [
+        ""
+      ],
+      "Components": {
+        "Info": {
+          "name": "Heart Shrine",
+          "extendedName": "",
+          "description": "A shrine that heals you fully."
+        },
+        "Render": {
+          "sprite": 72,
+          "layer": 2,
+          "color": [ 150, 120, 120 ]
+        },
+        "Physical": {
+          "blocks": true,
+          "weight": 30.0,
+          "materials": [
+            "Stone"
+          ]
+        },
+        "LightSource": {
+          "radius": 7,
+          "dropOff": 0.2,
+          "color": [ 255, 180, 180 ]
+        },
+        "Health": {
+          "max": 200.0,
+          "current": 200.0
+        },
+        "Usable": {
+          "action": "Heal",
+          "params": {
+            "Amount": "999"
+          },
+          "consumes": true
+        }
+      }
     }
   }
 }

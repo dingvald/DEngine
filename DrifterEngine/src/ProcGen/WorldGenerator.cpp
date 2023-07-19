@@ -11,6 +11,10 @@
 #include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
 #include "PlacementAlgorithms/Algorithms.h"
 
+#include "Machines/Chest.h"
+#include "Machines/HeartShrine.h"
+#include "Machines/WildernessHorde.h"
+
 // Perlin noise cutoffs:
 //------------------------------------------
 
@@ -30,8 +34,7 @@ static constexpr double MOISTURE_HUMID = 0.57;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
-    _machineFactory.loadPrototypes("generic.json");
-    _machineFactory.loadPrototypes("faction.json");
+    registerMachines();
 }
 
 void drft::gen::WorldGenerator::setSeed(unsigned int seed)
@@ -46,6 +49,13 @@ void drft::gen::WorldGenerator::setSeed(unsigned int seed)
     _temperatureNoise = std::make_unique<rng::PerlinNoise>(temperatureSeed);
     _altitudeNoise = std::make_unique<rng::PerlinNoise>(altitudeSeed);
     _moistureNoise = std::make_unique<rng::PerlinNoise>(moistureSeed);
+}
+
+void drft::gen::WorldGenerator::registerMachines()
+{
+    _machineFactory.registerMachine<machine::Chest>("Chest");
+    _machineFactory.registerMachine<machine::HeartShrine>("Heart Shrine");
+    _machineFactory.registerMachine<machine::WildernessHorde>("Wilderness Horde");
 }
 
 drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temperature, double altitude, double moisture) const
@@ -121,7 +131,7 @@ drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temper
     return BiomeType::Forest;
 }
 
-sf::Vector2<double> drft::gen::WorldGenerator::convertIntergerCoordinates(sf::Vector2i coord) const
+sf::Vector2<double> drft::gen::WorldGenerator::convertIntergerCoordinatesToDouble(sf::Vector2i coord) const
 {
     sf::Vector2<double> result;
     result.x = (static_cast<double>(coord.x) + 0.5) / (13 * 80);
@@ -294,16 +304,15 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
                 {
                     prototype.params[name.GetString()] = value.GetFloat();
                 }
-                _biomes[type].prototypes[wilderness.name.GetString()].push_back(prototype);
+                _biomes[type].wildernessPrototypes[wilderness.name.GetString()].push_back(prototype);
             }
         }
-
         if (biomeObject.HasMember("Machines"))
         {
             auto& machines = biomeObject["Machines"];
             for (auto& machine : machines.GetObject())
             {
-                _biomes[type].machines[machine.name.GetString()] = machine.value.GetFloat();
+                _biomes[type].possibleMachines[machine.name.GetString()] = machine.value.GetFloat();
             }
         }
     }
@@ -326,19 +335,36 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
     spatial::Grid<CellState> freeSpaces{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
 
     // Maybe pick a machine to throw in
-    auto pickedMachine = biome.pickMachine(seed);
-    if (pickedMachine.has_value())
+    auto pickedMachines = biome.pickMachines(seed);
+    if (!pickedMachines.empty())
     {
-        const auto& machine = _machineFactory.build(pickedMachine.value());
-        auto randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - machine.getBounds().x
-                                                                          ,spatial::CHUNK_HEIGHT - machine.getBounds().y});
-        machine.place(tileCoord + randomPosition, registry, biome);
-        reserveMachineBounds(freeSpaces, { randomPosition.x, randomPosition.y, machine.getBounds().x, machine.getBounds().y });
+        for (auto& machineName : pickedMachines)
+        {
+            if (const auto machine = _machineFactory.build(machineName))
+            {
+                machine->initialize(registry, biome);
+                sf::Vector2i randomPosition;
+                int safetyCount = 10;
+                do {
+                    --safetyCount;
+                    randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - machine->getBounds().width - 1,
+                                                                                  spatial::CHUNK_HEIGHT - machine->getBounds().height - 1 });
+                    machine->setPosition(tileCoord, randomPosition);
+                } while (freeSpaces.contains(machine->getBounds(), CellState::Machine) && safetyCount > 0);
+                if (safetyCount > 0)
+                {
+                    machine->layout();
+                    reserveMachineBounds(freeSpaces, machine->getBounds());
+                }
+            }
+        }
     }
 
     // Randomly round edges for lakes and mountains
     addErodedEdges(determineOpenFaces(coordinate), freeSpaces, seed);
-    for (auto& [category, entityList] : biome.prototypes)
+
+    // Place wilderness
+    for (auto& [category, entityList] : biome.wildernessPrototypes)
     {
         for (auto& [entity, algorithm, params] : entityList)
         {
@@ -353,7 +379,7 @@ drft::gen::BiomeType drft::gen::WorldGenerator::getBiomeType(sf::Vector2i coordi
     if (_cachedBiomeTypes.contains({ coordinate.x, coordinate.y })) {
         return _cachedBiomeTypes.at({ coordinate.x, coordinate.y });
     }
-    auto dCoord = convertIntergerCoordinates(spatial::toTileSpace(coordinate));
+    auto dCoord = convertIntergerCoordinatesToDouble(spatial::toTileSpace(coordinate));
 
     double t_noise = _temperatureNoise->gen(dCoord.x, dCoord.y, 0);
     double a_noise = _altitudeNoise->gen(dCoord.x, dCoord.y, 0);

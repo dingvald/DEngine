@@ -2,25 +2,24 @@
 #include "Biome.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::optional<std::string> drft::gen::Biome::pickMachine(int seed) const
+std::vector<std::string> drft::gen::Biome::pickMachines(int seed) const
 {
-    // TODO: make more random - currently picks the first one it finds although many could be "picked"
-    const int selection = rng::RandomNumberGenerator::intInRange(0, 1000);
-    for (auto& [machineName, probability] : machines)
+    std::vector<std::string> result;
+    for (auto& [machineName, probability] : possibleMachines)
     {
+        const int selection = rng::RandomNumberGenerator::intInRange(0, 1000);
         if ((probability * 1000) > selection)
         {
-            return machineName;
+            result.push_back(machineName);
         }
     }
-    
-    return std::nullopt;
+    return result;
 }
 
-std::string drft::gen::Biome::pickRandomEntity(const std::string& category) const
+std::string drft::gen::Biome::pickRandomEntityFromCategory(const std::string& categoryName) const
 {
-    auto& prototype = prototypes.at(category);
-    auto choice = rng::RandomNumberGenerator::intInRange(0, prototype.size() - 1);
+    auto& category = wildernessPrototypes.at(categoryName);
+    const int selection = rng::RandomNumberGenerator::intInRange(0, category.size() - 1);
 
-    return prototype[choice].name;
+    return category.at(selection).name;
 }

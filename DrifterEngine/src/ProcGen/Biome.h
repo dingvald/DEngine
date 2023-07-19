@@ -12,12 +12,12 @@ namespace drft::gen
 
 	struct Biome
 	{
-		std::optional<std::string> pickMachine(int seed) const;
-		std::string pickRandomEntity(const std::string& category) const;
+		std::vector<std::string> pickMachines(int seed) const;
+		std::string pickRandomEntityFromCategory(const std::string& category) const;
 
 		BiomeType type;
 		using PrototypeList = std::vector<WildernessPrototype>;
-		std::unordered_map<std::string, PrototypeList> prototypes;
-		std::unordered_map<std::string, float> machines;
+		std::unordered_map<std::string, PrototypeList> wildernessPrototypes;
+		std::unordered_map<std::string, float> possibleMachines;
 	};
 }
