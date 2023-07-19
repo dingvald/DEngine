@@ -16,3 +16,11 @@ std::optional<std::string> drft::gen::Biome::pickMachine(int seed) const
     
     return std::nullopt;
 }
+
+std::string drft::gen::Biome::pickRandomEntity(const std::string& category) const
+{
+    auto& prototype = prototypes.at(category);
+    auto choice = rng::RandomNumberGenerator::intInRange(0, prototype.size() - 1);
+
+    return prototype[choice].name;
+}

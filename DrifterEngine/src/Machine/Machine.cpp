@@ -1,16 +1,23 @@
 #include "pch.h"
 #include "Components/Components.h"
 #include "Machine.h"
+#include "ProcGen/Biome.h"
 #include "Factory/EntityFactory.h"
 #include "Spatial/Conversions.h"
 
 
-void drft::Machine::place(sf::Vector2i tileOrigin, entt::registry& registry) const
+void drft::Machine::place(sf::Vector2i tileOrigin, entt::registry& registry, const gen::Biome& biome) const
 {
 	const auto& factory = registry.ctx().get<EntityFactory&>();
 	for (auto& [position, name] : _entities)
 	{
-		auto entity = factory.build(name, registry);
+		std::string entityName = name;
+		if (name[0] == '$')
+		{
+			// Entity is a variable entity
+			entityName = biome.pickRandomEntity(name.substr(1));
+		}
+		auto entity = factory.build(entityName, registry);
 		sf::Vector2f worldPosition = spatial::toWorldSpace(tileOrigin + position);
 		entity.patch<component::Position>([worldPosition](component::Position& pos) {
 				pos.position = worldPosition;

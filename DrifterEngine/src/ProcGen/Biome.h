@@ -13,6 +13,7 @@ namespace drft::gen
 	struct Biome
 	{
 		std::optional<std::string> pickMachine(int seed) const;
+		std::string pickRandomEntity(const std::string& category) const;
 
 		BiomeType type;
 		using PrototypeList = std::vector<WildernessPrototype>;

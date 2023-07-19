@@ -1,11 +1,14 @@
 #pragma once
-
+namespace drft::gen
+{
+	struct Biome;
+}
 namespace drft
 {
 	class Machine
 	{
 	public:
-		void place(sf::Vector2i tileOrigin, entt::registry& registry) const;
+		void place(sf::Vector2i tileOrigin, entt::registry& registry, const gen::Biome& biome) const;
 		sf::Vector2i getBounds() const;
 
 	protected:

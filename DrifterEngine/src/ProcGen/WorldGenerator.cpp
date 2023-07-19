@@ -281,33 +281,23 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
     {
         BiomeType type = gen::String2Biome.at(biome.name.GetString());
         const auto biomeObject = biome.value.GetObject();
-        auto& environmental = biomeObject["Environmental"];
-        auto& wilderness = biomeObject["Wilderness"];
-       
-        for (auto& entity : environmental.GetObject())
+        for (auto& wilderness : biomeObject)
         {
-            WildernessPrototype prototype;
-            auto entityObj = entity.value.GetObject();
-            prototype.name = entity.name.GetString();
-            prototype.algorithm = entityObj["Algorithm"].GetString();
-            for (auto& [name, value] : entityObj["Params"].GetObject())
+            if (std::strcmp(wilderness.name.GetString(),"Machines") == 0) continue;
+            for (auto& entity : wilderness.value.GetObject())
             {
-                prototype.params[name.GetString()] = value.GetFloat();
+                WildernessPrototype prototype;
+                auto entityObj = entity.value.GetObject();
+                prototype.name = entity.name.GetString();
+                prototype.algorithm = entityObj["Algorithm"].GetString();
+                for (auto& [name, value] : entityObj["Params"].GetObject())
+                {
+                    prototype.params[name.GetString()] = value.GetFloat();
+                }
+                _biomes[type].prototypes[wilderness.name.GetString()].push_back(prototype);
             }
-            _biomes[type].prototypes["Environmental"].push_back(prototype);
         }
-        for (auto& entity : wilderness.GetObject())
-        {
-            WildernessPrototype prototype;
-            auto entityObj = entity.value.GetObject();
-            prototype.name = entity.name.GetString();
-            prototype.algorithm = entityObj["Algorithm"].GetString();
-            for (auto& [name, value] : entityObj["Params"].GetObject())
-            {
-                prototype.params[name.GetString()] = value.GetFloat();
-            }
-            _biomes[type].prototypes["Environmental"].push_back(prototype);
-        }
+
         if (biomeObject.HasMember("Machines"))
         {
             auto& machines = biomeObject["Machines"];
@@ -342,7 +332,7 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
         const auto& machine = _machineFactory.build(pickedMachine.value());
         auto randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - machine.getBounds().x
                                                                           ,spatial::CHUNK_HEIGHT - machine.getBounds().y});
-        machine.place(tileCoord + randomPosition, registry);
+        machine.place(tileCoord + randomPosition, registry, biome);
         reserveMachineBounds(freeSpaces, { randomPosition.x, randomPosition.y, machine.getBounds().x, machine.getBounds().y });
     }
 
