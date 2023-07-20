@@ -293,7 +293,9 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
         const auto biomeObject = biome.value.GetObject();
         for (auto& wilderness : biomeObject)
         {
-            if (std::strcmp(wilderness.name.GetString(),"Machines") == 0) continue;
+            if (std::strcmp(wilderness.name.GetString(), "Machines") == 0) continue;
+            if (std::strcmp(wilderness.name.GetString(), "Elites") == 0) continue;
+
             for (auto& entity : wilderness.value.GetObject())
             {
                 WildernessPrototype prototype;
@@ -305,6 +307,14 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
                     prototype.params[name.GetString()] = value.GetFloat();
                 }
                 _biomes[type].wildernessPrototypes[wilderness.name.GetString()].push_back(prototype);
+            }
+        }
+        if (biomeObject.HasMember("Elites"))
+        {
+            auto& elites = biomeObject["Elites"];
+            for (auto& elite : elites.GetObject())
+            {
+                _biomes[type].possibleElites[elite.name.GetString()] = elite.value.GetFloat();
             }
         }
         if (biomeObject.HasMember("Machines"))
