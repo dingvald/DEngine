@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "HeartShrine.h"
 #include "Factory/EntityFactory.h"
+#include "Spatial/Helpers.h"
 #include "Components/Components.h"
 #include "ProcGen/Biome.h"
 
-static constexpr int MACHINE_WIDTH = 5;
-static constexpr int MACHINE_HEIGHT = 5;
+static constexpr int MACHINE_WIDTH = 10;
+static constexpr int MACHINE_HEIGHT = MACHINE_WIDTH;
 
 sf::Vector2i drft::machine::HeartShrine::getDimensions() const
 {
@@ -14,26 +15,25 @@ sf::Vector2i drft::machine::HeartShrine::getDimensions() const
 
 void drft::machine::HeartShrine::layout()
 {
-	for (int y = 0; y < MACHINE_HEIGHT; ++y)
+	sf::Vector2i centerPosition = { MACHINE_WIDTH / 2, MACHINE_HEIGHT / 2 };
+	auto positionsInCircle = spatial::getIntCircleInRadius(centerPosition, MACHINE_WIDTH / 2);
+	for (auto position : positionsInCircle)
 	{
-		for (int x = 0; x < MACHINE_WIDTH; ++x)
+		if (position.x == centerPosition.x && (position.y > centerPosition.y))
 		{
-			if (x == 2 && (y == 3 || y == 4))
-			{
-				auto grass = _factory->build("Grass", *_registry);
-				setRelativePosition(grass, { x,y });
-				continue;
-			}
-			if (x == 2 && y == 2)
-			{
-				auto grass = _factory->build("Grass", *_registry);
-				setRelativePosition(grass, { x,y });
-				auto heartShrine = _factory->build("Heart Shrine", *_registry);
-				setRelativePosition(heartShrine, { x,y });
-				continue;
-			}
-			auto water = _factory->build("Water", *_registry);
-			setRelativePosition(water, { x,y });
+			auto grass = _factory->build("Grass", *_registry);
+			setRelativePosition(grass, position);
+			continue;
 		}
+		if (position == centerPosition)
+		{
+			auto grass = _factory->build("Grass", *_registry);
+			setRelativePosition(grass, position);
+			auto heartShrine = _factory->build("Heart Shrine", *_registry);
+			setRelativePosition(heartShrine, position);
+			continue;
+		}
+		auto water = _factory->build("Water", *_registry);
+		setRelativePosition(water, position);
 	}
 }
