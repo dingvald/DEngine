@@ -1,68 +1,58 @@
 {
   "Biomes": {
     "Forest": {
-      "Base Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 500
+      "Environment": {
+        "Base": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 500
+            }
+          }
+        },
+        "Minor": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 10
+            }
+          },
+          "Herb": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 20
+            }
+          }
+        },
+        "Major": {
+          "Tree": {
+            "Algorithm": "OrganicSpread",
+            "Params": {
+              "Generations": 3,
+              "StartingSeeds": 7,
+              "SeedsPerGeneration": 3,
+              "Radius": 9
+            }
           }
         }
       },
-      "Small Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 10
-          }
+      "Wildlife": {
+        "Tier 1": {
+          "Mosquito": [ 3, 0.5 ],
+          "Firefly": [ 3, 0.5 ]
         },
+        "Tier 2": {
+          "Rat": [ 2, 0.2 ]
+        },
+        "Tier 3": {
+          "Cougar": [ 1, 0.1 ]
+        },
+        "Elite": {
 
-        "Herb": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 20
-          }
-        }
-      },
-      "Large Environmental": {
-        "Tree": {
-          "Algorithm": "OrganicSpread",
-          "Params": {
-            "Generations": 3,
-            "StartingSeeds": 7,
-            "SeedsPerGeneration": 3,
-            "Radius": 9
-          }
-        }
-      },
-      "Wilderness": {
-        "Mosquito": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 5
-          }
         },
-        "Firefly": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
-          }
-        },
-        "Rat": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 3
-          }
-        },
-        "Cougar": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
-          }
-        }
-      },
-      "Elites": {
+        "Legendary": {
 
+        }
       },
       "Machines": {
         "Chest": 0.1,
@@ -71,63 +61,69 @@
       }
     },
     "Mountain": {
-      "Base Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 50
+      "Environment": {
+        "Base": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 50
+            }
+          }
+        },
+        "Minor": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 100
+            }
+          },
+          "Mountain Flower": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 1
+            }
+          }
+        },
+        "Major": {
+          "Tree": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 40
+            }
+          },
+          "Boulder": {
+            "Algorithm": "PerlinSpread",
+            "Params": {
+              "Threshold": 0.51
+            }
+          },
+          "Iron Deposit": {
+            "Algorithm": "OrganicSpread",
+            "Params": {
+              "Generations": 2,
+              "StartingSeeds": 1,
+              "SeedsPerGeneration": 2,
+              "Radius": 2
+            }
           }
         }
       },
-      "Small Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 100
-          }
+      "Wildlife": {
+        "Tier 1": {
+
         },
-        "Mountain Flower": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
-          }
-        }
-      },
-      "Large Environmental": {
-        "Tree": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 40
-          }
+        "Tier 2": {
+
         },
-        "Boulder": {
-          "Algorithm": "PerlinSpread",
-          "Params": {
-            "Threshold": 0.51
-          }
+        "Tier 3": {
+          "Golem": [ 4,0.4 ],
+          "Mountain Lion": [ 2, 0.5 ]
         },
-        "Iron Deposit": {
-          "Algorithm": "OrganicSpread",
-          "Params": {
-            "Generations": 2,
-            "StartingSeeds": 1,
-            "SeedsPerGeneration": 2,
-            "Radius": 2
-          }
-        }
-      },
-      "Wilderness": {
-        "Golem": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
+        "Elite": {
+
         },
-        "Mountain Lion": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 2
-          }
+        "Legendary": {
+
         }
       },
       "Machines": {
@@ -137,216 +133,234 @@
       }
     },
     "Lake": {
-      "Base Environmental": {
-        "Water": {
-          "Algorithm": "Fill",
-          "Params": {
+      "Environment": {
+        "Base": {
+          "Water": {
+            "Algorithm": "Fill",
+            "Params": {
+            }
+          },
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 300
+            }
           }
         }
-      },
-      "Small Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        }
-      },
-      "Wilderness": {
-
       }
     },
     "Swamp": {
-      "Base Environmental": {
-        "Water": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        }
-      },
-      "Small Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
+      "Environment": {
+        "Base": {
+          "Water": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 300
+            }
           }
         },
-        "Roots": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 100
-          }
-        }
-      },
-      "Wilderness": {
-        "Mosquito": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 30
+        "Minor": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 300
+            }
+          },
+          "Roots": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 100
+            }
           }
         },
-        "Alligator": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
+        "Major": {
+          
         }
+      },
+      "Wildlife": {
+        "Tier 1": {
+          "Mosquito": [ 30, 0.9 ]
+        },
+        "Tier 2": {
+
+        },
+        "Tier 3": {
+          "Alligator": [ 5, 0.6 ]
+        },
+        "Elite": {
+
+        },
+        "Legendary": {
+
+        }
+      },
+      "Machines": {
+        "Chest": 0.2,
+        "Heart Shrine": 0.1,
+        "Wilderness Horde": 0.08
       }
     },
     "Jungle": {
-      "Base Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
+      "Environment": {
+        "Base": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 300
+            }
+          }
+        },
+        "Minor": {
+          "Brambles": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 200
+            }
+          }
+        },
+        "Major": {
+          "Jungle Tree": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 600
+            }
           }
         }
       },
-      "Small Environmental": {
-        "Brambles": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 200
-          }
+      "Wildlife": {
+        "Tier 1": {
+          "Mosquito": [ 3, 0.5 ]
         },
-        "Jungle Tree": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
+        "Tier 2": {
+          "Snake": [ 6, 0.3 ]
+        },
+        "Tier 3": {
+          "Panther": [ 5, 0.4 ]
+        },
+        "Elite": {
+
+        },
+        "Legendary": {
+
         }
       },
-      "Large Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        },
-        "Brambles": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 200
-          }
-        },
-        "Jungle Tree": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
-        }
-      },
-      "Wilderness": {
-        "Panther": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
-        },
-        "Snake": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 10
-          }
-        }
+      "Machines": {
+        "Chest": 0.1,
+        "Heart Shrine": 0.08,
+        "Wilderness Horde": 0.2
       }
     },
     "Desert": {
-      "Base Environmental": {
-        "Sand": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
+      "Environment": {
+        "Base": {
+          "Sand": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 600
+            }
           }
+        },
+        "Minor": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 5
+            }
+          },
+          "Cactus": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 21
+            }
+          },
+          "Flint": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 4
+            }
+          }
+        },
+        "Major": {
+
         }
       },
-      "Small Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 5
-          }
+      "Wildlife": {
+        "Tier 1": {
+          "Firefly": [ 8, 0.5 ]
         },
-        "Cactus": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 21
-          }
+        "Tier 2": {
+          "Rattler": [ 7, 0.6 ]
         },
-        "Flint": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
+        "Tier 3": {
+          "Vulture": [ 3, 0.5 ]
+        },
+        "Elite": {
+
+        },
+        "Legendary": {
+
         }
       },
-      "Wilderness": {
-        "Firefly": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
-        },
-        "Rattler": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 5
-          }
-        },
-        "Vulture": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
-          }
-        }
+      "Machines": {
+        "Chest": 0.1,
+        "Heart Shrine": 0.08,
+        "Wilderness Horde": 0.2
       }
     },
     "Grassland": {
-      "Base Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
-        }
-      },
-      "Small Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 7
+      "Environment": {
+        "Base": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 600
+            }
           }
         },
-        
-        "Herb": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 20
-          }
-        }
-      },
-      "Large Environmental": {
-        "Tree": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 10
-          }
-        }
-      },
-      "Wilderness": {
-        "Butterfly": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 6
+        "Minor": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 7
+            }
+          },
+          "Herb": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 20
+            }
           }
         },
-        "Rat": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 5
+        "Major": {
+          "Tree": {
+            "Algorithm": "RandomSpread",
+            "Params": {
+              "Number": 10
+            }
           }
         }
+      },
+      "Wildlife": {
+        "Tier 1": {
+          "Butterfly": [ 10, 0.2 ]
+        },
+        "Tier 2": {
+          "Rat": [ 10, 0.2 ]
+        },
+        "Tier 3": {
+
+        },
+        "Elite": {
+
+        },
+        "Legendary": {
+
+        }
+      },
+      "Machines": {
+        "Chest": 0.1,
+        "Heart Shrine": 0.08,
+        "Wilderness Horde": 0.2
       }
     }
   }

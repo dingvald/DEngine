@@ -291,30 +291,36 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
     {
         BiomeType type = gen::String2Biome.at(biome.name.GetString());
         const auto biomeObject = biome.value.GetObject();
-        for (auto& wilderness : biomeObject)
+        if (biomeObject.HasMember("Environment"))
         {
-            if (std::strcmp(wilderness.name.GetString(), "Machines") == 0) continue;
-            if (std::strcmp(wilderness.name.GetString(), "Elites") == 0) continue;
-
-            for (auto& entity : wilderness.value.GetObject())
+            auto& environmentals = biomeObject["Environment"];
+            for (auto& category : environmentals.GetObject())
             {
-                WildernessPrototype prototype;
-                auto entityObj = entity.value.GetObject();
-                prototype.name = entity.name.GetString();
-                prototype.algorithm = entityObj["Algorithm"].GetString();
-                for (auto& [name, value] : entityObj["Params"].GetObject())
+                for (auto& entity : category.value.GetObject())
                 {
-                    prototype.params[name.GetString()] = value.GetFloat();
+                    EnvironmentGeneration generation;
+                    auto generationObj = entity.value.GetObject();
+                    generation.algorithm = generationObj["Algorithm"].GetString();
+                    for (auto& [name, value] : generationObj["Params"].GetObject())
+                    {
+                        generation.params[name.GetString()] = value.GetFloat();
+                    }
+                    _biomes[type]._environmentals[category.name.GetString()][entity.name.GetString()] = generation;
                 }
-                _biomes[type].wildernessPrototypes[wilderness.name.GetString()].push_back(prototype);
             }
         }
-        if (biomeObject.HasMember("Elites"))
+        if (biomeObject.HasMember("Wildlife"))
         {
-            auto& elites = biomeObject["Elites"];
-            for (auto& elite : elites.GetObject())
+            auto& wildlife = biomeObject["Wildlife"];
+            for (auto& category : wildlife.GetObject())
             {
-                _biomes[type].possibleElites[elite.name.GetString()] = elite.value.GetFloat();
+                for (auto& wildlife : category.value.GetObject())
+                {
+                    WildlifeChance wildlifeChance = { 0,0 };
+                    wildlifeChance.max = wildlife.value.GetArray()[0].GetFloat();
+                    wildlifeChance.chance = wildlife.value.GetArray()[1].GetFloat();
+                    _biomes[type]._wildlife[category.name.GetString()][wildlife.name.GetString()] = wildlifeChance;
+                } 
             }
         }
         if (biomeObject.HasMember("Machines"))
@@ -322,7 +328,7 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
             auto& machines = biomeObject["Machines"];
             for (auto& machine : machines.GetObject())
             {
-                _biomes[type].possibleMachines[machine.name.GetString()] = machine.value.GetFloat();
+                _biomes[type]._machines[machine.name.GetString()] = machine.value.GetFloat();
             }
         }
     }
@@ -332,9 +338,6 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
 
 void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
-    // Always place tiles
-    gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
-
     const auto biomeType = getBiomeType(coordinate);
     const auto& biome = _biomes.at(biomeType);
 
@@ -344,8 +347,11 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
 
     spatial::Grid<CellState> freeSpaces{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
 
-    // Maybe pick a machine to throw in
-    auto pickedMachines = biome.pickMachines(seed);
+    // Always place tiles
+    gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+
+    // Maybe pick a Machine to throw in
+    const auto pickedMachines = biome.pickRandomMachines();
     if (!pickedMachines.empty())
     {
         for (auto& machineName : pickedMachines)
@@ -354,7 +360,7 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
             {
                 machine->initialize(registry, biome);
                 sf::Vector2i randomPosition;
-                int safetyCount = 10;
+                int safetyCount = 10; // Avoid infinite loop
                 do {
                     --safetyCount;
                     randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - machine->getBounds().width - 1,
@@ -373,13 +379,28 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
     // Randomly round edges for lakes and mountains
     addErodedEdges(determineOpenFaces(coordinate), freeSpaces, seed);
 
-    // Place wilderness
-    for (auto& [category, entityList] : biome.wildernessPrototypes)
+    // Place Environment
+    for (const auto& [_, entities] : biome.environmentals())
     {
-        for (auto& [entity, algorithm, params] : entityList)
+        for (const auto& [entity, generation] : entities)
         {
-           const auto positions = gen::String2Algorithm.at(algorithm)( seed, freeSpaces, params);
-           gen::place(entity, spatial::toTileSpace(coordinate), positions, registry);
+           const auto positions = gen::String2Algorithm.at(generation.algorithm)(seed, freeSpaces, generation.params);
+           gen::place(entity, tileCoord, positions, registry);
+        }
+    }
+    // Place Wildlife
+    for (const auto& [_, entities] : biome.wildlife())
+    {
+        for (const auto& [entity, chance] : entities)
+        {
+            for (int i = 0; i < static_cast<int>(chance.max); ++i)
+            {
+                if ((chance.chance * 100) >= rng::RandomNumberGenerator::intInRange(0, 100))
+                {
+                    sf::Vector2i randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - 1, spatial::CHUNK_HEIGHT - 1 });
+                    gen::place(entity, tileCoord, randomPosition, registry);
+                }
+            }
         }
     }
 }

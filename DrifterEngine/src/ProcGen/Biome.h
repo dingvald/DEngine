@@ -3,22 +3,40 @@
 
 namespace drft::gen
 {
-	struct WildernessPrototype
+	struct EnvironmentGeneration
 	{
-		std::string name;
 		std::string algorithm;
 		std::unordered_map<std::string, float> params;
 	};
-
-	struct Biome
+	struct WildlifeChance
 	{
-		std::vector<std::string> pickMachines(int seed) const;
-		std::string pickRandomEntityFromCategory(const std::string& category) const;
+		float max;
+		float chance;
+	};
+	
+	class Biome
+	{
+	public:
+		using Environment = std::unordered_map<std::string, EnvironmentGeneration>;
+		using WildlifeTier = std::unordered_map<std::string, WildlifeChance>;
+		using SpawnChance = float;
 
-		BiomeType type;
-		using PrototypeList = std::vector<WildernessPrototype>;
-		std::unordered_map<std::string, PrototypeList> wildernessPrototypes;
-		std::unordered_map<std::string, float> possibleElites;
-		std::unordered_map<std::string, float> possibleMachines;
+		using Environmentals = std::unordered_map<std::string, Environment>;
+		using Wildlife = std::unordered_map<std::string, WildlifeTier>;
+		using Machines = std::unordered_map<std::string, SpawnChance>;
+
+		const Environmentals& environmentals() const { return _environmentals; };
+		const Wildlife& wildlife() const { return _wildlife; };
+		const Machines& machines() const { return _machines; };
+
+		std::vector<std::string> pickRandomMachines() const;
+		std::string pickRandomWildlife(const std::string& category = "any") const;
+		std::string pickRandomEnvironmental(const std::string& category = "any") const;
+
+	private:
+		friend class WorldGenerator;
+		Environmentals _environmentals;
+		Wildlife _wildlife;
+		Machines _machines;
 	};
 }

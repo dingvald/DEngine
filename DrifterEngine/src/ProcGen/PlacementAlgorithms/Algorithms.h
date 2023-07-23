@@ -18,7 +18,7 @@ namespace drft::gen
 		{"OrganicSpread", gen::organicSpread},
 		{"Fill", gen::fill}
 	};
-
+	void place(const std::string& name, sf::Vector2i origin, sf::Vector2i position, entt::registry& reg);
 	void place(const std::string& name, sf::Vector2i origin, const std::vector<sf::Vector2i>& positions, entt::registry& reg);
 	void fastFill(const std::string& name, sf::Vector2i origin, entt::registry& reg);
 }

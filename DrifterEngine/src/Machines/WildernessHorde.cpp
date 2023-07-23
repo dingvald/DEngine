@@ -14,7 +14,7 @@ sf::Vector2i drft::machine::WildernessHorde::getDimensions() const
 
 void drft::machine::WildernessHorde::layout()
 {
-	std::string wilderness = _biome->pickRandomEntityFromCategory("Wilderness");
+	/*
 	for (int y = 0; y < MACHINE_HEIGHT; ++y)
 	{
 		for (int x = 0; x < MACHINE_WIDTH; ++x)
@@ -25,4 +25,5 @@ void drft::machine::WildernessHorde::layout()
 			setRelativePosition(baseEnv, { x,y });
 		}
 	}
+	*/
 }
