@@ -38,7 +38,7 @@
       },
       "Wildlife": {
         "Tier 1": {
-          "Mosquito": [ 3, 0.5 ],
+          "Mosquito": [ 3, 0.7 ],
           "Firefly": [ 3, 0.5 ]
         },
         "Tier 2": {
@@ -55,7 +55,7 @@
         }
       },
       "Machines": {
-        "Chest": 0.1,
+        "Chest": 0.05,
         "Heart Shrine": 0.08,
         "Wilderness Horde": 0.2
       }
