@@ -2,7 +2,7 @@
   "Prototypes": {
     "Iron Breastplate": {
       "Inherits": [
-        "Base Item"
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -42,7 +42,7 @@
     },
     "Iron Legplates": {
       "Inherits": [
-        "Base Item"
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -125,7 +125,7 @@
     },
     "Wood Legplates": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -169,7 +169,7 @@
     },
     "Wood Shield": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -201,9 +201,6 @@
           "max": 30,
           "current": 30
         },
-        "Item": {
-          "id": 0
-        },
         "Wearable": {
           "slot": "HeldL",
           "protection": 2
@@ -212,7 +209,7 @@
     },
     "Woven Hood": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -255,7 +252,7 @@
     },
     "Woven Sandals": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -298,7 +295,7 @@
     },
     "Woven Bracers": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {

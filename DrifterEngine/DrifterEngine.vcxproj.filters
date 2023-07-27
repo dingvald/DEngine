@@ -363,6 +363,9 @@
     <ClCompile Include="src\Machines\WildernessHorde.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Machines\OreDeposit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1236,6 +1239,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Machines\WildernessHorde.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\OreDeposit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

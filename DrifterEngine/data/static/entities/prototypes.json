@@ -1492,8 +1492,7 @@
         },
         "Craftable": {
           "recipe": {
-            "Wood": 4,
-            "Twine": 1
+            "Wood": 3
           }
         }
       }

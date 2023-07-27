@@ -14,6 +14,7 @@
 #include "Machines/Chest.h"
 #include "Machines/HeartShrine.h"
 #include "Machines/WildernessHorde.h"
+#include "Machines/OreDeposit.h"
 
 // Perlin noise cutoffs:
 //------------------------------------------
@@ -56,6 +57,7 @@ void drft::gen::WorldGenerator::registerMachines()
     _machineFactory.registerMachine<machine::Chest>("Chest");
     _machineFactory.registerMachine<machine::HeartShrine>("Heart Shrine");
     _machineFactory.registerMachine<machine::WildernessHorde>("Wilderness Horde");
+    _machineFactory.registerMachine<machine::OreDeposit>("Ore Deposit");
 }
 
 drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temperature, double altitude, double moisture) const
@@ -328,7 +330,13 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
             auto& machines = biomeObject["Machines"];
             for (auto& machine : machines.GetObject())
             {
-                _biomes[type]._machines[machine.name.GetString()] = machine.value.GetFloat();
+                JSONMachine jsonMachine;
+                jsonMachine.chance = machine.value["chance"].GetFloat();
+                for (auto& param : machine.value["params"].GetObject())
+                {
+                    jsonMachine.params.emplace(param.name.GetString(), param.value.GetString());
+                }
+                _biomes[type]._machines[machine.name.GetString()] = jsonMachine;
             }
         }
     }

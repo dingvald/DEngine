@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Machines\OreDeposit.cpp" />
     <ClCompile Include="src\Machines\HeartShrine.cpp" />
     <ClCompile Include="src\Machines\Chest.cpp" />
     <ClCompile Include="src\Factory\MachineFactory.cpp" />
@@ -331,6 +332,7 @@
     <ClCompile Include="src\Machines\WildernessHorde.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Machines\OreDeposit.h" />
     <ClInclude Include="src\Machines\HeartShrine.h" />
     <ClInclude Include="src\Machines\Chest.h" />
     <ClInclude Include="src\Factory\MachineFactory.h" />

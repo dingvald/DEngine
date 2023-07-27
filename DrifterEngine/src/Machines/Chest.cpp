@@ -19,13 +19,15 @@ void drft::machine::Chest::layout()
 	setRelativePosition(chest, { 1,1 });
 
 	// Surround chest with the biome's base environmental entity
+	auto baseEntity = _biome->pickRandomEnvironmental({ "Base" });
+	if (!baseEntity.has_value()) return;
 	for (int y = 0; y < MACHINE_HEIGHT; ++y)
 	{
 		for (int x = 0; x < MACHINE_WIDTH; ++x)
 		{
 			if (x == 1 && y == 1) continue;
-			auto pickedEntity = _biome->pickRandomEnvironmental("Base");
-			entt::handle baseEnv = _factory->build(pickedEntity, *_registry);
+			
+			entt::handle baseEnv = _factory->build(baseEntity.value(), *_registry);
 			setRelativePosition(baseEnv, { x,y });
 		}
 	}

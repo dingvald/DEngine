@@ -55,9 +55,33 @@
         }
       },
       "Machines": {
-        "Chest": 0.05,
-        "Heart Shrine": 0.08,
-        "Wilderness Horde": 0.2
+        "Chest": {
+          "chance": 0.05,
+          "params": {
+
+          }
+        },
+        "Heart Shrine": {
+          "chance": 0.07,
+          "params": {
+
+          }
+        },
+        "Wilderness Horde": {
+          "chance": 0.08,
+          "params": {
+            "Tier 1": "1.0",
+            "Tier 2": "0.5",
+            "Tier 3": "0.125"
+          }
+        },
+        "Ore Deposit": {
+          "chance": 0.2,
+          "params": {
+            "Flint": "0.5",
+            "Iron Deposit": "0.5"
+          }
+        }
       }
     },
     "Mountain": {
@@ -96,15 +120,6 @@
             "Params": {
               "Threshold": 0.51
             }
-          },
-          "Iron Deposit": {
-            "Algorithm": "OrganicSpread",
-            "Params": {
-              "Generations": 2,
-              "StartingSeeds": 1,
-              "SeedsPerGeneration": 2,
-              "Radius": 2
-            }
           }
         }
       },
@@ -116,7 +131,7 @@
 
         },
         "Tier 3": {
-          "Golem": [ 4,0.4 ],
+          "Golem": [ 4, 0.4 ],
           "Mountain Lion": [ 2, 0.5 ]
         },
         "Elite": {
@@ -127,9 +142,33 @@
         }
       },
       "Machines": {
-        "Chest": 0.2,
-        "Heart Shrine": 0.1,
-        "Wilderness Horde": 0.08
+        "Chest": {
+          "chance": 0.05,
+          "params": {
+
+          }
+        },
+        "Heart Shrine": {
+          "chance": 0.07,
+          "params": {
+
+          }
+        },
+        "Wilderness Horde": {
+          "chance": 0.08,
+          "params": {
+            "Tier 1": "1.0",
+            "Tier 2": "0.5",
+            "Tier 3": "0.125"
+          }
+        },
+        "Ore Deposit": {
+          "chance": 0.2,
+          "params": {
+            "Flint": "0.3",
+            "Iron Deposit": "0.7"
+          }
+        }
       }
     },
     "Lake": {
@@ -174,7 +213,7 @@
           }
         },
         "Major": {
-          
+
         }
       },
       "Wildlife": {
@@ -195,9 +234,26 @@
         }
       },
       "Machines": {
-        "Chest": 0.2,
-        "Heart Shrine": 0.1,
-        "Wilderness Horde": 0.08
+        "Chest": {
+          "chance": 0.05,
+          "params": {
+
+          }
+        },
+        "Heart Shrine": {
+          "chance": 0.07,
+          "params": {
+
+          }
+        },
+        "Wilderness Horde": {
+          "chance": 0.08,
+          "params": {
+            "Tier 1": "1.0",
+            "Tier 2": "0.5",
+            "Tier 3": "0.125"
+          }
+        }
       }
     },
     "Jungle": {
@@ -245,9 +301,26 @@
         }
       },
       "Machines": {
-        "Chest": 0.1,
-        "Heart Shrine": 0.08,
-        "Wilderness Horde": 0.2
+        "Chest": {
+          "chance": 0.05,
+          "params": {
+
+          }
+        },
+        "Heart Shrine": {
+          "chance": 0.07,
+          "params": {
+
+          }
+        },
+        "Wilderness Horde": {
+          "chance": 0.08,
+          "params": {
+            "Tier 1": "1.0",
+            "Tier 2": "0.5",
+            "Tier 3": "0.125"
+          }
+        }
       }
     },
     "Desert": {
@@ -302,9 +375,33 @@
         }
       },
       "Machines": {
-        "Chest": 0.1,
-        "Heart Shrine": 0.08,
-        "Wilderness Horde": 0.2
+        "Chest": {
+          "chance": 0.05,
+          "params": {
+
+          }
+        },
+        "Heart Shrine": {
+          "chance": 0.07,
+          "params": {
+
+          }
+        },
+        "Wilderness Horde": {
+          "chance": 0.08,
+          "params": {
+            "Tier 1": "1.0",
+            "Tier 2": "0.5",
+            "Tier 3": "0.125"
+          }
+        },
+        "Ore Deposit": {
+          "chance": 0.1,
+          "params": {
+            "Flint": "0.7",
+            "Iron Deposit": "0.2"
+          }
+        }
       }
     },
     "Grassland": {
@@ -358,9 +455,33 @@
         }
       },
       "Machines": {
-        "Chest": 0.1,
-        "Heart Shrine": 0.08,
-        "Wilderness Horde": 0.2
+        "Chest": {
+          "chance": 0.05,
+          "params": {
+
+          }
+        },
+        "Heart Shrine": {
+          "chance": 0.07,
+          "params": {
+
+          }
+        },
+        "Wilderness Horde": {
+          "chance": 0.08,
+          "params": {
+            "Tier 1": "1.0",
+            "Tier 2": "0.5",
+            "Tier 3": "0.125"
+          }
+        },
+        "Ore Deposit": {
+          "chance": 0.02,
+          "params": {
+            "Flint": "0.5",
+            "Iron Deposit": "0.5"
+          }
+        }
       }
     }
   }
