@@ -14,13 +14,13 @@
           "Stone": {
             "Algorithm": "RandomSpread",
             "Params": {
-              "Number": 10
+              "Number": 6
             }
           },
           "Herb": {
             "Algorithm": "RandomSpread",
             "Params": {
-              "Number": 20
+              "Number": 5
             }
           }
         },
@@ -76,7 +76,7 @@
           }
         },
         "Ore Deposit": {
-          "chance": 0.2,
+          "chance": 0.3,
           "params": {
             "Flint": "0.5",
             "Iron Deposit": "0.5"
@@ -163,7 +163,7 @@
           }
         },
         "Ore Deposit": {
-          "chance": 0.2,
+          "chance": 0.5,
           "params": {
             "Flint": "0.3",
             "Iron Deposit": "0.7"
@@ -424,7 +424,7 @@
           "Herb": {
             "Algorithm": "RandomSpread",
             "Params": {
-              "Number": 20
+              "Number": 8
             }
           }
         },

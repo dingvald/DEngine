@@ -76,7 +76,10 @@ namespace drft::util
 		Katana,
 		ChestClosed,
 		ChestOpen,
-		HeartShrine
+		HeartShrine,
+		HouseIcon,
+		Star,
+		DungeonDoor
 	};
 
 	class SpriteIndexer

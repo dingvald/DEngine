@@ -520,44 +520,6 @@
         }
       }
     },
-    "Ashen Sword": {
-      "Inherits": [
-        "BaseItem"
-      ],
-      "Components": {
-        "Info": {
-          "name": "Ashen Sword",
-          "extendedName": "",
-          "description": "A sword covered in a strange ash."
-        },
-        "Render": {
-          "sprite": 69,
-          "layer": 1,
-          "color": [ 178, 190, 181 ]
-        },
-        "Physical": {
-          "blocks": false,
-          "weight": 2.0,
-          "materials": [
-            "Wood",
-            "Ash"
-          ]
-        },
-        "Health": {
-          "max": 666.0,
-          "current": 666.0
-        },
-        "Sharp": {
-          "sharpness": 3
-        },
-        "Craftable": {
-          "recipe": {
-            "Ash": 27,
-            "Wooden Sword": 1
-          }
-        }
-      }
-    },
     "Machete": {
       "Inherits": [
         "BaseItem"
@@ -868,7 +830,7 @@
           "baseDamage": 2
         },
         "Faction": {
-          "name": "bad"
+          "name": "parasite"
         },
         "Leveling": {
           "currentLevel": 1
@@ -925,7 +887,7 @@
           "baseDamage": 4
         },
         "Faction": {
-          "name": "bad"
+          "name": "carrion"
         },
         "Leveling": {
           "currentLevel": 3
@@ -965,7 +927,10 @@
         "Physical": {
           "blocks": true,
           "weight": 5.0,
-          "materials": [ "Corpse" ]
+          "materials": [
+            "Corpse",
+            "Leather"
+          ]
         },
         "Actor": {
           "moveSpeed": 1.2,
@@ -979,7 +944,7 @@
           "baseDamage": 2
         },
         "Faction": {
-          "name": "bad"
+          "name": "rodent"
         },
         "Leveling": {
           "currentLevel": 2
@@ -1019,7 +984,12 @@
         "Physical": {
           "blocks": true,
           "weight": 90.0,
-          "materials": [ "Corpse" ]
+          "materials": [
+            "Corpse",
+            "Leather",
+            "Leather",
+            "Leather"
+          ]
         },
         "Actor": {
           "moveSpeed": 2.0,
@@ -1033,7 +1003,7 @@
           "baseDamage": 3
         },
         "Faction": {
-          "name": "bad"
+          "name": "feline"
         },
         "Leveling": {
           "currentLevel": 4
@@ -1121,7 +1091,7 @@
           "baseDamage": 5
         },
         "Faction": {
-          "name": "bad"
+          "name": "reptile"
         },
         "Leveling": {
           "currentLevel": 4
@@ -1175,7 +1145,7 @@
           "baseDamage": 6
         },
         "Faction": {
-          "name": "bad"
+          "name": "golem"
         },
         "Leveling": {
           "currentLevel": 5
@@ -1229,7 +1199,7 @@
           "baseDamage": 4
         },
         "Faction": {
-          "name": "bad"
+          "name": "reptile"
         },
         "Leveling": {
           "currentLevel": 4
@@ -1323,7 +1293,7 @@
           "baseDamage": 5
         },
         "Faction": {
-          "name": "bad"
+          "name": "horror"
         },
         "Leveling": {
           "currentLevel": 4
@@ -1382,7 +1352,7 @@
           "baseDamage": 5
         },
         "Faction": {
-          "name": "bad"
+          "name": "horror"
         },
         "Leveling": {
           "currentLevel": 4
@@ -1441,7 +1411,7 @@
           "baseDamage": 5
         },
         "Faction": {
-          "name": "bad"
+          "name": "horror"
         },
         "Leveling": {
           "currentLevel": 4

@@ -48,7 +48,7 @@
           "baseDamage": 1
         },
         "Faction": {
-          "name": "good"
+          "name": "player"
         },
         "Container": {
           "capacity": 30

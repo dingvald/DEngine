@@ -332,6 +332,7 @@
     <ClCompile Include="src\Machines\WildernessHorde.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />
     <ClInclude Include="src\Machines\OreDeposit.h" />
     <ClInclude Include="src\Machines\HeartShrine.h" />
     <ClInclude Include="src\Machines\Chest.h" />

@@ -28,10 +28,10 @@ void drft::system::HUD::init()
 	createStaminaBar();
 	createInHandsDisplay();
 	createItemsOnGroundDisplay();
-	createFloatingMessagesDisplay();
 
 	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::ItemBreakEvent>().connect<&HUD::onItemBreakEvent>(this);
+	dispatcher.sink<events::SendFloatingMessageEvent>().connect<&HUD::onSendFloatingMessageEvent>(this);
 	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
 	registry->on_construct<component::action::LevelUp>().connect<&HUD::onLevelUp>(this);
@@ -175,11 +175,6 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 			.textSize = 16
 			})
 		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
-}
-
-void drft::system::HUD::createFloatingMessagesDisplay()
-{
-	
 }
 
 void drft::system::HUD::updateLevelInfo(entt::const_handle player)
@@ -376,12 +371,12 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 	}
 }
 
-void drft::system::HUD::queueFloatingMessage(std::string&& message, sf::Color color, sf::Vector2f position, int ttl)
+void drft::system::HUD::queueFloatingMessage(const std::string& message, sf::Color color, sf::Vector2f position, int ttl)
 {
 	using namespace entt::literals;
 	const auto& font = registry->ctx().get<sf::Font&>("terminus"_hs);
 
-	_floatingMessages.emplace_back(sf::Text(message, font), position + sf::Vector2f(spatial::TILE_WIDTH/2, 0), ttl);
+	_floatingMessages.emplace_back(sf::Text(std::string(message), font), position + sf::Vector2f(spatial::TILE_WIDTH/2, 0), ttl);
 	auto& newMessage = _floatingMessages.back();
 	newMessage.text.setFillColor(color);
 	newMessage.text.setCharacterSize(16);
@@ -396,6 +391,20 @@ void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f siz
 	shape.setFillColor(sf::Color::White);
 
 	_flashEffects.emplace_back(shape, ttl);
+}
+
+void drft::system::HUD::onSendFloatingMessageEvent(events::SendFloatingMessageEvent& ev)
+{
+	if (ev.isScreenSpace)
+	{
+		const auto cameraOrigin = getCurrentCameraOrigin(*registry);
+		queueFloatingMessage(ev.message, ev.color, ev.position + cameraOrigin, ev.ttl);
+	}
+	else
+	{
+		queueFloatingMessage(ev.message, ev.color, ev.position, ev.ttl);
+	}
+	
 }
 
 void drft::system::HUD::onItemBreakEvent(events::ItemBreakEvent& ev)

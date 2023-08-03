@@ -33,7 +33,6 @@
 #include "Systems/Gameplay/Actions/EquipItemSystem.h"
 #include "Systems/Gameplay/ItemDurabilitySystem.h"
 #include "Systems/Gameplay/HitEffectSystem.h"
-#include "Systems/Gameplay/HorrorSpawningSystem.h"
 #include "Systems/Gameplay/Actions/CraftItemSystem.h"
 #include "Systems/Gameplay/Actions/MovementSystem.h"
 #include "Systems/Gameplay/Actions/WaitingSystem.h"
@@ -69,7 +68,7 @@
 // TODO: Move save directory to state context
 static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";
 static constexpr std::string_view PLAYER_FILE_NAME = "playerSaveData";
-static constexpr std::string_view GAME_STATE_SAVE_FILENAME = ".\\data\\savegame\\gamestate.json"; // file extension added because it will be fixed
+static constexpr std::string_view GAME_STATE_SAVE_FILENAME = ".\\data\\savegame\\gamestate.json"; // file extension added because it will always be json
 
 drft::GameState::GameState(StateStack& stack, StateContext& context) 
 	: State(stack, context)
@@ -248,7 +247,6 @@ void drft::GameState::importSystems()
 	_systems->add<PlayerInput>(						Phase::OnProcessInput);
 	_systems->add<ArtificialInput>(					Phase::OnProcessInput);
 
-	_systems->add<HorrorSpawningSystem>(			Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
 	_systems->add<SelectDirectionSystem>(			Phase::OnUpdate);
