@@ -11,6 +11,11 @@
 #include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
 #include "PlacementAlgorithms/Algorithms.h"
 
+#include "Machines/Chest.h"
+#include "Machines/HeartShrine.h"
+#include "Machines/WildernessHorde.h"
+#include "Machines/OreDeposit.h"
+
 // Perlin noise cutoffs:
 //------------------------------------------
 
@@ -30,8 +35,7 @@ static constexpr double MOISTURE_HUMID = 0.57;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
-    _machineFactory.loadPrototypes("generic.json");
-    _machineFactory.loadPrototypes("faction.json");
+    registerMachines();
 }
 
 void drft::gen::WorldGenerator::setSeed(unsigned int seed)
@@ -46,6 +50,14 @@ void drft::gen::WorldGenerator::setSeed(unsigned int seed)
     _temperatureNoise = std::make_unique<rng::PerlinNoise>(temperatureSeed);
     _altitudeNoise = std::make_unique<rng::PerlinNoise>(altitudeSeed);
     _moistureNoise = std::make_unique<rng::PerlinNoise>(moistureSeed);
+}
+
+void drft::gen::WorldGenerator::registerMachines()
+{
+    _machineFactory.registerMachine<machine::Chest>("Chest");
+    _machineFactory.registerMachine<machine::HeartShrine>("Heart Shrine");
+    _machineFactory.registerMachine<machine::WildernessHorde>("Wilderness Horde");
+    _machineFactory.registerMachine<machine::OreDeposit>("Ore Deposit");
 }
 
 drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temperature, double altitude, double moisture) const
@@ -121,7 +133,7 @@ drft::gen::BiomeType drft::gen::WorldGenerator::determineBiomeType(double temper
     return BiomeType::Forest;
 }
 
-sf::Vector2<double> drft::gen::WorldGenerator::convertIntergerCoordinates(sf::Vector2i coord) const
+sf::Vector2<double> drft::gen::WorldGenerator::convertIntergerCoordinatesToDouble(sf::Vector2i coord) const
 {
     sf::Vector2<double> result;
     result.x = (static_cast<double>(coord.x) + 0.5) / (13 * 80);
@@ -281,29 +293,50 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
     {
         BiomeType type = gen::String2Biome.at(biome.name.GetString());
         const auto biomeObject = biome.value.GetObject();
-        for (auto& wilderness : biomeObject)
+        if (biomeObject.HasMember("Environment"))
         {
-            if (std::strcmp(wilderness.name.GetString(),"Machines") == 0) continue;
-            for (auto& entity : wilderness.value.GetObject())
+            auto& environmentals = biomeObject["Environment"];
+            for (auto& category : environmentals.GetObject())
             {
-                WildernessPrototype prototype;
-                auto entityObj = entity.value.GetObject();
-                prototype.name = entity.name.GetString();
-                prototype.algorithm = entityObj["Algorithm"].GetString();
-                for (auto& [name, value] : entityObj["Params"].GetObject())
+                for (auto& entity : category.value.GetObject())
                 {
-                    prototype.params[name.GetString()] = value.GetFloat();
+                    EnvironmentGeneration generation;
+                    auto generationObj = entity.value.GetObject();
+                    generation.algorithm = generationObj["Algorithm"].GetString();
+                    for (auto& [name, value] : generationObj["Params"].GetObject())
+                    {
+                        generation.params[name.GetString()] = value.GetFloat();
+                    }
+                    _biomes[type]._environmentals[category.name.GetString()][entity.name.GetString()] = generation;
                 }
-                _biomes[type].prototypes[wilderness.name.GetString()].push_back(prototype);
             }
         }
-
+        if (biomeObject.HasMember("Wildlife"))
+        {
+            auto& wildlife = biomeObject["Wildlife"];
+            for (auto& category : wildlife.GetObject())
+            {
+                for (auto& wildlife : category.value.GetObject())
+                {
+                    WildlifeChance wildlifeChance = { 0,0 };
+                    wildlifeChance.max = wildlife.value.GetArray()[0].GetFloat();
+                    wildlifeChance.chance = wildlife.value.GetArray()[1].GetFloat();
+                    _biomes[type]._wildlife[category.name.GetString()][wildlife.name.GetString()] = wildlifeChance;
+                } 
+            }
+        }
         if (biomeObject.HasMember("Machines"))
         {
             auto& machines = biomeObject["Machines"];
             for (auto& machine : machines.GetObject())
             {
-                _biomes[type].machines[machine.name.GetString()] = machine.value.GetFloat();
+                JSONMachine jsonMachine;
+                jsonMachine.chance = machine.value["chance"].GetFloat();
+                for (auto& param : machine.value["params"].GetObject())
+                {
+                    jsonMachine.params.emplace(param.name.GetString(), param.value.GetString());
+                }
+                _biomes[type]._machines[machine.name.GetString()] = jsonMachine;
             }
         }
     }
@@ -313,9 +346,6 @@ bool drft::gen::WorldGenerator::loadBiomeBlueprints(std::string filename)
 
 void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
-    // Always place tiles
-    gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
-
     const auto biomeType = getBiomeType(coordinate);
     const auto& biome = _biomes.at(biomeType);
 
@@ -325,25 +355,60 @@ void drft::gen::WorldGenerator::buildChunk(sf::Vector2i coordinate, entt::regist
 
     spatial::Grid<CellState> freeSpaces{ spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT };
 
-    // Maybe pick a machine to throw in
-    auto pickedMachine = biome.pickMachine(seed);
-    if (pickedMachine.has_value())
+    // Always place tiles
+    gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+
+    // Maybe pick a Machine to throw in
+    const auto pickedMachines = biome.pickRandomMachines();
+    if (!pickedMachines.empty())
     {
-        const auto& machine = _machineFactory.build(pickedMachine.value());
-        auto randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - machine.getBounds().x
-                                                                          ,spatial::CHUNK_HEIGHT - machine.getBounds().y});
-        machine.place(tileCoord + randomPosition, registry, biome);
-        reserveMachineBounds(freeSpaces, { randomPosition.x, randomPosition.y, machine.getBounds().x, machine.getBounds().y });
+        for (auto& machineName : pickedMachines)
+        {
+            if (const auto machine = _machineFactory.build(machineName))
+            {
+                machine->initialize(registry, biome);
+                sf::Vector2i randomPosition;
+                int safetyCount = 10; // Avoid infinite loop
+                do {
+                    --safetyCount;
+                    randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - machine->getBounds().width - 1,
+                                                                                  spatial::CHUNK_HEIGHT - machine->getBounds().height - 1 });
+                    machine->setPosition(tileCoord, randomPosition);
+                } while (freeSpaces.contains(machine->getBounds(), CellState::Machine) && safetyCount > 0);
+                if (safetyCount > 0)
+                {
+                    machine->layout();
+                    reserveMachineBounds(freeSpaces, machine->getBounds());
+                }
+            }
+        }
     }
 
     // Randomly round edges for lakes and mountains
     addErodedEdges(determineOpenFaces(coordinate), freeSpaces, seed);
-    for (auto& [category, entityList] : biome.prototypes)
+
+    // Place Environment
+    for (const auto& [_, entities] : biome.environmentals())
     {
-        for (auto& [entity, algorithm, params] : entityList)
+        for (const auto& [entity, generation] : entities)
         {
-           const auto positions = gen::String2Algorithm.at(algorithm)( seed, freeSpaces, params);
-           gen::place(entity, spatial::toTileSpace(coordinate), positions, registry);
+           const auto positions = gen::String2Algorithm.at(generation.algorithm)(seed, freeSpaces, generation.params);
+           gen::place(entity, tileCoord, positions, registry);
+        }
+    }
+    // Place Wildlife
+    for (const auto& [_, entities] : biome.wildlife())
+    {
+        for (const auto& [entity, chance] : entities)
+        {
+            for (int i = 0; i < static_cast<int>(chance.max); ++i)
+            {
+                if ((chance.chance * 100) >= rng::RandomNumberGenerator::intInRange(0, 100))
+                {
+                    sf::Vector2i randomPosition = rng::RandomNumberGenerator::positionInRect({ spatial::CHUNK_WIDTH - 1, spatial::CHUNK_HEIGHT - 1 });
+                    gen::place(entity, tileCoord, randomPosition, registry);
+                }
+            }
         }
     }
 }
@@ -353,7 +418,7 @@ drft::gen::BiomeType drft::gen::WorldGenerator::getBiomeType(sf::Vector2i coordi
     if (_cachedBiomeTypes.contains({ coordinate.x, coordinate.y })) {
         return _cachedBiomeTypes.at({ coordinate.x, coordinate.y });
     }
-    auto dCoord = convertIntergerCoordinates(spatial::toTileSpace(coordinate));
+    auto dCoord = convertIntergerCoordinatesToDouble(spatial::toTileSpace(coordinate));
 
     double t_noise = _temperatureNoise->gen(dCoord.x, dCoord.y, 0);
     double a_noise = _altitudeNoise->gen(dCoord.x, dCoord.y, 0);

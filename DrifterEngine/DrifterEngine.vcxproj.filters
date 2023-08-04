@@ -342,7 +342,7 @@
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Machine\Machine.cpp">
+    <ClCompile Include="src\Machines\Machine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Factory\MachineFactory.cpp">
@@ -352,6 +352,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\RemoveFromContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machines\Chest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machines\HeartShrine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machines\WildernessHorde.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machines\OreDeposit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1205,7 +1217,7 @@
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Machine\Machine.h">
+    <ClInclude Include="src\Machines\Machine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Factory\MachineFactory.h">
@@ -1218,6 +1230,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\RemoveFromContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\Chest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\HeartShrine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\WildernessHorde.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\OreDeposit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\SendFloatingMessageEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1236,8 +1263,6 @@
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\wearables.json" />
     <None Include="data\static\entities\bases.json" />
-    <None Include="data\static\machines\faction.json" />
-    <None Include="data\static\machines\generic.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">

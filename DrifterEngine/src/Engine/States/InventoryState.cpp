@@ -90,7 +90,6 @@ void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity ite
 {
 	const auto& itemRender = getContext().registry.get<component::Render>(item);
 	const auto& sprites = getContext().textures.get("Sprites");
-	// Had an exception here once when equipping an item
 
 	sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
 	container.insert("Icon", gui::Icon(sprite))

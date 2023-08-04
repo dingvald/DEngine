@@ -6,7 +6,7 @@
 #include "Utility/SpriteBatch.h"
 #include "Spatial/Conversions.h"
 
-static const sf::Color seenTileColor = sf::Color(10, 10, 10);
+static const sf::Color seenTileColor = sf::Color(18, 18, 18);
 
 void drft::system::EntityRenderer::init()
 {

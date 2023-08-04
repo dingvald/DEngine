@@ -2,7 +2,7 @@
   "Prototypes": {
     "Iron Breastplate": {
       "Inherits": [
-        "Base Item"
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -31,8 +31,8 @@
           }
         },
         "Health": {
-          "max": 80,
-          "current": 80
+          "max": 100,
+          "current": 100
         },
         "Wearable": {
           "slot": "Body",
@@ -42,7 +42,7 @@
     },
     "Iron Legplates": {
       "Inherits": [
-        "Base Item"
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -70,12 +70,12 @@
           }
         },
         "Health": {
-          "max": 60,
-          "current": 60
+          "max": 100,
+          "current": 100
         },
         "Wearable": {
           "slot": "Legs",
-          "protection": 4
+          "protection": 5
         }
       }
     },
@@ -125,7 +125,7 @@
     },
     "Wood Legplates": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -169,7 +169,7 @@
     },
     "Wood Shield": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -201,9 +201,6 @@
           "max": 30,
           "current": 30
         },
-        "Item": {
-          "id": 0
-        },
         "Wearable": {
           "slot": "HeldL",
           "protection": 2
@@ -212,7 +209,7 @@
     },
     "Woven Hood": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -255,7 +252,7 @@
     },
     "Woven Sandals": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -298,7 +295,7 @@
     },
     "Woven Bracers": {
       "Inherits": [
-        ""
+        "BaseItem"
       ],
       "Components": {
         "Info": {
@@ -336,6 +333,96 @@
         "Wearable": {
           "slot": "Hands",
           "protection": 1
+        }
+      }
+    },
+    "Leather Sandals": {
+      "Inherits": [
+        "BaseItem"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Leather Sandals",
+          "extendedName": "",
+          "description": "Sandals made from leather."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 63,
+          "layer": 1,
+          "color": [ 98, 74, 46 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 3.0,
+          "materials": [
+            "Leather",
+            "Twine"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Leather": 2,
+            "Twine": 2
+          }
+        },
+        "Health": {
+          "max": 40,
+          "current": 40
+        },
+        "Item": {
+          "id": 0
+        },
+        "Wearable": {
+          "slot": "Feet",
+          "protection": 3
+        }
+      }
+    },
+    "Leather Bracers": {
+      "Inherits": [
+        "BaseItem"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Leather Bracers",
+          "extendedName": "",
+          "description": "Bracers made from leather."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 64,
+          "layer": 1,
+          "color": [ 98, 74, 46 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 2.0,
+          "materials": [
+            "Leather",
+            "Twine"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Leather": 2,
+            "Twine": 2
+          }
+        },
+        "Health": {
+          "max": 40,
+          "current": 40
+        },
+        "Item": {
+          "id": 0
+        },
+        "Wearable": {
+          "slot": "Hands",
+          "protection": 3
         }
       }
     }

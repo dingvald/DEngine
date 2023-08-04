@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "SFML/Graphics/Rect.hpp"
 
 namespace drft::spatial
 {
@@ -13,6 +14,9 @@ namespace drft::spatial
 
 		void resize(int width, int height);
 		void fill(T val);
+
+		bool contains(int x, int y, T val);
+		bool contains(sf::IntRect rect, T val);
 
 		T& at(int x, int y);
 		const T& at(int x, int y) const;

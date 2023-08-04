@@ -92,9 +92,9 @@ namespace component
 
 	struct Actor
 	{
-		int ap = { 0 };
-		float moveSpeed = { 1.0f };
-		float actSpeed = { 1.0f };
+		int ap = 0;
+		float moveSpeed = 1.0f;
+		float actSpeed = 1.0f;
 	};
 
 	struct Health

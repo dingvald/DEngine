@@ -180,8 +180,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Machines\OreDeposit.cpp" />
+    <ClCompile Include="src\Machines\HeartShrine.cpp" />
+    <ClCompile Include="src\Machines\Chest.cpp" />
     <ClCompile Include="src\Factory\MachineFactory.cpp" />
-    <ClCompile Include="src\Machine\Machine.cpp" />
+    <ClCompile Include="src\Machines\Machine.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\ContainerHasItem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp" />
@@ -326,10 +329,15 @@
     <ClCompile Include="src\Engine\States\SelectDirectionState.cpp" />
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
+    <ClCompile Include="src\Machines\WildernessHorde.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />
+    <ClInclude Include="src\Machines\OreDeposit.h" />
+    <ClInclude Include="src\Machines\HeartShrine.h" />
+    <ClInclude Include="src\Machines\Chest.h" />
     <ClInclude Include="src\Factory\MachineFactory.h" />
-    <ClInclude Include="src\Machine\Machine.h" />
+    <ClInclude Include="src\Machines\Machine.h" />
     <ClInclude Include="src\ProcGen\PlacementAlgorithms\GridEnums.h" />
     <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h" />
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h" />
@@ -616,6 +624,7 @@
     <ClInclude Include="src\Engine\States\SelectDirectionState.h" />
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h" />
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h" />
+    <ClInclude Include="src\Machines\WildernessHorde.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\biomes\biomes.json" />
@@ -624,8 +633,6 @@
     <None Include="data\static\entities\player.json" />
     <None Include="data\static\entities\prototypes.json" />
     <None Include="data\static\entities\wearables.json" />
-    <None Include="data\static\machines\faction.json" />
-    <None Include="data\static\machines\generic.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="packages.config" />
     <None Include="src\Spatial\Grid.inl" />

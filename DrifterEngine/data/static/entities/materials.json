@@ -126,7 +126,7 @@
         "Render": {
           "sprite": 43,
           "layer": 1,
-          "color": [ 40, 40, 40 ]
+          "color": [ 65, 65, 65 ]
         },
         "Physical": {
           "blocks": false,
@@ -183,6 +183,29 @@
           }
         }
       }
+    },
+    "Leather": {
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Leather",
+          "extendedName": "",
+          "description": "Tough and stylish material."
+        },
+        "Render": {
+          "sprite": 74,
+          "layer": 1,
+          "color": [ 98, 74, 46 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 0.5,
+          "materials": [ "Leather" ]
+        }
+      }
     }
+
   }
 }
