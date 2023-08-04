@@ -64,9 +64,9 @@ EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition)
 
 EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const
 {
-	auto chunkCoordinate = toChunkCoordinate(tilePosition);
-	auto localPosition = toLocalChunkSpace(tilePosition);
-	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
+	const auto chunkCoordinate = toChunkCoordinate(tilePosition);
+	const auto localPosition = toLocalChunkSpace(tilePosition);
+	const auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
 
 	if (!_chunks.contains(keyablePair)) {
 		return EntityList{};
