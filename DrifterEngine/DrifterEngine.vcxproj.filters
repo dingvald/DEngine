@@ -312,7 +312,7 @@
     <ClCompile Include="src\Systems\Helpers\FindItemOwner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Helpers\GetCurrentCameraOrigin.cpp">
+    <ClCompile Include="src\Systems\Helpers\GetCurrentCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\GetTextCenter.cpp">
@@ -1187,7 +1187,7 @@
     <ClInclude Include="src\Systems\Helpers\FindItemOwner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Helpers\GetCurrentCameraOrigin.h">
+    <ClInclude Include="src\Systems\Helpers\GetCurrentCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\GetTextCenter.h">

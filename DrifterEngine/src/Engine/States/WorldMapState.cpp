@@ -99,15 +99,10 @@ void drft::WorldMapState::onPush()
 	
 	loadMapNotes();
 
-	sf::IntRect cameraRect;
 	auto view = getContext().registry.view<component::Camera, component::Position>();
 	for (auto [entity, camera, pos] : view.each())
 	{
 		_currentPosition = spatial::toChunkCoordinate(pos.position);
-		cameraRect.left = camera.viewport.left / spatial::TILE_WIDTH;
-		cameraRect.top = camera.viewport.top / spatial::TILE_HEIGHT;
-		cameraRect.width = camera.viewport.width / spatial::TILE_WIDTH;
-		cameraRect.height = camera.viewport.height / spatial::TILE_HEIGHT;
 	}
 
 	_surroundings = spatial::getIntCircleInRadius(_currentPosition, 15);

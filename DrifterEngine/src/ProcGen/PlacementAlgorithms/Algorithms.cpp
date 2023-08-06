@@ -7,7 +7,7 @@
 void drft::gen::place(const std::string& name, sf::Vector2i origin, sf::Vector2i position, entt::registry& reg)
 {
 	const auto& factory = reg.ctx().get<const EntityFactory&>();
-	auto worldPos = spatial::toWorldSpace(origin + position);
+	auto worldPos = origin + position;
 	factory.build(name, reg)
 		.patch<component::Position>([worldPos](auto& pos)
 			{
@@ -20,7 +20,7 @@ void drft::gen::place(const std::string& name, sf::Vector2i tileOrigin, const st
 	const auto& factory = reg.ctx().get<const EntityFactory&>();
 	for (auto pos : positions)
 	{
-		auto position = spatial::toWorldSpace(tileOrigin + pos);
+		auto position = tileOrigin + pos;
 		factory.build(name, reg)
 			.patch<component::Position>([position](auto& pos)
 				{
@@ -36,7 +36,7 @@ void drft::gen::fastFill(const std::string& name, sf::Vector2i tileOrigin, entt:
 	{
 		for (int x = 0; x < spatial::CHUNK_WIDTH; ++x)
 		{
-			const auto position = spatial::toWorldSpace(tileOrigin + sf::Vector2i(x,y));
+			const auto position = tileOrigin + sf::Vector2i(x,y);
 			factory.build(name, reg)
 				.patch<component::Position>([position](auto& pos)
 					{

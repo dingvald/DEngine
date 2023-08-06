@@ -16,7 +16,7 @@ void drft::system::PickUpSystem::update(const float dt)
 	auto& grid = registry->ctx().get<spatial::WorldGrid&>();
 	for (auto [entity, pos, container] : view.each())
 	{
-		const auto myTilePosition = spatial::toTileSpace(pos.position);
+		const auto myTilePosition = pos.position;
 		const auto items = grid.entitiesAt(myTilePosition,
 			[this](entt::entity entity) -> bool
 			{

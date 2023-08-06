@@ -4,6 +4,7 @@
 #include "Events/DayStartEvent.h"
 #include "Events/NightStartEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
+#include "Spatial/Conversions.h"
 #include "Utility/SmoothTransition.h"
 
 static constexpr int DAY_START_HOUR = 5;
@@ -75,7 +76,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 		dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dusk has fallen...",
 			.color = sf::Color(125,0,255),
-			.position = registry->ctx().get<sf::RenderWindow>().getView().getCenter(),
+			.position = sf::Vector2i(0,0),
 			.isScreenSpace = true,
 			.ttl = 120
 			});
@@ -87,7 +88,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 		dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dawn has broken...",
 			.color = sf::Color::Yellow,
-			.position = registry->ctx().get<sf::RenderWindow>().getView().getCenter(),
+			.position = sf::Vector2i(0,0),
 			.isScreenSpace = true,
 			.ttl = 120
 			});

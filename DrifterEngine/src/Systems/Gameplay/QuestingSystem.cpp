@@ -112,7 +112,7 @@ void drft::system::QuestingSystem::buildGoalEntity()
 	
 	key.patch<component::Position>([tilePosition](component::Position& pos)
 		{
-			pos.position = spatial::toWorldSpace(tilePosition);
+			pos.position = tilePosition;
 		});
 
 	_isGoalBuilt = true;

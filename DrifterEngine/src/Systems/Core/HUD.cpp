@@ -8,7 +8,7 @@
 #include "Utility/SmoothTransition.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Systems/Helpers/FindItemOwner.h"
-#include "Systems/Helpers/GetCurrentCameraOrigin.h"
+#include "Systems/Helpers/GetCurrentCamera.h"
 #include "Components/Components.h"
 
 static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 32.f };
@@ -222,7 +222,7 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 
 	if (auto pos = player.try_get<component::Position>())
 	{
-		auto entities = grid.entitiesAt(spatial::toTileSpace(pos->position),
+		auto entities = grid.entitiesAt(pos->position,
 			[this](entt::entity entity) -> bool
 			{
 				if (registry->all_of<component::Info>(entity)
@@ -295,15 +295,14 @@ void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
 	_inHandsDisplay.update(0.f);
 }
 
-void drft::system::HUD::updateFloatingMessagesDisplay(entt::const_handle player)
+void drft::system::HUD::updateFloatingMessagesDisplay(entt::const_handle)
 {
-	const auto cameraOrigin = getCurrentCameraOrigin(*registry);
+	const auto camera = getCurrentCamera(*registry);
 
 	auto it = _floatingMessages.begin();
 	while (it != _floatingMessages.end())
 	{
-		auto pos = it->position - cameraOrigin;
-		it->text.setPosition(pos);
+		it->text.setPosition(it->position);
 		util::SmoothTransition transition(0, 255, 0, MESSAGE_LIFETIME);
 		sf::Color color = it->text.getFillColor();
 		color.a = static_cast<sf::Uint8>(transition.compute(static_cast<float>(it->ttl)));
@@ -376,7 +375,7 @@ void drft::system::HUD::queueFloatingMessage(const std::string& message, sf::Col
 	using namespace entt::literals;
 	const auto& font = registry->ctx().get<sf::Font&>("terminus"_hs);
 
-	_floatingMessages.emplace_back(sf::Text(std::string(message), font), position + sf::Vector2f(spatial::TILE_WIDTH/2, 0), ttl);
+	_floatingMessages.emplace_back(sf::Text(std::string(message), font), position + sf::Vector2f(spatial::TILE_WIDTH / 2, 0.f), ttl);
 	auto& newMessage = _floatingMessages.back();
 	newMessage.text.setFillColor(color);
 	newMessage.text.setCharacterSize(16);
@@ -395,25 +394,26 @@ void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f siz
 
 void drft::system::HUD::onSendFloatingMessageEvent(events::SendFloatingMessageEvent& ev)
 {
+	const auto camera = getCurrentCamera(*registry);
 	if (ev.isScreenSpace)
 	{
-		const auto cameraOrigin = getCurrentCameraOrigin(*registry);
-		queueFloatingMessage(ev.message, ev.color, ev.position + cameraOrigin, ev.ttl);
+		
+		queueFloatingMessage(ev.message, ev.color, toScreenSpace(ev.position + camera.position, camera), ev.ttl);
 	}
 	else
 	{
-		queueFloatingMessage(ev.message, ev.color, ev.position, ev.ttl);
+		queueFloatingMessage(ev.message, ev.color, toScreenSpace(ev.position, camera), ev.ttl);
 	}
 	
 }
 
 void drft::system::HUD::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
-	if (!registry->all_of<component::Player>(ev.owner)) return;
+	auto camera = getCurrentCamera(*registry);
 	if (auto pos = registry->try_get<component::Position>(ev.owner))
 	{
 		auto itemName = util::getEntityName({ *registry, ItemDatabase::getEntityFromItemID(ev.itemID) });
-		queueFloatingMessage(itemName + " broke!", sf::Color::Yellow, pos->position, MESSAGE_LIFETIME*2);
+		queueFloatingMessage(itemName + " broke!", sf::Color::Yellow, toScreenSpace(pos->position, camera), MESSAGE_LIFETIME*2);
 	}
 }
 
@@ -423,17 +423,18 @@ void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity enti
 	// queue damage numbers
 	if (auto pos = registry.try_get<component::Position>(entity))
 	{
+		auto camera = getCurrentCamera(registry);
 		if (damage.amount > 0)
 		{
-			queueFloatingMessage(std::to_string(damage.amount), sf::Color::White, pos->position, MESSAGE_LIFETIME);
+			queueFloatingMessage(std::to_string(damage.amount), sf::Color::White, toScreenSpace(pos->position, camera), MESSAGE_LIFETIME);
 		}
 		else if (damage.amount < 0)
 		{
-			queueFloatingMessage("+" + std::to_string(std::abs(damage.amount)), sf::Color::Green, pos->position, MESSAGE_LIFETIME);
+			queueFloatingMessage("+" + std::to_string(std::abs(damage.amount)), sf::Color::Green, toScreenSpace(pos->position, camera), MESSAGE_LIFETIME);
 		}
 		else
 		{
-			queueFloatingMessage(std::to_string(damage.amount), sf::Color::Blue, pos->position, MESSAGE_LIFETIME);
+			queueFloatingMessage(std::to_string(damage.amount), sf::Color::Blue, toScreenSpace(pos->position, camera), MESSAGE_LIFETIME);
 		}
 	}
 	// Flash health bar
@@ -469,6 +470,7 @@ void drft::system::HUD::onLevelUp(entt::registry& registry, entt::entity entity)
 {
 	if (auto pos = registry.try_get<component::Position>(entity))
 	{
-		queueFloatingMessage("LEVEL UP", sf::Color::Magenta, pos->position, MESSAGE_LIFETIME);
+		auto camera = getCurrentCamera(registry);
+		queueFloatingMessage("LEVEL UP", sf::Color::Magenta, toScreenSpace(pos->position, camera), MESSAGE_LIFETIME);
 	}
 }

@@ -18,8 +18,8 @@ void drft::system::Camera::onStart(bool)
 	const float viewportWidth = registry->ctx().get<const sf::RenderWindow&>().getView().getSize().x;
 	const float viewportHeight = registry->ctx().get<const sf::RenderWindow&>().getView().getSize().y;
 	// component order matters for camera because it determines order of component destruction.
-	registry->emplace<component::Camera>(_camera, sf::FloatRect(0, 0, viewportWidth, viewportHeight), entt::null);
-	registry->emplace<component::Position>(_camera, sf::Vector2f(0, 0));
+	registry->emplace<component::Camera>(_camera, sf::FloatRect(-viewportWidth / 2, -viewportHeight / 2, viewportWidth, viewportHeight), sf::Vector2f{}, entt::null);
+	registry->emplace<component::Position>(_camera, sf::Vector2i(0, 0));
 }
 
 void drft::system::Camera::update(const float dt)
@@ -44,18 +44,7 @@ void drft::system::Camera::update(const float dt)
 		const auto& target = registry->try_get<const component::Position>(camera.target);
 		if (!target) continue;
 
-		const auto normalizedTargetPosition = target->position - pos.position;
-		pos.position.x += static_cast<float>(std::lerp(0, normalizedTargetPosition.x, std::clamp(CAMERA_SPEED * dt, 0.f, 1.f)));
-		pos.position.y += static_cast<float>(std::lerp(0, normalizedTargetPosition.y, std::clamp(CAMERA_SPEED * dt, 0.f, 1.f)));
-
-		if (spatial::distance({0,0}, normalizedTargetPosition) < 0.5f)
-		{
-			pos.position.x = std::floor(target->position.x);
-			pos.position.y = std::floor(target->position.y);
-		}
-
-		camera.viewport.left = pos.position.x - (camera.viewport.width / 2.f);
-		camera.viewport.top = pos.position.y - (camera.viewport.height / 2.f);
+		pos.position = target->position;
 
 		service::DebugInfo::instance().putInfo("Position", std::to_string(target->position.x) + ", " + std::to_string(target->position.y));
 	}

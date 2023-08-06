@@ -16,7 +16,7 @@ using namespace drft;
 constexpr float TARGET_FPS = 60.0f;
 
 drft::Engine::Engine()
-	: _window(sf::VideoMode(960, 540), "Drifter Engine")
+	: _window(sf::VideoMode(1280, 720), "Drifter Engine")
 	, _showDebug(false)
 {
 	initialize();

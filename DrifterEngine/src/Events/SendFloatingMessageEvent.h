@@ -8,7 +8,7 @@ namespace drft::events
 	{
 		std::string message = "INVALID";
 		sf::Color color = sf::Color::Magenta;
-		sf::Vector2f position;
+		sf::Vector2i position;
 		bool isScreenSpace = true;
 		int ttl = 10;
 	};

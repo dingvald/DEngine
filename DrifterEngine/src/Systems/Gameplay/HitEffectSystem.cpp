@@ -128,7 +128,7 @@ void drft::system::HitEffectSystem::onDie(entt::registry& registry, entt::entity
 	}
 }
 
-void drft::system::HitEffectSystem::queueEffect(sf::Vector2f position, unsigned int sprite, sf::Color color, std::function<bool(entt::registry& registry, entt::entity)> effectUpdateFunc)
+void drft::system::HitEffectSystem::queueEffect(sf::Vector2i position, unsigned int sprite, sf::Color color, std::function<bool(entt::registry& registry, entt::entity)> effectUpdateFunc)
 {
 	auto effect = entt::handle{ *registry, registry->create() };
 	effect.emplace<component::Render>(sprite, 4u, color);

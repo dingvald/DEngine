@@ -21,7 +21,7 @@ namespace drft::system
 
 	private:
 		bool isAffectedByLiquids(entt::entity entity) const;
-		void addInLiquidEffect(sf::Vector2f position, sf::Color color);
+		void addInLiquidEffect(sf::Vector2i position, sf::Color color);
 
 		void onEnterTileEvent(events::EnterTileEvent& ev) const;
 		void onTurnEndEvent(events::TurnEndEvent& ev) const;

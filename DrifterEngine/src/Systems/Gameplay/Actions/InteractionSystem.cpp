@@ -19,7 +19,7 @@ void drft::system::InteractionSystem::update(const float dt)
 	for (auto [entity, pos] : interactView.each())
 	{
 		std::vector<entt::entity> canInteractWith;
-		auto surroundings = spatial::getIntRectAroundOrigin(spatial::toTileSpace(pos.position), 3, 3);
+		auto surroundings = spatial::getIntRectAroundOrigin(pos.position, 3, 3);
 		for (auto tile : surroundings)
 		{
 			auto entities = grid.entitiesAt(tile, 
@@ -35,7 +35,7 @@ void drft::system::InteractionSystem::update(const float dt)
 		}
 		else if (canInteractWith.size() > 1)
 		{
-			auto tilePosition = spatial::toTileSpace(pos.position);
+			auto tilePosition = pos.position;
 			registry->emplace<component::action::SelectDirection>(entity,
 				[this, tilePosition, entity](sf::Vector2i direction) -> bool
 				{

@@ -27,5 +27,5 @@ sf::IntRect drft::Machine::getBounds() const
 
 void drft::Machine::setRelativePosition(entt::handle entity, sf::Vector2i position)
 {
-	entity.emplace_or_replace<component::Position>(spatial::toWorldSpace(_chunkOrigin + _position + position));
+	entity.emplace_or_replace<component::Position>(_chunkOrigin + _position + position);
 }

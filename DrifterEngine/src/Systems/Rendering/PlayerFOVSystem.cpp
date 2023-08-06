@@ -36,14 +36,14 @@ void drft::system::PlayerFOVSystem::fixedUpdate()
 	{
 		if (registry->any_of<component::LightBlocking>(entity))
 		{
-			_lightBlockingPositions.emplace(spatial::toTileSpace(pos.position));
+			_lightBlockingPositions.emplace(pos.position);
 		}
 	}
 
 	auto playerView = registry->view<component::Player, component::Position>();
 	for (auto [_, player, pos] : playerView.each())
 	{
-		_fov->compute(spatial::toTileSpace(pos.position), player.sightRange);
+		_fov->compute(pos.position, player.sightRange);
 		for (auto entityToLight : _toLight)
 		{
 			registry->emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);

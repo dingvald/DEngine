@@ -23,7 +23,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 	for (auto [entity, attack, pos] : launchAttackView.each())
 	{
 		const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
-		sf::Vector2i targetPosition = spatial::toTileSpace(pos.position) + attack.direction;
+		sf::Vector2i targetPosition = pos.position + attack.direction;
 
 		const auto targets = grid.entitiesAt(targetPosition,
 			[this](entt::entity entity) -> bool

@@ -192,7 +192,7 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\InteractionSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\FindItemOwner.cpp" />
-    <ClCompile Include="src\Systems\Helpers\GetCurrentCameraOrigin.cpp" />
+    <ClCompile Include="src\Systems\Helpers\GetCurrentCamera.cpp" />
     <ClCompile Include="src\Systems\Helpers\ItemDatabase.cpp" />
     <ClCompile Include="src\Engine\States\DisplayTextState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\QuestingSystem.cpp" />
@@ -346,7 +346,7 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\InteractionSystem.h" />
     <ClInclude Include="src\Systems\Helpers\FindItemOwner.h" />
-    <ClInclude Include="src\Systems\Helpers\GetCurrentCameraOrigin.h" />
+    <ClInclude Include="src\Systems\Helpers\GetCurrentCamera.h" />
     <ClInclude Include="src\Systems\Helpers\ItemDatabase.h" />
     <ClInclude Include="src\Engine\States\DisplayTextState.h" />
     <ClInclude Include="src\Systems\Gameplay\QuestingSystem.h" />

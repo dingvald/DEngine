@@ -21,8 +21,8 @@ void drft::system::ArtificialInput::update(const float dt)
 		const auto target = registry->try_get<component::Position>(ai.target);
 		if (target)
 		{
-			const auto myTilePosition = spatial::toTileSpace(myPos.position);
-			const auto targetTilePosition = spatial::toTileSpace(target->position);
+			const auto myTilePosition = myPos.position;
+			const auto targetTilePosition = target->position;
 
 			if (spatial::distance(myTilePosition, targetTilePosition) <= ai.sightRange)
 			{
@@ -69,10 +69,10 @@ entt::entity drft::system::ArtificialInput::findTarget(entt::handle entity) cons
 	{
 		if (FactionSystem::resolveRelationship(faction.name, otherfaction.name) == Relationship::Hostile)
 		{
-			const float distance = spatial::distance(spatial::toTileSpace(pos.position), spatial::toTileSpace(otherPos.position));
+			const float distance = spatial::distance(pos.position, otherPos.position);
 			if (distance < ai.sightRange && distance < closestRange)
 			{
-				if (hasLineOfSight(spatial::toTileSpace(pos.position), spatial::toTileSpace(otherPos.position)))
+				if (hasLineOfSight(pos.position, otherPos.position))
 				{
 					closestRange = distance;
 					closestTarget = otherEnt;
@@ -108,7 +108,7 @@ void drft::system::ArtificialInput::randomMove(entt::handle entity) const
 	int randx = rng::RandomNumberGenerator::intInRange(-1, 1);
 	int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
 	const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
-	const auto& tilepos = spatial::toTileSpace(entity.get<component::Position>().position);
+	const auto& tilepos = entity.get<component::Position>().position;
 
 	auto blockerFilter = [this](entt::entity entity) -> bool
 	{

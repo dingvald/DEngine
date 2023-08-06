@@ -15,7 +15,7 @@ namespace component
 
 	struct Position
 	{
-		sf::Vector2f position = { 0.f,0.f };
+		sf::Vector2i position = { 0,0 };
 	};
 
 	struct Render
@@ -86,7 +86,8 @@ namespace component
 
 	struct Camera
 	{
-		sf::FloatRect viewport = { 0.f,0.f,0.f,0.f };
+		sf::FloatRect viewport;
+		sf::Vector2f smoothingVector;
 		entt::entity target = { entt::null };
 	};
 
