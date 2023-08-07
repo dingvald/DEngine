@@ -3,7 +3,7 @@
 #include "Components/Components.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
-#include "ProcGen/WorldGenerator.h"
+#include "WorldMap/WorldMap.h"
 
 static constexpr float FLASH_RATE = 1.0;
 static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";
@@ -105,16 +105,14 @@ void drft::WorldMapState::onPush()
 		_currentPosition = spatial::toChunkCoordinate(pos.position);
 	}
 
-	_surroundings = spatial::getIntCircleInRadius(_currentPosition, 15);
-
 	refreshMapSprites();
 
 	_currentPositionTile.setSize({ spatial::TILE_WIDTH, spatial::TILE_HEIGHT });
-	_currentPositionTile.setPosition(VIEW.getCenter());
+	_currentPositionTile.setPosition(spatial::toWorldSpace(_currentPosition));
 	_currentPositionTile.setFillColor(sf::Color::White);
 
 	_cursor.setSize({ spatial::TILE_WIDTH, spatial::TILE_HEIGHT });
-	_cursor.setPosition(VIEW.getCenter());
+	_cursor.setPosition(spatial::toWorldSpace(_currentPosition));
 	_cursor.setOutlineThickness(1.0f);
 	_cursor.setOutlineColor(sf::Color::Yellow);
 	_cursor.setFillColor(sf::Color(0, 0, 0, 0));
@@ -132,23 +130,25 @@ void drft::WorldMapState::refreshMapSprites()
 {
 	_map.clear();
 	_mapNotes.noteSprites.clear();
+
 	const auto& VIEW = getContext().window.getView();
 	
-	const auto& generator = getContext().registry.ctx().get<const gen::WorldGenerator&>();
-	for (auto pos : _surroundings)
+	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
+	for (int y = 0; y < worldMap.getDimensions().y; ++y)
 	{
-		sf::Vector2f screenPosition = spatial::toWorldSpace(pos - _currentPosition) + VIEW.getCenter();
-		auto biomeType = generator.getBiomeType(pos);
-		_map.addSprite(static_cast<unsigned int>(util::Sprite::Square),
-			sf::Color::Black, screenPosition);
-
-		_map.addSprite(static_cast<unsigned int>(gen::BiomeSprites.at(biomeType)),
-			gen::BiomeColors.at(biomeType), screenPosition);
-
-		if (_mapNotes.notes.contains(pos))
+		for (int x = 0; x < worldMap.getDimensions().x; ++x)
 		{
-			_mapNotes.noteSprites.addSprite(static_cast<unsigned int>(_mapNotes.notes.at(pos).icon),
-				_mapNotes.notes.at(pos).color, screenPosition);
+			sf::Vector2f screenPosition = spatial::toWorldSpace(sf::Vector2i(x,y));
+			_map.addSprite(static_cast<unsigned int>(util::Sprite::Square),
+				sf::Color::Black, screenPosition);
+			_map.addSprite(static_cast<unsigned int>(util::Sprite::Dot),
+				sf::Color::Magenta, screenPosition);
+
+			if (_mapNotes.notes.contains({x,y}))
+			{
+				_mapNotes.noteSprites.addSprite(static_cast<unsigned int>(_mapNotes.notes.at({x,y}).icon),
+					_mapNotes.notes.at({x,y}).color, screenPosition);
+			}
 		}
 	}
 }
@@ -158,17 +158,20 @@ void drft::WorldMapState::addMapNote(sf::Vector2i position, util::Sprite sprite,
 	_mapNotes.notes[position] = { sprite, color };
 
 	const auto& VIEW = getContext().window.getView();
-	sf::Vector2f screenPosition = spatial::toWorldSpace(position - _currentPosition) + VIEW.getCenter();
+	sf::Vector2f screenPosition = spatial::toWorldSpace(_cursorPosition);
 	_mapNotes.noteSprites.addSprite(static_cast<unsigned int>(_mapNotes.notes.at(position).icon),
 		_mapNotes.notes.at(position).color, screenPosition);
 }
 
 void drft::WorldMapState::moveCursor(sf::Vector2i direction)
 {
-	if (std::find(_surroundings.begin(), _surroundings.end(), _cursorPosition + direction) == _surroundings.end())
+	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
+	sf::Vector2i intended = _cursorPosition + direction;
+	if (intended.x < 0 || intended.y < 0 || intended.x >= worldMap.getDimensions().x || intended.y >= worldMap.getDimensions().y)
 	{
 		return;
 	}
+	
 	_cursorPosition += direction;
 	_cursor.move({static_cast<float>(direction.x * spatial::TILE_HEIGHT),
 		static_cast<float>(direction.y * spatial::TILE_WIDTH)});

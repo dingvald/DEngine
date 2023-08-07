@@ -102,26 +102,7 @@ void drft::DisplayTextState::buildDisplay()
 
 void drft::DisplayTextState::buildMap()
 {
-	const auto& VIEW = getContext().window.getView();
-	sf::Vector2i goalPosition;
-	goalPosition.x = std::stoi(_sessionParameters.at("X"));
-	goalPosition.y = std::stoi(_sessionParameters.at("Y"));
-
-	auto surroundings = spatial::getIntCircleInRadius(goalPosition, 5);
-	const auto& generator = getContext().registry.ctx().get<const gen::WorldGenerator&>();
-	for (auto pos : surroundings)
-	{
-		auto biomeType = generator.getBiomeType(pos);
-		_sprites.addSprite(static_cast<unsigned int>(util::Sprite::Square),
-			sf::Color::Black, sf::Vector2f((pos - goalPosition) * spatial::TILE_WIDTH) + VIEW.getCenter());
-
-		_sprites.addSprite(static_cast<unsigned int>(gen::BiomeSprites.at(biomeType)),
-			sf::Color(200, 180, 140), sf::Vector2f((pos - goalPosition) * spatial::TILE_WIDTH) + VIEW.getCenter());
-
-		_sprites.addSprite(static_cast<unsigned int>(util::Sprite::X),
-			sf::Color::Red, sf::Vector2f(0.f, 0.f) + VIEW.getCenter());
-
-	}
+	
 }
 
 void drft::DisplayTextState::buildText()

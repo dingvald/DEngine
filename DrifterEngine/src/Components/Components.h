@@ -87,7 +87,7 @@ namespace component
 	struct Camera
 	{
 		sf::FloatRect viewport;
-		sf::Vector2f smoothingVector;
+		sf::Vector2f lag;
 		entt::entity target = { entt::null };
 	};
 

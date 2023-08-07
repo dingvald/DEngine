@@ -11,12 +11,12 @@ drft::system::CameraInfo drft::system::getCurrentCamera(entt::registry& registry
 	{
 		result.position = pos.position;
 		result.viewport = camera.viewport;
-		result.smoothingVector = camera.smoothingVector;
+		result.lag = camera.lag;
 	}
 	return result;
 }
 
 sf::Vector2f drft::system::toScreenSpace(sf::Vector2i tilePosition, CameraInfo camera)
 {
-	return (spatial::toWorldSpace(tilePosition - camera.position) - camera.smoothingVector) - sf::Vector2f(camera.viewport.left, camera.viewport.top);
+	return (spatial::toWorldSpace(tilePosition - camera.position) - camera.lag) - sf::Vector2f(camera.viewport.left, camera.viewport.top);
 }

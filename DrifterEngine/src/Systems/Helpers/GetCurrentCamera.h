@@ -5,7 +5,7 @@ namespace drft::system
 	struct CameraInfo
 	{
 		sf::Vector2i position;
-		sf::Vector2f smoothingVector;
+		sf::Vector2f lag;
 		sf::FloatRect viewport;
 	};
 

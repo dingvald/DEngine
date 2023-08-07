@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "MainMenuState.h"
-#include "ProcGen/WorldGenerator.h"
+#include "WorldMap/WorldMap.h"
 
 drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
-	getContext().registry.ctx().emplace<gen::WorldGenerator>().loadBiomeBlueprints("biomes.json");
+	auto& worldMap = context.registry.ctx().emplace<WorldMap>();
+
 	// TODO: Allow the world generator seed to be set from the main menu
 
 	const auto& VIEW = getContext().window.getView();
