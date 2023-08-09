@@ -4,6 +4,7 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "WorldMap/WorldMap.h"
+#include "ProcGen/Biome.h"
 
 static constexpr float FLASH_RATE = 1.0;
 static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";
@@ -141,8 +142,8 @@ void drft::WorldMapState::refreshMapSprites()
 			sf::Vector2f screenPosition = spatial::toWorldSpace(sf::Vector2i(x,y));
 			_map.addSprite(static_cast<unsigned int>(util::Sprite::Square),
 				sf::Color::Black, screenPosition);
-			_map.addSprite(static_cast<unsigned int>(util::Sprite::Dot),
-				sf::Color::Magenta, screenPosition);
+			_map.addSprite(worldMap.getBiomeIcon({x,y}).sprite,
+				worldMap.getBiomeIcon({x,y}).color, screenPosition);
 
 			if (_mapNotes.notes.contains({x,y}))
 			{
@@ -305,6 +306,7 @@ void drft::WorldMapState::openIconSelection()
 			.setChildrenOrigin(gui::ElementPosition::CENTER)
 			.registerCallback(gui::ElementCallbackType::OnSelect, [this, index = i]() -> bool {
 				openColorSelection(IconSprites.at(index));
+				return true;
 				})
 			.insert("Icon", gui::Icon(sprite))
 				.setSize({ 16,16 })

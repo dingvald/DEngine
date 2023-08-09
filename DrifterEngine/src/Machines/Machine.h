@@ -1,7 +1,7 @@
 #pragma once
 namespace drft::gen
 {
-	class Biome;
+	struct Biome;
 }
 namespace drft
 {

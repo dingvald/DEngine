@@ -4,9 +4,10 @@
 void drft::WorldMap::init(sf::Vector2i dimensions, unsigned int seed)
 {
 	_dimensions = dimensions;
+
 	_worldGenerator.setSeed(seed);
-
-
+	_worldGenerator.loadBiomes("biomes.json");
+	_worldGenerator.generateTerrain(dimensions);
 }
 
 sf::Vector2i drft::WorldMap::getDimensions() const
@@ -14,7 +15,12 @@ sf::Vector2i drft::WorldMap::getDimensions() const
 	return _dimensions;
 }
 
-void drft::WorldMap::generate(sf::Vector2i coordinate, entt::registry& registry) const
+drft::gen::BiomeIcon drft::WorldMap::getBiomeIcon(sf::Vector2i coordinate) const
 {
-	_worldGenerator.generate(coordinate, registry);
+	return _worldGenerator.getBiomeIcon(coordinate);
+}
+
+void drft::WorldMap::finalizeBuild(sf::Vector2i coordinate, entt::registry& registry) const
+{
+	_worldGenerator.finalize(coordinate, registry);
 }

@@ -79,7 +79,8 @@ namespace drft::util
 		HeartShrine,
 		HouseIcon,
 		Star,
-		DungeonDoor
+		DungeonDoor,
+		Evergreen
 	};
 
 	class SpriteIndexer

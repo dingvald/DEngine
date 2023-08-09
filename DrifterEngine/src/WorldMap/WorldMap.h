@@ -9,9 +9,11 @@ namespace drft
 	public:
 		void init(sf::Vector2i dimensions, unsigned int seed);
 
-		void generate(sf::Vector2i coordinate, entt::registry& registry) const;
+		void finalizeBuild(sf::Vector2i coordinate, entt::registry& registry) const;
 
 		sf::Vector2i getDimensions() const;
+
+		gen::BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
 		
 
 	private:

@@ -32,7 +32,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	}
 
 	auto& worldMap = reg.ctx().get<WorldMap&>();
-	worldMap.generate(_coordinate, reg);
+	worldMap.finalizeBuild(_coordinate, reg);
 
 	setState(ChunkState::Built);
 

@@ -1,5 +1,169 @@
 {
   "Biomes": {
-    
+    "Forest": {
+      "Icon": {
+        "Sprite": 5,
+        "Color": [ 65, 97, 63 ]
+      },
+      "Climate": {
+        "Temperature": [ "Cool" ],
+        "Humidity": [ "Dry", "Moderate", "Humid" ],
+        "Altitude": [ "Low", "Medium" ]
+      }
+    },
+    "Nordic Foothills": {
+      "Icon": {
+        "Sprite": 76,
+        "Color": [ 0, 74, 54 ]
+      },
+      "Climate": {
+        "Temperature": [ "Cool", "Cold" ],
+        "Humidity": [ "Moderate", "Humid" ],
+        "Altitude": [ "High" ]
+      }
+    },
+    "Mountain": {
+      "Icon": {
+        "Sprite": 27,
+        "Color": [ 120, 120, 120 ]
+      },
+      "Climate": {
+        "Temperature": [ "Warm", "Cool", "Cold" ],
+        "Humidity": [ "Dry", "Moderate", "Humid" ],
+        "Altitude": [ "Very High" ]
+      }
+    },
+    "Snowy Peak": {
+      "Icon": {
+        "Sprite": 27,
+        "Color": [ 255, 255, 255 ]
+      },
+      "Climate": {
+        "Temperature": [ "Cold" ],
+        "Humidity": [ "Dry", "Moderate" ],
+        "Altitude": [ "Very High" ]
+      }
+    },
+    "Volcano": {
+      "Icon": {
+        "Sprite": 27,
+        "Color": [ 247, 52, 43 ]
+      },
+      "Climate": {
+        "Temperature": [ "Hot" ],
+        "Humidity": [ "Dry", "Moderate" ],
+        "Altitude": [ "Very High" ]
+      }
+    },
+    "Lava Front": {
+      "Icon": {
+        "Sprite": 25,
+        "Color": [ 247, 52, 43 ]
+      },
+      "Climate": {
+        "Temperature": [ "Hot" ],
+        "Humidity": [ "Dry", "Moderate" ],
+        "Altitude": [ "High" ]
+      }
+    },
+    "Swamp": {
+      "Icon": {
+        "Sprite": 25,
+        "Color": [ 60, 92, 83 ]
+      },
+      "Climate": {
+        "Temperature": [ "Cool", "Warm" ],
+        "Humidity": [ "Moderate", "Humid" ],
+        "Altitude": [ "Low", "Medium" ]
+      }
+    },
+    "Jungle": {
+      "Icon": {
+        "Sprite": 28,
+        "Color": [ 31, 51, 36 ]
+      },
+      "Climate": {
+        "Temperature": [ "Warm", "Hot" ],
+        "Humidity": [ "Humid" ],
+        "Altitude": [ "Low", "Medium", "High" ]
+      }
+    },
+    "Cloud Forest": {
+      "Icon": {
+        "Sprite": 5,
+        "Color": [ 150, 160, 191 ]
+      },
+      "Climate": {
+        "Temperature": [ "Cool", "Warm" ],
+        "Humidity": [ "Humid", "Very Humid" ],
+        "Altitude": [ "Very High" ]
+      }
+    },
+    "Desert Plateau": {
+      "Icon": {
+        "Sprite": 27,
+        "Color": [ 194, 178, 128 ]
+      },
+      "Climate": {
+        "Temperature": [ "Warm", "Hot" ],
+        "Humidity": [ "Dry" ],
+        "Altitude": [ "High" ]
+      }
+    },
+    "Desert": {
+      "Icon": {
+        "Sprite": 24,
+        "Color": [ 194, 178, 128 ]
+      },
+      "Climate": {
+        "Temperature": [ "Warm", "Hot" ],
+        "Humidity": [ "Dry" ],
+        "Altitude": [ "Low", "Medium" ]
+      }
+    },
+    "Prarie": {
+      "Icon": {
+        "Sprite": 6,
+        "Color": [ 72, 111, 56 ]
+      },
+      "Climate": {
+        "Temperature": [ "Cool", "Warm" ],
+        "Humidity": [ "Moderate", "Humid" ],
+        "Altitude": [ "Low", "Medium" ]
+      }
+    },
+    "Savanna": {
+      "Icon": {
+        "Sprite": 6,
+        "Color": [ 243, 180, 35 ]
+      },
+      "Climate": {
+        "Temperature": [ "Warm", "Hot" ],
+        "Humidity": [ "Dry", "Moderate" ],
+        "Altitude": [ "Low", "Medium" ]
+      }
+    },
+    "Tundra": {
+      "Icon": {
+        "Sprite": 6,
+        "Color": [ 247, 52, 43 ]
+      },
+      "Climate": {
+        "Temperature": [ "Cold" ],
+        "Humidity": [ "Dry" ],
+        "Altitude": [ "Low", "Medium", "High", "Very High" ]
+      }
+    },
+    "Lake": {
+      "Icon": {
+        "Sprite": 25,
+        "Color": [ 27, 149, 224 ]
+      },
+      "Climate": {
+        "Temperature": [ "Cold", "Cool", "Warm", "Hot" ],
+        "Humidity": [ "Very Humid" ],
+        "Altitude": [ "Low", "Medium", "High" ]
+      }
+    }
   }
 }
