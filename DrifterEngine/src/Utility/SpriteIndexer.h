@@ -80,7 +80,9 @@ namespace drft::util
 		HouseIcon,
 		Star,
 		DungeonDoor,
-		Evergreen
+		Evergreen,
+		Cloud,
+		Mesa
 	};
 
 	class SpriteIndexer

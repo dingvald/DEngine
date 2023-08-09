@@ -85,12 +85,12 @@
       "Climate": {
         "Temperature": [ "Warm", "Hot" ],
         "Humidity": [ "Humid" ],
-        "Altitude": [ "Low", "Medium", "High" ]
+        "Altitude": [ "Low", "Medium" ]
       }
     },
     "Cloud Forest": {
       "Icon": {
-        "Sprite": 5,
+        "Sprite": 77,
         "Color": [ 150, 160, 191 ]
       },
       "Climate": {
@@ -99,10 +99,10 @@
         "Altitude": [ "Very High" ]
       }
     },
-    "Desert Plateau": {
+    "Desert Mesa": {
       "Icon": {
-        "Sprite": 27,
-        "Color": [ 194, 178, 128 ]
+        "Sprite": 78,
+        "Color": [ 148, 83, 33 ]
       },
       "Climate": {
         "Temperature": [ "Warm", "Hot" ],
@@ -135,7 +135,7 @@
     "Savanna": {
       "Icon": {
         "Sprite": 6,
-        "Color": [ 243, 180, 35 ]
+        "Color": [ 194, 178, 128 ]
       },
       "Climate": {
         "Temperature": [ "Warm", "Hot" ],

@@ -91,7 +91,7 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 			biomeObj.icon.sprite = biome.value["Icon"]["Sprite"].GetInt();
 			biomeObj.icon.color.r = biome.value["Icon"]["Color"].GetArray()[0].GetInt();
 			biomeObj.icon.color.g = biome.value["Icon"]["Color"].GetArray()[1].GetInt();
-			biomeObj.icon.color.b = biome.value["Icon"]["Color"].GetArray()[1].GetInt();
+			biomeObj.icon.color.b = biome.value["Icon"]["Color"].GetArray()[2].GetInt();
 		}
 		if (biome.value.HasMember("Climate"))
 		{
