@@ -57,9 +57,9 @@ namespace drft::gen
 	{
 		std::string name;
 		BiomeIcon icon;
-		std::set<TemperatureRange> temperatures;
-		std::set<HumidityRange> humidities;
-		std::set<AltitudeRange> altitudes;
+		std::unordered_set<TemperatureRange> temperatures;
+		std::unordered_set<HumidityRange> humidities;
+		std::unordered_set<AltitudeRange> altitudes;
 	};
 }
 
