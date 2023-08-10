@@ -9,6 +9,7 @@ namespace drft
 	public:
 		void init(sf::Vector2i dimensions, unsigned int seed);
 
+		// Takes the abstract proc gen layers created so far and creates a concrete chunk
 		void finalizeBuild(sf::Vector2i coordinate, entt::registry& registry) const;
 
 		sf::Vector2i getDimensions() const;

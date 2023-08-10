@@ -34,15 +34,18 @@ static constexpr double MOISTURE_VERYHUMID = 0.57;
 
 //--------------------------------------------
 
-
+static constexpr int NUM_MAXIMA = 5;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
     
 }
 
-void drft::gen::WorldGenerator::setSeed(unsigned int seed)
+void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 {
+	_dimensions = dimensions;
+	_biomeMap.resize(_dimensions.x, _dimensions.y);
+
     _seed = seed;
 
     const unsigned int temperatureSeed = rng::noise(_seed);
@@ -50,7 +53,7 @@ void drft::gen::WorldGenerator::setSeed(unsigned int seed)
     const unsigned int moistureSeed = rng::noise(altitudeSeed);
 
     _temperatureNoise = std::make_unique<rng::PerlinNoise>(temperatureSeed, 8, 2, 0.5f);
-    _altitudeNoise = std::make_unique<rng::PerlinNoise>(altitudeSeed, 8, 2, 0.6f);
+    _altitudeNoise = std::make_unique<rng::PerlinNoise>(altitudeSeed, 8, 2, 0.5f);
     _moistureNoise = std::make_unique<rng::PerlinNoise>(moistureSeed, 8, 2, 0.5f);
 }
 
@@ -112,36 +115,22 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 	}
 }
 
-void drft::gen::WorldGenerator::generateTerrain(sf::Vector2i dimensions)
+void drft::gen::WorldGenerator::generateTerrain()
 {
-	_biomeMap.resize(dimensions.x, dimensions.y);
-	double minTemp = 100;
-	double maxTemp = 0;
-	double minHum = 100;
-	double maxHum = 0;
-	double minAlt = 100;
-	double maxAlt = 0;
-
-	for (int y = 0; y < dimensions.y; ++y)
+	for (int y = 0; y < _dimensions.y; ++y)
 	{
-		for (int x = 0; x < dimensions.x; ++x)
+		for (int x = 0; x < _dimensions.x; ++x)
 		{
-			const double x_normalized = static_cast<double>(x*spatial::CHUNK_WIDTH) / static_cast<double>(dimensions.x/3*spatial::CHUNK_WIDTH);
-			const double y_normalized = static_cast<double>(y*spatial::CHUNK_HEIGHT) / static_cast<double>(dimensions.y/2*spatial::CHUNK_HEIGHT);
-			auto temperature = _temperatureNoise->gen(x_normalized, y_normalized);
-			auto humidity = _moistureNoise->gen(x_normalized, y_normalized);
-			auto altitude = _altitudeNoise->gen(x_normalized, y_normalized);
-			minTemp = std::min(minTemp, temperature);
-			maxTemp = std::max(maxTemp, temperature);
-			minHum = std::min(minHum, humidity);
-			maxHum = std::max(maxHum, humidity);
-			minAlt = std::min(minAlt, altitude);
-			maxAlt = std::max(maxAlt, altitude);
+			auto tileCoordinate = spatial::toTileSpace(sf::Vector2i(x, y));
+			auto temperature = getTemperature(tileCoordinate);
+			auto humidity = getHumidity(tileCoordinate);
+			auto altitude = getAltitude(tileCoordinate);
 
-			auto potentialBiomes = biomesThatSatisfy(
-				convertTemperatureFromPerlin(temperature),
-				convertHumidityFromPerlin(humidity),
-				convertAltitudeFromPerlin(altitude)
+			auto potentialBiomes = biomesThatSatisfy
+			(
+				getTemperatureFromPerlin(temperature),
+				getHumidityFromPerlin(humidity),
+				getAltitudeFromPerlin(altitude)
 			);
 			if (potentialBiomes.empty())
 			{
@@ -158,7 +147,7 @@ void drft::gen::WorldGenerator::generateTerrain(sf::Vector2i dimensions)
 				for (auto position : surroundings)
 				{
 					if (position.x < 0 || position.y < 0
-						|| position.x >= dimensions.x || position.y >= dimensions.y) continue;
+						|| position.x >= _dimensions.x || position.y >= _dimensions.y) continue;
 					if (potentialBiomes.contains(_biomeMap.at(position.x, position.y)))
 					{
 						_biomeMap.at(x, y) = _biomeMap.at(position.x, position.y);
@@ -176,10 +165,6 @@ void drft::gen::WorldGenerator::generateTerrain(sf::Vector2i dimensions)
 			}
 		}
 	}
-
-	std::cout << "Temperature:\t\tMin: " << minTemp << " Max: " << maxTemp << std::endl;
-	std::cout << "Humidity:\t\tMin: " << minHum << " Max: " << maxHum << std::endl;
-	std::cout << "Altitude:\t\tMin: " << minAlt << " Max: " << maxAlt << std::endl;
 }
 
 void drft::gen::WorldGenerator::finalize(sf::Vector2i coordinate, entt::registry& registry) const
@@ -197,7 +182,32 @@ drft::gen::BiomeIcon drft::gen::WorldGenerator::getBiomeIcon(sf::Vector2i coordi
 	return BiomeIcon{};
 }
 
-drft::gen::TemperatureRange drft::gen::WorldGenerator::convertTemperatureFromPerlin(double perlinTemperature) const
+double drft::gen::WorldGenerator::getAltitude(sf::Vector2i tileCoordinate) const
+{
+	const auto normalized = normalizeCoordinates(tileCoordinate);
+	return _altitudeNoise->gen(normalized.x, normalized.y);
+}
+
+double drft::gen::WorldGenerator::getHumidity(sf::Vector2i tileCoordinate) const
+{
+	const auto normalized = normalizeCoordinates(tileCoordinate);
+	return _moistureNoise->gen(normalized.x, normalized.y);
+}
+
+double drft::gen::WorldGenerator::getTemperature(sf::Vector2i tileCoordinate) const
+{
+	const auto normalized = normalizeCoordinates(tileCoordinate);
+	return _temperatureNoise->gen(normalized.x, normalized.y);
+}
+
+sf::Vector2<double> drft::gen::WorldGenerator::normalizeCoordinates(sf::Vector2i tileCoordinate) const
+{
+	const double x_normalized = static_cast<double>(tileCoordinate.x) / static_cast<double>(_dimensions.x / 3 * spatial::CHUNK_WIDTH);
+	const double y_normalized = static_cast<double>(tileCoordinate.y) / static_cast<double>(_dimensions.y / 2 * spatial::CHUNK_HEIGHT);
+	return sf::Vector2<double>(x_normalized, y_normalized);
+}
+
+drft::gen::TemperatureRange drft::gen::WorldGenerator::getTemperatureFromPerlin(double perlinTemperature) const
 {
 	if (perlinTemperature < TEMPERATURE_COLD) return TemperatureRange::Cold;
 	if (perlinTemperature < TEMPERATURE_MIDPOINT) return TemperatureRange::Cool;
@@ -205,7 +215,7 @@ drft::gen::TemperatureRange drft::gen::WorldGenerator::convertTemperatureFromPer
 	return TemperatureRange::Hot;
 }
 
-drft::gen::HumidityRange drft::gen::WorldGenerator::convertHumidityFromPerlin(double perlinHumidity) const
+drft::gen::HumidityRange drft::gen::WorldGenerator::getHumidityFromPerlin(double perlinHumidity) const
 {
 	if (perlinHumidity < MOISTURE_DRY) return HumidityRange::Dry;
 	if (perlinHumidity < MOISTURE_MIDPOINT) return HumidityRange::Moderate;
@@ -213,7 +223,7 @@ drft::gen::HumidityRange drft::gen::WorldGenerator::convertHumidityFromPerlin(do
 	return HumidityRange::VeryHumid;
 }
 
-drft::gen::AltitudeRange drft::gen::WorldGenerator::convertAltitudeFromPerlin(double perlinAltitude) const
+drft::gen::AltitudeRange drft::gen::WorldGenerator::getAltitudeFromPerlin(double perlinAltitude) const
 {
 	if (perlinAltitude < ALTITUDE_LOW) return AltitudeRange::Low;
 	if (perlinAltitude < ALTITUDE_MIDPOINT) return AltitudeRange::Medium;
