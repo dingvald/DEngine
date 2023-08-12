@@ -3,7 +3,7 @@
 #include "Components/Components.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/Conversions.h"
-#include "ProcGen/WorldGenerator.h"
+#include "ProcGen/WorldGeneration/WorldGenerator.h"
 
 drft::DisplayTextState::DisplayTextState(StateStack& stack, StateContext& context)
 	: State(stack, context)

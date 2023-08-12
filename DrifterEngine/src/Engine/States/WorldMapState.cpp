@@ -64,6 +64,16 @@ bool drft::WorldMapState::handleEvent(const sf::Event& ev)
 			openOnSelectMenu();
 			return false;
 		}
+		if (ev.key.code == sf::Keyboard::Add) {
+			_scalingFactor += sf::Vector2f(0.1f, 0.1f);
+			_scalingFactor.x = std::min(_scalingFactor.x, 2.0f);
+			_scalingFactor.y = std::min(_scalingFactor.y, 2.0f);
+		}
+		if (ev.key.code == sf::Keyboard::Subtract) {
+			_scalingFactor -= sf::Vector2f(0.1f, 0.1f);
+			_scalingFactor.x = std::max(_scalingFactor.x, 0.5f);
+			_scalingFactor.y = std::max(_scalingFactor.y, 0.5f);
+		}
 		break;
 	}
 
@@ -77,19 +87,21 @@ bool drft::WorldMapState::update(const float dt)
 	pulseCurrentPositionTile(dt);
 	pulseCursor(dt);
 	pulseMapNotes(dt);
+	applyScaling();
 
 	return false;
 }
 
 void drft::WorldMapState::render(sf::RenderTarget& target)
 {
+	auto& transform = _map.getTransform();
 	_mapBackground.render(target);
 	target.draw(_map);
-	target.draw(_currentPositionTile);
-	target.draw(_cursor);
+	target.draw(_currentPositionTile, transform);
+	target.draw(_cursor, transform);
 	if (_drawNotes)
 	{
-		target.draw(_mapNotes.noteSprites);
+		target.draw(_mapNotes.noteSprites, transform);
 	}
 	_guiStack.render(target);
 }
@@ -401,6 +413,14 @@ void drft::WorldMapState::pulseMapNotes(float dt)
 		_drawNotes = !_drawNotes;
 		elapsed = 0.0;
 	}
+}
+
+void drft::WorldMapState::applyScaling()
+{
+	auto position = _map.getPosition();
+	_map.setOrigin(_currentPositionTile.getPosition());
+	_map.setPosition(position);
+	_map.setScale(_scalingFactor);
 }
 
 void drft::WorldMapState::saveMapNotes()

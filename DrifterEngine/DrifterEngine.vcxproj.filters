@@ -201,7 +201,7 @@
     <ClCompile Include="src\Random\PerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\WorldGenerator.cpp">
+    <ClCompile Include="src\ProcGen\WorldGeneration\WorldGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Random\RandomNoise.cpp">
@@ -367,6 +367,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Biome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random\NoiseMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1049,7 +1055,7 @@
     <ClInclude Include="src\Random\PerlinNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\WorldGenerator.h">
+    <ClInclude Include="src\ProcGen\WorldGeneration\WorldGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\RandomNoise.h">
@@ -1248,6 +1254,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Biome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random\NoiseMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #pragma once
-#include "ProcGen/WorldGenerator.h"
+#include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include "Utility/stdHashing.h"
 
 namespace drft

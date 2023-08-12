@@ -1,6 +1,6 @@
 #pragma once
 #include "Random/PerlinNoise.h"
-#include "Biome.h"
+#include "ProcGen/Biome.h"
 #include "Spatial/Grid.h"
 
 namespace drft::gen
@@ -17,12 +17,7 @@ namespace drft::gen
 
 		BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
 
-		double getAltitude(sf::Vector2i tileCoordinate) const;
-		double getHumidity(sf::Vector2i tileCoordinate) const;
-		double getTemperature(sf::Vector2i tileCoordinate) const;
-
 	private:
-		sf::Vector2<double> normalizeCoordinates(sf::Vector2i tileCoordinate) const;
 		TemperatureRange getTemperatureFromPerlin(double perlinTemperature) const;
 		HumidityRange getHumidityFromPerlin(double perlinHumidity) const;
 		AltitudeRange getAltitudeFromPerlin(double perlinAltitude) const;
@@ -33,10 +28,6 @@ namespace drft::gen
 		sf::Vector2i _dimensions;
 		std::vector<Biome> _biomeTypes;
 		spatial::Grid<Biome*> _biomeMap;
-		using NoisePtr = std::unique_ptr<rng::PerlinNoise>;
-		NoisePtr _temperatureNoise;
-		NoisePtr _altitudeNoise;
-		NoisePtr _moistureNoise;
 	};
 }
 

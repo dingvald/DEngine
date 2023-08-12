@@ -6,8 +6,10 @@
 #include "Random/RandomNumberGenerator.h"
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
-#include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
-#include "PlacementAlgorithms/Algorithms.h"
+#include "Random/NoiseMap.h"
+#include "ProcGen/PlacementAlgorithms/Algorithms.h"
+#include "ShapingFunctions.h"
+#include "Utility/stdHashing.h"
 
 #include "Machines/Chest.h"
 #include "Machines/HeartShrine.h"
@@ -18,23 +20,24 @@
 //------------------------------------------
 
 // Temperature cutoffs
-static constexpr double TEMPERATURE_COLD = 0.43;
+static constexpr double TEMPERATURE_COLD = 0.25;
 static constexpr double TEMPERATURE_MIDPOINT = 0.50;
-static constexpr double TEMPERATURE_HOT = 0.57;
+static constexpr double TEMPERATURE_HOT = 0.75;
 
 // Altitude cutoffs
-static constexpr double ALTITUDE_LOW = 0.43;
+static constexpr double ALTITUDE_VERYLOW = 0.0;
+static constexpr double ALTITUDE_LOW = 0.25;
 static constexpr double ALTITUDE_MIDPOINT = 0.50;
-static constexpr double ALTITUDE_VERYHIGH = 0.57;
+static constexpr double ALTITUDE_VERYHIGH = 0.75;
 
 // Moisture cutoffs
-static constexpr double MOISTURE_DRY = 0.43;
+static constexpr double MOISTURE_DRY = 0.25;
 static constexpr double MOISTURE_MIDPOINT = 0.50;
-static constexpr double MOISTURE_VERYHUMID = 0.57;
+static constexpr double MOISTURE_VERYHUMID = 0.75;
 
 //--------------------------------------------
 
-static constexpr int NUM_MAXIMA = 5;
+static constexpr int NUM_MAXIMA = 7;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
@@ -47,14 +50,6 @@ void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
 
     _seed = seed;
-
-    const unsigned int temperatureSeed = rng::noise(_seed);
-    const unsigned int altitudeSeed = rng::noise(temperatureSeed);
-    const unsigned int moistureSeed = rng::noise(altitudeSeed);
-
-    _temperatureNoise = std::make_unique<rng::PerlinNoise>(temperatureSeed, 8, 2, 0.5f);
-    _altitudeNoise = std::make_unique<rng::PerlinNoise>(altitudeSeed, 8, 2, 0.5f);
-    _moistureNoise = std::make_unique<rng::PerlinNoise>(moistureSeed, 8, 2, 0.5f);
 }
 
 void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
@@ -117,14 +112,46 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 
 void drft::gen::WorldGenerator::generateTerrain()
 {
+	// Generate starting noise maps
+	auto altitudeMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, _seed);
+	auto temperatureMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, rng::noise(_seed));
+	auto humidityMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, rng::noise(rng::noise(_seed)));
+
+	// Place local maxima
+	std::unordered_set<sf::Vector2i> maximaPositions;
+	for (int maxima = 0; maxima < NUM_MAXIMA; ++maxima)
+	{
+		float randdrop = rng::RandomNumberGenerator::realInRange(0.03, 0.09);
+		sf::Vector2i randpos;
+		bool doOver = false;
+		int safetyCount = 0;
+		do
+		{
+			randpos.x = rng::RandomNumberGenerator::intInRange(0, _dimensions.x - 1);
+			randpos.y = rng::RandomNumberGenerator::intInRange(0, _dimensions.y - 1);
+			auto positionsInRadius = spatial::getIntCircleInRadius(randpos, 7);
+			for (auto pos : positionsInRadius)
+			{
+				if (maximaPositions.contains(pos))
+				{
+					doOver = true;
+					break;
+				}
+			}
+			++safetyCount;
+		} while (doOver && safetyCount < 10);
+
+		maximaPositions.insert(randpos);
+		setDropOffCircle(randpos, 0.75, randdrop, altitudeMap);
+	}
+
 	for (int y = 0; y < _dimensions.y; ++y)
 	{
 		for (int x = 0; x < _dimensions.x; ++x)
 		{
-			auto tileCoordinate = spatial::toTileSpace(sf::Vector2i(x, y));
-			auto temperature = getTemperature(tileCoordinate);
-			auto humidity = getHumidity(tileCoordinate);
-			auto altitude = getAltitude(tileCoordinate);
+			auto temperature = temperatureMap.at(x, y);
+			auto humidity = humidityMap.at(x, y);
+			auto altitude = altitudeMap.at(x, y) - 0.5;
 
 			auto potentialBiomes = biomesThatSatisfy
 			(
@@ -165,6 +192,7 @@ void drft::gen::WorldGenerator::generateTerrain()
 			}
 		}
 	}
+
 }
 
 void drft::gen::WorldGenerator::finalize(sf::Vector2i coordinate, entt::registry& registry) const
@@ -180,31 +208,6 @@ drft::gen::BiomeIcon drft::gen::WorldGenerator::getBiomeIcon(sf::Vector2i coordi
 		return biome->icon;
 	}
 	return BiomeIcon{};
-}
-
-double drft::gen::WorldGenerator::getAltitude(sf::Vector2i tileCoordinate) const
-{
-	const auto normalized = normalizeCoordinates(tileCoordinate);
-	return _altitudeNoise->gen(normalized.x, normalized.y);
-}
-
-double drft::gen::WorldGenerator::getHumidity(sf::Vector2i tileCoordinate) const
-{
-	const auto normalized = normalizeCoordinates(tileCoordinate);
-	return _moistureNoise->gen(normalized.x, normalized.y);
-}
-
-double drft::gen::WorldGenerator::getTemperature(sf::Vector2i tileCoordinate) const
-{
-	const auto normalized = normalizeCoordinates(tileCoordinate);
-	return _temperatureNoise->gen(normalized.x, normalized.y);
-}
-
-sf::Vector2<double> drft::gen::WorldGenerator::normalizeCoordinates(sf::Vector2i tileCoordinate) const
-{
-	const double x_normalized = static_cast<double>(tileCoordinate.x) / static_cast<double>(_dimensions.x / 3 * spatial::CHUNK_WIDTH);
-	const double y_normalized = static_cast<double>(tileCoordinate.y) / static_cast<double>(_dimensions.y / 2 * spatial::CHUNK_HEIGHT);
-	return sf::Vector2<double>(x_normalized, y_normalized);
 }
 
 drft::gen::TemperatureRange drft::gen::WorldGenerator::getTemperatureFromPerlin(double perlinTemperature) const
@@ -225,6 +228,7 @@ drft::gen::HumidityRange drft::gen::WorldGenerator::getHumidityFromPerlin(double
 
 drft::gen::AltitudeRange drft::gen::WorldGenerator::getAltitudeFromPerlin(double perlinAltitude) const
 {
+	if (perlinAltitude < ALTITUDE_VERYLOW) return AltitudeRange::VeryLow;
 	if (perlinAltitude < ALTITUDE_LOW) return AltitudeRange::Low;
 	if (perlinAltitude < ALTITUDE_MIDPOINT) return AltitudeRange::Medium;
 	if (perlinAltitude < ALTITUDE_VERYHIGH) return AltitudeRange::High;

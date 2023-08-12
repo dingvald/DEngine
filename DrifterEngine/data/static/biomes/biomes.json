@@ -8,7 +8,7 @@
       "Climate": {
         "Temperature": [ "Cool", "Warm" ],
         "Humidity": [ "Moderate", "Humid" ],
-        "Altitude": [ "Medium", "High" ]
+        "Altitude": [ "Low", "Medium", "High" ]
       }
     },
     "Nordic Foothills": {
@@ -74,7 +74,7 @@
       "Climate": {
         "Temperature": [ "Cool", "Warm" ],
         "Humidity": [ "Humid", "Very Humid" ],
-        "Altitude": [ "Medium" ]
+        "Altitude": [ "Low", "Medium" ]
       }
     },
     "Jungle": {
@@ -118,7 +118,7 @@
       "Climate": {
         "Temperature": [ "Warm", "Hot" ],
         "Humidity": [ "Dry" ],
-        "Altitude": [ "Medium" ]
+        "Altitude": [ "Low", "Medium" ]
       }
     },
     "Prarie": {
@@ -129,7 +129,7 @@
       "Climate": {
         "Temperature": [ "Cool", "Warm" ],
         "Humidity": [ "Moderate", "Humid" ],
-        "Altitude": [ "Medium" ]
+        "Altitude": [ "Low", "Medium" ]
       }
     },
     "Savanna": {
@@ -140,7 +140,7 @@
       "Climate": {
         "Temperature": [ "Warm" ],
         "Humidity": [ "Dry", "Moderate" ],
-        "Altitude": [ "Medium" ]
+        "Altitude": [ "Low", "Medium" ]
       }
     },
     "Tundra": {
@@ -150,11 +150,11 @@
       },
       "Climate": {
         "Temperature": [ "Cold" ],
-        "Humidity": [ "Dry" ],
-        "Altitude": [ "Medium", "High"]
+        "Humidity": [ "Dry", "Moderate" ],
+        "Altitude": [ "Low", "Medium", "High"]
       }
     },
-    "Lake": {
+    "Water": {
       "Icon": {
         "Sprite": 25,
         "Color": [ 27, 149, 224 ]
@@ -162,7 +162,7 @@
       "Climate": {
         "Temperature": [ "Cold", "Cool", "Warm", "Hot" ],
         "Humidity": [ "Dry", "Moderate", "Humid", "Very Humid" ],
-        "Altitude": [ "Low" ]
+        "Altitude": [ "Very Low" ]
       }
     }
   }

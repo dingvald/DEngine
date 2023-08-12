@@ -6,7 +6,6 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/WorldGrid.h"
 #include "Systems/Helpers/AddToContainer.h"
-#include "ProcGen/WorldGenerator.h"
 #include "Random/RandomNumberGenerator.h"
 
 

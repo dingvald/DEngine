@@ -34,6 +34,7 @@ namespace drft::gen
 
 	enum class AltitudeRange
 	{
+		VeryLow,
 		Low,
 		Medium,
 		High,
@@ -41,6 +42,7 @@ namespace drft::gen
 	};
 	const std::unordered_map<std::string, AltitudeRange> AltitudeString2Enum =
 	{
+		{"Very Low", AltitudeRange::VeryLow},
 		{"Low", AltitudeRange::Low},
 		{"Medium", AltitudeRange::Medium},
 		{"High", AltitudeRange::High},

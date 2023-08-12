@@ -80,6 +80,7 @@ namespace drft
 		void pulseCurrentPositionTile(float dt);
 		void pulseCursor(float dt);
 		void pulseMapNotes(float dt);
+		void applyScaling();
 
 		void saveMapNotes();
 		void loadMapNotes();
@@ -94,6 +95,7 @@ namespace drft
 		sf::RectangleShape _cursor;
 		SpriteBatch _map;
 		MapNotes _mapNotes;
+		sf::Vector2f _scalingFactor = { 1.f,1.f };
 		bool _drawNotes = true;
 	};
 }

@@ -4,7 +4,7 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Components/Components.h"
-#include "ProcGen/WorldGenerator.h"
+#include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include "Services/DebugInfo.h"
 #include "Random/RandomNumberGenerator.h"
 

@@ -37,27 +37,9 @@ namespace drft::spatial
 	}
 
 	template<typename T>
-	inline bool Grid<T>::contains(int x, int y, T val)
+	inline bool Grid<T>::contains(int x, int y)
 	{
-		return (_cells.at(y * _width + x) == val);
-	}
-
-	template<typename T>
-	inline bool Grid<T>::contains(sf::IntRect rect, T val)
-	{
-		int miny = std::min(0, rect.top);
-		int minx = std::min(0, rect.left);
-		int maxy = std::max(_height, rect.top + rect.height);
-		int maxx = std::max(_width, rect.left + rect.width);
-		for (int y = miny; y < maxy; ++y)
-		{
-			for (int x = minx; x < maxx; ++x)
-			{
-				if (_cells.at(y * _width + x) == val)
-					return true;
-			}
-		}
-		return false;
+		return !(x < 0 || y < 0 || x >= _width || y >= _height);
 	}
 
 	template<typename T>

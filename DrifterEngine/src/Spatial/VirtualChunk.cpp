@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "VirtualChunk.h"
-#include "ProcGen/WorldGenerator.h"
+#include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include "Utility/CopyEntity.h"
 #include "Utility/SaveRegistry.h"
 #include "Utility/LoadRegistry.h"
