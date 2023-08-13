@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ShapingFunctions.h"
 #include "Spatial/Helpers.h"
+#include "Utility/Math.h"
 
 void drft::gen::setCircle(sf::Vector2i origin, int radius, double val, float dropoff, spatial::Grid<double>& map)
 {
@@ -31,6 +32,17 @@ void drft::gen::setRect(sf::Vector2i origin, sf::Vector2i dimensions, double val
 		double avg_drop = (x_drop + y_drop) / 2.0;
 
 		map.at(position.x, position.y) += val - avg_drop;
+	}
+}
+
+void drft::gen::remap(double iMin, double iMax, double oMin, double oMax, spatial::Grid<double>& map)
+{
+	for (int y = 0; y < map.height(); ++y)
+	{
+		for (int x = 0; x < map.width(); ++x)
+		{
+			map.at(x, y) = math::remap(iMin, iMax, oMin, oMax, map.at(x, y));
+		}
 	}
 }
 

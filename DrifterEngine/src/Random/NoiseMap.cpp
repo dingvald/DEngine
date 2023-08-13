@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "NoiseMap.h"
 #include "PerlinNoise.h"
-#include "Utility/SmoothTransition.h"
+#include "Utility/Math.h"
+
 
 drft::spatial::Grid<double> drft::rng::NoiseMap::generate(sf::Vector2i dimensions, sf::Vector2i repetitions, int seed, int octaves, float lacunarity, float gain)
 {
@@ -28,7 +29,7 @@ drft::spatial::Grid<double> drft::rng::NoiseMap::generate(sf::Vector2i dimension
     {
         for (int x = 0; x < result.width(); ++x)
         {
-            result.at(x, y) = (result.at(x, y) - min) / (max - min);
+            result.at(x, y) = math::inverseLerp(min, max, result.at(x, y));
         }
     }
 

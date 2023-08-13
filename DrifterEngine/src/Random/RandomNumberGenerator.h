@@ -9,6 +9,7 @@ namespace drft::rng
 	public:
 		static void setSeed(unsigned int seed);
 		static unsigned int getSeed();
+		static std::mt19937& getGenerator();
 		static double realInRange(double min, double max);
 		static int intInRange(int min, int max);
 		static sf::Vector2i positionInCircle(sf::Vector2i origin, int radius);

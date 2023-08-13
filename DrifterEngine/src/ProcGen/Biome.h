@@ -2,51 +2,39 @@
 
 namespace drft::gen
 {
-	enum class TemperatureRange
+	struct Range
 	{
-		Cold,
-		Cool,
-		Warm,
-		Hot
-	};
-	const std::unordered_map<std::string, TemperatureRange> TemperatureString2Enum =
-	{
-		{"Cold", TemperatureRange::Cold},
-		{"Cool", TemperatureRange::Cool},
-		{"Warm", TemperatureRange::Warm},
-		{"Hot", TemperatureRange::Hot},
-	};
-
-	enum class HumidityRange
-	{
-		Dry,
-		Moderate,
-		Humid,
-		VeryHumid
-	};
-	const std::unordered_map<std::string, HumidityRange> HumidityString2Enum =
-	{
-		{"Dry", HumidityRange::Dry},
-		{"Moderate", HumidityRange::Moderate},
-		{"Humid", HumidityRange::Humid},
-		{"Very Humid", HumidityRange::VeryHumid}
-	};
-
-	enum class AltitudeRange
-	{
-		VeryLow,
-		Low,
-		Medium,
-		High,
-		VeryHigh
-	};
-	const std::unordered_map<std::string, AltitudeRange> AltitudeString2Enum =
-	{
-		{"Very Low", AltitudeRange::VeryLow},
-		{"Low", AltitudeRange::Low},
-		{"Medium", AltitudeRange::Medium},
-		{"High", AltitudeRange::High},
-		{"Very High", AltitudeRange::VeryHigh}
+	public:
+		Range(float min = 0.0, float max = 1.0)
+			: _min(min)
+			, _max(max)
+		{}
+		void setMax(float max) { _max = max; }
+		void setMin(float min) { _min = min; }
+		float getMax() const { return _max; }
+		float getMin() const { return _min; }
+		bool isWithinRange(float val) const
+		{
+			if (val < _max && val > _min)
+				return true;
+			else
+				return false;
+		}
+		float distance(float val) const
+		{
+			if (isWithinRange(val)) return 0.0f;
+			if (val < _min)
+			{
+				return std::abs(val - _min);
+			}
+			else
+			{
+				return std::abs(val - _max);
+			}
+		}
+	protected:
+		float _max = 1.0f;
+		float _min = 0.0f;
 	};
 
 	struct BiomeIcon
@@ -59,9 +47,9 @@ namespace drft::gen
 	{
 		std::string name;
 		BiomeIcon icon;
-		std::unordered_set<TemperatureRange> temperatures;
-		std::unordered_set<HumidityRange> humidities;
-		std::unordered_set<AltitudeRange> altitudes;
+		Range temperature;
+		Range humidity;
+		Range altitude;
 	};
 }
 

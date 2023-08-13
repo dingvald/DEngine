@@ -375,6 +375,9 @@
     <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility\Math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1260,6 +1263,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

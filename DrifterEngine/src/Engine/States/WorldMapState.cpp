@@ -179,6 +179,7 @@ void drft::WorldMapState::addMapNote(sf::Vector2i position, util::Sprite sprite,
 void drft::WorldMapState::moveCursor(sf::Vector2i direction)
 {
 	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
+	const auto& VIEW = getContext().window.getView();
 	sf::Vector2i intended = _cursorPosition + direction;
 	if (intended.x < 0 || intended.y < 0 || intended.x >= worldMap.getDimensions().x || intended.y >= worldMap.getDimensions().y)
 	{

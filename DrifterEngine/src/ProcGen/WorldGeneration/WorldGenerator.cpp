@@ -10,6 +10,7 @@
 #include "ProcGen/PlacementAlgorithms/Algorithms.h"
 #include "ShapingFunctions.h"
 #include "Utility/stdHashing.h"
+#include "Utility/Math.h"
 
 #include "Machines/Chest.h"
 #include "Machines/HeartShrine.h"
@@ -50,6 +51,11 @@ void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
 
     _seed = seed;
+
+	_altitudeMap.resize(_dimensions.x, _dimensions.y);
+	_temperatureMap.resize(_dimensions.x, _dimensions.y);
+	_humidityMap.resize(_dimensions.x, _dimensions.y);
+	
 }
 
 void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
@@ -93,17 +99,70 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 		}
 		if (biome.value.HasMember("Climate"))
 		{
-			for (auto& temperatureType : biome.value["Climate"]["Temperature"].GetArray())
+			// Temperature
+			auto tempArray = biome.value["Climate"]["Temperature"].GetArray();
+			if (tempArray[0].IsString())
 			{
-				biomeObj.temperatures.insert(TemperatureString2Enum.at(temperatureType.GetString()));
+				if (std::string(tempArray[0].GetString()).compare("Any") == 0)
+				{
+					biomeObj.temperature.setMax(FLT_MAX);
+					biomeObj.temperature.setMin(-FLT_MAX);
+				}
+				else
+				{
+					throw std::invalid_argument("Unexpected parsed value.");
+				}
 			}
-			for (auto& humidityType : biome.value["Climate"]["Humidity"].GetArray())
+			else
 			{
-				biomeObj.humidities.insert(HumidityString2Enum.at(humidityType.GetString()));
+				biomeObj.temperature.setMin(tempArray[0].GetFloat());
+				biomeObj.temperature.setMax(tempArray[1].GetFloat());
+				_temperatureExtremes.setMin(std::min(tempArray[0].GetFloat(), _temperatureExtremes.getMin()));
+				_temperatureExtremes.setMax(std::max(tempArray[1].GetFloat(), _temperatureExtremes.getMax()));
 			}
-			for (auto& altitudeType : biome.value["Climate"]["Altitude"].GetArray())
+			
+			// Humidity
+			auto humArray = biome.value["Climate"]["Humidity"].GetArray();
+			if (humArray[0].IsString())
 			{
-				biomeObj.altitudes.insert(AltitudeString2Enum.at(altitudeType.GetString()));
+				if (std::string(humArray[0].GetString()).compare("Any") == 0)
+				{
+					biomeObj.humidity.setMax(FLT_MAX);
+					biomeObj.humidity.setMin(-FLT_MAX);
+				}
+				else
+				{
+					throw std::invalid_argument("Unexpected parsed value.");
+				}
+			}
+			else
+			{
+				biomeObj.humidity.setMin(humArray[0].GetFloat());
+				biomeObj.humidity.setMax(humArray[1].GetFloat());
+				_humidityExtremes.setMin(std::min(humArray[0].GetFloat(), _humidityExtremes.getMin()));
+				_humidityExtremes.setMax(std::max(humArray[1].GetFloat(), _humidityExtremes.getMax()));
+			}
+
+			// Altitude
+			auto altArray = biome.value["Climate"]["Altitude"].GetArray();
+			if (altArray[0].IsString())
+			{
+				if (std::string(altArray[0].GetString()).compare("Any") == 0)
+				{
+					biomeObj.altitude.setMax(FLT_MAX);
+					biomeObj.altitude.setMin(-FLT_MAX);
+				}
+				else
+				{
+					throw std::invalid_argument("Unexpected parsed value.");
+				}
+			}
+			else
+			{
+				biomeObj.altitude.setMin(altArray[0].GetFloat());
+				biomeObj.altitude.setMax(altArray[1].GetFloat());
+				_altitudeExtremes.setMin(std::min(altArray[0].GetFloat(), _altitudeExtremes.getMin()));
+				_altitudeExtremes.setMax(std::max(altArray[1].GetFloat(), _altitudeExtremes.getMax()));
 			}
 		}
 		_biomeTypes.push_back(biomeObj);
@@ -113,83 +172,18 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 void drft::gen::WorldGenerator::generateTerrain()
 {
 	// Generate starting noise maps
-	auto altitudeMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, _seed);
-	auto temperatureMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, rng::noise(_seed));
-	auto humidityMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, rng::noise(rng::noise(_seed)));
+	_altitudeMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, _seed, 16, 2.0f, 0.55);
+	_temperatureMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, rng::noise(_seed));
+	_humidityMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, rng::noise(rng::noise(_seed)));
 
-	// Place local maxima
-	std::unordered_set<sf::Vector2i> maximaPositions;
-	for (int maxima = 0; maxima < NUM_MAXIMA; ++maxima)
-	{
-		float randdrop = rng::RandomNumberGenerator::realInRange(0.03, 0.09);
-		sf::Vector2i randpos;
-		bool doOver = false;
-		int safetyCount = 0;
-		do
-		{
-			randpos.x = rng::RandomNumberGenerator::intInRange(0, _dimensions.x - 1);
-			randpos.y = rng::RandomNumberGenerator::intInRange(0, _dimensions.y - 1);
-			auto positionsInRadius = spatial::getIntCircleInRadius(randpos, 7);
-			for (auto pos : positionsInRadius)
-			{
-				if (maximaPositions.contains(pos))
-				{
-					doOver = true;
-					break;
-				}
-			}
-			++safetyCount;
-		} while (doOver && safetyCount < 10);
-
-		maximaPositions.insert(randpos);
-		setDropOffCircle(randpos, 0.75, randdrop, altitudeMap);
-	}
+	// Remap altitude map to have negative values for ocean
+	remap(0.0, 1.0, -1.0, 1.0, _altitudeMap);
 
 	for (int y = 0; y < _dimensions.y; ++y)
 	{
 		for (int x = 0; x < _dimensions.x; ++x)
 		{
-			auto temperature = temperatureMap.at(x, y);
-			auto humidity = humidityMap.at(x, y);
-			auto altitude = altitudeMap.at(x, y) - 0.5;
-
-			auto potentialBiomes = biomesThatSatisfy
-			(
-				getTemperatureFromPerlin(temperature),
-				getHumidityFromPerlin(humidity),
-				getAltitudeFromPerlin(altitude)
-			);
-			if (potentialBiomes.empty())
-			{
-
-			}
-			else if (potentialBiomes.size() == 1)
-			{
-				_biomeMap.at(x, y) = *potentialBiomes.begin();
-			}
-			else if (potentialBiomes.size() > 1)
-			{
-				// if there are multiple potential biomes, place one that is already near by
-				auto surroundings = spatial::getIntRectAroundOrigin({ x,y }, 1, 1);
-				for (auto position : surroundings)
-				{
-					if (position.x < 0 || position.y < 0
-						|| position.x >= _dimensions.x || position.y >= _dimensions.y) continue;
-					if (potentialBiomes.contains(_biomeMap.at(position.x, position.y)))
-					{
-						_biomeMap.at(x, y) = _biomeMap.at(position.x, position.y);
-						break;
-					}
-				}
-				// if no matches, choose at random
-				if (!_biomeMap.at(x, y))
-				{
-					int choice = rng::RandomNumberGenerator::intInRange(0, potentialBiomes.size()-1);
-					auto itr = potentialBiomes.begin();
-					std::advance(itr, choice);
-					_biomeMap.at(x, y) = *itr;
-				}
-			}
+			_biomeMap.at(x, y) = selectBiome({ x, y });
 		}
 	}
 
@@ -210,41 +204,111 @@ drft::gen::BiomeIcon drft::gen::WorldGenerator::getBiomeIcon(sf::Vector2i coordi
 	return BiomeIcon{};
 }
 
-drft::gen::TemperatureRange drft::gen::WorldGenerator::getTemperatureFromPerlin(double perlinTemperature) const
+float drft::gen::WorldGenerator::getTemperatureFromPerlin(double perlinTemperature) const
 {
-	if (perlinTemperature < TEMPERATURE_COLD) return TemperatureRange::Cold;
-	if (perlinTemperature < TEMPERATURE_MIDPOINT) return TemperatureRange::Cool;
-	if (perlinTemperature < TEMPERATURE_HOT) return TemperatureRange::Warm;
-	return TemperatureRange::Hot;
+	return math::remap(0.0, 1.0, _temperatureExtremes.getMin(), _temperatureExtremes.getMax(), perlinTemperature);
 }
 
-drft::gen::HumidityRange drft::gen::WorldGenerator::getHumidityFromPerlin(double perlinHumidity) const
+float drft::gen::WorldGenerator::getHumidityFromPerlin(double perlinHumidity) const
 {
-	if (perlinHumidity < MOISTURE_DRY) return HumidityRange::Dry;
-	if (perlinHumidity < MOISTURE_MIDPOINT) return HumidityRange::Moderate;
-	if (perlinHumidity < MOISTURE_VERYHUMID) return HumidityRange::Humid;
-	return HumidityRange::VeryHumid;
+	return math::remap(0.0, 1.0, _humidityExtremes.getMin(), _humidityExtremes.getMax(), perlinHumidity);
 }
 
-drft::gen::AltitudeRange drft::gen::WorldGenerator::getAltitudeFromPerlin(double perlinAltitude) const
+float drft::gen::WorldGenerator::getAltitudeFromPerlin(double perlinAltitude) const
 {
-	if (perlinAltitude < ALTITUDE_VERYLOW) return AltitudeRange::VeryLow;
-	if (perlinAltitude < ALTITUDE_LOW) return AltitudeRange::Low;
-	if (perlinAltitude < ALTITUDE_MIDPOINT) return AltitudeRange::Medium;
-	if (perlinAltitude < ALTITUDE_VERYHIGH) return AltitudeRange::High;
-	return AltitudeRange::VeryHigh;
+	return math::remap(-1.0, 1.0, _altitudeExtremes.getMin(), _altitudeExtremes.getMax(), perlinAltitude);
 }
 
-std::unordered_set<drft::gen::Biome*> drft::gen::WorldGenerator::biomesThatSatisfy(TemperatureRange temperature, HumidityRange humidity, AltitudeRange altitude)
+std::unordered_set<const drft::gen::Biome*> drft::gen::WorldGenerator::biomesThatSatisfy(float temperature, float humidity, float altitude) const
 {
-	std::unordered_set<Biome*> result;
+	constexpr float ACCEPTANCE_DISTANCE = 0.2; // 10 percent "closeness"
+	std::unordered_set<const Biome*> result;
+	std::vector<std::pair<const Biome*, float>> distanceMap;
 	for (auto& biome : _biomeTypes)
 	{
-		if (biome.temperatures.contains(temperature) && biome.humidities.contains(humidity) && biome.altitudes.contains(altitude))
+		float tempDist = biome.temperature.distance(temperature);
+		tempDist = math::remap(_temperatureExtremes.getMin(), _temperatureExtremes.getMax(), 0.0, 1.0, tempDist);
+		float humDist = biome.humidity.distance(humidity);
+		humDist = math::remap(_humidityExtremes.getMin(), _humidityExtremes.getMax(), 0.0, 1.0, humDist);
+		float altDist = biome.altitude.distance(altitude);
+		altDist = math::remap(_altitudeExtremes.getMin(), _altitudeExtremes.getMax(), 0.0, 1.0, altDist);
+
+		distanceMap.push_back(std::make_pair(&biome,  (tempDist + humDist + altDist) / 3.0f));
+	}
+
+	std::sort(distanceMap.begin(), distanceMap.end(), [](const std::pair<const Biome*, float>& a, const std::pair<const Biome*, float>& b)
 		{
-			result.insert(&biome);
+			return a.second < b.second;
+		});
+
+	for (const auto& [biome, distance] : distanceMap)
+	{
+		if (distance < ACCEPTANCE_DISTANCE)
+		{
+			result.insert(biome);
+		}
+	}
+	
+	return result;
+}
+
+const drft::gen::Biome* drft::gen::WorldGenerator::selectBiome(sf::Vector2i coordinate) const
+{
+	auto temperature = _temperatureMap.at(coordinate.x, coordinate.y);
+	auto humidity = _humidityMap.at(coordinate.x, coordinate.y);
+	auto altitude = _altitudeMap.at(coordinate.x, coordinate.y);
+
+	auto potentialBiomes = biomesThatSatisfy
+	(
+		getTemperatureFromPerlin(temperature),
+		getHumidityFromPerlin(humidity),
+		getAltitudeFromPerlin(altitude)
+	);
+
+	if (potentialBiomes.empty())
+	{
+		return nullptr;
+	}
+	else if (potentialBiomes.size() == 1)
+	{
+		return *potentialBiomes.begin();
+	}
+	else if (potentialBiomes.size() > 1)
+	{
+		/*
+		// if there are multiple potential biomes, high chance to continue placing the same type that is nearby
+		*/
+		constexpr int CHANCE_MAX = 5;
+		constexpr int THRESHOLD = 1;
+		int choice = rng::RandomNumberGenerator::intInRange(0, CHANCE_MAX);
+
+		if (choice > THRESHOLD)
+		{
+			// Place same biome type
+			auto surroundings = spatial::getIntRectAroundOrigin({ coordinate.x, coordinate.y }, 3, 3);
+			// Shuffle to prevent bias towards top-left
+			std::shuffle(surroundings.begin(), surroundings.end(), rng::RandomNumberGenerator::getGenerator());
+			for (auto position : surroundings)
+			{
+				if (position.x < 0 || position.y < 0
+					|| position.x >= _dimensions.x || position.y >= _dimensions.y) continue;
+				if (potentialBiomes.contains(_biomeMap.at(position.x, position.y)))
+				{
+					return _biomeMap.at(position.x, position.y);
+					break;
+				}
+			}
+		}
+
+		// if no matches, choose at random
+		if (!_biomeMap.at(coordinate.x, coordinate.y))
+		{
+			int choice = rng::RandomNumberGenerator::intInRange(0, potentialBiomes.size() - 1);
+			auto itr = potentialBiomes.begin();
+			std::advance(itr, choice);
+			return *itr;
 		}
 	}
 
-	return result;
+	return nullptr;
 }

@@ -236,6 +236,7 @@
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
     <ClCompile Include="src\Utility\GetTextCenter.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
+    <ClCompile Include="src\Utility\Math.cpp" />
     <ClCompile Include="src\Utility\Statistics.cpp" />
     <ClCompile Include="src\Utility\SaveEntity.cpp" />
     <ClCompile Include="src\Utility\LoadRegistry.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
     <ClInclude Include="src\Utility\GetTextCenter.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />
+    <ClInclude Include="src\Utility\Math.h" />
     <ClInclude Include="src\Utility\Statistics.h" />
     <ClInclude Include="src\Utility\SaveEntity.h" />
     <ClInclude Include="src\Utility\LoadRegistry.h" />
