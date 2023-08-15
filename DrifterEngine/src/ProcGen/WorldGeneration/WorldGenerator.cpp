@@ -20,25 +20,6 @@
 // Perlin noise cutoffs:
 //------------------------------------------
 
-// Temperature cutoffs
-static constexpr double TEMPERATURE_COLD = 0.25;
-static constexpr double TEMPERATURE_MIDPOINT = 0.50;
-static constexpr double TEMPERATURE_HOT = 0.75;
-
-// Altitude cutoffs
-static constexpr double ALTITUDE_VERYLOW = 0.0;
-static constexpr double ALTITUDE_LOW = 0.25;
-static constexpr double ALTITUDE_MIDPOINT = 0.50;
-static constexpr double ALTITUDE_VERYHIGH = 0.75;
-
-// Moisture cutoffs
-static constexpr double MOISTURE_DRY = 0.25;
-static constexpr double MOISTURE_MIDPOINT = 0.50;
-static constexpr double MOISTURE_VERYHUMID = 0.75;
-
-//--------------------------------------------
-
-static constexpr int NUM_MAXIMA = 7;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
@@ -172,12 +153,14 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 void drft::gen::WorldGenerator::generateTerrain()
 {
 	// Generate starting noise maps
-	_altitudeMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, _seed, 16, 2.0f, 0.55);
+	_altitudeMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, _seed, 16, 1.7f, 0.55);
 	_temperatureMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, rng::noise(_seed));
 	_humidityMap = rng::NoiseMap::generate(_dimensions, { 3,2 }, rng::noise(rng::noise(_seed)));
 
 	// Remap altitude map to have negative values for ocean
 	remap(0.0, 1.0, -1.0, 1.0, _altitudeMap);
+	// Set north pole
+	setDropOffRect(sf::IntRect(0,0,_dimensions.x, _dimensions.y/2), -0.5, -0.01, _temperatureMap);
 
 	for (int y = 0; y < _dimensions.y; ++y)
 	{
@@ -186,7 +169,6 @@ void drft::gen::WorldGenerator::generateTerrain()
 			_biomeMap.at(x, y) = selectBiome({ x, y });
 		}
 	}
-
 }
 
 void drft::gen::WorldGenerator::finalize(sf::Vector2i coordinate, entt::registry& registry) const

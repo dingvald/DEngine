@@ -20,18 +20,16 @@ void drft::gen::setDropOffCircle(sf::Vector2i origin, double val, float dropoff,
 	setCircle(origin, radius, val, dropoff, map);
 }
 
-void drft::gen::setRect(sf::Vector2i origin, sf::Vector2i dimensions, double val, sf::Vector2f dropoff, spatial::Grid<double>& map)
+void drft::gen::setDropOffRect(sf::IntRect area, double val, float dropoff, spatial::Grid<double>& map)
 {
-	auto positions = spatial::getIntRectAroundOrigin(origin, dimensions.x, dimensions.y);
-	for (auto position : positions)
+	for (int y = area.top; y < area.height + area.top; ++y)
 	{
-		if (!map.contains(position.x, position.y)) continue;
-
-		double x_drop = spatial::distance(origin, { position.x, origin.y }) * dropoff.x;
-		double y_drop = spatial::distance(origin, { origin.x, position.y }) * dropoff.y;
-		double avg_drop = (x_drop + y_drop) / 2.0;
-
-		map.at(position.x, position.y) += val - avg_drop;
+		for (int x = area.left; x < area.width + area.left; ++x)
+		{
+			float distance = spatial::distance(sf::Vector2f(x, y), sf::Vector2f(x, 0));
+			double calcedVal = val - dropoff * distance;
+			map.at(x, y) = std::clamp(map.at(x, y) + calcedVal, 0.0, 1.0);
+		}
 	}
 }
 

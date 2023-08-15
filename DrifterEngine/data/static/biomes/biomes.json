@@ -6,9 +6,9 @@
         "Color": [ 65, 97, 63 ]
       },
       "Climate": {
-        "Temperature": [ 10.0, 20.0 ],
-        "Humidity": [ 30.0, 60.0 ],
-        "Altitude": [ 10, 1000 ]
+        "Temperature": [ 10.0, 30.0 ],
+        "Humidity": [ 30.0, 70.0 ],
+        "Altitude": [ 50, 1500 ]
       }
     },
     "Nordic Foothills": {
@@ -19,7 +19,7 @@
       "Climate": {
         "Temperature": [ -10.0, 10.0 ],
         "Humidity": [ 20.0, 50.0 ],
-        "Altitude": [ 1000, 3000 ]
+        "Altitude": [ 1000, 2000 ]
       }
     },
     "Mountain": {
@@ -30,7 +30,7 @@
       "Climate": {
         "Temperature": [ 0.0, 15.0 ],
         "Humidity": [ 20.0, 80.0 ],
-        "Altitude": [ 1500, 2500 ]
+        "Altitude": [ 2000, 2500 ]
       }
     },
     "Snowy Peak": {
@@ -50,7 +50,7 @@
         "Color": [ 247, 52, 43 ]
       },
       "Climate": {
-        "Temperature": [ 40.0, 50.0 ],
+        "Temperature": [ 35.0, 50.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 2000, 3000 ]
       }
@@ -63,7 +63,7 @@
       "Climate": {
         "Temperature": [ 35.0, 50.0 ],
         "Humidity": [ 60.0, 100.0 ],
-        "Altitude": [ 1500, 2000 ]
+        "Altitude": [ 2000, 2500 ]
       }
     },
     "Swamp": {
@@ -85,7 +85,7 @@
       "Climate": {
         "Temperature": [ 25.0, 35.0 ],
         "Humidity": [ 60.0, 100.0 ],
-        "Altitude": [ 100, 1000 ]
+        "Altitude": [ 100, 1500 ]
       }
     },
     "Cloud Forest": {
@@ -96,7 +96,7 @@
       "Climate": {
         "Temperature": [ 10.0, 25.0 ],
         "Humidity": [ 60.0, 100.0 ],
-        "Altitude": [ 2000, 3000 ]
+        "Altitude": [ 2500, 3000 ]
       }
     },
     "Desert Mesa": {
@@ -106,7 +106,7 @@
       },
       "Climate": {
         "Temperature": [ 35.0, 50.0 ],
-        "Humidity": [ 0.0, 30.0],
+        "Humidity": [ 0.0, 30.0 ],
         "Altitude": [ 1000, 2000 ]
       }
     },
@@ -116,9 +116,9 @@
         "Color": [ 194, 178, 128 ]
       },
       "Climate": {
-        "Temperature": [ 35.0, 50.0 ],
-        "Humidity": [ 0.0, 30.0 ],
-        "Altitude": [ 10, 500 ]
+        "Temperature": [ 30.0, 50.0 ],
+        "Humidity": [ 0.0, 40.0 ],
+        "Altitude": [ 50, 1000 ]
       }
     },
     "Prarie": {
@@ -128,8 +128,8 @@
       },
       "Climate": {
         "Temperature": [ 10.0, 25.0 ],
-        "Humidity": [ 30.0, 60.0 ],
-        "Altitude": [ 10, 1000 ]
+        "Humidity": [ 30.0, 70.0 ],
+        "Altitude": [ 50, 1500 ]
       }
     },
     "Savanna": {
@@ -138,9 +138,9 @@
         "Color": [ 194, 178, 128 ]
       },
       "Climate": {
-        "Temperature": [ 15.0, 30.0],
-        "Humidity": [ 0.0, 60.0],
-        "Altitude": [ 10, 750 ]
+        "Temperature": [ 15.0, 30.0 ],
+        "Humidity": [ 0.0, 60.0 ],
+        "Altitude": [ 50, 1500 ]
       }
     },
     "Tundra": {
@@ -151,7 +151,18 @@
       "Climate": {
         "Temperature": [ -30.0, 0.0 ],
         "Humidity": [ 0.0, 30.0 ],
-        "Altitude": [ 10, 1000]
+        "Altitude": [ 50, 1000 ]
+      }
+    },
+    "Beach": {
+      "Icon": {
+        "Sprite": 25,
+        "Color": [ 194, 178, 128 ]
+      },
+      "Climate": {
+        "Temperature": [ "Any" ],
+        "Humidity": [ "Any" ],
+        "Altitude": [ 40, 50 ]
       }
     },
     "Water": {
@@ -162,7 +173,7 @@
       "Climate": {
         "Temperature": [ "Any" ],
         "Humidity": [ "Any" ],
-        "Altitude": [ -1000, 0 ]
+        "Altitude": [ -1700, 0 ]
       }
     }
   }
