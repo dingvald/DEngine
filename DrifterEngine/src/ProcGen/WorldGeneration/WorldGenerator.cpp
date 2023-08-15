@@ -221,31 +221,50 @@ float drft::gen::WorldGenerator::getAltitudeFromPerlin(double perlinAltitude) co
 
 std::unordered_set<const drft::gen::Biome*> drft::gen::WorldGenerator::biomesThatSatisfy(float temperature, float humidity, float altitude) const
 {
-	constexpr float ACCEPTANCE_DISTANCE = 0.2; // 10 percent "closeness"
+	constexpr float ACCEPTANCE_DISTANCE = 0.05; // 1 percent "closeness" to best match
 	std::unordered_set<const Biome*> result;
 	std::vector<std::pair<const Biome*, float>> distanceMap;
 	for (auto& biome : _biomeTypes)
 	{
 		float tempDist = biome.temperature.distance(temperature);
-		tempDist = math::remap(_temperatureExtremes.getMin(), _temperatureExtremes.getMax(), 0.0, 1.0, tempDist);
+		tempDist = math::remap(0.0, _temperatureExtremes.getMax() - _temperatureExtremes.getMin() - temperature, 0.0, 1.0, tempDist);
 		float humDist = biome.humidity.distance(humidity);
-		humDist = math::remap(_humidityExtremes.getMin(), _humidityExtremes.getMax(), 0.0, 1.0, humDist);
+		humDist = math::remap(0.0, _humidityExtremes.getMax() - _humidityExtremes.getMin() - humidity, 0.0, 1.0, humDist);
 		float altDist = biome.altitude.distance(altitude);
-		altDist = math::remap(_altitudeExtremes.getMin(), _altitudeExtremes.getMax(), 0.0, 1.0, altDist);
+		altDist = math::remap(0.0, _altitudeExtremes.getMax() -_altitudeExtremes.getMin() - altitude, 0.0, 1.0, altDist);
 
-		distanceMap.push_back(std::make_pair(&biome,  (tempDist + humDist + altDist) / 3.0f));
+		// if perfect match found
+		if ((tempDist + humDist + altDist) < FLT_EPSILON)
+		{
+			result.insert(&biome);
+		}
+		else
+		{
+			distanceMap.push_back(std::make_pair(&biome, (tempDist + humDist + altDist) / 3.0f));
+		}
 	}
 
-	std::sort(distanceMap.begin(), distanceMap.end(), [](const std::pair<const Biome*, float>& a, const std::pair<const Biome*, float>& b)
-		{
-			return a.second < b.second;
-		});
-
-	for (const auto& [biome, distance] : distanceMap)
+	// If no perfect matches, find closest
+	if (result.empty())
 	{
-		if (distance < ACCEPTANCE_DISTANCE)
+		std::sort(distanceMap.begin(), distanceMap.end(), [](const std::pair<const Biome*, float>& a, const std::pair<const Biome*, float>& b)
+			{
+				return a.second < b.second;
+			});
+
+		auto& [bestMatch, closestDistance] = distanceMap.at(0);
+		result.insert(bestMatch);
+		for (int i = 1; i < distanceMap.size(); ++i)
 		{
-			result.insert(biome);
+			auto& [otherMatch, distance] = distanceMap.at(i);
+			if (std::abs(closestDistance - distance) < ACCEPTANCE_DISTANCE)
+			{
+				result.insert(otherMatch);
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
 	

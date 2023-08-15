@@ -74,7 +74,7 @@
       "Climate": {
         "Temperature": [ 10.0, 25.0 ],
         "Humidity": [ 60.0, 100.0 ],
-        "Altitude": [ 0, 500 ]
+        "Altitude": [ 10, 500 ]
       }
     },
     "Jungle": {
@@ -118,7 +118,7 @@
       "Climate": {
         "Temperature": [ 35.0, 50.0 ],
         "Humidity": [ 0.0, 30.0 ],
-        "Altitude": [ 0, 500 ]
+        "Altitude": [ 10, 500 ]
       }
     },
     "Prarie": {
@@ -129,7 +129,7 @@
       "Climate": {
         "Temperature": [ 10.0, 25.0 ],
         "Humidity": [ 30.0, 60.0 ],
-        "Altitude": [ 0, 1000 ]
+        "Altitude": [ 10, 1000 ]
       }
     },
     "Savanna": {
@@ -140,7 +140,7 @@
       "Climate": {
         "Temperature": [ 15.0, 30.0],
         "Humidity": [ 0.0, 60.0],
-        "Altitude": [ 0, 750 ]
+        "Altitude": [ 10, 750 ]
       }
     },
     "Tundra": {
@@ -151,7 +151,7 @@
       "Climate": {
         "Temperature": [ -30.0, 0.0 ],
         "Humidity": [ 0.0, 30.0 ],
-        "Altitude": [ 0, 1000]
+        "Altitude": [ 10, 1000]
       }
     },
     "Water": {
