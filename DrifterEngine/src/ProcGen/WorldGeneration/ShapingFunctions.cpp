@@ -44,3 +44,14 @@ void drft::gen::remap(double iMin, double iMax, double oMin, double oMax, spatia
 	}
 }
 
+void drft::gen::customShaper(spatial::Grid<double>& map, std::function<void(double&, sf::Vector2i)> shaper)
+{
+	for (int y = 0; y < map.height(); ++y)
+	{
+		for (int x = 0; x < map.width(); ++x)
+		{
+			shaper(map.at(x, y), sf::Vector2i(x, y));
+		}
+	}
+}
+

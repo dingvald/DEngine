@@ -18,25 +18,19 @@ namespace drft::gen
 		BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
 
 	private:
-		float getTemperatureFromPerlin(double perlinTemperature) const;
-		float getHumidityFromPerlin(double perlinHumidity) const;
-		float getAltitudeFromPerlin(double perlinAltitude) const;
-		std::unordered_set<const Biome*> biomesThatSatisfy(float temperature, float humidity, float altitude) const;
+		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
+		std::unordered_set<const Biome*> determinePotentialBiomes(sf::Vector2i coordinate) const;
 		const Biome* selectBiome(sf::Vector2i coordinate) const;
 
 	private:
+		using NoiseMap = spatial::Grid<double>;
 		unsigned int _seed = 0;
 		sf::Vector2i _dimensions;
 		std::vector<Biome> _biomeTypes;
 		spatial::Grid<const Biome*> _biomeMap;
 
-		spatial::Grid<double> _altitudeMap;
-		spatial::Grid<double> _temperatureMap;
-		spatial::Grid<double> _humidityMap;
-
-		Range _temperatureExtremes;
-		Range _humidityExtremes;
-		Range _altitudeExtremes;
+		std::unordered_map<std::string, NoiseMap> _noiseMaps;
+		std::unordered_map<std::string, Range> _ranges;
 	};
 }
 

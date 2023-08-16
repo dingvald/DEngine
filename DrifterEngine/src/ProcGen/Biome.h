@@ -47,9 +47,7 @@ namespace drft::gen
 	{
 		std::string name;
 		BiomeIcon icon;
-		Range temperature;
-		Range humidity;
-		Range altitude;
+		std::unordered_map<std::string, Range> ranges;
 	};
 }
 
