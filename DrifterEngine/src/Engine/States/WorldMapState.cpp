@@ -59,6 +59,26 @@ bool drft::WorldMapState::handleEvent(const sf::Event& ev)
 			moveCursor({ -1,0 });
 			return false;
 		}
+		if (ev.key.code == sf::Keyboard::Numpad1)
+		{
+			moveCursor({ -1, 1 });
+			return false;
+		}
+		if (ev.key.code == sf::Keyboard::Numpad7)
+		{
+			moveCursor({ -1, -1 });
+			return false;
+		}
+		if (ev.key.code == sf::Keyboard::Numpad9)
+		{
+			moveCursor({ 1, -1 });
+			return false;
+		}
+		if (ev.key.code == sf::Keyboard::Numpad3)
+		{
+			moveCursor({ 1, 1 });
+			return false;
+		}
 		if (ev.key.code == sf::Keyboard::Space)
 		{
 			openOnSelectMenu();
