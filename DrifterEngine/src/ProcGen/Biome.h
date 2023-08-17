@@ -1,4 +1,5 @@
 #pragma once
+#include "Spatial/Grid.h"
 
 namespace drft::gen
 {
@@ -43,11 +44,18 @@ namespace drft::gen
 		sf::Color color = sf::Color::Magenta;
 	};
 
-	struct Biome
+	struct BiomeType
 	{
 		std::string name;
 		BiomeIcon icon;
 		std::unordered_map<std::string, Range> ranges;
+	};
+
+	class Biome
+	{
+
+
+		spatial::Grid<int> reservedSpaces;
 	};
 }
 

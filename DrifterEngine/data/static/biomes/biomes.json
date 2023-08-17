@@ -85,7 +85,7 @@
         "Color": [ 31, 51, 36 ]
       },
       "Climate": {
-        "Temperature": [ 20.0, 28.0 ],
+        "Temperature": [ 15.0, 30.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 100, 1500 ]
       }

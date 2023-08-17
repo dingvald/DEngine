@@ -69,7 +69,7 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 	// Iterate each biome
 	for (auto&& biome : doc["Biomes"].GetObject())
 	{
-		Biome biomeObj;
+		BiomeType biomeObj;
 		biomeObj.name = biome.name.GetString();
 		if (biome.value.HasMember("Icon"))
 		{
@@ -123,6 +123,15 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 	}
 }
 
+void drft::gen::WorldGenerator::generate()
+{
+	std::cout << "Generating terrain data..." << std::endl;
+	generateTerrain();
+	std::cout << "Generation complete." << std::endl;
+
+
+}
+
 void drft::gen::WorldGenerator::generateTerrain()
 {
 	// Generate starting noise maps
@@ -143,22 +152,30 @@ void drft::gen::WorldGenerator::generateTerrain()
 	// Make volcanism rarer
 	customShaper(_noiseMaps.at("Volcanism"), [](double& val, sf::Vector2i position)
 		{
-			val = std::clamp(val - 0.98, 0.0, 1.0);
+			val = std::clamp(val - 0.97, 0.0, 1.0);
 		});
 
 	for (int y = 0; y < _dimensions.y; ++y)
 	{
 		for (int x = 0; x < _dimensions.x; ++x)
 		{
-			_biomeMap.at(x, y) = selectBiome({ x, y });
+			_biomeMap.at(x, y) = selectBiomeType({ x, y });
 		}
 	}
+
+	// Post process ?
+	// e.g. eliminate isolated biomes
 }
 
-void drft::gen::WorldGenerator::finalize(sf::Vector2i coordinate, entt::registry& registry) const
+void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
     // Always place tiles
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+}
+
+sf::Vector2i drft::gen::WorldGenerator::getStartingPosition(const std::string& biomeType) const
+{
+	return sf::Vector2i(1024, 1024);
 }
 
 drft::gen::BiomeIcon drft::gen::WorldGenerator::getBiomeIcon(sf::Vector2i coordinate) const
@@ -180,11 +197,11 @@ float drft::gen::WorldGenerator::getRangeFromPerlin(const std::string& mapName, 
 	return math::remap(0.0, 1.0, _ranges.at(mapName).getMin(), _ranges.at(mapName).getMax(), perlinValue);
 }
 
-std::unordered_set<const drft::gen::Biome*> drft::gen::WorldGenerator::determinePotentialBiomes(sf::Vector2i coordinate) const
+std::unordered_set<const drft::gen::BiomeType*> drft::gen::WorldGenerator::determinePotentialBiomes(sf::Vector2i coordinate) const
 {
 	constexpr float ACCEPTANCE_DISTANCE = 0.05; // percent "closeness" to best match
-	std::unordered_set<const Biome*> result;
-	std::vector<std::pair<const Biome*, float>> distanceMap;
+	std::unordered_set<const BiomeType*> result;
+	std::vector<std::pair<const BiomeType*, float>> distanceMap;
 	
 	for (auto& biome : _biomeTypes)
 	{
@@ -220,7 +237,7 @@ std::unordered_set<const drft::gen::Biome*> drft::gen::WorldGenerator::determine
 	// If no perfect matches, find closest
 	if (result.empty())
 	{
-		std::sort(distanceMap.begin(), distanceMap.end(), [](const std::pair<const Biome*, float>& a, const std::pair<const Biome*, float>& b)
+		std::sort(distanceMap.begin(), distanceMap.end(), [](const std::pair<const BiomeType*, float>& a, const std::pair<const BiomeType*, float>& b)
 			{
 				return a.second < b.second;
 			});
@@ -244,7 +261,7 @@ std::unordered_set<const drft::gen::Biome*> drft::gen::WorldGenerator::determine
 	return result;
 }
 
-const drft::gen::Biome* drft::gen::WorldGenerator::selectBiome(sf::Vector2i coordinate) const
+const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vector2i coordinate) const
 {
 
 	auto potentialBiomes = determinePotentialBiomes(coordinate);

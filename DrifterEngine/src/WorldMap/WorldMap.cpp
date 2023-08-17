@@ -7,7 +7,7 @@ void drft::WorldMap::init(sf::Vector2i dimensions, unsigned int seed)
 
 	_worldGenerator.init(dimensions, seed);
 	_worldGenerator.loadBiomes("biomes.json");
-	_worldGenerator.generateTerrain();
+	_worldGenerator.generate();
 }
 
 sf::Vector2i drft::WorldMap::getDimensions() const
@@ -20,7 +20,12 @@ drft::gen::BiomeIcon drft::WorldMap::getBiomeIcon(sf::Vector2i coordinate) const
 	return _worldGenerator.getBiomeIcon(coordinate);
 }
 
+sf::Vector2i drft::WorldMap::getStartingPosition(const std::string& biomeType) const
+{
+	return _worldGenerator.getStartingPosition(biomeType);
+}
+
 void drft::WorldMap::finalizeBuild(sf::Vector2i coordinate, entt::registry& registry) const
 {
-	_worldGenerator.finalize(coordinate, registry);
+	_worldGenerator.finalizeChunk(coordinate, registry);
 }

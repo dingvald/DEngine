@@ -95,7 +95,7 @@ namespace drft
 		sf::RectangleShape _cursor;
 		SpriteBatch _map;
 		MapNotes _mapNotes;
-		sf::Vector2f _scalingFactor = { 1.f,1.f };
+		float _scalingFactor = 0.5f;
 		bool _drawNotes = true;
 	};
 }

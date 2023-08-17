@@ -64,15 +64,13 @@ bool drft::WorldMapState::handleEvent(const sf::Event& ev)
 			openOnSelectMenu();
 			return false;
 		}
-		if (ev.key.code == sf::Keyboard::Add) {
-			_scalingFactor += sf::Vector2f(0.1f, 0.1f);
-			_scalingFactor.x = std::min(_scalingFactor.x, 2.0f);
-			_scalingFactor.y = std::min(_scalingFactor.y, 2.0f);
-		}
 		if (ev.key.code == sf::Keyboard::Subtract) {
-			_scalingFactor -= sf::Vector2f(0.1f, 0.1f);
-			_scalingFactor.x = std::max(_scalingFactor.x, 0.5f);
-			_scalingFactor.y = std::max(_scalingFactor.y, 0.5f);
+			_scalingFactor += 0.1;
+			_scalingFactor = std::min(_scalingFactor, 2.0f);
+		}
+		if (ev.key.code == sf::Keyboard::Add) {
+			_scalingFactor -= 0.1;
+			_scalingFactor = std::max(_scalingFactor, 0.5f);
 		}
 		break;
 	}
@@ -94,16 +92,37 @@ bool drft::WorldMapState::update(const float dt)
 
 void drft::WorldMapState::render(sf::RenderTarget& target)
 {
-	auto& transform = _map.getTransform();
+	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
+	auto worldMapDimensions = spatial::toWorldSpace(worldMap.getDimensions());
+	auto defaultViewSize = target.getView().getSize();
+	sf::View view;
+
+	view.setSize(target.getView().getSize());
+
+	sf::Vector2f viewPosition = _cursor.getPosition();
+	float leftScaledEdge = _scalingFactor * (worldMapDimensions.x - defaultViewSize.x) / 2;
+	float rightScaledEdge = worldMapDimensions.x - (_scalingFactor * (defaultViewSize.x/ 2));
+	float topScaledEdge = _scalingFactor * (worldMapDimensions.y - defaultViewSize.y) / 2;
+	float bottomScaledEdge = worldMapDimensions.y - (_scalingFactor * (defaultViewSize.y) / 2);
+
+	viewPosition.x = std::clamp(viewPosition.x, leftScaledEdge, rightScaledEdge);
+	viewPosition.y = std::clamp(viewPosition.y, topScaledEdge, bottomScaledEdge);
+
+	view.setCenter(viewPosition);
+	view.zoom(_scalingFactor);
+	
+	target.setView(view);
+
 	_mapBackground.render(target);
 	target.draw(_map);
-	target.draw(_currentPositionTile, transform);
-	target.draw(_cursor, transform);
+	target.draw(_currentPositionTile);
+	target.draw(_cursor);
 	if (_drawNotes)
 	{
-		target.draw(_mapNotes.noteSprites, transform);
+		target.draw(_mapNotes.noteSprites);
 	}
 	_guiStack.render(target);
+	target.setView(target.getDefaultView());
 }
 
 void drft::WorldMapState::onPush()
@@ -418,10 +437,7 @@ void drft::WorldMapState::pulseMapNotes(float dt)
 
 void drft::WorldMapState::applyScaling()
 {
-	auto position = _map.getPosition();
-	_map.setOrigin(_currentPositionTile.getPosition());
-	_map.setPosition(position);
-	_map.setScale(_scalingFactor);
+
 }
 
 void drft::WorldMapState::saveMapNotes()
