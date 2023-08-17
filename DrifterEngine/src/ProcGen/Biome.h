@@ -1,5 +1,6 @@
 #pragma once
 #include "Spatial/Grid.h"
+#include "Utility/stdHashing.h"
 
 namespace drft::gen
 {
@@ -51,10 +52,27 @@ namespace drft::gen
 		std::unordered_map<std::string, Range> ranges;
 	};
 
+	struct BiomeZone
+	{
+		BiomeZone(const BiomeType* type)
+			:_type(type)
+		{}
+		const BiomeType* getType() const { return _type; }
+		void setID(unsigned int id) { _id = id; }
+		unsigned int getID() const { return _id; }
+		int size() const { return _zone.size(); }
+		void put(sf::Vector2i position) { _zone.insert(position); }
+		const std::unordered_set<sf::Vector2i>& getZone() const { return _zone; }
+	private:
+		const BiomeType* _type;
+		unsigned int _id = 0;
+		std::unordered_set<sf::Vector2i> _zone;
+	};
+
 	class Biome
 	{
 
-
+		unsigned int zoneID = 0;
 		spatial::Grid<int> reservedSpaces;
 	};
 }
