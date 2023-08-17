@@ -156,17 +156,7 @@
         "Altitude": [ 50, 1000 ]
       }
     },
-    "Coastal Water": {
-      "Icon": {
-        "Sprite": 25,
-        "Color": [ 135, 206, 235 ]
-      },
-      "Climate": {
-        "Temperature": [ "Any" ],
-        "Humidity": [ "Any" ],
-        "Altitude": [ -10, -0 ]
-      }
-    },
+    
     "Water": {
       "Icon": {
         "Sprite": 25,
@@ -175,7 +165,7 @@
       "Climate": {
         "Temperature": [ "Any" ],
         "Humidity": [ "Any" ],
-        "Altitude": [ -2000, -200 ]
+        "Altitude": [ -2700, -200 ]
       }
     }
   }

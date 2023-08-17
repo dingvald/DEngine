@@ -165,6 +165,36 @@ void drft::gen::WorldGenerator::generateTerrain()
 
 	// Post process ?
 	// e.g. eliminate isolated biomes
+
+	for (int y = 0; y < _dimensions.y; ++y)
+	{
+		for (int x = 0; x < _dimensions.x; ++x)
+		{
+			auto centerBiome = _biomeMap.at(x, y);
+			bool isolated = true;
+			auto surroundings = spatial::getIntRectAroundOrigin({ x, y }, 3, 3);
+			for (auto cell : surroundings)
+			{
+				if (!_biomeMap.contains(cell.x, cell.y) || cell == sf::Vector2i(x, y)) continue;
+				if (_biomeMap.at(cell.x, cell.y) == centerBiome)
+				{
+					isolated = false;
+					break;
+				}
+			}
+			if (isolated)
+			{
+				int choice = 0;
+				do
+				{
+					choice = rng::RandomNumberGenerator::intInRange(0, surroundings.size() - 1);
+				} while (!_biomeMap.contains(surroundings[choice].x, surroundings[choice].y)
+					|| surroundings[choice] == sf::Vector2i(x, y));
+
+				_biomeMap.at(x, y) = _biomeMap.at(surroundings[choice].x, surroundings[choice].y);
+			}
+		}
+	}
 }
 
 void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
