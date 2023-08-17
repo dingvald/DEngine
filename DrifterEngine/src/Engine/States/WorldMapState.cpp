@@ -100,13 +100,11 @@ void drft::WorldMapState::render(sf::RenderTarget& target)
 	view.setSize(target.getView().getSize());
 
 	sf::Vector2f viewPosition = _cursor.getPosition();
-	float leftScaledEdge = _scalingFactor * (worldMapDimensions.x - defaultViewSize.x) / 2;
-	float rightScaledEdge = worldMapDimensions.x - (_scalingFactor * (defaultViewSize.x/ 2));
-	float topScaledEdge = _scalingFactor * (worldMapDimensions.y - defaultViewSize.y) / 2;
-	float bottomScaledEdge = worldMapDimensions.y - (_scalingFactor * (defaultViewSize.y) / 2);
+	float edgeOffsetX = (worldMapDimensions.x - defaultViewSize.x) * 0.5f * _scalingFactor;
+	float edgeOffsetY = (worldMapDimensions.y - defaultViewSize.y) * 0.5f * _scalingFactor;
 
-	viewPosition.x = std::clamp(viewPosition.x, leftScaledEdge, rightScaledEdge);
-	viewPosition.y = std::clamp(viewPosition.y, topScaledEdge, bottomScaledEdge);
+	viewPosition.x = std::clamp(viewPosition.x, edgeOffsetX, worldMapDimensions.x - edgeOffsetX);
+	viewPosition.y = std::clamp(viewPosition.y, edgeOffsetY, worldMapDimensions.y - edgeOffsetY);
 
 	view.setCenter(viewPosition);
 	view.zoom(_scalingFactor);
