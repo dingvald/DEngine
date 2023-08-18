@@ -6,6 +6,7 @@
 #include "Events/SendFloatingMessageEvent.h"
 #include "Spatial/Conversions.h"
 #include "Utility/SmoothTransition.h"
+#include "Systems/Helpers/GetCurrentCamera.h"
 
 static constexpr int DAY_START_HOUR = 5;
 static constexpr int NIGHT_START_HOUR = 23;
@@ -71,24 +72,26 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 
 	if (_hours == NIGHT_START_HOUR && _minutes == 0 && _seconds == 0)
 	{
+		auto camera = getCurrentCamera(*registry);
 		auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 		dispatcher.trigger(events::NightStartEvent());
 		dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dusk has fallen...",
 			.color = sf::Color(125,0,255),
-			.position = sf::Vector2i(0,0),
+			.position = camera.position,
 			.isScreenSpace = true,
 			.ttl = 120
 			});
 	}
 	else if (_hours == DAY_START_HOUR && _minutes == 0 && _seconds == 0)
 	{
+		auto camera = getCurrentCamera(*registry);
 		auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 		dispatcher.trigger(events::DayStartEvent());
 		dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dawn has broken...",
 			.color = sf::Color::Yellow,
-			.position = sf::Vector2i(0,0),
+			.position = camera.position,
 			.isScreenSpace = true,
 			.ttl = 120
 			});
