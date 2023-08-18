@@ -50,6 +50,18 @@ namespace drft::gen
 		std::string name;
 		BiomeIcon icon;
 		std::unordered_map<std::string, Range> ranges;
+
+		struct SpawningAlgorithm
+		{
+			std::string name;
+			std::unordered_map<std::string, float> parameters;
+		};
+		// { entity name, map of {algorithm, params} }
+		using EntityAlgorithm = std::unordered_map<std::string, SpawningAlgorithm>;
+		// { category name, list of {entity, algorithm} }
+		using EntityCategories = std::unordered_map<std::string, EntityAlgorithm>;
+
+		EntityCategories entityCategories;
 	};
 
 	struct BiomeZone

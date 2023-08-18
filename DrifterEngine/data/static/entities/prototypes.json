@@ -268,6 +268,41 @@
         }
       }
     },
+    "Pine Tree": {
+      "Inherits": [
+        ""
+      ],
+      "Components": {
+        "Info": {
+          "name": "Pine Tree",
+          "extendedName": "",
+          "description": "A wooden trunk with many needles."
+        },
+        "Render": {
+          "sprite": 76,
+          "layer": 2,
+          "color": [ 0, 74, 54 ]
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Physical": {
+          "blocks": true,
+          "weight": 400.0,
+          "materials": [
+            "Wood",
+            "Plant Fibre"
+          ]
+        },
+        "Health": {
+          "max": 100.0,
+          "current": 100.0
+        },
+        "LightBlocking": {
+          "opacity": 1.0
+        }
+      }
+    },
     "Jungle Tree": {
       "Inherits": [
         ""

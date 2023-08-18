@@ -5,5 +5,5 @@
 namespace drft::gen
 {
 	// Generates a random list of positions within the given bounds
-	std::vector<sf::Vector2i> randomSpread(int seed, const spatial::Grid<CellState>& grid, GenerationParameters);
+	std::vector<sf::Vector2i> randomSpread(const spatial::Grid<int>&, GenerationParameters, int);
 }

@@ -116,6 +116,33 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 				}
 			}
 		}
+		if (biome.value.HasMember("Entities"))
+		{
+			for (auto& category : biome.value["Entities"].GetObject())
+			{
+				for (auto& entity : category.value.GetObject())
+				{
+					if (entity.value.HasMember("Algorithm")
+						&& entity.value.HasMember("Parameters"))
+					{
+						std::string algoName = entity.value["Algorithm"].GetString();
+						BiomeType::SpawningAlgorithm spawningAlgorithm;
+						spawningAlgorithm.name = algoName;
+						for (auto& param : entity.value["Parameters"].GetObject())
+						{
+							spawningAlgorithm.parameters[param.name.GetString()] = param.value.GetFloat();
+						}
+						biomeObj.entityCategories
+							[category.name.GetString()]
+							[entity.name.GetString()] = spawningAlgorithm;
+					}
+					else
+					{
+						throw std::exception("Parsed entity does not have a placement algorithm");
+					}
+				}
+			}
+		}
 		_biomeTypes.emplace(biomeObj.name, biomeObj);
 	}
 }
@@ -265,6 +292,15 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 {
     // Always place tiles
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+	auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
+	for (auto& [category, entities] : biomeType->entityCategories)
+	{
+		for (auto& [entityName, algorithm] : entities)
+		{
+			auto positions = String2Algorithm.at(algorithm.name)(spatial::Grid<int>(spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT), algorithm.parameters, _seed);
+			place(entityName, spatial::toTileSpace(coordinate), positions, registry);
+		}
+	}
 }
 
 sf::Vector2i drft::gen::WorldGenerator::getStartingPosition(std::string biomeType) const
@@ -401,10 +437,9 @@ const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vecto
 			{
 				if (position.x < 0 || position.y < 0
 					|| position.x >= _dimensions.x || position.y >= _dimensions.y) continue;
-				if (potentialBiomes.contains(_biomeMap.at(position.x, position.y)->name))
+				if (_biomeMap.at(position.x, position.y) && potentialBiomes.contains(_biomeMap.at(position.x, position.y)->name))
 				{
 					return _biomeMap.at(position.x, position.y);
-					break;
 				}
 			}
 		}

@@ -9,7 +9,36 @@
         "Temperature": [ 0.0, 20.0 ],
         "Humidity": [ 30.0, 70.0 ],
         "Altitude": [ 50, 1500 ]
-      }
+      },
+      "Entities": {
+        "Geological": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 3,
+              "Maximum": 7
+            }
+          }
+        },
+        "Vegetation": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 200,
+              "Maximum": 400
+            }
+          },
+          "Tree": {
+            "Algorithm": "OrganicSpread",
+            "Parameters": {
+              "Generations": 3,
+              "StartingSeeds": 4,
+              "SeedsPerGeneration": 3,
+              "Radius": 8
+            }
+          }
+        }
+      } 
     },
     "Nordic Foothills": {
       "Icon": {
@@ -20,6 +49,41 @@
         "Temperature": [ -1.0, 8.0 ],
         "Humidity": [ 10.0, 50.0 ],
         "Altitude": [ 1000, 2000 ]
+      },
+      "Entities": {
+        "Geological": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 20,
+              "Maximum": 50
+            }
+          },
+          "Boulder": {
+            "Algorithm": "PerlinSpread",
+            "Parameters": {
+              "Threshold": 0.60
+            }
+          }
+        },
+        "Vegetation": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 10,
+              "Maximum": 20
+            }
+          },
+          "Pine Tree": {
+            "Algorithm": "OrganicSpread",
+            "Parameters": {
+              "Generations": 3,
+              "StartingSeeds": 5,
+              "SeedsPerGeneration": 3,
+              "Radius": 8
+            }
+          }
+        }
       }
     },
     "Mountain": {
@@ -31,6 +95,39 @@
         "Temperature": [ 0.0, 15.0 ],
         "Humidity": [ 20.0, 80.0 ],
         "Altitude": [ 2000, 2500 ]
+      },
+      "Entities": {
+        "Geological": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 20,
+              "Maximum": 50
+            }
+          },
+          "Boulder": {
+            "Algorithm": "PerlinSpread",
+            "Parameters": {
+              "Threshold": 0.56
+            }
+          }
+        },
+        "Vegetation": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 100,
+              "Maximum": 200
+            }
+          },
+          "Tree": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 25,
+              "Maximum": 25
+            }
+          }
+        }
       }
     },
     "Snowy Peak": {
@@ -156,7 +253,6 @@
         "Altitude": [ 50, 1000 ]
       }
     },
-    
     "Water": {
       "Icon": {
         "Sprite": 25,
