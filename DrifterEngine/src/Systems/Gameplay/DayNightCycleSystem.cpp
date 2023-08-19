@@ -79,6 +79,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 			.message = "Dusk has fallen...",
 			.color = sf::Color(125,0,255),
 			.position = camera.position,
+			.velocity = {0,0},
 			.isScreenSpace = true,
 			.ttl = 120
 			});
@@ -92,6 +93,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 			.message = "Dawn has broken...",
 			.color = sf::Color::Yellow,
 			.position = camera.position,
+			.velocity = {0,0},
 			.isScreenSpace = true,
 			.ttl = 120
 			});

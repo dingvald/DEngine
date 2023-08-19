@@ -25,7 +25,7 @@ void drft::system::LiquidSystem::fixedUpdate()
 	{
 		if (liquid.volume > 500)
 		{
-			auto entities = _grid->entitiesAt(spatial::toTileSpace(pos.position),
+			auto entities = _grid->entitiesAt(pos.position,
 				[this](entt::entity entity) -> bool
 				{
 					return isAffectedByLiquids(entity);

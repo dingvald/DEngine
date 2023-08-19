@@ -19,7 +19,7 @@ sf::Vector2i drft::spatial::toTileSpace(sf::Vector2i chunkCoordinate)
 	return { x,y };
 }
 
-sf::Vector2f drft::spatial::toWorldSpace(sf::Vector2i tilePosition)
+sf::Vector2f drft::spatial::toFloatSpace(sf::Vector2i tilePosition)
 {
 	float x = static_cast<float>(tilePosition.x * TILE_WIDTH);
 	float y = static_cast<float>(tilePosition.y * TILE_HEIGHT);

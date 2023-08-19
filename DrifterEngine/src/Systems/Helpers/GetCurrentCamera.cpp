@@ -18,5 +18,5 @@ drft::system::CameraInfo drft::system::getCurrentCamera(entt::registry& registry
 
 sf::Vector2f drft::system::toScreenSpace(sf::Vector2i tilePosition, CameraInfo camera)
 {
-	return (spatial::toWorldSpace(tilePosition - camera.position) - camera.lag) - sf::Vector2f(camera.viewport.left, camera.viewport.top);
+	return (spatial::toFloatSpace(tilePosition - camera.position) - camera.lag) - sf::Vector2f(camera.viewport.left, camera.viewport.top);
 }

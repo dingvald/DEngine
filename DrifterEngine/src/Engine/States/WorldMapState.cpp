@@ -113,7 +113,7 @@ bool drft::WorldMapState::update(const float dt)
 void drft::WorldMapState::render(sf::RenderTarget& target)
 {
 	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
-	auto worldMapDimensions = spatial::toWorldSpace(worldMap.getDimensions());
+	auto worldMapDimensions = spatial::toFloatSpace(worldMap.getDimensions());
 	auto defaultViewSize = target.getView().getSize();
 	sf::View view;
 
@@ -158,11 +158,11 @@ void drft::WorldMapState::onPush()
 	refreshMapSprites();
 
 	_currentPositionTile.setSize({ spatial::TILE_WIDTH, spatial::TILE_HEIGHT });
-	_currentPositionTile.setPosition(spatial::toWorldSpace(_currentPosition));
+	_currentPositionTile.setPosition(spatial::toFloatSpace(_currentPosition));
 	_currentPositionTile.setFillColor(sf::Color::White);
 
 	_cursor.setSize({ spatial::TILE_WIDTH, spatial::TILE_HEIGHT });
-	_cursor.setPosition(spatial::toWorldSpace(_currentPosition));
+	_cursor.setPosition(spatial::toFloatSpace(_currentPosition));
 	_cursor.setOutlineThickness(1.0f);
 	_cursor.setOutlineColor(sf::Color::Yellow);
 	_cursor.setFillColor(sf::Color(0, 0, 0, 0));
@@ -188,7 +188,7 @@ void drft::WorldMapState::refreshMapSprites()
 	{
 		for (int x = 0; x < worldMap.getDimensions().x; ++x)
 		{
-			sf::Vector2f screenPosition = spatial::toWorldSpace(sf::Vector2i(x,y));
+			sf::Vector2f screenPosition = spatial::toFloatSpace(sf::Vector2i(x,y));
 			_map.addSprite(static_cast<unsigned int>(util::Sprite::Square),
 				sf::Color::Black, screenPosition);
 			_map.addSprite(worldMap.getBiomeIcon({x,y}).sprite,
@@ -208,7 +208,7 @@ void drft::WorldMapState::addMapNote(sf::Vector2i position, util::Sprite sprite,
 	_mapNotes.notes[position] = { sprite, color };
 
 	const auto& VIEW = getContext().window.getView();
-	sf::Vector2f screenPosition = spatial::toWorldSpace(_cursorPosition);
+	sf::Vector2f screenPosition = spatial::toFloatSpace(_cursorPosition);
 	_mapNotes.noteSprites.addSprite(static_cast<unsigned int>(_mapNotes.notes.at(position).icon),
 		_mapNotes.notes.at(position).color, screenPosition);
 }

@@ -23,7 +23,7 @@ void drft::system::CullingSystem::fixedUpdate()
 	auto view = registry->view<component::Position>();
 	for (auto [entity, pos] : view.each())
 	{
-		if (viewport.contains(spatial::toWorldSpace(pos.position - camera.position)))
+		if (viewport.contains(spatial::toFloatSpace(pos.position - camera.position)))
 		{
 			registry->emplace<component::tag::InViewport>(entity);
 		}

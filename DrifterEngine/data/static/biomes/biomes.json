@@ -33,7 +33,7 @@
             "Parameters": {
               "Generations": 3,
               "StartingSeeds": 4,
-              "SeedsPerGeneration": 3,
+              "SeedsPerGeneration": 4,
               "Radius": 8
             }
           }
@@ -108,7 +108,7 @@
           "Boulder": {
             "Algorithm": "PerlinSpread",
             "Parameters": {
-              "Threshold": 0.56
+              "Threshold": 0.52
             }
           }
         },
@@ -120,7 +120,7 @@
               "Maximum": 200
             }
           },
-          "Tree": {
+          "Pine Tree": {
             "Algorithm": "RandomSpread",
             "Parameters": {
               "Minimum": 25,
@@ -229,6 +229,24 @@
         "Temperature": [ 0.0, 20.0 ],
         "Humidity": [ 20.0, 70.0 ],
         "Altitude": [ 50, 1500 ]
+      },
+      "Entities": {
+        "Vegetation": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 400,
+              "Maximum": 700
+            }
+          },
+          "Tree": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 20,
+              "Maximum": 30
+            }
+          }
+        }
       }
     },
     "Savanna": {
@@ -262,6 +280,16 @@
         "Temperature": [ "Any" ],
         "Humidity": [ "Any" ],
         "Altitude": [ -2700, -200 ]
+      },
+      "Entities": {
+        "Liquid": {
+          "Water": {
+            "Algorithm": "Fill",
+            "Parameters": {
+
+            }
+          }
+        }
       }
     }
   }
