@@ -4,12 +4,11 @@
 #include "OrganicSpread.h"
 #include "Fill.h"
 #include "Spatial/Grid.h"
-#include "GridEnums.h"
 
 namespace drft::gen
 {
 	using PositionList = std::vector<sf::Vector2i>;
-	using GenAlgorithm = std::function<PositionList(const spatial::Grid<int>&, GenerationParameters, int)>;
+	using GenAlgorithm = std::function<PositionList(const spatial::Grid<std::bitset<32>>&, GenerationParameters, int)>;
 
 	const std::unordered_map<std::string, GenAlgorithm> String2Algorithm =
 	{

@@ -37,7 +37,7 @@ namespace drft::spatial
 	}
 
 	template<typename T>
-	inline bool Grid<T>::contains(int x, int y)
+	inline bool Grid<T>::contains(int x, int y) const
 	{
 		return !(x < 0 || y < 0 || x >= _width || y >= _height);
 	}

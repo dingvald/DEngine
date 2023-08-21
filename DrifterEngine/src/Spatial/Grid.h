@@ -15,7 +15,7 @@ namespace drft::spatial
 		void resize(int width, int height);
 		void fill(T val);
 
-		bool contains(int x, int y);
+		bool contains(int x, int y) const;
 
 		T& at(int x, int y);
 		const T& at(int x, int y) const;

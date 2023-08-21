@@ -17,6 +17,17 @@
 #include "Machines/WildernessHorde.h"
 #include "Machines/OreDeposit.h"
 
+static const sf::Vector2i FULL_CHUNK = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
+static const sf::Vector2i HALF_CHUNK = { FULL_CHUNK.x / 2, FULL_CHUNK.y / 2 };
+static const sf::Vector2i QUARTER_CHUNK = { FULL_CHUNK.x / 4, FULL_CHUNK.y / 4 };
+
+static const std::array<sf::Vector2i, 4u> BOUNDARY_POINTS =
+{
+	sf::Vector2i(0, -QUARTER_CHUNK.y),
+	sf::Vector2i(-QUARTER_CHUNK.x, 0),
+	sf::Vector2i(3 * QUARTER_CHUNK.x, 0),
+	sf::Vector2i(0, 3 * QUARTER_CHUNK.y)
+};
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
@@ -288,17 +299,66 @@ std::unordered_set<sf::Vector2i> drft::gen::WorldGenerator::floodFillZone(sf::Ve
 	return result;
 }
 
+double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const
+{
+	if (!_noiseMaps.contains(mapType))
+	{
+		throw std::exception(std::string("Map type does not exist." + mapType).c_str());
+	}
+	if (!_noiseMaps.at(mapType).contains(coordinate.x, coordinate.y))
+	{
+		throw std::exception(std::string("Map type does not contain point." + coordinate.x + std::string(", ") + std::to_string(coordinate.y)).c_str());
+	}
+
+	return _noiseMaps.at(mapType).at(coordinate.x, coordinate.y);
+}
+
 void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
     // Always place tiles
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+	//
+	// Stitch adjacent chunks
+	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate) - QUARTER_CHUNK;
+	spatial::Grid<std::bitset<32>> bitgrid(FULL_CHUNK.x + HALF_CHUNK.x, FULL_CHUNK.y + HALF_CHUNK.y);
+	std::vector<sf::Vector2i> differentSurroundings;
+	auto surroundings = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
+	for (auto surrounding : surroundings)
+	{
+		if (!_biomeMap.contains(surrounding.x, surrounding.y)) continue;
+		if (_biomeMap.at(coordinate.x, coordinate.y) != _biomeMap.at(surrounding.x, surrounding.y))
+		{
+			differentSurroundings.push_back(surrounding);
+		}
+	}
+	/// DEBUG HERE vvvvv ///////
+	for (auto diff : differentSurroundings)
+	{
+		const auto delta = coordinate - diff;
+		sf::Vector2i offset = { delta.x * HALF_CHUNK.x, delta.y * HALF_CHUNK.y };
+		sf::Vector2i origin = HALF_CHUNK + offset;
+		NoiseMap noise = rng::NoiseMap::generate(HALF_CHUNK, { 1,1 }, _seed);
+
+		for (int y = origin.y; y < origin.y + HALF_CHUNK.y; ++y)
+		{
+			for (int x = origin.x; x < origin.x + HALF_CHUNK.x; ++x)
+			{
+				if (noise.at(x - origin.x, y - origin.y) < 0.50)
+				{
+					bitgrid.at(x, y).set(0);
+				}
+			}
+		}
+	}
+	
+
 	auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 	for (auto& [category, entities] : biomeType->entityCategories)
 	{
 		for (auto& [entityName, algorithm] : entities)
 		{
-			auto positions = String2Algorithm.at(algorithm.name)(spatial::Grid<int>(spatial::CHUNK_WIDTH, spatial::CHUNK_HEIGHT), algorithm.parameters, _seed);
-			place(entityName, spatial::toTileSpace(coordinate), positions, registry);
+			auto positions = String2Algorithm.at(algorithm.name)(bitgrid, algorithm.parameters, _seed);
+			place(entityName,tileOrigin, positions, registry);
 		}
 	}
 }
@@ -344,7 +404,7 @@ float drft::gen::WorldGenerator::getRangeFromPerlin(const std::string& mapName, 
 
 std::unordered_set<std::string> drft::gen::WorldGenerator::determinePotentialBiomes(sf::Vector2i coordinate) const
 {
-	constexpr float ACCEPTANCE_DISTANCE = 0.03; // percent "closeness" to best match
+	constexpr float ACCEPTANCE_DISTANCE = 0.02; // percent "closeness" to best match
 	std::unordered_set<std::string> result;
 	std::vector<std::pair<const BiomeType*, float>> distanceMap;
 	

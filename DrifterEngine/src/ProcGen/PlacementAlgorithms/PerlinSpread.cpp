@@ -3,7 +3,7 @@
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
 
-std::vector<sf::Vector2i> drft::gen::perlinSpread(const spatial::Grid<int>& grid, GenerationParameters params, int seed)
+std::vector<sf::Vector2i> drft::gen::perlinSpread(const spatial::Grid<std::bitset<32>>& grid, GenerationParameters params, int seed)
 {
 	rng::PerlinNoise noise(seed);
 	std::vector<sf::Vector2i> result;
@@ -17,7 +17,7 @@ std::vector<sf::Vector2i> drft::gen::perlinSpread(const spatial::Grid<int>& grid
 			const double dy = (static_cast<double>(y) - 0.5) / 32;
 			const double val = noise.gen(dx, dy);
 
-			if (val > threshold && grid.at(x,y) == 0)
+			if (val > threshold && grid.at(x,y).none())
 			{
 				result.emplace_back(x, y);
 			}

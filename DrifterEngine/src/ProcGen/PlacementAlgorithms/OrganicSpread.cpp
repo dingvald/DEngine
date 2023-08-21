@@ -3,7 +3,7 @@
 #include "Spatial/Helpers.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::organicSpread(const spatial::Grid<int>& grid, GenerationParameters params, int seed)
+std::vector<sf::Vector2i> drft::gen::organicSpread(const spatial::Grid<std::bitset<32>>& grid, GenerationParameters params, int seed)
 {
 	std::vector<sf::Vector2i> positions;
 	const int generations = static_cast<int>(params.at("Generations"));
@@ -18,9 +18,9 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(const spatial::Grid<int>& gri
 		int safetyCount = 20;
 		do {
 			--safetyCount;
-			x = rng::RandomNumberGenerator::intInRange(0, grid.width() - 1);
-			y = rng::RandomNumberGenerator::intInRange(0, grid.height() - 1);
-		} while (grid.at(x, y) != 0 && safetyCount > 0);
+			x = rng::RandomNumberGenerator::intInRange(0, grid.width() - 16);
+			y = rng::RandomNumberGenerator::intInRange(0, grid.height() - 16);
+		} while (grid.at(x, y).any() && safetyCount > 0);
 		if (safetyCount > 0)
 		{
 			positions.emplace_back(x, y);
@@ -36,7 +36,11 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(const spatial::Grid<int>& gri
 			for (int spg = 0; spg < seedsPerGeneration; ++spg)
 			{
 				const int index = rng::RandomNumberGenerator::intInRange(0, surroundings.size() - 1);
-				positionsToAdd.emplace_back(surroundings.at(index));
+				auto pos = surroundings.at(index);
+				if (grid.contains(pos.x, pos.y) && grid.at(pos.x, pos.y).none())
+				{
+					positionsToAdd.emplace_back(pos);
+				}
 			}
 		}
 		positions.insert(positions.end(), positionsToAdd.begin(), positionsToAdd.end());

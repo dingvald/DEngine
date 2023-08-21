@@ -24,7 +24,7 @@ namespace drft::gen
 		void removeIsolatedBiomes();
 		void generateZones();
 		std::unordered_set<sf::Vector2i> floodFillZone(sf::Vector2i startingNode, const BiomeType* type);
-
+		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		std::unordered_set<std::string> determinePotentialBiomes(sf::Vector2i coordinate) const;
 		const BiomeType* selectBiomeType(sf::Vector2i coordinate) const;
@@ -35,7 +35,8 @@ namespace drft::gen
 		sf::Vector2i _dimensions;
 		std::unordered_map<std::string, BiomeType> _biomeTypes;
 		spatial::Grid<const BiomeType*> _biomeMap;
-
+		
+		std::unordered_map<sf::Vector2i, unsigned int> _boundarySeeds;
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
 		std::unordered_map<unsigned int, BiomeZone> _zones;
 		std::unordered_map<std::string, NoiseMap> _noiseMaps;

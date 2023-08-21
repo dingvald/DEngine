@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "Fill.h"
 
-std::vector<sf::Vector2i> drft::gen::fill(const spatial::Grid<int>& grid, GenerationParameters params, int seed)
+std::vector<sf::Vector2i> drft::gen::fill(const spatial::Grid<std::bitset<32>>& grid, GenerationParameters params, int seed)
 {
 	std::vector<sf::Vector2i> positions;
 	
@@ -9,7 +9,7 @@ std::vector<sf::Vector2i> drft::gen::fill(const spatial::Grid<int>& grid, Genera
 	{
 		for (int x = 0; x < grid.width(); ++x)
 		{
-			if (grid.at(x, y) == 0)
+			if (grid.at(x, y).none())
 			{
 				positions.emplace_back(x, y);
 			}

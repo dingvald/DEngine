@@ -1229,9 +1229,6 @@
     <ClInclude Include="src\Factory\MachineFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GridEnums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1266,6 +1263,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\GridBitFlags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

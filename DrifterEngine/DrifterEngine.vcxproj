@@ -336,6 +336,7 @@
     <ClCompile Include="src\WorldMap\WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
     <ClInclude Include="src\Random\NoiseMap.h" />
     <ClInclude Include="src\ProcGen\Biome.h" />
@@ -345,7 +346,6 @@
     <ClInclude Include="src\Machines\Chest.h" />
     <ClInclude Include="src\Factory\MachineFactory.h" />
     <ClInclude Include="src\Machines\Machine.h" />
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GridEnums.h" />
     <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h" />
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h" />
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h" />
