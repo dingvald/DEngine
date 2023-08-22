@@ -98,7 +98,7 @@ void drft::system::HitEffectSystem::onTakeDamage(entt::registry& registry, entt:
 		{
 			if ((incoming->amount < (incoming->originalAmount / 2)) || incoming->amount == 0) // Most/all of the damage has been mitigated
 			{
-				unsigned int sprite = static_cast<unsigned int>(util::Sprite::Square);
+				unsigned int sprite = static_cast<unsigned int>(util::Sprite::Diamond);
 				queueEffect(pos->position, sprite, sf::Color::Blue, halfFadeFunc);
 			}
 		}

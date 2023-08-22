@@ -11,6 +11,7 @@
 #include "ShapingFunctions.h"
 #include "Utility/stdHashing.h"
 #include "Utility/Math.h"
+#include "Utility/stdHashing.h"
 
 #include "Machines/Chest.h"
 #include "Machines/HeartShrine.h"
@@ -313,10 +314,10 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 	// Stitch adjacent chunks
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate) - QUARTER_CHUNK;
 	spatial::Grid<std::bitset<32>> bitgrid(FULL_CHUNK.x + HALF_CHUNK.x, FULL_CHUNK.y + HALF_CHUNK.y);
-	NoiseMap noiseMap = rng::NoiseMap::generate({ bitgrid.width(), bitgrid.height() }, { 5,5 }, _seed + coordinate.x*coordinate.y, 8, 3.0, 1.0);
-	const float maxDistance = spatial::distance(sf::Vector2i{ 0,0 }, {bitgrid.width() / 2, bitgrid.height() / 2});
-
-	std::vector<sf::Vector2i> differentSurroundings;
+	bitgrid.fill(std::bitset<32>().set(0));
+	NoiseMap noiseMap = rng::NoiseMap::generate({ bitgrid.width(), bitgrid.height() }, { 2,2 }, _seed + coordinate.x*coordinate.y, 8, 2.0, 0.7);
+	
+	std::unordered_set<sf::Vector2i> differentSurroundings;
 	auto surroundings = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
 	for (auto& surrounding : surroundings)
 	{
@@ -324,27 +325,40 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 		auto myBiome = _biomeMap.at(coordinate.x, coordinate.y);
 		auto otherBiome = _biomeMap.at(surrounding.x, surrounding.y);
 		if (myBiome != otherBiome)
-		{
-			differentSurroundings.push_back(surrounding);
+		{	
+			differentSurroundings.insert(surrounding);
 		}
 	}
-	for (auto& diff : differentSurroundings)
-	{
-		const auto delta = diff - coordinate;
-		sf::Vector2i tileOffset = { delta.x * HALF_CHUNK.x, delta.y * HALF_CHUNK.y };
-		sf::Vector2i origin = HALF_CHUNK + tileOffset;
 
-		for (int y = origin.y; y < origin.y + HALF_CHUNK.y; ++y)
+	sf::Vector2i center = { bitgrid.width() / 2, bitgrid.height() / 2 };
+	float radius = static_cast<float>(bitgrid.width()) / 2;
+	auto inCenter = [](int x, int y) -> bool
+	{
+		if ((x >= QUARTER_CHUNK.x && x < (FULL_CHUNK.x + QUARTER_CHUNK.x))
+			&& (y >= QUARTER_CHUNK.y && y < (FULL_CHUNK.y + QUARTER_CHUNK.y)))
 		{
-			for (int x = origin.x; x < origin.x + HALF_CHUNK.x; ++x)
+			return true;
+		}
+		return false;
+	};
+	for (int y = 0; y < bitgrid.height(); ++y)
+	{
+		for (int x = 0; x < bitgrid.width(); ++x)
+		{
+			if (inCenter(x, y))
 			{
-				sf::Vector2i center = { bitgrid.width() / 2, bitgrid.height() / 2 };
-				sf::Vector2i tile = { x, y };
-				float distance = spatial::distance(center, tile);
-				float threshold = std::powf(distance / maxDistance, 2.0f);
-				if (noiseMap.at(x, y) < 1.8*threshold)
+				bitgrid.at(x, y).reset(0);
+				continue;
+			}
+			sf::Vector2i neighbourChunk = spatial::toChunkCoordinate(tileOrigin + sf::Vector2i(x, y));
+			if (differentSurroundings.contains(neighbourChunk))
+			{
+				auto delta = neighbourChunk - coordinate;
+				if (delta.x != 0 && delta.y != 0) continue;
+				float distance = spatial::distance(center, { x, y });
+				if (noiseMap.at(x, y) > 0.8*std::powf(distance / radius, 3))
 				{
-					bitgrid.at(x, y).set(0);
+					bitgrid.at(x, y).reset(0);
 				}
 			}
 		}
