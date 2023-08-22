@@ -36,7 +36,6 @@ namespace drft::gen
 		std::unordered_map<std::string, BiomeType> _biomeTypes;
 		spatial::Grid<const BiomeType*> _biomeMap;
 		
-		std::unordered_map<sf::Vector2i, unsigned int> _boundarySeeds;
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
 		std::unordered_map<unsigned int, BiomeZone> _zones;
 		std::unordered_map<std::string, NoiseMap> _noiseMaps;

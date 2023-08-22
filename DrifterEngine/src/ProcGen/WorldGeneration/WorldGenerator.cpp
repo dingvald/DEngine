@@ -21,14 +21,6 @@ static const sf::Vector2i FULL_CHUNK = { drft::spatial::CHUNK_WIDTH, drft::spati
 static const sf::Vector2i HALF_CHUNK = { FULL_CHUNK.x / 2, FULL_CHUNK.y / 2 };
 static const sf::Vector2i QUARTER_CHUNK = { FULL_CHUNK.x / 4, FULL_CHUNK.y / 4 };
 
-static const std::array<sf::Vector2i, 4u> BOUNDARY_POINTS =
-{
-	sf::Vector2i(0, -QUARTER_CHUNK.y),
-	sf::Vector2i(-QUARTER_CHUNK.x, 0),
-	sf::Vector2i(3 * QUARTER_CHUNK.x, 0),
-	sf::Vector2i(0, 3 * QUARTER_CHUNK.y)
-};
-
 drft::gen::WorldGenerator::WorldGenerator()
 {
     
@@ -321,37 +313,44 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 	// Stitch adjacent chunks
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate) - QUARTER_CHUNK;
 	spatial::Grid<std::bitset<32>> bitgrid(FULL_CHUNK.x + HALF_CHUNK.x, FULL_CHUNK.y + HALF_CHUNK.y);
+	NoiseMap noiseMap = rng::NoiseMap::generate({ bitgrid.width(), bitgrid.height() }, { 5,5 }, _seed + coordinate.x*coordinate.y, 8, 3.0, 1.0);
+	const float maxDistance = spatial::distance(sf::Vector2i{ 0,0 }, {bitgrid.width() / 2, bitgrid.height() / 2});
+
 	std::vector<sf::Vector2i> differentSurroundings;
 	auto surroundings = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
-	for (auto surrounding : surroundings)
+	for (auto& surrounding : surroundings)
 	{
 		if (!_biomeMap.contains(surrounding.x, surrounding.y)) continue;
-		if (_biomeMap.at(coordinate.x, coordinate.y) != _biomeMap.at(surrounding.x, surrounding.y))
+		auto myBiome = _biomeMap.at(coordinate.x, coordinate.y);
+		auto otherBiome = _biomeMap.at(surrounding.x, surrounding.y);
+		if (myBiome != otherBiome)
 		{
 			differentSurroundings.push_back(surrounding);
 		}
 	}
-	/// DEBUG HERE vvvvv ///////
-	for (auto diff : differentSurroundings)
+	for (auto& diff : differentSurroundings)
 	{
-		const auto delta = coordinate - diff;
-		sf::Vector2i offset = { delta.x * HALF_CHUNK.x, delta.y * HALF_CHUNK.y };
-		sf::Vector2i origin = HALF_CHUNK + offset;
-		NoiseMap noise = rng::NoiseMap::generate(HALF_CHUNK, { 1,1 }, _seed);
+		const auto delta = diff - coordinate;
+		sf::Vector2i tileOffset = { delta.x * HALF_CHUNK.x, delta.y * HALF_CHUNK.y };
+		sf::Vector2i origin = HALF_CHUNK + tileOffset;
 
 		for (int y = origin.y; y < origin.y + HALF_CHUNK.y; ++y)
 		{
 			for (int x = origin.x; x < origin.x + HALF_CHUNK.x; ++x)
 			{
-				if (noise.at(x - origin.x, y - origin.y) < 0.50)
+				sf::Vector2i center = { bitgrid.width() / 2, bitgrid.height() / 2 };
+				sf::Vector2i tile = { x, y };
+				float distance = spatial::distance(center, tile);
+				float threshold = std::powf(distance / maxDistance, 2.0f);
+				if (noiseMap.at(x, y) < 1.8*threshold)
 				{
 					bitgrid.at(x, y).set(0);
 				}
 			}
 		}
 	}
-	
 
+	// Place entities into available spaces
 	auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 	for (auto& [category, entities] : biomeType->entityCategories)
 	{

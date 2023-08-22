@@ -60,9 +60,12 @@
             }
           },
           "Boulder": {
-            "Algorithm": "PerlinSpread",
+            "Algorithm": "OrganicSpread",
             "Parameters": {
-              "Threshold": 0.60
+              "Generations": 2,
+              "StartingSeeds": 5,
+              "SeedsPerGeneration": 2,
+              "Radius": 10
             }
           }
         },

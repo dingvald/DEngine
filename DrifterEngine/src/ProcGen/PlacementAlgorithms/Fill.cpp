@@ -9,10 +9,8 @@ std::vector<sf::Vector2i> drft::gen::fill(const spatial::Grid<std::bitset<32>>& 
 	{
 		for (int x = 0; x < grid.width(); ++x)
 		{
-			if (grid.at(x, y).none())
-			{
-				positions.emplace_back(x, y);
-			}
+			if (grid.at(x, y).any()) continue;
+			positions.emplace_back(x, y);
 		}
 	}
 
