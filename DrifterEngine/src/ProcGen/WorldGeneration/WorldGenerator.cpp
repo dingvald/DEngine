@@ -357,9 +357,14 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 				int x_edge = delta.x == 0 ? x : (delta.x > 0 ? FULL_CHUNK.x + HALF_CHUNK.x : 0);
 				int y_edge = delta.y == 0 ? y : (delta.y > 0 ? FULL_CHUNK.y + HALF_CHUNK.y : 0);
 
-				float distance = spatial::distance(sf::Vector2i(x_center, y_center), sf::Vector2i(x, y));
+				float maxDistance = spatial::distance(sf::Vector2i(x_center, y_center), { x_edge, y_edge });
+				if (delta.x != 0 && delta.y != 0)
+				{
+					maxDistance -= (maxDistance / 16);
+				}
+				float distance = std::min(maxDistance, spatial::distance(sf::Vector2i(x_center, y_center), { x, y }));
 
-				if (noiseMap.at(x, y) > 0.9 * std::powf(distance / radius, 4.f))
+				if (noiseMap.at(x, y) > 0.9 * std::powf(distance / maxDistance, 4.f))
 				{
 					bitgrid.at(x, y).reset(0);
 				}
