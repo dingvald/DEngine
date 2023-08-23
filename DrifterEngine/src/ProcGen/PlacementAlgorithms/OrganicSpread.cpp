@@ -18,8 +18,8 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(const spatial::Grid<std::bits
 		int safetyCount = 20;
 		do {
 			--safetyCount;
-			x = rng::RandomNumberGenerator::intInRange(grid.width()/8, grid.width() - grid.width() / 8);
-			y = rng::RandomNumberGenerator::intInRange(grid.height()/8, grid.height() - grid.height() / 8);
+			x = rng::RandomNumberGenerator::intInRange(0, grid.width() - 1);
+			y = rng::RandomNumberGenerator::intInRange(0, grid.height() - 1);
 		} while (grid.at(x, y).any() && safetyCount > 0);
 		if (safetyCount > 0)
 		{

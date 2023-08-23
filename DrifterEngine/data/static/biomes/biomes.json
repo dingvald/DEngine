@@ -32,9 +32,9 @@
             "Algorithm": "OrganicSpread",
             "Parameters": {
               "Generations": 3,
-              "StartingSeeds": 4,
+              "StartingSeeds": 5,
               "SeedsPerGeneration": 4,
-              "Radius": 8
+              "Radius": 10
             }
           }
         }
