@@ -326,7 +326,6 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 		});
 	NoiseMap noiseMap = rng::NoiseMap::generate({ bitgrid.width(), bitgrid.height() }, { 3,3 }, _seed + coordinate.x*coordinate.y, 8, 3.0f, 0.55f);
 	sf::Vector2i center = { bitgrid.width() / 2, bitgrid.height() / 2 };
-	float radius = HALF_CHUNK.x + QUARTER_CHUNK.x;
 	
 	std::vector<sf::Vector2i> differentSurroundings;
 	auto surroundings = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
@@ -347,6 +346,11 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 		int height = delta.y == 0 ? FULL_CHUNK.y : HALF_CHUNK.y;
 		int x_origin = delta.x < 0 ? 0 : (delta.x == 0 ? QUARTER_CHUNK.x : FULL_CHUNK.x);
 		int y_origin = delta.y < 0 ? 0 : (delta.y == 0 ? QUARTER_CHUNK.y : FULL_CHUNK.y);
+		float radius = QUARTER_CHUNK.x + HALF_CHUNK.x;
+		if (delta.x != 0 && delta.y != 0)
+		{
+			radius += QUARTER_CHUNK.x / 2;
+		}
 
 		for (int y = y_origin; y < y_origin + height; ++y)
 		{
@@ -357,14 +361,9 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 				int x_edge = delta.x == 0 ? x : (delta.x > 0 ? FULL_CHUNK.x + HALF_CHUNK.x : 0);
 				int y_edge = delta.y == 0 ? y : (delta.y > 0 ? FULL_CHUNK.y + HALF_CHUNK.y : 0);
 
-				float maxDistance = spatial::distance(sf::Vector2i(x_center, y_center), { x_edge, y_edge });
-				if (delta.x != 0 && delta.y != 0)
-				{
-					maxDistance -= (maxDistance / 16);
-				}
-				float distance = std::min(maxDistance, spatial::distance(sf::Vector2i(x_center, y_center), { x, y }));
+				float distance = std::min(radius, spatial::distance(sf::Vector2i(x_center, y_center), { x, y }));
 
-				if (noiseMap.at(x, y) > 0.9 * std::powf(distance / maxDistance, 4.f))
+				if (noiseMap.at(x, y) > 0.9 * std::powf(distance / radius, 4.f))
 				{
 					bitgrid.at(x, y).reset(0);
 				}
