@@ -28,6 +28,7 @@ namespace drft::gen
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		std::unordered_set<std::string> determinePotentialBiomes(sf::Vector2i coordinate) const;
 		const BiomeType* selectBiomeType(sf::Vector2i coordinate) const;
+		void blendBiomeBoundaries(sf::Vector2i coordinate, spatial::Grid<std::bitset<32>>& bitgrid) const;
 
 	private:
 		using NoiseMap = spatial::Grid<double>;
