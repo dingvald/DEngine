@@ -17,6 +17,11 @@ unsigned int drft::rng::RandomNumberGenerator::getSeed()
 	return _seed;
 }
 
+std::mt19937& drft::rng::RandomNumberGenerator::getGenerator()
+{
+	return _rng;
+}
+
 double RandomNumberGenerator::realInRange(double min, double max)
 {
 	using Dist = std::uniform_real_distribution<double>;

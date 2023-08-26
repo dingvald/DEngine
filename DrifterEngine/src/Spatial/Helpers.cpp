@@ -1,6 +1,21 @@
 #include "pch.h"
 #include "Helpers.h"
 
+std::vector<sf::Vector2i> drft::spatial::getIntRect(sf::Vector2i origin, int width, int height)
+{
+	std::vector<sf::Vector2i> result;
+
+	for (int y = origin.y; y <= origin.y + height; ++y)
+	{
+		for (int x = origin.x; x <= origin.x + width; ++x)
+		{
+			result.emplace_back(x, y);
+		}
+	}
+
+	return result;
+}
+
 std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(const sf::Vector2i centerPosition, const int radius)
 {
 	std::vector<sf::Vector2i> result;

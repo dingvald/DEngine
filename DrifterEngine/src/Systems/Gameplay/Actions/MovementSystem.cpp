@@ -24,7 +24,7 @@ void drft::system::MovementSystem::update(const float dt)
 			continue;
 		}
 
-		sf::Vector2i targetPosition = spatial::toTileSpace(pos.position) + move.direction;
+		sf::Vector2i targetPosition = pos.position + move.direction;
 		const auto blockers = grid.entitiesAt(targetPosition,
 			[this](entt::entity entity) -> bool
 			{
@@ -41,9 +41,9 @@ void drft::system::MovementSystem::update(const float dt)
 		if (blockers.empty())
 		{
 			registry->patch<component::Position>(entity,
-				[&targetPosition](component::Position& pos)
+				[targetPosition](component::Position& pos)
 				{
-					pos.position = spatial::toWorldSpace(targetPosition);
+					pos.position = targetPosition;
 				});
 			registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
 			spendActionPoints(*registry, entity, ActionType::Move);

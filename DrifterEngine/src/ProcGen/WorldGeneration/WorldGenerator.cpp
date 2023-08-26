@@ -18,11 +18,6 @@
 #include "Machines/WildernessHorde.h"
 #include "Machines/OreDeposit.h"
 
-std::unordered_set<std::string> Dungeons =
-{
-	"Forest"
-};
-
 static const sf::Vector2i FULL_CHUNK = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 static const sf::Vector2i HALF_CHUNK = { FULL_CHUNK.x / 2, FULL_CHUNK.y / 2 };
 static const sf::Vector2i QUARTER_CHUNK = { FULL_CHUNK.x / 4, FULL_CHUNK.y / 4 };
@@ -164,9 +159,7 @@ void drft::gen::WorldGenerator::generate()
 	std::cout << "Generating zones..." << std::endl;
 	generateZones();
 	std::cout << "Zones complete." << std::endl;
-	std::cout << "Generating dungeons..." << std::endl;
-	generateDungeons();
-	std::cout << "Dungeons complete." << std::endl;
+	// generate dungeons
 	// generate modifications
 	// generate structures
 
@@ -182,6 +175,7 @@ void drft::gen::WorldGenerator::generateTerrain()
 		currentSeed = rng::noise(currentSeed);
 	}
 	_noiseMaps.at("Volcanism") = rng::NoiseMap::generate(_dimensions, { 1,1 }, currentSeed, 16, 2.0, 0.55);
+
 	// Set north pole
 	customShaper(_noiseMaps.at("Temperature"), [](double& val, sf::Vector2i position)
 		{
@@ -193,6 +187,7 @@ void drft::gen::WorldGenerator::generateTerrain()
 		{
 			val = std::clamp(val - 0.97, 0.0, 1.0);
 		});
+
 	for (int y = 0; y < _dimensions.y; ++y)
 	{
 		for (int x = 0; x < _dimensions.x; ++x)
@@ -265,38 +260,6 @@ void drft::gen::WorldGenerator::generateZones()
 	}
 
 	std::cout << "Zones identified: " << _zones.size() << std::endl;
-}
-
-void drft::gen::WorldGenerator::generateDungeons()
-{
-	struct ZoneSizeIDPair
-	{
-		unsigned int id = 0;
-		int size = 0;
-	};
-	std::unordered_map<std::string, ZoneSizeIDPair> largestZones;
-	// Find largest zones
-	for (auto& [id, zone] : _zones)
-	{
-		if (zone.size() > largestZones[zone.getType()->name].size)
-		{
-			largestZones[zone.getType()->name] = { id, zone.size() };
-		}
-	}
-
-	std::cout << "/////////////////////////////////" << std::endl;
-	std::cout << "Dungeon Candidates:" << std::endl;
-	for (auto& [name, zoneIDSizepair] : largestZones)
-	{
-		std::cout << "Zone: " << name << std::endl;
-		std::cout << "Size: " << zoneIDSizepair.size << std::endl;
-		auto position = *_zones.at(zoneIDSizepair.id).getZone().begin();
-		std::cout << "Location: " << "(" << position.x << ", " << position.y << ")" << std::endl;
-		std::cout << std::endl;
-	}
-	std::cout << "/////////////////////////////////" << std::endl;
-
-
 }
 
 std::unordered_set<sf::Vector2i> drft::gen::WorldGenerator::floodFillZone(sf::Vector2i startingNode, const BiomeType* type)

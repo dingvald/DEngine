@@ -1,23 +1,93 @@
 #pragma once
-#include "BiomeTypes.h"
+#include "Spatial/Grid.h"
+#include "Utility/stdHashing.h"
 
 namespace drft::gen
 {
-	struct WildernessPrototype
+	struct Range
+	{
+	public:
+		Range(float min = 0.0, float max = 1.0)
+			: _min(min)
+			, _max(max)
+		{}
+		void setMax(float max) { _max = max; }
+		void setMin(float min) { _min = min; }
+		float getMax() const { return _max; }
+		float getMin() const { return _min; }
+		bool isWithinRange(float val) const
+		{
+			if (val < _max && val > _min)
+				return true;
+			else
+				return false;
+		}
+		float distance(float val) const
+		{
+			if (isWithinRange(val)) return 0.0f;
+			if (val < _min)
+			{
+				return std::abs(val - _min);
+			}
+			else
+			{
+				return std::abs(val - _max);
+			}
+		}
+	protected:
+		float _max = 1.0f;
+		float _min = 0.0f;
+	};
+
+	struct BiomeIcon
+	{
+		unsigned int sprite = 4;
+		sf::Color color = sf::Color::Magenta;
+	};
+
+	struct BiomeType
 	{
 		std::string name;
-		std::string algorithm;
-		std::unordered_map<std::string, float> params;
+		BiomeIcon icon;
+		std::unordered_map<std::string, Range> ranges;
+
+		struct SpawningAlgorithm
+		{
+			std::string name;
+			std::unordered_map<std::string, float> parameters;
+		};
+		// { entity name, map of {algorithm, params} }
+		using EntityAlgorithm = std::unordered_map<std::string, SpawningAlgorithm>;
+		// { category name, list of {entity, algorithm} }
+		using EntityCategories = std::unordered_map<std::string, EntityAlgorithm>;
+
+		EntityCategories entityCategories;
 	};
 
-	struct Biome
+	struct BiomeZone
 	{
-		std::optional<std::string> pickMachine(int seed) const;
-		std::string pickRandomEntity(const std::string& category) const;
+		BiomeZone(const BiomeType* type)
+			:_type(type)
+		{}
+		const BiomeType* getType() const { return _type; }
+		void setID(unsigned int id) { _id = id; }
+		unsigned int getID() const { return _id; }
+		int size() const { return _zone.size(); }
+		void put(sf::Vector2i position) { _zone.insert(position); }
+		const std::unordered_set<sf::Vector2i>& getZone() const { return _zone; }
+	private:
+		const BiomeType* _type;
+		unsigned int _id = 0;
+		std::unordered_set<sf::Vector2i> _zone;
+	};
 
-		BiomeType type;
-		using PrototypeList = std::vector<WildernessPrototype>;
-		std::unordered_map<std::string, PrototypeList> prototypes;
-		std::unordered_map<std::string, float> machines;
+	class Biome
+	{
+
+		unsigned int zoneID = 0;
+		spatial::Grid<int> reservedSpaces;
 	};
 }
+
+
+

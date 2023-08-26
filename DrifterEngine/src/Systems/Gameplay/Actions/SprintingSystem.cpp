@@ -94,7 +94,7 @@ void drft::system::SprintingSystem::addSprintEffect(entt::registry& registry, en
 {
 	auto effect = entt::handle{ registry, registry.create() };
 	effect.emplace<component::Render>(static_cast<unsigned int>(util::Sprite::StatusEffect), 4u, sf::Color(50,150,50));
-	effect.emplace<component::Position>(sf::Vector2f(0,0));
+	effect.emplace<component::Position>(sf::Vector2i(0,0));
 	_sprintEffects.emplace(entity, effect.entity());
 }
 

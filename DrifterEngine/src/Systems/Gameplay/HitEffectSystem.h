@@ -12,7 +12,7 @@ namespace drft::system
 	private:
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
 		void onDie(entt::registry& registry, entt::entity entity);
-		void queueEffect(sf::Vector2f position, unsigned int sprite, sf::Color color, std::function<bool(entt::registry&, entt::entity)> onFixedUpdate);
+		void queueEffect(sf::Vector2i position, unsigned int sprite, sf::Color color, std::function<bool(entt::registry&, entt::entity)> onFixedUpdate);
 		void removeEffect(entt::entity effect);
 
 	private:

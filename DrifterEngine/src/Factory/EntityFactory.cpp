@@ -80,9 +80,9 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 						// HACKZZ: Inflexible - assumes certain types in arrays
 						auto arr = data.value.GetArray();
 						int size = arr.Size();
-						if (size == 2 && arr[0].IsFloat())
+						if (size == 2 && arr[0].IsInt())
 						{
-							sf::Vector2f vec2 = { arr[0].GetFloat(), arr[1].GetFloat() };
+							sf::Vector2i vec2 = { arr[0].GetInt(), arr[1].GetInt() };
 							meta.data(entt::hashed_string(memberName)).set(any, vec2);
 						}
 						else if (size == 3 && arr[0].IsInt())

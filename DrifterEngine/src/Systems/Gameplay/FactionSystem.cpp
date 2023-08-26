@@ -11,9 +11,21 @@ FactionSystem::FactionTable FactionSystem::_factionTable;
 
 void drft::system::FactionSystem::init()
 {
-	_factionTable["good"]["bad"] = -1000;
-	_factionTable["good"]["neutral"] = 0;
-	_factionTable["bad"]["neutral"] = 0;
+	// player
+	_factionTable["player"]["carrion"] = -1000;
+	_factionTable["player"]["parasite"] = -1000;
+	_factionTable["player"]["rodent"] = -1000;
+	_factionTable["player"]["feline"] = -1000;
+	_factionTable["player"]["reptile"] = -1000;
+	_factionTable["player"]["golem"] = -1000;
+	_factionTable["player"]["horror"] = -1000;
+
+	_factionTable["rodent"]["feline"] = -1000;
+	_factionTable["reptile"]["feline"] = -1000;
+	_factionTable["carrion"]["rodent"] = -1000;
+	_factionTable["parasite"]["rodent"] = -1000;
+	_factionTable["parasite"]["feline"] = -1000;
+
 }
 
 Closeness drft::system::FactionSystem::getCloseness(const std::string& faction1, const std::string& faction2)

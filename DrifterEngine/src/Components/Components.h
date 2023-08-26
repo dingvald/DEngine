@@ -15,7 +15,7 @@ namespace component
 
 	struct Position
 	{
-		sf::Vector2f position = { 0.f,0.f };
+		sf::Vector2i position = { 0,0 };
 	};
 
 	struct Render
@@ -86,15 +86,16 @@ namespace component
 
 	struct Camera
 	{
-		sf::FloatRect viewport = { 0.f,0.f,0.f,0.f };
+		sf::FloatRect viewport;
+		sf::Vector2f lag;
 		entt::entity target = { entt::null };
 	};
 
 	struct Actor
 	{
-		int ap = { 0 };
-		float moveSpeed = { 1.0f };
-		float actSpeed = { 1.0f };
+		int ap = 0;
+		float moveSpeed = 1.0f;
+		float actSpeed = 1.0f;
 	};
 
 	struct Health

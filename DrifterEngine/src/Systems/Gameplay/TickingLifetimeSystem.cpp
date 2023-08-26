@@ -10,6 +10,7 @@ void drft::system::TickingLifetimeSystem::init()
 
 void drft::system::TickingLifetimeSystem::onGameTickEvent(events::GameTickEvent& ev)
 {
+	// Has position so that items in inventory don't tick their lifetimes
 	auto view = registry->view<component::TickingLifetime, component::Position>();
 	for (auto [entity, lifetime, pos] : view.each())
 	{

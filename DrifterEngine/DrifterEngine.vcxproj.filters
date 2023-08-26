@@ -201,10 +201,7 @@
     <ClCompile Include="src\Random\PerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\WorldGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\Biome.cpp">
+    <ClCompile Include="src\ProcGen\WorldGeneration\WorldGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Random\RandomNoise.cpp">
@@ -312,7 +309,7 @@
     <ClCompile Include="src\Systems\Helpers\FindItemOwner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Helpers\GetCurrentCameraOrigin.cpp">
+    <ClCompile Include="src\Systems\Helpers\GetCurrentCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\GetTextCenter.cpp">
@@ -342,7 +339,7 @@
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Machine\Machine.cpp">
+    <ClCompile Include="src\Machines\Machine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Factory\MachineFactory.cpp">
@@ -352,6 +349,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\RemoveFromContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machines\Chest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machines\HeartShrine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machines\WildernessHorde.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machines\OreDeposit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorldMap\WorldMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Biome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random\NoiseMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\Math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1034,13 +1058,7 @@
     <ClInclude Include="src\Random\PerlinNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\WorldGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\BiomeTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\Biome.h">
+    <ClInclude Include="src\ProcGen\WorldGeneration\WorldGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\RandomNoise.h">
@@ -1175,7 +1193,7 @@
     <ClInclude Include="src\Systems\Helpers\FindItemOwner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Helpers\GetCurrentCameraOrigin.h">
+    <ClInclude Include="src\Systems\Helpers\GetCurrentCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\GetTextCenter.h">
@@ -1205,19 +1223,49 @@
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Machine\Machine.h">
+    <ClInclude Include="src\Machines\Machine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Factory\MachineFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GridEnums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\RemoveFromContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\Chest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\HeartShrine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\WildernessHorde.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machines\OreDeposit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\SendFloatingMessageEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WorldMap\WorldMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Biome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random\NoiseMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\GridBitFlags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1236,8 +1284,6 @@
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\wearables.json" />
     <None Include="data\static\entities\bases.json" />
-    <None Include="data\static\machines\faction.json" />
-    <None Include="data\static\machines\generic.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">

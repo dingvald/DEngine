@@ -61,7 +61,7 @@ void drft::system::HorrorSpawningSystem::spawnHorror() const
 	{
 		const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
 		
-		auto position = rng::RandomNumberGenerator::positionInCircle(spatial::toTileSpace(pos.position), 96);
+		auto position = rng::RandomNumberGenerator::positionInCircle(pos.position, 96);
 		auto isBlocking = [this](entt::entity entity) -> bool
 		{
 			if (auto physical = registry->try_get<component::Physical>(entity))
@@ -72,7 +72,7 @@ void drft::system::HorrorSpawningSystem::spawnHorror() const
 		};
 
 		auto blockers = grid.entitiesAt(position, isBlocking);
-		while (!blockers.empty() && spatial::distance(position, spatial::toTileSpace(pos.position)) < 16)
+		while (!blockers.empty() && spatial::distance(position, pos.position) < 16)
 		{
 			position = rng::RandomNumberGenerator::positionInCircle(spatial::toTileSpace(pos.position), 96);
 			blockers = grid.entitiesAt(position, isBlocking);
@@ -99,7 +99,7 @@ void drft::system::HorrorSpawningSystem::spawnHorror() const
 		horror.emplace<component::Horror>(true);
 		horror.patch<component::Position>([position](component::Position& pos)
 			{
-				pos.position = spatial::toWorldSpace(position);
+				pos.position = position;
 			});
 	}
 }

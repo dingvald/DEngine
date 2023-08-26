@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "VirtualChunk.h"
-#include "ProcGen/WorldGenerator.h"
+#include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include "Utility/CopyEntity.h"
 #include "Utility/SaveRegistry.h"
 #include "Utility/LoadRegistry.h"
 #include "Conversions.h"
 #include "WorldGrid.h"
+#include "WorldMap/WorldMap.h"
 
 using namespace drft::spatial;
 using namespace std::chrono_literals;
@@ -29,7 +30,10 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 		std::cout << "Building " << toString() << std::endl;
 		setState(ChunkState::Building);
 	}
-	reg.ctx().get<gen::WorldGenerator&>().buildChunk(_coordinate, reg);
+
+	auto& worldMap = reg.ctx().get<WorldMap&>();
+	worldMap.finalizeBuild(_coordinate, reg);
+
 	setState(ChunkState::Built);
 
 	return ioStatus::Done;

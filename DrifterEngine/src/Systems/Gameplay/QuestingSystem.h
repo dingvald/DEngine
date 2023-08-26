@@ -13,11 +13,8 @@ namespace drft::system
 		void load(cereal::JSONInputArchive& iarchive);
 
 	private:
-		void setNewGoalPosition(sf::Vector2i currentCoordinate);
-		void buildGoalEntity();
 
 	private:
-		bool _isGoalBuilt = false;
 		sf::Vector2i _goalPosition;
 	};
 }

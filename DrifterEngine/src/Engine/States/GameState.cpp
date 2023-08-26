@@ -6,7 +6,7 @@
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Events/RequestStateChange.h"
-#include "ProcGen/WorldGenerator.h"
+#include "WorldMap/WorldMap.h"
 
 #pragma region System Includes
 #include "Systems/SystemScheduler.h"
@@ -33,7 +33,6 @@
 #include "Systems/Gameplay/Actions/EquipItemSystem.h"
 #include "Systems/Gameplay/ItemDurabilitySystem.h"
 #include "Systems/Gameplay/HitEffectSystem.h"
-#include "Systems/Gameplay/HorrorSpawningSystem.h"
 #include "Systems/Gameplay/Actions/CraftItemSystem.h"
 #include "Systems/Gameplay/Actions/MovementSystem.h"
 #include "Systems/Gameplay/Actions/WaitingSystem.h"
@@ -69,7 +68,7 @@
 // TODO: Move save directory to state context
 static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";
 static constexpr std::string_view PLAYER_FILE_NAME = "playerSaveData";
-static constexpr std::string_view GAME_STATE_SAVE_FILENAME = ".\\data\\savegame\\gamestate.json"; // file extension added because it will be fixed
+static constexpr std::string_view GAME_STATE_SAVE_FILENAME = ".\\data\\savegame\\gamestate.json"; // file extension added because it will always be json
 
 drft::GameState::GameState(StateStack& stack, StateContext& context) 
 	: State(stack, context)
@@ -136,6 +135,10 @@ bool drft::GameState::loadOrCreatePlayer()
 	{
 		assert(_factory->has("Player"), "No player prototype found - is JSON loaded?");
 		_player = _factory->build("Player", getContext().registry);
+		_player.patch<component::Position>([this](component::Position& pos)
+			{
+				pos.position = this->_startingPosition;
+			});
 		return true;
 	}
 	return true;
@@ -161,7 +164,8 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace_as<sf::Font&>("terminus"_hs, getContext().fonts.get("Terminus"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
-	getContext().registry.ctx().get<gen::WorldGenerator&>().setSeed(rng::RandomNumberGenerator::getSeed());
+	getContext().registry.ctx().get<WorldMap&>().init({ 160, 90 }, rng::RandomNumberGenerator::getSeed());
+	_startingPosition = getContext().registry.ctx().get<WorldMap&>().getStartingPosition("Forest");
 }
 
 void drft::GameState::loadRegistry()
@@ -248,7 +252,6 @@ void drft::GameState::importSystems()
 	_systems->add<PlayerInput>(						Phase::OnProcessInput);
 	_systems->add<ArtificialInput>(					Phase::OnProcessInput);
 
-	_systems->add<HorrorSpawningSystem>(			Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
 	_systems->add<SelectDirectionSystem>(			Phase::OnUpdate);

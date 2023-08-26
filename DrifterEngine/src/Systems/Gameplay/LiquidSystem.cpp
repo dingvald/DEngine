@@ -25,7 +25,7 @@ void drft::system::LiquidSystem::fixedUpdate()
 	{
 		if (liquid.volume > 500)
 		{
-			auto entities = _grid->entitiesAt(spatial::toTileSpace(pos.position),
+			auto entities = _grid->entitiesAt(pos.position,
 				[this](entt::entity entity) -> bool
 				{
 					return isAffectedByLiquids(entity);
@@ -41,7 +41,7 @@ void drft::system::LiquidSystem::fixedUpdate()
 	auto inLiquidView = registry->view<component::InLiquid, component::Position>();
 	for (auto [entity, inLiquid, pos] : inLiquidView.each())
 	{
-		auto liquids = _grid->entitiesAt(spatial::toTileSpace(pos.position),
+		auto liquids = _grid->entitiesAt(pos.position,
 			[this](auto entity) -> bool
 			{
 				return registry->any_of<component::Liquid>(entity);
@@ -72,7 +72,7 @@ bool drft::system::LiquidSystem::isAffectedByLiquids(entt::entity entity) const
 	return false;
 }
 
-void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector2f position, sf::Color color)
+void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector2i position, sf::Color color)
 {
 	sf::Color translucentColor = { color.r, color.g, color.b, 200 };
 	auto effect = entt::handle{ *registry, registry->create() };

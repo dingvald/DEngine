@@ -2,6 +2,7 @@
 #include "Systems/System.h"
 #include "GUI/GUIElement.h"
 #include "Events/ItemBreakEvent.h"
+#include "Events/SendFloatingMessageEvent.h"
 
 namespace drft::system
 {
@@ -18,7 +19,6 @@ namespace drft::system
 		void createStaminaBar();
 		void createInHandsDisplay();
 		void createItemsOnGroundDisplay();
-		void createFloatingMessagesDisplay();
 
 		void updateLevelInfo(entt::const_handle player);
 		void updateHealthBar(entt::const_handle player);
@@ -29,9 +29,10 @@ namespace drft::system
 		void updateFlashEffects();
 		void addItemIcon(gui::Element& container, entt::entity item);
 
-		void queueFloatingMessage(std::string&& message, sf::Color color, sf::Vector2f position, int ttl);
+		void queueFloatingMessage(const std::string& message, sf::Color color, sf::Vector2i position, sf::Vector2f velocity, int ttl, bool isScreenSpace);
 		void queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl);
 
+		void onSendFloatingMessageEvent(events::SendFloatingMessageEvent& ev);
 		void onItemBreakEvent(events::ItemBreakEvent& ev);
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
 		void onConsumeStamina(entt::registry& registry, entt::entity entity);
@@ -46,10 +47,14 @@ namespace drft::system
 		struct FloatingMessage
 		{
 			sf::Text text;
-			sf::Vector2f position;
+			sf::Vector2i position;
+			sf::Vector2f velocity;
 			int ttl = 0;
+			bool isScreenSpace = false;
+			sf::Vector2f distanceTraveled;
 		};
 
+		// Static HUD
 		sf::Text _lvlText{};
 		sf::Text _xpText{};
 
@@ -64,6 +69,7 @@ namespace drft::system
 		gui::DualContainer _inHandsDisplay;
 		gui::List _itemsOnGround{ false };
 
+		// Messages
 		std::vector<FloatingMessage> _floatingMessages;
 		std::vector<FlashEffect> _flashEffects;
 	};

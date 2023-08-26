@@ -21,7 +21,7 @@ void drft::system::DeathSystem::update(const float dt)
 	for (auto [entity, physical, pos] : view.each())
 	{
 		int chance = 100;
-		for (auto matName : physical.materials)
+		for (auto& matName : physical.materials)
 		{
 			int roll = rng::RandomNumberGenerator::intInRange(0, 100);
 			if (roll <= chance)

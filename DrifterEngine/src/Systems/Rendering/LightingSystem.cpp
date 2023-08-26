@@ -54,18 +54,18 @@ void drft::system::LightingSystem::fixedUpdate()
 	{
 		if (registry->any_of<component::LightBlocking>(entity))
 		{
-			_lightBlockingPositions.emplace(spatial::toTileSpace(pos.position));
+			_lightBlockingPositions.emplace(pos.position);
 		}
 	}
 	// Apply light from permenant light sources
 	auto lighting = registry->view<const component::LightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : lighting.each())
 	{
-		_fov->compute(spatial::toTileSpace(lightpos.position), static_cast<int>(light.radius));
+		_fov->compute(lightpos.position, static_cast<int>(light.radius));
 		for (auto entity : _toLight)
 		{
 			auto pos = registry->get<component::Position>(entity);
-			auto tileDistance = spatial::distance(spatial::toTileSpace(pos.position), spatial::toTileSpace(lightpos.position));
+			auto tileDistance = spatial::distance(pos.position, lightpos.position);
 			float denom = (tileDistance / light.radius) + (1.f*light.dropOff);
 			float i = std::clamp( 1 / (denom*denom), 0.0f, 1.0f);
 			sf::Color lightColor = 
@@ -91,11 +91,11 @@ void drft::system::LightingSystem::fixedUpdate()
 	auto tempLighting = registry->view<const component::TempLightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : tempLighting.each())
 	{
-		_fov->compute(spatial::toTileSpace(lightpos.position), static_cast<int>(light.radius));
+		_fov->compute(lightpos.position, static_cast<int>(light.radius));
 		for (auto entity : _toLight)
 		{
 			auto pos = registry->get<component::Position>(entity);
-			auto tileDistance = spatial::distance(spatial::toTileSpace(pos.position), spatial::toTileSpace(lightpos.position));
+			auto tileDistance = spatial::distance(pos.position, lightpos.position);
 			float denom = (tileDistance / light.radius) + (1.f * light.dropOff);
 			float i = std::clamp(1 / (denom * denom), 0.0f, 1.0f);
 			sf::Color lightColor =

@@ -23,7 +23,6 @@ namespace drft::gen
 		void generateTerrain();
 		void removeIsolatedBiomes();
 		void generateZones();
-		void generateDungeons();
 		std::unordered_set<sf::Vector2i> floodFillZone(sf::Vector2i startingNode, const BiomeType* type);
 		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;

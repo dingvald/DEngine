@@ -1,340 +1,296 @@
 {
   "Biomes": {
     "Forest": {
-      "Base Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 500
-          }
-        }
+      "Icon": {
+        "Sprite": 5,
+        "Color": [ 65, 97, 63 ]
       },
-      "Small Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 10
+      "Climate": {
+        "Temperature": [ 0.0, 20.0 ],
+        "Humidity": [ 30.0, 70.0 ],
+        "Altitude": [ 50, 1500 ]
+      },
+      "Entities": {
+        "Geological": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 3,
+              "Maximum": 7
+            }
           }
         },
-
-        "Herb": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 20
+        "Vegetation": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 200,
+              "Maximum": 400
+            }
+          },
+          "Tree": {
+            "Algorithm": "OrganicSpread",
+            "Parameters": {
+              "Generations": 3,
+              "StartingSeeds": 5,
+              "SeedsPerGeneration": 4,
+              "Radius": 10
+            }
           }
         }
-      },
-      "Large Environmental": {
-        "Tree": {
-          "Algorithm": "OrganicSpread",
-          "Params": {
-            "Generations": 3,
-            "StartingSeeds": 7,
-            "SeedsPerGeneration": 3,
-            "Radius": 9
-          }
-        }
-      },
-      "Wilderness": {
-        "Mosquito": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 5
-          }
-        },
-        "Firefly": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
-          }
-        },
-        "Rat": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 3
-          }
-        },
-        "Cougar": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
-          }
-        }
-      },
-      "Machines": {
-        "Chest": 1.0
-      }
+      } 
     },
-    "Mountain": {
-      "Base Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 50
-          }
-        }
+    "Nordic Foothills": {
+      "Icon": {
+        "Sprite": 76,
+        "Color": [ 0, 74, 54 ]
       },
-      "Small Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 100
-          }
-        },
-        "Mountain Flower": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
-          }
-        }
+      "Climate": {
+        "Temperature": [ -1.0, 8.0 ],
+        "Humidity": [ 10.0, 50.0 ],
+        "Altitude": [ 1000, 2000 ]
       },
-      "Large Environmental": {
-        "Tree": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 40
+      "Entities": {
+        "Geological": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 20,
+              "Maximum": 50
+            }
+          },
+          "Boulder": {
+            "Algorithm": "OrganicSpread",
+            "Parameters": {
+              "Generations": 2,
+              "StartingSeeds": 5,
+              "SeedsPerGeneration": 2,
+              "Radius": 10
+            }
           }
         },
-        "Boulder": {
-          "Algorithm": "PerlinSpread",
-          "Params": {
-            "Threshold": 0.51
-          }
-        },
-        "Iron Deposit": {
-          "Algorithm": "OrganicSpread",
-          "Params": {
-            "Generations": 2,
-            "StartingSeeds": 1,
-            "SeedsPerGeneration": 2,
-            "Radius": 2
-          }
-        }
-      },
-      "Wilderness": {
-        "Golem": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
-        },
-        "Mountain Lion": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 2
+        "Vegetation": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 10,
+              "Maximum": 20
+            }
+          },
+          "Pine Tree": {
+            "Algorithm": "OrganicSpread",
+            "Parameters": {
+              "Generations": 3,
+              "StartingSeeds": 5,
+              "SeedsPerGeneration": 3,
+              "Radius": 8
+            }
           }
         }
       }
     },
-    "Lake": {
-      "Base Environmental": {
-        "Water": {
-          "Algorithm": "Fill",
-          "Params": {
+    "Mountain": {
+      "Icon": {
+        "Sprite": 27,
+        "Color": [ 120, 120, 120 ]
+      },
+      "Climate": {
+        "Temperature": [ 0.0, 15.0 ],
+        "Humidity": [ 20.0, 80.0 ],
+        "Altitude": [ 2000, 2500 ]
+      },
+      "Entities": {
+        "Geological": {
+          "Stone": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 20,
+              "Maximum": 50
+            }
+          },
+          "Boulder": {
+            "Algorithm": "PerlinSpread",
+            "Parameters": {
+              "Threshold": 0.52
+            }
+          }
+        },
+        "Vegetation": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 100,
+              "Maximum": 200
+            }
+          },
+          "Pine Tree": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 25,
+              "Maximum": 25
+            }
           }
         }
+      }
+    },
+    "Snowy Peak": {
+      "Icon": {
+        "Sprite": 27,
+        "Color": [ 255, 255, 255 ]
       },
-      "Small Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        }
+      "Climate": {
+        "Temperature": [ -20.0, 0.0 ],
+        "Humidity": [ 0.0, 50.0 ],
+        "Altitude": [ 2500, 3000 ]
+      }
+    },
+    "Volcano": {
+      "Icon": {
+        "Sprite": 27,
+        "Color": [ 247, 52, 43 ]
       },
-      "Wilderness": {
-
+      "Climate": {
+        "Temperature": [ 20.0, 30.0 ],
+        "Humidity": [ 60.0, 100.0 ],
+        "Altitude": [ 2000, 3000 ],
+        "Volcanism": [0.0, 1.0]
+      }
+    },
+    "Lava Front": {
+      "Icon": {
+        "Sprite": 25,
+        "Color": [ 247, 52, 43 ]
+      },
+      "Climate": {
+        "Temperature": [ 20.0, 30.0 ],
+        "Humidity": [ 60.0, 100.0 ],
+        "Altitude": [ 1500, 2500 ],
+        "Volcanism": [0.0, 1.0]
       }
     },
     "Swamp": {
-      "Base Environmental": {
-        "Water": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        }
+      "Icon": {
+        "Sprite": 25,
+        "Color": [ 60, 92, 83 ]
       },
-      "Small Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        },
-        "Roots": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 100
-          }
-        }
-      },
-      "Wilderness": {
-        "Mosquito": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 30
-          }
-        },
-        "Alligator": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
-        }
+      "Climate": {
+        "Temperature": [ 5.0, 25.0 ],
+        "Humidity": [ 60.0, 100.0 ],
+        "Altitude": [ 10, 500 ]
       }
     },
     "Jungle": {
-      "Base Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        }
+      "Icon": {
+        "Sprite": 28,
+        "Color": [ 31, 51, 36 ]
       },
-      "Small Environmental": {
-        "Brambles": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 200
-          }
-        },
-        "Jungle Tree": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
-        }
+      "Climate": {
+        "Temperature": [ 15.0, 30.0 ],
+        "Humidity": [ 60.0, 100.0 ],
+        "Altitude": [ 100, 1500 ]
+      }
+    },
+    "Cloud Forest": {
+      "Icon": {
+        "Sprite": 28,
+        "Color": [ 150, 160, 191 ]
       },
-      "Large Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        },
-        "Brambles": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 200
-          }
-        },
-        "Jungle Tree": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
-        }
+      "Climate": {
+        "Temperature": [ 20.0, 28.0 ],
+        "Humidity": [ 60.0, 100.0 ],
+        "Altitude": [ 1500, 3000 ]
+      }
+    },
+    "Desert Mesa": {
+      "Icon": {
+        "Sprite": 78,
+        "Color": [ 168, 98, 44 ]
       },
-      "Wilderness": {
-        "Panther": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
-        },
-        "Snake": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 10
-          }
-        }
+      "Climate": {
+        "Temperature": [ 20.0, 35.0 ],
+        "Humidity": [ 0.0, 30.0 ],
+        "Altitude": [ 1000, 2000 ]
       }
     },
     "Desert": {
-      "Base Environmental": {
-        "Sand": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
-        }
+      "Icon": {
+        "Sprite": 24,
+        "Color": [ 194, 178, 128 ]
       },
-      "Small Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 5
-          }
-        },
-        "Cactus": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 21
-          }
-        },
-        "Flint": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
-        }
+      "Climate": {
+        "Temperature": [ 20.0, 35.0 ],
+        "Humidity": [ 0.0, 40.0 ],
+        "Altitude": [ 50, 1000 ]
+      }
+    },
+    "Prarie": {
+      "Icon": {
+        "Sprite": 6,
+        "Color": [ 72, 111, 56 ]
       },
-      "Wilderness": {
-        "Firefly": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 4
-          }
-        },
-        "Rattler": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 5
-          }
-        },
-        "Vulture": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
+      "Climate": {
+        "Temperature": [ 0.0, 20.0 ],
+        "Humidity": [ 20.0, 70.0 ],
+        "Altitude": [ 50, 1500 ]
+      },
+      "Entities": {
+        "Vegetation": {
+          "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 400,
+              "Maximum": 700
+            }
+          },
+          "Tree": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 20,
+              "Maximum": 30
+            }
           }
         }
       }
     },
-    "Grassland": {
-      "Base Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
-        }
+    "Savanna": {
+      "Icon": {
+        "Sprite": 6,
+        "Color": [ 194, 178, 128 ]
       },
-      "Small Environmental": {
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 7
-          }
-        },
-        
-        "Herb": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 20
-          }
-        }
+      "Climate": {
+        "Temperature": [ 20.0, 30.0 ],
+        "Humidity": [ 0.0, 60.0 ],
+        "Altitude": [ 50, 1500 ]
+      }
+    },
+    "Tundra": {
+      "Icon": {
+        "Sprite": 6,
+        "Color": [ 140, 140, 180 ]
       },
-      "Large Environmental": {
-        "Tree": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 10
-          }
-        }
+      "Climate": {
+        "Temperature": [ -9.0, 1.0 ],
+        "Humidity": [ 0.0, 30.0 ],
+        "Altitude": [ 50, 1000 ]
+      }
+    },
+    "Water": {
+      "Icon": {
+        "Sprite": 25,
+        "Color": [ 27, 149, 224 ]
       },
-      "Wilderness": {
-        "Butterfly": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 6
-          }
-        },
-        "Rat": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 5
+      "Climate": {
+        "Temperature": [ "Any" ],
+        "Humidity": [ "Any" ],
+        "Altitude": [ -2700, -200 ]
+      },
+      "Entities": {
+        "Liquid": {
+          "Water": {
+            "Algorithm": "Fill",
+            "Parameters": {
+
+            }
           }
         }
       }

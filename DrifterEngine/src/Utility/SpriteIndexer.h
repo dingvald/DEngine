@@ -75,7 +75,14 @@ namespace drft::util
 		DoorOpen,
 		Katana,
 		ChestClosed,
-		ChestOpen
+		ChestOpen,
+		HeartShrine,
+		HouseIcon,
+		Star,
+		DungeonDoor,
+		Evergreen,
+		Cloud,
+		Mesa
 	};
 
 	class SpriteIndexer
