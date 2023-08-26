@@ -11,10 +11,11 @@ namespace drft
 	public:
 		EntityFactory();
 
-		// Load entity prototypes from the given JSON file into the given registry.
-		bool loadPrototypes(std::string JSONfilename);
+		// Load entity prototypes from the given JSON file into the prototype registry.
+		bool loadPrototypes(const std::string& JSONfilename);
 
-		entt::entity get(std::string name) const;
+		// Returns the entity prototype with the given name. Returns entt::null if not found.
+		entt::entity get(const std::string& name) const;
 
 		// Access the prototype registry (read-only).
 		const entt::registry& prototypes() const;

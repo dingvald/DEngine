@@ -1,20 +1,12 @@
 #include "pch.h"
 #include "UseItemSystem.h"
 #include "Components/Components.h"
+#include "Systems/Helpers/RemoveFromContainer.h"
 
 void drft::system::UseItemSystem::init()
 {
 	registry->on_construct<component::action::Use>().connect<&UseItemSystem::onUseItem>(this);
 	registry->on_update<component::action::Use>().connect<&UseItemSystem::onUseItem>(this);
-}
-
-void drft::system::UseItemSystem::update(const float dt)
-{
-	auto useView = registry->view<component::action::Use>();
-	for (auto entity : useView)
-	{
-		
-	}
 }
 
 void drft::system::UseItemSystem::onUpdateEnd()
@@ -26,13 +18,9 @@ void drft::system::UseItemSystem::onUseItem(entt::registry& registry, entt::enti
 {
 	auto& useAction = registry.get<component::action::Use>(entity);
 	auto& usableComp = registry.get<component::Usable>(useAction.entity);
-	String2UseFunc.at(usableComp.action)(registry, entity, usableComp.params);
-	if (usableComp.consumes)
+	String2UseFunc.at(usableComp.action)(registry, entity, useAction.entity, usableComp.params);
+	if (usableComp.consumes && useAction.item != component::Item::NONE)
 	{
-		registry.patch<component::Container>(entity,
-			[useAction](component::Container& cont)
-			{
-				cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), useAction.item), cont.contents.end());
-			});
+		removeFromContainer(registry, entity, useAction.entity, true);
 	}
 }

@@ -12,7 +12,6 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Info, INFO_STRING>()
 		.prop("serialize"_hs)
-		.data<&Info::prototype>("prototype"_hs)
 		.data<&Info::name>("name"_hs)
 		.data<&Info::extendedName>("extendedName"_hs)
 		.data<&Info::description>("description"_hs);
@@ -26,6 +25,12 @@ void component::Meta::initialize()
 		.data<&Render::sprite>("sprite"_hs)
 		.data<&Render::layer>("layer"_hs)
 		.data<&Render::color>("color"_hs);
+
+	snapshot::reflectComponent<BaseStats, BASE_STATS_STRING>()
+		.prop("serialize"_hs)
+		.data<&BaseStats::strength>("strength"_hs)
+		.data<&BaseStats::agility>("agility"_hs)
+		.data<&BaseStats::vitality>("vitality"_hs);
 
 	snapshot::reflectComponent<PlayerHasSeen, PLAYER_SEEN_STRING>()
 		.prop("serialize"_hs);
@@ -55,14 +60,14 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Actor, ACTOR_STRING>()
 		.prop("serialize"_hs)
-		.data<&Actor::ap>("ap"_hs)
 		.data<&Actor::moveSpeed>("moveSpeed"_hs)
 		.data<&Actor::actSpeed>("actSpeed"_hs);
 
 	snapshot::reflectComponent<Health, HEALTH_STRING>()
 		.prop("serialize"_hs)
 		.data<&Health::max>("max"_hs)
-		.data<&Health::current>("current"_hs);
+		.data<&Health::current>("current"_hs)
+		.data<&Health::recovery>("recovery"_hs);
 
 	snapshot::reflectComponent<Stamina, STAMINA_STRING>()
 		.prop("serialize"_hs)
@@ -128,11 +133,15 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Horror, HORROR_STRING>()
 		.prop("serialize"_hs);
 
-	snapshot::reflectComponent<Door, DOOR_STRING>()
+	snapshot::reflectComponent<Openable, OPENABLE_STRING>()
 		.prop("serialize"_hs)
-		.data<&Door::keyName>("keyName"_hs);
+		.data<&Openable::keyName>("keyName"_hs);
 
 	snapshot::reflectComponent<TickingLifetime, TICKING_LIFETIME_STRING>()
 		.prop("serialize"_hs)
 		.data<&TickingLifetime::ticksRemaining>("ticksRemaining"_hs);
+
+	snapshot::reflectComponent<Leveling, LEVELING_STRING>()
+		.prop("serialize"_hs)
+		.data<&Leveling::currentLevel>("currentLevel"_hs);
 }

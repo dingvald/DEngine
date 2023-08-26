@@ -2,6 +2,7 @@
 #include "CullingSystem.h"
 #include "Components/Components.h"
 #include "Components/Tags.h"
+#include "Spatial/Conversions.h"
 
 void drft::system::CullingSystem::init()
 {
@@ -17,10 +18,10 @@ void drft::system::CullingSystem::fixedUpdate()
 	{
 		viewport = cam.viewport;
 		bufferdViewport = {
-			viewport.left - 32,
-			viewport.top - 32,
-			viewport.width + 64,
-			viewport.height + 64
+			viewport.left - spatial::TILE_WIDTH,
+			viewport.top - spatial::TILE_HEIGHT,
+			viewport.width + 2*spatial::TILE_WIDTH,
+			viewport.height + 2*spatial::TILE_HEIGHT
 		};
 	}
 

@@ -11,7 +11,7 @@
 #include "Systems/Helpers/GetCurrentCameraOrigin.h"
 #include "Components/Components.h"
 
-static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 16.f };
+static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 32.f };
 static constexpr float HEALTHBAR_HEIGHT = 7;
 static constexpr int HEALTHBAR_WIDTH_MULTIPLIER = 7;
 
@@ -23,6 +23,7 @@ static constexpr int MESSAGE_LIFETIME = 80; // frames
 
 void drft::system::HUD::init()
 {
+	createLevelInfo();
 	createHealthBar();
 	createStaminaBar();
 	createInHandsDisplay();
@@ -33,6 +34,7 @@ void drft::system::HUD::init()
 	dispatcher.sink<events::ItemBreakEvent>().connect<&HUD::onItemBreakEvent>(this);
 	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
+	registry->on_construct<component::action::LevelUp>().connect<&HUD::onLevelUp>(this);
 }
 
 void drft::system::HUD::fixedUpdate()
@@ -41,6 +43,7 @@ void drft::system::HUD::fixedUpdate()
 	auto player = entt::handle(*registry, view.front());
 
 	// Player relevant displays
+	updateLevelInfo(player);
 	updateHealthBar(player);
 	updateStaminaBar(player);
 	updateInHandsDisplay(player);
@@ -53,6 +56,9 @@ void drft::system::HUD::fixedUpdate()
 
 void drft::system::HUD::render(sf::RenderTarget& target)
 {
+	target.draw(_lvlText);
+	target.draw(_xpText);
+
 	target.draw(_healthBarContainer);
 	target.draw(_healthBar);
 	target.draw(_heartIcon);
@@ -73,6 +79,23 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 	{
 		target.draw(effect.shape);
 	}
+}
+
+void drft::system::HUD::createLevelInfo()
+{
+	using namespace entt::literals;
+	const auto& font = registry->ctx().get<sf::Font&>("terminus"_hs);
+
+	_lvlText.setFont(font);
+	_xpText.setFont(font);
+
+	_lvlText.setPosition(HEALTHBAR_POSITION - sf::Vector2f(0.f, 24.f));
+	_lvlText.setString("Level: ");
+	_lvlText.setCharacterSize(16);
+
+	_xpText.setPosition(HEALTHBAR_POSITION - sf::Vector2f(-64.f, 24.f));
+	_xpText.setString("xp: 0/100 ");
+	_xpText.setCharacterSize(16);
 }
 
 void drft::system::HUD::createHealthBar()
@@ -113,7 +136,7 @@ void drft::system::HUD::createStaminaBar()
 
 void drft::system::HUD::createInHandsDisplay()
 {
-	_inHandsDisplay.setPosition(HEALTHBAR_POSITION - sf::Vector2f(7.f, -18.f))
+	_inHandsDisplay.setPosition(HEALTHBAR_POSITION + sf::Vector2f(-7.f, 12.f))
 		.setChildrenOrigin(gui::ElementPosition::CENTER_LEFT)
 		.setStyle(gui::ElementState::Idle, {
 			.childPadding = {48.f, 0.f}
@@ -159,13 +182,22 @@ void drft::system::HUD::createFloatingMessagesDisplay()
 	
 }
 
+void drft::system::HUD::updateLevelInfo(entt::const_handle player)
+{
+	if (auto level = player.try_get<component::Leveling>())
+	{
+		_lvlText.setString("Lvl " + std::to_string(level->currentLevel));
+		_xpText.setString("XP " + std::to_string(level->currentXP) + "/" + std::to_string(level->neededXP));
+	}
+}
+
 void drft::system::HUD::updateHealthBar(entt::const_handle player)
 {
 	if (auto health = player.try_get<component::Health>())
 	{
-		_healthBarContainer.setSize({ static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER), HEALTHBAR_HEIGHT + 2.f });
-		_healthBar.setSize({ (static_cast<float>(health->current) / static_cast<float>(health->max))
-			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT });
+		_healthBarContainer.setSize({health->max * HEALTHBAR_WIDTH_MULTIPLIER, HEALTHBAR_HEIGHT + 2.f });
+		_healthBar.setSize({ (health->current / health->max)
+			* (health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT });
 	}
 	else
 	{
@@ -330,7 +362,7 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 
 	if (auto health = registry->try_get<component::Health>(item))
 	{
-		float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
+		float scalingFactor = health->current / health->max;
 		container.insert("Health", gui::Panel())
 			.setSize({ 32, (32 - 32 * scalingFactor) })
 			.setLocalPosition({ 0, 16 })
@@ -402,8 +434,8 @@ void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity enti
 		
 		if (damage.amount != 0)
 		{
-			sf::Vector2f size = { (static_cast<float>(health->current) / static_cast<float>(health->max))
-			* static_cast<float>(health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT + 2.f };
+			sf::Vector2f size = { (health->current / health->max)
+			* (health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT + 2.f };
 			queueFlashEffect(HEALTHBAR_POSITION, size, 10);
 		}
 	}
@@ -421,5 +453,13 @@ void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity 
 			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT + 2.f };
 			queueFlashEffect(STAMINABAR_POSITION, size, 10);
 		}
+	}
+}
+
+void drft::system::HUD::onLevelUp(entt::registry& registry, entt::entity entity)
+{
+	if (auto pos = registry.try_get<component::Position>(entity))
+	{
+		queueFloatingMessage("LEVEL UP", sf::Color::Magenta, pos->position, MESSAGE_LIFETIME);
 	}
 }

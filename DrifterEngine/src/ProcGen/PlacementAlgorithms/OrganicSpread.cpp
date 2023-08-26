@@ -3,7 +3,7 @@
 #include "Spatial/Helpers.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::organicSpread(int seed, const spatial::Grid<int>& grid, GenerationParameters params)
+std::vector<sf::Vector2i> drft::gen::organicSpread(int seed, const spatial::Grid<CellState>& grid, GenerationParameters params)
 {
 	std::vector<sf::Vector2i> positions;
 	const int generations = static_cast<int>(params.at("Generations"));
@@ -13,9 +13,18 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(int seed, const spatial::Grid
 
 	for (int ss = 0; ss < startingSeeds; ++ss)
 	{
-		int randx = rng::RandomNumberGenerator::intInRange(0, grid.width());
-		int randy = rng::RandomNumberGenerator::intInRange(0, grid.height());
-		positions.emplace_back(randx, randy);
+		int x = 0;
+		int y = 0;
+		int safetyCount = 20;
+		do {
+			--safetyCount;
+			x = rng::RandomNumberGenerator::intInRange(0, grid.width() - 1);
+			y = rng::RandomNumberGenerator::intInRange(0, grid.height() - 1);
+		} while (grid.at(x, y) == CellState::Machine && safetyCount > 0);
+		if (safetyCount > 0)
+		{
+			positions.emplace_back(x, y);
+		}
 	}
 
 	for (int gen = 0; gen < generations; ++gen)

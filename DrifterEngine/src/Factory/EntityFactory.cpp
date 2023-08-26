@@ -14,7 +14,7 @@ drft::EntityFactory::EntityFactory()
 	component::Meta::initialize();
 }
 
-bool drft::EntityFactory::loadPrototypes(std::string filename)
+bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 {
 	using namespace rapidjson;
 
@@ -42,41 +42,39 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 	std::cout << "Parsing " << filename << "..." << std::endl;
 
 	// Iterate each prototype
-	for (auto& prototype : doc["Prototypes"].GetArray())
+	for (auto&& prototype : doc["Prototypes"].GetObject())
 	{
-		auto entityName = std::string(prototype["Name"].GetString());
-
 		entt::entity entity = _protoRegistry.create();
+		const std::string entityName = prototype.name.GetString();
 		_protoRegistry.emplace_or_replace<component::Prototype>(entity);
 		_prototypes[entityName] = entity;
 
-		if (prototype.HasMember("Inherits"))
+		const auto entityObject = prototype.value.GetObject();
+
+		if (entityObject.HasMember("Inherits"))
 		{
 			// Copy all inherited values into entity
-			for (auto&& base : prototype["Inherits"].GetArray())
+			for (auto&& base : entityObject["Inherits"].GetArray())
 			{
-				auto baseName = std::string(base.GetString());
+				const auto baseName = std::string(base.GetString());
 				if (!_prototypes.contains(baseName)) continue;
 				util::copyEntity(entity, _prototypes[baseName], _protoRegistry);
 			}
 			
 		}
-		if (prototype.HasMember("Components"))
+		if (entityObject.HasMember("Components"))
 		{
 			// Iterate each component
-			for (auto&& component : prototype["Components"].GetArray())
+			for (auto&& component : entityObject["Components"].GetObject())
 			{
-				auto componentName = component["Name"].GetString();
-
+				auto componentName = component.name.GetString();
 				auto meta = entt::resolve(entt::hashed_string(componentName));
 				auto any = meta.func("emplace"_hs).invoke(meta, entt::forward_as_meta(_protoRegistry), entity);
 				
-				if (!component.HasMember("Data")) continue;
-					
 				// Iterate component data
-				for (auto&& data : component["Data"].GetObject())
+				for (auto&& data : component.value.GetObject())
 				{
-					auto memberName = data.name.GetString();
+					const auto memberName = data.name.GetString();
 					if (data.value.IsArray())
 					{
 						// HACKZZ: Inflexible - assumes certain types in arrays
@@ -134,28 +132,29 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 					}
 					else if (data.value.IsObject())
 					{
-						if (component["Data"][memberName].GetObject().begin()->value.IsInt64())
+						if (data.value.GetObject().MemberCount() == 0) continue;
+						if (data.value.GetObject().begin()->value.IsInt64())
 						{
 							std::unordered_map<std::string, unsigned long> map;
-							for (auto&& mapData : component["Data"][memberName].GetObject())
+							for (auto&& mapData : data.value.GetObject())
 							{
 								map.emplace(mapData.name.GetString(), mapData.value.GetInt64());
 							}
 							meta.data(entt::hashed_string(memberName)).set(any, map);
 						}
-						else if (component["Data"][memberName].GetObject().begin()->value.IsFloat())
+						else if (data.value.GetObject().begin()->value.IsFloat())
 						{
 							std::unordered_map<std::string, float> map;
-							for (auto&& mapData : component["Data"][memberName].GetObject())
+							for (auto&& mapData : data.value.GetObject())
 							{
 								map.emplace(mapData.name.GetString(), mapData.value.GetFloat());
 							}
 							meta.data(entt::hashed_string(memberName)).set(any, map);
 						}
-						else if (component["Data"][memberName].GetObject().begin()->value.IsString())
+						else if (data.value.GetObject().begin()->value.IsString())
 						{
 							std::unordered_map<std::string, std::string> map;
-							for (auto&& mapData : component["Data"][memberName].GetObject())
+							for (auto&& mapData : data.value.GetObject())
 							{
 								map.emplace(mapData.name.GetString(), mapData.value.GetString());
 							}
@@ -174,8 +173,12 @@ bool drft::EntityFactory::loadPrototypes(std::string filename)
 	return true;
 }
 
-entt::entity drft::EntityFactory::get(std::string name) const
+entt::entity drft::EntityFactory::get(const std::string& name) const
 {
+	if (!_prototypes.contains(name))
+	{
+		return entt::null;
+	}
 	return _prototypes.at(name);
 }
 

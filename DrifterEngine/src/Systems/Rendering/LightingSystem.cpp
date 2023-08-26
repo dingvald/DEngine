@@ -33,7 +33,7 @@ void drft::system::LightingSystem::fixedUpdate()
 {
 	auto globalLightView = registry->view<component::GlobalLightSource>();
 	auto positions = registry->view<const component::Position, component::tag::InViewport>();
-
+	// Apply global lighting
 	for (auto [_, globalLight] : globalLightView.each())
 	{
 		for (auto entity : positions)
@@ -48,7 +48,7 @@ void drft::system::LightingSystem::fixedUpdate()
 			}
 		}
 	}
-	
+	// Get all light blocking entities to be checked by the FOV algo
 	_lightBlockingPositions.reserve(positions.size_hint());
 	for (auto [entity, pos] : positions.each())
 	{
@@ -57,7 +57,7 @@ void drft::system::LightingSystem::fixedUpdate()
 			_lightBlockingPositions.emplace(spatial::toTileSpace(pos.position));
 		}
 	}
-
+	// Apply light from permenant light sources
 	auto lighting = registry->view<const component::LightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : lighting.each())
 	{
@@ -87,7 +87,7 @@ void drft::system::LightingSystem::fixedUpdate()
 		}
 		_toLight.clear();
 	}
-
+	// Apply light from temporary light sources
 	auto tempLighting = registry->view<const component::TempLightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : tempLighting.each())
 	{

@@ -108,7 +108,7 @@ void drft::system::LiquidSystem::onTurnEndEvent(events::TurnEndEvent& ev) const
 		&& isAffectedByLiquids(ev.entity) 
 		&& stamina->current <= 0.f)
 	{
-		registry->emplace_or_replace<component::action::TakeDamage>(ev.entity, health->max / 10);
+		registry->emplace_or_replace<component::action::TakeDamage>(ev.entity, static_cast<int>(health->max / 10));
 	}
 }
 

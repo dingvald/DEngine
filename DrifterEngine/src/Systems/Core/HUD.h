@@ -13,12 +13,14 @@ namespace drft::system
 		void render(sf::RenderTarget& target) override;
 
 	private:
+		void createLevelInfo();
 		void createHealthBar();
 		void createStaminaBar();
 		void createInHandsDisplay();
 		void createItemsOnGroundDisplay();
 		void createFloatingMessagesDisplay();
 
+		void updateLevelInfo(entt::const_handle player);
 		void updateHealthBar(entt::const_handle player);
 		void updateStaminaBar(entt::const_handle player);
 		void updateItemsOnGround(entt::const_handle player);
@@ -33,6 +35,7 @@ namespace drft::system
 		void onItemBreakEvent(events::ItemBreakEvent& ev);
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
 		void onConsumeStamina(entt::registry& registry, entt::entity entity);
+		void onLevelUp(entt::registry& registry, entt::entity entity);
 
 	private:
 		struct FlashEffect
@@ -46,6 +49,9 @@ namespace drft::system
 			sf::Vector2f position;
 			int ttl = 0;
 		};
+
+		sf::Text _lvlText{};
+		sf::Text _xpText{};
 
 		sf::RectangleShape _healthBar{};
 		sf::RectangleShape _healthBarContainer{};

@@ -24,7 +24,7 @@
 #include "Systems/Core/TurnManager.h"
 #include "Systems/Core/WorldGridResolver.h"
 #include "Systems/Gameplay/BodyPartSystem.h"
-#include "Systems/Gameplay/DamageSystem.h"
+#include "Systems/Gameplay/HealthSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
 #include "Systems/Gameplay/Actions/SprintingSystem.h"
 #include "Systems/Gameplay/DayNightCycleSystem.h"
@@ -40,12 +40,12 @@
 #include "Systems/Gameplay/Actions/PickUpSystem.h"
 #include "Systems/Gameplay/Actions/InteractionSystem.h"
 #include "Systems/Gameplay/Actions/LaunchAttackSystem.h"
-#include "Systems/Gameplay/Actions/DoorToggleSystem.h"
 #include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/QuestingSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
+#include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
 #include "Systems/Gameplay/Actions/OpenInventorySystem.h"
 #include "Systems/Gameplay/Actions/OpenEquipmentSystem.h"
@@ -143,6 +143,7 @@ bool drft::GameState::loadOrCreatePlayer()
 
 void drft::GameState::loadEntityPrototypes()
 {
+	_factory->loadPrototypes("bases.json");
 	_factory->loadPrototypes("materials.json");
 	_factory->loadPrototypes("prototypes.json");
 	_factory->loadPrototypes("wearables.json");
@@ -250,7 +251,6 @@ void drft::GameState::importSystems()
 	_systems->add<HorrorSpawningSystem>(			Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
-	_systems->add<DoorToggleSystem>(				Phase::OnUpdate);
 	_systems->add<SelectDirectionSystem>(			Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
 	_systems->add<PickUpSystem>(					Phase::OnUpdate);
@@ -264,10 +264,11 @@ void drft::GameState::importSystems()
 	_systems->add<OpenCraftingSystem>(				Phase::OnUpdate);
 	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
 	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
-	_systems->add<DamageSystem>(					Phase::OnUpdate + 10);
+	_systems->add<HealthSystem>(					Phase::OnUpdate + 10);
 	_systems->add<StaminaSystem>(					Phase::OnUpdate + 10);
 	_systems->add<ItemDurabilitySystem>(			Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);
+	_systems->add<LevelingSystem>(					Phase::OnUpdate + 20);
 
 	_systems->add<Camera>(							Phase::OnPostUpdate);
 	_systems->add<ChunkManager>(					Phase::OnPostUpdate);

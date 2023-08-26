@@ -17,9 +17,9 @@ void drft::system::BodyPartSystem::update(const float dt)
 	auto attackView = registry->view<component::Body, component::action::LaunchAttack, component::tag::Active>();
 	for (auto [entity, body, attack] : attackView.each())
 	{
-		if (body.parts.contains("HeldR"))
+		if (body.parts.contains("HeldR") || body.parts.contains("HeldL"))
 		{
-			const int weaponDamage = calculateDamageFromEquipped(body.parts.at("HeldR"));
+			const int weaponDamage = calculateDamageFromHeld(entity, body.parts.at("HeldR"), body.parts.at("HeldL"));
 			attack.damage += weaponDamage;
 		}
 	}
@@ -32,39 +32,42 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 		auto& incomingDamage = registry.get<component::action::IncomingDamage>(entity);
 		if (incomingDamage.amount <= 0) return;
 		auto part = determinePartHit(body->parts);
-		std::cout << part + " hit!" << std::endl;
 		auto itemHit = body->parts.at(part);
 		auto itemEntity = ItemDatabase::getEntityFromItemID(itemHit);
 		if (itemEntity != entt::null)
 		{
 			if (auto wearable = registry.try_get<component::Wearable>(itemEntity))
 			{
-				incomingDamage.amount = std::clamp(incomingDamage.amount - wearable->protection, 0, incomingDamage.amount);
 				if (auto health = registry.try_get<component::Health>(itemEntity))
 				{
 					registry.emplace<component::action::IncomingDamage>(itemEntity, wearable->protection, wearable->protection);
 				}
 			}
-			
 		}
+		int mitigation = calculateMitigationFromWorn(entity, itemHit);
+		incomingDamage.amount = std::clamp(incomingDamage.amount - mitigation, 0, incomingDamage.amount);
 	}
 }
 
-int drft::system::BodyPartSystem::calculateDamageFromEquipped(unsigned long itemID)
+int drft::system::BodyPartSystem::calculateDamageFromHeld(entt::entity attacker, unsigned long itemR, unsigned long itemL)
 {
-	if (itemID != component::Item::NONE)
-	{
-		const auto rightHandItem = ItemDatabase::getEntityFromItemID(itemID);
-		float weight = 0.0f;
-		float sharpness = 1.f;
+	int result = 0;
+	float weight = 1.0f;
+	float power = 1.0f;
+	float speed = 1.0f;
+	float sharpness = 0.f;
+	bool isLeftHandEmpty = (itemL == component::Item::NONE);
 
+	if (itemR != component::Item::NONE)
+	{
+		const auto rightHandItem = ItemDatabase::getEntityFromItemID(itemR);
 		if (auto physicalComp = registry->try_get<component::Physical>(rightHandItem))
 		{
-			weight += physicalComp->weight;
+			weight = physicalComp->weight;
 		}
 		if (auto sharpComp = registry->try_get<component::Sharp>(rightHandItem))
 		{
-			sharpness += std::powf(static_cast<float>(sharpComp->sharpness), 2.f) * 0.5f;
+			sharpness = sharpComp->sharpness;
 		}
 		if (auto healthComp = registry->try_get<component::Health>(rightHandItem))
 		{
@@ -74,10 +77,45 @@ int drft::system::BodyPartSystem::calculateDamageFromEquipped(unsigned long item
 				registry->emplace<component::action::TakeDamage>(rightHandItem, 1);
 			}
 		}
-
-		return static_cast<int>(std::ceil(weight * sharpness));
 	}
-	return 0;
+	if (auto stats = registry->try_get<component::BaseStats>(attacker))
+	{
+		float effectiveStrength = isLeftHandEmpty ? stats->strength * 2.f : stats->strength;
+		power = std::max(0.f, effectiveStrength * ((-(1 / powf((effectiveStrength), 2.f)) * powf(weight - (effectiveStrength / 2), 2.f) + 1.f)));
+		speed = std::min(static_cast<float>(stats->agility), std::max(0.f, (2.f * stats->agility) / weight));
+	}
+
+	float maxDamage = std::ceil(sqrtf(speed * power * weight) + powf(sharpness, 1.5f));
+	float minDamage = std::min(maxDamage, std::floorf(sqrtf(speed * weight) + powf(sharpness, 2.f)));
+	float damage = rng::RandomNumberGenerator::realInRange(minDamage, maxDamage);
+
+	return std::ceilf(damage);
+}
+
+int drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, unsigned long partHit)
+{
+	float sum = 0.f;
+	float fromHit = 0.f;
+	int count = 0;
+	if (auto body = registry->try_get<component::Body>(defender))
+	{
+		for (auto&& [partName, itemID] : body->parts)
+		{
+			++count;
+			auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
+			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
+			{
+				if (itemID == partHit)
+				{
+					fromHit = wearable->protection;
+				}
+				sum += wearable->protection;
+			}
+		}
+	}
+	count = std::max(1, count);
+	float average = sum / count;
+	return static_cast<int>(std::ceil(average + fromHit));
 }
 
 std::string drft::system::BodyPartSystem::determinePartHit(std::unordered_map<std::string, unsigned long>& parts)

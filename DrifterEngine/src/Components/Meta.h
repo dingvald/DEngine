@@ -28,8 +28,10 @@ constexpr std::string_view CONTAINER_STRING = "Container";
 constexpr std::string_view CRAFTABLE_STRING = "Craftable";
 constexpr std::string_view USABLE_STRING = "Usable";
 constexpr std::string_view HORROR_STRING = "Horror";
-constexpr std::string_view DOOR_STRING = "Door";
+constexpr std::string_view OPENABLE_STRING = "Openable";
 constexpr std::string_view TICKING_LIFETIME_STRING = "TickingLifetime";
+constexpr std::string_view LEVELING_STRING = "Leveling";
+constexpr std::string_view BASE_STATS_STRING = "BaseStats";
 
 namespace component
 {

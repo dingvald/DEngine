@@ -7,7 +7,7 @@ namespace component
 
 	struct Info
 	{
-		std::string prototype = { "" };
+		std::string prototype = { "PROTOTYPE" };
 		std::string name = { "" };
 		std::string extendedName = { "" };
 		std::string description = { "" };
@@ -23,6 +23,13 @@ namespace component
 		unsigned int sprite = 4u;
 		unsigned int layer = 0u;
 		sf::Color color = sf::Color::Magenta;
+	};
+
+	struct BaseStats
+	{
+		int strength = 1;
+		int agility = 1;
+		int vitality = 1;
 	};
 
 	struct PlayerHasSeen
@@ -92,8 +99,9 @@ namespace component
 
 	struct Health
 	{
-		int max = 10;
-		int current = 10;
+		float max = 10.f;
+		float current = 10.f;
+		float recovery = 0.f;
 	};
 
 	struct Stamina
@@ -188,7 +196,7 @@ namespace component
 		bool standin = false;
 	};
 
-	struct Door
+	struct Openable
 	{
 		bool isOpen = false;
 		std::string keyName = "";
@@ -197,6 +205,13 @@ namespace component
 	struct TickingLifetime
 	{
 		int ticksRemaining = 0;
+	};
+
+	struct Leveling
+	{
+		unsigned int currentLevel = 0;
+		unsigned int currentXP = 0;
+		unsigned int neededXP = 100;
 	};
 }
 
@@ -236,11 +251,13 @@ namespace component::action
 	{
 		int originalAmount = 0;
 		int amount = 0;
+		entt::entity source = entt::null;
 	};
 
 	struct TakeDamage
 	{
 		int amount = 0;
+		entt::entity source = entt::null;
 	};
 
 	struct PickUp {};
@@ -291,6 +308,16 @@ namespace component::action
 	struct ConsumeStamina
 	{
 		float amount = 0.f;
+	};
+
+	struct GainExperience
+	{
+		unsigned int amount = 0;
+	};
+
+	struct LevelUp 
+	{
+		std::unordered_map<std::string, int> statChanges;
 	};
 
 	struct DisplayText

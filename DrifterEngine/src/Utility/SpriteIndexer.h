@@ -71,9 +71,11 @@ namespace drft::util
 		Bracers,
 		Shield,
 		ShortSword,
-		Door,
+		DoorClosed,
 		DoorOpen,
-		Katana
+		Katana,
+		ChestClosed,
+		ChestOpen
 	};
 
 	class SpriteIndexer

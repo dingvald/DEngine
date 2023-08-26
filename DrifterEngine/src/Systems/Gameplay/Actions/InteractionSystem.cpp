@@ -22,8 +22,9 @@ void drft::system::InteractionSystem::update(const float dt)
 		auto surroundings = spatial::getIntRectAroundOrigin(spatial::toTileSpace(pos.position), 3, 3);
 		for (auto tile : surroundings)
 		{
-			auto entities = grid.entitiesAt(tile, [this](entt::entity entity) -> bool {
-					return registry->any_of<component::Door>(entity);
+			auto entities = grid.entitiesAt(tile, 
+				[this](entt::entity entity) -> bool {
+					return registry->any_of < component::Usable > (entity);
 				});
 			canInteractWith.insert(canInteractWith.end(), entities.begin(), entities.end());
 		}
@@ -41,7 +42,7 @@ void drft::system::InteractionSystem::update(const float dt)
 					const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
 					auto interactables = grid.entitiesAt(tilePosition + direction, 
 						[this](entt::entity entity) -> bool {
-							return registry->any_of<component::Door>(entity);
+							return registry->any_of<component::Usable>(entity);
 						});
 					if (interactables.empty()) return false;
 					for (auto interactable : interactables)
@@ -64,7 +65,7 @@ void drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::V
 {
 	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
 	auto entities = grid.entitiesAt(target, [this](entt::entity entity) -> bool {
-		return registry->any_of<component::Door>(entity);
+		return registry->any_of<component::Usable>(entity);
 		});
 	for (auto entity : entities)
 	{
@@ -74,9 +75,13 @@ void drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::V
 
 void drft::system::InteractionSystem::onContructDoInteract(entt::registry& registry, entt::entity entity)
 {
-	auto interaction= registry.get<component::action::DoInteract>(entity);
-	if (registry.all_of<component::Door>(interaction.subject))
+	auto interaction = registry.get<component::action::DoInteract>(entity);
+	if (auto item = registry.try_get<component::Item>(interaction.subject))
 	{
-		registry.emplace<component::action::ToggleDoor>(interaction.subject);
+		registry.emplace_or_replace<component::action::Use>(entity, interaction.subject, item->id);
 	}
+	else
+	{
+		registry.emplace_or_replace<component::action::Use>(entity, interaction.subject, component::Item::NONE);
+	}	
 }

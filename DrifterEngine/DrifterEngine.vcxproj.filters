@@ -117,7 +117,7 @@
     <ClCompile Include="src\Spatial\VirtualChunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\DamageSystem.cpp">
+    <ClCompile Include="src\Systems\Gameplay\HealthSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\Actions\MovementSystem.cpp">
@@ -228,12 +228,6 @@
     <ClCompile Include="src\ProcGen\PlacementAlgorithms\Fill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Helpers\Erode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\Helpers\Dilate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -324,13 +318,7 @@
     <ClCompile Include="src\Utility\GetTextCenter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Machine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\Actions\InteractionSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\DoorToggleSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\States\SelectDirectionState.cpp">
@@ -346,6 +334,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Machine\Machine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Factory\MachineFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\ContainerHasItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\RemoveFromContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -935,7 +941,7 @@
     <ClInclude Include="src\Spatial\VirtualChunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\DamageSystem.h">
+    <ClInclude Include="src\Systems\Gameplay\HealthSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\MovementSystem.h">
@@ -1061,15 +1067,6 @@
     <ClInclude Include="src\ProcGen\PlacementAlgorithms\Fill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Helpers\Kernels.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\Helpers\Erode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\Helpers\Dilate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1184,13 +1181,7 @@
     <ClInclude Include="src\Utility\GetTextCenter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Machine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\InteractionSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\DoorToggleSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\States\SelectDirectionState.h">
@@ -1208,6 +1199,27 @@
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Machine\Machine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Factory\MachineFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GridEnums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\RemoveFromContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -1223,6 +1235,9 @@
     <None Include="packages.config" />
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\wearables.json" />
+    <None Include="data\static\entities\bases.json" />
+    <None Include="data\static\machines\faction.json" />
+    <None Include="data\static\machines\generic.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">

@@ -1,7 +1,30 @@
 {
   "Biomes": {
     "Forest": {
-      "Environmental": {
+      "Base Environmental": {
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 500
+          }
+        }
+      },
+      "Small Environmental": {
+        "Stone": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 10
+          }
+        },
+
+        "Herb": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 20
+          }
+        }
+      },
+      "Large Environmental": {
         "Tree": {
           "Algorithm": "OrganicSpread",
           "Params": {
@@ -10,27 +33,9 @@
             "SeedsPerGeneration": 3,
             "Radius": 9
           }
-        },
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 10
-          }
-        },
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 500
-          }
-        },
-        "Herb": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 20
-          }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Mosquito": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -55,10 +60,35 @@
             "Number": 1
           }
         }
+      },
+      "Machines": {
+        "Chest": 1.0
       }
     },
     "Mountain": {
-      "Environmental": {
+      "Base Environmental": {
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 50
+          }
+        }
+      },
+      "Small Environmental": {
+        "Stone": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 100
+          }
+        },
+        "Mountain Flower": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 1
+          }
+        }
+      },
+      "Large Environmental": {
         "Tree": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -71,7 +101,7 @@
             "Threshold": 0.51
           }
         },
-        "IronDeposit": {
+        "Iron Deposit": {
           "Algorithm": "OrganicSpread",
           "Params": {
             "Generations": 2,
@@ -79,27 +109,9 @@
             "SeedsPerGeneration": 2,
             "Radius": 2
           }
-        },
-        "Stone": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 100
-          }
-        },
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 50
-          }
-        },
-        "Mountain Flower": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 1
-          }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Golem": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -115,32 +127,36 @@
       }
     },
     "Lake": {
-      "Environmental": {
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 300
-          }
-        },
+      "Base Environmental": {
         "Water": {
           "Algorithm": "Fill",
           "Params": {
           }
         }
       },
-      "Actors": {
-
-      }
-    },
-    "Swamp": {
-      "Environmental": {
+      "Small Environmental": {
         "Grass": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 300
           }
-        },
+        }
+      },
+      "Wilderness": {
+
+      }
+    },
+    "Swamp": {
+      "Base Environmental": {
         "Water": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 300
+          }
+        }
+      },
+      "Small Environmental": {
+        "Grass": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 300
@@ -153,7 +169,7 @@
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Mosquito": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -169,7 +185,29 @@
       }
     },
     "Jungle": {
-      "Environmental": {
+      "Base Environmental": {
+        "Grass": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 300
+          }
+        }
+      },
+      "Small Environmental": {
+        "Brambles": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 200
+          }
+        },
+        "Jungle Tree": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 600
+          }
+        }
+      },
+      "Large Environmental": {
         "Grass": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -182,14 +220,14 @@
             "Number": 200
           }
         },
-        "JungleTree": {
+        "Jungle Tree": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 600
           }
         }
       },
-      "Actors": {
+      "Wilderness": {
         "Panther": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -205,7 +243,15 @@
       }
     },
     "Desert": {
-      "Environmental": {
+      "Base Environmental": {
+        "Sand": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 600
+          }
+        }
+      },
+      "Small Environmental": {
         "Stone": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -218,21 +264,14 @@
             "Number": 21
           }
         },
-        "Sand": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
-        },
         "Flint": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 4
           }
         }
-
       },
-      "Actors": {
+      "Wilderness": {
         "Firefly": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -254,25 +293,22 @@
       }
     },
     "Grassland": {
-      "Environmental": {
-        "Tree": {
+      "Base Environmental": {
+        "Grass": {
           "Algorithm": "RandomSpread",
           "Params": {
-            "Number": 10
+            "Number": 600
           }
-        },
+        }
+      },
+      "Small Environmental": {
         "Stone": {
           "Algorithm": "RandomSpread",
           "Params": {
             "Number": 7
           }
         },
-        "Grass": {
-          "Algorithm": "RandomSpread",
-          "Params": {
-            "Number": 600
-          }
-        },
+        
         "Herb": {
           "Algorithm": "RandomSpread",
           "Params": {
@@ -280,7 +316,15 @@
           }
         }
       },
-      "Actors": {
+      "Large Environmental": {
+        "Tree": {
+          "Algorithm": "RandomSpread",
+          "Params": {
+            "Number": 10
+          }
+        }
+      },
+      "Wilderness": {
         "Butterfly": {
           "Algorithm": "RandomSpread",
           "Params": {

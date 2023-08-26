@@ -68,7 +68,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, Health& health)
 	{
-		archive(health.max, health.current);
+		archive(health.max, health.current, health.recovery);
 	}
 
 	template<class Archive>
@@ -168,15 +168,27 @@ namespace cereal
 	}
 
 	template<class Archive>
-	void serialize(Archive& archive, Door& door)
+	void serialize(Archive& archive, Openable& openable)
 	{
-		archive(door.isOpen, door.keyName);
+		archive(openable.isOpen, openable.keyName);
 	}
 
 	template<class Archive>
 	void serialize(Archive& archive, TickingLifetime& tickingLifetime)
 	{
 		archive(tickingLifetime.ticksRemaining);
+	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Leveling& leveling)
+	{
+		archive(leveling.currentLevel, leveling.currentXP, leveling.neededXP);
+	}
+
+	template<class Archive>
+	void serialize(Archive& archive, BaseStats& baseStats)
+	{
+		archive(baseStats.strength, baseStats.agility, baseStats.vitality);
 	}
 }
 

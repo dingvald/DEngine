@@ -21,7 +21,7 @@ void drft::system::EntityRenderer::init()
 void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
 	sf::Vector2f cameraOrigin = getCurrentCameraOrigin(*registry);
-
+	// Apply lighting to entities in the player's FOV
 	const auto view = registry->view< const component::Position, const component::Render, const component::Lit, const component::tag::InPlayerFOV, component::tag::InViewport>();
 	for (auto const & [entity, pos, ren, lit] : view.each())
 	{
@@ -31,14 +31,14 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		sf::Vector2f renderPosition = pos.position - cameraOrigin;
 		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(r,g,b, ren.color.a), renderPosition);
 	}
-
+	// Apply darkened light to entities outside the player's FOV
 	const auto seenView = registry->view< const component::Position, const component::Render, const component::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren, seen] : seenView.each())
 	{
 		sf::Vector2f renderPosition = pos.position - cameraOrigin;
 		_spriteLayers[ren.layer].addSprite(ren.sprite, seenTileColor, renderPosition);
 	}
-
+	// Draw batches
 	for (auto& [layer, batch] : _spriteLayers)
 	{
 		target.draw(batch);

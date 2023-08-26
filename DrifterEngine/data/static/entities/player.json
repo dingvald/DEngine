@@ -1,88 +1,63 @@
 {
-  "Prototypes": [
-    {
-      "Name": "Player",
+  "Prototypes": {
+    "Player": {
       "Inherits": [
-        "HumanBody"
+        "Human Body"
       ],
-      "Components": [
-        {
-          "Name": "Info",
-          "Data": {
-            "name": "Player",
-            "extendedName": "The Player",
-            "description": "The Player character. Can be anything the player wants..."
-          }
+      "Components": {
+        "Info": {
+          "name": "Player",
+          "extendedName": "The Player",
+          "description": "The Player character. Can be anything the player wants..."
         },
-        {
-          "Name": "Render",
-          "Data": {
-            "sprite": 1,
-            "layer": 2,
-            "color": [ 120, 120, 120 ]
-          }
+        "Render": {
+          "sprite": 1,
+          "layer": 2,
+          "color": [ 120, 120, 120 ]
         },
-        {
-          "Name": "Position",
-          "Data": {
-            "position": [ 0.0, 0.0 ]
-          }
+        "Position": {
+          "position": [ 0.0, 0.0 ]
         },
-        {
-          "Name": "Physical",
-          "Data": {
-            "blocks": true,
-            "weight": 80.0,
-            "materials": [ "Corpse" ]
-          }
+        "BaseStats": {
+          "strength": 5,
+          "agility": 5,
+          "vitality": 5
         },
-        {
-          "Name": "Actor",
-          "Data": {
-            "ap": 0,
-            "moveSpeed": 1.0,
-            "actSpeed": 1.0
-          }
+        "Physical": {
+          "blocks": true,
+          "weight": 80.0,
+          "materials": [ "Corpse" ]
         },
-        {
-          "Name": "Health",
-          "Data": {
-            "max": 30,
-            "current": 30
-          }
+        "Actor": {
+          "moveSpeed": 1.0,
+          "actSpeed": 1.0
         },
-        {
-          "Name": "Stamina",
-          "Data": {
-            "max": 25.0,
-            "current": 25.0
-          }
+        "Health": {
+          "max": 30.0,
+          "current": 30.0,
+          "recovery": 0.05
         },
-        {
-          "Name": "Player",
-          "Data": {
-            "sightRange": 24
-          }
+        "Stamina": {
+          "max": 25.0,
+          "current": 25.0
         },
-        {
-          "Name": "Attacker",
-          "Data": {
-            "baseDamage": 1
-          }
+        "Player": {
+          "sightRange": 24
         },
-        {
-          "Name": "Faction",
-          "Data": {
-            "name": "good"
-          }
+        "Attacker": {
+          "baseDamage": 1
         },
-        {
-          "Name": "Container",
-          "Data": {
-            "capacity": 30
-          }
+        "Faction": {
+          "name": "good"
+        },
+        "Container": {
+          "capacity": 30
+        },
+        "Leveling": {
+          "currentLevel": 0
         }
-      ]
+      }
     }
-  ]
+  }
 }
+    

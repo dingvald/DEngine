@@ -45,6 +45,14 @@ sf::Vector2i drft::rng::RandomNumberGenerator::positionInCircle(sf::Vector2i ori
 	return { x,y };
 }
 
+sf::Vector2i drft::rng::RandomNumberGenerator::positionInRect(sf::Vector2i dimensions)
+{
+	int x = intInRange(0, dimensions.x);
+	int y = intInRange(0, dimensions.y);
+
+	return { x,y };
+}
+
 unsigned int drft::rng::generateSeed()
 {
 	return static_cast<unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count());

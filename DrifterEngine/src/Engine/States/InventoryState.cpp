@@ -111,7 +111,7 @@ void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity ite
 
 	if (auto health = getContext().registry.try_get<component::Health>(item))
 	{
-		float scalingFactor = (static_cast<float>(health->current) / static_cast<float>(health->max));
+		float scalingFactor = health->current / health->max;
 		container.insert("Health", gui::Panel())
 			.setSize({ 32, (32 - 32 * scalingFactor) })
 			.setLocalPosition({ 0, 16})
@@ -831,8 +831,28 @@ void drft::InventoryState::setupEquipmentGrid()
 									[this, slotName]() -> bool
 									{
 										auto sessionEntity = this->_sessionEntities.front();
-										getContext().registry.emplace_or_replace<component::action::Unequip>(sessionEntity, slotName.data());
-										_inventoryStack.clear();
+										auto& container = getContext().registry.get<component::Container>(sessionEntity);
+										const auto VIEW = getContext().window.getView();
+										if (container.contents.size() < container.capacity)
+										{
+											getContext().registry.emplace_or_replace<component::action::Unequip>(sessionEntity, slotName.data());
+											_inventoryStack.clear();
+										}
+										else
+										{
+											_inventoryStack.insert("Message", gui::PopupMessage())
+												.setPosition(VIEW.getCenter())
+												.setStyle(gui::ElementState::Focused, {
+													.fillColor = sf::Color(0,0,0,255),
+													.outlineColor = sf::Color(255,255,255,150),
+													.outlineThickness = 1.f,
+													.innerPadding = {2.f, 2.f},
+													.font = &getContext().fonts.get("Terminus"),
+													.textColor = sf::Color::White
+													})
+												.setTextString("Inventory full.");
+										}
+										
 										return true;
 									});
 
