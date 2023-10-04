@@ -451,13 +451,66 @@
         },
         "Body": {
           "parts": {
-            "Head": 0,
-            "Body": 0,
-            "Hands": 0,
-            "HeldR": 0,
-            "HeldL": 0,
-            "Legs": 0,
-            "Feet": 0
+            "Head": {
+              "type": "head",
+              "layers": 1,
+              "size": 9,
+              "canGrasp": false
+            },
+            "Torso": {
+              "type": "torso",
+              "layers": 2,
+              "size": 36,
+              "canGrasp": false
+            },
+            "Right Arm": {
+              "type": "upper limb",
+              "layers": 1,
+              "size": 7,
+              "canGrasp": false
+            },
+            "Left Arm": {
+              "type": "upper limb",
+              "layers": 1,
+              "size": 7,
+              "canGrasp": false
+            },
+            "Right Hand": {
+              "type": "upper extremity",
+              "layers": 1,
+              "size": 2,
+              "canGrasp": true
+            },
+            "Left Hand": {
+              "type": "upper extremity",
+              "layers": 1,
+              "size": 2,
+              "canGrasp": true
+            },
+            "Right Leg": {
+              "type": "lower limb",
+              "layers": 2,
+              "size": 15,
+              "canGrasp": false
+            },
+            "Left Leg": {
+              "type": "lower limb",
+              "layers": 2,
+              "size": 15,
+              "canGrasp": false
+            },
+            "Right Foot": {
+              "type": "lower extremity",
+              "layers": 1,
+              "size": 3,
+              "canGrasp": false
+            },
+            "Left Foot": {
+              "type": "lower extremity",
+              "layers": 1,
+              "size": 3,
+              "canGrasp": false
+            }
           }
         }
       }

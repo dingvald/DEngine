@@ -160,6 +160,23 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 							}
 							meta.data(entt::hashed_string(memberName)).set(any, map);
 						}
+						else if (data.value.GetObject().begin()->value.IsObject())
+						{
+							// HACKZZ: assumes body part
+							std::unordered_map<std::string, component::Body::Part> map;
+							for (auto&& mapData : data.value.GetObject())
+							{
+								component::Body::Part newPart;
+								newPart.type = mapData.value["type"].GetString();
+								newPart.layers = mapData.value["layers"].GetInt();
+								newPart.size = mapData.value["size"].GetInt();
+								newPart.canGrasp = mapData.value["canGrasp"].GetBool();
+
+								map.emplace(mapData.name.GetString(), newPart);
+							}
+							
+							meta.data(entt::hashed_string(memberName)).set(any, map);
+						}
 					}
 					else if (data.value.IsBool())
 					{

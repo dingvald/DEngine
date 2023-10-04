@@ -134,7 +134,15 @@ namespace component
 
 	struct Body
 	{
-		std::unordered_map<std::string, unsigned long> parts;
+		struct Part
+		{
+			std::string type = "";
+			unsigned int layers = 1;
+			unsigned int size = 0;
+			std::vector<unsigned long> equipped;
+			bool canGrasp = false;
+		};
+		std::unordered_map<std::string, Part> parts;
 	};
 
 	struct Wearable
