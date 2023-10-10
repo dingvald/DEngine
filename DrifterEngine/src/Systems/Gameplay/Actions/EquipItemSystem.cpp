@@ -22,15 +22,19 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 	auto& container = registry.get<component::Container>(entity);
 	const auto& equipItem = registry.get<component::action::Equip>(entity);
 	auto& body = registry.get<component::Body>(entity);
-
-	auto& currentlyEquipped = body.parts.at(equipItem.slotname);
+	auto part = body.parts.search(equipItem.partName);
+	if (!part)
+	{
+		throw std::exception("Trying to equip item to non-existant part name");
+	}
+	auto currentlyEquipped = part->getEquipped(equipItem.layer);
 	auto itemItr = std::find(container.contents.begin(), container.contents.end(), equipItem.toEquip);
 
 	if (itemItr != container.contents.end())
 	{
-		if (currentlyEquipped > 0)
+		if (currentlyEquipped.has_value())
 		{
-			std::swap(*itemItr, currentlyEquipped);
+			std::swap(*itemItr, currentlyEquipped.value());
 		}
 		else
 		{
@@ -39,7 +43,7 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 					cont.contents.erase(itemItr);
 				});
 			
-			body.parts.at(equipItem.slotname) = equipItem.toEquip;
+			part->equip(equipItem.toEquip, equipItem.layer);
 		}
 	}
 }
@@ -50,13 +54,17 @@ void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, e
 	const auto& unequipItem = registry.get<component::action::Unequip>(entity);
 	auto& body = registry.get<component::Body>(entity);
 
-	if (body.parts.contains(unequipItem.slotname))
+	if (auto part = body.parts.search(unequipItem.partName))
 	{
-		registry.patch<component::Container>(entity, [&body, &unequipItem](component::Container& cont)
-			{
-				cont.contents.push_back(body.parts.at(unequipItem.slotname));
-			});
-		
-		body.parts.at(unequipItem.slotname) = 0;
+		auto optionalItem = part->getEquipped(unequipItem.layer);
+		if (optionalItem.has_value())
+		{
+			unsigned long itemToUnequip = optionalItem.value();
+			registry.patch<component::Container>(entity, [itemToUnequip](component::Container& cont)
+				{
+					cont.contents.push_back(itemToUnequip);
+				});
+			part->unequip(itemToUnequip);
+		}
 	}
 }

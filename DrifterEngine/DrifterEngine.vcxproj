@@ -188,6 +188,7 @@
     <ClCompile Include="src\Machines\Chest.cpp" />
     <ClCompile Include="src\Factory\MachineFactory.cpp" />
     <ClCompile Include="src\Machines\Machine.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\BodyParts.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\ContainerHasItem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp" />
@@ -346,6 +347,7 @@
     <ClInclude Include="src\Machines\Chest.h" />
     <ClInclude Include="src\Factory\MachineFactory.h" />
     <ClInclude Include="src\Machines\Machine.h" />
+    <ClInclude Include="src\Systems\Gameplay\BodyParts.h" />
     <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h" />
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h" />
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h" />

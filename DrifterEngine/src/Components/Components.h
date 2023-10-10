@@ -1,4 +1,5 @@
 #pragma once
+#include "Systems/Gameplay/BodyParts.h"
 
 namespace component
 {
@@ -134,15 +135,7 @@ namespace component
 
 	struct Body
 	{
-		struct Part
-		{
-			std::string type = "";
-			unsigned int layers = 1;
-			unsigned int size = 0;
-			std::vector<unsigned long> equipped;
-			bool canGrasp = false;
-		};
-		std::unordered_map<std::string, Part> parts;
+		PartTree parts;
 	};
 
 	struct Wearable
@@ -284,12 +277,14 @@ namespace component::action
 	struct Equip
 	{
 		Item::ID toEquip = 0;
-		std::string slotname = {};
+		std::string partName = {};
+		unsigned int layer = 0;
 	};
 
 	struct Unequip
 	{
-		std::string slotname = {};
+		std::string partName = {};
+		unsigned int layer = 0;
 	};
 
 	struct Craft

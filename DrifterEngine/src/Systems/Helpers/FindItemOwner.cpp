@@ -26,11 +26,14 @@ entt::entity drft::system::findItemOwner(entt::registry& registry, unsigned long
 			auto bodyView = registry.view<component::Body>();
 			for (auto [entity, body] : bodyView.each())
 			{
-				for (auto&& [partName, item] : body.parts)
+				for (auto part : body.parts.flatten())
 				{
-					if (item == itemID)
+					for (auto item : part->getEquipped())
 					{
-						return entity;
+						if (item == itemID)
+						{
+							return entity;
+						}
 					}
 				}
 			}

@@ -14,24 +14,27 @@ void drft::system::LightSourceSystem::fixedUpdate()
 	auto bodyView = registry->view<component::Body, component::tag::InViewport>();
 	for (auto [entity, body] : bodyView.each())
 	{
-		for (const auto& [slotname, itemID] : body.parts)
+		for (const auto part : body.parts.flatten())
 		{
-			const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
-			if (const auto light = registry->try_get<component::LightSource>(itemEntity))
+			for (auto item : part->getEquipped())
 			{
-				if (auto tempLight = registry->try_get<component::TempLightSource>(entity))
+				const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+				if (const auto light = registry->try_get<component::LightSource>(itemEntity))
 				{
-					sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(tempLight->color.r * (static_cast<float>(light->color.r) / 255.f), 0.f, 255.f));
-					sf::Uint8 g = static_cast<sf::Uint8>(std::clamp(tempLight->color.g * (static_cast<float>(light->color.g) / 255.f), 0.f, 255.f));
-					sf::Uint8 b = static_cast<sf::Uint8>(std::clamp(tempLight->color.b * (static_cast<float>(light->color.b) / 255.f), 0.f, 255.f));
+					if (auto tempLight = registry->try_get<component::TempLightSource>(entity))
+					{
+						sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(tempLight->color.r * (static_cast<float>(light->color.r) / 255.f), 0.f, 255.f));
+						sf::Uint8 g = static_cast<sf::Uint8>(std::clamp(tempLight->color.g * (static_cast<float>(light->color.g) / 255.f), 0.f, 255.f));
+						sf::Uint8 b = static_cast<sf::Uint8>(std::clamp(tempLight->color.b * (static_cast<float>(light->color.b) / 255.f), 0.f, 255.f));
 
-					const float radius = std::max(tempLight->radius, light->radius);
-					const float dropOff = std::min(tempLight->dropOff, light->dropOff);
-					registry->emplace_or_replace<component::TempLightSource>(entity, radius, dropOff, sf::Color(r,g,b,tempLight->color.a));
-				}
-				else
-				{
-					registry->emplace_or_replace<component::TempLightSource>(entity, light->radius, light->dropOff, light->color);
+						const float radius = std::max(tempLight->radius, light->radius);
+						const float dropOff = std::min(tempLight->dropOff, light->dropOff);
+						registry->emplace_or_replace<component::TempLightSource>(entity, radius, dropOff, sf::Color(r, g, b, tempLight->color.a));
+					}
+					else
+					{
+						registry->emplace_or_replace<component::TempLightSource>(entity, light->radius, light->dropOff, light->color);
+					}
 				}
 			}
 		}

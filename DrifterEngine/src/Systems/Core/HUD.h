@@ -66,7 +66,7 @@ namespace drft::system
 		sf::RectangleShape _staminaBarContainer{};
 		sf::Sprite _staminaIcon{};
 
-		gui::DualContainer _inHandsDisplay;
+		gui::MultiContainer _inHandsDisplay;
 		gui::List _itemsOnGround{ false };
 
 		// Messages

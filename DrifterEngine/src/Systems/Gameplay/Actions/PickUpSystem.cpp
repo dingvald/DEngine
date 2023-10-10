@@ -16,38 +16,32 @@ void drft::system::PickUpSystem::update(const float dt)
 	auto& grid = registry->ctx().get<spatial::WorldGrid&>();
 	for (auto [entity, pos, container] : view.each())
 	{
+		if (container.contents.size() >= container.capacity) continue;
+
 		const auto myTilePosition = pos.position;
-		const auto items = grid.entitiesAt(myTilePosition,
-			[this](entt::entity entity) -> bool
+		const auto items = grid.entitiesAt(myTilePosition, [this](entt::entity entity) -> bool
 			{
 				return registry->all_of<component::Item>(entity);
 			});
 
-		if (items.empty())
+		if (!items.empty())
 		{
-			std::cout << "Nothing to pick up." << std::endl;
-		}
-		else
-		{
-			if (container.contents.size() >= container.capacity)
-			{
-				std::cout << "Cannot pickup, inventory full." << std::endl;
-				continue;
-			}
 			registry->remove<component::Position>(items.front());
-			std::cout << util::getEntityName({ *registry, entity }) 
-				<< " picked up a " << util::getEntityName({ *registry, items.front()}) << std::endl;
 
-			auto item = registry->get<component::Item>(items.front());
+			auto& item = registry->get<component::Item>(items.front());
 
 			bool putDirectlyInHand = false;
-			// try to put in right hand first (NOT LEFT HAND!)
 			if (auto body = registry->try_get<component::Body>(entity))
 			{
-				if (body->parts.contains("HeldR") && body->parts.at("HeldR") == component::Item::NONE)
+				const auto handParts = body->parts.search(PartType::Hand);
+				for (auto hand : handParts)
 				{
-					body->parts.at("HeldR") = item.id;
-					putDirectlyInHand = true;
+					if (hand->getEquipped().empty())
+					{
+						hand->equip(item.id, 0);
+						putDirectlyInHand = true;
+						break;
+					}
 				}
 			}
 			// otherwise put into inventory

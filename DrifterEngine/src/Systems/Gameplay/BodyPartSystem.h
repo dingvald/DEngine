@@ -7,14 +7,14 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void update(const float dt) override;
 
 	private:
 		void onIncomingDamage(entt::registry& registry, entt::entity entity);
+		void onLaunchAttack(entt::registry& registry, entt::entity entity);
 
-		int calculateDamageFromHeld(entt::entity attacker, unsigned long itemR, unsigned long itemL);
+		int calculateForceFromHeld(entt::entity attacker);
 		int calculateMitigationFromWorn(entt::entity defender, unsigned long partHit);
-		std::string determinePartHit(std::unordered_map<std::string, unsigned long>& parts);
+		std::string determinePartHit(entt::handle entity);
 	};
 
 }

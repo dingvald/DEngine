@@ -68,119 +68,111 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 			for (auto&& component : entityObject["Components"].GetObject())
 			{
 				auto componentName = component.name.GetString();
-				auto meta = entt::resolve(entt::hashed_string(componentName));
-				auto any = meta.func("emplace"_hs).invoke(meta, entt::forward_as_meta(_protoRegistry), entity);
 				
-				// Iterate component data
-				for (auto&& data : component.value.GetObject())
+				// SPECIAL CASE: parse Body component
+				if (std::string(componentName) == BODY_STRING)
 				{
-					const auto memberName = data.name.GetString();
-					if (data.value.IsArray())
+					
+				}
+				// DEFAULT CASE: parse generic
+				else
+				{
+					auto meta = entt::resolve(entt::hashed_string(componentName));
+					auto any = meta.func("emplace"_hs).invoke(meta, entt::forward_as_meta(_protoRegistry), entity);
+					// Iterate component data
+					for (auto&& data : component.value.GetObject())
 					{
-						// HACKZZ: Inflexible - assumes certain types in arrays
-						auto arr = data.value.GetArray();
-						int size = arr.Size();
-						if (size == 2 && arr[0].IsInt())
+						const auto memberName = data.name.GetString();
+						if (data.value.IsArray())
 						{
-							sf::Vector2i vec2 = { arr[0].GetInt(), arr[1].GetInt() };
-							meta.data(entt::hashed_string(memberName)).set(any, vec2);
-						}
-						else if (size == 3 && arr[0].IsInt())
-						{
-							sf::Color col = {
-								static_cast<sf::Uint8>(arr[0].GetInt()),
-								static_cast<sf::Uint8>(arr[1].GetInt()),
-								static_cast<sf::Uint8>(arr[2].GetInt())
-							};
-							meta.data(entt::hashed_string(memberName)).set(any, col);
-						}
-						else if (arr[0].IsString())
-						{
-							// Either a unordered set of strings or a vector of strings
-							if (meta.data(entt::hashed_string(memberName)).type().is_associative_container())
+							// HACKZZ: Inflexible - assumes certain types in arrays
+							auto arr = data.value.GetArray();
+							int size = arr.Size();
+							if (size == 2 && arr[0].IsInt())
 							{
-								std::unordered_set<std::string> strings;
-								for (int i = 0; i < size; ++i)
+								sf::Vector2i vec2 = { arr[0].GetInt(), arr[1].GetInt() };
+								meta.data(entt::hashed_string(memberName)).set(any, vec2);
+							}
+							else if (size == 3 && arr[0].IsInt())
+							{
+								sf::Color col = {
+									static_cast<sf::Uint8>(arr[0].GetInt()),
+									static_cast<sf::Uint8>(arr[1].GetInt()),
+									static_cast<sf::Uint8>(arr[2].GetInt())
+								};
+								meta.data(entt::hashed_string(memberName)).set(any, col);
+							}
+							else if (arr[0].IsString())
+							{
+								// Either a unordered set of strings or a vector of strings
+								if (meta.data(entt::hashed_string(memberName)).type().is_associative_container())
 								{
-									strings.insert(arr[i].GetString());
+									std::unordered_set<std::string> strings;
+									for (int i = 0; i < size; ++i)
+									{
+										strings.insert(arr[i].GetString());
+									}
+									meta.data(entt::hashed_string(memberName)).set(any, strings);
 								}
-								meta.data(entt::hashed_string(memberName)).set(any, strings);
-							}
-							else if (meta.data(entt::hashed_string(memberName)).type().is_sequence_container())
-							{
-								std::vector<std::string> strings;
-								for (int i = 0; i < size; ++i)
+								else if (meta.data(entt::hashed_string(memberName)).type().is_sequence_container())
 								{
-									strings.push_back(arr[i].GetString());
+									std::vector<std::string> strings;
+									for (int i = 0; i < size; ++i)
+									{
+										strings.push_back(arr[i].GetString());
+									}
+									meta.data(entt::hashed_string(memberName)).set(any, strings);
 								}
-								meta.data(entt::hashed_string(memberName)).set(any, strings);
 							}
 						}
-					}
-					else if (data.value.IsString())
-					{
-						std::string val(data.value.GetString());
-						meta.data(entt::hashed_string(memberName)).set(any, val);
-					}
-					else if (data.value.IsInt())
-					{
-						meta.data(entt::hashed_string(memberName)).set(any, data.value.GetInt());
-					}
-					else if (data.value.IsFloat())
-					{
-						meta.data(entt::hashed_string(memberName)).set(any, data.value.GetFloat());
-					}
-					else if (data.value.IsObject())
-					{
-						if (data.value.GetObject().MemberCount() == 0) continue;
-						if (data.value.GetObject().begin()->value.IsInt64())
+						else if (data.value.IsString())
 						{
-							std::unordered_map<std::string, unsigned long> map;
-							for (auto&& mapData : data.value.GetObject())
-							{
-								map.emplace(mapData.name.GetString(), mapData.value.GetInt64());
-							}
-							meta.data(entt::hashed_string(memberName)).set(any, map);
+							std::string val(data.value.GetString());
+							meta.data(entt::hashed_string(memberName)).set(any, val);
 						}
-						else if (data.value.GetObject().begin()->value.IsFloat())
+						else if (data.value.IsInt())
 						{
-							std::unordered_map<std::string, float> map;
-							for (auto&& mapData : data.value.GetObject())
-							{
-								map.emplace(mapData.name.GetString(), mapData.value.GetFloat());
-							}
-							meta.data(entt::hashed_string(memberName)).set(any, map);
+							meta.data(entt::hashed_string(memberName)).set(any, data.value.GetInt());
 						}
-						else if (data.value.GetObject().begin()->value.IsString())
+						else if (data.value.IsFloat())
 						{
-							std::unordered_map<std::string, std::string> map;
-							for (auto&& mapData : data.value.GetObject())
-							{
-								map.emplace(mapData.name.GetString(), mapData.value.GetString());
-							}
-							meta.data(entt::hashed_string(memberName)).set(any, map);
+							meta.data(entt::hashed_string(memberName)).set(any, data.value.GetFloat());
 						}
-						else if (data.value.GetObject().begin()->value.IsObject())
+						else if (data.value.IsObject())
 						{
-							// HACKZZ: assumes body part
-							std::unordered_map<std::string, component::Body::Part> map;
-							for (auto&& mapData : data.value.GetObject())
+							if (data.value.GetObject().MemberCount() == 0) continue;
+							if (data.value.GetObject().begin()->value.IsInt64())
 							{
-								component::Body::Part newPart;
-								newPart.type = mapData.value["type"].GetString();
-								newPart.layers = mapData.value["layers"].GetInt();
-								newPart.size = mapData.value["size"].GetInt();
-								newPart.canGrasp = mapData.value["canGrasp"].GetBool();
-
-								map.emplace(mapData.name.GetString(), newPart);
+								std::unordered_map<std::string, unsigned long> map;
+								for (auto&& mapData : data.value.GetObject())
+								{
+									map.emplace(mapData.name.GetString(), mapData.value.GetInt64());
+								}
+								meta.data(entt::hashed_string(memberName)).set(any, map);
 							}
-							
-							meta.data(entt::hashed_string(memberName)).set(any, map);
+							else if (data.value.GetObject().begin()->value.IsFloat())
+							{
+								std::unordered_map<std::string, float> map;
+								for (auto&& mapData : data.value.GetObject())
+								{
+									map.emplace(mapData.name.GetString(), mapData.value.GetFloat());
+								}
+								meta.data(entt::hashed_string(memberName)).set(any, map);
+							}
+							else if (data.value.GetObject().begin()->value.IsString())
+							{
+								std::unordered_map<std::string, std::string> map;
+								for (auto&& mapData : data.value.GetObject())
+								{
+									map.emplace(mapData.name.GetString(), mapData.value.GetString());
+								}
+								meta.data(entt::hashed_string(memberName)).set(any, map);
+							}
 						}
-					}
-					else if (data.value.IsBool())
-					{
-						meta.data(entt::hashed_string(memberName)).set(any, data.value.GetBool());
+						else if (data.value.IsBool())
+						{
+							meta.data(entt::hashed_string(memberName)).set(any, data.value.GetBool());
+						}
 					}
 				}
 			}

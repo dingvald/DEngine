@@ -450,66 +450,65 @@
           "color": [ 150, 150, 150 ]
         },
         "Body": {
-          "parts": {
-            "Head": {
-              "type": "head",
-              "layers": 1,
-              "size": 9,
-              "canGrasp": false
-            },
-            "Torso": {
-              "type": "torso",
-              "layers": 2,
-              "size": 36,
-              "canGrasp": false
-            },
-            "Right Arm": {
-              "type": "upper limb",
-              "layers": 1,
-              "size": 7,
-              "canGrasp": false
-            },
-            "Left Arm": {
-              "type": "upper limb",
-              "layers": 1,
-              "size": 7,
-              "canGrasp": false
-            },
-            "Right Hand": {
-              "type": "upper extremity",
-              "layers": 1,
-              "size": 2,
-              "canGrasp": true
-            },
-            "Left Hand": {
-              "type": "upper extremity",
-              "layers": 1,
-              "size": 2,
-              "canGrasp": true
-            },
-            "Right Leg": {
-              "type": "lower limb",
-              "layers": 2,
-              "size": 15,
-              "canGrasp": false
-            },
-            "Left Leg": {
-              "type": "lower limb",
-              "layers": 2,
-              "size": 15,
-              "canGrasp": false
-            },
-            "Right Foot": {
-              "type": "lower extremity",
-              "layers": 1,
-              "size": 3,
-              "canGrasp": false
-            },
-            "Left Foot": {
-              "type": "lower extremity",
-              "layers": 1,
-              "size": 3,
-              "canGrasp": false
+          "Torso": {
+            "type": "Torso",
+            "size": 36,
+            "layers": 2,
+            "attachedParts": {
+              "Head": {
+                "type": "Head",
+                "size": 9,
+                "layers": 1
+              },
+              "Right Arm": {
+                "type": "Upper Limb",
+                "size": 7,
+                "layers": 1,
+                "attachedParts": {
+                  "Right Hand": {
+                    "type": "Hand",
+                    "size": 2,
+                    "layers": 1,
+                    "preffered": true
+                  }
+                }
+              },
+              "Left Arm": {
+                "type": "Upper Limb",
+                "size": 7,
+                "layers": 1,
+                "attachedParts": {
+                  "Left Hand": {
+                    "type": "Hand",
+                    "size": 2,
+                    "layers": 1
+                  }
+                }
+              },
+              "Right Leg": {
+                "type": "Lower Limb",
+                "size": 15,
+                "layers": 2,
+                "attachedParts": {
+                  "Right Foot": {
+                    "type": "Foot",
+                    "size": 3,
+                    "layers": 2
+                  }
+                }
+              },
+              "Left Leg": {
+                "type": "Lower Limb",
+                "size": 15,
+                "layers": 2,
+                "attachedParts": {
+                  "Left Foot": {
+                    "type": "Foot",
+                    "size": 3,
+                    "layers": 2
+                  }
+                }
+              }
             }
           }
         }
@@ -521,13 +520,66 @@
       ],
       "Components": {
         "Body": {
-          "parts": {
-            "Head": 0,
-            "Body": 0,
-            "FrontLegs": 0,
-            "HeldR": 0,
-            "HeldL": 0,
-            "BackLegs": 0
+          "Torso": {
+            "type": "Torso",
+            "size": 36,
+            "layers": 2,
+            "attachedParts": {
+              "Head": {
+                "type": "Head",
+                "size": 9,
+                "layers": 1
+              },
+              "Right Arm": {
+                "type": "Upper Limb",
+                "size": 7,
+                "layers": 1,
+                "attachedParts": {
+                  "Right Hand": {
+                    "type": "Hand",
+                    "size": 2,
+                    "layers": 1,
+                    "preffered": true
+                  }
+                }
+              },
+              "Left Arm": {
+                "type": "Upper Limb",
+                "size": 7,
+                "layers": 1,
+                "attachedParts": {
+                  "Left Hand": {
+                    "type": "Hand",
+                    "size": 2,
+                    "layers": 1
+                  }
+                }
+              },
+              "Right Leg": {
+                "type": "Lower Limb",
+                "size": 15,
+                "layers": 2,
+                "attachedParts": {
+                  "Right Foot": {
+                    "type": "Foot",
+                    "size": 3,
+                    "layers": 2
+                  }
+                }
+              },
+              "Left Leg": {
+                "type": "Lower Limb",
+                "size": 15,
+                "layers": 2,
+                "attachedParts": {
+                  "Left Foot": {
+                    "type": "Foot",
+                    "size": 3,
+                    "layers": 2
+                  }
+                }
+              }
+            }
           }
         }
       }

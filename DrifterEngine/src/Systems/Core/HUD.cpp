@@ -251,48 +251,7 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 
 void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
 {
-	_inHandsDisplay["RightHandContainer"]["Item"].clear();
-	_inHandsDisplay["LeftHandContainer"]["Item"].clear();
-
-	if (auto body = player.try_get<component::Body>())
-	{
-		if (body->parts.contains("HeldR") && body->parts.at("HeldR") != component::Item::NONE)
-		{
-			entt::entity rightHandItem = ItemDatabase::getEntityFromItemID(body->parts.at("HeldR"));
-			addItemIcon(_inHandsDisplay["RightHandContainer"]["Item"], rightHandItem);
-		}
-		else
-		{
-			using namespace entt::literals;
-			const auto& sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
-			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(util::Sprite::PaperDollHandR, sprites) };
-			_inHandsDisplay["RightHandContainer"]["Item"].insert("Icon", gui::Icon(sprite))
-				.setSize({ 32,32 })
-				.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-				.setStyle(gui::ElementState::Idle, {
-						.fillColor = sf::Color(80,80,80,150)
-					});
-		}
-		if (body->parts.contains("HeldL") && body->parts.at("HeldL") != component::Item::NONE)
-		{
-			entt::entity leftHandItem = ItemDatabase::getEntityFromItemID(body->parts.at("HeldL"));
-			addItemIcon(_inHandsDisplay["LeftHandContainer"]["Item"], leftHandItem);
-		}
-		else
-		{
-			using namespace entt::literals;
-			const auto& sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
-			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(util::Sprite::PaperDollHandL, sprites) };
-			_inHandsDisplay["LeftHandContainer"]["Item"].insert("Icon", gui::Icon(sprite))
-				.setSize({ 32,32 })
-				.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-				.setStyle(gui::ElementState::Idle, {
-						.fillColor = sf::Color(80,80,80,150)
-					});
-		}
-	}
-
-	_inHandsDisplay.update(0.f);
+	
 }
 
 void drft::system::HUD::updateFloatingMessagesDisplay(entt::const_handle)

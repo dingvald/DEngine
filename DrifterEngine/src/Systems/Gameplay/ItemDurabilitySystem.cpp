@@ -11,12 +11,8 @@ void drft::system::ItemDurabilitySystem::init()
 void drft::system::ItemDurabilitySystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
 	auto& body = registry->get<component::Body>(ev.owner);
-	for (auto& [slotname, itemID] : body.parts)
+	for (auto& part : body.parts.flatten())
 	{
-		if (itemID == ev.itemID)
-		{
-			itemID = component::Item::NONE;
-			return;
-		}
+		part->unequip(ev.itemID);
 	}
 }
