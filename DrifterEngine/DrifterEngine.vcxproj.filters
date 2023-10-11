@@ -273,9 +273,6 @@
     <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\ItemDurabilitySystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\LiquidSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1146,9 +1143,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\ItemBreakEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\ItemDurabilitySystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\LiquidSystem.h">

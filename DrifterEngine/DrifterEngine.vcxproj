@@ -202,7 +202,6 @@
     <ClCompile Include="src\Systems\Gameplay\QuestingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\SprintingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LiquidSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\ItemDurabilitySystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HorrorSpawningSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\AddToContainer.cpp" />
@@ -365,7 +364,6 @@
     <ClInclude Include="src\Events\TurnEndEvent.h" />
     <ClInclude Include="src\Events\TurnStartEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\LiquidSystem.h" />
-    <ClInclude Include="src\Systems\Gameplay\ItemDurabilitySystem.h" />
     <ClInclude Include="src\Events\ItemBreakEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\LightSourceSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\HorrorSpawningSystem.h" />

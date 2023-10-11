@@ -141,23 +141,6 @@ void drft::system::HUD::createInHandsDisplay()
 		.setStyle(gui::ElementState::Idle, {
 			.childPadding = {48.f, 0.f}
 			});
-
-	_inHandsDisplay.insert("RightHandContainer", gui::SingleContainer())
-		.setSize({ 32, 32 })
-		.setStyle(gui::ElementState::Idle, {
-			.fillColor = {0,0,0,150},
-			.outlineColor = {150,150,150,100},
-			.outlineThickness = 1.f
-			})
-		.insert("Item", gui::DualContainer());
-	_inHandsDisplay.insert("LeftHandContainer", gui::SingleContainer())
-		.setSize({ 32, 32 })
-		.setStyle(gui::ElementState::Idle, {
-			.fillColor = {0,0,0,150},
-			.outlineColor = {150,150,150,100},
-			.outlineThickness = 1.f
-			})
-		.insert("Item", gui::DualContainer());
 }
 
 void drft::system::HUD::createItemsOnGroundDisplay()
@@ -251,7 +234,30 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 
 void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
 {
-	
+	_inHandsDisplay.clear();
+	if (auto body = player.try_get<component::Body>())
+	{
+		auto handParts = body->parts.search(PartType::Hand);
+		for (auto hand : handParts)
+		{
+			auto& handContainer = _inHandsDisplay.insert(std::string(hand->name), gui::DualContainer());
+			handContainer.setSize({ 32, 32 })
+				.setStyle(gui::ElementState::Idle, {
+					.fillColor = {0,0,0,150},
+					.outlineColor = {150,150,150,100},
+					.outlineThickness = 1.f
+					})
+				.insert("Item", gui::DualContainer());
+
+			auto optionalHeldItem = hand->getEquipped(EquipmentLayer::Held);
+			if (optionalHeldItem.has_value())
+			{
+				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeldItem.value());
+				addItemIcon(handContainer["Item"], itemEntity);
+			}
+		}
+	}
+	_inHandsDisplay.update(0.f);
 }
 
 void drft::system::HUD::updateFloatingMessagesDisplay(entt::const_handle)
