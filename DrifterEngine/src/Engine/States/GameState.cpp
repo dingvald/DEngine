@@ -31,7 +31,6 @@
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/Actions/DropItemSystem.h"
 #include "Systems/Gameplay/Actions/EquipItemSystem.h"
-#include "Systems/Gameplay/ItemDurabilitySystem.h"
 #include "Systems/Gameplay/HitEffectSystem.h"
 #include "Systems/Gameplay/Actions/CraftItemSystem.h"
 #include "Systems/Gameplay/Actions/MovementSystem.h"
@@ -269,7 +268,6 @@ void drft::GameState::importSystems()
 	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
 	_systems->add<HealthSystem>(					Phase::OnUpdate + 10);
 	_systems->add<StaminaSystem>(					Phase::OnUpdate + 10);
-	_systems->add<ItemDurabilitySystem>(			Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);
 	_systems->add<LevelingSystem>(					Phase::OnUpdate + 20);
 
