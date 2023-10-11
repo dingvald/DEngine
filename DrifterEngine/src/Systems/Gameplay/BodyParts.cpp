@@ -40,10 +40,14 @@ void BodyPart::attach(std::unique_ptr<BodyPart> newPart)
 	_children.emplace_back(std::move(newPart));
 }
 
-bool BodyPart::equip(unsigned long itemID, unsigned long layer)
+bool BodyPart::equip(unsigned long itemID, EquipmentLayer layer)
 {
-	if (_equipped.contains(layer)) return false;
-	_equipped[layer] = itemID;
+	if (this->type != PartType::Hand && layer == EquipmentLayer::Held)
+	{
+		return false;
+	}
+	if (_equipped.contains(static_cast<int>(layer))) return false;
+	_equipped[static_cast<int>(layer)] = itemID;
 	return true;
 }
 
@@ -72,16 +76,20 @@ bool BodyPart::hasItemEquipped(unsigned int itemID)
 	return false;
 }
 
-std::optional<unsigned long> BodyPart::getEquipped(unsigned int layer)
+std::optional<unsigned long> BodyPart::getEquipped(EquipmentLayer layer) const
 {
-	if (_equipped.contains(layer))
+	if (this->type != PartType::Hand && layer == EquipmentLayer::Held)
 	{
-		return _equipped.at(layer);
+		return std::nullopt;
+	}
+	if (_equipped.contains(static_cast<int>(layer)))
+	{
+		return _equipped.at(static_cast<int>(layer));
 	}
 	return std::nullopt;
 }
 
-std::vector<unsigned long> BodyPart::getEquipped()
+std::vector<unsigned long> BodyPart::getEquipped() const
 {
 	std::vector<unsigned long> result;
 	for (auto [layer, itemID] : _equipped)
@@ -101,7 +109,7 @@ PartTree::PartTree(const PartTree& other)
 	this->_root = std::make_unique<BodyPart>(BodyPart{ *other._root });
 }
 
-PartTree& PartTree::operator=(PartTree other)
+PartTree& PartTree::operator=(PartTree& other)
 {
 	if (this != &other)
 	{

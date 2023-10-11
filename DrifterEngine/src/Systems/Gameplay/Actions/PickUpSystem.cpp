@@ -38,7 +38,7 @@ void drft::system::PickUpSystem::update(const float dt)
 				{
 					if (hand->getEquipped().empty())
 					{
-						hand->equip(item.id, 0);
+						hand->equip(item.id, EquipmentLayer::Held);
 						putDirectlyInHand = true;
 						break;
 					}

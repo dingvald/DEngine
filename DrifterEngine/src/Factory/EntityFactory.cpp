@@ -68,11 +68,29 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 			for (auto&& component : entityObject["Components"].GetObject())
 			{
 				auto componentName = component.name.GetString();
-				
+
 				// SPECIAL CASE: parse Body component
 				if (std::string(componentName) == BODY_STRING)
 				{
-					
+					auto bodyObj = component.value.GetObject();
+					auto& root = *bodyObj.begin();
+					auto parseBodyPart = [&](decltype(root)& rootObj, auto&& parse) -> std::unique_ptr<BodyPart>
+					{
+						BodyPart root;
+						root.name = rootObj.name.GetString();
+						root.type = string2PartType.at(rootObj.value.GetObject()["type"].GetString());
+						root.size = rootObj.value.GetObject()["size"].GetInt();
+						if (rootObj.value.HasMember("attachedParts"))
+						{
+							for (auto& attachedPart : rootObj.value["attachedParts"].GetObject())
+							{
+								root.attach(parse(attachedPart, parse));
+							}
+						}
+						return std::make_unique<BodyPart>(root);
+					};
+					PartTree parts(parseBodyPart(root, parseBodyPart));
+					_protoRegistry.emplace<component::Body>(entity, parts);
 				}
 				// DEFAULT CASE: parse generic
 				else

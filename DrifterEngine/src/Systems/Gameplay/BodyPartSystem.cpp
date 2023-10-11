@@ -12,6 +12,9 @@ void drft::system::BodyPartSystem::init()
 {
 	registry->on_construct<component::action::IncomingDamage>().connect<&BodyPartSystem::onIncomingDamage>(this);
 	registry->on_construct<component::action::LaunchAttack>().connect<&BodyPartSystem::onLaunchAttack>(this);
+
+	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	dispatcher.sink<events::ItemBreakEvent>().connect<&BodyPartSystem::onItemBreakEvent>(this);
 }
 
 void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, entt::entity entity)
@@ -45,6 +48,15 @@ void drft::system::BodyPartSystem::onLaunchAttack(entt::registry& registry, entt
 	{
 		auto& attack = registry.get<component::action::LaunchAttack>(entity);
 		attack.damage += calculateForceFromHeld(entity);
+	}
+}
+
+void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
+{
+	auto& body = registry->get<component::Body>(ev.owner);
+	for (auto& part : body.parts.flatten())
+	{
+		part->unequip(ev.itemID);
 	}
 }
 

@@ -453,59 +453,48 @@
           "Torso": {
             "type": "Torso",
             "size": 36,
-            "layers": 2,
             "attachedParts": {
               "Head": {
                 "type": "Head",
-                "size": 9,
-                "layers": 1
+                "size": 9
               },
               "Right Arm": {
                 "type": "Upper Limb",
                 "size": 7,
-                "layers": 1,
                 "attachedParts": {
                   "Right Hand": {
                     "type": "Hand",
-                    "size": 2,
-                    "layers": 1,
-                    "preffered": true
+                    "size": 2
                   }
                 }
               },
               "Left Arm": {
                 "type": "Upper Limb",
                 "size": 7,
-                "layers": 1,
                 "attachedParts": {
                   "Left Hand": {
                     "type": "Hand",
-                    "size": 2,
-                    "layers": 1
+                    "size": 2
                   }
                 }
               },
               "Right Leg": {
                 "type": "Lower Limb",
                 "size": 15,
-                "layers": 2,
                 "attachedParts": {
                   "Right Foot": {
                     "type": "Foot",
-                    "size": 3,
-                    "layers": 2
+                    "size": 3
                   }
                 }
               },
               "Left Leg": {
                 "type": "Lower Limb",
                 "size": 15,
-                "layers": 2,
                 "attachedParts": {
                   "Left Foot": {
                     "type": "Foot",
-                    "size": 3,
-                    "layers": 2
+                    "size": 3
                   }
                 }
               }

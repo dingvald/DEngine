@@ -45,6 +45,10 @@ void component::Meta::initialize()
 		.prop("serialize"_hs)
 		.data<&LightBlocking::opacity>("opacity"_hs);
 
+	snapshot::reflectComponent<Body, BODY_STRING>()
+		.prop("serialize"_hs)
+		.data<&Body::parts>("parts"_hs);
+
 	snapshot::reflectComponent<Physical, PHYSICAL_STRING>()
 		.prop("serialize"_hs)
 		.data<&Physical::blocks>("blocks"_hs)

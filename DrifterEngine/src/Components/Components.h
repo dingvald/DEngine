@@ -278,13 +278,13 @@ namespace component::action
 	{
 		Item::ID toEquip = 0;
 		std::string partName = {};
-		unsigned int layer = 0;
+		EquipmentLayer layer = EquipmentLayer::Base;
 	};
 
 	struct Unequip
 	{
 		std::string partName = {};
-		unsigned int layer = 0;
+		EquipmentLayer layer = EquipmentLayer::Base;
 	};
 
 	struct Craft

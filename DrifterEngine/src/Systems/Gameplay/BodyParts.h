@@ -21,6 +21,13 @@ enum class PartAlignment
 	Right
 };
 
+enum class EquipmentLayer
+{
+	Held,
+	Base,
+	Outer
+};
+
 static inline const std::unordered_map<std::string, PartType> string2PartType =
 {
 	{"Head", PartType::Head},
@@ -43,27 +50,56 @@ static inline const std::unordered_map<PartType, std::string> partType2String =
 
 struct BodyPart
 {
+	BodyPart() = default;
 	BodyPart(std::string name, PartType type, unsigned int size);
 	BodyPart(const BodyPart& other);
 	BodyPart& operator=(BodyPart& other);
 	BodyPart(BodyPart&& other) = default;
 	BodyPart& operator=(BodyPart&& other) = default;
 
-
 	std::string name;
 	PartType type = PartType::Head;
 	unsigned int size = 0;
 
 	void attach(std::unique_ptr<BodyPart> newPart);
-	bool equip(unsigned long itemID, unsigned long layer);
+	bool equip(unsigned long itemID, EquipmentLayer layer);
 	void unequip(unsigned long itemID);
 	bool hasItemEquipped(unsigned int itemID);
-	std::optional<unsigned long> getEquipped(unsigned int layer);
-	std::vector<unsigned long> getEquipped();
+	std::optional<unsigned long> getEquipped(EquipmentLayer layer) const;
+	std::vector<unsigned long> getEquipped() const;
+
+private:
+	friend class cereal::access;
+	template<class Archive>
+	void save(Archive& archive) const
+	{
+		archive(name, size, static_cast<int>(type));
+		archive(_equipped);
+		archive(static_cast<int>(_children.size()));
+		for (auto& part : _children)
+		{
+			archive(*(part.get()));
+		}
+	}
+
+	template<class Archive>
+	void load(Archive& archive)
+	{
+		archive(name, size, static_cast<PartType>(type));
+		archive(_equipped);
+		int childrenSize = 0;
+		archive(childrenSize);
+		for (int i = 0; i < childrenSize; ++i)
+		{
+			BodyPart bodyPart;
+			archive(bodyPart);
+			_children.push_back(std::make_unique<BodyPart>(bodyPart));
+		}
+	}
 
 private:
 	friend class PartTree;
-	std::map<unsigned int, unsigned long> _equipped;
+	std::map<int, unsigned long> _equipped;
 	std::vector<std::unique_ptr<BodyPart>> _children;
 };
 
@@ -71,9 +107,10 @@ private:
 class PartTree
 {
 public:
+	PartTree() = default;
 	PartTree(std::unique_ptr<BodyPart> root);
 	PartTree(const PartTree& other);
-	PartTree& operator=(PartTree other);
+	PartTree& operator=(PartTree& other);
 	PartTree(PartTree&& other) = default;
 	PartTree& operator=(PartTree&& other) = default;
 
@@ -91,9 +128,22 @@ private:
 	void recursiveSearch(BodyPart* root, PartType type, std::vector<BodyPart*>& result);
 	const BodyPart* recursiveSearch(BodyPart* root, const std::string& partName) const;
 
+	friend class cereal::access;
+	template<class Archive>
+	void save(Archive& archive) const
+	{
+		archive(*(_root.get()));
+	}
+
+	template<class Archive>
+	void load(Archive& archive)
+	{
+		BodyPart root;
+		archive(root);
+		_root = std::make_unique<BodyPart>(root);
+	}
 private:
+	
 	std::unique_ptr<BodyPart> _root = nullptr;
 };
-
-
 

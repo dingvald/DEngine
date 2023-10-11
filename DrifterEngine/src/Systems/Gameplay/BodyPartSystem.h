@@ -1,5 +1,6 @@
 #pragma once
 #include "Systems/System.h"
+#include "Events/ItemBreakEvent.h"
 
 namespace drft::system
 {
@@ -11,6 +12,7 @@ namespace drft::system
 	private:
 		void onIncomingDamage(entt::registry& registry, entt::entity entity);
 		void onLaunchAttack(entt::registry& registry, entt::entity entity);
+		void onItemBreakEvent(events::ItemBreakEvent& ev);
 
 		int calculateForceFromHeld(entt::entity attacker);
 		int calculateMitigationFromWorn(entt::entity defender, unsigned long partHit);
