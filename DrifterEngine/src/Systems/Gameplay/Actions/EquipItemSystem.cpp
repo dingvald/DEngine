@@ -42,7 +42,6 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 				{
 					cont.contents.erase(itemItr);
 				});
-			
 			part->equip(equipItem.toEquip, equipItem.layer);
 		}
 	}

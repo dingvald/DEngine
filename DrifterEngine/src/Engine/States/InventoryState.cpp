@@ -12,25 +12,6 @@ static constexpr int INVENTORY_HEIGHT = 6;
 static constexpr int EQUIPMENT_WIDTH = 3;
 static constexpr int EQUIPMENT_HEIGHT = 4;
 
-static const std::vector<std::string_view> PAPER_DOLL =
-{
-	"None",		"Head",		"None",
-	"Hands",	"Body",		"None",
-	"HeldR",	"Legs",		"HeldL",
-	"None",		"Feet",		"None"
-};
-
-static const std::map<std::string, drft::util::Sprite> PAPER_DOLL_SPRITES =
-{
-	{"Head", drft::util::Sprite::PaperDollHead},
-	{"Hands", drft::util::Sprite::PaperDollHands},
-	{"Body", drft::util::Sprite::PaperDollBody},
-	{"HeldR", drft::util::Sprite::PaperDollHandR},
-	{"HeldL", drft::util::Sprite::PaperDollHandL},
-	{"Legs", drft::util::Sprite::PaperDollLegs},
-	{"Feet", drft::util::Sprite::PaperDollFeet}
-};
-
 
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
     : State(stack, context)
@@ -60,6 +41,8 @@ bool drft::InventoryState::handleEvent(const sf::Event& ev)
 bool drft::InventoryState::update(const float dt)
 {
 	_inventoryBackground.update(dt);
+	updateInventoryGrid();
+	updateEquipmentGrid();
 	_inventoryStack.update(dt);
 	_flowControl.update(dt);
 	_inventoryBlob.update(dt);
@@ -590,14 +573,14 @@ void drft::InventoryState::setupEquipmentGrid()
 {
 	const auto& VIEW = getContext().window.getView();
 
-	auto& equipmentGrid = _flowControl.insert("EquipmentGrid", gui::Grid(EQUIPMENT_WIDTH, EQUIPMENT_HEIGHT));
+	auto& equipmentGrid = _flowControl.insert("EquipmentGrid", gui::List(true));
 	equipmentGrid.setPosition(VIEW.getCenter());
 	equipmentGrid.setStyle(gui::ElementState::Idle, {
 		.fillColor = sf::Color(0,0,0,50),
 		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f,
-		.innerPadding = {24.f, 24.f},
-		.childPadding = {8.f, 8.f},
+		.innerPadding = {8.f, 8.f},
+		.childPadding = {32.f, 8.f},
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color(150,150,150)
 		});
@@ -606,13 +589,83 @@ void drft::InventoryState::setupEquipmentGrid()
 		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {24.f, 24.f},
-		.childPadding = {8.f, 8.f},
+		.childPadding = {32.f, 8.f},
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color::White
 		});
 	equipmentGrid.setTextString(util::getEntityName({ getContext().registry, _sessionEntities.front() }) + "'s Equipment");
 	equipmentGrid.setTextPosition(gui::ElementPosition::TOP_CENTER);
 	equipmentGrid.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
+	equipmentGrid.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+
+	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
+	{
+		for (auto part : body->parts.flatten())
+		{
+			auto& partRow = equipmentGrid.insert(std::string(part->name), gui::DualContainer())
+				.setSize({16, 16})
+				.setStyle(gui::ElementState::Idle, {
+					.outlineColor = sf::Color(255,255,255,150),
+					.outlineThickness = 0.f,
+					.innerPadding = {2.f, 2.f},
+					.childPadding = {128.f, 0.f}
+					})
+				.setStyle(gui::ElementState::Focused, {
+					.outlineColor = sf::Color(255,255,255,150),
+					.outlineThickness = 0.f,
+					.innerPadding = {2.f, 2.f},
+					.childPadding = {128.f, 0.f}
+					});
+
+			partRow.insert("PartName", gui::Label())
+				.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
+				.setTextOrigin(gui::ElementPosition::CENTER_LEFT)
+				.setStyle(gui::ElementState::Idle, {
+					.outlineColor = sf::Color(255,255,255,150),
+					.outlineThickness = 0.f,
+					.innerPadding = {2.f, 2.f},
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color::White
+					})
+				.setStyle(gui::ElementState::Focused, {
+					.outlineColor = sf::Color(255,255,255,150),
+					.outlineThickness = 0.f,
+					.innerPadding = {2.f, 2.f},
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color::Yellow
+					})
+				.setTextString(std::string(part->name));
+
+			partRow.insert("Equipped", gui::MultiContainer())
+				.setStyle(gui::ElementState::Idle, {
+				.childPadding = {32.f, 0.f}
+					});
+		}
+	}
+}
+
+void drft::InventoryState::updateInventoryGrid()
+{
+}
+
+void drft::InventoryState::updateEquipmentGrid()
+{
+	auto& equipmentGrid = _flowControl["EquipmentGrid"];
+	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
+	{
+		for (auto part : body->parts.flatten())
+		{
+			auto equippedItems = part->getEquipped();
+			auto& equippedIconContainer = equipmentGrid[std::string(part->name)]["Equipped"];
+			equippedIconContainer.clear();
+			for (auto item : equippedItems)
+			{
+				auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+				addItemIcon(equippedIconContainer, itemEntity);
+			}
+		}
+	}
+	_flowControl["EquipmentGrid"].update(0.f);
 }
 
 void drft::InventoryState::determineSessionEntities()

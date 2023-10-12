@@ -1,5 +1,5 @@
 #pragma once
-#include "Systems/Gameplay/BodyParts.h"
+#include "Systems/HelperClasses/BodyParts.h"
 
 namespace component
 {

@@ -3,7 +3,6 @@
 #include "Components/Components.h"
 #include "Components/Tags.h"
 #include "Systems/Helpers/ItemDatabase.h"
-#include "Systems/Gameplay/BodyParts.h"
 #include "Random/RandomNumberGenerator.h"
 
 static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 30;
@@ -63,6 +62,22 @@ void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
 {
 	int force = 0;
+	if (auto body = registry->try_get<component::Body>(attacker))
+	{
+		auto rightHand = body->parts.search("Right Hand"); // TODO: genericize
+		if (rightHand)
+		{
+			auto itemID = rightHand->getEquipped(EquipmentLayer::Held);
+			auto itemEntity = ItemDatabase::getEntityFromItemID(itemID.value_or(0));
+			if (itemEntity != entt::null)
+			{
+				if (auto physical = registry->try_get<component::Physical>(itemEntity))
+				{
+					force += physical->weight;
+				}
+			}
+		}
+	}
 
 	return std::ceilf(force);
 }

@@ -375,7 +375,10 @@
     <ClCompile Include="src\Utility\Math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\BodyParts.cpp">
+    <ClCompile Include="src\Systems\HelperClasses\BodyParts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PaperDoll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1265,7 +1268,10 @@
     <ClInclude Include="src\ProcGen\GridBitFlags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\BodyParts.h">
+    <ClInclude Include="src\Systems\HelperClasses\BodyParts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PaperDoll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

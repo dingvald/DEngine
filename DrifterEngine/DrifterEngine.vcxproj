@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="PaperDoll.cpp" />
     <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp" />
     <ClCompile Include="src\Random\NoiseMap.cpp" />
     <ClCompile Include="src\ProcGen\Biome.cpp" />
@@ -188,7 +189,7 @@
     <ClCompile Include="src\Machines\Chest.cpp" />
     <ClCompile Include="src\Factory\MachineFactory.cpp" />
     <ClCompile Include="src\Machines\Machine.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\BodyParts.cpp" />
+    <ClCompile Include="src\Systems\HelperClasses\BodyParts.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\ContainerHasItem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp" />
@@ -336,6 +337,7 @@
     <ClCompile Include="src\WorldMap\WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PaperDoll.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
     <ClInclude Include="src\Random\NoiseMap.h" />
@@ -346,7 +348,7 @@
     <ClInclude Include="src\Machines\Chest.h" />
     <ClInclude Include="src\Factory\MachineFactory.h" />
     <ClInclude Include="src\Machines\Machine.h" />
-    <ClInclude Include="src\Systems\Gameplay\BodyParts.h" />
+    <ClInclude Include="src\Systems\HelperClasses\BodyParts.h" />
     <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h" />
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h" />
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h" />

@@ -47,6 +47,9 @@ namespace drft
 		void setupPanels();
 		void setupInventoryGrid();
 		void setupEquipmentGrid();
+
+		void updateInventoryGrid();
+		void updateEquipmentGrid();
 		void determineSessionEntities();
 		void shutdownSessionEntities();
 
