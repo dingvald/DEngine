@@ -8,8 +8,8 @@ enum class PartType
 	Head,
 	Torso,
 	UpperLimb,
-	LowerLimb,
 	Hand,
+	LowerLimb,
 	Foot,
 	Any
 };
@@ -26,6 +26,12 @@ enum class EquipmentLayer
 	Held,
 	Base,
 	Outer
+};
+
+enum class FlattenType
+{
+	DepthFirst,
+	ByPartType
 };
 
 static inline const std::unordered_map<std::string, PartType> string2PartType =
@@ -115,12 +121,14 @@ public:
 	PartTree& operator=(PartTree&& other) = default;
 
 	std::unique_ptr<BodyPart> remove(const std::string& partName);
+	int size() const;
 	bool contains(const std::string& partName) const;
 	BodyPart* search(const std::string& partName);
 	const BodyPart* search(const std::string& partName) const;
 	std::vector<BodyPart*> search(PartType type);
 	const std::vector<const BodyPart*> search(PartType type) const;
-	std::vector<BodyPart*> flatten();
+	std::vector<BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType);
+	const std::vector<const BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType) const;
 
 private:
 	BodyPart* recursiveSearch(BodyPart* root, const std::string& partName);

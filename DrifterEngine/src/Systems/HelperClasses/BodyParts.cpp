@@ -136,6 +136,11 @@ std::unique_ptr<BodyPart> PartTree::remove(const std::string& partName)
 	return nullptr;
 }
 
+int PartTree::size() const
+{
+	return flatten().size();
+}
+
 bool PartTree::contains(const std::string& partName) const
 {
 	auto found = search(partName);
@@ -167,10 +172,52 @@ const std::vector<const BodyPart*> PartTree::search(PartType type) const
 	return result;
 }
 
-std::vector<BodyPart*> PartTree::flatten()
+std::vector<BodyPart*> PartTree::flatten(FlattenType flattenHow)
 {
 	std::vector<BodyPart*> result;
-	recursiveSearch(_root.get(), PartType::Any, result);
+	switch (flattenHow)
+	{
+		case FlattenType::DepthFirst:
+		{
+			recursiveSearch(_root.get(), PartType::Any, result);
+		}
+		break;
+		case FlattenType::ByPartType:
+		{
+			for (int i = 0; i < static_cast<int>(PartType::Any); ++i)
+			{
+				auto typeVector = search(static_cast<PartType>(i));
+				result.insert(result.end(), typeVector.begin(), typeVector.end());
+			}
+		}
+		break;
+	}
+	
+	
+	return result;
+}
+
+const std::vector<const BodyPart*> PartTree::flatten(FlattenType flattenHow) const
+{
+	std::vector<const BodyPart*> result;
+	switch (flattenHow)
+	{
+	case FlattenType::DepthFirst:
+	{
+		recursiveSearch(_root.get(), PartType::Any, result);
+	}
+	break;
+	case FlattenType::ByPartType:
+	{
+		for (int i = 0; i < static_cast<int>(PartType::Any); ++i)
+		{
+			auto typeVector = search(static_cast<PartType>(i));
+			result.insert(result.end(), typeVector.begin(), typeVector.end());
+		}
+	}
+	break;
+	}
+
 	return result;
 }
 

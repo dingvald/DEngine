@@ -43,13 +43,13 @@ namespace drft
 		void onPop() override;
 
 	private:
-		void addItemIcon(gui::Element& container, entt::entity item);
+		void addItemIcon(gui::Element& container, entt::entity item, sf::Vector2f iconSize);
 		void setupPanels();
-		void setupInventoryGrid();
-		void setupEquipmentGrid();
+		void setupInventoryDisplay();
+		void setupEquipmentDisplay();
 
-		void updateInventoryGrid();
-		void updateEquipmentGrid();
+		void updateInventoryDisplay();
+		void updateEquipmentDisplay();
 		void determineSessionEntities();
 		void shutdownSessionEntities();
 
