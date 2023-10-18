@@ -171,9 +171,6 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\PickUpSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\OpenInventorySystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\States\StateContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1026,9 +1023,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\PickUpSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\OpenInventorySystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\States\StateContext.h">

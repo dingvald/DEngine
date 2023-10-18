@@ -301,8 +301,6 @@ namespace component::action
 
 	struct Die {};
 
-	struct OpenInventory {};
-
 	struct OpenEquipment {};
 
 	struct OpenWorldMap {};

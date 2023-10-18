@@ -284,3 +284,36 @@ void PartTree::recursiveSearch(BodyPart* root, PartType type, std::vector<BodyPa
 		recursiveSearch(child.get(), type, result);
 	}
 }
+
+std::set<unsigned long> getAllEquipped(const PartTree& partTree)
+{
+	std::set<unsigned long> result;
+	for (auto part : partTree.flatten())
+	{
+		auto equipped = part->getEquipped();
+		for (auto item : equipped)
+		{
+			result.insert(item);
+		}
+	}
+	return result;
+}
+
+std::set<unsigned long> getAllHeldEquipped(const PartTree& partTree)
+{
+	std::set<unsigned long> result;
+	for (auto part : partTree.search(PartType::Hand))
+	{
+		auto optionalItem = part->getEquipped(EquipmentLayer::Held);
+		if (optionalItem.has_value())
+		{
+			result.insert(optionalItem.value());
+		}
+	}
+	return result;
+}
+
+std::set<unsigned long> getAllWornEquipped(const PartTree& partTree)
+{
+	return std::set<unsigned long>();
+}

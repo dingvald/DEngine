@@ -46,16 +46,17 @@ namespace drft
 		void addItemIcon(gui::Element& container, entt::entity item, sf::Vector2f iconSize);
 		void setupPanels();
 		void setupInventoryDisplay();
-		void setupEquipmentDisplay();
+		void setupWornItemsDisplay();
+		void setupHeldItemsDisplay();
 
 		void updateInventoryDisplay();
-		void updateEquipmentDisplay();
+		void updateWornItemsDisplay();
+		void updateHeldItemsDisplay();
 		void determineSessionEntities();
 		void shutdownSessionEntities();
 
 	private:
 		std::vector<entt::entity> _sessionEntities;
-		SessionType _sessionType = SessionType::Inventory;
 		SessionContext _sessionContext;
 
 		gui::Panel _inventoryBackground;

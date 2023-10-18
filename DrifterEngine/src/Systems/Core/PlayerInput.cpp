@@ -39,12 +39,8 @@ void drft::system::PlayerInput::init()
 	_actionMap.addAction(Key::Numpad5, [](entt::handle entity) {
 		entity.emplace<component::action::Wait>(); 
 		});
-
 	_actionMap.addAction(Key::G, [](entt::handle entity) {
 		entity.emplace<component::action::PickUp>(); 
-		});
-	_actionMap.addAction(Key::I, [](entt::handle entity) {
-		entity.emplace<component::action::OpenInventory>();
 		});
 	_actionMap.addAction(Key::E, [](entt::handle entity) {
 		entity.emplace<component::action::OpenEquipment>();

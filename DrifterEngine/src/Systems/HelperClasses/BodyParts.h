@@ -155,3 +155,6 @@ private:
 	std::unique_ptr<BodyPart> _root = nullptr;
 };
 
+std::set<unsigned long> getAllEquipped(const PartTree& partTree);
+std::set<unsigned long> getAllHeldEquipped(const PartTree& partTree);
+std::set<unsigned long> getAllWornEquipped(const PartTree& partTree);
