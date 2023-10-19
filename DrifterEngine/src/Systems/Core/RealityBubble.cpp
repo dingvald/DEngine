@@ -6,7 +6,7 @@
 #include "Spatial/Helpers.h"
 #include "Services/DebugInfo.h"
 
-static const int REALITY_RADIUS = 80; // in tiles
+static const int REALITY_RADIUS = 96; // in tiles
 
 void drft::system::RealityBubble::init()
 {
@@ -29,8 +29,7 @@ void drft::system::RealityBubble::update(const float)
 	auto actorView = registry->view<const component::Actor, const component::Position>();
 	for (auto&& [entity, actor, pos] : actorView.each())
 	{
-		const auto actorPosition = pos.position;
-		const auto distance = spatial::distance(_cameraPosition, actorPosition);
+		const auto distance = spatial::distance(_cameraPosition, pos.position);
 
 		if (distance > REALITY_RADIUS)
 		{

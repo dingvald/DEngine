@@ -48,12 +48,12 @@ namespace drft::gui
 
 	struct Style
 	{
-		sf::Color fillColor = { 0,0,0,0 }; // clear
+		sf::Color fillColor = { 0,0,0,0 };
 		sf::Color outlineColor = { 0,0,0,0 };
 
 		float outlineThickness = 0.f;
 		sf::Vector2f innerPadding = { 0.f, 0.f }; // Space between outer edge and inner children
-		sf::Vector2f childPadding = { 0.f, 0.f }; // minimum distance between children
+		sf::Vector2f childPadding = { 0.f, 0.f }; // Minimum distance between children
 
 		sf::Font* font = nullptr;
 		sf::Color textColor = sf::Color::White;
@@ -94,7 +94,6 @@ namespace drft::gui
 		void render(sf::RenderTarget& target)
 		{
 			if (!_isVisible) return;
-		
 			onRender(target);
 		}
 
@@ -573,6 +572,7 @@ namespace drft::gui
 	{
 	public:
 		void transferControlTo(std::string&& childname);
+		void cycleControl();
 		void layoutChildren() override;
 
 	protected:
@@ -581,7 +581,7 @@ namespace drft::gui
 		void onRender(sf::RenderTarget& target) override;
 
 	private:
-		Element* _inControl = nullptr;
+		int _inControlIndex = 0;
 	};
 
 	// General-purpose container that makes no attempt to control it's children.

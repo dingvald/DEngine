@@ -19,7 +19,7 @@ static constexpr int WORN_ITEMS_HEIGHT = 4;
 
 static constexpr int PANEL_HEIGHT_OFFSET = -128;
 
-static constexpr int HELD_PANEL_WIDTH_OFFSET = -192;
+static constexpr int HELD_PANEL_WIDTH_OFFSET = -256;
 static constexpr int HELD_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET;
 
 static constexpr int WORN_PANEL_WIDTH_OFFSET = HELD_PANEL_WIDTH_OFFSET;
@@ -43,6 +43,10 @@ bool drft::InventoryState::handleEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
+		if (ev.key.code == sf::Keyboard::Tab)
+		{
+			_flowControl.cycleControl();
+		}
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
 			requestStackPop();
@@ -161,8 +165,8 @@ void drft::InventoryState::setupInventoryDisplay()
 	auto& inventoryGrid = _flowControl.insert("InventoryGrid", gui::Grid(INVENTORY_WIDTH, INVENTORY_HEIGHT));
 	inventoryGrid.setPosition(VIEW.getCenter() + sf::Vector2f{INVENTORY_PANEL_WIDTH_OFFSET, INVENTORY_PANEL_HEIGHT_OFFSET });
 	inventoryGrid.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,150),
-		.outlineColor = sf::Color(150,150,150,100),
+		.fillColor = sf::Color(0,0,0,200),
+		.outlineColor = sf::Color(80,80,80,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},
@@ -214,8 +218,8 @@ void drft::InventoryState::setupInventoryDisplay()
 			container.setOrigin(gui::ElementPosition::TOP_LEFT);
 			container.setChildrenOrigin(gui::ElementPosition::CENTER);
 			container.setStyle(gui::ElementState::Idle, {
-				.fillColor = sf::Color(0,0,0,150),
-				.outlineColor = sf::Color(150,150,150,100),
+				.fillColor = sf::Color(0,0,0,200),
+				.outlineColor = sf::Color(80,80,80,100),
 				.outlineThickness = 1.f
 				});
 			container.setStyle(gui::ElementState::Focused, {
@@ -377,16 +381,6 @@ void drft::InventoryState::setupInventoryDisplay()
 							[this, itemEntity, itemID]() -> bool
 							{
 								const auto& VIEW = getContext().window.getView();
-								std::cout << "Equipping item " << util::getEntityName({ this->getContext().registry, itemEntity }) << std::endl;
-
-								_flowControl.transferControlTo("EquipmentDisplay");
-								_flowControl["EquipmentDisplay"].setPosition(VIEW.getCenter());
-								_flowControl["EquipmentDisplay"].setTextString("Equip " + util::getEntityName({ this->getContext().registry, itemEntity }) + " where?");
-								_flowControl["EquipmentDisplay"].setVisibility(false);
-								_flowControl["EquipmentDisplay"].setVisibility(true);
-								_inventoryBlob["ItemLabel"].setTextString("");
-								_sessionContext.setCurrentItem(itemID);
-								_inventoryStack.clear();
 							
 								return true;
 							});
@@ -482,8 +476,8 @@ void drft::InventoryState::setupWornItemsDisplay()
 	auto& wornItemsDisplay = _flowControl.insert("WornItemsDisplay", gui::Grid(WORN_ITEMS_WIDTH, WORN_ITEMS_HEIGHT));
 	wornItemsDisplay.setPosition(VIEW.getCenter() + sf::Vector2f{WORN_PANEL_WIDTH_OFFSET, WORN_PANEL_HEIGHT_OFFSET });
 	wornItemsDisplay.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,150),
-		.outlineColor = sf::Color(150,150,150,100),
+		.fillColor = sf::Color(0,0,0,200),
+		.outlineColor = sf::Color(80,80,80,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},
@@ -512,8 +506,8 @@ void drft::InventoryState::setupHeldItemsDisplay()
 	auto& wornItemsDisplay = _flowControl.insert("HeldItemsDisplay", gui::Grid(HELD_ITEMS_WIDTH, HELD_ITEMS_HEIGHT));
 	wornItemsDisplay.setPosition(VIEW.getCenter() + sf::Vector2f{ HELD_PANEL_WIDTH_OFFSET, HELD_PANEL_HEIGHT_OFFSET });
 	wornItemsDisplay.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,150),
-		.outlineColor = sf::Color(150,150,150,100),
+		.fillColor = sf::Color(0,0,0,200),
+		.outlineColor = sf::Color(80,80,80,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},

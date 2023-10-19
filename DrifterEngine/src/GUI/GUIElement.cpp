@@ -5,12 +5,26 @@
 
 void drft::gui::FlowControl::transferControlTo(std::string&& childname)
 {
-	_inControl = _children.at(_childrenMap.at(childname)).get();
+	_inControlIndex = _childrenMap.at(childname);
 	for (auto& child : _children)
 	{
 		child->setState(gui::ElementState::Idle);
 	}
-	_inControl->setState(gui::ElementState::Focused);
+	_children.at(_inControlIndex)->setState(gui::ElementState::Focused);
+}
+
+void drft::gui::FlowControl::cycleControl()
+{
+	++_inControlIndex;
+	if (_inControlIndex >= _children.size())
+	{
+		_inControlIndex = 0;
+	}
+	for (auto& child : _children)
+	{
+		child->setState(gui::ElementState::Idle);
+	}
+	_children.at(_inControlIndex)->setState(gui::ElementState::Focused);
 }
 
 void drft::gui::FlowControl::layoutChildren()
@@ -19,9 +33,9 @@ void drft::gui::FlowControl::layoutChildren()
 bool drft::gui::FlowControl::onHandleEvent(const sf::Event& ev)
 {
 	bool propagate = true;
-	if (_inControl)
+	if (_inControlIndex < _children.size())
 	{
-		propagate = _inControl->handleEvent(ev);
+		propagate = _children.at(_inControlIndex)->handleEvent(ev);
 	}
 	else
 	{
