@@ -63,7 +63,7 @@ void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, e
 				{
 					cont.contents.push_back(itemToUnequip);
 				});
-			part->unequip(itemToUnequip);
+			body.parts.unequipItemFromBody(itemToUnequip);
 		}
 	}
 }

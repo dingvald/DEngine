@@ -55,6 +55,8 @@ namespace drft
 		void determineSessionEntities();
 		void shutdownSessionEntities();
 
+		void tryEquipItem(unsigned long itemID);
+
 	private:
 		std::vector<entt::entity> _sessionEntities;
 		SessionContext _sessionContext;

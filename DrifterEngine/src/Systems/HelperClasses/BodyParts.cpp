@@ -37,6 +37,7 @@ BodyPart& BodyPart::operator=(BodyPart& other)
 
 void BodyPart::attach(std::unique_ptr<BodyPart> newPart)
 {
+	newPart->_parent = this;
 	_children.emplace_back(std::move(newPart));
 }
 
@@ -49,6 +50,16 @@ bool BodyPart::equip(unsigned long itemID, EquipmentLayer layer)
 	if (_equipped.contains(static_cast<int>(layer))) return false;
 	_equipped[static_cast<int>(layer)] = itemID;
 	return true;
+}
+
+bool BodyPart::isConnectedTo(const BodyPart* part) const
+{
+	if (_parent == part) return true;
+	for (auto& child : _children)
+	{
+		if (child.get() == part) return true;
+	}
+	return false;
 }
 
 void BodyPart::unequip(unsigned long itemID)
@@ -221,6 +232,127 @@ const std::vector<const BodyPart*> PartTree::flatten(FlattenType flattenHow) con
 	return result;
 }
 
+std::set<unsigned long> PartTree::getAllEquipped()
+{
+	std::set<unsigned long> result;
+	for (auto part : this->flatten())
+	{
+		auto equipped = part->getEquipped();
+		for (auto item : equipped)
+		{
+			result.insert(item);
+		}
+	}
+	return result;
+}
+
+std::set<unsigned long> PartTree::getAllHeldEquipped()
+{
+	std::set<unsigned long> result;
+	for (auto part : this->search(PartType::Hand))
+	{
+		auto optionalItem = part->getEquipped(EquipmentLayer::Held);
+		if (optionalItem.has_value())
+		{
+			result.insert(optionalItem.value());
+		}
+	}
+	return result;
+}
+
+std::set<unsigned long> PartTree::getAllWornEquipped()
+{
+	std::set<unsigned long> result;
+	for (auto part : this->flatten())
+	{
+		for (int i = static_cast<int>(EquipmentLayer::Held) + 1; i <= static_cast<int>(EquipmentLayer::OverAll); ++i)
+		{
+			auto optionalItem = part->getEquipped(static_cast<EquipmentLayer>(i));
+			if (optionalItem.has_value())
+			{
+				result.insert(optionalItem.value());
+			}
+		}
+	}
+	return result;
+}
+
+std::unordered_set<std::string> PartTree::getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer)
+{
+	std::unordered_set<std::string> result;
+	std::vector<BodyPart*> potentialParts;
+	for (auto& slot : slots)
+	{
+		potentialParts = this->search(string2PartType.at(slot));
+		for (auto it = potentialParts.begin(); it != potentialParts.end();)
+		{
+			if ((*it)->getEquipped(layer).has_value())
+			{
+				it = potentialParts.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
+
+	// check covers
+	for (auto& partName : covers)
+	{
+		// check if a specific part
+		auto specificPart = this->search(partName);
+		if (specificPart)
+		{
+			auto itemEquipped = specificPart->getEquipped(layer);
+			if (itemEquipped.has_value())
+			{
+				return std::unordered_set<std::string>{};
+			}
+		}
+		else
+		{
+			// check if a generic typed part
+			if (!string2PartType.contains(partName))
+			{
+				// Cannot equip item on body, so early out
+				return std::unordered_set<std::string>{};
+			}
+			auto typedParts = this->search(string2PartType.at(partName));
+			for (auto it = potentialParts.begin(); it != potentialParts.end();)
+			{
+				bool isConnected = false;
+				for (auto typedPart : typedParts)
+				{
+					if ((*it)->isConnectedTo(typedPart))
+					{
+						isConnected = true;
+					}
+				}
+				if (!isConnected)
+				{
+					it = potentialParts.erase(it);
+				}
+				else
+				{
+					++it;
+				}
+			}
+		}
+	}
+
+	for (auto& part : potentialParts)
+	{
+		result.insert(part->name);
+	}
+
+	return result;
+}
+
+void PartTree::unequipItemFromBody(unsigned long itemID)
+{
+}
+
 BodyPart* PartTree::recursiveSearch(BodyPart* root, const std::string& partName)
 {
 	if (!root) return nullptr;
@@ -283,37 +415,4 @@ void PartTree::recursiveSearch(BodyPart* root, PartType type, std::vector<BodyPa
 	{
 		recursiveSearch(child.get(), type, result);
 	}
-}
-
-std::set<unsigned long> getAllEquipped(const PartTree& partTree)
-{
-	std::set<unsigned long> result;
-	for (auto part : partTree.flatten())
-	{
-		auto equipped = part->getEquipped();
-		for (auto item : equipped)
-		{
-			result.insert(item);
-		}
-	}
-	return result;
-}
-
-std::set<unsigned long> getAllHeldEquipped(const PartTree& partTree)
-{
-	std::set<unsigned long> result;
-	for (auto part : partTree.search(PartType::Hand))
-	{
-		auto optionalItem = part->getEquipped(EquipmentLayer::Held);
-		if (optionalItem.has_value())
-		{
-			result.insert(optionalItem.value());
-		}
-	}
-	return result;
-}
-
-std::set<unsigned long> getAllWornEquipped(const PartTree& partTree)
-{
-	return std::set<unsigned long>();
 }

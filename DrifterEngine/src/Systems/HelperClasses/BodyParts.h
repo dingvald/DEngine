@@ -9,6 +9,7 @@ enum class PartType
 	Torso,
 	UpperLimb,
 	Hand,
+	Waist,
 	LowerLimb,
 	Foot,
 	Any
@@ -25,7 +26,8 @@ enum class EquipmentLayer
 {
 	Held,
 	Base,
-	Outer
+	Outer,
+	OverAll
 };
 
 enum class FlattenType
@@ -39,6 +41,7 @@ static inline const std::unordered_map<std::string, PartType> string2PartType =
 	{"Head", PartType::Head},
 	{"Torso", PartType::Torso},
 	{"Upper Limb", PartType::UpperLimb},
+	{"Waist", PartType::Waist},
 	{"Lower Limb", PartType::LowerLimb},
 	{"Hand", PartType::Hand},
 	{"Foot", PartType::Foot}
@@ -49,6 +52,7 @@ static inline const std::unordered_map<PartType, std::string> partType2String =
 	{PartType::Head, "Head"},
 	{PartType::Torso, "Torso"},
 	{PartType::UpperLimb, "Upper Limb"},
+	{PartType::Waist, "Waist"},
 	{PartType::LowerLimb, "Lower Limb"},
 	{PartType::Hand, "Hand"},
 	{PartType::Foot, "Foot"}
@@ -69,12 +73,14 @@ struct BodyPart
 
 	void attach(std::unique_ptr<BodyPart> newPart);
 	bool equip(unsigned long itemID, EquipmentLayer layer);
-	void unequip(unsigned long itemID);
+	bool isConnectedTo(const BodyPart* part) const;
+	
 	bool hasItemEquipped(unsigned int itemID);
 	std::optional<unsigned long> getEquipped(EquipmentLayer layer) const;
 	std::vector<unsigned long> getEquipped() const;
 
 private:
+	void unequip(unsigned long itemID);
 	friend class cereal::access;
 	template<class Archive>
 	void save(Archive& archive) const
@@ -99,12 +105,14 @@ private:
 		{
 			BodyPart bodyPart;
 			archive(bodyPart);
+			bodyPart._parent = this;
 			_children.push_back(std::make_unique<BodyPart>(bodyPart));
 		}
 	}
 
 private:
 	friend class PartTree;
+	BodyPart* _parent = nullptr;
 	std::map<int, unsigned long> _equipped;
 	std::vector<std::unique_ptr<BodyPart>> _children;
 };
@@ -130,6 +138,12 @@ public:
 	std::vector<BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType);
 	const std::vector<const BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType) const;
 
+	std::set<unsigned long> getAllEquipped();
+	std::set<unsigned long> getAllHeldEquipped();
+	std::set<unsigned long> getAllWornEquipped();
+	std::unordered_set<std::string> getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer);
+	void unequipItemFromBody(unsigned long itemID);
+
 private:
 	BodyPart* recursiveSearch(BodyPart* root, const std::string& partName);
 	void recursiveSearch(BodyPart* root, PartType type, std::vector<const BodyPart*>& result) const;
@@ -154,7 +168,3 @@ private:
 	
 	std::unique_ptr<BodyPart> _root = nullptr;
 };
-
-std::set<unsigned long> getAllEquipped(const PartTree& partTree);
-std::set<unsigned long> getAllHeldEquipped(const PartTree& partTree);
-std::set<unsigned long> getAllWornEquipped(const PartTree& partTree);

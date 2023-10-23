@@ -134,7 +134,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, Wearable& wearable)
 	{
-		archive(wearable.slot, wearable.protection);
+		archive(wearable.slots, wearable.layer, wearable.covers, wearable.protections);
 	}
 
 	template<class Archive>

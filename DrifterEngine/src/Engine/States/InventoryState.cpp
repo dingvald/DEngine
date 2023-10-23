@@ -378,10 +378,9 @@ void drft::InventoryState::setupInventoryDisplay()
 						.setTextString("equip")
 						.setTextOrigin(gui::ElementPosition::TOP_LEFT)
 						.registerCallback(gui::ElementCallbackType::OnSelect,
-							[this, itemEntity, itemID]() -> bool
+							[this, itemID]() -> bool
 							{
-								const auto& VIEW = getContext().window.getView();
-							
+								tryEquipItem(itemID);
 								return true;
 							});
 
@@ -536,9 +535,45 @@ void drft::InventoryState::updateInventoryDisplay()
 
 void drft::InventoryState::updateWornItemsDisplay()
 {
+	auto& wornItemsDisplay = _flowControl["WornItemsDisplay"];
+	wornItemsDisplay.clear();
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
-		
+		auto heldItems = body->parts.getAllWornEquipped();
+		for (auto item : heldItems)
+		{
+			auto& container = wornItemsDisplay.insert(std::to_string(item), gui::SingleContainer());
+			container.setSize({ 32, 32 });
+			container.setOrigin(gui::ElementPosition::TOP_LEFT);
+			container.setChildrenOrigin(gui::ElementPosition::CENTER);
+			container.setStyle(gui::ElementState::Idle, {
+				.fillColor = sf::Color(0,0,0,150),
+				.outlineColor = sf::Color(150,150,150,100),
+				.outlineThickness = 1.f
+				});
+			container.setStyle(gui::ElementState::Focused, {
+				.fillColor = sf::Color(40,40,0,150),
+				.outlineColor = sf::Color::Yellow,
+				.outlineThickness = 1.f,
+				});
+			container.setStyle(gui::ElementState::Active, {
+				.fillColor = sf::Color(0,0,0,150),
+				.outlineColor = sf::Color::Red,
+				.outlineThickness = 1.f
+				});
+			container.setStyle(gui::ElementState::Unselectable, {
+				.fillColor = sf::Color(0,0,0,80),
+				.outlineColor = sf::Color(150,150,150,80),
+				.outlineThickness = 1.f
+				});
+			container.setStyle(gui::ElementState::FocusedUnselectable, {
+				.fillColor = sf::Color(0,0,0,120),
+				.outlineColor = sf::Color(150,150,150,120),
+				.outlineThickness = 1.f
+				});
+			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+			addItemIcon(container, itemEntity, { 32, 32 });
+		}
 	}
 }
 
@@ -548,7 +583,7 @@ void drft::InventoryState::updateHeldItemsDisplay()
 	heldItemsDisplay.clear();
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
-		auto heldItems = getAllHeldEquipped(body->parts);
+		auto heldItems = body->parts.getAllHeldEquipped();
 		for (auto item : heldItems)
 		{
 			auto& container = heldItemsDisplay.insert(std::to_string(item), gui::SingleContainer());
@@ -601,5 +636,35 @@ void drft::InventoryState::shutdownSessionEntities()
 	for (auto entity : _sessionEntities)
 	{
 		getContext().registry.remove<component::action::OpenEquipment>(entity);
+	}
+}
+
+void drft::InventoryState::tryEquipItem(unsigned long itemID)
+{
+	const auto& VIEW = getContext().window.getView();
+	auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
+	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
+	{
+		if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
+		{
+			auto slots = body->parts.getCompatiblePartsForItem(wearable->slots, wearable->covers, static_cast<EquipmentLayer>(wearable->layer));
+			std::cout << "There are " << slots.size() << " slots where this can be equipped." << std::endl;
+			if (slots.size() == 1)
+			{
+				component::action::Equip equipAction{ .toEquip = itemID, .partName = *slots.begin(), .layer = static_cast<EquipmentLayer>(wearable->layer)};
+				getContext().registry.emplace<component::action::Equip>(_sessionEntities.front(), equipAction);
+			}
+			else
+			{
+				for (auto& slot : slots)
+				{
+					std::cout << "Can equip on slot " << slot << std::endl;
+				}
+			}
+		}
+		else
+		{
+
+		}
 	}
 }

@@ -35,8 +35,17 @@
           "current": 100
         },
         "Wearable": {
-          "slot": "Body",
-          "protection": 5
+          "slots": [
+            "Torso"
+          ],
+          "layer": 2,
+          "covers": [
+          ],
+          "protections": {
+            "piercing": 2,
+            "slashing": 3,
+            "crushing": 2
+          }
         }
       }
     },
@@ -74,8 +83,19 @@
           "current": 100
         },
         "Wearable": {
-          "slot": "Legs",
-          "protection": 5
+          "slots": [
+            "Waist"
+          ],
+          "layer": 2,
+          "covers": [
+            "Left Leg",
+            "Right Leg"
+          ],
+          "protections": {
+            "piercing": 2,
+            "slashing": 3,
+            "crushing": 2
+          }
         }
       }
     },
@@ -118,8 +138,17 @@
           "id": 0
         },
         "Wearable": {
-          "slot": "Body",
-          "protection": 3
+          "slots": [
+            "Torso"
+          ],
+          "layer": 2,
+          "covers": [
+          ],
+          "protections": {
+            "piercing": 1,
+            "slashing": 2,
+            "crushing": 1
+          }
         }
       }
     },
@@ -162,8 +191,19 @@
           "id": 0
         },
         "Wearable": {
-          "slot": "Legs",
-          "protection": 2
+          "slots": [
+            "Waist"
+          ],
+          "layer": 2,
+          "covers": [
+            "Left Leg",
+            "Right Leg"
+          ],
+          "protections": {
+            "piercing": 2,
+            "slashing": 3,
+            "crushing": 2
+          }
         }
       }
     },
@@ -202,8 +242,18 @@
           "current": 30
         },
         "Wearable": {
-          "slot": "HeldL",
-          "protection": 2
+          "slots": [
+            "Upper Limb"
+          ],
+          "layer": 3,
+          "covers": [
+            "Hand"
+          ],
+          "protections": {
+            "piercing": 4,
+            "slashing": 4,
+            "crushing": 4
+          }
         }
       }
     },
@@ -245,20 +295,28 @@
           "id": 0
         },
         "Wearable": {
-          "slot": "Head",
-          "protection": 1
+          "slots": [
+            "Head"
+          ],
+          "layer": 2,
+          "covers": [
+          ],
+          "protections": {
+            "piercing": 1,
+            "slashing": 1
+          }
         }
       }
     },
-    "Woven Sandals": {
+    "Woven Sandal": {
       "Inherits": [
         "BaseItem"
       ],
       "Components": {
         "Info": {
-          "name": "Woven Sandals",
+          "name": "Woven Sandal",
           "extendedName": "",
-          "description": "Sandals woven together from various plant fibres."
+          "description": "A Sandal woven together from various plant fibres."
         },
         "Position": {
           "position": [ 0.0, 0.0 ]
@@ -288,18 +346,26 @@
           "id": 0
         },
         "Wearable": {
-          "slot": "Feet",
-          "protection": 1
+          "slots": [
+            "Foot"
+          ],
+          "layer": 2,
+          "covers": [
+          ],
+          "protections": {
+            "piercing": 1,
+            "slashing": 1
+          }
         }
       }
     },
-    "Woven Bracers": {
+    "Woven Bracer": {
       "Inherits": [
         "BaseItem"
       ],
       "Components": {
         "Info": {
-          "name": "Woven Bracers",
+          "name": "Woven Bracer",
           "extendedName": "",
           "description": "Bracers woven together from various plant fibres."
         },
@@ -331,18 +397,26 @@
           "id": 0
         },
         "Wearable": {
-          "slot": "Hands",
-          "protection": 1
+          "slots": [
+            "Hand"
+          ],
+          "layer": 2,
+          "covers": [
+          ],
+          "protections": {
+            "piercing": 1,
+            "slashing": 1
+          }
         }
       }
     },
-    "Leather Sandals": {
+    "Leather Sandal": {
       "Inherits": [
         "BaseItem"
       ],
       "Components": {
         "Info": {
-          "name": "Leather Sandals",
+          "name": "Leather Sandal",
           "extendedName": "",
           "description": "Sandals made from leather."
         },
@@ -376,20 +450,29 @@
           "id": 0
         },
         "Wearable": {
-          "slot": "Feet",
-          "protection": 3
+          "slots": [
+            "Foot"
+          ],
+          "layer": 2,
+          "covers": [
+          ],
+          "protections": {
+            "piercing": 2,
+            "slashing": 2,
+            "crushing": 1
+          }
         }
       }
     },
-    "Leather Bracers": {
+    "Leather Bracer": {
       "Inherits": [
         "BaseItem"
       ],
       "Components": {
         "Info": {
-          "name": "Leather Bracers",
+          "name": "Leather Bracer",
           "extendedName": "",
-          "description": "Bracers made from leather."
+          "description": "A Bracer made from leather."
         },
         "Position": {
           "position": [ 0.0, 0.0 ]
@@ -421,8 +504,17 @@
           "id": 0
         },
         "Wearable": {
-          "slot": "Hands",
-          "protection": 3
+          "slots": [
+            "Hand"
+          ],
+          "layer": 2,
+          "covers": [
+          ],
+          "protections": {
+            "piercing": 2,
+            "slashing": 2,
+            "crushing": 1
+          }
         }
       }
     }

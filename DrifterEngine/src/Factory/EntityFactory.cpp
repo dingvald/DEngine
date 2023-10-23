@@ -106,6 +106,7 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 							// HACKZZ: Inflexible - assumes certain types in arrays
 							auto arr = data.value.GetArray();
 							int size = arr.Size();
+							if (size == 0) continue;
 							if (size == 2 && arr[0].IsInt())
 							{
 								sf::Vector2i vec2 = { arr[0].GetInt(), arr[1].GetInt() };

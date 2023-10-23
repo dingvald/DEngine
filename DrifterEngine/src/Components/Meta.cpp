@@ -113,8 +113,10 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Wearable, WEARABLE_STRING>()
 		.prop("serialize"_hs)
-		.data<&Wearable::slot>("slot"_hs)
-		.data<&Wearable::protection>("protection"_hs);
+		.data<&Wearable::slots>("slots"_hs)
+		.data<&Wearable::layer>("layer"_hs)
+		.data<&Wearable::covers>("covers"_hs)
+		.data<&Wearable::protections>("protections"_hs);
 
 	snapshot::reflectComponent<Container, CONTAINER_STRING>()
 		.prop("serialize"_hs)

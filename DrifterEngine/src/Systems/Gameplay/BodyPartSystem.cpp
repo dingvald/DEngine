@@ -32,7 +32,7 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 			{
 				if (auto health = registry.try_get<component::Health>(itemEntity))
 				{
-					registry.emplace<component::action::IncomingDamage>(itemEntity, wearable->protection, wearable->protection);
+					// TODO: add damage to the wearable
 				}
 			}
 		}
@@ -53,10 +53,7 @@ void drft::system::BodyPartSystem::onLaunchAttack(entt::registry& registry, entt
 void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
 	auto& body = registry->get<component::Body>(ev.owner);
-	for (auto& part : body.parts.flatten())
-	{
-		part->unequip(ev.itemID);
-	}
+	body.parts.unequipItemFromBody(ev.itemID);
 }
 
 int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
