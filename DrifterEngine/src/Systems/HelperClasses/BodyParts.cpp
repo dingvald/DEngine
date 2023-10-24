@@ -277,9 +277,9 @@ std::set<unsigned long> PartTree::getAllWornEquipped()
 	return result;
 }
 
-std::unordered_set<std::string> PartTree::getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer)
+CompatibleParts PartTree::getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer)
 {
-	std::unordered_set<std::string> result;
+	CompatibleParts result;
 	std::vector<BodyPart*> potentialParts;
 	for (auto& slot : slots)
 	{
@@ -288,6 +288,7 @@ std::unordered_set<std::string> PartTree::getCompatiblePartsForItem(const std::v
 		{
 			if ((*it)->getEquipped(layer).has_value())
 			{
+				result.conflicts.emplace((*it)->name, (*it)->getEquipped(layer).value());
 				it = potentialParts.erase(it);
 			}
 			else
@@ -307,7 +308,8 @@ std::unordered_set<std::string> PartTree::getCompatiblePartsForItem(const std::v
 			auto itemEquipped = specificPart->getEquipped(layer);
 			if (itemEquipped.has_value())
 			{
-				return std::unordered_set<std::string>{};
+				result.conflicts.emplace(partName, itemEquipped.value());
+				result.canEquip = false;
 			}
 		}
 		else
@@ -316,7 +318,8 @@ std::unordered_set<std::string> PartTree::getCompatiblePartsForItem(const std::v
 			if (!string2PartType.contains(partName))
 			{
 				// Cannot equip item on body, so early out
-				return std::unordered_set<std::string>{};
+				result.canEquip = false;
+				return result;
 			}
 			auto typedParts = this->search(string2PartType.at(partName));
 			for (auto it = potentialParts.begin(); it != potentialParts.end();)
@@ -324,9 +327,17 @@ std::unordered_set<std::string> PartTree::getCompatiblePartsForItem(const std::v
 				bool isConnected = false;
 				for (auto typedPart : typedParts)
 				{
+					auto optionalItem = typedPart->getEquipped(layer);
 					if ((*it)->isConnectedTo(typedPart))
 					{
-						isConnected = true;
+						if (optionalItem.has_value())
+						{
+							result.conflicts.emplace(typedPart->name, optionalItem.value());
+						}
+						else
+						{
+							isConnected = true;
+						}
 					}
 				}
 				if (!isConnected)
@@ -340,10 +351,16 @@ std::unordered_set<std::string> PartTree::getCompatiblePartsForItem(const std::v
 			}
 		}
 	}
-
-	for (auto& part : potentialParts)
+	if (result.canEquip && !potentialParts.empty())
 	{
-		result.insert(part->name);
+		for (auto& part : potentialParts)
+		{
+			result.freeSlots.insert(part->name);
+		}
+	}
+	else
+	{
+		result.canEquip = false;
 	}
 
 	return result;

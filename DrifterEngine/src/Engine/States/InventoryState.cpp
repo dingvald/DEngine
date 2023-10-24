@@ -19,7 +19,7 @@ static constexpr int WORN_ITEMS_HEIGHT = 4;
 
 static constexpr int PANEL_HEIGHT_OFFSET = -128;
 
-static constexpr int HELD_PANEL_WIDTH_OFFSET = -256;
+static constexpr int HELD_PANEL_WIDTH_OFFSET = -516;
 static constexpr int HELD_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET;
 
 static constexpr int WORN_PANEL_WIDTH_OFFSET = HELD_PANEL_WIDTH_OFFSET;
@@ -268,199 +268,8 @@ void drft::InventoryState::setupInventoryDisplay()
 						return false;
 					}
 					const auto itemID = entityContainer.contents.at(index);
-					const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
-
-					auto& commandList = _inventoryStack.insert("CommandList", gui::List(true))
-						.setSize({ 64,128 })
-						.setStyle(gui::ElementState::Focused, {
-							.fillColor = sf::Color(0,0,0,255),
-							.outlineColor = sf::Color(255,255,255,100),
-							.outlineThickness = 1.f,
-							.innerPadding = {4.f, 4.f},
-							.childPadding = {2.f, 2.f}
-							})
-						.setOrigin(gui::ElementPosition::TOP_LEFT);
-
-					commandList.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
-
-					if (auto usable = getContext().registry.try_get<component::Usable>(itemEntity))
-					{
-						commandList.insert("Use", gui::Label())
-							.setStyle(gui::ElementState::Idle, {
-								.font = &getContext().fonts.get("Terminus"),
-								.textColor = sf::Color::White,
-								.textSize = 16
-								})
-							.setStyle(gui::ElementState::Focused, {
-								.font = &getContext().fonts.get("Terminus"),
-								.textColor = sf::Color::Yellow,
-								.textSize = 16
-								})
-							.setTextString("use")
-							.setTextOrigin(gui::ElementPosition::TOP_LEFT)
-							.registerCallback(gui::ElementCallbackType::OnSelect,
-								[this, itemEntity, itemID]() -> bool
-								{
-									requestStackPop();
-									getContext().registry.emplace_or_replace<component::action::Use>(_sessionEntities.front(), itemEntity, itemID);
-										
-									return true;
-								});
-					}
-
-					commandList.insert("Swap", gui::Label())
-						.setStyle(gui::ElementState::Idle, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = sf::Color::White,
-							.textSize = 16
-							})
-						.setStyle(gui::ElementState::Focused, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = sf::Color::Yellow,
-							.textSize = 16
-							})
-						.setTextString("swap")
-						.setTextOrigin(gui::ElementPosition::TOP_LEFT)
-						.registerCallback(gui::ElementCallbackType::OnSelect,
-							[this, itemEntity]() -> bool
-							{
-								std::cout << "Swapping item " << util::getEntityName({ this->getContext().registry, itemEntity }) << std::endl;
-								return true;
-							});
-
-					commandList.insert("Drop", gui::Label())
-						.setStyle(gui::ElementState::Idle, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = sf::Color::White,
-							.textSize = 16
-							})
-						.setStyle(gui::ElementState::Focused, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = sf::Color::Yellow,
-							.textSize = 16
-							})
-						.setTextString("drop")
-						.setTextOrigin(gui::ElementPosition::TOP_LEFT)
-						.registerCallback(gui::ElementCallbackType::OnSelect,
-							[this, itemEntity, itemID]() -> bool
-							{
-								auto sessionEntity = this->_sessionEntities.front();
-
-								if (getContext().registry.all_of<component::action::Drop>(sessionEntity))
-								{
-									getContext().registry.patch<component::action::Drop>(sessionEntity,
-										[itemID](component::action::Drop& drop)
-										{
-											drop.toDrop.push_back(itemID);
-										});
-								}
-								else
-								{
-									getContext().registry.emplace<component::action::Drop>(sessionEntity, std::vector<component::Item::ID>{itemID});
-								}
-
-								_inventoryStack.clear();
-
-								return true;
-							});
-
-					commandList.insert("Equip", gui::Label())
-						.setStyle(gui::ElementState::Idle, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = sf::Color::White,
-							.textSize = 16
-							})
-						.setStyle(gui::ElementState::Focused, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = sf::Color::Yellow,
-							.textSize = 16
-							})
-						.setTextString("equip")
-						.setTextOrigin(gui::ElementPosition::TOP_LEFT)
-						.registerCallback(gui::ElementCallbackType::OnSelect,
-							[this, itemID]() -> bool
-							{
-								tryEquipItem(itemID);
-								return true;
-							});
-
-					commandList.insert("Info", gui::Label())
-						.setStyle(gui::ElementState::Idle, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = sf::Color::White,
-							.textSize = 16
-							})
-						.setStyle(gui::ElementState::Focused, {
-							.font = &getContext().fonts.get("Terminus"),
-							.textColor = sf::Color::Yellow,
-							.textSize = 16
-							})
-						.setTextString("info")
-						.setTextOrigin(gui::ElementPosition::TOP_LEFT)
-						.registerCallback(gui::ElementCallbackType::OnSelect,
-							[this, itemEntity]() -> bool
-							{
-								auto& itemInfo = getContext().registry.get<component::Info>(itemEntity);
-								auto& itemPhysical = getContext().registry.get<component::Physical>(itemEntity);
-								_inventoryStack.insert("ItemInfoList", gui::List(false));
-								_inventoryStack["ItemInfoList"]
-									.setPosition(getContext().window.getView().getCenter())
-									.setStyle(gui::ElementState::Focused, {
-											.fillColor = sf::Color::Black,
-											.outlineColor = sf::Color(100,100,100,255),
-											.outlineThickness = 2.f,
-											.innerPadding = {4,4},
-											.childPadding = {0, 16}
-										})
-									.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
-								_inventoryStack["ItemInfoList"].insert("Name", gui::Label())
-									.setStyle(gui::ElementState::Idle, {
-											.font = &getContext().fonts.get("Terminus"),
-											.textSize = 16
-										})
-									.setTextString("Name:\n" + itemInfo.name)
-									.setTextOrigin(gui::ElementPosition::TOP_LEFT);
-								_inventoryStack["ItemInfoList"].insert("Description", gui::Label())
-									.setStyle(gui::ElementState::Idle, {
-											.font = &getContext().fonts.get("Terminus"),
-											.textSize = 16
-										})
-									.setTextString("Description:\n" + itemInfo.description)
-									.setTextOrigin(gui::ElementPosition::TOP_LEFT);
-								_inventoryStack["ItemInfoList"].insert("Weight", gui::Label())
-									.setStyle(gui::ElementState::Idle, {
-											.font = &getContext().fonts.get("Terminus"),
-											.textSize = 16
-										})
-									.setTextString("Weight:\n" + std::format("{:.1f}", itemPhysical.weight) + "kg")
-									.setTextOrigin(gui::ElementPosition::TOP_LEFT);
-
-								std::stringstream ss;
-								ss << "[";
-								for (int i = 0; i < itemPhysical.materials.size(); ++i)
-								{
-									if (itemPhysical.materials[i].compare("") == 0) continue;
-
-									ss << itemPhysical.materials[i];
-									if (i < itemPhysical.materials.size() - 1)
-									{
-										ss << ", ";
-									}
-								}
-								ss << "]";
-
-								_inventoryStack["ItemInfoList"].insert("Materials", gui::Label())
-									.setStyle(gui::ElementState::Idle, {
-											.font = &getContext().fonts.get("Terminus"),
-											.textSize = 16
-										})
-									.setTextString("Materials:\n" + ss.str())
-									.setTextOrigin(gui::ElementPosition::TOP_LEFT);
-
-								return true;
-							});
-
-					_inventoryStack["CommandList"].setPosition(container.getPosition() + sf::Vector2f{ 36,-1 });
+					const auto commandListPosition = container.getPosition() + sf::Vector2f{ 36,-1 };
+					createItemCommandList(commandListPosition, itemID);
 
 					return true;
 				});
@@ -639,27 +448,236 @@ void drft::InventoryState::shutdownSessionEntities()
 	}
 }
 
+void drft::InventoryState::createItemCommandList(sf::Vector2f position, unsigned long itemID)
+{
+	const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
+
+	auto& commandList = _inventoryStack.insert("CommandList", gui::List(true))
+		.setSize({ 64,128 })
+		.setPosition(position)
+		.setStyle(gui::ElementState::Focused, {
+			.fillColor = sf::Color(0,0,0,255),
+			.outlineColor = sf::Color(255,255,255,100),
+			.outlineThickness = 1.f,
+			.innerPadding = {4.f, 4.f},
+			.childPadding = {2.f, 2.f}
+			})
+		.setOrigin(gui::ElementPosition::TOP_LEFT)
+		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+
+	if (auto usable = getContext().registry.try_get<component::Usable>(itemEntity))
+	{
+		commandList.insert("Use", gui::Label())
+			.setStyle(gui::ElementState::Idle, {
+				.font = &getContext().fonts.get("Terminus"),
+				.textColor = sf::Color::White,
+				.textSize = 16
+				})
+			.setStyle(gui::ElementState::Focused, {
+				.font = &getContext().fonts.get("Terminus"),
+				.textColor = sf::Color::Yellow,
+				.textSize = 16
+				})
+			.setTextString("use")
+			.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+			.registerCallback(gui::ElementCallbackType::OnSelect,
+				[this, itemEntity, itemID]() -> bool
+				{
+					requestStackPop();
+		getContext().registry.emplace_or_replace<component::action::Use>(_sessionEntities.front(), itemEntity, itemID);
+
+		return true;
+				});
+	}
+
+	commandList.insert("Swap", gui::Label())
+		.setStyle(gui::ElementState::Idle, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 16
+			})
+		.setStyle(gui::ElementState::Focused, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::Yellow,
+			.textSize = 16
+			})
+		.setTextString("swap")
+		.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+		.registerCallback(gui::ElementCallbackType::OnSelect,
+			[this, itemEntity]() -> bool
+			{
+				std::cout << "Swapping item " << util::getEntityName({ this->getContext().registry, itemEntity }) << std::endl;
+	return true;
+			});
+
+	commandList.insert("Drop", gui::Label())
+		.setStyle(gui::ElementState::Idle, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 16
+			})
+		.setStyle(gui::ElementState::Focused, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::Yellow,
+			.textSize = 16
+			})
+		.setTextString("drop")
+		.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+		.registerCallback(gui::ElementCallbackType::OnSelect,
+			[this, itemEntity, itemID]() -> bool
+			{
+				auto sessionEntity = this->_sessionEntities.front();
+
+	if (getContext().registry.all_of<component::action::Drop>(sessionEntity))
+	{
+		getContext().registry.patch<component::action::Drop>(sessionEntity,
+			[itemID](component::action::Drop& drop)
+			{
+				drop.toDrop.push_back(itemID);
+			});
+	}
+	else
+	{
+		getContext().registry.emplace<component::action::Drop>(sessionEntity, std::vector<component::Item::ID>{itemID});
+	}
+
+	_inventoryStack.clear();
+
+	return true;
+			});
+
+	commandList.insert("Equip", gui::Label())
+		.setStyle(gui::ElementState::Idle, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 16
+			})
+		.setStyle(gui::ElementState::Focused, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::Yellow,
+			.textSize = 16
+			})
+		.setTextString("equip")
+		.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+		.registerCallback(gui::ElementCallbackType::OnSelect,
+			[this, itemID]() -> bool
+			{
+				tryEquipItem(itemID);
+				return true;
+			});
+
+	commandList.insert("Info", gui::Label())
+		.setStyle(gui::ElementState::Idle, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::White,
+			.textSize = 16
+			})
+		.setStyle(gui::ElementState::Focused, {
+			.font = &getContext().fonts.get("Terminus"),
+			.textColor = sf::Color::Yellow,
+			.textSize = 16
+			})
+		.setTextString("info")
+		.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+		.registerCallback(gui::ElementCallbackType::OnSelect,
+			[this, itemEntity]() -> bool
+			{
+				auto& itemInfo = getContext().registry.get<component::Info>(itemEntity);
+				auto& itemPhysical = getContext().registry.get<component::Physical>(itemEntity);
+				_inventoryStack.insert("ItemInfoList", gui::List(false));
+				_inventoryStack["ItemInfoList"]
+					.setPosition(getContext().window.getView().getCenter())
+					.setStyle(gui::ElementState::Focused, {
+							.fillColor = sf::Color::Black,
+							.outlineColor = sf::Color(100,100,100,255),
+							.outlineThickness = 2.f,
+							.innerPadding = {4,4},
+							.childPadding = {0, 16}
+					})
+					.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+				_inventoryStack["ItemInfoList"].insert("Name", gui::Label())
+					.setStyle(gui::ElementState::Idle, {
+							.font = &getContext().fonts.get("Terminus"),
+							.textSize = 16
+						})
+					.setTextString("Name:\n" + itemInfo.name)
+					.setTextOrigin(gui::ElementPosition::TOP_LEFT);
+				_inventoryStack["ItemInfoList"].insert("Description", gui::Label())
+					.setStyle(gui::ElementState::Idle, {
+						.font = &getContext().fonts.get("Terminus"),
+						.textSize = 16
+					})
+					.setTextString("Description:\n" + itemInfo.description)
+					.setTextOrigin(gui::ElementPosition::TOP_LEFT);
+				_inventoryStack["ItemInfoList"].insert("Weight", gui::Label())
+					.setStyle(gui::ElementState::Idle, {
+						.font = &getContext().fonts.get("Terminus"),
+						.textSize = 16
+					})
+					.setTextString("Weight:\n" + std::format("{:.1f}", itemPhysical.weight) + "kg")
+					.setTextOrigin(gui::ElementPosition::TOP_LEFT);
+
+				std::stringstream ss;
+				ss << "[";
+				for (int i = 0; i < itemPhysical.materials.size(); ++i)
+				{
+					if (itemPhysical.materials[i].compare("") == 0) continue;
+
+					ss << itemPhysical.materials[i];
+					if (i < itemPhysical.materials.size() - 1)
+					{
+						ss << ", ";
+					}
+				}
+				ss << "]";
+
+				_inventoryStack["ItemInfoList"].insert("Materials", gui::Label())
+					.setStyle(gui::ElementState::Idle, {
+							.font = &getContext().fonts.get("Terminus"),
+							.textSize = 16
+						})
+					.setTextString("Materials:\n" + ss.str())
+					.setTextOrigin(gui::ElementPosition::TOP_LEFT);
+
+				return true;
+			});
+}
+
 void drft::InventoryState::tryEquipItem(unsigned long itemID)
 {
 	const auto& VIEW = getContext().window.getView();
-	auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
+	const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
+	const auto playersName = util::getEntityName({ getContext().registry, _sessionEntities.front() });
+	const auto itemName = util::getEntityName({ getContext().registry, itemEntity });
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
 		if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
 		{
-			auto slots = body->parts.getCompatiblePartsForItem(wearable->slots, wearable->covers, static_cast<EquipmentLayer>(wearable->layer));
-			std::cout << "There are " << slots.size() << " slots where this can be equipped." << std::endl;
-			if (slots.size() == 1)
+			auto compatibility = body->parts.getCompatiblePartsForItem(wearable->slots, wearable->covers, static_cast<EquipmentLayer>(wearable->layer));
+			if (compatibility.freeSlots.empty())
 			{
-				component::action::Equip equipAction{ .toEquip = itemID, .partName = *slots.begin(), .layer = static_cast<EquipmentLayer>(wearable->layer)};
+				std::string message = "Cannot equip the " + itemName + ".";
+				_inventoryStack.insert("Cannot Equip", gui::PopupMessage())
+					.setPosition(VIEW.getCenter())
+					.setStyle(gui::ElementState::Focused, {
+						.fillColor = sf::Color(0,0,0,255),
+						.outlineColor = sf::Color(255,255,255,150),
+						.outlineThickness = 1.f,
+						.innerPadding = {2.f, 2.f},
+						.font = &getContext().fonts.get("Terminus"),
+						.textColor = sf::Color::White
+						})
+					.setTextString(std::move(message));
+			}
+			else if (compatibility.freeSlots.size() == 1)
+			{
+				component::action::Equip equipAction{ .toEquip = itemID, .partName = *compatibility.freeSlots.begin(), .layer = static_cast<EquipmentLayer>(wearable->layer)};
 				getContext().registry.emplace<component::action::Equip>(_sessionEntities.front(), equipAction);
+				_inventoryStack.clear();
 			}
 			else
 			{
-				for (auto& slot : slots)
-				{
-					std::cout << "Can equip on slot " << slot << std::endl;
-				}
+				
 			}
 		}
 		else

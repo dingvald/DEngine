@@ -55,6 +55,7 @@ namespace drft
 		void determineSessionEntities();
 		void shutdownSessionEntities();
 
+		void createItemCommandList(sf::Vector2f position, unsigned long itemID);
 		void tryEquipItem(unsigned long itemID);
 
 	private:

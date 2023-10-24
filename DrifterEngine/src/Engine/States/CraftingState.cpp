@@ -187,7 +187,7 @@ void drft::CraftingState::refreshCraftingList()
 					{
 						component::action::Craft toCraft;
 						toCraft.itemName = craftableName;
-						for (auto [matName, amount] : recipe)
+						for (auto&& [matName, amount] : recipe)
 						{
 							toCraft.recipe[matName] = amount;
 						}
@@ -280,7 +280,7 @@ void drft::CraftingState::refreshCraftingList()
 				.setTextOrigin(gui::ElementPosition::CENTER_LEFT);
 				
 
-			for (auto [matName, amount] : recipe)
+			for (auto& [matName, amount] : recipe)
 			{
 				const auto& matRender = prototypeReg.get<component::Render>(factory.get(matName));
 				sf::Sprite matSprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(matRender.sprite), sprites) };

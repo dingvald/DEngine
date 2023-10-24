@@ -15,13 +15,6 @@ enum class PartType
 	Any
 };
 
-enum class PartAlignment
-{
-	Center,
-	Left,
-	Right
-};
-
 enum class EquipmentLayer
 {
 	Held,
@@ -56,6 +49,13 @@ static inline const std::unordered_map<PartType, std::string> partType2String =
 	{PartType::LowerLimb, "Lower Limb"},
 	{PartType::Hand, "Hand"},
 	{PartType::Foot, "Foot"}
+};
+
+struct CompatibleParts
+{
+	std::unordered_set<std::string> freeSlots;
+	std::unordered_map<std::string, unsigned long> conflicts;
+	bool canEquip = true;
 };
 
 struct BodyPart
@@ -117,7 +117,6 @@ private:
 	std::vector<std::unique_ptr<BodyPart>> _children;
 };
 
-
 class PartTree
 {
 public:
@@ -141,7 +140,7 @@ public:
 	std::set<unsigned long> getAllEquipped();
 	std::set<unsigned long> getAllHeldEquipped();
 	std::set<unsigned long> getAllWornEquipped();
-	std::unordered_set<std::string> getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer);
+	CompatibleParts getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer);
 	void unequipItemFromBody(unsigned long itemID);
 
 private:
