@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "BodyParts.h"
 
+// BODY PART //////////////////////////////////////////////////////////////////////////////////////////////////
+
 BodyPart::BodyPart(std::string name, PartType type, unsigned int size)
 	: name(name)
 	, type(type)
@@ -110,6 +112,7 @@ std::vector<unsigned long> BodyPart::getEquipped() const
 	return result;
 }
 
+// PART TREE //////////////////////////////////////////////////////////////////////////////////////////////////
 
 PartTree::PartTree(std::unique_ptr<BodyPart> root)
 	:_root(std::move(root))
@@ -232,37 +235,44 @@ const std::vector<const BodyPart*> PartTree::flatten(FlattenType flattenHow) con
 	return result;
 }
 
-std::set<unsigned long> PartTree::getAllEquipped()
+std::vector<unsigned long> PartTree::getAllEquipped()
 {
-	std::set<unsigned long> result;
+	std::vector<unsigned long> result;
+	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->flatten())
 	{
 		auto equipped = part->getEquipped();
 		for (auto item : equipped)
 		{
-			result.insert(item);
+			if (alreadyIncluded.contains(item)) continue;
+			result.push_back(item);
+			alreadyIncluded.insert(item);
 		}
 	}
 	return result;
 }
 
-std::set<unsigned long> PartTree::getAllHeldEquipped()
+std::vector<unsigned long> PartTree::getAllHeldEquipped()
 {
-	std::set<unsigned long> result;
+	std::vector<unsigned long> result;
+	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->search(PartType::Hand))
 	{
 		auto optionalItem = part->getEquipped(EquipmentLayer::Held);
 		if (optionalItem.has_value())
 		{
-			result.insert(optionalItem.value());
+			if (alreadyIncluded.contains(optionalItem.value())) continue;
+			result.push_back(optionalItem.value());
+			alreadyIncluded.insert(optionalItem.value());
 		}
 	}
 	return result;
 }
 
-std::set<unsigned long> PartTree::getAllWornEquipped()
+std::vector<unsigned long> PartTree::getAllWornEquipped()
 {
-	std::set<unsigned long> result;
+	std::vector<unsigned long> result;
+	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->flatten())
 	{
 		for (int i = static_cast<int>(EquipmentLayer::Held) + 1; i <= static_cast<int>(EquipmentLayer::OverAll); ++i)
@@ -270,7 +280,9 @@ std::set<unsigned long> PartTree::getAllWornEquipped()
 			auto optionalItem = part->getEquipped(static_cast<EquipmentLayer>(i));
 			if (optionalItem.has_value())
 			{
-				result.insert(optionalItem.value());
+				if (alreadyIncluded.contains(optionalItem.value())) continue;
+				result.push_back(optionalItem.value());
+				alreadyIncluded.insert(optionalItem.value());
 			}
 		}
 	}

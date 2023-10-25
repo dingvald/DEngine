@@ -137,9 +137,9 @@ public:
 	std::vector<BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType);
 	const std::vector<const BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType) const;
 
-	std::set<unsigned long> getAllEquipped();
-	std::set<unsigned long> getAllHeldEquipped();
-	std::set<unsigned long> getAllWornEquipped();
+	std::vector<unsigned long> getAllEquipped();
+	std::vector<unsigned long> getAllHeldEquipped();
+	std::vector<unsigned long> getAllWornEquipped();
 	CompatibleParts getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer);
 	void unequipItemFromBody(unsigned long itemID);
 

@@ -656,7 +656,15 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID)
 			auto compatibility = body->parts.getCompatiblePartsForItem(wearable->slots, wearable->covers, static_cast<EquipmentLayer>(wearable->layer));
 			if (compatibility.freeSlots.empty())
 			{
-				std::string message = "Cannot equip the " + itemName + ".";
+				std::stringstream message;
+				message << "Cannot equip the " << itemName << ":";
+				for (auto& [otherPartName, otherItemID] : compatibility.conflicts)
+				{
+					message << std::endl;
+					auto otherItemEntity = ItemDatabase::getEntityFromItemID(otherItemID);
+					auto otherItemName = util::getEntityName({ getContext().registry, otherItemEntity });
+					message << " - " << otherPartName << " already covered by " << otherItemName;
+				}
 				_inventoryStack.insert("Cannot Equip", gui::PopupMessage())
 					.setPosition(VIEW.getCenter())
 					.setStyle(gui::ElementState::Focused, {
@@ -667,17 +675,61 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID)
 						.font = &getContext().fonts.get("Terminus"),
 						.textColor = sf::Color::White
 						})
-					.setTextString(std::move(message));
+					.setTextString(message.str());
 			}
 			else if (compatibility.freeSlots.size() == 1)
 			{
-				component::action::Equip equipAction{ .toEquip = itemID, .partName = *compatibility.freeSlots.begin(), .layer = static_cast<EquipmentLayer>(wearable->layer)};
-				getContext().registry.emplace<component::action::Equip>(_sessionEntities.front(), equipAction);
+				std::string slotName = *compatibility.freeSlots.begin();
+				component::action::Equip equipAction{ .toEquip = itemID, .partName = slotName, .layer = static_cast<EquipmentLayer>(wearable->layer)};
+				getContext().registry.emplace_or_replace<component::action::Equip>(_sessionEntities.front(), equipAction);
 				_inventoryStack.clear();
 			}
 			else
 			{
-				
+				auto& commandList = _inventoryStack.insert("Equip Where?", gui::List(true))
+					.setSize({ 64,128 })
+					.setPosition(VIEW.getCenter())
+					.setStyle(gui::ElementState::Focused, {
+						.fillColor = sf::Color(0,0,0,255),
+						.outlineColor = sf::Color(255,255,255,100),
+						.outlineThickness = 1.f,
+						.innerPadding = {4.f, 4.f},
+						.childPadding = {2.f, 2.f},
+						.font = &getContext().fonts.get("Terminus"),
+						.textColor = sf::Color::White,
+						.textSize = 16
+						})
+					.setOrigin(gui::ElementPosition::TOP_LEFT)
+					.setChildrenOrigin(gui::ElementPosition::TOP_LEFT)
+					.setTextPosition(gui::ElementPosition::TOP_CENTER)
+					.setTextString("Equip" + itemName + " where?");
+
+				for (auto& freeSlot : compatibility.freeSlots)
+				{
+					commandList.insert(std::string{ freeSlot }, gui::Label())
+						.setStyle(gui::ElementState::Idle, {
+							.font = &getContext().fonts.get("Terminus"),
+							.textColor = sf::Color::White,
+							.textSize = 16
+							})
+						.setStyle(gui::ElementState::Focused, {
+							.font = &getContext().fonts.get("Terminus"),
+							.textColor = sf::Color::Yellow,
+							.textSize = 16
+							})
+						.setTextString(std::string{ freeSlot })
+						.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+						.registerCallback(gui::ElementCallbackType::OnSelect,
+							[this, itemEntity, itemID, wearable, freeSlot]() -> bool
+							{
+								std::string slotName = freeSlot;
+								component::action::Equip equipAction{ .toEquip = itemID, .partName = slotName, .layer = static_cast<EquipmentLayer>(wearable->layer) };
+								getContext().registry.emplace_or_replace<component::action::Equip>(_sessionEntities.front(), equipAction);
+								_inventoryStack.clear();
+								return true;
+							});
+				}
+
 			}
 		}
 		else
