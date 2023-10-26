@@ -4,6 +4,7 @@
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/SpriteIndexer.h"
+#include "Utility/GetStringAcronym.h"
 
 //TODO: width and height should depend on player's container size
 static constexpr int INVENTORY_WIDTH = 5;
@@ -349,9 +350,9 @@ void drft::InventoryState::updateWornItemsDisplay()
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
 		auto heldItems = body->parts.getAllWornEquipped();
-		for (auto item : heldItems)
+		for (auto& [partName, item] : heldItems)
 		{
-			auto& container = wornItemsDisplay.insert(std::to_string(item), gui::SingleContainer());
+			auto& container = wornItemsDisplay.insert(std::to_string(item), gui::DualContainer());
 			container.setSize({ 32, 32 });
 			container.setOrigin(gui::ElementPosition::TOP_LEFT);
 			container.setChildrenOrigin(gui::ElementPosition::CENTER);
@@ -382,6 +383,17 @@ void drft::InventoryState::updateWornItemsDisplay()
 				});
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			addItemIcon(container, itemEntity, { 32, 32 });
+			container.insert("Slot Abbreviation", gui::Label())
+				.setLocalPosition({ -8, -8 })
+				.setStyle(gui::ElementState::Idle, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color(255,255,255,100)
+					})
+				.setStyle(gui::ElementState::Focused, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color(255,255,255,100)
+					})
+				.setTextString(util::getStringAcronym(partName));
 		}
 	}
 }
@@ -393,39 +405,60 @@ void drft::InventoryState::updateHeldItemsDisplay()
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
 		auto heldItems = body->parts.getAllHeldEquipped();
-		for (auto item : heldItems)
+		for (auto& [partName, item] : heldItems)
 		{
-			auto& container = heldItemsDisplay.insert(std::to_string(item), gui::SingleContainer());
+			auto& container = heldItemsDisplay.insert(std::to_string(item), gui::DualContainer());
 			container.setSize({ 32, 32 });
 			container.setOrigin(gui::ElementPosition::TOP_LEFT);
 			container.setChildrenOrigin(gui::ElementPosition::CENTER);
 			container.setStyle(gui::ElementState::Idle, {
 				.fillColor = sf::Color(0,0,0,150),
 				.outlineColor = sf::Color(150,150,150,100),
-				.outlineThickness = 1.f
+				.outlineThickness = 1.f,
+				.font = &getContext().fonts.get("Terminus"),
+				.textColor = sf::Color::White
 				});
 			container.setStyle(gui::ElementState::Focused, {
 				.fillColor = sf::Color(40,40,0,150),
 				.outlineColor = sf::Color::Yellow,
 				.outlineThickness = 1.f,
+				.font = &getContext().fonts.get("Terminus"),
+				.textColor = sf::Color::White
 				});
 			container.setStyle(gui::ElementState::Active, {
 				.fillColor = sf::Color(0,0,0,150),
 				.outlineColor = sf::Color::Red,
-				.outlineThickness = 1.f
+				.outlineThickness = 1.f,
+				.font = &getContext().fonts.get("Terminus"),
+				.textColor = sf::Color::White
 				});
 			container.setStyle(gui::ElementState::Unselectable, {
 				.fillColor = sf::Color(0,0,0,80),
 				.outlineColor = sf::Color(150,150,150,80),
-				.outlineThickness = 1.f
+				.outlineThickness = 1.f,
+				.font = &getContext().fonts.get("Terminus"),
+				.textColor = sf::Color::White
 				});
 			container.setStyle(gui::ElementState::FocusedUnselectable, {
 				.fillColor = sf::Color(0,0,0,120),
 				.outlineColor = sf::Color(150,150,150,120),
-				.outlineThickness = 1.f
+				.outlineThickness = 1.f,
+				.font = &getContext().fonts.get("Terminus"),
+				.textColor = sf::Color::White
 				});
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			addItemIcon(container, itemEntity, { 32, 32 });
+			container.insert("Slot Abbreviation", gui::Label())
+				.setLocalPosition({ -8, -8 })
+				.setStyle(gui::ElementState::Idle, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color(255,255,255,100)
+					})
+				.setStyle(gui::ElementState::Focused, {
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color(255,255,255,100)
+					})
+				.setTextString(util::getStringAcronym(partName));
 		}
 	}
 }
@@ -654,6 +687,11 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID)
 		if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
 		{
 			auto compatibility = body->parts.getCompatiblePartsForItem(wearable->slots, wearable->covers, static_cast<EquipmentLayer>(wearable->layer));
+			std::cout << "Tring to equip the " << itemName << " to slot " << std::endl;
+			for (auto& slot : wearable->slots)
+			{
+				std::cout << "- " << slot << std::endl;
+			}
 			if (compatibility.freeSlots.empty())
 			{
 				std::stringstream message;

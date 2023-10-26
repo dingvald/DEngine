@@ -235,9 +235,9 @@ const std::vector<const BodyPart*> PartTree::flatten(FlattenType flattenHow) con
 	return result;
 }
 
-std::vector<unsigned long> PartTree::getAllEquipped()
+std::vector<PartTree::PartItemPair> PartTree::getAllEquipped()
 {
-	std::vector<unsigned long> result;
+	std::vector<PartItemPair> result;
 	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->flatten())
 	{
@@ -245,16 +245,16 @@ std::vector<unsigned long> PartTree::getAllEquipped()
 		for (auto item : equipped)
 		{
 			if (alreadyIncluded.contains(item)) continue;
-			result.push_back(item);
+			result.push_back({ part->name, item });
 			alreadyIncluded.insert(item);
 		}
 	}
 	return result;
 }
 
-std::vector<unsigned long> PartTree::getAllHeldEquipped()
+std::vector<PartTree::PartItemPair> PartTree::getAllHeldEquipped()
 {
-	std::vector<unsigned long> result;
+	std::vector<PartItemPair> result;
 	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->search(PartType::Hand))
 	{
@@ -262,16 +262,16 @@ std::vector<unsigned long> PartTree::getAllHeldEquipped()
 		if (optionalItem.has_value())
 		{
 			if (alreadyIncluded.contains(optionalItem.value())) continue;
-			result.push_back(optionalItem.value());
+			result.push_back({ part->name, optionalItem.value() });
 			alreadyIncluded.insert(optionalItem.value());
 		}
 	}
 	return result;
 }
 
-std::vector<unsigned long> PartTree::getAllWornEquipped()
+std::vector<PartTree::PartItemPair> PartTree::getAllWornEquipped()
 {
-	std::vector<unsigned long> result;
+	std::vector<PartItemPair> result;
 	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->flatten())
 	{
@@ -281,7 +281,7 @@ std::vector<unsigned long> PartTree::getAllWornEquipped()
 			if (optionalItem.has_value())
 			{
 				if (alreadyIncluded.contains(optionalItem.value())) continue;
-				result.push_back(optionalItem.value());
+				result.push_back({ part->name, optionalItem.value() });
 				alreadyIncluded.insert(optionalItem.value());
 			}
 		}

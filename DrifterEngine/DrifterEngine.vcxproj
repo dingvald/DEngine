@@ -234,6 +234,7 @@
     <ClCompile Include="src\Engine\States\InventoryState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
+    <ClCompile Include="src\Utility\GetStringAcronym.cpp" />
     <ClCompile Include="src\Utility\GetTextCenter.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
     <ClCompile Include="src\Utility\Math.cpp" />
@@ -402,6 +403,7 @@
     <ClInclude Include="src\Events\RequestStateChange.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
+    <ClInclude Include="src\Utility\GetStringAcronym.h" />
     <ClInclude Include="src\Utility\GetTextCenter.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />
     <ClInclude Include="src\Utility\Math.h" />
