@@ -73,6 +73,7 @@ struct BodyPart
 
 	void attach(std::unique_ptr<BodyPart> newPart);
 	bool equip(unsigned long itemID, EquipmentLayer layer);
+	void unequip(unsigned long itemID);
 	bool isConnectedTo(const BodyPart* part) const;
 	
 	bool hasItemEquipped(unsigned int itemID);
@@ -80,7 +81,6 @@ struct BodyPart
 	std::vector<unsigned long> getEquipped() const;
 
 private:
-	void unequip(unsigned long itemID);
 	friend class cereal::access;
 	template<class Archive>
 	void save(Archive& archive) const

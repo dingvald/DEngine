@@ -383,7 +383,7 @@ void drft::InventoryState::updateWornItemsDisplay()
 				});
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			addItemIcon(container, itemEntity, { 32, 32 });
-			container.insert("Slot Abbreviation", gui::Label())
+			container.insert("Slot Abbrev", gui::Label())
 				.setLocalPosition({ -8, -8 })
 				.setStyle(gui::ElementState::Idle, {
 					.font = &getContext().fonts.get("Terminus"),
@@ -448,7 +448,7 @@ void drft::InventoryState::updateHeldItemsDisplay()
 				});
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			addItemIcon(container, itemEntity, { 32, 32 });
-			container.insert("Slot Abbreviation", gui::Label())
+			container.insert("Slot Abbrev", gui::Label())
 				.setLocalPosition({ -8, -8 })
 				.setStyle(gui::ElementState::Idle, {
 					.font = &getContext().fonts.get("Terminus"),
@@ -772,7 +772,50 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID)
 		}
 		else
 		{
-
+			auto& commandList = _inventoryStack.insert("Equip Where?", gui::List(true))
+				.setSize({ 64,128 })
+				.setPosition(VIEW.getCenter())
+				.setStyle(gui::ElementState::Focused, {
+					.fillColor = sf::Color(0,0,0,255),
+					.outlineColor = sf::Color(255,255,255,100),
+					.outlineThickness = 1.f,
+					.innerPadding = {4.f, 4.f},
+					.childPadding = {2.f, 2.f},
+					.font = &getContext().fonts.get("Terminus"),
+					.textColor = sf::Color::White,
+					.textSize = 16
+					})
+				.setOrigin(gui::ElementPosition::TOP_LEFT)
+				.setChildrenOrigin(gui::ElementPosition::TOP_LEFT)
+				.setTextPosition(gui::ElementPosition::TOP_CENTER)
+				.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER)
+				.setTextString("Equip " + itemName + " where?");
+			auto hands = body->parts.search(PartType::Hand);
+			for (auto hand : hands)
+			{
+				commandList.insert(std::string{hand->name}, gui::Label())
+					.setStyle(gui::ElementState::Idle, {
+						.font = &getContext().fonts.get("Terminus"),
+						.textColor = sf::Color::White,
+						.textSize = 16
+						})
+					.setStyle(gui::ElementState::Focused, {
+						.font = &getContext().fonts.get("Terminus"),
+						.textColor = sf::Color::Yellow,
+						.textSize = 16
+						})
+					.setTextString(std::string{ hand->name })
+					.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+					.registerCallback(gui::ElementCallbackType::OnSelect,
+						[this, itemEntity, itemID, hand]() -> bool
+						{
+							std::string slotName = hand->name;
+							component::action::Equip equipAction{ .toEquip = itemID, .partName = slotName, .layer = EquipmentLayer::Held };
+							getContext().registry.emplace_or_replace<component::action::Equip>(_sessionEntities.front(), equipAction);
+							_inventoryStack.clear();
+							return true;
+						});
+			}
 		}
 	}
 }

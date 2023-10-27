@@ -67,7 +67,7 @@ bool BodyPart::isConnectedTo(const BodyPart* part) const
 void BodyPart::unequip(unsigned long itemID)
 {
 	int layerToErase = -1;
-	for (auto [layer, item] : _equipped)
+	for (auto& [layer, item] : _equipped)
 	{
 		if (itemID == item)
 		{

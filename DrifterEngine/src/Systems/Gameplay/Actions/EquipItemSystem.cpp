@@ -27,14 +27,16 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 	{
 		throw std::exception("Trying to equip item to non-existant part name");
 	}
-	auto currentlyEquipped = part->getEquipped(equipItem.layer);
+
 	auto itemItr = std::find(container.contents.begin(), container.contents.end(), equipItem.toEquip);
 
 	if (itemItr != container.contents.end())
 	{
-		if (currentlyEquipped.has_value())
+		if (auto currentlyEquipped = part->getEquipped(equipItem.layer))
 		{
-			std::swap(*itemItr, currentlyEquipped.value());
+			*itemItr = currentlyEquipped.value();
+			part->unequip(currentlyEquipped.value());
+			part->equip(equipItem.toEquip, equipItem.layer);
 		}
 		else
 		{
