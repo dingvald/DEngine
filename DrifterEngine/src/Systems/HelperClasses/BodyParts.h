@@ -51,13 +51,6 @@ static inline const std::unordered_map<PartType, std::string> partType2String =
 	{PartType::Foot, "Foot"}
 };
 
-struct CompatibleParts
-{
-	std::unordered_set<std::string> freeSlots;
-	std::unordered_map<std::string, unsigned long> conflicts;
-	bool canEquip = true;
-};
-
 struct BodyPart
 {
 	BodyPart() = default;
@@ -76,7 +69,7 @@ struct BodyPart
 	void unequip(unsigned long itemID);
 	bool isConnectedTo(const BodyPart* part) const;
 	
-	bool hasItemEquipped(unsigned int itemID);
+	bool hasItemEquipped(unsigned int itemID) const;
 	std::optional<unsigned long> getEquipped(EquipmentLayer layer) const;
 	std::vector<unsigned long> getEquipped() const;
 
@@ -146,8 +139,11 @@ public:
 	std::vector<PartItemPair> getAllEquipped();
 	std::vector<PartItemPair> getAllHeldEquipped();
 	std::vector<PartItemPair> getAllWornEquipped();
-	CompatibleParts getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer);
-	void unequipItemFromBody(unsigned long itemID);
+	std::vector<std::string> getSlotPartsForItem(const std::vector<std::string>& slots);
+	std::vector<std::string> getCoveredPartsForItem(const std::string& slot, const std::vector<std::string> covers, EquipmentLayer layer);
+
+
+	void unequipItem(unsigned long itemID);
 
 private:
 	BodyPart* recursiveSearch(BodyPart* root, const std::string& partName);

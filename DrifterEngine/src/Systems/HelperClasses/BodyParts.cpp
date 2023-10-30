@@ -80,7 +80,7 @@ void BodyPart::unequip(unsigned long itemID)
 	}
 }
 
-bool BodyPart::hasItemEquipped(unsigned int itemID)
+bool BodyPart::hasItemEquipped(unsigned int itemID) const
 {
 	for (auto [layer, item] : _equipped)
 	{
@@ -289,27 +289,10 @@ std::vector<PartTree::PartItemPair> PartTree::getAllWornEquipped()
 	return result;
 }
 
-CompatibleParts PartTree::getCompatiblePartsForItem(const std::vector<std::string>& slots, const std::vector<std::string>& covers, EquipmentLayer layer)
+std::vector<std::string> PartTree::getCoveredPartsForItem(const std::string& slot, const std::vector<std::string> covers, EquipmentLayer layer)
 {
-	CompatibleParts result;
-	std::vector<BodyPart*> potentialParts;
-	for (auto& slot : slots)
-	{
-		potentialParts = this->search(string2PartType.at(slot));
-		for (auto it = potentialParts.begin(); it != potentialParts.end();)
-		{
-			if ((*it)->getEquipped(layer).has_value())
-			{
-				result.conflicts.emplace((*it)->name, (*it)->getEquipped(layer).value());
-				it = potentialParts.erase(it);
-			}
-			else
-			{
-				++it;
-			}
-		}
-	}
-
+	std::vector<std::string> result;
+	auto slotPart = this->search(slot);
 	// check covers
 	for (auto& partName : covers)
 	{
@@ -317,69 +300,46 @@ CompatibleParts PartTree::getCompatiblePartsForItem(const std::vector<std::strin
 		auto specificPart = this->search(partName);
 		if (specificPart)
 		{
-			auto itemEquipped = specificPart->getEquipped(layer);
-			if (itemEquipped.has_value())
-			{
-				result.conflicts.emplace(partName, itemEquipped.value());
-				result.canEquip = false;
-			}
+			result.push_back(specificPart->name);
 		}
 		else
 		{
-			// check if a generic typed part
-			if (!string2PartType.contains(partName))
-			{
-				// Cannot equip item on body, so early out
-				result.canEquip = false;
-				return result;
-			}
 			auto typedParts = this->search(string2PartType.at(partName));
-			for (auto it = potentialParts.begin(); it != potentialParts.end();)
+			for (auto typedPart : typedParts)
 			{
-				bool isConnected = false;
-				for (auto typedPart : typedParts)
+				auto optionalItem = typedPart->getEquipped(layer);
+				if (slotPart->isConnectedTo(typedPart))
 				{
-					auto optionalItem = typedPart->getEquipped(layer);
-					if ((*it)->isConnectedTo(typedPart))
-					{
-						if (optionalItem.has_value())
-						{
-							result.conflicts.emplace(typedPart->name, optionalItem.value());
-						}
-						else
-						{
-							isConnected = true;
-						}
-					}
-				}
-				if (!isConnected)
-				{
-					it = potentialParts.erase(it);
-				}
-				else
-				{
-					++it;
+					result.push_back(typedPart->name);
 				}
 			}
 		}
-	}
-	if (result.canEquip && !potentialParts.empty())
-	{
-		for (auto& part : potentialParts)
-		{
-			result.freeSlots.insert(part->name);
-		}
-	}
-	else
-	{
-		result.canEquip = false;
 	}
 
 	return result;
 }
 
-void PartTree::unequipItemFromBody(unsigned long itemID)
+std::vector<std::string> PartTree::getSlotPartsForItem(const std::vector<std::string>& slots)
 {
+	std::vector<std::string> result;
+	for (auto& slot : slots)
+	{
+		auto parts = this->search(string2PartType.at(slot));
+		for (auto part : parts)
+		{
+			result.push_back(part->name);
+		}
+	}
+
+	return result;
+}
+
+void PartTree::unequipItem(unsigned long itemID)
+{
+	for (auto part : flatten())
+	{
+		part->unequip(itemID);
+	}
 }
 
 BodyPart* PartTree::recursiveSearch(BodyPart* root, const std::string& partName)

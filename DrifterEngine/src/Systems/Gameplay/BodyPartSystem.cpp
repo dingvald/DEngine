@@ -53,7 +53,7 @@ void drft::system::BodyPartSystem::onLaunchAttack(entt::registry& registry, entt
 void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
 	auto& body = registry->get<component::Body>(ev.owner);
-	body.parts.unequipItemFromBody(ev.itemID);
+	body.parts.unequipItem(ev.itemID);
 }
 
 int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
@@ -72,6 +72,10 @@ int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
 				{
 					force += physical->weight;
 				}
+				if (auto sharp = registry->try_get<component::Sharp>(itemEntity))
+				{
+					force += sharp->sharpness;
+				}
 			}
 		}
 	}
@@ -81,8 +85,11 @@ int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
 
 int drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, unsigned long itemHit)
 {
+	int result = 0;
 
-	return 0;
+
+
+	return result;
 }
 
 std::string drft::system::BodyPartSystem::determinePartHit(entt::handle entity)

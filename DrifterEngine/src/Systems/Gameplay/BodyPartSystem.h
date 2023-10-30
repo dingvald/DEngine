@@ -16,6 +16,7 @@ namespace drft::system
 
 		int calculateForceFromHeld(entt::entity attacker);
 		int calculateMitigationFromWorn(entt::entity defender, unsigned long partHit);
+
 		std::string determinePartHit(entt::handle entity);
 	};
 

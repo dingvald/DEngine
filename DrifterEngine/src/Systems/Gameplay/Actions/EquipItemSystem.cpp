@@ -23,13 +23,10 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 	const auto& equipItem = registry.get<component::action::Equip>(entity);
 	auto& body = registry.get<component::Body>(entity);
 	auto part = body.parts.search(equipItem.partName);
-	if (!part)
-	{
-		throw std::exception("Trying to equip item to non-existant part name");
-	}
+
+	if (!part) throw std::exception("Trying to equip item to non-existant part name");
 
 	auto itemItr = std::find(container.contents.begin(), container.contents.end(), equipItem.toEquip);
-
 	if (itemItr != container.contents.end())
 	{
 		if (auto currentlyEquipped = part->getEquipped(equipItem.layer))
@@ -65,7 +62,7 @@ void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, e
 				{
 					cont.contents.push_back(itemToUnequip);
 				});
-			body.parts.unequipItemFromBody(itemToUnequip);
+			part->unequip(itemToUnequip);
 		}
 	}
 }
