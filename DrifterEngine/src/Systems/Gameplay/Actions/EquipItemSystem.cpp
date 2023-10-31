@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EquipItemSystem.h"
 #include "Components/Components.h"
+#include "Systems/Helpers/ItemDatabase.h"
 
 void drft::system::EquipItemSystem::init()
 {
@@ -29,11 +30,11 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 	auto itemItr = std::find(container.contents.begin(), container.contents.end(), equipItem.toEquip);
 	if (itemItr != container.contents.end())
 	{
-		if (auto currentlyEquipped = part->getEquipped(equipItem.layer))
+		auto itemEntity = ItemDatabase::getEntityFromItemID(equipItem.toEquip);
+		if (auto currentlyEquipped = part->getSlotItem(equipItem.layer))
 		{
 			*itemItr = currentlyEquipped.value();
-			part->unequip(currentlyEquipped.value());
-			part->equip(equipItem.toEquip, equipItem.layer);
+			body.parts.unequipItem(currentlyEquipped.value());
 		}
 		else
 		{
@@ -41,7 +42,15 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 				{
 					cont.contents.erase(itemItr);
 				});
-			part->equip(equipItem.toEquip, equipItem.layer);
+		}
+		if (auto wearable = registry.try_get<component::Wearable>(itemEntity))
+		{
+			auto covers = body.parts.getCoveredPartsForItem(equipItem.partName, wearable->covers, equipItem.layer);
+			body.parts.equipItem(equipItem.toEquip, equipItem.layer, equipItem.partName, covers);
+		}
+		else
+		{
+			body.parts.equipItem(equipItem.toEquip, equipItem.layer, equipItem.partName);
 		}
 	}
 }
@@ -54,7 +63,7 @@ void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, e
 
 	if (auto part = body.parts.search(unequipItem.partName))
 	{
-		auto optionalItem = part->getEquipped(unequipItem.layer);
+		auto optionalItem = part->getSlotItem(unequipItem.layer);
 		if (optionalItem.has_value())
 		{
 			unsigned long itemToUnequip = optionalItem.value();
@@ -62,7 +71,7 @@ void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, e
 				{
 					cont.contents.push_back(itemToUnequip);
 				});
-			part->unequip(itemToUnequip);
+			body.parts.unequipItem(itemToUnequip);
 		}
 	}
 }

@@ -65,13 +65,18 @@ struct BodyPart
 	unsigned int size = 0;
 
 	void attach(std::unique_ptr<BodyPart> newPart);
-	bool equip(unsigned long itemID, EquipmentLayer layer);
-	void unequip(unsigned long itemID);
+
+	bool addSlotItem(unsigned long itemID, EquipmentLayer layer);
+	std::optional<unsigned long> getSlotItem(EquipmentLayer layer) const;
+	void removeSlotItem(unsigned long itemID);
+	std::vector<unsigned long> getAllSlotted() const;
+
+	void addCoveringItem(unsigned long itemID, EquipmentLayer layer);
+	std::vector<unsigned long> getCoveringItems(EquipmentLayer layer) const;
+	void removeCoveringItem(unsigned long itemID);
+	std::vector<unsigned long> getAllCoveringItems() const;
+
 	bool isConnectedTo(const BodyPart* part) const;
-	
-	bool hasItemEquipped(unsigned int itemID) const;
-	std::optional<unsigned long> getEquipped(EquipmentLayer layer) const;
-	std::vector<unsigned long> getEquipped() const;
 
 private:
 	friend class cereal::access;
@@ -79,7 +84,8 @@ private:
 	void save(Archive& archive) const
 	{
 		archive(name, size, static_cast<int>(type));
-		archive(_equipped);
+		archive(_slotted);
+		archive(_covering);
 		archive(static_cast<int>(_children.size()));
 		for (auto& part : _children)
 		{
@@ -91,7 +97,8 @@ private:
 	void load(Archive& archive)
 	{
 		archive(name, size, static_cast<PartType>(type));
-		archive(_equipped);
+		archive(_slotted);
+		archive(_covering);
 		int childrenSize = 0;
 		archive(childrenSize);
 		for (int i = 0; i < childrenSize; ++i)
@@ -106,7 +113,8 @@ private:
 private:
 	friend class PartTree;
 	BodyPart* _parent = nullptr;
-	std::map<int, unsigned long> _equipped;
+	std::map<int, unsigned long> _slotted;
+	std::map<int, std::vector<unsigned long>> _covering;
 	std::vector<std::unique_ptr<BodyPart>> _children;
 };
 
@@ -140,10 +148,11 @@ public:
 	std::vector<PartItemPair> getAllHeldEquipped();
 	std::vector<PartItemPair> getAllWornEquipped();
 	std::vector<std::string> getSlotPartsForItem(const std::vector<std::string>& slots);
-	std::vector<std::string> getCoveredPartsForItem(const std::string& slot, const std::vector<std::string> covers, EquipmentLayer layer);
 
-
+	bool equipItem(unsigned long itemID, EquipmentLayer layer, const std::string& slot, const std::vector<std::string>& covering = {});
 	void unequipItem(unsigned long itemID);
+
+	std::vector<std::string> getCoveredPartsForItem(const std::string& slot, const std::vector<std::string> covers, EquipmentLayer layer);
 
 private:
 	BodyPart* recursiveSearch(BodyPart* root, const std::string& partName);

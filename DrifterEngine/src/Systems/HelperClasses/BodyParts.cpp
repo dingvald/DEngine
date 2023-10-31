@@ -13,7 +13,8 @@ BodyPart::BodyPart(const BodyPart& other)
 	this->name = other.name;
 	this->type = other.type;
 	this->size = other.size;
-	this->_equipped = other._equipped;
+	this->_slotted = other._slotted;
+	this->_covering = other._covering;
 	for (const auto& child : other._children)
 	{
 		this->_children.emplace_back(std::make_unique<BodyPart>(BodyPart{ *child }));
@@ -27,7 +28,8 @@ BodyPart& BodyPart::operator=(BodyPart& other)
 		this->name = other.name;
 		this->type = other.type;
 		this->size = other.size;
-		this->_equipped = other._equipped;
+		this->_slotted = other._slotted;
+		this->_covering = other._covering;
 		for (const auto& child : other._children)
 		{
 			this->_children.emplace_back(std::make_unique<BodyPart>(BodyPart{ *child }));
@@ -43,15 +45,101 @@ void BodyPart::attach(std::unique_ptr<BodyPart> newPart)
 	_children.emplace_back(std::move(newPart));
 }
 
-bool BodyPart::equip(unsigned long itemID, EquipmentLayer layer)
+bool BodyPart::addSlotItem(unsigned long itemID, EquipmentLayer layer)
 {
 	if (this->type != PartType::Hand && layer == EquipmentLayer::Held)
 	{
 		return false;
 	}
-	if (_equipped.contains(static_cast<int>(layer))) return false;
-	_equipped[static_cast<int>(layer)] = itemID;
+	if (_slotted.contains(static_cast<int>(layer)))
+	{
+		return false;
+	}
+	_slotted[static_cast<int>(layer)] = itemID;
+	addCoveringItem(itemID, layer);
 	return true;
+}
+
+std::optional<unsigned long> BodyPart::getSlotItem(EquipmentLayer layer) const
+{
+	if (this->type != PartType::Hand && layer == EquipmentLayer::Held)
+	{
+		return std::nullopt;
+	}
+	if (_slotted.contains(static_cast<int>(layer)))
+	{
+		return _slotted.at(static_cast<int>(layer));
+	}
+	return std::nullopt;
+}
+
+void BodyPart::removeSlotItem(unsigned long itemID)
+{
+	for (auto it = _slotted.begin(); it != _slotted.end();)
+	{
+		if (it->second == itemID)
+		{
+			it = _slotted.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	removeCoveringItem(itemID);
+}
+
+std::vector<unsigned long> BodyPart::getAllSlotted() const
+{
+	std::vector<unsigned long> result;
+	for (auto& [layer, itemID] : _slotted)
+	{
+		result.push_back(itemID);
+	}
+	return result;
+}
+
+void BodyPart::addCoveringItem(unsigned long itemID, EquipmentLayer layer)
+{
+	if (this->type != PartType::Hand && layer == EquipmentLayer::Held)
+	{
+		return;
+	}
+	_covering[static_cast<int>(layer)].push_back(itemID);
+}
+
+std::vector<unsigned long> BodyPart::getCoveringItems(EquipmentLayer layer) const
+{
+	if (this->type != PartType::Hand && layer == EquipmentLayer::Held)
+	{
+		return std::vector<unsigned long>{};
+	}
+	if (_covering.contains(static_cast<int>(layer)))
+	{
+		return _covering.at(static_cast<int>(layer));
+	}
+	return std::vector<unsigned long>{};
+}
+
+void BodyPart::removeCoveringItem(unsigned long itemID)
+{
+	for (auto& [layer, items] : _covering)
+	{
+		items.erase(std::remove(items.begin(), items.end(), itemID));
+	}
+}
+
+std::vector<unsigned long> BodyPart::getAllCoveringItems() const
+{
+	std::vector<unsigned long> result;
+	for (auto& [layer, items] : _covering)
+	{
+		for (auto itemID : items)
+		{
+			result.push_back(itemID);
+		}
+	}
+	return result;
 }
 
 bool BodyPart::isConnectedTo(const BodyPart* part) const
@@ -62,54 +150,6 @@ bool BodyPart::isConnectedTo(const BodyPart* part) const
 		if (child.get() == part) return true;
 	}
 	return false;
-}
-
-void BodyPart::unequip(unsigned long itemID)
-{
-	int layerToErase = -1;
-	for (auto& [layer, item] : _equipped)
-	{
-		if (itemID == item)
-		{
-			layerToErase = layer;
-		}
-	}
-	if (layerToErase >= 0)
-	{
-		_equipped.erase(static_cast<unsigned int>(layerToErase));
-	}
-}
-
-bool BodyPart::hasItemEquipped(unsigned int itemID) const
-{
-	for (auto [layer, item] : _equipped)
-	{
-		if (item == itemID) return true;
-	}
-	return false;
-}
-
-std::optional<unsigned long> BodyPart::getEquipped(EquipmentLayer layer) const
-{
-	if (this->type != PartType::Hand && layer == EquipmentLayer::Held)
-	{
-		return std::nullopt;
-	}
-	if (_equipped.contains(static_cast<int>(layer)))
-	{
-		return _equipped.at(static_cast<int>(layer));
-	}
-	return std::nullopt;
-}
-
-std::vector<unsigned long> BodyPart::getEquipped() const
-{
-	std::vector<unsigned long> result;
-	for (auto [layer, itemID] : _equipped)
-	{
-		result.push_back(itemID);
-	}
-	return result;
 }
 
 // PART TREE //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,15 +278,12 @@ const std::vector<const BodyPart*> PartTree::flatten(FlattenType flattenHow) con
 std::vector<PartTree::PartItemPair> PartTree::getAllEquipped()
 {
 	std::vector<PartItemPair> result;
-	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->flatten())
 	{
-		auto equipped = part->getEquipped();
+		auto equipped = part->getAllSlotted();
 		for (auto item : equipped)
 		{
-			if (alreadyIncluded.contains(item)) continue;
 			result.push_back({ part->name, item });
-			alreadyIncluded.insert(item);
 		}
 	}
 	return result;
@@ -255,15 +292,12 @@ std::vector<PartTree::PartItemPair> PartTree::getAllEquipped()
 std::vector<PartTree::PartItemPair> PartTree::getAllHeldEquipped()
 {
 	std::vector<PartItemPair> result;
-	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->search(PartType::Hand))
 	{
-		auto optionalItem = part->getEquipped(EquipmentLayer::Held);
-		if (optionalItem.has_value())
+		auto item = part->getSlotItem(EquipmentLayer::Held);
+		if (item.has_value())
 		{
-			if (alreadyIncluded.contains(optionalItem.value())) continue;
-			result.push_back({ part->name, optionalItem.value() });
-			alreadyIncluded.insert(optionalItem.value());
+			result.push_back({ part->name, item.value() });
 		}
 	}
 	return result;
@@ -272,21 +306,57 @@ std::vector<PartTree::PartItemPair> PartTree::getAllHeldEquipped()
 std::vector<PartTree::PartItemPair> PartTree::getAllWornEquipped()
 {
 	std::vector<PartItemPair> result;
-	std::unordered_set<unsigned long> alreadyIncluded;
 	for (auto part : this->flatten())
 	{
 		for (int i = static_cast<int>(EquipmentLayer::Held) + 1; i <= static_cast<int>(EquipmentLayer::OverAll); ++i)
 		{
-			auto optionalItem = part->getEquipped(static_cast<EquipmentLayer>(i));
-			if (optionalItem.has_value())
+			auto item = part->getSlotItem(static_cast<EquipmentLayer>(i));
+			if (item.has_value())
 			{
-				if (alreadyIncluded.contains(optionalItem.value())) continue;
-				result.push_back({ part->name, optionalItem.value() });
-				alreadyIncluded.insert(optionalItem.value());
+				result.push_back({ part->name, item.value() });
 			}
 		}
 	}
 	return result;
+}
+
+std::vector<std::string> PartTree::getSlotPartsForItem(const std::vector<std::string>& slots)
+{
+	std::vector<std::string> result;
+	for (auto& slot : slots)
+	{
+		auto parts = this->search(string2PartType.at(slot));
+		for (auto part : parts)
+		{
+			result.push_back(part->name);
+		}
+	}
+
+	return result;
+}
+
+bool PartTree::equipItem(unsigned long itemID, EquipmentLayer layer, const std::string& slot, const std::vector<std::string>& covering)
+{
+	auto slotPart = this->search(slot);
+	if (!slotPart || !slotPart->addSlotItem(itemID, layer)) return false;
+
+	for (auto& coveredPartName : covering)
+	{
+		if (auto coveredPart = this->search(coveredPartName))
+		{
+			coveredPart->addCoveringItem(itemID, layer);
+		}
+	}
+	return true;
+}
+
+void PartTree::unequipItem(unsigned long itemID)
+{
+	for (auto part : flatten())
+	{
+		part->removeSlotItem(itemID);
+		part->removeCoveringItem(itemID);
+	}
 }
 
 std::vector<std::string> PartTree::getCoveredPartsForItem(const std::string& slot, const std::vector<std::string> covers, EquipmentLayer layer)
@@ -307,7 +377,6 @@ std::vector<std::string> PartTree::getCoveredPartsForItem(const std::string& slo
 			auto typedParts = this->search(string2PartType.at(partName));
 			for (auto typedPart : typedParts)
 			{
-				auto optionalItem = typedPart->getEquipped(layer);
 				if (slotPart->isConnectedTo(typedPart))
 				{
 					result.push_back(typedPart->name);
@@ -317,29 +386,6 @@ std::vector<std::string> PartTree::getCoveredPartsForItem(const std::string& slo
 	}
 
 	return result;
-}
-
-std::vector<std::string> PartTree::getSlotPartsForItem(const std::vector<std::string>& slots)
-{
-	std::vector<std::string> result;
-	for (auto& slot : slots)
-	{
-		auto parts = this->search(string2PartType.at(slot));
-		for (auto part : parts)
-		{
-			result.push_back(part->name);
-		}
-	}
-
-	return result;
-}
-
-void PartTree::unequipItem(unsigned long itemID)
-{
-	for (auto part : flatten())
-	{
-		part->unequip(itemID);
-	}
 }
 
 BodyPart* PartTree::recursiveSearch(BodyPart* root, const std::string& partName)

@@ -24,7 +24,7 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 		if (incomingDamage.amount <= 0) return;
 
 		auto partName = determinePartHit({registry, entity});
-		auto itemHit = body->parts.search(partName)->getEquipped().back();
+		auto itemHit = body->parts.search(partName)->getAllSlotted().back();
 		auto itemEntity = ItemDatabase::getEntityFromItemID(itemHit);
 		if (itemEntity != entt::null)
 		{
@@ -64,8 +64,8 @@ int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
 		auto rightHand = body->parts.search("Right Hand"); // TODO: genericize
 		if (rightHand)
 		{
-			auto itemID = rightHand->getEquipped(EquipmentLayer::Held);
-			auto itemEntity = ItemDatabase::getEntityFromItemID(itemID.value_or(0));
+			auto optionalHeld = rightHand->getSlotItem(EquipmentLayer::Held);
+			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(0));
 			if (itemEntity != entt::null)
 			{
 				if (auto physical = registry->try_get<component::Physical>(itemEntity))
@@ -77,6 +77,7 @@ int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
 					force += sharp->sharpness;
 				}
 			}
+
 		}
 	}
 

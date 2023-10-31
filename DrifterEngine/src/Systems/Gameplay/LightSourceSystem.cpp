@@ -16,7 +16,7 @@ void drft::system::LightSourceSystem::fixedUpdate()
 	{
 		for (const auto part : body.parts.flatten())
 		{
-			for (auto item : part->getEquipped())
+			for (auto item : part->getAllSlotted())
 			{
 				const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 				if (const auto light = registry->try_get<component::LightSource>(itemEntity))

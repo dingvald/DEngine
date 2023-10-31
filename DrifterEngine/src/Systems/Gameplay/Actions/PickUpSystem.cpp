@@ -36,9 +36,9 @@ void drft::system::PickUpSystem::update(const float dt)
 				const auto handParts = body->parts.search(PartType::Hand);
 				for (auto hand : handParts)
 				{
-					if (hand->getEquipped().empty())
+					if (!hand->getSlotItem(EquipmentLayer::Held).has_value())
 					{
-						hand->equip(item.id, EquipmentLayer::Held);
+						hand->addSlotItem(item.id, EquipmentLayer::Held);
 						putDirectlyInHand = true;
 						break;
 					}

@@ -16,7 +16,7 @@ static constexpr int HELD_ITEMS_HEIGHT = 1;
 static constexpr int WORN_ITEMS_WIDTH = 4;
 static constexpr int WORN_ITEMS_HEIGHT = 4;
 
-// Positions:
+// GUI Element Positions:
 
 static constexpr int PANEL_HEIGHT_OFFSET = -128;
 
@@ -678,12 +678,13 @@ void drft::InventoryState::createItemCommandList(sf::Vector2f position, unsigned
 
 void drft::InventoryState::tryEquipItem(unsigned long itemID)
 {
-	const auto& VIEW = getContext().window.getView();
-	const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
-	const auto playersName = util::getEntityName({ getContext().registry, _sessionEntities.front() });
-	const auto itemName = util::getEntityName({ getContext().registry, itemEntity });
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
+		const auto& VIEW = getContext().window.getView();
+		const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
+		const auto playersName = util::getEntityName({ getContext().registry, _sessionEntities.front() });
+		const auto itemName = util::getEntityName({ getContext().registry, itemEntity });
+
 		auto& commandList = _inventoryStack.insert("Equip Where?", gui::List(true))
 			.setSize({ 64,128 })
 			.setPosition(VIEW.getCenter())
@@ -705,7 +706,7 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID)
 
 		if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
 		{
-			auto slots = body->parts.getCompatiblePartsForItem(wearable->slots);
+			auto slots = body->parts.getSlotPartsForItem(wearable->slots);
 			for (auto& slot : slots)
 			{
 				commandList.insert(std::string{ slot }, gui::Label())

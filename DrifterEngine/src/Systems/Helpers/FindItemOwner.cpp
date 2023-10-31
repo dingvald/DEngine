@@ -28,7 +28,7 @@ entt::entity drft::system::findItemOwner(entt::registry& registry, unsigned long
 			{
 				for (auto part : body.parts.flatten())
 				{
-					for (auto item : part->getEquipped())
+					for (auto item : part->getAllSlotted())
 					{
 						if (item == itemID)
 						{

@@ -249,10 +249,10 @@ void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
 					})
 				.insert("Item", gui::DualContainer());
 
-			auto optionalHeldItem = hand->getEquipped(EquipmentLayer::Held);
-			if (optionalHeldItem.has_value())
+			auto heldItems = hand->getSlotItem(EquipmentLayer::Held);
+			if (heldItems.has_value())
 			{
-				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeldItem.value());
+				auto itemEntity = ItemDatabase::getEntityFromItemID(heldItems.value());
 				addItemIcon(handContainer["Item"], itemEntity);
 			}
 		}
