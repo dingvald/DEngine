@@ -4,29 +4,11 @@
 
 namespace drft
 {
-	enum class SessionType
+	enum class CommandListType
 	{
-		Equip,
-		Inventory
-	};
-
-	struct SessionContext
-	{
-	public:
-		void setCurrentItem(unsigned long itemID) { _currentItemID = itemID; }
-		unsigned long getCurrentItem() const { return _currentItemID; }
-		void setCurrentSlot(std::string slotname) { _currentSlotName = slotname; }
-		const std::string& getCurrentSlot() const { return _currentSlotName; }
-
-		void reset()
-		{
-			_currentItemID = 0;
-			_currentSlotName = "None";
-		}
-
-	private:
-		unsigned long _currentItemID = 0;
-		std::string _currentSlotName = "None";
+		Inventory,
+		Held,
+		Worn
 	};
 
 	class InventoryState : public State
@@ -55,12 +37,12 @@ namespace drft
 		void determineSessionEntities();
 		void shutdownSessionEntities();
 
-		void createItemCommandList(sf::Vector2f position, unsigned long itemID);
+		void createItemCommandList(CommandListType type, sf::Vector2f position, unsigned long itemID);
 		void tryEquipItem(unsigned long itemID);
+		void tryUnequipItem(unsigned long itemID);
 
 	private:
 		std::vector<entt::entity> _sessionEntities;
-		SessionContext _sessionContext;
 
 		gui::Panel _inventoryBackground;
 		gui::FlowControl _flowControl;

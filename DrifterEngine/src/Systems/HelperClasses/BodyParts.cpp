@@ -125,7 +125,7 @@ void BodyPart::removeCoveringItem(unsigned long itemID)
 {
 	for (auto& [layer, items] : _covering)
 	{
-		items.erase(std::remove(items.begin(), items.end(), itemID));
+		items.erase(std::remove(items.begin(), items.end(), itemID), items.end());
 	}
 }
 

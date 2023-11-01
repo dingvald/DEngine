@@ -286,8 +286,6 @@ namespace component::action
 	struct Unequip
 	{
 		Item::ID toUnequip = 0;
-		std::string partName = {};
-		EquipmentLayer layer = EquipmentLayer::Base;
 	};
 
 	struct Craft

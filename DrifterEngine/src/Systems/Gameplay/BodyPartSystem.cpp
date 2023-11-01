@@ -26,6 +26,9 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 		auto partName = determinePartHit({registry, entity});
 		auto itemHit = body->parts.search(partName)->getAllSlotted().back();
 		auto itemEntity = ItemDatabase::getEntityFromItemID(itemHit);
+		int mitigation = calculateMitigationFromWorn(entity, itemHit);
+		incomingDamage.amount = std::clamp(incomingDamage.amount - mitigation, 0, incomingDamage.amount);
+
 		if (itemEntity != entt::null)
 		{
 			if (auto wearable = registry.try_get<component::Wearable>(itemEntity))
@@ -36,8 +39,6 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 				}
 			}
 		}
-		int mitigation = calculateMitigationFromWorn(entity, itemHit);
-		incomingDamage.amount = std::clamp(incomingDamage.amount - mitigation, 0, incomingDamage.amount);
 	}
 }
 

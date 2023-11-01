@@ -61,17 +61,10 @@ void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, e
 	const auto& unequipItem = registry.get<component::action::Unequip>(entity);
 	auto& body = registry.get<component::Body>(entity);
 
-	if (auto part = body.parts.search(unequipItem.partName))
-	{
-		auto optionalItem = part->getSlotItem(unequipItem.layer);
-		if (optionalItem.has_value())
+	if (container.contents.size() >= container.capacity) return;
+	registry.patch<component::Container>(entity, [&unequipItem](component::Container& cont)
 		{
-			unsigned long itemToUnequip = optionalItem.value();
-			registry.patch<component::Container>(entity, [itemToUnequip](component::Container& cont)
-				{
-					cont.contents.push_back(itemToUnequip);
-				});
-			body.parts.unequipItem(itemToUnequip);
-		}
-	}
+			cont.contents.push_back(unequipItem.toUnequip);
+		});
+	body.parts.unequipItem(unequipItem.toUnequip);
 }
