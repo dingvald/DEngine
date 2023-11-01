@@ -24,7 +24,7 @@ static constexpr int HELD_PANEL_WIDTH_OFFSET = 0;
 static constexpr int HELD_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET;
 
 static constexpr int WORN_PANEL_WIDTH_OFFSET = HELD_PANEL_WIDTH_OFFSET;
-static constexpr int WORN_PANEL_HEIGHT_OFFSET = HELD_PANEL_HEIGHT_OFFSET + 96;
+static constexpr int WORN_PANEL_HEIGHT_OFFSET = HELD_PANEL_HEIGHT_OFFSET + 84;
 
 static constexpr int INVENTORY_PANEL_WIDTH_OFFSET = -256;
 static constexpr int INVENTORY_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET;
@@ -184,9 +184,9 @@ void drft::InventoryState::setupInventoryDisplay()
 		.textColor = sf::Color::White
 		});
 	inventoryGrid.setOrigin(gui::ElementPosition::TOP_LEFT);
-	inventoryGrid.setTextString("Inventory");
-	inventoryGrid.setTextPosition(gui::ElementPosition::TOP_CENTER);
-	inventoryGrid.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
+	inventoryGrid.setTextString("Inventory:");
+	inventoryGrid.setTextPosition(gui::ElementPosition::TOP_LEFT);
+	inventoryGrid.setTextOrigin(gui::ElementPosition::BOTTOM_LEFT);
 
 	const auto& entityContainer = getContext().registry.get<component::Container>(_sessionEntities.front());
 	inventoryGrid.registerCallback(gui::ElementCallbackType::OnUpdate,
@@ -356,8 +356,8 @@ void drft::InventoryState::updateWornItemsDisplay()
 			container.setOrigin(gui::ElementPosition::TOP_LEFT);
 			container.setChildrenOrigin(gui::ElementPosition::CENTER);
 			container.setStyle(gui::ElementState::Idle, {
-				.fillColor = sf::Color(0,0,0,150),
-				.outlineColor = sf::Color(150,150,150,100),
+				.fillColor = sf::Color(0,0,0,200),
+				.outlineColor = sf::Color(80,80,80,100),
 				.outlineThickness = 1.f
 				});
 			container.setStyle(gui::ElementState::Focused, {
@@ -418,11 +418,9 @@ void drft::InventoryState::updateHeldItemsDisplay()
 			container.setOrigin(gui::ElementPosition::TOP_LEFT);
 			container.setChildrenOrigin(gui::ElementPosition::CENTER);
 			container.setStyle(gui::ElementState::Idle, {
-				.fillColor = sf::Color(0,0,0,150),
-				.outlineColor = sf::Color(150,150,150,100),
-				.outlineThickness = 1.f,
-				.font = &getContext().fonts.get("Terminus"),
-				.textColor = sf::Color::White
+				.fillColor = sf::Color(0,0,0,200),
+				.outlineColor = sf::Color(80,80,80,100),
+				.outlineThickness = 1.f
 				});
 			container.setStyle(gui::ElementState::Focused, {
 				.fillColor = sf::Color(40,40,0,150),
