@@ -386,11 +386,11 @@ void drft::InventoryState::updateWornItemsDisplay()
 				.setLocalPosition({ -8, -8 })
 				.setStyle(gui::ElementState::Idle, {
 					.font = &getContext().fonts.get("Terminus"),
-					.textColor = sf::Color(255,255,255,100)
+					.textColor = sf::Color(255,255,255,200)
 					})
 				.setStyle(gui::ElementState::Focused, {
 					.font = &getContext().fonts.get("Terminus"),
-					.textColor = sf::Color(255,255,255,100)
+					.textColor = sf::Color(255,255,255,50)
 					})
 				.setTextString(util::getStringAcronym(partName));
 			container.registerCallback(gui::ElementCallbackType::OnSelect, [this, item, &container]() -> bool
@@ -456,11 +456,11 @@ void drft::InventoryState::updateHeldItemsDisplay()
 				.setLocalPosition({ -8, -8 })
 				.setStyle(gui::ElementState::Idle, {
 					.font = &getContext().fonts.get("Terminus"),
-					.textColor = sf::Color(255,255,255,100)
+					.textColor = sf::Color(255,255,255,200)
 					})
 				.setStyle(gui::ElementState::Focused, {
 					.font = &getContext().fonts.get("Terminus"),
-					.textColor = sf::Color(255,255,255,100)
+					.textColor = sf::Color(255,255,255,50)
 					})
 				.setTextString(util::getStringAcronym(partName));
 			container.registerCallback(gui::ElementCallbackType::OnSelect, [this, item, &container]() -> bool
