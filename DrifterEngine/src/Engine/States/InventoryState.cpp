@@ -189,25 +189,6 @@ void drft::InventoryState::setupInventoryDisplay()
 	inventoryGrid.setTextOrigin(gui::ElementPosition::BOTTOM_LEFT);
 
 	const auto& entityContainer = getContext().registry.get<component::Container>(_sessionEntities.front());
-	inventoryGrid.registerCallback(gui::ElementCallbackType::OnUpdate,
-		[this, &entityContainer, &inventoryGrid]() -> bool
-		{
-			for (int i = 0; i < INVENTORY_WIDTH * INVENTORY_HEIGHT - 1; ++i)
-			{
-				inventoryGrid[i].clear();
-			}
-			int count = 0;
-			for (auto& item : entityContainer.contents)
-			{
-				auto& container = inventoryGrid[count];
-				const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-				addItemIcon(container, itemEntity, {32, 32});
-
-				++count;
-			}
-			return true;
-		});
-
 	for (int row = 0; row < INVENTORY_HEIGHT; ++row)
 	{
 		for (int col = 0; col < INVENTORY_WIDTH; ++col)
@@ -340,6 +321,22 @@ void drft::InventoryState::setupHeldItemsDisplay()
 
 void drft::InventoryState::updateInventoryDisplay()
 {
+	auto& inventoryGrid = _flowControl["InventoryGrid"];
+	for (int i = 0; i < INVENTORY_WIDTH * INVENTORY_HEIGHT - 1; ++i)
+	{
+		inventoryGrid[i].clear();
+	}
+
+	const auto& entityContainer = getContext().registry.get<component::Container>(_sessionEntities.front());
+	int count = 0;
+	for (auto& item : entityContainer.contents)
+	{
+		auto& container = inventoryGrid[count];
+		const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+		addItemIcon(container, itemEntity, { 32, 32 });
+
+		++count;
+	}
 }
 
 void drft::InventoryState::updateWornItemsDisplay()
