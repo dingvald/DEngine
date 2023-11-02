@@ -390,7 +390,17 @@ void drft::InventoryState::updateWornItemsDisplay()
 					.textColor = sf::Color(255,255,255,50)
 					})
 				.setTextString(util::getStringAcronym(partName));
-			container.registerCallback(gui::ElementCallbackType::OnSelect, [this, item, &container]() -> bool
+			container.registerCallback(gui::ElementCallbackType::OnFocus,
+				[this, &container, item]() -> bool
+				{
+					const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+					auto itemName = util::getEntityName({ getContext().registry, itemEntity });
+					_inventoryBlob["ItemLabel"].setTextString(std::move(itemName));
+					_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+					return true;
+				});
+			container.registerCallback(gui::ElementCallbackType::OnSelect, 
+				[this, item, &container]() -> bool
 				{
 					const auto commandListPosition = container.getPosition() + sf::Vector2f{ 36,-1 };
 					createItemCommandList(CommandListType::Worn, commandListPosition, item);
@@ -460,7 +470,17 @@ void drft::InventoryState::updateHeldItemsDisplay()
 					.textColor = sf::Color(255,255,255,50)
 					})
 				.setTextString(util::getStringAcronym(partName));
-			container.registerCallback(gui::ElementCallbackType::OnSelect, [this, item, &container]() -> bool
+			container.registerCallback(gui::ElementCallbackType::OnFocus,
+				[this, &container, item]() -> bool
+				{
+					const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+					auto itemName = util::getEntityName({ getContext().registry, itemEntity });
+					_inventoryBlob["ItemLabel"].setTextString(std::move(itemName));
+					_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+					return true;
+				});
+			container.registerCallback(gui::ElementCallbackType::OnSelect, 
+				[this, item, &container]() -> bool
 				{
 					const auto commandListPosition = container.getPosition() + sf::Vector2f{ 36,-1 };
 					createItemCommandList(CommandListType::Held, commandListPosition, item);
