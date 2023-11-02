@@ -38,7 +38,7 @@ namespace drft
 		void shutdownSessionEntities();
 
 		void createItemCommandList(CommandListType type, sf::Vector2f position, unsigned long itemID);
-		void tryEquipItem(unsigned long itemID);
+		void tryEquipItem(unsigned long itemID, sf::Vector2f position);
 		void tryUnequipItem(unsigned long itemID);
 
 	private:

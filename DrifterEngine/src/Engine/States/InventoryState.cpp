@@ -611,12 +611,12 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 			return true;
 					});
 
-			commandList.insert("Equip", gui::Label())
-				.setStyle(gui::ElementState::Idle, {
+			auto& equipCommand = commandList.insert("Equip", gui::Label());
+			equipCommand.setStyle(gui::ElementState::Idle, {
 					.font = &getContext().fonts.get("Terminus"),
 					.textColor = sf::Color::White,
 					.textSize = 16
-					})
+				})
 				.setStyle(gui::ElementState::Focused, {
 					.font = &getContext().fonts.get("Terminus"),
 					.textColor = sf::Color::Yellow,
@@ -625,10 +625,12 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 				.setTextString("equip")
 				.setTextOrigin(gui::ElementPosition::TOP_LEFT)
 				.registerCallback(gui::ElementCallbackType::OnSelect,
-					[this, itemID]() -> bool
+					[this, itemID, &equipCommand]() -> bool
 					{
-						tryEquipItem(itemID);
-			return true;
+						auto commandBounds = equipCommand.getGlobalBounds();
+						sf::Vector2f position = { commandBounds.left + commandBounds.width + 8, equipCommand.getPosition().y};
+						tryEquipItem(itemID, position);
+						return true;
 					});
 		}
 	break;
@@ -733,7 +735,7 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 			});
 }
 
-void drft::InventoryState::tryEquipItem(unsigned long itemID)
+void drft::InventoryState::tryEquipItem(unsigned long itemID, sf::Vector2f position)
 {
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
@@ -744,7 +746,7 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID)
 
 		auto& commandList = _inventoryStack.insert("Equip Where?", gui::List(true))
 			.setSize({ 64,128 })
-			.setPosition(VIEW.getCenter())
+			.setPosition(position)
 			.setStyle(gui::ElementState::Focused, {
 				.fillColor = sf::Color(0,0,0,255),
 				.outlineColor = sf::Color(255,255,255,100),
@@ -756,10 +758,7 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID)
 				.textSize = 16
 				})
 			.setOrigin(gui::ElementPosition::TOP_LEFT)
-			.setChildrenOrigin(gui::ElementPosition::TOP_LEFT)
-			.setTextPosition(gui::ElementPosition::TOP_CENTER)
-			.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER)
-			.setTextString("Equip " + itemName + " where?");
+			.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
 		if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
 		{
