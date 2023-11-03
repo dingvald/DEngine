@@ -167,7 +167,7 @@ void drft::InventoryState::setupInventoryDisplay()
 	inventoryGrid.setPosition(VIEW.getCenter() + sf::Vector2f{INVENTORY_PANEL_WIDTH_OFFSET, INVENTORY_PANEL_HEIGHT_OFFSET });
 	inventoryGrid.setStyle(gui::ElementState::Idle, {
 		.fillColor = sf::Color(0,0,0,200),
-		.outlineColor = sf::Color(80,80,80,100),
+		.outlineColor = sf::Color(0,0,0,200),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},
@@ -267,7 +267,7 @@ void drft::InventoryState::setupWornItemsDisplay()
 	wornItemsDisplay.setPosition(VIEW.getCenter() + sf::Vector2f{WORN_PANEL_WIDTH_OFFSET, WORN_PANEL_HEIGHT_OFFSET });
 	wornItemsDisplay.setStyle(gui::ElementState::Idle, {
 		.fillColor = sf::Color(0,0,0,200),
-		.outlineColor = sf::Color(80,80,80,100),
+		.outlineColor = sf::Color(0,0,0,200),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},
@@ -297,7 +297,7 @@ void drft::InventoryState::setupHeldItemsDisplay()
 	heldItemsDisplay.setPosition(VIEW.getCenter() + sf::Vector2f{ HELD_PANEL_WIDTH_OFFSET, HELD_PANEL_HEIGHT_OFFSET });
 	heldItemsDisplay.setStyle(gui::ElementState::Idle, {
 		.fillColor = sf::Color(0,0,0,200),
-		.outlineColor = sf::Color(80,80,80,100),
+		.outlineColor = sf::Color(0,0,0,200),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},

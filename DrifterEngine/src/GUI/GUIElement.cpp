@@ -564,7 +564,7 @@ bool drft::gui::Grid::onUpdate(const float dt)
 		}
 		else
 		{
-			child->setState(ElementState::Unselectable);
+child->setState(ElementState::Unselectable);
 		}
 
 		if (_cursorPosition == sf::Vector2i(col, row))
@@ -638,10 +638,42 @@ void drft::gui::Grid::autoSize()
 		tallest_y = std::max(child->getGlobalBounds().height, tallest_y);
 	}
 
-	float sum_x = 2*_style[_state].innerPadding.x + ((_numColumns-1) * (_style[_state].childPadding.x)) + (_numColumns * widest_x);
-	float sum_y = 2*_style[_state].innerPadding.y + ((_numRows-1) * (_style[_state].childPadding.y)) + (_numRows * tallest_y);
+	int numColumnsOfChildren = std::min(static_cast<int>(_children.size()), _numColumns);
+	int numRowOfChildren = _children.size() / _numColumns;
 
-	setSize({ sum_x, sum_y });
+	const sf::Vector2f childPadding = _style[_state].childPadding;
+
+	float sum_x = 0.f;
+	float sum_y = 0.f;
+
+	int count = 0;
+
+	for (const auto& child : _children)
+	{
+		if (count < numColumnsOfChildren)
+		{
+			sum_x += widest_x;
+			if (count < numColumnsOfChildren - 1)
+			{
+				sum_x += childPadding.x;
+			}
+		}
+
+		if (count % numColumnsOfChildren == 0)
+		{
+			sum_y += tallest_y;
+			if ((count / _numColumns) < numRowOfChildren - 1)
+			{
+				sum_y += childPadding.y;
+			}
+		}
+		++count;
+	}
+
+	sum_x += 2 * _style[_state].innerPadding.x;
+	sum_y += 2 * _style[_state].innerPadding.y;
+
+	setSize({ sum_x, sum_y});
 	setTextOrigin(_textOrigin);
 	setTextPosition(_textPosition);
 }
@@ -652,8 +684,8 @@ void drft::gui::Grid::layoutChildren()
 
 	int col = 0;
 	int row = 0;
-	float x = _style.at(_state).innerPadding.x + _shape.getGlobalBounds().left;
-	float y = _style.at(_state).innerPadding.y + _shape.getGlobalBounds().top;
+	float x = _style.at(_state).innerPadding.x + _shape.getGlobalBounds().left + _style.at(_state).outlineThickness;
+	float y = _style.at(_state).innerPadding.y + _shape.getGlobalBounds().top + _style.at(_state).outlineThickness;
 
 	float widest_x = 0.0f;
 	float tallest_y = 0.0f;
@@ -675,7 +707,7 @@ void drft::gui::Grid::layoutChildren()
 		{
 			col = 0;
 			++row;
-			x = _style.at(_state).innerPadding.x + _shape.getGlobalBounds().left;
+			x = _style.at(_state).innerPadding.x + _shape.getGlobalBounds().left + _style.at(_state).outlineThickness;
 			y += tallest_y + _style.at(_state).childPadding.y;
 		}
 	}
