@@ -15,3 +15,10 @@ double drft::math::remap(double iMin, double iMax, double oMin, double oMax, dou
 {
     return lerp(oMin, oMax, inverseLerp(iMin, iMax, val));
 }
+
+int drft::math::wrap(int val, int min, int max)
+{
+    if (val < min) val = max;
+    if (val > max) val = min;
+    return val;
+}

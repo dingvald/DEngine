@@ -345,8 +345,8 @@ void drft::InventoryState::updateWornItemsDisplay()
 	wornItemsDisplay.clear();
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
-		auto heldItems = body->parts.getAllWornEquipped();
-		for (auto& [partName, item] : heldItems)
+		auto wornItems = body->parts.getAllWornEquipped();
+		for (auto& [partName, item] : wornItems)
 		{
 			auto& container = wornItemsDisplay.insert(std::to_string(item), gui::DualContainer());
 			container.setSize({ 32, 32 });
@@ -408,6 +408,10 @@ void drft::InventoryState::updateWornItemsDisplay()
 					return true;
 				});
 		}
+	}
+	if (wornItemsDisplay == _flowControl.getActive() && wornItemsDisplay.isEmpty())
+	{
+		_flowControl.cycleControl();
 	}
 }
 
@@ -488,6 +492,10 @@ void drft::InventoryState::updateHeldItemsDisplay()
 					return true;
 				});
 		}
+	}
+	if (heldItemsDisplay == _flowControl.getActive() && heldItemsDisplay.isEmpty())
+	{
+		_flowControl.cycleControl();
 	}
 }
 

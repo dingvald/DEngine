@@ -1,7 +1,14 @@
 #include "pch.h"
 #include "GUIElement.h"
+#include "Utility/Math.h"
 
 // FlOWCONTROL
+
+const drft::gui::Element& drft::gui::FlowControl::getActive() const
+{
+	if (_children.empty()) return *this;
+	return *_children.at(_inControlIndex);
+}
 
 void drft::gui::FlowControl::transferControlTo(std::string&& childname)
 {
@@ -15,11 +22,15 @@ void drft::gui::FlowControl::transferControlTo(std::string&& childname)
 
 void drft::gui::FlowControl::cycleControl()
 {
-	++_inControlIndex;
-	if (_inControlIndex >= _children.size())
+	int originalIndex = _inControlIndex;
+	do
 	{
-		_inControlIndex = 0;
-	}
+		_inControlIndex = math::wrap(++_inControlIndex, 0, _children.size() - 1);
+	} while ( (_children.at(_inControlIndex)->isContainer() && _children.at(_inControlIndex)->isEmpty()) 
+		&& _inControlIndex != originalIndex);
+
+	if (_inControlIndex == originalIndex) return;
+
 	for (auto& child : _children)
 	{
 		child->setState(gui::ElementState::Idle);
@@ -28,7 +39,9 @@ void drft::gui::FlowControl::cycleControl()
 }
 
 void drft::gui::FlowControl::layoutChildren()
-{}
+{
+	// Does not handle layout
+}
 
 bool drft::gui::FlowControl::onHandleEvent(const sf::Event& ev)
 {
@@ -806,7 +819,17 @@ void drft::gui::Icon::onRender(sf::RenderTarget& target)
 
 void drft::gui::Element::popBack()
 {
+	if (_children.empty()) return;
 	remove(_children.size() - 1);
+}
+
+bool drft::gui::Element::isContainer() const
+{
+	if (dynamic_cast<const gui::Container*>(this) == nullptr)
+	{
+		return false;
+	}
+	return true;
 }
 
 // POPUP MESSAGE

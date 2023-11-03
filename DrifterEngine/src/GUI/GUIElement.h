@@ -67,6 +67,11 @@ namespace drft::gui
 		using ElementPtr = std::unique_ptr<Element>;
 		virtual void init() {}
 
+		bool operator==(const gui::Element& rhs)
+		{
+			return this == &rhs;
+		}
+
 		bool handleEvent(const sf::Event& ev) 
 		{
 			if (!_isVisible) return true;
@@ -345,6 +350,7 @@ namespace drft::gui
 			_children.pop_back();
 		}
 		void popBack();
+		bool isContainer() const;
 		bool isEmpty() const
 		{
 			return _children.empty();
@@ -571,6 +577,7 @@ namespace drft::gui
 	class FlowControl : public Container
 	{
 	public:
+		const gui::Element& getActive() const;
 		void transferControlTo(std::string&& childname);
 		void cycleControl();
 		void layoutChildren() override;
