@@ -21,24 +21,10 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 	if (auto body = registry.try_get<component::Body>(entity))
 	{
 		auto& incomingDamage = registry.get<component::action::IncomingDamage>(entity);
-		if (incomingDamage.amount <= 0) return;
+		if (incomingDamage.damageTypes.empty()) return;
 
-		auto partName = determinePartHit({registry, entity});
-		auto itemHit = body->parts.search(partName)->getAllSlotted().back();
-		auto itemEntity = ItemDatabase::getEntityFromItemID(itemHit);
-		int mitigation = calculateMitigationFromWorn(entity, itemHit);
-		incomingDamage.amount = std::clamp(incomingDamage.amount - mitigation, 0, incomingDamage.amount);
-
-		if (itemEntity != entt::null)
-		{
-			if (auto wearable = registry.try_get<component::Wearable>(itemEntity))
-			{
-				if (auto health = registry.try_get<component::Health>(itemEntity))
-				{
-					// TODO: add damage to the wearable
-				}
-			}
-		}
+		const auto& partHit = determinePartHit({registry, entity});
+		auto mitigatedDamage = calculateMitigationFromWorn(entity, partHit, incomingDamage.damageTypes);
 	}
 }
 
@@ -47,7 +33,11 @@ void drft::system::BodyPartSystem::onLaunchAttack(entt::registry& registry, entt
 	if (auto body = registry.try_get<component::Body>(entity))
 	{
 		auto& attack = registry.get<component::action::LaunchAttack>(entity);
-		attack.damage += calculateForceFromHeld(entity);
+		auto weaponDamageTypes = calculateDamageTypesFromHeld(entity);
+		for (auto& [typeName, damage] : weaponDamageTypes)
+		{
+			attack.damageTypes[typeName] += damage;
+		}
 	}
 }
 
@@ -57,12 +47,12 @@ void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 	body.parts.unequipItem(ev.itemID);
 }
 
-int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
+std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDamageTypesFromHeld(entt::entity attacker)
 {
-	int force = 0;
+	std::unordered_map<std::string, int> result;
 	if (auto body = registry->try_get<component::Body>(attacker))
 	{
-		auto rightHand = body->parts.search("Right Hand"); // TODO: genericize
+		const auto rightHand = body->parts.search("Right Hand"); // TODO: genericize
 		if (rightHand)
 		{
 			auto optionalHeld = rightHand->getSlotItem(EquipmentLayer::Held);
@@ -71,32 +61,50 @@ int drft::system::BodyPartSystem::calculateForceFromHeld(entt::entity attacker)
 			{
 				if (auto physical = registry->try_get<component::Physical>(itemEntity))
 				{
-					force += physical->weight;
+					result["crushing"] += physical->weight;
 				}
 				if (auto sharp = registry->try_get<component::Sharp>(itemEntity))
 				{
-					force += sharp->sharpness;
+					result["slashing"] += sharp->sharpness;
 				}
 			}
 
 		}
 	}
 
-	return std::ceilf(force);
+	return result;
 }
 
-int drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, unsigned long itemHit)
+std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, const BodyPart& partHit, const std::unordered_map<std::string, int> incomingDamageTypes)
 {
-	int result = 0;
+	std::unordered_map<std::string, int> result;
+	auto itemsEquipped = partHit.getAllCoveringItems();
+	for (auto item : itemsEquipped)
+	{
+		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+
+		if (itemEntity != entt::null)
+		{
+			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
+			{
+				if (auto health = registry->try_get<component::Health>(itemEntity))
+				{
+					// TODO: add damage to the wearable
+				}
+			}
+		}
+	}
 
 
+
+	
 
 	return result;
 }
 
-std::string drft::system::BodyPartSystem::determinePartHit(entt::handle entity)
+const BodyPart& drft::system::BodyPartSystem::determinePartHit(entt::handle entity)
 {
-	std::string result;
+	BodyPart partHit;
 	if (auto body = entity.try_get<component::Body>())
 	{
 		int sum = 0;
@@ -114,13 +122,12 @@ std::string drft::system::BodyPartSystem::determinePartHit(entt::handle entity)
 			sum -= part->size;
 			if (sum <= choice)
 			{
-				result = part->name;
-				return result;
+				return *part;
 			}
 		}
 	}
 
-	return result;
+	return partHit;
 }
 
  

@@ -2,6 +2,8 @@
 #include "Systems/System.h"
 #include "Events/ItemBreakEvent.h"
 
+struct BodyPart;
+
 namespace drft::system
 {
 	class BodyPartSystem : public System
@@ -14,10 +16,10 @@ namespace drft::system
 		void onLaunchAttack(entt::registry& registry, entt::entity entity);
 		void onItemBreakEvent(events::ItemBreakEvent& ev);
 
-		int calculateForceFromHeld(entt::entity attacker);
-		int calculateMitigationFromWorn(entt::entity defender, unsigned long partHit);
+		std::unordered_map<std::string, int> calculateDamageTypesFromHeld(entt::entity attacker);
+		std::unordered_map<std::string, int> calculateMitigationFromWorn(entt::entity defender, const BodyPart& partHit, const std::unordered_map<std::string, int> incomingDamageTypes);
 
-		std::string determinePartHit(entt::handle entity);
+		const BodyPart& determinePartHit(entt::handle entity);
 	};
 
 }

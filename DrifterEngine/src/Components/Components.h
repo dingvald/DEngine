@@ -229,7 +229,7 @@ namespace component::action
 	struct LaunchAttack
 	{
 		sf::Vector2i direction = { 0,0 };
-		int damage = 0;
+		std::unordered_map<std::string, int> damageTypes;
 	};
 
 	struct ToggleSprint {};
@@ -253,8 +253,7 @@ namespace component::action
 
 	struct IncomingDamage
 	{
-		int originalAmount = 0;
-		int amount = 0;
+		std::unordered_map<std::string, int> damageTypes;
 		entt::entity source = entt::null;
 	};
 

@@ -16,7 +16,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 	auto attackerView = registry->view<component::action::LaunchAttack, component::Attacker, component::tag::Active>();
 	for (auto [entity, attack, attacker] : attackerView.each())
 	{
-		attack.damage += attacker.baseDamage;
+		attack.damageTypes["crushing"] += attacker.baseDamage;
 	}
 
 	auto launchAttackView = registry->view<component::action::LaunchAttack, component::Position, component::tag::Active>();
@@ -38,7 +38,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		if (targets.empty()) continue;
 		for (auto target : targets)
 		{
-			registry->emplace_or_replace<component::action::IncomingDamage>(target, attack.damage, attack.damage, entity);
+			registry->emplace_or_replace<component::action::IncomingDamage>(target, attack.damageTypes, entity);
 		}
 		spendActionPoints(*registry, entity, ActionType::Act);
 	}

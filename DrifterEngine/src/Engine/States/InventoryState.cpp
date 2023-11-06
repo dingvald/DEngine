@@ -166,8 +166,8 @@ void drft::InventoryState::setupInventoryDisplay()
 	auto& inventoryGrid = _flowControl.insert("InventoryGrid", gui::Grid(INVENTORY_WIDTH, INVENTORY_HEIGHT));
 	inventoryGrid.setPosition(VIEW.getCenter() + sf::Vector2f{INVENTORY_PANEL_WIDTH_OFFSET, INVENTORY_PANEL_HEIGHT_OFFSET });
 	inventoryGrid.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,200),
-		.outlineColor = sf::Color(0,0,0,200),
+		.fillColor = sf::Color(0,0,0,100),
+		.outlineColor = sf::Color(0,0,0,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},
@@ -175,7 +175,7 @@ void drft::InventoryState::setupInventoryDisplay()
 		.textColor = sf::Color::White
 		});
 	inventoryGrid.setStyle(gui::ElementState::Focused, {
-		.fillColor = sf::Color(0,0,0,150),
+		.fillColor = sf::Color(0,0,0,200),
 		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
@@ -266,8 +266,8 @@ void drft::InventoryState::setupWornItemsDisplay()
 	auto& wornItemsDisplay = _flowControl.insert("WornItemsDisplay", gui::Grid(WORN_ITEMS_WIDTH, WORN_ITEMS_HEIGHT));
 	wornItemsDisplay.setPosition(VIEW.getCenter() + sf::Vector2f{WORN_PANEL_WIDTH_OFFSET, WORN_PANEL_HEIGHT_OFFSET });
 	wornItemsDisplay.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,200),
-		.outlineColor = sf::Color(0,0,0,200),
+		.fillColor = sf::Color(0,0,0,100),
+		.outlineColor = sf::Color(0,0,0,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},
@@ -275,7 +275,7 @@ void drft::InventoryState::setupWornItemsDisplay()
 		.textColor = sf::Color::White
 		});
 	wornItemsDisplay.setStyle(gui::ElementState::Focused, {
-		.fillColor = sf::Color(0,0,0,150),
+		.fillColor = sf::Color(0,0,0,200),
 		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
@@ -296,8 +296,8 @@ void drft::InventoryState::setupHeldItemsDisplay()
 	auto& heldItemsDisplay = _flowControl.insert("HeldItemsDisplay", gui::Grid(HELD_ITEMS_WIDTH, HELD_ITEMS_HEIGHT));
 	heldItemsDisplay.setPosition(VIEW.getCenter() + sf::Vector2f{ HELD_PANEL_WIDTH_OFFSET, HELD_PANEL_HEIGHT_OFFSET });
 	heldItemsDisplay.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,200),
-		.outlineColor = sf::Color(0,0,0,200),
+		.fillColor = sf::Color(0,0,0,100),
+		.outlineColor = sf::Color(0,0,0,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
 		.childPadding = {8.f, 8.f},
@@ -305,7 +305,7 @@ void drft::InventoryState::setupHeldItemsDisplay()
 		.textColor = sf::Color::White
 		});
 	heldItemsDisplay.setStyle(gui::ElementState::Focused, {
-		.fillColor = sf::Color(0,0,0,150),
+		.fillColor = sf::Color(0,0,0,200),
 		.outlineColor = sf::Color(150,150,150,100),
 		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
