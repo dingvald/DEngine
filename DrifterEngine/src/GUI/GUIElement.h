@@ -490,7 +490,10 @@ namespace drft::gui
 			_shape.setOutlineColor(_style[_state].outlineColor);
 			_shape.setOutlineThickness(_style[_state].outlineThickness);
 
-			_text.setFont(*_style[_state].font);
+			if (_style[_state].font)
+			{
+				_text.setFont(*_style[_state].font);
+			}
 			_text.setFillColor(_style[_state].textColor);
 			_text.setCharacterSize(_style[_state].textSize);
 			_text.setScale(_style[_state].textScale);

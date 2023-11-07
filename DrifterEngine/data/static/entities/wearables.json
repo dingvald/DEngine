@@ -200,9 +200,9 @@
             "Right Leg"
           ],
           "protections": {
-            "piercing": 2,
-            "slashing": 3,
-            "crushing": 2
+            "piercing": 1,
+            "slashing": 2,
+            "crushing": 1
           }
         }
       }

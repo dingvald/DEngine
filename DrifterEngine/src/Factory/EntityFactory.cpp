@@ -160,14 +160,28 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 						else if (data.value.IsObject())
 						{
 							if (data.value.GetObject().MemberCount() == 0) continue;
-							if (data.value.GetObject().begin()->value.IsInt64())
+							if (data.value.GetObject().begin()->value.IsInt())
 							{
-								std::unordered_map<std::string, unsigned long> map;
-								for (auto&& mapData : data.value.GetObject())
+								if (auto varAny = meta.data(entt::hashed_string(memberName)).get(any).try_cast<std::unordered_map<std::string, int>>())
 								{
-									map.emplace(mapData.name.GetString(), mapData.value.GetInt64());
+									std::unordered_map<std::string, int> map;
+									for (auto&& mapData : data.value.GetObject())
+									{
+										map.emplace(mapData.name.GetString(), mapData.value.GetInt());
+									}
+
+									meta.data(entt::hashed_string(memberName)).set(any, map);
 								}
-								meta.data(entt::hashed_string(memberName)).set(any, map);
+								else if (auto varAny = meta.data(entt::hashed_string(memberName)).get(any).try_cast<std::unordered_map<std::string, unsigned long>>())
+								{
+									std::unordered_map<std::string, unsigned long> map;
+									for (auto&& mapData : data.value.GetObject())
+									{
+										map.emplace(mapData.name.GetString(), mapData.value.GetInt());
+									}
+
+									meta.data(entt::hashed_string(memberName)).set(any, map);
+								}
 							}
 							else if (data.value.GetObject().begin()->value.IsFloat())
 							{

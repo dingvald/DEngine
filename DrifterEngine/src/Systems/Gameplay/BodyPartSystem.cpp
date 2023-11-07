@@ -4,6 +4,7 @@
 #include "Components/Tags.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Random/RandomNumberGenerator.h"
+#include "Utility/EntityHelpers.h"
 
 static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 30;
 
@@ -22,8 +23,12 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 	{
 		auto& incomingDamage = registry.get<component::action::IncomingDamage>(entity);
 		if (incomingDamage.damageTypes.empty()) return;
-
+		
 		const auto& partHit = determinePartHit({registry, entity});
+
+		const auto sourceName = util::getEntityName({ registry, incomingDamage.source });
+		const auto targetName = util::getEntityName({ registry, entity });
+		std::cout << sourceName << " attacks " << targetName << "'s " << partHit.name << "!" << std::endl;
 		auto mitigatedDamage = calculateMitigationFromWorn(entity, partHit, incomingDamage.damageTypes);
 		incomingDamage.damageTypes = mitigatedDamage;
 	}
@@ -78,7 +83,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, const BodyPart& partHit, const std::unordered_map<std::string, int> incomingDamageTypes)
 {
-	std::unordered_map<std::string, int> result;
+	std::unordered_map<std::string, int> result = incomingDamageTypes;
 	auto itemsEquipped = partHit.getAllCoveringItems();
 	for (auto item : itemsEquipped)
 	{
@@ -87,12 +92,11 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 		{
 			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
 			{
-				for (auto& [damageType, amount] : incomingDamageTypes)
+				for (auto& [damageType, amount] : result)
 				{
-					result[damageType] = amount;
 					if (wearable->protections.contains(damageType))
 					{
-						result[damageType] = std::max(0, result[damageType] - wearable->protections.at(damageType));
+						amount = std::max(0, amount - wearable->protections.at(damageType));
 					}
 				}
 

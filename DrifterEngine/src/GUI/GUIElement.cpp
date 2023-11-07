@@ -333,7 +333,7 @@ bool drft::gui::List::onHandleEvent(const sf::Event& ev)
 		}
 		if (ev.key.code == sf::Keyboard::Space)
 		{
-			if (_cursorPosition >= 0 || _cursorPosition < _children.size())
+			if (_cursorPosition >= 0 && _cursorPosition < _children.size())
 			{
 				if (!_children.empty() && _children[_cursorPosition]->isSelectable())
 				{
