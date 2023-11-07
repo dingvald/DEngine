@@ -17,7 +17,12 @@ void drft::system::HealthSystem::update(const float dt)
 	auto incomingDamageView = registry->view<component::action::IncomingDamage>();
 	for (auto [entity, incoming] : incomingDamageView.each())
 	{
-		registry->emplace<component::action::TakeDamage>(entity, incoming.amount, incoming.source);
+		int total = 0;
+		for (auto& [_, damage] : incoming.damageTypes)
+		{
+			total += damage;
+		}
+		registry->emplace<component::action::TakeDamage>(entity, total, incoming.source);
 	}
 
 	auto damageView = registry->view<component::action::TakeDamage, component::Health>();

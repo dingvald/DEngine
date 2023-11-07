@@ -25,6 +25,7 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 
 		const auto& partHit = determinePartHit({registry, entity});
 		auto mitigatedDamage = calculateMitigationFromWorn(entity, partHit, incomingDamage.damageTypes);
+		incomingDamage.damageTypes = mitigatedDamage;
 	}
 }
 
@@ -82,11 +83,19 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 	for (auto item : itemsEquipped)
 	{
 		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-
 		if (itemEntity != entt::null)
 		{
 			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
 			{
+				for (auto& [damageType, amount] : incomingDamageTypes)
+				{
+					result[damageType] = amount;
+					if (wearable->protections.contains(damageType))
+					{
+						result[damageType] = std::max(0, result[damageType] - wearable->protections.at(damageType));
+					}
+				}
+
 				if (auto health = registry->try_get<component::Health>(itemEntity))
 				{
 					// TODO: add damage to the wearable

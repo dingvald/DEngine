@@ -37,6 +37,15 @@
               "Radius": 10
             }
           }
+        },
+        "Wildlife": {
+          "Rat": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 2,
+              "Maximum": 6
+            }
+          }
         }
       } 
     },
