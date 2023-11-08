@@ -65,7 +65,7 @@ namespace drft::util
 		Golem,
 		Breastplate,
 		Hood,
-		TatteredVest,
+		Tunic,
 		Legplates,
 		Sandals,
 		Bracers,
