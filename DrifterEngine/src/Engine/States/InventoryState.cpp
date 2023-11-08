@@ -379,8 +379,9 @@ void drft::InventoryState::updateWornItemsDisplay()
 				});
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			addItemIcon(container, itemEntity, { 32, 32 });
+			const auto& wearable = getContext().registry.get<component::Wearable>(itemEntity);
 			container.insert("Slot Abbrev", gui::Label())
-				.setLocalPosition({ -8, -8 })
+				.setLocalPosition({ 0, -8 })
 				.setStyle(gui::ElementState::Idle, {
 					.font = &getContext().fonts.get("Terminus"),
 					.textColor = sf::Color(255,255,255,200)
@@ -389,7 +390,8 @@ void drft::InventoryState::updateWornItemsDisplay()
 					.font = &getContext().fonts.get("Terminus"),
 					.textColor = sf::Color(255,255,255,50)
 					})
-				.setTextString(util::getStringAcronym(partName));
+				.setTextString(util::getStringAcronym(partName) + ":" + std::to_string(wearable.layer));
+			
 			container.registerCallback(gui::ElementCallbackType::OnFocus,
 				[this, &container, item]() -> bool
 				{

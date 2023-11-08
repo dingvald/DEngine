@@ -273,7 +273,7 @@
         "Render": {
           "sprite": 60,
           "layer": 1,
-          "color": [ 186, 161, 127 ]
+          "color": [ 190, 182, 160 ]
         },
         "Physical": {
           "blocks": false,
@@ -324,7 +324,7 @@
         "Render": {
           "sprite": 63,
           "layer": 1,
-          "color": [ 186, 161, 127 ]
+          "color": [ 190, 182, 160 ]
         },
         "Physical": {
           "blocks": false,
@@ -375,7 +375,7 @@
         "Render": {
           "sprite": 64,
           "layer": 1,
-          "color": [ 186, 161, 127 ]
+          "color": [ 190, 182, 160 ]
         },
         "Physical": {
           "blocks": false,
@@ -406,6 +406,59 @@
           "protections": {
             "piercing": 1,
             "slashing": 1
+          }
+        }
+      }
+    },
+    "Woven Tunic": {
+      "Inherits": [
+        "BaseItem"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Woven Tunic",
+          "extendedName": "Woven Tunic",
+          "description": "A soft garment that is good for travelling."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 61,
+          "layer": 1,
+          "color": [ 190, 182, 160 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 4.0,
+          "materials": [
+            "Plant Fibre"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Plant Fibre": 6,
+            "Twine": 2
+          }
+        },
+        "Health": {
+          "max": 30,
+          "current": 30
+        },
+        "Item": {
+          "id": 0
+        },
+        "Wearable": {
+          "slots": [
+            "Torso"
+          ],
+          "layer": 1,
+          "covers": [
+            "Left Leg",
+            "Right Leg"
+          ],
+          "protections": {
+            "crushing": 1
           }
         }
       }
