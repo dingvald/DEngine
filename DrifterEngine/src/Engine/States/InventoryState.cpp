@@ -4,7 +4,7 @@
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/SpriteIndexer.h"
-#include "Utility/GetStringAcronym.h"
+#include "Utility/StringManipulation.h"
 
 //TODO: width and height should depend on player's container size
 static constexpr int INVENTORY_WIDTH = 5;
@@ -21,7 +21,7 @@ static constexpr int WORN_ITEMS_HEIGHT = 4;
 static constexpr int PANEL_HEIGHT_OFFSET = -128;
 
 static constexpr int HELD_PANEL_WIDTH_OFFSET = 0;
-static constexpr int HELD_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET;
+static constexpr int HELD_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET - 36;
 
 static constexpr int WORN_PANEL_WIDTH_OFFSET = HELD_PANEL_WIDTH_OFFSET;
 static constexpr int WORN_PANEL_HEIGHT_OFFSET = HELD_PANEL_HEIGHT_OFFSET + 84;
@@ -263,23 +263,17 @@ void drft::InventoryState::setupWornItemsDisplay()
 {
 	const auto& VIEW = getContext().window.getView();
 
-	auto& wornItemsDisplay = _flowControl.insert("WornItemsDisplay", gui::Grid(WORN_ITEMS_WIDTH, WORN_ITEMS_HEIGHT));
+	auto& wornItemsDisplay = _flowControl.insert("WornItemsDisplay", gui::List(true));
 	wornItemsDisplay.setPosition(VIEW.getCenter() + sf::Vector2f{WORN_PANEL_WIDTH_OFFSET, WORN_PANEL_HEIGHT_OFFSET });
 	wornItemsDisplay.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,100),
-		.outlineColor = sf::Color(0,0,0,100),
-		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
-		.childPadding = {8.f, 8.f},
+		.childPadding = {8.f, 34.f},
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color::White
 		});
 	wornItemsDisplay.setStyle(gui::ElementState::Focused, {
-		.fillColor = sf::Color(0,0,0,200),
-		.outlineColor = sf::Color(150,150,150,100),
-		.outlineThickness = 1.f,
 		.innerPadding = {16.f, 16.f},
-		.childPadding = {8.f, 8.f},
+		.childPadding = {8.f, 34.f},
 		.font = &getContext().fonts.get("Terminus"),
 		.textColor = sf::Color::White
 		});
@@ -287,6 +281,7 @@ void drft::InventoryState::setupWornItemsDisplay()
 	wornItemsDisplay.setTextString("Worn:");
 	wornItemsDisplay.setTextPosition(gui::ElementPosition::TOP_LEFT);
 	wornItemsDisplay.setTextOrigin(gui::ElementPosition::BOTTOM_LEFT);
+	wornItemsDisplay.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 }
 
 void drft::InventoryState::setupHeldItemsDisplay()
@@ -345,71 +340,79 @@ void drft::InventoryState::updateWornItemsDisplay()
 	wornItemsDisplay.clear();
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
-		auto wornItems = body->parts.getAllWornEquipped();
-		for (auto& [partName, item] : wornItems)
+		std::vector<std::string> parts;
+		for (int typeIndex = 0; typeIndex < static_cast<int>(EquipmentSlot::Total); ++typeIndex)
 		{
-			auto& container = wornItemsDisplay.insert(std::to_string(item), gui::DualContainer());
-			container.setSize({ 32, 32 });
-			container.setOrigin(gui::ElementPosition::TOP_LEFT);
-			container.setChildrenOrigin(gui::ElementPosition::CENTER);
-			container.setStyle(gui::ElementState::Idle, {
-				.fillColor = sf::Color(0,0,0,200),
-				.outlineColor = sf::Color(80,80,80,100),
-				.outlineThickness = 1.f
+			auto p = body->parts.getPartsWithSlot(static_cast<EquipmentSlot>(typeIndex));
+			parts.insert(parts.end(), p.begin(), p.end());
+		}
+
+		for (auto&& part : parts)
+		{
+			auto& partRow = wornItemsDisplay.insert(std::string(part), gui::DualContainer());
+			partRow.setStyle(gui::ElementState::Idle, {
+				.childPadding = {80.f, 0}
 				});
-			container.setStyle(gui::ElementState::Focused, {
-				.fillColor = sf::Color(40,40,0,150),
-				.outlineColor = sf::Color::Yellow,
-				.outlineThickness = 1.f,
+			partRow.setStyle(gui::ElementState::Focused, {
+				.childPadding = {80.f, 0}
 				});
-			container.setStyle(gui::ElementState::Active, {
-				.fillColor = sf::Color(0,0,0,150),
-				.outlineColor = sf::Color::Red,
-				.outlineThickness = 1.f
-				});
-			container.setStyle(gui::ElementState::Unselectable, {
-				.fillColor = sf::Color(0,0,0,80),
-				.outlineColor = sf::Color(150,150,150,80),
-				.outlineThickness = 1.f
-				});
-			container.setStyle(gui::ElementState::FocusedUnselectable, {
-				.fillColor = sf::Color(0,0,0,120),
-				.outlineColor = sf::Color(150,150,150,120),
-				.outlineThickness = 1.f
-				});
-			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-			addItemIcon(container, itemEntity, { 32, 32 });
-			const auto& wearable = getContext().registry.get<component::Wearable>(itemEntity);
-			container.insert("Slot Abbrev", gui::Label())
-				.setLocalPosition({ 0, -8 })
+
+			partRow.insert("SlotName", gui::Label())
 				.setStyle(gui::ElementState::Idle, {
 					.font = &getContext().fonts.get("Terminus"),
-					.textColor = sf::Color(255,255,255,200)
+					.textColor = sf::Color::White
 					})
 				.setStyle(gui::ElementState::Focused, {
 					.font = &getContext().fonts.get("Terminus"),
-					.textColor = sf::Color(255,255,255,50)
+					.textColor = sf::Color::Yellow
 					})
-				.setTextString(util::getStringAcronym(partName) + ":" + std::to_string(wearable.layer));
-			
-			container.registerCallback(gui::ElementCallbackType::OnFocus,
-				[this, &container, item]() -> bool
-				{
-					const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-					auto itemName = util::getEntityName({ getContext().registry, itemEntity });
-					_inventoryBlob["ItemLabel"].setTextString(std::move(itemName));
-					_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
-					return true;
-				});
-			container.registerCallback(gui::ElementCallbackType::OnSelect, 
-				[this, item, &container]() -> bool
-				{
-					const auto commandListPosition = container.getPosition() + sf::Vector2f{ 36,-1 };
-					createItemCommandList(CommandListType::Worn, commandListPosition, item);
+				.setTextString(shortenPartName(part) + ":")
+				.setTextOrigin(gui::ElementPosition::CENTER_LEFT);
 
-					return true;
-				});
+			auto& itemsContainer = partRow.insert(std::string(part), gui::MultiContainer())
+				.setStyle(gui::ElementState::Idle, {
+					.childPadding = {16.f, 0}
+					})
+				.setStyle(gui::ElementState::Focused, {
+					.childPadding = {34.f, 0}
+					});
+
+			auto items = body->parts.getAllEquippedOnPartExcept(part, { EquipmentLayer::Held });
+			for (auto item : items)
+			{
+				auto& container = itemsContainer.insert(std::to_string(item), gui::DualContainer());
+				container.setSize({ 32, 32 });
+				container.setChildrenOrigin(gui::ElementPosition::CENTER);
+				container.setStyle(gui::ElementState::Idle, {
+					.fillColor = sf::Color(0,0,0,200),
+					.outlineColor = sf::Color(80,80,80,100),
+					.outlineThickness = 1.f
+					});
+				container.setStyle(gui::ElementState::Focused, {
+					.fillColor = sf::Color(0,0,0,200),
+					.outlineColor = sf::Color(80,80,80,100),
+					.outlineThickness = 1.f
+					});
+				container.setStyle(gui::ElementState::Active, {
+					.fillColor = sf::Color(0,0,0,200),
+					.outlineColor = sf::Color(80,80,80,100),
+					.outlineThickness = 1.f
+					});
+				container.setStyle(gui::ElementState::Unselectable, {
+					.fillColor = sf::Color(0,0,0,200),
+					.outlineColor = sf::Color(80,80,80,100),
+					.outlineThickness = 1.f
+					});
+				container.setStyle(gui::ElementState::FocusedUnselectable, {
+					.fillColor = sf::Color(0,0,0,200),
+					.outlineColor = sf::Color(80,80,80,100),
+					.outlineThickness = 1.f
+					});
+				auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+				addItemIcon(container, itemEntity, { 32, 32 });
+			}
 		}
+			
 	}
 	if (wornItemsDisplay == _flowControl.getActive() && wornItemsDisplay.isEmpty())
 	{
@@ -423,7 +426,7 @@ void drft::InventoryState::updateHeldItemsDisplay()
 	heldItemsDisplay.clear();
 	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
 	{
-		auto heldItems = body->parts.getAllHeldEquipped();
+		auto heldItems = body->parts.getAllEquipped({ EquipmentLayer::Held });
 		for (auto& [partName, item] : heldItems)
 		{
 			auto& container = heldItemsDisplay.insert(std::to_string(item), gui::DualContainer());
@@ -772,10 +775,10 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID, sf::Vector2f posit
 
 		if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
 		{
-			auto slots = body->parts.getSlotPartsForItem(wearable->slots);
-			for (auto& slot : slots)
+			auto partNames = body->parts.getPartsWithSlots(convertStringsToSlots(wearable->slots));
+			for (auto& part : partNames)
 			{
-				commandList.insert(std::string{ slot }, gui::Label())
+				commandList.insert(std::string{ part }, gui::Label())
 					.setStyle(gui::ElementState::Idle, {
 						.font = &getContext().fonts.get("Terminus"),
 						.textColor = sf::Color::White,
@@ -786,13 +789,12 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID, sf::Vector2f posit
 						.textColor = sf::Color::Yellow,
 						.textSize = 16
 						})
-					.setTextString(std::string{ slot })
+					.setTextString(std::string{ part })
 					.setTextOrigin(gui::ElementPosition::TOP_LEFT)
 					.registerCallback(gui::ElementCallbackType::OnSelect,
-						[this, itemEntity, itemID, wearable, slot]() -> bool
+						[this, itemEntity, itemID, wearable, part]() -> bool
 						{
-							std::string slotName = slot;
-							component::action::Equip equipAction{ .toEquip = itemID, .partName = slotName, .layer = static_cast<EquipmentLayer>(wearable->layer) };
+							component::action::Equip equipAction{ .toEquip = itemID, .partName = part, .layer = static_cast<EquipmentLayer>(wearable->layer) };
 							getContext().registry.emplace_or_replace<component::action::Equip>(_sessionEntities.front(), equipAction);
 							_inventoryStack.clear();
 							return true;
@@ -844,4 +846,19 @@ void drft::InventoryState::tryUnequipItem(unsigned long itemID)
 		}
 	}
 	_inventoryStack.clear();
+}
+
+std::string drft::InventoryState::shortenPartName(const std::string& fullPartName) const
+{
+	auto splitString = util::stringSplit(fullPartName, " ");
+	std::string result;
+	if (splitString.size() > 1)
+	{
+		result = util::getStringAcronym(splitString.front()) + " " + splitString.back();
+	}
+	else
+	{
+		result = fullPartName;
+	}
+	return result;
 }

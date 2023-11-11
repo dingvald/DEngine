@@ -24,7 +24,7 @@ namespace drft::util
 		PaperDollBody,
 		PaperDollHandR,
 		PaperDollHandL,
-		PaperDollLegs,
+		Pants,
 		PaperDollFeet,
 		PaperDollHands,
 		Boulder,

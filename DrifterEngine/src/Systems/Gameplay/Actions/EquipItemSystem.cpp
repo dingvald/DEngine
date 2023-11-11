@@ -23,15 +23,12 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 	auto& container = registry.get<component::Container>(entity);
 	const auto& equipItem = registry.get<component::action::Equip>(entity);
 	auto& body = registry.get<component::Body>(entity);
-	auto part = body.parts.search(equipItem.partName);
-
-	if (!part) throw std::exception("Trying to equip item to non-existant part name");
 
 	auto itemItr = std::find(container.contents.begin(), container.contents.end(), equipItem.toEquip);
 	if (itemItr != container.contents.end())
 	{
 		auto itemEntity = ItemDatabase::getEntityFromItemID(equipItem.toEquip);
-		if (auto currentlyEquipped = part->getSlotItem(equipItem.layer))
+		if (auto currentlyEquipped = body.parts.getEquippedOnPart(equipItem.partName, equipItem.layer))
 		{
 			*itemItr = currentlyEquipped.value();
 			body.parts.unequipItem(currentlyEquipped.value());
@@ -43,15 +40,7 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 					cont.contents.erase(itemItr);
 				});
 		}
-		if (auto wearable = registry.try_get<component::Wearable>(itemEntity))
-		{
-			auto covers = body.parts.getCoveredPartsForItem(equipItem.partName, wearable->covers, equipItem.layer);
-			body.parts.equipItem(equipItem.toEquip, equipItem.layer, equipItem.partName, covers);
-		}
-		else
-		{
-			body.parts.equipItem(equipItem.toEquip, equipItem.layer, equipItem.partName);
-		}
+		body.parts.equipItem(equipItem.toEquip, equipItem.layer, equipItem.partName);
 	}
 }
 

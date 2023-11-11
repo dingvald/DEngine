@@ -255,35 +255,18 @@ void drft::gui::DualContainer::onRender(sf::RenderTarget& target)
 	}
 }
 
-void drft::gui::DualContainer::onSelect()
-{
-	Element::onSelect();
-	for (auto& child : _children)
-	{
-		child->setState(ElementState::Active);
-	}
-}
-
-void drft::gui::DualContainer::onFocus()
-{
-	Element::onFocus();
-	for (auto& child : _children)
-	{
-		child->setState(ElementState::Focused);
-	}
-}
-
-void drft::gui::DualContainer::onLeave()
-{
-	Element::onLeave();
-
-	for (auto& child : _children)
-	{
-		child->setState(ElementState::Idle);
-	}
-}
-
 // MULTI CONTAINER
+
+bool drft::gui::MultiContainer::onUpdate(const float dt)
+{
+	layoutChildren();
+	for (auto& child : _children)
+	{
+		child->setState(_state);
+		child->update(dt);
+	}
+	return true;
+}
 
 void drft::gui::MultiContainer::layoutChildren()
 {

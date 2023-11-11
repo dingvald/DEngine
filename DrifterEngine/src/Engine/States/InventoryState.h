@@ -41,6 +41,8 @@ namespace drft
 		void tryEquipItem(unsigned long itemID, sf::Vector2f position);
 		void tryUnequipItem(unsigned long itemID);
 
+		std::string shortenPartName(const std::string& fullPartName) const;
+
 	private:
 		std::vector<entt::entity> _sessionEntities;
 

@@ -142,7 +142,6 @@ namespace component
 	{
 		std::vector<std::string> slots;
 		int layer = 0;
-		std::vector<std::string> covers;
 		std::unordered_map<std::string, int> protections;
 	};
 

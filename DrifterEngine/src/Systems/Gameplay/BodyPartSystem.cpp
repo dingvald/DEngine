@@ -84,7 +84,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, const BodyPart& partHit, const std::unordered_map<std::string, int> incomingDamageTypes)
 {
 	std::unordered_map<std::string, int> result = incomingDamageTypes;
-	auto itemsEquipped = partHit.getAllCoveringItems();
+	auto itemsEquipped = partHit.getAllSlotted();
 	for (auto item : itemsEquipped)
 	{
 		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
@@ -107,10 +107,6 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 			}
 		}
 	}
-
-
-
-	
 
 	return result;
 }

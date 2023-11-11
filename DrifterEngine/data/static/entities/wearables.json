@@ -39,8 +39,6 @@
             "Torso"
           ],
           "layer": 2,
-          "covers": [
-          ],
           "protections": {
             "piercing": 2,
             "slashing": 3,
@@ -84,13 +82,9 @@
         },
         "Wearable": {
           "slots": [
-            "Waist"
+            "Legs"
           ],
           "layer": 2,
-          "covers": [
-            "Left Leg",
-            "Right Leg"
-          ],
           "protections": {
             "piercing": 2,
             "slashing": 3,
@@ -142,8 +136,6 @@
             "Torso"
           ],
           "layer": 2,
-          "covers": [
-          ],
           "protections": {
             "piercing": 1,
             "slashing": 2,
@@ -192,13 +184,9 @@
         },
         "Wearable": {
           "slots": [
-            "Waist"
+            "Legs"
           ],
           "layer": 2,
-          "covers": [
-            "Left Leg",
-            "Right Leg"
-          ],
           "protections": {
             "piercing": 1,
             "slashing": 2,
@@ -243,12 +231,9 @@
         },
         "Wearable": {
           "slots": [
-            "Upper Limb"
+            "Arm"
           ],
           "layer": 3,
-          "covers": [
-            "Hand"
-          ],
           "protections": {
             "piercing": 4,
             "slashing": 4,
@@ -299,8 +284,6 @@
             "Head"
           ],
           "layer": 2,
-          "covers": [
-          ],
           "protections": {
             "piercing": 1,
             "slashing": 1
@@ -308,15 +291,15 @@
         }
       }
     },
-    "Woven Sandal": {
+    "Woven Sandals": {
       "Inherits": [
         "BaseItem"
       ],
       "Components": {
         "Info": {
-          "name": "Woven Sandal",
+          "name": "Woven Sandals",
           "extendedName": "",
-          "description": "A Sandal woven together from various plant fibres."
+          "description": "Sandals woven together from various plant fibres."
         },
         "Position": {
           "position": [ 0.0, 0.0 ]
@@ -347,11 +330,9 @@
         },
         "Wearable": {
           "slots": [
-            "Foot"
+            "Feet"
           ],
           "layer": 2,
-          "covers": [
-          ],
           "protections": {
             "piercing": 1,
             "slashing": 1
@@ -401,8 +382,6 @@
             "Hand"
           ],
           "layer": 2,
-          "covers": [
-          ],
           "protections": {
             "piercing": 1,
             "slashing": 1
@@ -453,23 +432,68 @@
             "Torso"
           ],
           "layer": 1,
-          "covers": [
-            "Left Leg",
-            "Right Leg"
-          ],
           "protections": {
             "crushing": 1
           }
         }
       }
     },
-    "Leather Sandal": {
+    "Woven Pants": {
       "Inherits": [
         "BaseItem"
       ],
       "Components": {
         "Info": {
-          "name": "Leather Sandal",
+          "name": "Woven Pants",
+          "extendedName": "Woven Pants",
+          "description": "Pants woven together using various plant fibres."
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Render": {
+          "sprite": 20,
+          "layer": 1,
+          "color": [ 190, 182, 160 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 6.0,
+          "materials": [
+            "Wood"
+          ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Plant Fibre": 4,
+            "Twine": 1
+          }
+        },
+        "Health": {
+          "max": 30,
+          "current": 30
+        },
+        "Item": {
+          "id": 0
+        },
+        "Wearable": {
+          "slots": [
+            "Legs"
+          ],
+          "layer": 1,
+          "protections": {
+            "crushing": 1
+          }
+        }
+      }
+    },
+    "Leather Sandals": {
+      "Inherits": [
+        "BaseItem"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Leather Sandals",
           "extendedName": "",
           "description": "Sandals made from leather."
         },
@@ -504,11 +528,9 @@
         },
         "Wearable": {
           "slots": [
-            "Foot"
+            "Feet"
           ],
           "layer": 2,
-          "covers": [
-          ],
           "protections": {
             "piercing": 2,
             "slashing": 2,
@@ -561,8 +583,6 @@
             "Hand"
           ],
           "layer": 2,
-          "covers": [
-          ],
           "protections": {
             "piercing": 2,
             "slashing": 2,

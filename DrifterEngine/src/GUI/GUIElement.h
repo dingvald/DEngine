@@ -446,6 +446,10 @@ namespace drft::gui
 				break;
 			}
 			applyStyle();
+			for (auto&& child : _children)
+			{
+				child->setState(state);
+			}
 		}
 		ElementState getState() const
 		{
@@ -641,15 +645,12 @@ namespace drft::gui
 		bool onHandleEvent(const sf::Event& ev) override;
 		bool onUpdate(const float dt) override;
 		void onRender(sf::RenderTarget& target) override;
-
-		void onSelect() override;
-		void onFocus() override;
-		void onLeave() override;
 	};
 
 	class MultiContainer : public DualContainer
 	{
 	public:
+		bool onUpdate(const float dt) override;
 		void layoutChildren() override;
 	};
 
@@ -674,7 +675,7 @@ namespace drft::gui
 		void autoSize();
 		
 	protected:
-		int _cursorPosition = 0;
+		int _cursorPosition = -1;
 	private:
 		bool _canInteract = false;
 	};

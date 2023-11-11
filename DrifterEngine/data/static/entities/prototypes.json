@@ -478,34 +478,27 @@
                   }
                 }
               },
-              "Waist": {
-                "type": "Waist",
-                "size": 0,
+              "Right Leg": {
+                "type": "Lower Limb",
+                "size": 15,
                 "layers": 2,
                 "attachedParts": {
-                  "Right Leg": {
-                    "type": "Lower Limb",
-                    "size": 15,
-                    "layers": 2,
-                    "attachedParts": {
-                      "Right Foot": {
-                        "type": "Foot",
-                        "size": 3,
-                        "layers": 2
-                      }
-                    }
-                  },
-                  "Left Leg": {
-                    "type": "Lower Limb",
-                    "size": 15,
-                    "layers": 2,
-                    "attachedParts": {
-                      "Left Foot": {
-                        "type": "Foot",
-                        "size": 3,
-                        "layers": 2
-                      }
-                    }
+                  "Right Foot": {
+                    "type": "Foot",
+                    "size": 3,
+                    "layers": 2
+                  }
+                }
+              },
+              "Left Leg": {
+                "type": "Lower Limb",
+                "size": 15,
+                "layers": 2,
+                "attachedParts": {
+                  "Left Foot": {
+                    "type": "Foot",
+                    "size": 3,
+                    "layers": 2
                   }
                 }
               }
@@ -555,34 +548,27 @@
                   }
                 }
               },
-              "Waist": {
-                "type": "Waist",
-                "size": 0,
+              "Right Leg": {
+                "type": "Lower Limb",
+                "size": 15,
                 "layers": 2,
                 "attachedParts": {
-                  "Right Leg": {
-                    "type": "Lower Limb",
-                    "size": 15,
-                    "layers": 2,
-                    "attachedParts": {
-                      "Right Foot": {
-                        "type": "Foot",
-                        "size": 3,
-                        "layers": 2
-                      }
-                    }
-                  },
-                  "Left Leg": {
-                    "type": "Lower Limb",
-                    "size": 15,
-                    "layers": 2,
-                    "attachedParts": {
-                      "Left Foot": {
-                        "type": "Foot",
-                        "size": 3,
-                        "layers": 2
-                      }
-                    }
+                  "Right Foot": {
+                    "type": "Foot",
+                    "size": 3,
+                    "layers": 2
+                  }
+                }
+              },
+              "Left Leg": {
+                "type": "Lower Limb",
+                "size": 15,
+                "layers": 2,
+                "attachedParts": {
+                  "Left Foot": {
+                    "type": "Foot",
+                    "size": 3,
+                    "layers": 2
                   }
                 }
               }

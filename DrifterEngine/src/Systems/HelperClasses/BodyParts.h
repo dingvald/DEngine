@@ -2,6 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include "EquipmentSlots.h"
 
 enum class PartType
 {
@@ -9,18 +10,9 @@ enum class PartType
 	Torso,
 	UpperLimb,
 	Hand,
-	Waist,
 	LowerLimb,
 	Foot,
 	Any
-};
-
-enum class EquipmentLayer
-{
-	Held,
-	Base,
-	Outer,
-	OverAll
 };
 
 enum class FlattenType
@@ -34,7 +26,6 @@ static inline const std::unordered_map<std::string, PartType> string2PartType =
 	{"Head", PartType::Head},
 	{"Torso", PartType::Torso},
 	{"Upper Limb", PartType::UpperLimb},
-	{"Waist", PartType::Waist},
 	{"Lower Limb", PartType::LowerLimb},
 	{"Hand", PartType::Hand},
 	{"Foot", PartType::Foot}
@@ -45,7 +36,6 @@ static inline const std::unordered_map<PartType, std::string> partType2String =
 	{PartType::Head, "Head"},
 	{PartType::Torso, "Torso"},
 	{PartType::UpperLimb, "Upper Limb"},
-	{PartType::Waist, "Waist"},
 	{PartType::LowerLimb, "Lower Limb"},
 	{PartType::Hand, "Hand"},
 	{PartType::Foot, "Foot"}
@@ -70,11 +60,7 @@ struct BodyPart
 	std::optional<unsigned long> getSlotItem(EquipmentLayer layer) const;
 	void removeSlotItem(unsigned long itemID);
 	std::vector<unsigned long> getAllSlotted() const;
-
-	void addCoveringItem(unsigned long itemID, EquipmentLayer layer);
-	std::vector<unsigned long> getCoveringItems(EquipmentLayer layer) const;
-	void removeCoveringItem(unsigned long itemID);
-	std::vector<unsigned long> getAllCoveringItems() const;
+	std::vector<unsigned long> getAllSlottedExcept(std::unordered_set<EquipmentLayer> exclude);
 
 	bool isConnectedTo(const BodyPart* part) const;
 
@@ -85,7 +71,6 @@ private:
 	{
 		archive(name, size, static_cast<int>(type));
 		archive(_slotted);
-		archive(_covering);
 		archive(static_cast<int>(_children.size()));
 		for (auto& part : _children)
 		{
@@ -98,7 +83,6 @@ private:
 	{
 		archive(name, size, static_cast<PartType>(type));
 		archive(_slotted);
-		archive(_covering);
 		int childrenSize = 0;
 		archive(childrenSize);
 		for (int i = 0; i < childrenSize; ++i)
@@ -114,7 +98,6 @@ private:
 	friend class PartTree;
 	BodyPart* _parent = nullptr;
 	std::map<int, unsigned long> _slotted;
-	std::map<int, std::vector<unsigned long>> _covering;
 	std::vector<std::unique_ptr<BodyPart>> _children;
 };
 
@@ -138,21 +121,22 @@ public:
 	std::vector<BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType);
 	const std::vector<const BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType) const;
 
+	std::vector<std::string> getPartsWithSlot(EquipmentSlot slot) const;
+	std::vector<std::string> getPartsWithSlots(std::vector<EquipmentSlot> slots) const; 
 	struct PartItemPair
 	{
 		std::string partName;
 		unsigned long itemID;
 	};
 
+	std::optional<unsigned long> getEquippedOnPart(const std::string& partName, EquipmentLayer layer);
+	std::vector<unsigned long> getAllEquippedOnPartExcept(const std::string& partName, std::unordered_set<EquipmentLayer> layers);
 	std::vector<PartItemPair> getAllEquipped();
-	std::vector<PartItemPair> getAllHeldEquipped();
-	std::vector<PartItemPair> getAllWornEquipped();
-	std::vector<std::string> getSlotPartsForItem(const std::vector<std::string>& slots);
+	std::vector<PartItemPair> getAllEquipped(std::unordered_set<EquipmentLayer> layers);
+	std::vector<PartItemPair> getAllEquippedExcept(std::unordered_set<EquipmentLayer> layers);
 
-	bool equipItem(unsigned long itemID, EquipmentLayer layer, const std::string& slot, const std::vector<std::string>& covering = {});
+	bool equipItem(unsigned long itemID, EquipmentLayer layer, const std::string& partName);
 	void unequipItem(unsigned long itemID);
-
-	std::vector<std::string> getCoveredPartsForItem(const std::string& slot, const std::vector<std::string> covers, EquipmentLayer layer);
 
 private:
 	BodyPart* recursiveSearch(BodyPart* root, const std::string& partName);

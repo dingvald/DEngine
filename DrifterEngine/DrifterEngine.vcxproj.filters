@@ -378,7 +378,10 @@
     <ClCompile Include="PaperDoll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utility\GetStringAcronym.cpp">
+    <ClCompile Include="src\Utility\StringManipulation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\HelperClasses\EquipmentSlots.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1271,7 +1274,10 @@
     <ClInclude Include="PaperDoll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\GetStringAcronym.h">
+    <ClInclude Include="src\Utility\StringManipulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\HelperClasses\EquipmentSlots.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
