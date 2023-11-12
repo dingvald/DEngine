@@ -356,6 +356,55 @@ void drft::InventoryState::updateWornItemsDisplay()
 			partRow.setStyle(gui::ElementState::Focused, {
 				.childPadding = {80.f, 0}
 				});
+			partRow.registerCallback(gui::ElementCallbackType::OnFocus,
+				[this]() -> bool
+				{
+					_inventoryBlob["ItemLabel"].setTextString("");
+					_inventoryBlob["ItemLabel"].setPosition({0,0});
+					return true;
+				});
+			partRow.registerCallback(gui::ElementCallbackType::OnSelect,
+				[this, part, body, &partRow]() -> bool
+				{
+					auto itemID = body->parts.getTopEquippedOnPart(part);
+					if (!itemID.has_value()) return true;
+
+					const auto commandListPosition = partRow.getPosition() + sf::Vector2f{ 36,-1 };
+					auto& commandList = _inventoryStack.insert("CommandList", gui::List(true))
+						.setSize({ 64,128 })
+						.setPosition(commandListPosition)
+						.setStyle(gui::ElementState::Focused, {
+							.fillColor = sf::Color(0,0,0,255),
+							.outlineColor = sf::Color(255,255,255,100),
+							.outlineThickness = 1.f,
+							.innerPadding = {4.f, 4.f},
+							.childPadding = {2.f, 2.f}
+							})
+						.setOrigin(gui::ElementPosition::TOP_LEFT)
+						.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+
+					commandList.insert("Unequip", gui::Label())
+						.setStyle(gui::ElementState::Idle, {
+							.font = &getContext().fonts.get("Terminus"),
+							.textColor = sf::Color::White,
+							.textSize = 16
+							})
+						.setStyle(gui::ElementState::Focused, {
+							.font = &getContext().fonts.get("Terminus"),
+							.textColor = sf::Color::Yellow,
+							.textSize = 16
+							})
+						.setTextString("unequip")
+						.setTextOrigin(gui::ElementPosition::TOP_LEFT)
+						.registerCallback(gui::ElementCallbackType::OnSelect,
+							[this, itemID]() -> bool
+							{
+								tryUnequipItem(itemID.value());
+								return true;
+							});
+					
+					return true;
+				});
 
 			partRow.insert("SlotName", gui::Label())
 				.setStyle(gui::ElementState::Idle, {

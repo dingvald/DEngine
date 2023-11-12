@@ -71,6 +71,14 @@ std::optional<unsigned long> BodyPart::getSlotItem(EquipmentLayer layer) const
 	return std::nullopt;
 }
 
+std::optional<unsigned long> BodyPart::getTopSlotItem() const
+{
+	if (_slotted.empty()) return std::nullopt;
+	int layer = _slotted.rbegin()->first;
+	if (EquipmentLayer::Held == static_cast<EquipmentLayer>(layer)) return std::nullopt;
+	return _slotted.rbegin()->second;
+}
+
 void BodyPart::removeSlotItem(unsigned long itemID)
 {
 	for (auto it = _slotted.begin(); it != _slotted.end();)
@@ -96,7 +104,7 @@ std::vector<unsigned long> BodyPart::getAllSlotted() const
 	return result;
 }
 
-std::vector<unsigned long> BodyPart::getAllSlottedExcept(std::unordered_set<EquipmentLayer> exclude)
+std::vector<unsigned long> BodyPart::getAllSlottedExcept(std::unordered_set<EquipmentLayer> exclude) const
 {
 	std::vector<unsigned long> result;
 	for (auto& [layer, itemID] : _slotted)
@@ -295,7 +303,44 @@ std::vector<std::string> PartTree::getPartsWithSlots(std::vector<EquipmentSlot> 
 	return result;
 }
 
-std::optional<unsigned long> PartTree::getEquippedOnPart(const std::string& partName, EquipmentLayer layer)
+std::optional<unsigned long> PartTree::getTopEquippedOnPart(const std::string& partName) const
+{
+
+	if (partName == "Legs")
+	{
+		auto slotParts = this->search(PartType::LowerLimb);
+		for (auto part : slotParts)
+		{
+			if (part->getTopSlotItem().has_value())
+			{
+				return part->getTopSlotItem().value();
+			}
+		}
+	}
+	else if (partName == "Feet")
+	{
+		auto slotParts = this->search(PartType::Foot);
+		for (auto part : slotParts)
+		{
+			if (part->getTopSlotItem().has_value())
+			{
+				return part->getTopSlotItem().value();
+			}
+		}
+	}
+	else
+	{
+		auto part = this->search(partName);
+		if (part && part->getTopSlotItem().has_value())
+		{
+			return part->getTopSlotItem().value();
+		}
+	}
+
+	return std::nullopt;
+}
+
+std::optional<unsigned long> PartTree::getEquippedOnPart(const std::string& partName, EquipmentLayer layer) const
 {
 	if (partName == "Legs")
 	{
@@ -331,7 +376,7 @@ std::optional<unsigned long> PartTree::getEquippedOnPart(const std::string& part
 	return std::nullopt;
 }
 
-std::vector<unsigned long> PartTree::getAllEquippedOnPartExcept(const std::string& partName, std::unordered_set<EquipmentLayer> layers)
+std::vector<unsigned long> PartTree::getAllEquippedOnPartExcept(const std::string& partName, std::unordered_set<EquipmentLayer> layers) const
 {
 	std::vector<unsigned long> result;
 	if (partName == "Legs")
@@ -366,7 +411,7 @@ std::vector<unsigned long> PartTree::getAllEquippedOnPartExcept(const std::strin
 	return result;
 }
 
-std::vector<PartTree::PartItemPair> PartTree::getAllEquipped()
+std::vector<PartTree::PartItemPair> PartTree::getAllEquipped() const
 {
 	std::vector<PartItemPair> result;
 	for (auto part : this->flatten())
@@ -380,7 +425,7 @@ std::vector<PartTree::PartItemPair> PartTree::getAllEquipped()
 	return result;
 }
 
-std::vector<PartTree::PartItemPair> PartTree::getAllEquipped(std::unordered_set<EquipmentLayer> layers)
+std::vector<PartTree::PartItemPair> PartTree::getAllEquipped(std::unordered_set<EquipmentLayer> layers) const
 {
 	std::vector<PartItemPair> result;
 	for (auto part : this->flatten())
@@ -397,7 +442,7 @@ std::vector<PartTree::PartItemPair> PartTree::getAllEquipped(std::unordered_set<
 	return result;
 }
 
-std::vector<PartTree::PartItemPair> PartTree::getAllEquippedExcept(std::unordered_set<EquipmentLayer> layers)
+std::vector<PartTree::PartItemPair> PartTree::getAllEquippedExcept(std::unordered_set<EquipmentLayer> layers) const
 {
 	std::vector<PartItemPair> result;
 	for (auto part : this->flatten())

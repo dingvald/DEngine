@@ -58,9 +58,10 @@ struct BodyPart
 
 	bool addSlotItem(unsigned long itemID, EquipmentLayer layer);
 	std::optional<unsigned long> getSlotItem(EquipmentLayer layer) const;
+	std::optional<unsigned long> getTopSlotItem() const;
 	void removeSlotItem(unsigned long itemID);
 	std::vector<unsigned long> getAllSlotted() const;
-	std::vector<unsigned long> getAllSlottedExcept(std::unordered_set<EquipmentLayer> exclude);
+	std::vector<unsigned long> getAllSlottedExcept(std::unordered_set<EquipmentLayer> exclude) const;
 
 	bool isConnectedTo(const BodyPart* part) const;
 
@@ -113,11 +114,13 @@ public:
 
 	std::unique_ptr<BodyPart> remove(const std::string& partName);
 	int size() const;
+
 	bool contains(const std::string& partName) const;
 	BodyPart* search(const std::string& partName);
 	const BodyPart* search(const std::string& partName) const;
 	std::vector<BodyPart*> search(PartType type);
 	const std::vector<const BodyPart*> search(PartType type) const;
+
 	std::vector<BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType);
 	const std::vector<const BodyPart*> flatten(FlattenType flattenHow = FlattenType::ByPartType) const;
 
@@ -129,11 +132,12 @@ public:
 		unsigned long itemID;
 	};
 
-	std::optional<unsigned long> getEquippedOnPart(const std::string& partName, EquipmentLayer layer);
-	std::vector<unsigned long> getAllEquippedOnPartExcept(const std::string& partName, std::unordered_set<EquipmentLayer> layers);
-	std::vector<PartItemPair> getAllEquipped();
-	std::vector<PartItemPair> getAllEquipped(std::unordered_set<EquipmentLayer> layers);
-	std::vector<PartItemPair> getAllEquippedExcept(std::unordered_set<EquipmentLayer> layers);
+	std::optional<unsigned long> getTopEquippedOnPart(const std::string& partName) const;
+	std::optional<unsigned long> getEquippedOnPart(const std::string& partName, EquipmentLayer layer) const;
+	std::vector<unsigned long> getAllEquippedOnPartExcept(const std::string& partName, std::unordered_set<EquipmentLayer> layers) const;
+	std::vector<PartItemPair> getAllEquipped() const;
+	std::vector<PartItemPair> getAllEquipped(std::unordered_set<EquipmentLayer> layers) const;
+	std::vector<PartItemPair> getAllEquippedExcept(std::unordered_set<EquipmentLayer> layers) const;
 
 	bool equipItem(unsigned long itemID, EquipmentLayer layer, const std::string& partName);
 	void unequipItem(unsigned long itemID);
