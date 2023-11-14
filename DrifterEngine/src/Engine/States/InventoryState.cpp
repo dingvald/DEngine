@@ -427,6 +427,7 @@ void drft::InventoryState::updateWornItemsDisplay()
 					});
 
 			auto items = body->parts.getAllEquippedOnPartExcept(part, { EquipmentLayer::Held });
+			int count = 1;
 			for (auto item : items)
 			{
 				auto& container = itemsContainer.insert(std::to_string(item), gui::DualContainer());
@@ -459,6 +460,32 @@ void drft::InventoryState::updateWornItemsDisplay()
 					});
 				auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 				addItemIcon(container, itemEntity, { 32, 32 });
+				if (count == items.size())
+				{
+					container.setStyle(gui::ElementState::Focused, {
+						.fillColor = sf::Color(0,0,0,200),
+						.outlineColor = sf::Color::Yellow,
+						.outlineThickness = 1.f
+						});
+					partRow.registerCallback(gui::ElementCallbackType::OnFocus,
+						[this, item, &container]() -> bool
+						{
+							const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+							auto itemName = util::getEntityName({ getContext().registry, itemEntity });
+							_inventoryBlob["ItemLabel"].setTextString(std::move(itemName));
+							_inventoryBlob["ItemLabel"].setPosition(container.getPosition() + sf::Vector2f(16.f, -2.f));
+							return true;
+						});
+					partRow.registerCallback(gui::ElementCallbackType::OnSelect,
+						[this, item, &container]() -> bool
+						{
+							const auto commandListPosition = container.getPosition() + sf::Vector2f{ 18.f,-16.f };
+							createItemCommandList(CommandListType::Worn, commandListPosition, item);
+
+							return true;
+						});
+				}
+				++count;
 			}
 		}
 			
