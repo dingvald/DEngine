@@ -384,6 +384,9 @@
     <ClCompile Include="src\Systems\HelperClasses\EquipmentSlots.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Random\PercentChance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1278,6 +1281,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\HelperClasses\EquipmentSlots.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random\PercentChance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

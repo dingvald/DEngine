@@ -182,6 +182,7 @@
   <ItemGroup>
     <ClCompile Include="PaperDoll.cpp" />
     <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp" />
+    <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Random\NoiseMap.cpp" />
     <ClCompile Include="src\ProcGen\Biome.cpp" />
     <ClCompile Include="src\Machines\OreDeposit.cpp" />
@@ -341,6 +342,7 @@
     <ClInclude Include="PaperDoll.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
+    <ClInclude Include="src\Random\PercentChance.h" />
     <ClInclude Include="src\Random\NoiseMap.h" />
     <ClInclude Include="src\ProcGen\Biome.h" />
     <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />

@@ -4,9 +4,10 @@
 #include "Components/Tags.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Random/RandomNumberGenerator.h"
+#include "Random/PercentChance.h"
 #include "Utility/EntityHelpers.h"
 
-static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 30;
+static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 15;
 
 void drft::system::BodyPartSystem::init()
 {
@@ -58,11 +59,10 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 	std::unordered_map<std::string, int> result;
 	if (auto body = registry->try_get<component::Body>(attacker))
 	{
-		const auto rightHand = body->parts.search("Right Hand"); // TODO: genericize
-		if (rightHand)
+		if (const auto rightHand = body->parts.search("Right Hand"))
 		{
 			auto optionalHeld = rightHand->getSlotItem(EquipmentLayer::Held);
-			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(0));
+			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(component::Item::NONE));
 			if (itemEntity != entt::null)
 			{
 				if (auto physical = registry->try_get<component::Physical>(itemEntity))
@@ -75,6 +75,11 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 				}
 			}
 
+			if (rng::percentChance(CHANCE_TO_DAMAGE_EQUIPPED_WEAPON))
+			{
+				component::action::TakeDamage damage{ .amount = 1, .source = entt::null };
+				registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
+			}
 		}
 	}
 
@@ -84,7 +89,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, const BodyPart& partHit, const std::unordered_map<std::string, int> incomingDamageTypes)
 {
 	std::unordered_map<std::string, int> result = incomingDamageTypes;
-	auto itemsEquipped = partHit.getAllSlotted();
+	auto itemsEquipped = partHit.getAllSlottedExcept({ EquipmentLayer::Held });
 	for (auto item : itemsEquipped)
 	{
 		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
@@ -92,17 +97,20 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 		{
 			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
 			{
+				int sum = 0;
 				for (auto& [damageType, amount] : result)
 				{
 					if (wearable->protections.contains(damageType))
 					{
+						sum += wearable->protections.at(damageType);
 						amount = std::max(0, amount - wearable->protections.at(damageType));
 					}
 				}
 
 				if (auto health = registry->try_get<component::Health>(itemEntity))
 				{
-					// TODO: add damage to the wearable
+					component::action::TakeDamage damage{ .amount = sum, .source = entt::null };
+					registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
 				}
 			}
 		}
