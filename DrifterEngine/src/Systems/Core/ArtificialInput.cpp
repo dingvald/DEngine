@@ -18,22 +18,23 @@ void drft::system::ArtificialInput::update(const float dt)
 	auto view = registry->view<component::AI, const component::Position, component::tag::CurrentActor>();
 	for (auto [entity, ai, myPos] : view.each())
 	{
-		const auto target = registry->try_get<component::Position>(ai.target);
-		if (target)
+		if (ai.target == entt::null)
 		{
-			const auto myTilePosition = myPos.position;
-			const auto targetTilePosition = target->position;
-
-			if (spatial::distance(myTilePosition, targetTilePosition) <= ai.sightRange)
+			ai.target = findTarget({ *registry, entity });
+		}
+		if (ai.target != entt::null)
+		{
+			auto& targetPos = registry->get<component::Position>(ai.target);
+			if (spatial::distance(myPos.position, targetPos.position) <= ai.sightRange)
 			{
-				if (hasLineOfSight(myTilePosition, targetTilePosition))
+				if (hasLineOfSight(myPos.position, targetPos.position))
 				{
 					clearPathCache(entity);
-					moveToTarget(entity, myTilePosition, targetTilePosition);
+					moveToTarget(entity, myPos.position, targetPos.position);
 				}
 				else
 				{
-					pathToTarget(entity, myTilePosition, targetTilePosition);
+					pathToTarget(entity, myPos.position, targetPos.position);
 				}
 			}
 			else
@@ -44,7 +45,6 @@ void drft::system::ArtificialInput::update(const float dt)
 		}
 		else
 		{
-			ai.target = findTarget({ *registry, entity });
 			randomMove({ *registry, entity });
 		}
 	}
@@ -184,4 +184,12 @@ void drft::system::ArtificialInput::clearPathCache(entt::entity entity) const
 {
 	if (!_cachedPaths.contains(entity)) return;
 	_cachedPaths.erase(entity);
+}
+
+void drft::system::ArtificialInput::onTargetMaybeSee(entt::entity ai, sf::Vector2i myPosition) const
+{
+}
+
+void drft::system::ArtificialInput::onTargetSureSee(entt::entity ai, sf::Vector2i myPosition) const
+{
 }

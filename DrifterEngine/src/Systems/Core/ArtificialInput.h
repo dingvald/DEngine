@@ -17,6 +17,9 @@ namespace drft::system
 		void pathToTarget(entt::entity ai, sf::Vector2i myPosition, sf::Vector2i targetPosition) const;
 		void clearPathCache(entt::entity entity) const;
 
+		void onTargetMaybeSee(entt::entity ai, sf::Vector2i myPosition) const;
+		void onTargetSureSee(entt::entity ai, sf::Vector2i myPosition) const;
+
 	private:
 		using aStarPath = std::deque<sf::Vector2i>;
 		mutable std::unordered_map<entt::entity, aStarPath> _cachedPaths;
