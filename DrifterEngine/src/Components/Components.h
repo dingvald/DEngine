@@ -1,5 +1,6 @@
 #pragma once
 #include "Systems/HelperClasses/BodyParts.h"
+#include "Systems/HelperClasses/AIStates.h"
 
 namespace component
 {
@@ -155,7 +156,7 @@ namespace component
 		int sightRange = 0;
 		std::unordered_set<std::string> goals;
 		entt::entity target = entt::null;
-
+		AIState state;
 	};
 
 	struct Faction

@@ -337,6 +337,7 @@
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
     <ClCompile Include="src\Machines\WildernessHorde.cpp" />
     <ClCompile Include="src\WorldMap\WorldMap.cpp" />
+    <ClCompile Include="src\Systems\HelperClasses\StateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PaperDoll.h" />
@@ -351,6 +352,7 @@
     <ClInclude Include="src\Machines\Chest.h" />
     <ClInclude Include="src\Factory\MachineFactory.h" />
     <ClInclude Include="src\Machines\Machine.h" />
+    <ClInclude Include="src\Systems\HelperClasses\AIStates.h" />
     <ClInclude Include="src\Systems\HelperClasses\BodyParts.h" />
     <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\EquipmentSlots.h" />
@@ -638,6 +640,7 @@
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h" />
     <ClInclude Include="src\Machines\WildernessHorde.h" />
     <ClInclude Include="src\WorldMap\WorldMap.h" />
+    <ClInclude Include="src\Systems\HelperClasses\StateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\biomes\biomes.json" />

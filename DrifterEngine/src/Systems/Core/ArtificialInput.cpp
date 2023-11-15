@@ -18,50 +18,30 @@ void drft::system::ArtificialInput::update(const float dt)
 	auto view = registry->view<component::AI, const component::Position, component::tag::CurrentActor>();
 	for (auto [entity, ai, myPos] : view.each())
 	{
-		if (ai.target == entt::null)
+		switch (ai.state)
 		{
-			ai.target = findTarget({ *registry, entity });
-		}
-		if (ai.target != entt::null)
-		{
-			auto& targetPos = registry->get<component::Position>(ai.target);
-			if (spatial::distance(myPos.position, targetPos.position) <= ai.sightRange)
-			{
-				if (hasLineOfSight(myPos.position, targetPos.position))
-				{
-					clearPathCache(entity);
-					moveToTarget(entity, myPos.position, targetPos.position);
-				}
-				else
-				{
-					pathToTarget(entity, myPos.position, targetPos.position);
-				}
-			}
-			else
-			{
-				clearPathCache(entity);
-				ai.target = entt::null;
-			}
-		}
-		else
-		{
-			randomMove({ *registry, entity });
+		case AIState::Standby:
+			aiStandby(ai);
+			break;
+		case AIState::MoveTo:
+			aiMoveTo(ai);
+			break;
+		case AIState::Interact:
+			aiInteract(ai);
+			break;
 		}
 	}
 }
 
 entt::entity drft::system::ArtificialInput::findTarget(entt::handle entity) const
 {
-	if (!entity.all_of<component::Faction>())
-	{
-		return entt::null;
-	}
+	if (!entity.all_of<component::Faction>()) return entt::null;
 
 	const auto& faction = entity.get<component::Faction>();
 	const auto& ai = entity.get<component::AI>();
 	const auto& pos = entity.get<component::Position>();
 
-	float closestRange = 1000;
+	float closestRange = static_cast<float>(ai.sightRange);
 	entt::entity closestTarget = entt::null;
 
 	auto factionView = registry->view<const component::Faction, const component::Position, component::tag::Active>();
@@ -186,10 +166,61 @@ void drft::system::ArtificialInput::clearPathCache(entt::entity entity) const
 	_cachedPaths.erase(entity);
 }
 
-void drft::system::ArtificialInput::onTargetMaybeSee(entt::entity ai, sf::Vector2i myPosition) const
+bool drft::system::ArtificialInput::isTargetValid(component::AI& ai) const
 {
+	if (ai.target == entt::null || !registry->valid(ai.target))
+	{
+		ai.target = entt::null;
+		ai.state = AIState::Standby;
+		return false;
+	}
+	return true;
 }
 
-void drft::system::ArtificialInput::onTargetSureSee(entt::entity ai, sf::Vector2i myPosition) const
+void drft::system::ArtificialInput::aiStandby(component::AI& ai)
 {
+	entt::entity entity = entt::to_entity(*registry, ai);
+	ai.target = findTarget({ *registry, entity});
+	if (ai.target == entt::null)
+	{
+		randomMove({ *registry, entity});
+	}
+	else
+	{
+		ai.state = AIState::MoveTo;
+	}
+}
+
+void drft::system::ArtificialInput::aiMoveTo(component::AI& ai)
+{
+	if (!isTargetValid(ai)) return;
+
+	entt::entity entity = entt::to_entity(*registry, ai);
+	auto& targetPos = registry->get<component::Position>(ai.target);
+	auto& myPos = registry->get<component::Position>(entity);
+
+	if (spatial::distance(myPos.position, targetPos.position) <= ai.sightRange)
+	{
+		if (hasLineOfSight(myPos.position, targetPos.position))
+		{
+			clearPathCache(entity);
+			moveToTarget(entity, myPos.position, targetPos.position);
+		}
+		else
+		{
+			pathToTarget(entity, myPos.position, targetPos.position);
+		}
+	}
+	else
+	{
+		clearPathCache(entity);
+		ai.target = entt::null;
+		ai.state = AIState::Standby;
+	}
+}
+
+void drft::system::ArtificialInput::aiInteract(component::AI& ai)
+{
+	if (!isTargetValid(ai)) return;
+
 }

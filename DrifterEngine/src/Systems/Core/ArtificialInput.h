@@ -1,5 +1,12 @@
 #pragma once
 #include "Systems/System.h"
+#include "Systems/HelperClasses/StateMachine.h"
+#include "Systems/HelperClasses/AIStates.h"
+
+namespace component
+{
+	struct AI;
+}
 
 namespace drft::system
 {
@@ -17,8 +24,12 @@ namespace drft::system
 		void pathToTarget(entt::entity ai, sf::Vector2i myPosition, sf::Vector2i targetPosition) const;
 		void clearPathCache(entt::entity entity) const;
 
-		void onTargetMaybeSee(entt::entity ai, sf::Vector2i myPosition) const;
-		void onTargetSureSee(entt::entity ai, sf::Vector2i myPosition) const;
+		bool isTargetValid(component::AI& ai) const;
+
+		// States
+		void aiStandby(component::AI& ai);
+		void aiMoveTo(component::AI& ai);
+		void aiInteract(component::AI& ai);
 
 	private:
 		using aStarPath = std::deque<sf::Vector2i>;
