@@ -7,6 +7,7 @@
 #include "Spatial/Helpers.h"
 #include "Spatial/Conversions.h"
 #include "Systems/Gameplay/FactionSystem.h"
+#include "Systems/Gameplay/TargetSelectors/TargetSelectors.h"
 
 
 void drft::system::ArtificialInput::init()
@@ -33,30 +34,27 @@ void drft::system::ArtificialInput::update(const float dt)
 	}
 }
 
-entt::entity drft::system::ArtificialInput::findTarget(entt::handle entity) const
+entt::entity drft::system::ArtificialInput::findTarget(entt::handle entity, std::function<bool(entt::const_handle, entt::const_handle)> selector) const
 {
 	if (!entity.all_of<component::Faction>()) return entt::null;
 
-	const auto& faction = entity.get<component::Faction>();
 	const auto& ai = entity.get<component::AI>();
 	const auto& pos = entity.get<component::Position>();
 
 	float closestRange = static_cast<float>(ai.sightRange);
 	entt::entity closestTarget = entt::null;
 
-	auto factionView = registry->view<const component::Faction, const component::Position, component::tag::Active>();
-	for (auto [otherEnt, otherfaction, otherPos] : factionView.each())
+	auto view = registry->view<const component::Position, component::tag::Active>();
+	for (auto [otherEntity, otherPos] : view.each())
 	{
-		if (FactionSystem::resolveRelationship(faction.name, otherfaction.name) == Relationship::Hostile)
+		const float distance = spatial::distance(pos.position, otherPos.position);
+		if (distance < ai.sightRange && distance < closestRange)
 		{
-			const float distance = spatial::distance(pos.position, otherPos.position);
-			if (distance < ai.sightRange && distance < closestRange)
+			entt::const_handle otherHandle = { *registry, otherEntity };
+			if (hasLineOfSight(pos.position, otherPos.position) && selector(entity, otherHandle))
 			{
-				if (hasLineOfSight(pos.position, otherPos.position))
-				{
-					closestRange = distance;
-					closestTarget = otherEnt;
-				}
+				closestRange = distance;
+				closestTarget = otherEntity;
 			}
 		}
 	}
@@ -180,10 +178,11 @@ bool drft::system::ArtificialInput::isTargetValid(component::AI& ai) const
 void drft::system::ArtificialInput::aiStandby(component::AI& ai)
 {
 	entt::entity entity = entt::to_entity(*registry, ai);
-	ai.target = findTarget({ *registry, entity});
+	entt::handle eHandle = { *registry, entity };
+	ai.target = findTarget(eHandle, targetSelector::isHostile);
 	if (ai.target == entt::null)
 	{
-		randomMove({ *registry, entity});
+		randomMove(eHandle);
 	}
 	else
 	{

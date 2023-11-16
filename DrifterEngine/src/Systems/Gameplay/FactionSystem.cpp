@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "FactionSystem.h"
+#include "Components/Components.h"
 
 using namespace drft::system;
 
@@ -54,9 +55,14 @@ void drft::system::FactionSystem::modifyCloseness(const std::string& faction1, c
 	}
 }
 
-drft::system::Relationship drft::system::FactionSystem::resolveRelationship(const std::string& faction1, const std::string& faction2)
+drft::system::Relationship drft::system::FactionSystem::resolveRelationship(entt::const_handle entity1, entt::const_handle entity2)
 {
-	Closeness closeness = getCloseness(faction1, faction2);
+	auto faction1 = entity1.try_get<component::Faction>();
+	auto faction2 = entity2.try_get<component::Faction>();
+
+	if (!faction1 || !faction2) return Relationship::Neutral;
+
+	Closeness closeness = getCloseness(faction1->name, faction2->name);
 	
 	if (faction1 == faction2)
 	{

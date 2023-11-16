@@ -16,7 +16,7 @@ namespace drft::system
 	public:
 		void init() override;
 
-		[[nodiscard]] static Relationship resolveRelationship(const std::string& faction1, const std::string& faction2);
+		[[nodiscard]] static Relationship resolveRelationship(entt::const_handle entity1, entt::const_handle entity2);
 		static void modifyCloseness(const std::string& faction1, const std::string& faction2, Closeness deltaValue);
 
 	private:

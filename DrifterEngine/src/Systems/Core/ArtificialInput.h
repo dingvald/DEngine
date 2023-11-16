@@ -17,7 +17,7 @@ namespace drft::system
 		void update(const float dt) override;
 
 	private:
-		entt::entity findTarget(entt::handle entity) const;
+		entt::entity findTarget(entt::handle entity, std::function<bool(entt::const_handle, entt::const_handle)> selector) const;
 		bool hasLineOfSight(sf::Vector2i myPosition, sf::Vector2i targetPosition) const;
 		void randomMove(entt::handle entity) const;
 		void moveToTarget(entt::entity ai, sf::Vector2i myPosition, sf::Vector2i targetPosition) const;
