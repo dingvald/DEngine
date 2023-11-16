@@ -156,7 +156,7 @@ namespace component
 		int sightRange = 0;
 		std::unordered_set<std::string> goals;
 		entt::entity target = entt::null;
-		AIState state;
+		AIState state = AIState::Standby;
 	};
 
 	struct Faction
@@ -194,11 +194,6 @@ namespace component
 		std::string action;
 		Parameters params;
 		bool consumes = false;
-	};
-
-	struct Horror
-	{
-		bool standin = false;
 	};
 
 	struct Openable

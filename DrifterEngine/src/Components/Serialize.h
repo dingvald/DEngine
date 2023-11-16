@@ -162,12 +162,6 @@ namespace cereal
 	}
 
 	template<class Archive>
-	void serialize(Archive& archive, Horror& horror)
-	{
-		archive(horror.standin);
-	}
-
-	template<class Archive>
 	void serialize(Archive& archive, Openable& openable)
 	{
 		archive(openable.isOpen, openable.keyName);
