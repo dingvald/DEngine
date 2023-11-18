@@ -155,6 +155,7 @@ namespace component
 	{
 		int sightRange = 0;
 		std::unordered_set<std::string> goals;
+		std::unordered_map<std::string, int> blackboard;
 		entt::entity target = entt::null;
 		AIState state = AIState::Standby;
 	};

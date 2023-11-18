@@ -372,9 +372,6 @@
     <ClCompile Include="src\Systems\HelperClasses\BodyParts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PaperDoll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utility\StringManipulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -388,6 +385,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\IAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\WorldState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1274,9 +1277,6 @@
     <ClInclude Include="src\Systems\HelperClasses\BodyParts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PaperDoll.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\StringManipulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1293,6 +1293,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\IAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\WorldState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

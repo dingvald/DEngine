@@ -12,14 +12,12 @@ FactionSystem::FactionTable FactionSystem::_factionTable;
 
 void drft::system::FactionSystem::init()
 {
-	// player
 	_factionTable["player"]["carrion"] = -1000;
 	_factionTable["player"]["parasite"] = -1000;
 	_factionTable["player"]["rodent"] = -1000;
 	_factionTable["player"]["feline"] = -1000;
 	_factionTable["player"]["reptile"] = -1000;
 	_factionTable["player"]["golem"] = -1000;
-	_factionTable["player"]["horror"] = -1000;
 
 	_factionTable["rodent"]["feline"] = -1000;
 	_factionTable["reptile"]["feline"] = -1000;

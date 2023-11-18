@@ -27,8 +27,8 @@ void drft::system::ArtificialInput::update(const float dt)
 		case AIState::MoveTo:
 			aiMoveTo(ai);
 			break;
-		case AIState::Interact:
-			aiInteract(ai);
+		case AIState::PerformAction:
+			aiPerformAction(ai);
 			break;
 		}
 	}
@@ -179,7 +179,7 @@ void drft::system::ArtificialInput::aiStandby(component::AI& ai)
 {
 	entt::entity entity = entt::to_entity(*registry, ai);
 	entt::handle eHandle = { *registry, entity };
-	ai.target = findTarget(eHandle, targetSelector::isHostile);
+	ai.target = findTarget(eHandle, targetSelector::isHostile); // Action.isValidTarget;
 	if (ai.target == entt::null)
 	{
 		randomMove(eHandle);
@@ -197,6 +197,10 @@ void drft::system::ArtificialInput::aiMoveTo(component::AI& ai)
 	entt::entity entity = entt::to_entity(*registry, ai);
 	auto& targetPos = registry->get<component::Position>(ai.target);
 	auto& myPos = registry->get<component::Position>(entity);
+
+	// if (action.isInRange(pos, targetPos))
+	//		ai.state = AIState::PerformAction;
+	//		return;
 
 	if (spatial::distance(myPos.position, targetPos.position) <= ai.sightRange)
 	{
@@ -218,7 +222,7 @@ void drft::system::ArtificialInput::aiMoveTo(component::AI& ai)
 	}
 }
 
-void drft::system::ArtificialInput::aiInteract(component::AI& ai)
+void drft::system::ArtificialInput::aiPerformAction(component::AI& ai)
 {
 	if (!isTargetValid(ai)) return;
 

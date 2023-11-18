@@ -4,5 +4,5 @@ enum class AIState
 {
 	Standby,
 	MoveTo,
-	Interact
+	PerformAction
 };

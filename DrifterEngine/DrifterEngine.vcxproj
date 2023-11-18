@@ -180,7 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PaperDoll.cpp" />
+    <ClCompile Include="src\GOAP\IAction.cpp" />
     <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Random\NoiseMap.cpp" />
@@ -338,9 +338,10 @@
     <ClCompile Include="src\Machines\WildernessHorde.cpp" />
     <ClCompile Include="src\WorldMap\WorldMap.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\StateMachine.cpp" />
+    <ClCompile Include="src\GOAP\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PaperDoll.h" />
+    <ClInclude Include="src\GOAP\IAction.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
     <ClInclude Include="src\Random\PercentChance.h" />
@@ -641,6 +642,7 @@
     <ClInclude Include="src\Machines\WildernessHorde.h" />
     <ClInclude Include="src\WorldMap\WorldMap.h" />
     <ClInclude Include="src\Systems\HelperClasses\StateMachine.h" />
+    <ClInclude Include="src\GOAP\WorldState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\biomes\biomes.json" />

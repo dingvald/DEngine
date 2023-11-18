@@ -29,7 +29,7 @@ namespace drft::system
 		// States
 		void aiStandby(component::AI& ai);
 		void aiMoveTo(component::AI& ai);
-		void aiInteract(component::AI& ai);
+		void aiPerformAction(component::AI& ai);
 
 	private:
 		using aStarPath = std::deque<sf::Vector2i>;

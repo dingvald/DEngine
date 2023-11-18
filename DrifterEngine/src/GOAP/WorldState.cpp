@@ -1,0 +1,68 @@
+#include "pch.h"
+#include "WorldState.h"
+
+int& drft::goap::WorldState::operator[](const std::string key)
+{
+	return _state[key];
+}
+
+void drft::goap::WorldState::add(const std::string& key, int value)
+{
+	if (_state.contains(key)) throw std::exception("WorldState already has key.");
+	_state[key] = value;
+}
+
+bool drft::goap::WorldState::matches(const WorldState& otherState) const
+{
+	if (otherState.isSubset(*this) && otherState.isSuperset(*this)) return true;
+	return false;
+}
+
+bool drft::goap::WorldState::isSubset(const WorldState& otherState) const
+{
+	for (auto&& [key, val] : _state)
+	{
+		if (!otherState._state.contains(key)) return false;
+		if (otherState._state.at(key) != val) return false;
+	}
+	return true;
+}
+
+bool drft::goap::WorldState::isSuperset(const WorldState& otherState) const
+{
+	for (auto&& [key, val] : otherState._state)
+	{
+		if (_state.contains(key)) return false;
+		if (_state.at(key) != val) return false;
+	}
+	return true;
+}
+
+int drft::goap::WorldState::distance(const WorldState& otherState) const
+{
+	int result = 0;
+
+	for (auto&& [key, val] : otherState._state)
+	{
+		if (!_state.contains(key))
+		{
+			++result;
+			continue;
+		}
+		else if (_state.at(key) != val)
+		{
+			++result;
+			continue;
+		}
+	}
+
+	return result;
+}
+
+void drft::goap::WorldState::merge(const WorldState& otherState)
+{
+	for (auto&& [key, val] : otherState._state)
+	{
+		_state[key] = val;
+	}
+}
