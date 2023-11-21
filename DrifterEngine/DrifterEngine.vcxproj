@@ -180,7 +180,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\GOAP\IAction.cpp" />
+    <ClCompile Include="src\GOAP\Plan.cpp" />
+    <ClCompile Include="src\GOAP\ActionRegistry.cpp" />
+    <ClCompile Include="src\GOAP\GoalRegistry.cpp" />
+    <ClCompile Include="src\GOAP\Actions\IAction.cpp" />
     <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Random\NoiseMap.cpp" />
@@ -341,7 +344,11 @@
     <ClCompile Include="src\GOAP\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GOAP\IAction.h" />
+    <ClInclude Include="src\GOAP\Actions\AiActionTypes.h" />
+    <ClInclude Include="src\GOAP\Plan.h" />
+    <ClInclude Include="src\GOAP\ActionRegistry.h" />
+    <ClInclude Include="src\GOAP\GoalRegistry.h" />
+    <ClInclude Include="src\GOAP\Actions\IAction.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
     <ClInclude Include="src\Random\PercentChance.h" />

@@ -1,6 +1,14 @@
 #include "pch.h"
 #include "WorldState.h"
 
+drft::goap::WorldState::WorldState(std::initializer_list<std::pair<std::string, int>> init_list)
+{
+	for (auto&& [key, val] : init_list)
+	{
+		_state.emplace(key, val);
+	}
+}
+
 int& drft::goap::WorldState::operator[](const std::string key)
 {
 	return _state[key];
@@ -14,11 +22,11 @@ void drft::goap::WorldState::add(const std::string& key, int value)
 
 bool drft::goap::WorldState::matches(const WorldState& otherState) const
 {
-	if (otherState.isSubset(*this) && otherState.isSuperset(*this)) return true;
+	if (otherState.isSubsetOf(*this) && otherState.isSupersetOf(*this)) return true;
 	return false;
 }
 
-bool drft::goap::WorldState::isSubset(const WorldState& otherState) const
+bool drft::goap::WorldState::isSubsetOf(const WorldState& otherState) const
 {
 	for (auto&& [key, val] : _state)
 	{
@@ -28,11 +36,11 @@ bool drft::goap::WorldState::isSubset(const WorldState& otherState) const
 	return true;
 }
 
-bool drft::goap::WorldState::isSuperset(const WorldState& otherState) const
+bool drft::goap::WorldState::isSupersetOf(const WorldState& otherState) const
 {
 	for (auto&& [key, val] : otherState._state)
 	{
-		if (_state.contains(key)) return false;
+		if (!_state.contains(key)) return false;
 		if (_state.at(key) != val) return false;
 	}
 	return true;

@@ -9,12 +9,12 @@ bool drft::goap::IAction::isInRange(sf::Vector2i agentPosition, sf::Vector2i tar
 	return false;
 }
 
-const drft::goap::WorldState& drft::goap::IAction::getPreconditions() const
+const drft::goap::WorldState& drft::goap::IAction::preconditions() const
 {
 	return _preconditions;
 }
 
-const drft::goap::WorldState& drft::goap::IAction::getEffects() const
+const drft::goap::WorldState& drft::goap::IAction::effects() const
 {
 	return _effects;
 }

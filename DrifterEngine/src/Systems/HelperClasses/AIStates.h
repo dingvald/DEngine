@@ -2,7 +2,7 @@
 
 enum class AIState
 {
-	Standby,
+	Think,
 	MoveTo,
 	PerformAction
 };

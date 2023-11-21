@@ -1,22 +1,28 @@
 #pragma once
 #include "Utility/Math.h"
-#include "WorldState.h"
+#include "GOAP/WorldState.h"
 
 namespace drft::goap
 {
 	class IAction
 	{
 	public:
-		// Returns true if the entity is a valid target for this action.
-		virtual bool isValidTarget(entt::const_handle agent, entt::const_handle potentialTarget) = 0;
-		// Perform the action. Returns true if the action was performed.
-		virtual bool perform(entt::handle agent, entt::handle target) = 0;
+		IAction() = default;
+		IAction(IAction&) = delete;
+		IAction& operator=(IAction&) = delete;
+		virtual ~IAction() = default;
 
+		// Returns true if the entity is a valid target for this action.
+		virtual bool isValidTarget(entt::const_handle agent, entt::const_handle potentialTarget) const = 0;
+		// Perform the action. Returns true if the action was performed.
+		virtual bool perform(entt::handle agent, entt::handle target) const = 0;
+		// How expensive this action is to perform relative to other actions.
+		virtual int cost() const = 0;
 
 		// Checks if the agent is within the range required to perform the action.
 		bool isInRange(sf::Vector2i agentPosition, sf::Vector2i targetPosition) const;
-		const WorldState& getPreconditions() const;
-		const WorldState& getEffects() const;
+		const WorldState& preconditions() const;
+		const WorldState& effects() const;
 
 	protected:
 		// Adds a piece of world state that is required for this action to be performed.

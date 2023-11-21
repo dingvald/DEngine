@@ -387,10 +387,19 @@
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\IAction.cpp">
+    <ClCompile Include="src\GOAP\Actions\IAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GOAP\WorldState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\GoalRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\ActionRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Plan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1295,10 +1304,22 @@
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\IAction.h">
+    <ClInclude Include="src\GOAP\Actions\IAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\WorldState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\GoalRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\ActionRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Plan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Actions\AiActionTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

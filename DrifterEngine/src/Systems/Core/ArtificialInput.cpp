@@ -8,10 +8,15 @@
 #include "Spatial/Conversions.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/TargetSelectors/TargetSelectors.h"
+#include "GOAP/Plan.h"
+#include "GOAP/GoalRegistry.h"
+#include "GOAP/ActionRegistry.h"
 
 
 void drft::system::ArtificialInput::init()
 {
+	goap::ActionRegistry::bind();
+	goap::GoalRegistry::bind();
 }
 
 void drft::system::ArtificialInput::update(const float dt)
@@ -21,8 +26,8 @@ void drft::system::ArtificialInput::update(const float dt)
 	{
 		switch (ai.state)
 		{
-		case AIState::Standby:
-			aiStandby(ai);
+		case AIState::Think:
+			aiThink(ai);
 			break;
 		case AIState::MoveTo:
 			aiMoveTo(ai);
@@ -169,24 +174,65 @@ bool drft::system::ArtificialInput::isTargetValid(component::AI& ai) const
 	if (ai.target == entt::null || !registry->valid(ai.target))
 	{
 		ai.target = entt::null;
-		ai.state = AIState::Standby;
+		ai.state = AIState::Think;
 		return false;
 	}
 	return true;
 }
 
-void drft::system::ArtificialInput::aiStandby(component::AI& ai)
+std::string drft::system::ArtificialInput::prioritizeGoal(const component::AI& ai) const
 {
+	std::string result;
+	for (auto&& goal : ai.goals)
+	{
+		return goal;
+	}
+
+	return result;
+}
+
+std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiActions(const component::AI& ai) const
+{
+	std::unordered_set<goap::AiAction> result;
+	entt::const_handle entity = { *registry, entt::to_entity(*registry, ai) };
+	if (entity.all_of<component::Faction>())
+	{
+		result.insert(goap::AiAction::SpotHostile);
+		result.insert(goap::AiAction::AttackHostile);
+		result.insert(goap::AiAction::RunFromHostile);
+	}
+
+	return result;
+}
+
+void drft::system::ArtificialInput::aiThink(component::AI& ai)
+{
+	// Run world sensors
+
+	// Prioritize goal
+	auto goal = prioritizeGoal(ai);
+	auto plan = goap::plan(ai.blackboard, getAiActions(ai), goal);
+
+	// Set target
 	entt::entity entity = entt::to_entity(*registry, ai);
 	entt::handle eHandle = { *registry, entity };
-	ai.target = findTarget(eHandle, targetSelector::isHostile); // Action.isValidTarget;
-	if (ai.target == entt::null)
-	{
+
+	// Just like real life
+	if (!plan) {
 		randomMove(eHandle);
+	}
+
+	ai.target = findTarget(eHandle, [&plan](auto actor, auto target) -> bool {
+			return goap::ActionRegistry::get(plan.value().front()).isValidTarget(actor, target);});
+
+	if (ai.target != entt::null)
+	{
+		ai.state = AIState::MoveTo;
 	}
 	else
 	{
-		ai.state = AIState::MoveTo;
+		// If no performable action random move
+		randomMove(eHandle);
 	}
 }
 
@@ -218,7 +264,7 @@ void drft::system::ArtificialInput::aiMoveTo(component::AI& ai)
 	{
 		clearPathCache(entity);
 		ai.target = entt::null;
-		ai.state = AIState::Standby;
+		ai.state = AIState::Think;
 	}
 }
 

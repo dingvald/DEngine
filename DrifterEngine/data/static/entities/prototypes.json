@@ -857,8 +857,7 @@
         "AI": {
           "sightRange": 15,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -914,8 +913,7 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -971,8 +969,7 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1028,8 +1025,7 @@
         "AI": {
           "sightRange": 16,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1085,8 +1081,7 @@
         "AI": {
           "sightRange": 12,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1144,8 +1139,7 @@
         "AI": {
           "sightRange": 12,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1232,8 +1226,7 @@
         "AI": {
           "sightRange": 12,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1286,8 +1279,7 @@
         "AI": {
           "sightRange": 16,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1340,8 +1332,7 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1375,8 +1366,7 @@
         "AI": {
           "sightRange": 6,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1434,8 +1424,7 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1493,8 +1482,7 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }
@@ -1552,8 +1540,7 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "random_move",
-            "kill_target"
+            "kill_hostile"
           ]
         }
       }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Systems/HelperClasses/BodyParts.h"
 #include "Systems/HelperClasses/AIStates.h"
+#include "GOAP/WorldState.h"
 
 namespace component
 {
@@ -155,9 +156,9 @@ namespace component
 	{
 		int sightRange = 0;
 		std::unordered_set<std::string> goals;
-		std::unordered_map<std::string, int> blackboard;
+		drft::goap::WorldState blackboard;
 		entt::entity target = entt::null;
-		AIState state = AIState::Standby;
+		AIState state = AIState::Think;
 	};
 
 	struct Faction

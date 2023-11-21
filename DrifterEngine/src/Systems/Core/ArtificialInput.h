@@ -2,6 +2,7 @@
 #include "Systems/System.h"
 #include "Systems/HelperClasses/StateMachine.h"
 #include "Systems/HelperClasses/AIStates.h"
+#include "GOAP/Actions/AiActionTypes.h"
 
 namespace component
 {
@@ -26,8 +27,11 @@ namespace drft::system
 
 		bool isTargetValid(component::AI& ai) const;
 
+		std::string prioritizeGoal(const component::AI& ai) const;
+		std::unordered_set<goap::AiAction> getAiActions(const component::AI& ai) const;
+
 		// States
-		void aiStandby(component::AI& ai);
+		void aiThink(component::AI& ai);
 		void aiMoveTo(component::AI& ai);
 		void aiPerformAction(component::AI& ai);
 
