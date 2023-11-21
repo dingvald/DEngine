@@ -4,10 +4,8 @@
 #include "GoalRegistry.h"
 
 
-std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::WorldState& blackboard, const std::unordered_set<AiAction>& actions, const std::string& goal)
+std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::WorldState& blackboard, const std::unordered_set<AiAction>& actions, const WorldState& goal)
 {
-	const auto& goalState = goap::GoalRegistry::get(goal);
-
 	struct Node
 	{
 		const WorldState* worldState;
@@ -42,7 +40,7 @@ std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::Wor
 	while (!openSet.empty())
 	{
 		auto& currentNode = *(openSet.begin());
-		if (currentNode.worldState->isSupersetOf(goalState))
+		if (currentNode.worldState->isSupersetOf(goal))
 		{
 			return constructPlan(cameFrom, currentNode);
 		}
@@ -56,7 +54,7 @@ std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::Wor
 			if (action.preconditions().isSubsetOf(*currentNode.worldState))
 			{
 				const int distanceSoFar = currentNode.distance + 1;
-				const int distanceFromTarget = action.effects().distance(goalState);
+				const int distanceFromTarget = action.effects().distance(goal);
 				const int cost = distanceSoFar + distanceFromTarget + action.cost();
 
 				Node neighbor = Node({ &action.effects(), actionType, distanceSoFar, cost });

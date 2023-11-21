@@ -180,14 +180,37 @@ bool drft::system::ArtificialInput::isTargetValid(component::AI& ai) const
 	return true;
 }
 
-std::string drft::system::ArtificialInput::prioritizeGoal(const component::AI& ai) const
+void drft::system::ArtificialInput::generatePlan(component::AI& ai) const
 {
-	std::string result;
-	for (auto&& goal : ai.goals)
+	auto goals = prioritizeGoals(ai);
+	if (!ai.plan.empty())
 	{
-		return goal;
+		// Check if already pursuing this goal...
+		const auto& lastAction = goap::ActionRegistry::get(ai.plan.back());
+		if (lastAction.effects().isSupersetOf(goals.top())) return;
 	}
 
+	while (!goals.empty())
+	{
+		auto tempPlan = goap::plan(ai.blackboard, getAiActions(ai), goals.top());
+		goals.pop();
+		if (!tempPlan) continue;
+		const auto& firstAction = goap::ActionRegistry::get(tempPlan.value().front());
+		if (ai.blackboard.isSupersetOf(firstAction.preconditions()))
+		{
+			ai.plan = tempPlan.value();
+			return;
+		}
+	}
+}
+
+std::stack<std::reference_wrapper<const drft::goap::WorldState>> drft::system::ArtificialInput::prioritizeGoals(const component::AI& ai) const
+{
+	std::stack<std::reference_wrapper<const goap::WorldState>> result;
+	for (auto&& goal : ai.goals)
+	{
+		result.push(std::ref( goap::GoalRegistry::get(goal)));
+	}
 	return result;
 }
 
@@ -207,23 +230,21 @@ std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiAct
 
 void drft::system::ArtificialInput::aiThink(component::AI& ai)
 {
-	// Run world sensors
-
-	// Prioritize goal
-	auto goal = prioritizeGoal(ai);
-	auto plan = goap::plan(ai.blackboard, getAiActions(ai), goal);
-
-	// Set target
 	entt::entity entity = entt::to_entity(*registry, ai);
 	entt::handle eHandle = { *registry, entity };
 
-	// Just like real life
-	if (!plan) {
+	// Run world sensors
+
+	generatePlan(ai);
+	
+	if (ai.plan.empty()) 
+	{
 		randomMove(eHandle);
+		return;
 	}
 
-	ai.target = findTarget(eHandle, [&plan](auto actor, auto target) -> bool {
-			return goap::ActionRegistry::get(plan.value().front()).isValidTarget(actor, target);});
+	ai.target = findTarget(eHandle, [&ai](auto actor, auto target) -> bool {
+			return goap::ActionRegistry::get(ai.plan.value().front()).isValidTarget(actor, target);});
 
 	if (ai.target != entt::null)
 	{
@@ -271,5 +292,15 @@ void drft::system::ArtificialInput::aiMoveTo(component::AI& ai)
 void drft::system::ArtificialInput::aiPerformAction(component::AI& ai)
 {
 	if (!isTargetValid(ai)) return;
-
+	if (ai.plan.empty())
+	{
+		ai.target = entt::null;
+		ai.state = AIState::Think;
+		return;
+	}
+	const auto& action = goap::ActionRegistry::get(ai.plan.front());
+	action.perform(entt::handle{ *registry, entt::to_entity(*registry, ai) }, entt::handle{ *registry, ai.target });
+	ai.plan.pop_front();
+	ai.target = entt::null;
+	ai.state = AIState::Think;
 }

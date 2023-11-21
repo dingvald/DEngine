@@ -116,7 +116,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, AI& ai)
 	{
-		archive(ai.sightRange, ai.goals, ai.blackboard, ai.state);
+		archive(ai.sightRange, ai.goals, ai.plan, ai.blackboard, ai.state);
 	}
 
 	template<class Archive>

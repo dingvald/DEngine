@@ -2,6 +2,7 @@
 #include "Systems/HelperClasses/BodyParts.h"
 #include "Systems/HelperClasses/AIStates.h"
 #include "GOAP/WorldState.h"
+#include "GOAP/Actions/AiActionTypes.h"
 
 namespace component
 {
@@ -156,6 +157,7 @@ namespace component
 	{
 		int sightRange = 0;
 		std::unordered_set<std::string> goals;
+		std::deque<drft::goap::AiAction> plan;
 		drft::goap::WorldState blackboard;
 		entt::entity target = entt::null;
 		AIState state = AIState::Think;

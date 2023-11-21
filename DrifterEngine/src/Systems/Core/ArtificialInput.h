@@ -9,6 +9,11 @@ namespace component
 	struct AI;
 }
 
+namespace drft::goap
+{
+	class WorldState;
+}
+
 namespace drft::system
 {
 	class ArtificialInput : public System
@@ -27,7 +32,8 @@ namespace drft::system
 
 		bool isTargetValid(component::AI& ai) const;
 
-		std::string prioritizeGoal(const component::AI& ai) const;
+		void generatePlan(component::AI& ai) const;
+		std::stack<std::reference_wrapper<const goap::WorldState>> prioritizeGoals(const component::AI& ai) const;
 		std::unordered_set<goap::AiAction> getAiActions(const component::AI& ai) const;
 
 		// States

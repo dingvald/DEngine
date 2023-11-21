@@ -55,5 +55,7 @@
 #include <cereal/types/unordered_set.hpp>
 #include <Cereal/types/unordered_map.hpp>
 #include <cereal/types/map.hpp>
+#include <cereal/types/optional.hpp>
+#include <cereal/types/deque.hpp>
 
 #pragma warning(pop)
