@@ -23,14 +23,14 @@ namespace drft::system
 		void update(const float dt) override;
 
 	private:
-		entt::entity findTarget(entt::handle entity, std::function<bool(entt::const_handle, entt::const_handle)> selector) const;
-		bool hasLineOfSight(sf::Vector2i myPosition, sf::Vector2i targetPosition) const;
+		bool inSightRange(sf::Vector2i position, const component::AI&) const;
 		void randomMove(entt::handle entity) const;
-		void moveToTarget(entt::entity ai, sf::Vector2i myPosition, sf::Vector2i targetPosition) const;
-		void pathToTarget(entt::entity ai, sf::Vector2i myPosition, sf::Vector2i targetPosition) const;
+		void moveToTarget(entt::handle entity, sf::Vector2i targetPosition) const;
+		void pathToTarget(entt::handle, sf::Vector2i targetPosition) const;
 		void clearPathCache(entt::entity entity) const;
 
-		bool isTargetValid(component::AI& ai) const;
+		entt::handle getHandle(component::AI& ai);
+		entt::const_handle getHandle(const component::AI& ai) const;
 
 		void generatePlan(component::AI& ai) const;
 		std::stack<std::reference_wrapper<const goap::WorldState>> prioritizeGoals(const component::AI& ai) const;

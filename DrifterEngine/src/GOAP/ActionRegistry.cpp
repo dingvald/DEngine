@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "ActionRegistry.h"
+#include "Actions/SpotHostileAction.h"
 
 drft::goap::ActionRegistry::ActionMap drft::goap::ActionRegistry::_actions = {};
 
 void drft::goap::ActionRegistry::bind()
 {
-
+	_actions.emplace(AiAction::SpotHostile, std::make_unique<SpotHostileAction>());
 
 }
 

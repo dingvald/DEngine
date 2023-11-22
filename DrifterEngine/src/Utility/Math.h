@@ -11,6 +11,7 @@ namespace drft::math
 	template<typename T>
 	struct Range
 	{
+		Range() = default;
 		Range(T min, T max)
 			: min(min)
 			, max(max) {}

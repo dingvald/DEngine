@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GOAP\Actions\SpotHostileAction.cpp" />
     <ClCompile Include="src\GOAP\Plan.cpp" />
     <ClCompile Include="src\GOAP\ActionRegistry.cpp" />
     <ClCompile Include="src\GOAP\GoalRegistry.cpp" />
@@ -199,6 +200,7 @@
     <ClCompile Include="src\Systems\HelperClasses\EquipmentSlots.cpp" />
     <ClCompile Include="src\Systems\Helpers\ContainerHasItem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp" />
+    <ClCompile Include="src\Systems\Helpers\HasLineOfSight.cpp" />
     <ClCompile Include="src\Systems\Helpers\InputBuffer.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\InteractionSystem.cpp" />
@@ -344,6 +346,7 @@
     <ClCompile Include="src\GOAP\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GOAP\Actions\SpotHostileAction.h" />
     <ClInclude Include="src\GOAP\Actions\AiActionTypes.h" />
     <ClInclude Include="src\GOAP\Plan.h" />
     <ClInclude Include="src\GOAP\ActionRegistry.h" />
@@ -367,6 +370,7 @@
     <ClInclude Include="src\Systems\HelperClasses\EquipmentSlots.h" />
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h" />
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h" />
+    <ClInclude Include="src\Systems\Helpers\HasLineOfSight.h" />
     <ClInclude Include="src\Systems\Helpers\InputBuffer.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\InteractionSystem.h" />

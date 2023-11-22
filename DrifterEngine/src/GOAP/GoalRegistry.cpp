@@ -6,7 +6,7 @@ drft::goap::GoalRegistry::GoalMap drft::goap::GoalRegistry::_goals = {};
 void drft::goap::GoalRegistry::bind()
 {
 	_goals["kill_hostile"] = { {"target_dead", true} };
-	_goals["avoid_hostile"] = { {"near_hostile", false} };
+	_goals["avoid_hostile"] = { {"sees_hostile", false} };
 }
 
 const drft::goap::GoalRegistry::Goal& drft::goap::GoalRegistry::get(const std::string& goalName)

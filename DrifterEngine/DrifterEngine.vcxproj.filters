@@ -402,6 +402,12 @@
     <ClCompile Include="src\GOAP\Plan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\HasLineOfSight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Actions\SpotHostileAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1320,6 +1326,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\Actions\AiActionTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\HasLineOfSight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Actions\SpotHostileAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

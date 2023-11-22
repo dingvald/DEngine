@@ -5,6 +5,7 @@ namespace drft::goap
 	enum class AiAction
 	{
 		NULL_TYPE,
+		RandomMove,
 		SpotHostile,
 		AttackHostile,
 		RunFromHostile
