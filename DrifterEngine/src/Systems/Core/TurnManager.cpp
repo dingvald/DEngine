@@ -21,6 +21,7 @@ void drft::system::TurnManager::onStart(bool)
 	registry->emplace<component::Actor>(_timeKeeper, 0, 1.0f, 1.0f);
 	registry->emplace<component::tag::Active>(_timeKeeper);
 	registry->emplace<component::Info>(_timeKeeper, "", "Time Keeper", "", "");
+
 	_actorQueue->setSentinel(_timeKeeper);
 	_managedEntities.insert(_timeKeeper);
 	_currentActor = _timeKeeper;
@@ -45,6 +46,7 @@ void drft::system::TurnManager::update(const float)
 		}
 	}
 
+	registry->clear<component::tag::CurrentActor>();
 	_previousActor = _currentActor;
 	if (_currentActor == _timeKeeper)
 	{
@@ -53,6 +55,7 @@ void drft::system::TurnManager::update(const float)
 		_currentActor = _actorQueue->front();
 		return;
 	}
+
 	registry->emplace_or_replace<component::tag::CurrentActor>(_currentActor);
 }
 
@@ -130,9 +133,8 @@ void drft::system::ActorQueue::sort()
 		[this](const entt::entity& a, const entt::entity& b)
 		{
 			auto& actor_a = this->registry.get<component::Actor>(a);
-	auto& actor_b = this->registry.get<component::Actor>(b);
-
-	return actor_a.ap > actor_b.ap;
+			auto& actor_b = this->registry.get<component::Actor>(b);
+			return actor_a.ap > actor_b.ap;
 		}
 	);
 }

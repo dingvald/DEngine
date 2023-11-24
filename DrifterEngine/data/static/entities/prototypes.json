@@ -1081,6 +1081,7 @@
         "AI": {
           "sightRange": 12,
           "goals": [
+            "wander",
             "kill_hostile"
           ]
         }

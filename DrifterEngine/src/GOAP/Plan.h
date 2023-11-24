@@ -1,5 +1,5 @@
 #pragma once
-#include "Actions/IAction.h"
+#include "IAction.h"
 #include "Actions/AiActionTypes.h"
 
 namespace drft::goap

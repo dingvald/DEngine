@@ -8,6 +8,6 @@ namespace drft::goap
 		RandomMove,
 		SpotHostile,
 		AttackHostile,
-		RunFromHostile
+		EscapeHostiles
 	};
 }

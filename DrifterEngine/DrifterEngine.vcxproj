@@ -180,11 +180,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GOAP\Sensors\HostileSensor.cpp" />
+    <ClCompile Include="src\GOAP\ISensor.cpp" />
+    <ClCompile Include="src\GOAP\Actions\EscapeHostilesAction.cpp" />
+    <ClCompile Include="src\GOAP\Actions\AttackHostileAction.cpp" />
+    <ClCompile Include="src\GOAP\Actions\RandomMoveAction.cpp" />
     <ClCompile Include="src\GOAP\Actions\SpotHostileAction.cpp" />
     <ClCompile Include="src\GOAP\Plan.cpp" />
     <ClCompile Include="src\GOAP\ActionRegistry.cpp" />
     <ClCompile Include="src\GOAP\GoalRegistry.cpp" />
-    <ClCompile Include="src\GOAP\Actions\IAction.cpp" />
+    <ClCompile Include="src\GOAP\IAction.cpp" />
     <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Random\NoiseMap.cpp" />
@@ -346,12 +351,18 @@
     <ClCompile Include="src\GOAP\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GOAP\Sensors\HostileSensor.h" />
+    <ClInclude Include="src\GOAP\ISensor.h" />
+    <ClInclude Include="src\GOAP\Actions\EscapeHostilesAction.h" />
+    <ClInclude Include="src\GOAP\Actions\AttackHostileAction.h" />
+    <ClInclude Include="src\GOAP\Actions\RandomMoveAction.h" />
     <ClInclude Include="src\GOAP\Actions\SpotHostileAction.h" />
     <ClInclude Include="src\GOAP\Actions\AiActionTypes.h" />
+    <ClInclude Include="src\GOAP\Goal.h" />
     <ClInclude Include="src\GOAP\Plan.h" />
     <ClInclude Include="src\GOAP\ActionRegistry.h" />
     <ClInclude Include="src\GOAP\GoalRegistry.h" />
-    <ClInclude Include="src\GOAP\Actions\IAction.h" />
+    <ClInclude Include="src\GOAP\IAction.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
     <ClInclude Include="src\Random\PercentChance.h" />

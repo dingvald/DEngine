@@ -8,12 +8,16 @@ std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::Wor
 {
 	struct Node
 	{
-		const WorldState* worldState;
-		AiAction cameFrom;
+		WorldState worldState;
+		AiAction action;
 		int cost = 0;
 		int distance = 0;
 		bool operator<(const Node& rhs) const
 		{
+			if (cost == rhs.cost)
+			{
+				return rhs.worldState.contains(worldState);
+			}
 			return cost < rhs.cost;
 		}
 	};
@@ -25,51 +29,58 @@ std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::Wor
 	auto constructPlan = [](const std::unordered_map<AiAction, Node>& cameFrom, const Node& current) {
 		std::deque<AiAction> result;
 		Node currentNode = current;
-		while (currentNode.cameFrom != AiAction::NULL_TYPE)
+		while (currentNode.action != AiAction::NULL_TYPE)
 		{
-			result.emplace_front(currentNode.cameFrom);
-			currentNode = cameFrom.at(currentNode.cameFrom);
+			result.push_front(currentNode.action);
+			currentNode = cameFrom.at(currentNode.action);
 		}
 		return result;
 	};
 
 	Node startNode = { &blackboard, AiAction::NULL_TYPE, 0, 0};
 	openSet.insert(startNode);
-	cameFrom.emplace(startNode.cameFrom, startNode);
+	cameFrom.insert({ startNode.action, startNode });
 
 	while (!openSet.empty())
 	{
-		auto& currentNode = *(openSet.begin());
-		if (currentNode.worldState->isSupersetOf(goal))
+		Node currentNode = *(openSet.begin());
+		if (currentNode.worldState.contains(goal))
 		{
 			return constructPlan(cameFrom, currentNode);
 		}
 		openSet.erase(openSet.begin());
-		closedSet.emplace(currentNode.cameFrom);
+		closedSet.insert(currentNode.action);
 
 		for (auto& actionType : actions)
 		{
 			if (closedSet.contains(actionType)) continue;
 			const auto& action = goap::ActionRegistry::get(actionType);
-			if (action.preconditions().isSubsetOf(*currentNode.worldState))
+			if (currentNode.worldState.contains(action.preconditions()))
 			{
 				const int distanceSoFar = currentNode.distance + 1;
 				const int distanceFromTarget = action.effects().distance(goal);
 				const int cost = distanceSoFar + distanceFromTarget + action.cost();
+				// TODO: need to merge currentNode world state into action effects
+				Node neighbor = Node({ action.effects(), actionType, distanceSoFar, cost });
 
-				Node neighbor = Node({ &action.effects(), actionType, distanceSoFar, cost });
-
-				auto inOpenSet = openSet.find(neighbor);
+				auto inOpenSet = std::find_if(openSet.begin(), openSet.end(),
+					[&neighbor](const Node& node) -> bool
+					{
+						return (neighbor.action == node.action
+						&& neighbor.worldState == node.worldState);
+					});
 				if (inOpenSet == openSet.end())
 				{
-					openSet.emplace(neighbor);
+					openSet.insert(neighbor);
+					cameFrom.insert({ actionType, currentNode });
 				}
 				else
 				{
 					if (inOpenSet->distance > distanceSoFar)
 					{
 						openSet.erase(inOpenSet);
-						openSet.emplace(neighbor);
+						openSet.insert(neighbor);
+						cameFrom.insert({ actionType, currentNode });
 					}
 				}
 			}

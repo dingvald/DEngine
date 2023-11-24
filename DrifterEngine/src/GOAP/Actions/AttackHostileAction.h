@@ -3,14 +3,18 @@
 
 namespace drft::goap
 {
-	class SpotHostileAction : public IAction
+	class AttackHostileAction :
+		public IAction
 	{
 	public:
-		SpotHostileAction();
+		AttackHostileAction();
 		// Inherited via IAction
+		[[nodiscard]] virtual std::optional<sf::Vector2i> setMoveTarget(entt::const_handle agent) const override;
 		virtual ActionResult perform(entt::handle agent) const override;
 		virtual int cost() const override;
 		virtual bool requiresInRange() const override;
+		virtual bool isInRange(entt::handle agent) const override;
 	};
 }
+
 

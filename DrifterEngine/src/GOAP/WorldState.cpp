@@ -20,23 +20,17 @@ void drft::goap::WorldState::add(const std::string& key, int value)
 	_state[key] = value;
 }
 
-bool drft::goap::WorldState::matches(const WorldState& otherState) const
-{
-	if (otherState.isSubsetOf(*this) && otherState.isSupersetOf(*this)) return true;
-	return false;
-}
-
-bool drft::goap::WorldState::isSubsetOf(const WorldState& otherState) const
+bool drft::goap::WorldState::isSameAs(const WorldState& otherState) const
 {
 	for (auto&& [key, val] : _state)
 	{
 		if (!otherState._state.contains(key)) return false;
 		if (otherState._state.at(key) != val) return false;
 	}
-	return true;
+	return contains(otherState);
 }
 
-bool drft::goap::WorldState::isSupersetOf(const WorldState& otherState) const
+bool drft::goap::WorldState::contains(const WorldState& otherState) const
 {
 	for (auto&& [key, val] : otherState._state)
 	{
@@ -73,4 +67,9 @@ void drft::goap::WorldState::merge(const WorldState& otherState)
 	{
 		_state[key] = val;
 	}
+}
+
+bool drft::goap::WorldState::isEmpty() const
+{
+	return _state.empty();
 }

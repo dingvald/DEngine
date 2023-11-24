@@ -1,12 +1,12 @@
 #pragma once
 #include "WorldState.h"
+#include "Goal.h"
 
 namespace drft::goap
 {
 	class GoalRegistry
 	{
 	public:
-		using Goal = WorldState;
 		static void bind();
 		static const Goal& get(const std::string& goalName);
 

@@ -387,7 +387,7 @@
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Actions\IAction.cpp">
+    <ClCompile Include="src\GOAP\IAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GOAP\WorldState.cpp">
@@ -406,6 +406,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GOAP\Actions\SpotHostileAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Actions\RandomMoveAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Actions\AttackHostileAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Actions\EscapeHostilesAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\ISensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Sensors\HostileSensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1310,7 +1325,7 @@
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Actions\IAction.h">
+    <ClInclude Include="src\GOAP\IAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\WorldState.h">
@@ -1332,6 +1347,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\Actions\SpotHostileAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Actions\RandomMoveAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Actions\AttackHostileAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Actions\EscapeHostilesAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Goal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\ISensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Sensors\HostileSensor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

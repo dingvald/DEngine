@@ -5,16 +5,15 @@
 #include "Components/Tags.h"
 #include "Systems/Helpers/HasLineOfSight.h"
 
-bool drft::goap::IAction::isInRange(sf::Vector2i agentPosition, sf::Vector2i targetPosition) const
+bool drft::goap::IAction::isInRange(entt::handle agent) const
 {
-	float distance = spatial::distance(agentPosition, targetPosition);
-	if (_range.isValueWithinInclusive(static_cast<int>(distance))) return true;
-	return false;
+	if (!requiresInRange()) return true;
+	throw std::exception("Need to override.");
 }
 
 bool drft::goap::IAction::isValid(const WorldState& worldState) const
 {
-	return worldState.isSupersetOf(_preconditions);
+	return worldState.contains(_preconditions);
 }
 
 const drft::goap::WorldState& drft::goap::IAction::preconditions() const
@@ -34,13 +33,7 @@ void drft::goap::IAction::addPrecondition(const std::string& key, int val)
 
 void drft::goap::IAction::addEffect(const std::string& key, int val)
 {
-	_preconditions.add(key, val);
-}
-
-void drft::goap::IAction::setRange(int min, int max)
-{
-	_range.min = min;
-	_range.max = max;
+	_effects.add(key, val);
 }
 
 entt::entity drft::goap::IAction::findTarget(entt::const_handle aiEntity, std::function<bool(entt::const_handle)> selector) const
@@ -58,7 +51,7 @@ entt::entity drft::goap::IAction::findTarget(entt::const_handle aiEntity, std::f
 		if (distance < ai.sightRange && distance < closestRange)
 		{
 			entt::const_handle otherHandle = { *aiEntity.registry(), otherEntity};
-			if (system::hasLineOfSight(pos.position, otherPos.position, *aiEntity.registry()) && selector(otherHandle))
+			if (system::hasLineOfSight(aiEntity, otherPos.position) && selector(otherHandle))
 			{
 				closestRange = distance;
 				closestTarget = otherEntity;
@@ -69,6 +62,15 @@ entt::entity drft::goap::IAction::findTarget(entt::const_handle aiEntity, std::f
 	return closestTarget;
 }
 
+const component::AI& drft::goap::IAction::getAI(entt::const_handle aiEntity) const
+{
+	if (auto ai = aiEntity.try_get<component::AI>())
+	{
+		return *ai;
+	}
+	throw std::exception("Entity does not have AI component.");
+}
+
 component::AI& drft::goap::IAction::getAI(entt::handle aiEntity) const
 {
 	if (auto ai = aiEntity.try_get<component::AI>())
@@ -76,4 +78,10 @@ component::AI& drft::goap::IAction::getAI(entt::handle aiEntity) const
 		return *ai;
 	}
 	throw std::exception("Entity does not have AI component.");
+}
+
+std::optional<sf::Vector2i> drft::goap::IAction::setMoveTarget(entt::const_handle agent) const
+{
+	if (!requiresInRange()) return std::nullopt;
+	throw std::exception("Need to override.");
 }

@@ -42,8 +42,8 @@
           "Rat": {
             "Algorithm": "RandomSpread",
             "Parameters": {
-              "Minimum": 2,
-              "Maximum": 6
+              "Minimum": 0,
+              "Maximum": 1
             }
           }
         }

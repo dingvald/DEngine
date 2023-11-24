@@ -12,11 +12,15 @@
 #include "GOAP/GoalRegistry.h"
 #include "GOAP/ActionRegistry.h"
 
+#include "GOAP/Sensors/HostileSensor.h"
+
 
 void drft::system::ArtificialInput::init()
 {
 	goap::ActionRegistry::bind();
 	goap::GoalRegistry::bind();
+
+	registerSensor(std::make_unique<goap::HostileSensor>());
 }
 
 void drft::system::ArtificialInput::update(const float dt)
@@ -39,42 +43,13 @@ void drft::system::ArtificialInput::update(const float dt)
 	}
 }
 
+
 bool drft::system::ArtificialInput::inSightRange(sf::Vector2i position, const component::AI& ai) const
 {
 	auto handle = getHandle(ai);
 	auto myPosition = handle.get<component::Position>().position;
 	if (spatial::distance(myPosition, position) < ai.sightRange) return true;
 	return false;
-}
-
-void drft::system::ArtificialInput::randomMove(entt::handle entity) const
-{
-	int randx = rng::RandomNumberGenerator::intInRange(-1, 1);
-	int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
-	const auto& grid = registry->ctx().get<const spatial::WorldGrid&>();
-	const auto& tilepos = entity.get<component::Position>().position;
-
-	auto blockerFilter = [this](entt::entity entity) -> bool
-	{
-		if (auto physical = registry->try_get<component::Physical>(entity))
-		{
-			return physical->blocks;
-		}
-		return false;
-	};
-
-	auto blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
-	
-	int safetyCount = 0; // in case entity is surrounded
-	while (safetyCount < 8 && !blockers.empty())
-	{
-		randx = rng::RandomNumberGenerator::intInRange(-1, 1);
-		randy = rng::RandomNumberGenerator::intInRange(-1, 1);
-		blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
-		++safetyCount;
-	}
-	
-	entity.emplace<component::action::Move>(sf::Vector2i(randx, randy));
 }
 
 void drft::system::ArtificialInput::moveToTarget(entt::handle entity, sf::Vector2i targetPosition) const
@@ -146,40 +121,78 @@ entt::const_handle drft::system::ArtificialInput::getHandle(const component::AI&
 	return aiHandle;
 }
 
-void drft::system::ArtificialInput::generatePlan(component::AI& ai) const
+void drft::system::ArtificialInput::registerSensor(std::unique_ptr<goap::ISensor> sensor)
+{
+	_sensors.emplace_back(std::move(sensor));
+}
+
+void drft::system::ArtificialInput::senseWorldState(component::AI& ai) const
+{
+	auto handle = getHandle(ai);
+	auto pos = handle.get<component::Position>();
+	auto senseRadius = spatial::getIntCircleInRadius(pos.position, ai.sightRange);
+	const auto& grid = handle.registry()->ctx().get<const spatial::WorldGrid&>();
+	std::vector<entt::entity> surroundings;
+	for (auto&& position : senseRadius)
+	{
+		auto entities = grid.entitiesAt(position);
+		surroundings.insert(surroundings.end(), entities.begin(), entities.end());
+	}
+
+	for (auto&& sensor : _sensors)
+	{
+		ai.blackboard.merge(sensor->sense(handle, surroundings));
+	}
+}
+
+std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(const component::AI& ai, const goap::Goal& exclude) const
 {
 	auto goals = prioritizeGoals(ai);
 	if (!ai.plan.empty())
 	{
 		const auto& lastAction = goap::ActionRegistry::get(ai.plan.back());
-		const auto& firstAction = goap::ActionRegistry::get(ai.plan.front());
-		if (firstAction.isValid(ai.blackboard) 
-			&& lastAction.effects().isSupersetOf(goals.top())) return;
+		if (lastAction.effects().contains(goals.front())) return ai.plan;
 	}
-
+	std::optional<std::deque<goap::AiAction>> optionalPlan;
 	while (!goals.empty())
 	{
-		auto tempPlan = goap::plan(ai.blackboard, getAiActions(ai), goals.top());
+		optionalPlan = goap::plan(ai.blackboard, getAiActions(ai), goals.front());
 		goals.pop();
-		if (!tempPlan) continue;
-		const auto& firstAction = goap::ActionRegistry::get(tempPlan.value().front());
-		if (firstAction.isValid(ai.blackboard))
+		if (optionalPlan.has_value())
 		{
-			ai.plan = tempPlan.value();
-			return;
+			return optionalPlan.value();
 		}
 	}
-	// No plan constructed
-
+	return std::deque<goap::AiAction>{goap::AiAction::RandomMove};
 }
 
-std::stack<std::reference_wrapper<const drft::goap::WorldState>> drft::system::ArtificialInput::prioritizeGoals(const component::AI& ai) const
+int drft::system::ArtificialInput::calculateGoalValue(const goap::Goal& goal, const component::AI& ai) const
 {
-	std::stack<std::reference_wrapper<const goap::WorldState>> result;
-	for (auto&& goal : ai.goals)
+	// TODO: This is just placeholder
+
+	if (goal.contains(goap::WorldState{ {"look_busy", true} }))
 	{
-		result.push(std::ref( goap::GoalRegistry::get(goal)));
+		return -1;
 	}
+	return 1;
+}
+
+std::queue<drft::goap::Goal> drft::system::ArtificialInput::prioritizeGoals(const component::AI& ai, const goap::Goal& exclude) const
+{
+	std::queue<goap::Goal> result;
+	std::map<int, goap::Goal, std::greater<int>> ranking;
+	for (auto&& goalName : ai.goals)
+	{
+		const auto& goal = goap::GoalRegistry::get(goalName);
+		if (goal.isSameAs(exclude)) continue;
+		int value = calculateGoalValue(goal, ai);
+		ranking.emplace(value, goal);
+	}
+	for (auto&& [_, goal] : ranking)
+	{
+		result.push(goal);
+	}
+
 	return result;
 }
 
@@ -187,43 +200,33 @@ std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiAct
 {
 	std::unordered_set<goap::AiAction> result;
 	entt::const_handle entity = { *registry, entt::to_entity(*registry, ai) };
+	result.insert(goap::AiAction::RandomMove);
+
 	if (entity.all_of<component::Faction>())
 	{
 		result.insert(goap::AiAction::SpotHostile);
 		result.insert(goap::AiAction::AttackHostile);
-		result.insert(goap::AiAction::RunFromHostile);
+		result.insert(goap::AiAction::EscapeHostiles);
 	}
 
 	return result;
 }
 
+
+// AI State Machine
+
 void drft::system::ArtificialInput::aiThink(component::AI& ai)
 {
-	
-
-	// Run world sensors
-
-	generatePlan(ai);
-	
-	if (ai.plan.empty()) 
-	{
-		randomMove(aiHandle);
-	}
-	else
-	{
-		ai.state = AIState::MoveTo;
-	}
+	senseWorldState(ai);
+	ai.plan = generatePlan(ai);
+	ai.state = AIState::MoveTo;
 }
 
 void drft::system::ArtificialInput::aiMoveTo(component::AI& ai)
 {
 	auto handle = getHandle(ai);
 	const auto& action = goap::ActionRegistry::get(ai.plan.front());
-	if (!action.isValid(ai.blackboard))
-	{
-		ai.state = AIState::Think;
-		return;
-	}
+
 	if (!action.requiresInRange() || action.isInRange(handle))
 	{
 		ai.state = AIState::PerformAction;
@@ -259,16 +262,35 @@ void drft::system::ArtificialInput::aiPerformAction(component::AI& ai)
 		ai.state = AIState::Think;
 		return;
 	}
+	auto handle = getHandle(ai);
 
 	const auto& action = goap::ActionRegistry::get(ai.plan.front());
-	if (!action.isValid(ai.blackboard))
+	if (action.requiresInRange() && !action.isInRange(handle))
 	{
-		ai.state = AIState::Think;
-		return;
+		ai.state = AIState::MoveTo;
 	}
-
-	action.perform(entt::handle{ *registry, entt::to_entity(*registry, ai) }, entt::handle{ *registry, ai.target });
-	ai.plan.pop_front();
-	ai.target = entt::null;
-	ai.state = AIState::Think;
+	else
+	{
+		const auto result = action.perform(getHandle(ai));
+		switch (result)
+		{
+		case drft::goap::ActionResult::Complete:
+			ai.plan.pop_front();
+			ai.state = AIState::Think;
+			break;
+		case drft::goap::ActionResult::Continue:
+			break;
+		case drft::goap::ActionResult::Error:
+		case drft::goap::ActionResult::Failed:
+			ai.plan = generatePlan(ai, goap::ActionRegistry::get(ai.plan.back()).effects());
+			ai.target = entt::null;
+			ai.state = AIState::Think;
+			break;
+		default:
+			ai.plan.pop_front();
+			ai.target = entt::null;
+			ai.state = AIState::Think;
+			break;
+		}
+	}
 }
