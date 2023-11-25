@@ -4,6 +4,11 @@
 #include "GOAP/WorldState.h"
 #include "GOAP/Actions/AiActionTypes.h"
 
+namespace drft::goap
+{
+	using Plan = std::deque<AiAction>;
+}
+
 namespace component
 {
 	struct Prototype 
@@ -157,7 +162,7 @@ namespace component
 	{
 		int sightRange = 0;
 		std::unordered_set<std::string> goals;
-		std::deque<drft::goap::AiAction> plan;
+		drft::goap::Plan plan;
 		drft::goap::WorldState blackboard;
 		entt::entity target = entt::null;
 		AIState state = AIState::Think;

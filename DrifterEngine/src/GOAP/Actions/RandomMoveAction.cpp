@@ -50,7 +50,3 @@ bool drft::goap::RandomMoveAction::requiresInRange() const
     return false;
 }
 
-bool drft::goap::RandomMoveAction::isInRange(entt::handle agent) const
-{
-    return false;
-}

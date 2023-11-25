@@ -423,6 +423,9 @@
     <ClCompile Include="src\GOAP\Sensors\HostileSensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GOAP\SensorRunner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1365,6 +1368,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\Sensors\HostileSensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\SensorRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\SensorTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

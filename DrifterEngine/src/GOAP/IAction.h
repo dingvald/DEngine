@@ -34,7 +34,7 @@ namespace drft::goap
 		// Checks if the AI needs to be in range for this action to be performed.
 		virtual bool requiresInRange() const = 0;
 		// Checks if the AI is in range to perform the action.
-		virtual bool isInRange(entt::handle agent) const;
+		virtual bool isInRange(entt::const_handle agent) const;
 		// Checks if the action is valid given the current world state.
 		bool isValid(const WorldState& worldState) const;
 

@@ -4,8 +4,10 @@
 
 namespace drft::goap
 {
+	using Plan = std::deque<AiAction>;
+
 	[[nodiscard]]
-	std::optional<std::deque<AiAction>> plan(const goap::WorldState& blackboard, const std::unordered_set<AiAction>& actions, const WorldState& goal);
+	std::optional<Plan> plan(const goap::WorldState& blackboard, const std::unordered_set<AiAction>& actions, const WorldState& goal);
 }
 
 

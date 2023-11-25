@@ -4,7 +4,7 @@
 #include "GoalRegistry.h"
 
 
-std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::WorldState& blackboard, const std::unordered_set<AiAction>& actions, const WorldState& goal)
+std::optional<drft::goap::Plan> drft::goap::plan(const goap::WorldState& blackboard, const std::unordered_set<AiAction>& actions, const WorldState& goal)
 {
 	struct Node
 	{
@@ -37,7 +37,7 @@ std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::Wor
 		return result;
 	};
 
-	Node startNode = { &blackboard, AiAction::NULL_TYPE, 0, 0};
+	Node startNode = { blackboard, AiAction::NULL_TYPE, 0, 0};
 	openSet.insert(startNode);
 	cameFrom.insert({ startNode.action, startNode });
 
@@ -61,13 +61,15 @@ std::optional<std::deque<drft::goap::AiAction>> drft::goap::plan(const goap::Wor
 				const int distanceFromTarget = action.effects().distance(goal);
 				const int cost = distanceSoFar + distanceFromTarget + action.cost();
 				// TODO: need to merge currentNode world state into action effects
-				Node neighbor = Node({ action.effects(), actionType, distanceSoFar, cost });
+				WorldState newState = currentNode.worldState;
+				newState.merge(action.effects());
+				Node neighbor = Node({ newState, actionType, distanceSoFar, cost });
 
 				auto inOpenSet = std::find_if(openSet.begin(), openSet.end(),
 					[&neighbor](const Node& node) -> bool
 					{
 						return (neighbor.action == node.action
-						&& neighbor.worldState == node.worldState);
+						&& neighbor.worldState.isSameAs(node.worldState));
 					});
 				if (inOpenSet == openSet.end())
 				{

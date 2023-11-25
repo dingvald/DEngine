@@ -5,7 +5,7 @@
 #include "Components/Tags.h"
 #include "Systems/Helpers/HasLineOfSight.h"
 
-bool drft::goap::IAction::isInRange(entt::handle agent) const
+bool drft::goap::IAction::isInRange(entt::const_handle agent) const
 {
 	if (!requiresInRange()) return true;
 	throw std::exception("Need to override.");

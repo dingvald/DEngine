@@ -15,15 +15,10 @@ drft::goap::ActionResult drft::goap::EscapeHostilesAction::perform(entt::handle 
 
 int drft::goap::EscapeHostilesAction::cost() const
 {
-	return 0;
+	return 1;
 }
 
 bool drft::goap::EscapeHostilesAction::requiresInRange() const
-{
-	return false;
-}
-
-bool drft::goap::EscapeHostilesAction::isInRange(entt::handle agent) const
 {
 	return false;
 }

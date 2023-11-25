@@ -14,10 +14,15 @@ drft::goap::AttackHostileAction::AttackHostileAction()
 
 std::optional<sf::Vector2i> drft::goap::AttackHostileAction::setMoveTarget(entt::const_handle agent) const
 {
+	std::cout << "Agent trying to move towards target..." << std::endl;
 	const auto& ai = getAI(agent);
-	if (ai.target == entt::null) return std::nullopt;
+	if (ai.target == entt::null)
+	{
+		return std::nullopt;
+	}
 	if (auto posComp = agent.registry()->try_get<component::Position>(ai.target))
 	{
+		std::cout << "Success!" << std::endl;
 		return posComp->position;
 	}
 
@@ -26,15 +31,22 @@ std::optional<sf::Vector2i> drft::goap::AttackHostileAction::setMoveTarget(entt:
 
 drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle agent) const
 {
+	std::cout << "Agent trying to attack target..." << std::endl;
 	const auto& ai = getAI(agent);
-	if (ai.target == entt::null) return ActionResult::Failed;
+	if (ai.target == entt::null)
+	{
+		std::cout << "Failed: Agent does not have a target." << std::endl;
+		return ActionResult::Failed;
+	}
 	if (auto targetPos = agent.registry()->try_get<component::Position>(ai.target))
 	{
 		const auto& pos = agent.get<component::Position>();
 		sf::Vector2i targetDirection = targetPos->position - pos.position;
 		agent.emplace_or_replace<component::action::LaunchAttack>(targetDirection);
+		std::cout << "Success!" << std::endl;
 		return ActionResult::Continue;
 	}
+	std::cout << "Failed: Target does not have a position." << std::endl;
 	return ActionResult::Failed;
 }
 
@@ -48,7 +60,7 @@ bool drft::goap::AttackHostileAction::requiresInRange() const
 	return true;
 }
 
-bool drft::goap::AttackHostileAction::isInRange(entt::handle agent) const
+bool drft::goap::AttackHostileAction::isInRange(entt::const_handle agent) const
 {
 	const auto& ai = getAI(agent);
 	if (ai.target == entt::null) return false;

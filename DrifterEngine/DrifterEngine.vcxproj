@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GOAP\SensorRunner.cpp" />
     <ClCompile Include="src\GOAP\Sensors\HostileSensor.cpp" />
     <ClCompile Include="src\GOAP\ISensor.cpp" />
     <ClCompile Include="src\GOAP\Actions\EscapeHostilesAction.cpp" />
@@ -351,6 +352,7 @@
     <ClCompile Include="src\GOAP\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GOAP\SensorRunner.h" />
     <ClInclude Include="src\GOAP\Sensors\HostileSensor.h" />
     <ClInclude Include="src\GOAP\ISensor.h" />
     <ClInclude Include="src\GOAP\Actions\EscapeHostilesAction.h" />
@@ -363,6 +365,7 @@
     <ClInclude Include="src\GOAP\ActionRegistry.h" />
     <ClInclude Include="src\GOAP\GoalRegistry.h" />
     <ClInclude Include="src\GOAP\IAction.h" />
+    <ClInclude Include="src\GOAP\SensorTypes.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
     <ClInclude Include="src\Random\PercentChance.h" />
