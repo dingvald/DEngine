@@ -19,15 +19,16 @@ std::vector<sf::Vector2i> drft::spatial::getIntRect(sf::Vector2i origin, int wid
 std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(const sf::Vector2i centerPosition, const int radius)
 {
 	std::vector<sf::Vector2i> result;
-
-	for (int y = centerPosition.y - radius; y <= centerPosition.y + radius; ++y)
+	result.reserve(radius * radius); // reserve more than needed
+	for (int y = centerPosition.y - radius; y <= centerPosition.y; ++y)
 	{
-		for (int x = centerPosition.x - radius; x <= centerPosition.x + radius; ++x)
+		for (int x = centerPosition.x - radius; x <= centerPosition.x; ++x)
 		{
-			const float distance = spatial::distance({ x,y }, centerPosition);
-			if (distance < radius)
+			if ((x - centerPosition.x) * (x - centerPosition.x) + (y - centerPosition.y) * (y - centerPosition.y) <= radius * radius)
 			{
-				result.emplace_back(x,y);
+				int xMirror = 2 * centerPosition.x - x;
+				int yMirror = 2 * centerPosition.y - y;
+				result.insert(result.end(), { {x, y}, {x, yMirror}, {xMirror, y}, {xMirror, yMirror} });
 			}
 		}
 	}
