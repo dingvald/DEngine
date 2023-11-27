@@ -21,6 +21,7 @@ void drft::system::ArtificialInput::init()
 	goap::GoalRegistry::bind();
 
 	_sensorySystem.registerSensor(std::make_unique<goap::HostileSensor>());
+	_sensorySystem.registerChecker(hasLineOfSight, goap::SensorType::Visual);
 }
 
 void drft::system::ArtificialInput::update(const float dt)

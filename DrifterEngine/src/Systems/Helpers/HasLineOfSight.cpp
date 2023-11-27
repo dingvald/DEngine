@@ -23,6 +23,5 @@ bool drft::system::hasLineOfSight(entt::const_handle entity, sf::Vector2i target
 		}
 		return true;
 	}
-	
 	return false;
 }

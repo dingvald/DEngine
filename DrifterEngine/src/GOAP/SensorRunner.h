@@ -2,31 +2,19 @@
 #include "ISensor.h"
 #include "SensorTypes.h"
 
-namespace component
-{
-	struct AI;
-}
-
 namespace drft::goap
 {
-	struct SensorStatus
-	{
-		SenseResult result = { .keepSensing = true, .success = false };
-		std::unique_ptr<ISensor> sensor = nullptr;
-	};
-
 	class SensorRunner
 	{
 	public:
+		using CheckerFxn = std::function<bool(entt::const_handle, sf::Vector2i)>;
 		void registerSensor(std::unique_ptr<goap::ISensor> sensor);
+		void registerChecker(CheckerFxn checker, SensorType type);
 		void runSensors(entt::handle agent);
 
 	private:
-		void resetSensorResult(SenseResult& result);
-		std::unordered_map<SensorType, std::vector<entt::entity>> getSensedEntities(entt::const_handle agent) const;
-
-	private:
-		mutable std::unordered_map<SensorType, std::vector<SensorStatus>> _sensors;
+		std::vector<std::unique_ptr<ISensor>> _sensors;
+		std::unordered_map<SensorType, CheckerFxn> _checkers;
 	};
 }
 

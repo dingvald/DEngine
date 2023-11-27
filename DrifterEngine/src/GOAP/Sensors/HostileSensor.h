@@ -6,10 +6,10 @@ namespace drft::goap
 	class HostileSensor : public ISensor
 	{
 		// Inherited via ISensor
-		virtual SenseResult sense(entt::handle agent, entt::entity = entt::null) const override;
 		virtual SensorType getType() const override;
-		virtual WorldState getSenseSuccess() const override;
-		virtual WorldState getSenseFailure() const override;
+		virtual void sense(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const override;
+		virtual WorldState stateAfterSuccess() const override;
+		virtual WorldState stateAfterFailure() const override;
 	};
 }
 

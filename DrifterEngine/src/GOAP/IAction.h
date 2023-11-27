@@ -46,8 +46,6 @@ namespace drft::goap
 		void addPrecondition(const std::string& key, int val);
 		// Adds an effect that occurs as a result of this action being performed.
 		void addEffect(const std::string& key, int val);
-		// Generic target finder with selector function.
-		entt::entity findTarget(entt::const_handle aiEntity, std::function<bool(entt::const_handle)> selector) const;
 		const component::AI& getAI(entt::const_handle aiEntity) const;
 		component::AI& getAI(entt::handle aiEntity) const;
 	

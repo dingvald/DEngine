@@ -6,7 +6,7 @@
 drft::goap::AttackHostileAction::AttackHostileAction()
 {
 	addPrecondition("sees_hostile", true);
-	addPrecondition("near_hostile", true);
+	addPrecondition("has_target", true);
 
 	addEffect("sees_hostile", false);
 	addEffect("target_dead", true);

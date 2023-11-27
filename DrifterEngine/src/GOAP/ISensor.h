@@ -2,22 +2,25 @@
 #include "WorldState.h"
 #include "SensorTypes.h"
 
+namespace component
+{
+	struct AI;
+}
+
 namespace drft::goap
 {
-	struct SenseResult
-	{
-		bool keepSensing = false;
-		bool success = false;
-	};
-
 	class ISensor
 	{
 	public:
 		virtual SensorType getType() const = 0;
-		// Senses an entity. Returns true is finished sensing (do no need to process all entities)
-		virtual SenseResult sense(entt::handle agent, entt::entity surrounding = entt::null) const = 0;
-		virtual WorldState getSenseSuccess() const = 0;
-		virtual WorldState getSenseFailure() const = 0;
+		virtual void sense(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const = 0;
+
+	protected:
+		// The world state after successfully sensing the agent's surroundings.
+		virtual WorldState stateAfterSuccess() const = 0;
+		// The world state after failing to sense the agent's surroundings.
+		virtual WorldState stateAfterFailure() const = 0;
+		component::AI& getAI(entt::handle agent) const;
 	};
 }
 
