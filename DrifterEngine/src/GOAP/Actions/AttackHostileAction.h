@@ -9,11 +9,10 @@ namespace drft::goap
 	public:
 		AttackHostileAction();
 		// Inherited via IAction
-		[[nodiscard]] virtual std::optional<sf::Vector2i> setMoveTarget(entt::const_handle agent) const override;
+		virtual std::optional<sf::Vector2i> trySetTarget(entt::handle agent) const override;
 		virtual ActionResult perform(entt::handle agent) const override;
 		virtual int cost() const override;
-		virtual bool requiresInRange() const override;
-		virtual bool isInRange(entt::const_handle agent) const override;
+		virtual bool isInRange(entt::handle agent) const override;
 	};
 }
 

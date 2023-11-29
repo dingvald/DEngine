@@ -3,9 +3,9 @@
 
 drft::goap::EscapeHostilesAction::EscapeHostilesAction()
 {
-	addPrecondition("sees_hostile", true);
+	addPrecondition(sees_hostile, true);
 
-	addEffect("sees_hostile", false);
+	addEffect(sees_hostile, false);
 }
 
 drft::goap::ActionResult drft::goap::EscapeHostilesAction::perform(entt::handle agent) const
@@ -18,7 +18,7 @@ int drft::goap::EscapeHostilesAction::cost() const
 	return 1;
 }
 
-bool drft::goap::EscapeHostilesAction::requiresInRange() const
+bool drft::goap::EscapeHostilesAction::isInRange(entt::handle agent) const
 {
-	return false;
+	return true;
 }

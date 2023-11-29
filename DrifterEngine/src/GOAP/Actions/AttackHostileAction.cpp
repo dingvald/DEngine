@@ -2,42 +2,65 @@
 #include "AttackHostileAction.h"
 #include "Components/Components.h"
 #include "Spatial/Helpers.h"
+#include "Systems/Gameplay/FactionSystem.h"
 
 drft::goap::AttackHostileAction::AttackHostileAction()
 {
-	addPrecondition("sees_hostile", true);
-	addPrecondition("has_target", true);
+	addPrecondition(sees_hostile, true);
 
-	addEffect("sees_hostile", false);
-	addEffect("target_dead", true);
+	addEffect(sees_hostile, false);
+	addEffect(target_dead, true); 
 }
 
-std::optional<sf::Vector2i> drft::goap::AttackHostileAction::setMoveTarget(entt::const_handle agent) const
+std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::handle agent) const
 {
-	std::cout << "Agent trying to move towards target..." << std::endl;
-	const auto& ai = getAI(agent);
-	if (ai.target == entt::null)
+	auto& ai = getAI(agent);
+	std::optional<sf::Vector2i> result = {};
+	if (ai.target == entt::null || !agent.registry()->valid(ai.target))
 	{
-		return std::nullopt;
+		for (auto entity : ai.entitiesOfInterest)
+		{
+			if (system::FactionSystem::resolveRelationship(agent, { *agent.registry(), entity }) != system::Relationship::Hostile)
+			{
+				continue;
+			}
+
+			if (auto targetPos = agent.registry()->try_get<component::Position>(entity))
+			{
+				auto& myPos = agent.get<component::Position>();
+				if (ai.target != entt::null)
+				{
+					auto& currentTargetPos = agent.registry()->get<component::Position>(ai.target);
+					const int currentTargetDistance = spatial::distance(myPos.position, currentTargetPos.position);
+					const int newTargetDistance = spatial::distance(myPos.position, targetPos->position);
+					if (newTargetDistance < currentTargetDistance)
+					{
+						ai.target = entity;
+					}
+				}
+				else
+				{
+					ai.target = entity;
+				}
+			}
+		}
 	}
-	if (auto posComp = agent.registry()->try_get<component::Position>(ai.target))
+	if (ai.target != entt::null && agent.registry()->valid(ai.target))
 	{
-		std::cout << "Success!" << std::endl;
-		return posComp->position;
+		result = agent.registry()->get<component::Position>(ai.target).position;
 	}
 
-	return std::nullopt;
+	return result;
 }
 
 drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle agent) const
 {
-	std::cout << "Agent trying to attack target..." << std::endl;
-	const auto& ai = getAI(agent);
+	auto& ai = getAI(agent);
 	if (ai.target == entt::null)
 	{
-		std::cout << "Failed: Agent does not have a target." << std::endl;
 		return ActionResult::Failed;
 	}
+
 	if (auto targetPos = agent.registry()->try_get<component::Position>(ai.target))
 	{
 		const auto& pos = agent.get<component::Position>();
@@ -46,7 +69,8 @@ drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle a
 		std::cout << "Success!" << std::endl;
 		return ActionResult::Continue;
 	}
-	std::cout << "Failed: Target does not have a position." << std::endl;
+
+	std::cout << "Failed: Target does not have a position" << std::endl;
 	return ActionResult::Failed;
 }
 
@@ -55,19 +79,19 @@ int drft::goap::AttackHostileAction::cost() const
 	return 2;
 }
 
-bool drft::goap::AttackHostileAction::requiresInRange() const
+bool drft::goap::AttackHostileAction::isInRange(entt::handle agent) const
 {
-	return true;
-}
-
-bool drft::goap::AttackHostileAction::isInRange(entt::const_handle agent) const
-{
-	const auto& ai = getAI(agent);
-	if (ai.target == entt::null) return false;
-	if (auto targetPos = agent.registry()->try_get<component::Position>(ai.target))
+	auto& ai = getAI(agent);
+	if (ai.target == entt::null)
 	{
-		const auto& myPos = agent.get<component::Position>();
-		return spatial::distance(myPos.position, targetPos->position) <= 1;
+		return false;
+	}
+
+	auto& pos = agent.get<component::Position>();
+	auto& targetPos = agent.registry()->get<component::Position>(ai.target);
+	if (spatial::distance(pos.position, targetPos.position) <= 1)
+	{
+		return true;
 	}
 	return false;
 }

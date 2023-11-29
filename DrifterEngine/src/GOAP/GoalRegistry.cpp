@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "GoalRegistry.h"
+#include "WorldStateTypes.h"
 
 drft::goap::GoalRegistry::GoalMap drft::goap::GoalRegistry::_goals = {};
 
 void drft::goap::GoalRegistry::bind()
 {
-	_goals["wander"]			= { {"look_busy", true} };
-	_goals["kill_hostile"]		= { {"target_dead", true} };
-	_goals["avoid_hostile"]		= { {"sees_hostile", false} };
+	_goals["wander"]			= { {look_busy, true} };
+	_goals["kill_hostile"]		= { {target_dead, true} };
+	_goals["avoid_hostile"]		= { {sees_hostile, false} };
 }
 
 const drft::goap::Goal& drft::goap::GoalRegistry::get(const std::string& goalName)

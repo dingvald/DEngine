@@ -5,15 +5,9 @@
 #include "Components/Tags.h"
 #include "Systems/Helpers/HasLineOfSight.h"
 
-bool drft::goap::IAction::isInRange(entt::const_handle agent) const
+std::optional<sf::Vector2i> drft::goap::IAction::trySetTarget(entt::handle agent) const
 {
-	if (!requiresInRange()) return true;
-	throw std::exception("Need to override.");
-}
-
-std::optional<sf::Vector2i> drft::goap::IAction::setMoveTarget(entt::const_handle agent) const
-{
-	if (!requiresInRange()) return std::nullopt;
+	if (isInRange(agent)) return std::nullopt;
 	throw std::exception("Need to override.");
 }
 
@@ -32,14 +26,14 @@ const drft::goap::WorldState& drft::goap::IAction::effects() const
 	return _effects;
 }
 
-void drft::goap::IAction::addPrecondition(const std::string& key, int val)
+void drft::goap::IAction::addPrecondition(WorldStateType state, int val)
 {
-	_preconditions.add(key, val);
+	_preconditions.add(state, val);
 }
 
-void drft::goap::IAction::addEffect(const std::string& key, int val)
+void drft::goap::IAction::addEffect(WorldStateType state, int val)
 {
-	_effects.add(key, val);
+	_effects.add(state, val);
 }
 
 const component::AI& drft::goap::IAction::getAI(entt::const_handle aiEntity) const

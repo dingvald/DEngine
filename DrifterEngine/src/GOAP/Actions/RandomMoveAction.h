@@ -10,7 +10,9 @@ namespace drft::goap
 		// Inherited via IAction
 		virtual ActionResult perform(entt::handle agent) const override;
 		virtual int cost() const override;
-		virtual bool requiresInRange() const override;
+
+		// Inherited via IAction
+		virtual bool isInRange(entt::handle agent) const override;
 	};
 }
 

@@ -366,6 +366,7 @@
     <ClInclude Include="src\GOAP\GoalRegistry.h" />
     <ClInclude Include="src\GOAP\IAction.h" />
     <ClInclude Include="src\GOAP\SensorTypes.h" />
+    <ClInclude Include="src\GOAP\WorldStateTypes.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
     <ClInclude Include="src\Random\PercentChance.h" />

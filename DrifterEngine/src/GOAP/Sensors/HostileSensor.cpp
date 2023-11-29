@@ -6,6 +6,7 @@
 #include "Events/SendFloatingMessageEvent.h"
 #include "Utility/EntityHelpers.h"
 #include "Spatial/Helpers.h"
+#include "GOAP/WorldStateTypes.h"
 
 drft::goap::SensorType drft::goap::HostileSensor::getType() const
 {
@@ -16,17 +17,16 @@ void drft::goap::HostileSensor::sense(entt::handle agent, std::function<bool(ent
 {
 	auto view = agent.registry()->view<component::Position, component::Faction, component::tag::Active>();
 	auto& ai = getAI(agent);
-	int closest = ai.sightRange;
 	auto& myPos = agent.get<component::Position>();
 	bool success = false;
 
 	for (const auto& [entity, pos, faction] : view.each())
 	{
 		if (system::FactionSystem::resolveRelationship(agent, { *agent.registry(), entity }) != system::Relationship::Hostile) continue;
-		if ((spatial::distance(myPos.position, pos.position) < closest) && checker(agent, pos.position))
+		if ((spatial::distance(myPos.position, pos.position) <= (ai.sightRange)) && checker(agent, pos.position))
 		{
 			success = true;
-			ai.target = entity;
+			ai.entitiesOfInterest.push_back(entity);
 		}
 	}
 
@@ -37,16 +37,15 @@ void drft::goap::HostileSensor::sense(entt::handle agent, std::function<bool(ent
 drft::goap::WorldState drft::goap::HostileSensor::stateAfterSuccess() const
 {
 	return WorldState{
-		{"sees_hostile", true},
-		{"has_target", true}
+		{visually_sense_hostile, true}
 	};
 }
 
 drft::goap::WorldState drft::goap::HostileSensor::stateAfterFailure() const
 {
 	return WorldState{
-		{"sees_hostile", false},
-		{"has_target", false}
+		{visually_sense_hostile, false},
+		{sees_hostile, false}
 	};
 }
 

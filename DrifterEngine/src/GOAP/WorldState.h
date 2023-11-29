@@ -1,15 +1,19 @@
 #pragma once
 
+
+
 namespace drft::goap
 {
+	enum WorldStateType : int;
+
 	class WorldState
 	{
 	public:
 		WorldState() = default;
-		WorldState(std::initializer_list<std::pair<std::string, int>> init_list);
-		int& operator[](const std::string key);
+		WorldState(std::initializer_list<std::pair<WorldStateType, int>> init_list);
+		int& operator[](WorldStateType key);
 		// Adds a new state and value;
-		void add(const std::string& key, int value);
+		void add(WorldStateType key, int value);
 		bool isSameAs(const WorldState& otherState) const;
 		bool contains(const WorldState& otherState) const;
 		// Returns the number of differences between this state and the other state.
@@ -19,7 +23,7 @@ namespace drft::goap
 		void merge(const WorldState& otherState);
 		bool isEmpty() const;
 	private:
-		std::unordered_map<std::string, int> _state;
+		std::unordered_map<WorldStateType, int> _state;
 
 		friend class cereal::access;
 		template<class Archive>

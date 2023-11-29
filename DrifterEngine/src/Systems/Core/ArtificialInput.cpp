@@ -106,6 +106,7 @@ entt::handle drft::system::ArtificialInput::getHandle(component::AI& ai) const
 
 void drft::system::ArtificialInput::senseWorldState(component::AI& ai) 
 {
+	ai.entitiesOfInterest.clear();
 	_sensorySystem.runSensors(getHandle(ai));
 }
 
@@ -128,8 +129,8 @@ std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(con
 bool drft::system::ArtificialInput::isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan, const goap::Goal& goal) const
 {
 	if (plan.empty()) return false;
-	const auto& lastAction = goap::ActionRegistry::get(plan.back());
 	const auto& firstAction = goap::ActionRegistry::get(plan.front());
+	const auto& lastAction = goap::ActionRegistry::get(plan.back());
 	if (worldState.contains(firstAction.preconditions())
 		&& lastAction.effects().contains(goal))
 	{
@@ -142,7 +143,7 @@ int drft::system::ArtificialInput::calculateGoalValue(const goap::Goal& goal, co
 {
 	// TODO: This is just placeholder
 
-	if (goal.contains(goap::WorldState{ {"look_busy", true} }))
+	if (goal.contains(goap::WorldState{ {goap::look_busy, true} }))
 	{
 		return -1;
 	}
@@ -226,17 +227,23 @@ void drft::system::ArtificialInput::aiThink(component::AI& ai) const
 
 void drft::system::ArtificialInput::aiMoveTo(component::AI& ai) const
 {
-	auto handle = getHandle(ai);
-	const auto& action = goap::ActionRegistry::get(ai.plan.front());
+	if (!isPlanValid(ai.blackboard, ai.plan, getCurrentGoal(ai)))
+	{
+		executeStateNow(ai, AIState::Think);
+		return;
+	}
 
-	if (!action.requiresInRange() || action.isInRange(handle))
+	auto handle = getHandle(ai);
+	const goap::IAction& action = goap::ActionRegistry::get(ai.plan.front());
+
+	if (action.isInRange(handle))
 	{
 		executeStateNow(ai, AIState::PerformAction);
 	}
 	else
 	{
-		auto optionalTarget = action.setMoveTarget(handle);
-		if (optionalTarget.has_value() && inSightRange(optionalTarget.value(), ai))
+		auto optionalTarget = action.trySetTarget(handle);
+		if (optionalTarget.has_value())
 		{
 			if (hasLineOfSight(handle, optionalTarget.value()))
 			{
@@ -260,14 +267,13 @@ void drft::system::ArtificialInput::aiPerformAction(component::AI& ai) const
 {
 	if (!isPlanValid(ai.blackboard, ai.plan, getCurrentGoal(ai)))
 	{
-		ai.target = entt::null;
-		ai.state = AIState::Think;
+		executeStateNow(ai, AIState::Think);
 		return;
 	}
 
 	auto handle = getHandle(ai);
 	const auto& action = goap::ActionRegistry::get(ai.plan.front());
-	if (action.requiresInRange() && !action.isInRange(handle))
+	if (!action.isInRange(handle))
 	{
 		executeStateNow(ai, AIState::MoveTo);
 	}
@@ -285,8 +291,8 @@ void drft::system::ArtificialInput::aiPerformAction(component::AI& ai) const
 		case goap::ActionResult::Error:
 		case goap::ActionResult::Failed:
 		default:
-			ai.plan.clear();
 			ai.target = entt::null;
+			ai.plan.clear();
 			setNextState(ai, AIState::Think);
 			break;
 		}

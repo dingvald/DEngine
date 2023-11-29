@@ -6,7 +6,7 @@
 
 drft::goap::RandomMoveAction::RandomMoveAction()
 {
-	addEffect("look_busy", true);
+	addEffect(look_busy, true);
 }
 
 drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agent) const
@@ -45,8 +45,8 @@ int drft::goap::RandomMoveAction::cost() const
     return 1;
 }
 
-bool drft::goap::RandomMoveAction::requiresInRange() const
+bool drft::goap::RandomMoveAction::isInRange(entt::handle agent) const
 {
-    return false;
+	return true;
 }
 

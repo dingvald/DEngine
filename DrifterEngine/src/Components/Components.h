@@ -164,8 +164,11 @@ namespace component
 		std::unordered_set<std::string> goals;
 		drft::goap::Plan plan;
 		drft::goap::WorldState blackboard;
-		entt::entity target = entt::null;
 		AIState state = AIState::Think;
+
+		// Runtime only
+		std::vector<entt::entity> entitiesOfInterest;
+		entt::entity target = entt::null;
 	};
 
 	struct Faction

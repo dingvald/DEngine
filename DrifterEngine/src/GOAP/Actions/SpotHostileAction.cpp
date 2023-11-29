@@ -1,27 +1,41 @@
 #include "pch.h"
 #include "SpotHostileAction.h"
 #include "Components/Components.h"
+#include "Events/SendFloatingMessageEvent.h"
+#include "Utility/EntityHelpers.h"
+#include "Spatial/Helpers.h"
 #include "Systems/Gameplay/FactionSystem.h"
 
 drft::goap::SpotHostileAction::SpotHostileAction()
 {
-	addPrecondition("sees_hostile", true);
-	addEffect("has_target", false);
+	addPrecondition(visually_sense_hostile, true);
+	addEffect(sees_hostile, true);
 }
 
 drft::goap::ActionResult drft::goap::SpotHostileAction::perform(entt::handle agent) const
 {
-	
+	auto& ai = getAI(agent);
+	auto& dispatcher = agent.registry()->ctx().get<entt::dispatcher&>();
+	dispatcher.trigger(events::SendFloatingMessageEvent{
+		.message = "!",
+		.color = sf::Color::Yellow,
+		.position = agent.get<component::Position>().position,
+		.velocity = {0,0},
+		.isScreenSpace = false,
+		.ttl = 120
+		});
+
+	ai.blackboard.merge(effects());
+	agent.emplace_or_replace<component::action::Wait>();
 	return ActionResult::Complete;
 }
 
 int drft::goap::SpotHostileAction::cost() const
 {
-	return 0;
+	return 1;
 }
 
-bool drft::goap::SpotHostileAction::requiresInRange() const
+bool drft::goap::SpotHostileAction::isInRange(entt::handle agent) const
 {
-	return false;
+	return true;
 }
-

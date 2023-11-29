@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "WorldState.h"
+#include "WorldStateTypes.h"
 
-drft::goap::WorldState::WorldState(std::initializer_list<std::pair<std::string, int>> init_list)
+drft::goap::WorldState::WorldState(std::initializer_list<std::pair<WorldStateType, int>> init_list)
 {
 	for (auto&& [key, val] : init_list)
 	{
@@ -9,12 +10,12 @@ drft::goap::WorldState::WorldState(std::initializer_list<std::pair<std::string, 
 	}
 }
 
-int& drft::goap::WorldState::operator[](const std::string key)
+int& drft::goap::WorldState::operator[](WorldStateType key)
 {
 	return _state[key];
 }
 
-void drft::goap::WorldState::add(const std::string& key, int value)
+void drft::goap::WorldState::add(WorldStateType key, int value)
 {
 	if (_state.contains(key)) throw std::exception("WorldState already has key.");
 	_state[key] = value;
