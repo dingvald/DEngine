@@ -17,6 +17,11 @@ namespace component
 	struct AI;
 }
 
+namespace drft::events
+{
+	struct TurnEndEvent;
+}
+
 namespace drft::system
 {
 	class ArtificialInput : public System
@@ -33,7 +38,7 @@ namespace drft::system
 
 		entt::handle getHandle(component::AI& ai) const;
 
-		
+		void onTurnEndEvent(const events::TurnEndEvent& ev);
 		void senseWorldState(component::AI& ai);
 		std::deque<goap::AiAction> generatePlan(const component::AI& ai, const goap::Goal& exclude = {}) const;
 		bool isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan) const;

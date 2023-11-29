@@ -3,6 +3,7 @@
 #include "Systems/HelperClasses/AIStates.h"
 #include "GOAP/WorldState.h"
 #include "GOAP/Actions/AiActionTypes.h"
+#include "GOAP/SensorTypes.h"
 
 namespace drft::goap
 {
@@ -167,7 +168,8 @@ namespace component
 		AIState state = AIState::Think;
 
 		// Runtime only
-		std::vector<entt::entity> entitiesOfInterest;
+		using SurroundingsMemory = std::unordered_map<drft::goap::SensorType, std::unordered_map<entt::entity, int>>;
+		SurroundingsMemory surroundings;
 		entt::entity target = entt::null;
 	};
 

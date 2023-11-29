@@ -13,27 +13,6 @@ drft::goap::SensorType drft::goap::HostileSensor::getType() const
 	return SensorType::Visual;
 }
 
-void drft::goap::HostileSensor::sense(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
-{
-	auto view = agent.registry()->view<component::Position, component::Faction, component::tag::Active>();
-	auto& ai = getAI(agent);
-	auto& myPos = agent.get<component::Position>();
-	bool success = false;
-
-	for (const auto& [entity, pos, faction] : view.each())
-	{
-		if (system::FactionSystem::resolveRelationship(agent, { *agent.registry(), entity }) != system::Relationship::Hostile) continue;
-		if ((spatial::distance(myPos.position, pos.position) <= (ai.sightRange)) && checker(agent, pos.position))
-		{
-			success = true;
-			ai.entitiesOfInterest.push_back(entity);
-		}
-	}
-
-	success ? getAI(agent).blackboard.merge(stateAfterSuccess())
-		: getAI(agent).blackboard.merge(stateAfterFailure());
-}
-
 drft::goap::WorldState drft::goap::HostileSensor::stateAfterSuccess() const
 {
 	return WorldState{
@@ -47,6 +26,37 @@ drft::goap::WorldState drft::goap::HostileSensor::stateAfterFailure() const
 		{visually_sense_hostile, false},
 		{sees_hostile, false}
 	};
+}
+
+bool drft::goap::HostileSensor::checkAndFillSurroundings(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
+{
+	auto& ai = getAI(agent);
+	auto& myPos = agent.get<component::Position>();
+	bool success = false;
+	auto view = agent.registry()->view<component::Position, component::Faction, component::tag::Active>();
+	for (const auto& [entity, pos, faction] : view.each())
+	{
+		if (system::FactionSystem::resolveRelationship(agent, { *agent.registry(), entity }) != system::Relationship::Hostile) continue;
+		if ((spatial::distance(myPos.position, pos.position) <= (ai.sightRange)) && checker(agent, pos.position))
+		{
+			ai.surroundings[getType()][entity] = std::max(ai.surroundings[getType()][entity], SensorMemory.at(getType()));
+			success = true;
+		}
+	}
+	return success;
+}
+
+bool drft::goap::HostileSensor::checkMemory(entt::const_handle agent) const
+{
+	if (!getAI(agent).surroundings.contains(getType())) return false;
+	for (auto&& [entity, _] : getAI(agent).surroundings.at(getType()))
+	{
+		if (system::FactionSystem::resolveRelationship(agent, { *agent.registry(), entity }) == system::Relationship::Hostile)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 

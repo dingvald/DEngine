@@ -17,7 +17,7 @@ drft::goap::ActionResult drft::goap::SpotHostileAction::perform(entt::handle age
 	auto& ai = getAI(agent);
 	auto& dispatcher = agent.registry()->ctx().get<entt::dispatcher&>();
 	dispatcher.trigger(events::SendFloatingMessageEvent{
-		.message = "!",
+		.message = "?",
 		.color = sf::Color::Yellow,
 		.position = agent.get<component::Position>().position,
 		.velocity = {0,0},

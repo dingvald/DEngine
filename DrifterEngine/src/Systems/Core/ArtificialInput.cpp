@@ -2,6 +2,7 @@
 #include "ArtificialInput.h"
 #include "Components/Components.h"
 #include "Components/Tags.h"
+#include "Events/TurnEndEvent.h"
 #include "Random/RandomNumberGenerator.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Helpers.h"
@@ -22,6 +23,9 @@ void drft::system::ArtificialInput::init()
 
 	_sensorySystem.registerSensor(std::make_unique<goap::HostileSensor>());
 	_sensorySystem.registerChecker(hasLineOfSight, goap::SensorType::Visual);
+
+	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	dispatcher.sink<events::TurnEndEvent>().connect<&ArtificialInput::onTurnEndEvent>(this);
 }
 
 void drft::system::ArtificialInput::update(const float dt)
@@ -104,9 +108,16 @@ entt::handle drft::system::ArtificialInput::getHandle(component::AI& ai) const
 	return aiHandle;
 }
 
-void drft::system::ArtificialInput::senseWorldState(component::AI& ai) 
+void drft::system::ArtificialInput::onTurnEndEvent(const events::TurnEndEvent& ev)
 {
-	ai.entitiesOfInterest.clear();
+	if (auto ai = registry->try_get<component::AI>(ev.entity))
+	{
+		_sensorySystem.decayMemory(ai->surroundings);
+	}
+}
+
+void drft::system::ArtificialInput::senseWorldState(component::AI& ai)
+{
 	_sensorySystem.runSensors(getHandle(ai));
 }
 
