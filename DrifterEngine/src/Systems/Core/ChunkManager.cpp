@@ -52,7 +52,7 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 	auto activeCoords = spatial::getIntCircleInRadius(newPosition, ACTIVE_CHUNK_RADIUS);
 
 	// Ensure active chunks are active or will be built
-	for (auto coord : activeCoords)
+	for (auto&& coord : activeCoords)
 	{
 		auto keyablePair = std::make_pair(coord.x, coord.y);
 		if (!_chunks.contains(keyablePair))

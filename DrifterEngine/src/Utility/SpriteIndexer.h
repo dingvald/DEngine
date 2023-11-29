@@ -82,7 +82,8 @@ namespace drft::util
 		DungeonDoor,
 		Evergreen,
 		Cloud,
-		Mesa
+		Mesa,
+		TallGrass
 	};
 
 	class SpriteIndexer

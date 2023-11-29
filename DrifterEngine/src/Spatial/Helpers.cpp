@@ -19,7 +19,8 @@ std::vector<sf::Vector2i> drft::spatial::getIntRect(sf::Vector2i origin, int wid
 std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(const sf::Vector2i centerPosition, const int radius)
 {
 	std::vector<sf::Vector2i> result;
-	result.reserve(radius * radius); // reserve more than needed
+	float approxSquares = std::ceil(3.13159 * radius * radius);
+	result.reserve(static_cast<size_t>(approxSquares));
 	for (int y = centerPosition.y - radius; y <= centerPosition.y; ++y)
 	{
 		for (int x = centerPosition.x - radius; x <= centerPosition.x; ++x)
@@ -32,7 +33,6 @@ std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(const sf::Vector2i
 			}
 		}
 	}
-
 	return result;
 }
 

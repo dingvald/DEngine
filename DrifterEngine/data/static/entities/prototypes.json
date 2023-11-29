@@ -35,6 +35,26 @@
         }
       }
     },
+    "Tall Grass": {
+      "Inherits": [
+        "Grass"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Tall Grass",
+          "extendedName": "",
+          "description": "Just grass but longer."
+        },
+        "Render": {
+          "sprite": 79,
+          "layer": 1,
+          "color": [ 72, 111, 56 ]
+        },
+        "LightBlocking": {
+          "opacity": 1.0
+        }
+      }
+    },
     "Sand": {
       "Inherits": [
         ""
