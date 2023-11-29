@@ -24,14 +24,14 @@
           "Grass": {
             "Algorithm": "RandomSpread",
             "Parameters": {
-              "Minimum": 100,
-              "Maximum": 200
+              "Minimum": 200,
+              "Maximum": 300
             }
           },
           "Tall Grass": {
             "Algorithm": "RandomSpread",
             "Parameters": {
-              "Minimum": 150,
+              "Minimum": 100,
               "Maximum": 250
             }
           },
@@ -193,7 +193,26 @@
         "Temperature": [ 5.0, 25.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 10, 500 ]
+      },
+      "Entities": {
+        "Liquid": {
+          "Water": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 600,
+              "Maximum": 800
+            }
+          },
+          "Tall Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 100,
+              "Maximum": 250
+            }
+          }
+        }
       }
+
     },
     "Jungle": {
       "Icon": {
@@ -252,6 +271,13 @@
       "Entities": {
         "Vegetation": {
           "Grass": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 200,
+              "Maximum": 400
+            }
+          },
+          "Tall Grass": {
             "Algorithm": "RandomSpread",
             "Parameters": {
               "Minimum": 400,
