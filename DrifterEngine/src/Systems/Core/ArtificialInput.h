@@ -36,7 +36,7 @@ namespace drft::system
 		
 		void senseWorldState(component::AI& ai);
 		std::deque<goap::AiAction> generatePlan(const component::AI& ai, const goap::Goal& exclude = {}) const;
-		bool isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan, const goap::Goal& goal) const;
+		bool isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan) const;
 		int calculateGoalValue(const goap::Goal& goal, const component::AI& ai) const;
 		std::queue<goap::Goal> prioritizeGoals(const component::AI& ai, const goap::Goal& exclude = {}) const;
 		std::unordered_set<goap::AiAction> getAiActions(const component::AI& ai) const;

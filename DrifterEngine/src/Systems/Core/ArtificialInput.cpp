@@ -126,17 +126,11 @@ std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(con
 	return std::deque<goap::AiAction>{goap::AiAction::RandomMove};
 }
 
-bool drft::system::ArtificialInput::isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan, const goap::Goal& goal) const
+bool drft::system::ArtificialInput::isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan) const
 {
 	if (plan.empty()) return false;
 	const auto& firstAction = goap::ActionRegistry::get(plan.front());
-	const auto& lastAction = goap::ActionRegistry::get(plan.back());
-	if (worldState.contains(firstAction.preconditions())
-		&& lastAction.effects().contains(goal))
-	{
-		return true;
-	}
-	return false;
+	return worldState.contains(firstAction.preconditions());
 }
 
 int drft::system::ArtificialInput::calculateGoalValue(const goap::Goal& goal, const component::AI& ai) const
@@ -218,7 +212,7 @@ void drft::system::ArtificialInput::executeStateNow(component::AI& ai, AIState s
 
 void drft::system::ArtificialInput::aiThink(component::AI& ai) const
 {
-	if (!isPlanValid(ai.blackboard, ai.plan, getCurrentGoal(ai)))
+	if (!isPlanValid(ai.blackboard, ai.plan))
 	{
 		ai.plan = generatePlan(ai);
 	}
@@ -227,7 +221,7 @@ void drft::system::ArtificialInput::aiThink(component::AI& ai) const
 
 void drft::system::ArtificialInput::aiMoveTo(component::AI& ai) const
 {
-	if (!isPlanValid(ai.blackboard, ai.plan, getCurrentGoal(ai)))
+	if (!isPlanValid(ai.blackboard, ai.plan))
 	{
 		executeStateNow(ai, AIState::Think);
 		return;
@@ -265,7 +259,7 @@ void drft::system::ArtificialInput::aiMoveTo(component::AI& ai) const
 
 void drft::system::ArtificialInput::aiPerformAction(component::AI& ai) const
 {
-	if (!isPlanValid(ai.blackboard, ai.plan, getCurrentGoal(ai)))
+	if (!isPlanValid(ai.blackboard, ai.plan))
 	{
 		executeStateNow(ai, AIState::Think);
 		return;
