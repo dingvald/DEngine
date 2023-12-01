@@ -5,11 +5,15 @@ drft::goap::EscapeHostilesAction::EscapeHostilesAction()
 {
 	addPrecondition(sees_hostile, true);
 
-	addEffect(sees_hostile, false);
+	addEffect(escape_hostile, true);
 }
 
 drft::goap::ActionResult drft::goap::EscapeHostilesAction::perform(entt::handle agent) const
 {
+	// get all hostiles in range
+	std::cout << "Trying to escape hostiles!" << std::endl;
+
+	// Move in direction vector away from 
 	return ActionResult::Continue;
 }
 

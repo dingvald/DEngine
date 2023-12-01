@@ -101,7 +101,7 @@ void drft::system::ArtificialInput::clearPathCache(entt::entity entity) const
 	_cachedPaths.erase(entity);
 }
 
-entt::handle drft::system::ArtificialInput::getHandle(component::AI& ai) const
+entt::handle drft::system::ArtificialInput::getHandle(const component::AI& ai) const
 {
 	entt::entity entity = entt::to_entity(*registry, ai);
 	entt::handle aiHandle = { *registry, entity };
@@ -121,19 +121,25 @@ void drft::system::ArtificialInput::senseWorldState(component::AI& ai)
 	_sensorySystem.runSensors(getHandle(ai));
 }
 
-std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(const component::AI& ai, const goap::Goal& exclude) const
+std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(component::AI& ai, std::queue<GoalName>& goals) const
 {
-	auto goals = prioritizeGoals(ai);
-	std::optional<std::deque<goap::AiAction>> optionalPlan;
 	while (!goals.empty())
 	{
-		optionalPlan = goap::plan(ai.blackboard, getAiActions(ai), goals.front());
+		const auto& goal = goap::GoalRegistry::get(goals.front());
+		if (ai.blackboard.contains(goal.desiredState()))
+		{
+			goals.pop();
+			continue;
+		}
+		auto optionalPlan = goap::plan(ai.blackboard, getAiActions(ai), goal.desiredState());
+		ai.currentGoal = goals.front();
 		goals.pop();
 		if (optionalPlan.has_value())
 		{
 			return optionalPlan.value();
 		}
 	}
+	ai.currentGoal = {};
 	return std::deque<goap::AiAction>{goap::AiAction::RandomMove};
 }
 
@@ -144,33 +150,20 @@ bool drft::system::ArtificialInput::isPlanValid(const goap::WorldState& worldSta
 	return worldState.contains(firstAction.preconditions());
 }
 
-int drft::system::ArtificialInput::calculateGoalValue(const goap::Goal& goal, const component::AI& ai) const
+std::queue<drft::system::ArtificialInput::GoalName> drft::system::ArtificialInput::prioritizeGoals(const component::AI& ai) const
 {
-	// TODO: This is just placeholder
-
-	if (goal.contains(goap::WorldState{ {goap::look_busy, true} }))
-	{
-		return -1;
-	}
-	return 1;
-}
-
-std::queue<drft::goap::Goal> drft::system::ArtificialInput::prioritizeGoals(const component::AI& ai, const goap::Goal& exclude) const
-{
-	std::queue<goap::Goal> result;
-	std::map<int, goap::Goal, std::greater<int>> ranking;
+	std::queue<std::string> result;
+	std::map<float, std::string, std::greater<float>> ranking;
 	for (auto&& goalName : ai.goals)
 	{
 		const auto& goal = goap::GoalRegistry::get(goalName);
-		if (goal.isSameAs(exclude)) continue;
-		int value = calculateGoalValue(goal, ai);
-		ranking.emplace(value, goal);
+		float utility = goal.utility(getHandle(ai));
+		ranking.emplace(utility, goalName);
 	}
-	for (auto&& [_, goal] : ranking)
+	for (auto&& [util, goal] : ranking)
 	{
 		result.push(goal);
 	}
-
 	return result;
 }
 
@@ -188,12 +181,6 @@ std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiAct
 	}
 
 	return result;
-}
-
-drft::goap::Goal drft::system::ArtificialInput::getCurrentGoal(const component::AI& ai) const
-{
-	if (ai.plan.empty()) return {};
-	return goap::ActionRegistry::get(ai.plan.back()).effects();
 }
 
 void drft::system::ArtificialInput::setNextState(component::AI& ai, AIState state) const
@@ -223,9 +210,11 @@ void drft::system::ArtificialInput::executeStateNow(component::AI& ai, AIState s
 
 void drft::system::ArtificialInput::aiThink(component::AI& ai) const
 {
-	if (!isPlanValid(ai.blackboard, ai.plan))
+	auto goals = prioritizeGoals(ai);
+	if (goals.front() != ai.currentGoal
+		|| !isPlanValid(ai.blackboard, ai.plan))
 	{
-		ai.plan = generatePlan(ai);
+		ai.plan = generatePlan(ai, goals);
 	}
 	executeStateNow(ai, AIState::MoveTo);
 }
@@ -243,6 +232,7 @@ void drft::system::ArtificialInput::aiMoveTo(component::AI& ai) const
 
 	if (action.isInRange(handle))
 	{
+		clearPathCache(handle.entity());
 		executeStateNow(ai, AIState::PerformAction);
 	}
 	else

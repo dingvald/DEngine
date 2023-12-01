@@ -180,6 +180,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GOAP\Goals\EscapeHostileGoal.cpp" />
+    <ClCompile Include="src\GOAP\Goals\KillHostileGoal.cpp" />
+    <ClCompile Include="src\GOAP\Goals\ExploreGoal.cpp" />
+    <ClCompile Include="src\GOAP\IGoal.cpp" />
     <ClCompile Include="src\GOAP\SensorRunner.cpp" />
     <ClCompile Include="src\GOAP\Sensors\HostileSensor.cpp" />
     <ClCompile Include="src\GOAP\ISensor.cpp" />
@@ -352,6 +356,9 @@
     <ClCompile Include="src\GOAP\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GOAP\Goals\EscapeHostileGoal.h" />
+    <ClInclude Include="src\GOAP\Goals\KillHostileGoal.h" />
+    <ClInclude Include="src\GOAP\Goals\ExploreGoal.h" />
     <ClInclude Include="src\GOAP\SensorRunner.h" />
     <ClInclude Include="src\GOAP\Sensors\HostileSensor.h" />
     <ClInclude Include="src\GOAP\ISensor.h" />
@@ -360,7 +367,7 @@
     <ClInclude Include="src\GOAP\Actions\RandomMoveAction.h" />
     <ClInclude Include="src\GOAP\Actions\SpotHostileAction.h" />
     <ClInclude Include="src\GOAP\Actions\AiActionTypes.h" />
-    <ClInclude Include="src\GOAP\Goal.h" />
+    <ClInclude Include="src\GOAP\IGoal.h" />
     <ClInclude Include="src\GOAP\Plan.h" />
     <ClInclude Include="src\GOAP\ActionRegistry.h" />
     <ClInclude Include="src\GOAP\GoalRegistry.h" />

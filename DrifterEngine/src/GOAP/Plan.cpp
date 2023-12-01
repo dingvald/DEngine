@@ -60,7 +60,7 @@ std::optional<drft::goap::Plan> drft::goap::plan(const goap::WorldState& blackbo
 				const int distanceSoFar = currentNode.distance + 1;
 				const int distanceFromTarget = action.effects().distance(goal);
 				const int cost = distanceSoFar + distanceFromTarget + action.cost();
-				// TODO: need to merge currentNode world state into action effects
+
 				WorldState newState = currentNode.worldState;
 				newState.merge(action.effects());
 				Node neighbor = Node({ newState, actionType, distanceSoFar, cost });

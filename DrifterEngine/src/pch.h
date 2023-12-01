@@ -36,6 +36,7 @@
 #include <future>
 #include <chrono>
 #include <cassert>
+#include <variant>
 
 // SFML
 #include <SFML/Graphics.hpp>

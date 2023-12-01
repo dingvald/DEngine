@@ -12,7 +12,9 @@ namespace drft::goap
 
 	private:
 		using ActionMap = std::unordered_map<AiAction, std::unique_ptr<IAction>>;
+		using ActionFactories = std::unordered_map<AiAction, std::function<std::unique_ptr<IAction>()>>;
 		static ActionMap _actions;
+		static ActionFactories _factories;
 	};
 }
 

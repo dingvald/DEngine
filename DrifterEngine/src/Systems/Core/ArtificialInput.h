@@ -3,7 +3,7 @@
 #include "Systems/HelperClasses/StateMachine.h"
 #include "Systems/HelperClasses/AIStates.h"
 #include "GOAP/Actions/AiActionTypes.h"
-#include "GOAP/Goal.h"
+#include "GOAP/IGoal.h"
 #include "GOAP/SensorRunner.h"
 
 
@@ -31,21 +31,20 @@ namespace drft::system
 		void update(const float dt) override;
 
 	private:
+		using GoalName = std::string;
 		bool inSightRange(sf::Vector2i position, const component::AI&) const;
 		void moveToTarget(entt::handle entity, sf::Vector2i targetPosition) const;
 		void pathToTarget(entt::handle, sf::Vector2i targetPosition) const;
 		void clearPathCache(entt::entity entity) const;
 
-		entt::handle getHandle(component::AI& ai) const;
+		entt::handle getHandle(const component::AI& ai) const;
 
 		void onTurnEndEvent(const events::TurnEndEvent& ev);
 		void senseWorldState(component::AI& ai);
-		std::deque<goap::AiAction> generatePlan(const component::AI& ai, const goap::Goal& exclude = {}) const;
+		std::deque<goap::AiAction> generatePlan(component::AI& ai, std::queue<GoalName>& goals) const;
 		bool isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan) const;
-		int calculateGoalValue(const goap::Goal& goal, const component::AI& ai) const;
-		std::queue<goap::Goal> prioritizeGoals(const component::AI& ai, const goap::Goal& exclude = {}) const;
+		std::queue<GoalName> prioritizeGoals(const component::AI& ai) const;
 		std::unordered_set<goap::AiAction> getAiActions(const component::AI& ai) const;
-		goap::Goal getCurrentGoal(const component::AI& ai) const;
 		void setNextState(component::AI& ai, AIState state) const;
 		void executeStateNow(component::AI& ai, AIState state) const;
 

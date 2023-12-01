@@ -877,7 +877,9 @@
         "AI": {
           "sightRange": 15,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -933,7 +935,9 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -989,7 +993,9 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1045,7 +1051,9 @@
         "AI": {
           "sightRange": 16,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1101,8 +1109,9 @@
         "AI": {
           "sightRange": 12,
           "goals": [
-            "wander",
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1160,7 +1169,9 @@
         "AI": {
           "sightRange": 12,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1247,7 +1258,9 @@
         "AI": {
           "sightRange": 12,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1300,7 +1313,9 @@
         "AI": {
           "sightRange": 16,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1353,7 +1368,9 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1387,7 +1404,9 @@
         "AI": {
           "sightRange": 6,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1445,7 +1464,9 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1503,7 +1524,9 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }
@@ -1561,7 +1584,9 @@
         "AI": {
           "sightRange": 10,
           "goals": [
-            "kill_hostile"
+            "explore",
+            "kill_hostile",
+            "escape_hostile"
           ]
         }
       }

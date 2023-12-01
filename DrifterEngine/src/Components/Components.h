@@ -163,6 +163,7 @@ namespace component
 	{
 		int sightRange = 0;
 		std::unordered_set<std::string> goals;
+		std::string currentGoal = {};
 		drft::goap::Plan plan;
 		drft::goap::WorldState blackboard;
 		AIState state = AIState::Think;

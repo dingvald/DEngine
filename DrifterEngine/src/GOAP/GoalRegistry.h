@@ -1,6 +1,6 @@
 #pragma once
 #include "WorldState.h"
-#include "Goal.h"
+#include "IGoal.h"
 
 namespace drft::goap
 {
@@ -8,10 +8,10 @@ namespace drft::goap
 	{
 	public:
 		static void bind();
-		static const Goal& get(const std::string& goalName);
+		static const IGoal& get(const std::string& goalName);
 
 	private:
-		using GoalMap = std::unordered_map<std::string, WorldState>;
+		using GoalMap = std::unordered_map<std::string, std::unique_ptr<IGoal>>;
 		static GoalMap _goals;
 	};
 }

@@ -8,8 +8,7 @@ drft::goap::AttackHostileAction::AttackHostileAction()
 {
 	addPrecondition(sees_hostile, true);
 
-	addEffect(sees_hostile, false);
-	addEffect(target_dead, true); 
+	addEffect(escape_hostile, true);
 }
 
 std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::handle agent) const

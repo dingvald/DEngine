@@ -426,6 +426,18 @@
     <ClCompile Include="src\GOAP\SensorRunner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GOAP\IGoal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Goals\ExploreGoal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Goals\KillHostileGoal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Goals\EscapeHostileGoal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1361,7 +1373,7 @@
     <ClInclude Include="src\GOAP\Actions\EscapeHostilesAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Goal.h">
+    <ClInclude Include="src\GOAP\IGoal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\ISensor.h">
@@ -1377,6 +1389,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\WorldStateTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Goals\ExploreGoal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Goals\KillHostileGoal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Goals\EscapeHostileGoal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
