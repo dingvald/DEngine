@@ -41,9 +41,9 @@ namespace drft::system
 
 		void onTurnEndEvent(const events::TurnEndEvent& ev);
 		void senseWorldState(component::AI& ai);
-		std::deque<goap::AiAction> generatePlan(component::AI& ai, std::queue<GoalName>& goals) const;
+		std::deque<goap::AiAction> generatePlan(component::AI& ai, std::deque<GoalName>& goals) const;
 		bool isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan) const;
-		std::queue<GoalName> prioritizeGoals(const component::AI& ai) const;
+		std::deque<GoalName> prioritizeGoals(const component::AI& ai) const;
 		std::unordered_set<goap::AiAction> getAiActions(const component::AI& ai) const;
 		void setNextState(component::AI& ai, AIState state) const;
 		void executeStateNow(component::AI& ai, AIState state) const;

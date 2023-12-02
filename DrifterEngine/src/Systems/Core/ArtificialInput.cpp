@@ -38,7 +38,6 @@ void drft::system::ArtificialInput::update(const float dt)
 	}
 }
 
-
 bool drft::system::ArtificialInput::inSightRange(sf::Vector2i position, const component::AI& ai) const
 {
 	auto myPosition = registry->get<component::Position>(entt::to_entity(*registry, ai)).position;
@@ -112,7 +111,10 @@ void drft::system::ArtificialInput::onTurnEndEvent(const events::TurnEndEvent& e
 {
 	if (auto ai = registry->try_get<component::AI>(ev.entity))
 	{
-		_sensorySystem.decayMemory(ai->surroundings);
+		if (_sensorySystem.decayMemory(ai->surroundings))
+		{
+			ai->blackboard.clear();
+		}
 	}
 }
 
@@ -121,24 +123,25 @@ void drft::system::ArtificialInput::senseWorldState(component::AI& ai)
 	_sensorySystem.runSensors(getHandle(ai));
 }
 
-std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(component::AI& ai, std::queue<GoalName>& goals) const
+std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(component::AI& ai, std::deque<GoalName>& goals) const
 {
 	while (!goals.empty())
 	{
 		const auto& goal = goap::GoalRegistry::get(goals.front());
 		if (ai.blackboard.contains(goal.desiredState()))
 		{
-			goals.pop();
+			goals.pop_front();
 			continue;
 		}
 		auto optionalPlan = goap::plan(ai.blackboard, getAiActions(ai), goal.desiredState());
 		ai.currentGoal = goals.front();
-		goals.pop();
+		goals.pop_front();
 		if (optionalPlan.has_value())
 		{
 			return optionalPlan.value();
 		}
 	}
+	// Fallback
 	ai.currentGoal = {};
 	return std::deque<goap::AiAction>{goap::AiAction::RandomMove};
 }
@@ -150,20 +153,48 @@ bool drft::system::ArtificialInput::isPlanValid(const goap::WorldState& worldSta
 	return worldState.contains(firstAction.preconditions());
 }
 
-std::queue<drft::system::ArtificialInput::GoalName> drft::system::ArtificialInput::prioritizeGoals(const component::AI& ai) const
+std::deque<drft::system::ArtificialInput::GoalName> drft::system::ArtificialInput::prioritizeGoals(const component::AI& ai) const
 {
-	std::queue<std::string> result;
+	const float THRESHOLD = 0.15f;
+	std::deque<std::string> result;
+	std::deque<std::string> topContenders;
+	std::deque<std::string> others;
+
 	std::map<float, std::string, std::greater<float>> ranking;
+	float maxUtility = 0.0f;
 	for (auto&& goalName : ai.goals)
 	{
 		const auto& goal = goap::GoalRegistry::get(goalName);
 		float utility = goal.utility(getHandle(ai));
+		maxUtility = std::max(maxUtility, utility);
 		ranking.emplace(utility, goalName);
 	}
-	for (auto&& [util, goal] : ranking)
+	
+	for (auto&& [util, goalName] : ranking)
 	{
-		result.push(goal);
+		if (util >= maxUtility - THRESHOLD)
+		{
+			topContenders.push_back(goalName);
+		}
+		else
+		{
+			others.push_back(goalName);
+		}
 	}
+	auto rd = std::random_device{};
+	auto rng = std::default_random_engine{ rd() };
+	std::shuffle(topContenders.begin(), topContenders.end(), rng);
+	for (int i = 0; i < topContenders.size(); ++i)
+	{
+		if (topContenders[i] == ai.currentGoal)
+		{
+			std::swap(topContenders[i], topContenders[0]);
+		}
+	}
+
+	result.insert(result.end(), topContenders.begin(), topContenders.end());
+	result.insert(result.end(), others.begin(), others.end());
+
 	return result;
 }
 
@@ -252,6 +283,7 @@ void drft::system::ArtificialInput::aiMoveTo(component::AI& ai) const
 		}
 		else
 		{
+			// replan required
 			clearPathCache(handle.entity());
 			setNextState(ai, AIState::Think);
 		}
@@ -282,6 +314,7 @@ void drft::system::ArtificialInput::aiPerformAction(component::AI& ai) const
 			setNextState(ai, AIState::Think);
 			break;
 		case goap::ActionResult::Continue:
+			setNextState(ai, AIState::Think);
 			break;
 		case goap::ActionResult::Error:
 		case goap::ActionResult::Failed:

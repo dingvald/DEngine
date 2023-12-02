@@ -5,9 +5,10 @@
 #include "Components/Components.h"
 #include "Systems/Helpers/HasLineOfSight.h"
 
-void drft::goap::SensorRunner::decayMemory(component::AI::SurroundingsMemory& surroundings) const
+bool drft::goap::SensorRunner::decayMemory(component::AI::SurroundingsMemory& surroundings) const
 {
 	std::unordered_set<entt::entity> keysToDelete;
+	int emptySensorMemories = 0;
 	for (auto&& [sensorType, memoryMap] : surroundings)
 	{
 		for (auto&& [entity, memory] : memoryMap)
@@ -23,7 +24,16 @@ void drft::goap::SensorRunner::decayMemory(component::AI::SurroundingsMemory& su
 			memoryMap.erase(key);
 		}
 		keysToDelete.clear();
+		if (memoryMap.empty())
+		{
+			++emptySensorMemories;
+		}
 	}
+	if (emptySensorMemories >= surroundings.size())
+	{
+		return true;
+	}
+	return false;
 }
 
 void drft::goap::SensorRunner::registerSensor(std::unique_ptr<goap::ISensor> sensor)

@@ -3,7 +3,7 @@
 
 drft::goap::KillHostileGoal::KillHostileGoal()
 {
-    addDesiredState(escape_hostile, true);
+    addDesiredState(kill_hostile, true);
 }
 
 float drft::goap::KillHostileGoal::utility(entt::const_handle agent) const

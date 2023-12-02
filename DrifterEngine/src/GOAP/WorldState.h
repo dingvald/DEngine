@@ -20,6 +20,8 @@ namespace drft::goap
 		// Note: will replace values with the same key.
 		void merge(const WorldState& otherState);
 		bool isEmpty() const;
+		void clear();
+		std::unordered_map<WorldStateType, int>& iterate();
 	private:
 		std::unordered_map<WorldStateType, int> _state;
 

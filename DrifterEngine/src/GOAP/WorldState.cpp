@@ -74,3 +74,13 @@ bool drft::goap::WorldState::isEmpty() const
 {
 	return _state.empty();
 }
+
+void drft::goap::WorldState::clear()
+{
+	_state.clear();
+}
+
+std::unordered_map<drft::goap::WorldStateType, int>& drft::goap::WorldState::iterate()
+{
+	return _state;
+}

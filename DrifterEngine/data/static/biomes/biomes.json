@@ -28,6 +28,13 @@
               "Maximum": 300
             }
           },
+          "Herb": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 2,
+              "Maximum": 6
+            }
+          },
           "Tall Grass": {
             "Algorithm": "RandomSpread",
             "Parameters": {
@@ -275,6 +282,13 @@
             "Parameters": {
               "Minimum": 200,
               "Maximum": 400
+            }
+          },
+          "Herb": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 3,
+              "Maximum": 9
             }
           },
           "Tall Grass": {

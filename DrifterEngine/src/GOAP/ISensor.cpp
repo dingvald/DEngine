@@ -4,21 +4,20 @@
 
 void drft::goap::ISensor::sense(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
 {
-	const auto isInSurroundings = checkAndFillSurroundings(agent, checker);
-	const auto isInMemory = checkMemory(agent);
-	mergeResults(isInSurroundings || isInMemory, getAI(agent));
+	const auto magnitudeFromSurroundings = checkAndFillSurroundings(agent, checker);
+	const auto magnitudeFromMemory = checkMemory(agent);
+	mergeResults(std::max(magnitudeFromMemory, magnitudeFromSurroundings), getAI(agent));
 }
 
-void drft::goap::ISensor::mergeResults(bool senseWasSuccess, component::AI& ai) const
+void drft::goap::ISensor::mergeResults(int magnitude, component::AI& ai) const
 {
-	if (senseWasSuccess)
+	WorldState state;
+	for (auto&& type : stateTypesSensed())
 	{
-		ai.blackboard.merge(stateAfterSuccess());
+		state.add(type, magnitude);
 	}
-	else
-	{
-		ai.blackboard.merge(stateAfterFailure());
-	}
+
+	ai.blackboard.merge(state);
 }
 
 component::AI& drft::goap::ISensor::getAI(entt::handle agent) const

@@ -1,17 +1,17 @@
 #include "pch.h"
-#include "AttackHostileAction.h"
+#include "InvestigateHostileAction.h"
 #include "Components/Components.h"
-#include "Spatial/Helpers.h"
 #include "Systems/Gameplay/FactionSystem.h"
+#include "Spatial/Helpers.h"
+#include "Events/SendFloatingMessageEvent.h"
 
-drft::goap::AttackHostileAction::AttackHostileAction()
+drft::goap::InvestigateHostileAction::InvestigateHostileAction()
 {
-	addPrecondition(spotted_hostile, true);
-
-	addEffect(kill_hostile, true);
+    addPrecondition(visually_sense_hostile, 1);
+    addEffect(visually_sense_hostile, 2);
 }
 
-std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::handle agent) const
+std::optional<sf::Vector2i> drft::goap::InvestigateHostileAction::trySetTarget(entt::handle agent) const
 {
 	auto& ai = getAI(agent);
 	std::optional<sf::Vector2i> result = {};
@@ -43,7 +43,7 @@ std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::
 				}
 			}
 		}
-		
+
 	}
 	if (ai.target != entt::null && agent.registry()->valid(ai.target))
 	{
@@ -53,45 +53,31 @@ std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::
 	return result;
 }
 
-drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle agent) const
+drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::handle agent) const
 {
-	auto& ai = getAI(agent);
-	if (ai.target == entt::null)
-	{
-		return ActionResult::Failed;
-	}
-
-	if (auto targetPos = agent.registry()->try_get<component::Position>(ai.target))
-	{
-		const auto& pos = agent.get<component::Position>();
-		sf::Vector2i targetDirection = targetPos->position - pos.position;
-		agent.emplace_or_replace<component::action::LaunchAttack>(targetDirection);
-		std::cout << "Success!" << std::endl;
-		return ActionResult::Continue;
-	}
-
-	std::cout << "Failed: Target does not have a position" << std::endl;
-	return ActionResult::Failed;
+	auto& dispatcher = agent.registry()->ctx().get<entt::dispatcher&>();
+	dispatcher.trigger(events::SendFloatingMessageEvent{
+		.message = "?",
+		.color = sf::Color::Yellow,
+		.position = agent.get<component::Position>().position,
+		.velocity = {0,0},
+		.isScreenSpace = false,
+		.ttl = 120
+		});
+    return ActionResult();
 }
 
-int drft::goap::AttackHostileAction::cost() const
+int drft::goap::InvestigateHostileAction::cost() const
 {
-	return 2;
+    return 1;
 }
 
-bool drft::goap::AttackHostileAction::isInRange(entt::handle agent) const
+bool drft::goap::InvestigateHostileAction::isInRange(entt::handle agent) const
 {
-	auto& ai = getAI(agent);
-	if (ai.target == entt::null)
-	{
-		return false;
-	}
-
-	auto& pos = agent.get<component::Position>();
-	auto& targetPos = agent.registry()->get<component::Position>(ai.target);
-	if (spatial::distance(pos.position, targetPos.position) <= 1)
+	const auto& ai = getAI(agent);
+	if (ai.blackboard.contains({ {visually_sense_hostile, 2 } }))
 	{
 		return true;
 	}
-	return false;
+    return false;
 }

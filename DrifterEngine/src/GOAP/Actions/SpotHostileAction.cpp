@@ -8,8 +8,8 @@
 
 drft::goap::SpotHostileAction::SpotHostileAction()
 {
-	addPrecondition(visually_sense_hostile, true);
-	addEffect(sees_hostile, true);
+	addPrecondition(visually_sense_hostile, 2);
+	addEffect(spotted_hostile, true);
 }
 
 drft::goap::ActionResult drft::goap::SpotHostileAction::perform(entt::handle agent) const
@@ -17,7 +17,7 @@ drft::goap::ActionResult drft::goap::SpotHostileAction::perform(entt::handle age
 	auto& ai = getAI(agent);
 	auto& dispatcher = agent.registry()->ctx().get<entt::dispatcher&>();
 	dispatcher.trigger(events::SendFloatingMessageEvent{
-		.message = "?",
+		.message = "!",
 		.color = sf::Color::Yellow,
 		.position = agent.get<component::Position>().position,
 		.velocity = {0,0},

@@ -438,6 +438,9 @@
     <ClCompile Include="src\GOAP\Goals\EscapeHostileGoal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GOAP\Actions\InvestigateHostileAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1398,6 +1401,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\Goals\EscapeHostileGoal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Actions\InvestigateHostileAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

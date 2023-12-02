@@ -7,8 +7,8 @@ namespace drft::goap
 		action_counter,
 		look_busy,
 		visually_sense_hostile,
-		sees_hostile,
-		target_dead,
+		spotted_hostile,
+		kill_hostile,
 		escape_hostile
 	};
 }

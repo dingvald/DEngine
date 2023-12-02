@@ -6,6 +6,7 @@ namespace drft::goap
 	{
 		NULL_TYPE,
 		RandomMove,
+		InvestigateHostile,
 		SpotHostile,
 		AttackHostile,
 		EscapeHostiles

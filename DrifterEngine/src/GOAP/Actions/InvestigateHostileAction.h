@@ -3,11 +3,10 @@
 
 namespace drft::goap
 {
-	class EscapeHostilesAction :
+	class InvestigateHostileAction :
 		public IAction
 	{
-	public:
-		EscapeHostilesAction();
+		InvestigateHostileAction();
 		// Inherited via IAction
 		virtual std::optional<sf::Vector2i> trySetTarget(entt::handle agent) const override;
 		virtual ActionResult perform(entt::handle agent) const override;
