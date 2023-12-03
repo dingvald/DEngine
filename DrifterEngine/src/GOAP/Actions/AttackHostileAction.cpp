@@ -56,10 +56,7 @@ std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::
 drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle agent) const
 {
 	auto& ai = getAI(agent);
-	if (ai.target == entt::null)
-	{
-		return ActionResult::Failed;
-	}
+	if (ai.target == entt::null) return ActionResult::Failed;
 
 	if (auto targetPos = agent.registry()->try_get<component::Position>(ai.target))
 	{
@@ -69,8 +66,6 @@ drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle a
 		std::cout << "Success!" << std::endl;
 		return ActionResult::Continue;
 	}
-
-	std::cout << "Failed: Target does not have a position" << std::endl;
 	return ActionResult::Failed;
 }
 

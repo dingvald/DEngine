@@ -17,13 +17,12 @@ namespace drft::goap
 
 	protected:
 		// Returns true if the surroundings contain the entity using the checker.
-		virtual int checkAndFillSurroundings(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const = 0;
+		virtual WorldState checkAndFillSurroundings(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const = 0;
 		// Returns true if the agent's memory of the sensor's type contains an entity .
-		virtual int checkMemory(entt::const_handle agent) const = 0;
+		virtual WorldState checkMemory(entt::const_handle agent) const = 0;
 		// Merges the results of the sense attempt.
-		void mergeResults(int magnitude, component::AI& ai) const;
-		// The world state types that are sensed by this sensor.
-		virtual std::vector<WorldStateType> stateTypesSensed() const = 0;
+		void mergeResults(const WorldState& fromSurroundings, const WorldState& fromMemory, component::AI& ai) const;
+
 		component::AI& getAI(entt::handle agent) const;
 		const component::AI& getAI(entt::const_handle agent) const;
 	};

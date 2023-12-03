@@ -12,7 +12,7 @@
 #include "GOAP/Plan.h"
 #include "GOAP/GoalRegistry.h"
 #include "GOAP/ActionRegistry.h"
-
+#include "GOAP/WorldStateTypes.h"
 #include "GOAP/Sensors/HostileSensor.h"
 
 
@@ -113,6 +113,7 @@ void drft::system::ArtificialInput::onTurnEndEvent(const events::TurnEndEvent& e
 	{
 		if (_sensorySystem.decayMemory(ai->surroundings))
 		{
+			// HACKZZ: May still want to preserve some things on the blackboard.
 			ai->blackboard.clear();
 		}
 	}
@@ -209,6 +210,7 @@ std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiAct
 		result.insert(goap::AiAction::SpotHostile);
 		result.insert(goap::AiAction::AttackHostile);
 		result.insert(goap::AiAction::EscapeHostiles);
+		result.insert(goap::AiAction::InvestigateHostile);
 	}
 
 	return result;
@@ -311,18 +313,19 @@ void drft::system::ArtificialInput::aiPerformAction(component::AI& ai) const
 		{
 		case goap::ActionResult::Complete:
 			ai.plan.pop_front();
-			setNextState(ai, AIState::Think);
+			ai.blackboard[goap::action_counter] = 0;
 			break;
 		case goap::ActionResult::Continue:
-			setNextState(ai, AIState::Think);
+			ai.blackboard[goap::action_counter]++;
 			break;
 		case goap::ActionResult::Error:
 		case goap::ActionResult::Failed:
 		default:
+			ai.blackboard[goap::action_counter] = 0;
 			ai.target = entt::null;
 			ai.plan.clear();
-			setNextState(ai, AIState::Think);
 			break;
 		}
+		setNextState(ai, AIState::Think);
 	}
 }

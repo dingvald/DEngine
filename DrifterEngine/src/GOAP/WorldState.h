@@ -19,6 +19,12 @@ namespace drft::goap
 		// Merges the other state into this state.
 		// Note: will replace values with the same key.
 		void merge(const WorldState& otherState);
+		// Merges the other state into this state if the other state's values are greater.
+		// Note: will replace values with the same key.
+		void mergeIfGreater(const WorldState& otherState);
+		// Merges the other state into this state if the other state's values are lesser.
+		// Note: will replace values with the same key.
+		void mergeIfLesser(const WorldState& otherState);
 		bool isEmpty() const;
 		void clear();
 		std::unordered_map<WorldStateType, int>& iterate();

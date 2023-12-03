@@ -3,6 +3,7 @@
 #include "Components/Components.h"
 #include "Systems/Helpers/ContainerHasItem.h"
 #include "Events/RequestStateChange.h"
+#include "Events/SendFloatingMessageEvent.h"
 
 void drft::system::use::heal(entt::registry& registry, entt::entity user, entt::entity item, Parameters params)
 {
@@ -22,7 +23,7 @@ void drft::system::use::open(entt::registry& registry, entt::entity user, entt::
 	if (auto openable = registry.try_get<component::Openable>(item))
 	{
 		bool canOpen = true;
-		if (openable->keyName.compare("") != 0)
+		if (openable->keyName == "")
 		{
 			// check if you have the key...
 			canOpen = containerHasItem(registry, user, openable->keyName);
@@ -63,7 +64,15 @@ void drft::system::use::open(entt::registry& registry, entt::entity user, entt::
 		}
 		else
 		{
-			//TODO: floating message
+			auto& dispatcher = registry.ctx().get<entt::dispatcher&>();
+			dispatcher.trigger(events::SendFloatingMessageEvent{
+				.message = "Cannot open - Key Required.",
+				.color = sf::Color::White,
+				.position = registry.get<component::Position>(user).position,
+				.velocity = {0,0},
+				.isScreenSpace = false,
+				.ttl = 240
+				});
 		}
 	}
 }

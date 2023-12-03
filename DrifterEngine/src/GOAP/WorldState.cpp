@@ -70,6 +70,36 @@ void drft::goap::WorldState::merge(const WorldState& otherState)
 	}
 }
 
+void drft::goap::WorldState::mergeIfGreater(const WorldState& otherState)
+{
+	for (auto&& [key, val] : otherState._state)
+	{
+		if (_state.contains(key))
+		{
+			_state.at(key) = std::max(_state.at(key), val);
+		}
+		else
+		{
+			_state[key] = val;
+		}
+	}
+}
+
+void drft::goap::WorldState::mergeIfLesser(const WorldState& otherState)
+{
+	for (auto&& [key, val] : otherState._state)
+	{
+		if (_state.contains(key))
+		{
+			_state.at(key) = std::min(_state.at(key), val);
+		}
+		else
+		{
+			_state[key] = val;
+		}
+	}
+}
+
 bool drft::goap::WorldState::isEmpty() const
 {
 	return _state.empty();

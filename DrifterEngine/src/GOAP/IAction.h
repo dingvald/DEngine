@@ -26,6 +26,8 @@ namespace drft::goap
 		IAction& operator=(IAction&) = delete;
 		virtual ~IAction() = default;
 
+		// Called when the action first hits the top of the action queue.
+		virtual void onStart(entt::handle agent) const {};
 		// Sets the AI's target to move to. Returns true if a target location was found.
 		virtual std::optional<sf::Vector2i> trySetTarget(entt::handle agent) const;
 		// Perform the action. Returns true if the action was performed.

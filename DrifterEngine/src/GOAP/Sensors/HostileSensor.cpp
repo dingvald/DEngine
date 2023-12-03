@@ -13,7 +13,7 @@ drft::goap::SensorType drft::goap::HostileSensor::getType() const
 	return SensorType::Visual;
 }
 
-int drft::goap::HostileSensor::checkAndFillSurroundings(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
+drft::goap::WorldState drft::goap::HostileSensor::checkAndFillSurroundings(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
 {
 	auto& ai = getAI(agent);
 	auto& myPos = agent.get<component::Position>();
@@ -25,35 +25,28 @@ int drft::goap::HostileSensor::checkAndFillSurroundings(entt::handle agent, std:
 		if (system::FactionSystem::resolveRelationship(agent, { *agent.registry(), entity }) != system::Relationship::Hostile) continue;
 		if ((spatial::distance(myPos.position, pos.position) <= (ai.sightRange + 1)) && checker(agent, pos.position))
 		{
+			magnitude = std::max(magnitude, 1);
+			// Refresh memory
 			ai.surroundings[getType()][entity] = std::max(ai.surroundings[getType()][entity], SensorMemory.at(getType()));
 			if (spatial::distance(myPos.position, pos.position) <= (ai.sightRange - 1))
 			{
-				magnitude = 2;
-			}
-			else
-			{
-				magnitude = 1;
+				magnitude = std::max(magnitude, 2);
 			}
 		}
 	}
-	return magnitude;
+	return WorldState{ {visually_sense_hostile, magnitude} };
 }
 
-int drft::goap::HostileSensor::checkMemory(entt::const_handle agent) const
+drft::goap::WorldState drft::goap::HostileSensor::checkMemory(entt::const_handle agent) const
 {
-	if (!getAI(agent).surroundings.contains(getType())) return false;
+	if (!getAI(agent).surroundings.contains(getType())) return {};
+
 	for (auto&& [entity, _] : getAI(agent).surroundings.at(getType()))
 	{
 		if (system::FactionSystem::resolveRelationship(agent, { *agent.registry(), entity }) == system::Relationship::Hostile)
 		{
-			return 1;
+			return WorldState{ {visually_sense_hostile, 1} };
 		}
 	}
-	return 0;
+	return {};
 }
-
-std::vector<drft::goap::WorldStateType> drft::goap::HostileSensor::stateTypesSensed() const
-{
-	return { visually_sense_hostile };
-}
-
