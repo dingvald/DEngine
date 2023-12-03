@@ -5,6 +5,8 @@
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Helpers.h"
 #include "Random/RandomNumberGenerator.h"
+#include "GOAP/Sensors/Utility/IsHostile.h"
+#include "GOAP/Sensors/Utility/IsEntityInSurroundings.h"
 
 drft::goap::EscapeHostilesAction::EscapeHostilesAction()
 {
@@ -92,11 +94,6 @@ int drft::goap::EscapeHostilesAction::cost() const
 
 bool drft::goap::EscapeHostilesAction::isInRange(entt::handle agent) const
 {
-	auto& ai = getAI(agent);
-	for (auto&& [entity, _] : ai.surroundings.at(SensorType::Visual))
-	{
-		auto otherHandle = entt::const_handle{ *agent.registry(), entity };
-		if (system::FactionSystem::resolveRelationship(agent, otherHandle) == system::Relationship::Hostile) return false;
-	}
+	if (isEntityInSurroundings(agent, { SensorType::Visual, SensorType::Auditory }, filter::isHostile)) return true;
 	return true;
 }

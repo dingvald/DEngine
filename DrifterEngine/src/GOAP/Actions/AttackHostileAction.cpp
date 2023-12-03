@@ -3,6 +3,8 @@
 #include "Components/Components.h"
 #include "Spatial/Helpers.h"
 #include "Systems/Gameplay/FactionSystem.h"
+#include "GOAP/Sensors/Utility/GetClosestEntity.h"
+#include "GOAP/Sensors/Utility/IsHostile.h"
 
 drft::goap::AttackHostileAction::AttackHostileAction()
 {
@@ -17,33 +19,8 @@ std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::
 	std::optional<sf::Vector2i> result = {};
 	if (ai.target == entt::null || !agent.registry()->valid(ai.target))
 	{
-		for (auto&& [sensorType, memoryMap] : ai.surroundings)
-		{
-			for (auto&& [entity, _] : memoryMap)
-			{
-				auto otherHandle = entt::const_handle{ *agent.registry(), entity };
-				if (!otherHandle.all_of<component::Position>()) continue;
-				if (system::FactionSystem::resolveRelationship(agent, otherHandle) != system::Relationship::Hostile) continue;
-
-				auto& myPos = agent.get<component::Position>();
-				auto& otherPos = otherHandle.get<component::Position>();
-				if (ai.target != entt::null)
-				{
-					auto& currentTargetPos = agent.registry()->get<component::Position>(ai.target);
-					const int currentTargetDistance = spatial::distance(myPos.position, currentTargetPos.position);
-					const int newTargetDistance = spatial::distance(myPos.position, otherPos.position);
-					if (newTargetDistance < currentTargetDistance)
-					{
-						ai.target = entity;
-					}
-				}
-				else
-				{
-					ai.target = entity;
-				}
-			}
-		}
-		
+		auto closestEntityHandle = getClosestEntity(agent, { SensorType::Visual }, filter::isHostile);
+		ai.target = closestEntityHandle.entity();
 	}
 	if (ai.target != entt::null && agent.registry()->valid(ai.target))
 	{

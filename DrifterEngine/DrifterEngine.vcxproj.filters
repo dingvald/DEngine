@@ -441,6 +441,15 @@
     <ClCompile Include="src\GOAP\Actions\InvestigateHostileAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GOAP\Sensors\Utility\GetClosestEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Sensors\Utility\IsHostile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1404,6 +1413,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\Actions\InvestigateHostileAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Sensors\Utility\GetClosestEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Sensors\Utility\IsHostile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

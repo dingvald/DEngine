@@ -196,6 +196,9 @@
     <ClCompile Include="src\GOAP\ActionRegistry.cpp" />
     <ClCompile Include="src\GOAP\GoalRegistry.cpp" />
     <ClCompile Include="src\GOAP\IAction.cpp" />
+    <ClCompile Include="src\GOAP\Sensors\Utility\GetClosestEntity.cpp" />
+    <ClCompile Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp" />
+    <ClCompile Include="src\GOAP\Sensors\Utility\IsHostile.cpp" />
     <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Random\NoiseMap.cpp" />
@@ -374,6 +377,9 @@
     <ClInclude Include="src\GOAP\ActionRegistry.h" />
     <ClInclude Include="src\GOAP\GoalRegistry.h" />
     <ClInclude Include="src\GOAP\IAction.h" />
+    <ClInclude Include="src\GOAP\Sensors\Utility\GetClosestEntity.h" />
+    <ClInclude Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.h" />
+    <ClInclude Include="src\GOAP\Sensors\Utility\IsHostile.h" />
     <ClInclude Include="src\GOAP\SensorTypes.h" />
     <ClInclude Include="src\GOAP\WorldStateTypes.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />

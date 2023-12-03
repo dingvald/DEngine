@@ -23,7 +23,7 @@ void drft::system::use::open(entt::registry& registry, entt::entity user, entt::
 	if (auto openable = registry.try_get<component::Openable>(item))
 	{
 		bool canOpen = true;
-		if (openable->keyName == "")
+		if (openable->keyName != "")
 		{
 			// check if you have the key...
 			canOpen = containerHasItem(registry, user, openable->keyName);
@@ -66,12 +66,12 @@ void drft::system::use::open(entt::registry& registry, entt::entity user, entt::
 		{
 			auto& dispatcher = registry.ctx().get<entt::dispatcher&>();
 			dispatcher.trigger(events::SendFloatingMessageEvent{
-				.message = "Cannot open - Key Required.",
+				.message = "Key required.",
 				.color = sf::Color::White,
 				.position = registry.get<component::Position>(user).position,
 				.velocity = {0,0},
 				.isScreenSpace = false,
-				.ttl = 240
+				.ttl = 120
 				});
 		}
 	}
