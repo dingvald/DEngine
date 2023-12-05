@@ -1279,7 +1279,7 @@
           "materials": [ "Corpse" ]
         },
         "Actor": {
-          "moveSpeed": 1.0,
+          "moveSpeed": 0.9,
           "actSpeed": 1.0
         },
         "Health": {
@@ -1287,7 +1287,7 @@
           "current": 100.0
         },
         "Attacker": {
-          "baseDamage": 5
+          "baseDamage": 6
         },
         "Faction": {
           "name": "reptile"
@@ -1299,8 +1299,7 @@
           "sightRange": 12,
           "goals": [
             "explore",
-            "kill_hostile",
-            "escape_hostile"
+            "kill_hostile"
           ]
         }
       }

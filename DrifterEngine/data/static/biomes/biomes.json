@@ -209,7 +209,9 @@
               "Minimum": 600,
               "Maximum": 800
             }
-          },
+          }
+        },
+        "Vegetation": {
           "Tall Grass": {
             "Algorithm": "RandomSpread",
             "Parameters": {
@@ -217,9 +219,17 @@
               "Maximum": 250
             }
           }
+        },
+        "Wildlife": {
+          "Alligator": {
+            "Algorithm": "RandomSpread",
+            "Parameters": {
+              "Minimum": 0,
+              "Maximum": 3
+            }
+          }
         }
       }
-
     },
     "Jungle": {
       "Icon": {
