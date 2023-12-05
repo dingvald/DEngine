@@ -9,6 +9,7 @@
 #include "Random/RandomNumberGenerator.h"
 #include "Utility/EntityHelpers.h"
 #include "Events/ItemBreakEvent.h"
+#include "Events/SendFloatingMessageEvent.h"
 
 void drft::system::DeathSystem::init()
 {
@@ -62,6 +63,15 @@ void drft::system::DeathSystem::update(const float dt)
 	{
 		auto owner = findItemOwner(*registry, item.id, WhereToLook::Bodies);
 		dispatcher.trigger(events::ItemBreakEvent(item.id, owner));
+		dispatcher.trigger(events::SendFloatingMessageEvent{
+			.message = util::getEntityName({*registry, entity}) + " broke!",
+			.color = sf::Color::Yellow,
+			.tracksEntity = owner,
+			.position = registry->get<component::Position>(owner).position,
+			.velocity = {0,-0.25},
+			.isScreenSpace = false,
+			.ttl = 100
+			});
 		registry->destroy(entity);
 	}
 }

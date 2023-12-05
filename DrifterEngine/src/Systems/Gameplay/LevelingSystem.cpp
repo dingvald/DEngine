@@ -2,6 +2,7 @@
 #include "LevelingSystem.h"
 #include "Components/Components.h"
 #include "Utility/EntityHelpers.h"
+#include "Events/SendFloatingMessageEvent.h"
 
 void drft::system::LevelingSystem::init()
 {
@@ -28,7 +29,6 @@ void drft::system::LevelingSystem::onXPGained(entt::registry& registry, entt::en
 			++leveling->currentLevel;
 			leveling->currentXP -= leveling->neededXP;
 			leveling->neededXP *= 2.5; // TODO: balance leveling speed
-			std::cout << util::getEntityName({ registry, entity }) << " is now level " << leveling->currentLevel << std::endl;
 			registry.emplace<component::action::LevelUp>(entity);
 		}
 	}
@@ -50,5 +50,16 @@ void drft::system::LevelingSystem::onLevelUp(entt::registry& registry, entt::ent
 			levelUp.statChanges.emplace("strength", 1);
 			levelUp.statChanges.emplace("agility", 1);
 			levelUp.statChanges.emplace("vitality", 1);
+		});
+
+	auto& dispatcher = registry.ctx().get<entt::dispatcher&>();
+	dispatcher.trigger(events::SendFloatingMessageEvent{
+		.message = "LEVEL UP",
+		.color = sf::Color::Magenta,
+		.tracksEntity = entity,
+		.position = registry.get<component::Position>(entity).position,
+		.velocity = {0,-0.1},
+		.isScreenSpace = false,
+		.ttl = 100
 		});
 }
