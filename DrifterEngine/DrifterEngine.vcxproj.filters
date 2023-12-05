@@ -450,6 +450,9 @@
     <ClCompile Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Core\FloatingTextSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1422,6 +1425,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Core\FloatingTextSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

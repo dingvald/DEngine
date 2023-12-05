@@ -19,8 +19,6 @@ static const sf::Vector2f STAMINABAR_POSITION = HEALTHBAR_POSITION + sf::Vector2
 static constexpr float STAMINABAR_HEIGHT = HEALTHBAR_HEIGHT;
 static constexpr int STAMINABAR_WIDTH_MULTIPLIER = HEALTHBAR_WIDTH_MULTIPLIER;
 
-static constexpr int MESSAGE_LIFETIME = 80; // frames
-
 void drft::system::HUD::init()
 {
 	createLevelInfo();
@@ -29,12 +27,8 @@ void drft::system::HUD::init()
 	createInHandsDisplay();
 	createItemsOnGroundDisplay();
 
-	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
-	dispatcher.sink<events::ItemBreakEvent>().connect<&HUD::onItemBreakEvent>(this);
-	dispatcher.sink<events::SendFloatingMessageEvent>().connect<&HUD::onSendFloatingMessageEvent>(this);
 	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
-	registry->on_construct<component::action::LevelUp>().connect<&HUD::onLevelUp>(this);
 }
 
 void drft::system::HUD::fixedUpdate()
@@ -48,7 +42,6 @@ void drft::system::HUD::fixedUpdate()
 	updateStaminaBar(player);
 	updateInHandsDisplay(player);
 	updateItemsOnGround(player);
-	updateFloatingMessagesDisplay(player);
 
 	// Effects
 	updateFlashEffects();
@@ -70,12 +63,7 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 	_inHandsDisplay.render(target);
 	_itemsOnGround.render(target);
 	
-	for (auto& message : _floatingMessages)
-	{
-		target.draw(message.text);
-	}
-
-	for (auto effect : _flashEffects)
+	for (auto&& effect : _flashEffects)
 	{
 		target.draw(effect.shape);
 	}
@@ -260,32 +248,6 @@ void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
 	_inHandsDisplay.update(0.f);
 }
 
-void drft::system::HUD::updateFloatingMessagesDisplay(entt::const_handle)
-{
-	const auto camera = getCurrentCamera(*registry);
-	const sf::Vector2f offset = { spatial::TILE_WIDTH / 2.f, 0.f }; // So messages originate from the center of cells
-	auto it = _floatingMessages.begin();
-	while (it != _floatingMessages.end())
-	{
-		if (it->isScreenSpace)
-		{
-			it->text.setPosition(spatial::toFloatSpace(it->position) + it->distanceTraveled + offset);
-		}
-		else
-		{
-			it->text.setPosition(toScreenSpace(it->position, camera) + it->distanceTraveled + offset);
-		}
-		
-		util::SmoothTransition transition(0, 255, 0, MESSAGE_LIFETIME);
-		sf::Color color = it->text.getFillColor();
-		color.a = static_cast<sf::Uint8>(transition.compute(static_cast<float>(it->ttl)));
-		it->distanceTraveled += it->velocity;
-		--(it->ttl);
-		it->text.setFillColor(color);
-		it = (it->ttl <= 0) ? (_floatingMessages.erase(it)) : (it + 1);
-	}
-}
-
 void drft::system::HUD::updateFlashEffects()
 {
 	auto it = _flashEffects.begin();
@@ -336,24 +298,6 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 	}
 }
 
-void drft::system::HUD::queueFloatingMessage(const std::string& message, sf::Color color, sf::Vector2i position, sf::Vector2f velocity, int ttl, bool isScreenSpace)
-{
-	using namespace entt::literals;
-	const auto& font = registry->ctx().get<sf::Font&>("terminus"_hs);
-	const auto camera = getCurrentCamera(*registry);
-
-	if (isScreenSpace)
-	{
-		position = spatial::toTileSpace(toScreenSpace(position, camera));
-	}
-
-	_floatingMessages.emplace_back(sf::Text(std::string(message), font), position, velocity, ttl, isScreenSpace);
-	auto& newMessage = _floatingMessages.back();
-	newMessage.text.setFillColor(color);
-	newMessage.text.setCharacterSize(16);
-	newMessage.text.setOrigin(util::getTextCenter(newMessage.text));
-}
-
 void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl)
 {
 	sf::RectangleShape shape;
@@ -364,46 +308,12 @@ void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f siz
 	_flashEffects.emplace_back(shape, ttl);
 }
 
-void drft::system::HUD::onSendFloatingMessageEvent(events::SendFloatingMessageEvent& ev)
-{
-	queueFloatingMessage(ev.message, ev.color, ev.position, ev.velocity, ev.ttl, ev.isScreenSpace);
-}
-
-void drft::system::HUD::onItemBreakEvent(events::ItemBreakEvent& ev)
-{
-	auto camera = getCurrentCamera(*registry);
-	if (auto pos = registry->try_get<component::Position>(ev.owner))
-	{
-		auto itemName = util::getEntityName({ *registry, ItemDatabase::getEntityFromItemID(ev.itemID) });
-		queueFloatingMessage(itemName + " broke!", sf::Color::Yellow, pos->position, { 0,-1 }, MESSAGE_LIFETIME * 2, false);
-	}
-}
-
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)
 {
 	auto& damage = registry.get<component::action::TakeDamage>(entity);
-	// queue damage numbers
-	if (auto pos = registry.try_get<component::Position>(entity))
-	{
-		auto camera = getCurrentCamera(registry);
-		if (damage.amount > 0)
-		{
-			queueFloatingMessage(std::to_string(damage.amount), sf::Color::White, pos->position, { 0, -0.75 }, MESSAGE_LIFETIME, false);
-		}
-		else if (damage.amount < 0)
-		{
-			queueFloatingMessage("+" + std::to_string(std::abs(damage.amount)), sf::Color::Green, pos->position, { 0, -0.75 }, MESSAGE_LIFETIME, false);
-		}
-		else
-		{
-			queueFloatingMessage(std::to_string(damage.amount), sf::Color::Blue, pos->position, { 0, -0.75 }, MESSAGE_LIFETIME, false);
-		}
-	}
-	// Flash health bar
 	if (auto health = registry.try_get<component::Health>(entity);
 		registry.all_of<component::Player>(entity))
 	{
-		
 		if (damage.amount != 0)
 		{
 			sf::Vector2f size = { (health->current / health->max)
@@ -425,14 +335,5 @@ void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity 
 			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT + 2.f };
 			queueFlashEffect(STAMINABAR_POSITION, size, 10);
 		}
-	}
-}
-
-void drft::system::HUD::onLevelUp(entt::registry& registry, entt::entity entity)
-{
-	if (auto pos = registry.try_get<component::Position>(entity))
-	{
-		auto camera = getCurrentCamera(registry);
-		queueFloatingMessage("LEVEL UP", sf::Color::Magenta, pos->position, { 0, -0.5 }, MESSAGE_LIFETIME, false);
 	}
 }

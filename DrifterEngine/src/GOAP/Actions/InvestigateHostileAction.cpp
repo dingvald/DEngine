@@ -34,10 +34,11 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 			dispatcher.trigger(events::SendFloatingMessageEvent{
 				.message = "?",
 				.color = sf::Color::Yellow,
+				.tracksEntity = agent.entity(),
 				.position = agent.get<component::Position>().position,
 				.velocity = {0,0},
 				.isScreenSpace = false,
-				.ttl = 120
+				.ttl = 80
 				});
 			agent.emplace_or_replace<component::action::Wait>();
 			return ActionResult::Continue;

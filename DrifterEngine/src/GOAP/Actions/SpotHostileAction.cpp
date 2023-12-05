@@ -19,10 +19,11 @@ drft::goap::ActionResult drft::goap::SpotHostileAction::perform(entt::handle age
 	dispatcher.trigger(events::SendFloatingMessageEvent{
 		.message = "!",
 		.color = sf::Color::Yellow,
+		.tracksEntity = agent.entity(),
 		.position = agent.get<component::Position>().position,
 		.velocity = {0,0},
 		.isScreenSpace = false,
-		.ttl = 120
+		.ttl = 80
 		});
 
 	ai.blackboard.merge(effects());

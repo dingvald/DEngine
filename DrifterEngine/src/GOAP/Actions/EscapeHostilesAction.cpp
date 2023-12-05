@@ -21,6 +21,7 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 	std::optional<sf::Vector2i> result = {};
 	std::optional<sf::Vector2i> closestHostile = {};
 	auto& myPos = agent.get<component::Position>().position;
+
 	for (auto&& [entity, _] : ai.surroundings.at(SensorType::Visual))
 	{
 		auto otherHandle = entt::const_handle{ *agent.registry(), entity };

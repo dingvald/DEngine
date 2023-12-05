@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Core\FloatingTextSystem.cpp" />
     <ClCompile Include="src\GOAP\Actions\InvestigateHostileAction.cpp" />
     <ClCompile Include="src\GOAP\Goals\EscapeHostileGoal.cpp" />
     <ClCompile Include="src\GOAP\Goals\KillHostileGoal.cpp" />
@@ -360,6 +361,7 @@
     <ClCompile Include="src\GOAP\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Core\FloatingTextSystem.h" />
     <ClInclude Include="src\GOAP\Actions\InvestigateHostileAction.h" />
     <ClInclude Include="src\GOAP\Goals\EscapeHostileGoal.h" />
     <ClInclude Include="src\GOAP\Goals\KillHostileGoal.h" />

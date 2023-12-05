@@ -23,6 +23,7 @@
 #include "Systems/Core/ItemUniqueIDGenerator.h"
 #include "Systems/Core/TurnManager.h"
 #include "Systems/Core/WorldGridResolver.h"
+#include "Systems/Core/FloatingTextSystem.h"
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/HealthSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
@@ -284,6 +285,7 @@ void drft::GameState::importSystems()
 
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<HUD>(								Phase::OnRender + 5);
+	_systems->add<FloatingTextSystem>(				Phase::OnRender + 5);
 
 	_systems->add<WorldGridResolver>(				Phase::Reactive);
 	_systems->add<FactionSystem>(					Phase::Reactive);

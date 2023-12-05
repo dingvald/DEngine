@@ -54,16 +54,19 @@ int drft::goap::AttackHostileAction::cost() const
 bool drft::goap::AttackHostileAction::isInRange(entt::handle agent) const
 {
 	auto& ai = getAI(agent);
-	if (ai.target == entt::null)
+	if (ai.target == entt::null || !agent.registry()->valid(ai.target))
 	{
 		return false;
 	}
 
 	auto& pos = agent.get<component::Position>();
-	auto& targetPos = agent.registry()->get<component::Position>(ai.target);
-	if (spatial::distance(pos.position, targetPos.position) <= 1)
+	if (auto targetPos = agent.registry()->try_get<component::Position>(ai.target))
 	{
-		return true;
+		if (spatial::distance(pos.position, targetPos->position) <= 1)
+		{
+			return true;
+		}
 	}
+	
 	return false;
 }

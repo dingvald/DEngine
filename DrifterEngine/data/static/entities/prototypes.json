@@ -635,6 +635,46 @@
         }
       }
     },
+    "Stone Axe": {
+      "Inherits": [
+        "BaseItem"
+      ],
+      "Components": {
+        "Info": {
+          "name": "Stone Axe",
+          "extendedName": "",
+          "description": "A durable axe for chopping."
+        },
+        "Render": {
+          "sprite": 12,
+          "layer": 1,
+          "color": [ 128, 132, 135 ]
+        },
+        "Physical": {
+          "blocks": false,
+          "weight": 2.0,
+          "materials": [
+            "Stone",
+            "Wood",
+            "Twine"
+          ]
+        },
+        "Health": {
+          "max": 120.0,
+          "current": 120.0
+        },
+        "Sharp": {
+          "sharpness": 3
+        },
+        "Craftable": {
+          "recipe": {
+            "Stone": 3,
+            "Wood": 2,
+            "Twine": 1
+          }
+        }
+      }
+    },
     "Wooden Sword": {
       "Inherits": [
         "BaseItem"

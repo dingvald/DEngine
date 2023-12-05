@@ -3,6 +3,7 @@
 #include "Components/Components.h"
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/GetExperienceFromKilling.h"
+#include "Events/SendFloatingMessageEvent.h"
 
 void drft::system::HealthSystem::init()
 {
@@ -28,6 +29,32 @@ void drft::system::HealthSystem::update(const float dt)
 	auto damageView = registry->view<component::action::TakeDamage, component::Health>();
 	for (auto [entity, damage, health] : damageView.each())
 	{
+		// send floating message
+		if (auto posComp = registry->try_get<component::Position>(entity))
+		{
+			std::string message;
+			sf::Color messageColor = sf::Color::White;
+			if (damage.amount == 0)
+			{
+				messageColor = sf::Color::Blue;
+			}
+			else if (damage.amount < 0)
+			{
+				message += "+";
+				messageColor = sf::Color::Green;
+			}
+			auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+			dispatcher.trigger(events::SendFloatingMessageEvent{
+				.message = message + std::to_string(std::abs(damage.amount)),
+				.color = messageColor,
+				.position = registry->get<component::Position>(entity).position,
+				.velocity = {0,-1},
+				.fades = true,
+				.isScreenSpace = false,
+				.ttl = 80
+				});
+		}
+		
 		health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
 		if (health.current == 0)
 		{
