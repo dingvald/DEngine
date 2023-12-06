@@ -32,6 +32,7 @@ constexpr std::string_view OPENABLE_STRING = "Openable";
 constexpr std::string_view TICKING_LIFETIME_STRING = "TickingLifetime";
 constexpr std::string_view LEVELING_STRING = "Leveling";
 constexpr std::string_view BASE_STATS_STRING = "BaseStats";
+constexpr std::string_view HOTBAR_STRING = "Hotbar";
 
 namespace component
 {

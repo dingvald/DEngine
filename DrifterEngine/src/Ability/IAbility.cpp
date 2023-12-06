@@ -1,0 +1,20 @@
+#include "pch.h"
+#include "IAbility.h"
+
+
+int drft::IAbility::getCost() const
+{
+	return 100;
+}
+
+drft::math::Range<int> drft::IAbility::getRange(entt::const_handle) const
+{
+	if (getTargetingType() == AbilityTargetingType::SelectSquare) throw std::exception("Need to override");
+	return { 0,0 };
+}
+
+std::vector<sf::Vector2i> drft::IAbility::getTargetingShape(entt::const_handle actor) const
+{
+	if (getTargetingType() != AbilityTargetingType::Auto) throw std::exception("Need to override");
+	return std::vector<sf::Vector2i>{};
+}

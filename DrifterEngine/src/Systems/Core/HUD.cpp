@@ -26,6 +26,7 @@ void drft::system::HUD::init()
 	createStaminaBar();
 	createInHandsDisplay();
 	createItemsOnGroundDisplay();
+	createHotbar();
 
 	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
@@ -42,8 +43,9 @@ void drft::system::HUD::fixedUpdate()
 	updateStaminaBar(player);
 	updateInHandsDisplay(player);
 	updateItemsOnGround(player);
+	updateHotbar(player);
 
-	// Effects
+	// Effects TODO: refactor into an effect system
 	updateFlashEffects();
 }
 
@@ -62,6 +64,7 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 
 	_inHandsDisplay.render(target);
 	_itemsOnGround.render(target);
+	_hotbar.render(target);
 	
 	for (auto&& effect : _flashEffects)
 	{
@@ -124,7 +127,7 @@ void drft::system::HUD::createStaminaBar()
 
 void drft::system::HUD::createInHandsDisplay()
 {
-	_inHandsDisplay.setPosition(HEALTHBAR_POSITION + sf::Vector2f(-7.f, 12.f))
+	_inHandsDisplay.setPosition(HEALTHBAR_POSITION + sf::Vector2f(16.f, 64.f))
 		.setChildrenOrigin(gui::ElementPosition::CENTER_LEFT)
 		.setStyle(gui::ElementState::Idle, {
 			.childPadding = {48.f, 0.f}
@@ -134,7 +137,7 @@ void drft::system::HUD::createInHandsDisplay()
 void drft::system::HUD::createItemsOnGroundDisplay()
 {
 	using namespace entt::literals;
-	const auto view = registry->ctx().get<sf::RenderWindow&>().getView();
+	const auto& view = registry->ctx().get<sf::RenderWindow&>().getView();
 	_itemsOnGround.setPosition({ view.getCenter().x + (view.getSize().x / 2) - 80, view.getCenter().y + (view.getSize().y / 2) - 64 })
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,100),
@@ -146,6 +149,17 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 			.textSize = 16
 			})
 		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+}
+
+void drft::system::HUD::createHotbar()
+{
+	const auto& view = registry->ctx().get<sf::RenderWindow&>().getView();
+	const sf::Vector2f position = { view.getCenter().x - 192, view.getCenter().y + (view.getSize().y / 2) - 64 };
+
+	_hotbar.setPosition(position)
+		.setStyle(gui::ElementState::Idle, {
+					.childPadding = {48.f, 0.f}
+			});
 }
 
 void drft::system::HUD::updateLevelInfo(entt::const_handle player)
@@ -201,7 +215,7 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 				{
 					return true;
 				}
-		return false;
+				return false;
 			});
 		int count = 0;
 		for (auto entity : entities)
@@ -263,6 +277,40 @@ void drft::system::HUD::updateFlashEffects()
 			++it;
 		}
 	}
+}
+
+void drft::system::HUD::updateHotbar(entt::const_handle player)
+{
+	using namespace entt::literals;
+	_hotbar.clear();
+	if (auto hotbar = player.try_get<component::Hotbar>())
+	{
+		for (int i = 0; i < hotbar->abilities.size(); ++i) 
+		{
+			auto& hotbarContainer = _hotbar.insert(std::to_string(i), gui::SingleContainer());
+			hotbarContainer.setSize({ 32,32 });
+			hotbarContainer.setStyle(gui::ElementState::Idle, {
+					.fillColor = sf::Color(0,0,0,60),
+					.outlineColor = sf::Color(255,255,255,50),
+					.outlineThickness = 1.f,
+					.innerPadding = {0.f, 0.f},
+					.childPadding = {0.f, 4.f}
+				});
+			hotbarContainer.setOrigin(gui::ElementPosition::CENTER);
+			hotbarContainer.insert("Slot Abbrev", gui::Label())
+					.setLocalPosition({ -8, -8 })
+					.setStyle(gui::ElementState::Idle, {
+					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+					.textColor = sf::Color(255,255,255,100)
+					})
+					.setStyle(gui::ElementState::Focused, {
+					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+					.textColor = sf::Color(255,255,255,50)
+					})
+					.setTextString(std::to_string(i));
+		}
+	}
+	_hotbar.update(0.f);
 }
 
 void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)

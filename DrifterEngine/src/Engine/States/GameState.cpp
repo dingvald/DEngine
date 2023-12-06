@@ -27,6 +27,7 @@
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/HealthSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
+#include "Systems/Gameplay/HotbarSystem.h"
 #include "Systems/Gameplay/Actions/SprintingSystem.h"
 #include "Systems/Gameplay/DayNightCycleSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
@@ -264,6 +265,7 @@ void drft::GameState::importSystems()
 	_systems->add<OpenWorldMapSystem>(				Phase::OnUpdate);
 	_systems->add<OpenCraftingSystem>(				Phase::OnUpdate);
 	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
+	_systems->add<HotbarSystem>(					Phase::OnUpdate);
 	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
 	_systems->add<HealthSystem>(					Phase::OnUpdate + 10);
 	_systems->add<StaminaSystem>(					Phase::OnUpdate + 10);

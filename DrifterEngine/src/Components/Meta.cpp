@@ -142,4 +142,7 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Leveling, LEVELING_STRING>()
 		.prop("serialize"_hs)
 		.data<&Leveling::currentLevel>("currentLevel"_hs);
+
+	snapshot::reflectComponent<Hotbar, HOTBAR_STRING>()
+		.prop("serialize"_hs);
 }

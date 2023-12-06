@@ -10,5 +10,5 @@ namespace drft::system
 		Act
 	};
 
-	void spendActionPoints(entt::registry& registry, entt::entity actor, ActionType type);
+	void spendActionPoints(int cost, ActionType type, entt::handle entity);
 }

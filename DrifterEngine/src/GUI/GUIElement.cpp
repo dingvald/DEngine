@@ -84,7 +84,7 @@ void drft::gui::Blob::layoutChildren()
 {
 	for (auto& child : _children)
 	{
-		child->setPosition(getPosition() + child->getPosition() + _childOrigin + _childOffset);
+		child->setPosition(_childOrigin);
 	}
 }
 
@@ -150,7 +150,7 @@ void drft::gui::Stack::layoutChildren()
 {
 	for (auto& child : _children)
 	{
-		child->setPosition(child->getPosition() + _shape.getPosition() + _childOrigin);
+		child->setPosition(_childOrigin);
 	}
 }
 
@@ -192,7 +192,7 @@ bool drft::gui::SingleContainer::onHandleEvent(const sf::Event& ev)
 void drft::gui::SingleContainer::layoutChildren()
 {
 	if (_children.empty()) return;
-	_children.front()->setPosition(_shape.getPosition() + _childOrigin);
+	_children.front()->setPosition(_childOrigin);
 }
 
 bool drft::gui::SingleContainer::onUpdate(const float dt)
@@ -221,8 +221,8 @@ void drft::gui::SingleContainer::onRender(sf::RenderTarget& target)
 void drft::gui::DualContainer::layoutChildren()
 {
 	if (_children.empty()) return;
-	_children.front()->setPosition(_shape.getPosition() + _children.front()->getLocalPosition() + _childOrigin);
-	_children.back()->setPosition(_shape.getPosition() + _children.back()->getLocalPosition() + _childOrigin + _style[_state].childPadding);
+	_children.front()->setPosition(_childOrigin);
+	_children.back()->setPosition(_childOrigin + _style[_state].childPadding);
 }
 
 bool drft::gui::DualContainer::onHandleEvent(const sf::Event& ev)
@@ -275,7 +275,7 @@ void drft::gui::MultiContainer::layoutChildren()
 	int count = 0;
 	for (auto& child : _children)
 	{
-		child->setPosition(_shape.getPosition() + _childOrigin + (static_cast<float>(count) * _style[_state].childPadding));
+		child->setPosition(_childOrigin + (static_cast<float>(count) * _style[_state].childPadding));
 		++count;
 	}
 }

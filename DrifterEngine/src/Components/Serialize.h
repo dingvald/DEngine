@@ -184,6 +184,12 @@ namespace cereal
 	{
 		archive(baseStats.strength, baseStats.agility, baseStats.vitality);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Hotbar& hotbar)
+	{
+		archive(hotbar.abilities);
+	}
 }
 
 

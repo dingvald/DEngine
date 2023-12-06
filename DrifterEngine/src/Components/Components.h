@@ -228,6 +228,11 @@ namespace component
 		unsigned int currentXP = 0;
 		unsigned int neededXP = 100;
 	};
+
+	struct Hotbar
+	{
+		std::array<int, 10> abilities;
+	};
 }
 
 namespace component::action
@@ -241,6 +246,11 @@ namespace component::action
 	{
 		sf::Vector2i direction = { 0,0 };
 		std::unordered_map<std::string, int> damageTypes;
+	};
+
+	struct HotbarPressed
+	{
+		int slot = 0;
 	};
 
 	struct ToggleSprint {};

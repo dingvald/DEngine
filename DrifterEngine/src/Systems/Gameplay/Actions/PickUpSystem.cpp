@@ -53,7 +53,7 @@ void drft::system::PickUpSystem::update(const float dt)
 						cont.contents.push_back(item.id);
 					});
 			}
-			spendActionPoints(*registry, entity, ActionType::Act);
+			spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *registry, entity });
 		}
 	}
 }

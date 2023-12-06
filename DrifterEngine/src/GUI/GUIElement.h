@@ -114,9 +114,9 @@ namespace drft::gui
 
 		Element& setPosition(sf::Vector2f position)
 		{ 
-			_shape.setPosition(position); 
+			_shape.setPosition(position + _localPosition); 
 			setTextPosition(_textPosition);
-
+			setChildrenOrigin(_childAlignment, _childOffset);
 			return *this; 
 		}
 		sf::Vector2f getPosition() const
@@ -171,6 +171,7 @@ namespace drft::gui
 		{ 
 			_shape.setSize(size); 
 			setOrigin(_origin);
+			setChildrenOrigin(_childAlignment, _childOffset);
 			return *this;
 		}
 		sf::Vector2f getSize() const
@@ -531,6 +532,7 @@ namespace drft::gui
 	class Container : public Element
 	{
 	public:
+		/*
 		Element& setChildrenOrigin(ElementPosition origin, sf::Vector2f offset = { 0,0 })
 		{
 			_childAlignment = origin;
@@ -576,7 +578,7 @@ namespace drft::gui
 			_childOrigin += offset;
 
 			return *this;
-		}
+		}*/
 		virtual void layoutChildren() = 0;	
 	};
 

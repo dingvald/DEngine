@@ -40,7 +40,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		{
 			registry->emplace_or_replace<component::action::IncomingDamage>(target, attack.damageTypes, entity);
 		}
-		spendActionPoints(*registry, entity, ActionType::Act);
+		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *registry, entity });
 	}
 }
 

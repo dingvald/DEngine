@@ -46,7 +46,7 @@ void drft::system::MovementSystem::update(const float dt)
 					pos.position = targetPosition;
 				});
 			registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
-			spendActionPoints(*registry, entity, ActionType::Move);
+			spendActionPoints(BASE_ACTION_COST, ActionType::Move, { *registry, entity });
 		}
 		else
 		{

@@ -2,11 +2,10 @@
 #include "SpendActionPoints.h"
 #include "Components/Components.h"
 
-void drft::system::spendActionPoints(entt::registry& registry, entt::entity actor, ActionType type)
+void drft::system::spendActionPoints(int cost, ActionType type, entt::handle entity)
 {
-	float actionCost = BASE_ACTION_COST;
-	const auto actorComp = registry.try_get<component::Actor>(actor);
-	if (actorComp)
+	float actionCost = cost;
+	if (const auto& actorComp = entity.try_get<component::Actor>())
 	{
 		switch (type)
 		{
@@ -18,5 +17,5 @@ void drft::system::spendActionPoints(entt::registry& registry, entt::entity acto
 			break;
 		}
 	}
-	registry.emplace_or_replace<component::action::SpendPoints>(actor, static_cast<int>(actionCost));
+	entity.emplace_or_replace<component::action::SpendPoints>(static_cast<int>(actionCost));
 }

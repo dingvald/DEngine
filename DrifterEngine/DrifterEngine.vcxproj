@@ -180,6 +180,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ability\Abilities\NullAbility.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\HotbarSystem.cpp" />
+    <ClCompile Include="src\Ability\AbilityRegistry.cpp" />
+    <ClCompile Include="src\Ability\IAbility.cpp" />
     <ClCompile Include="src\Systems\Core\FloatingTextSystem.cpp" />
     <ClCompile Include="src\GOAP\Actions\InvestigateHostileAction.cpp" />
     <ClCompile Include="src\GOAP\Goals\EscapeHostileGoal.cpp" />
@@ -361,6 +365,12 @@
     <ClCompile Include="src\GOAP\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Ability\Abilities\NullAbility.h" />
+    <ClInclude Include="src\Systems\Gameplay\HotbarSystem.h" />
+    <ClInclude Include="src\Ability\AbilityRegistry.h" />
+    <ClInclude Include="src\Ability\AbilityTargetingType.h" />
+    <ClInclude Include="src\Ability\AbilityType.h" />
+    <ClInclude Include="src\Ability\IAbility.h" />
     <ClInclude Include="src\Systems\Core\FloatingTextSystem.h" />
     <ClInclude Include="src\GOAP\Actions\InvestigateHostileAction.h" />
     <ClInclude Include="src\GOAP\Goals\EscapeHostileGoal.h" />

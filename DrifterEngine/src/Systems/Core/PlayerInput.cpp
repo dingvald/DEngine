@@ -57,6 +57,15 @@ void drft::system::PlayerInput::init()
 	_actionMap.addAction(Key::Space, [](entt::handle entity) {
 		entity.emplace<component::action::TryInteract>();
 		});
+
+	// Hotbar //
+	for (int i = 0; i < 10; ++i)
+	{
+		_actionMap.addAction(static_cast<sf::Keyboard::Key>(static_cast<int>(Key::Num0) + i), 
+			[i](entt::handle entity) {
+			entity.emplace<component::action::HotbarPressed>(i);
+		});
+	}
 }
 
 void drft::system::PlayerInput::update(const float dt)
