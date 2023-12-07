@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "AbilityRegistry.h"
 #include "Abilities/NullAbility.h"
+#include "Abilities/ToggleSprintAbility.h"
 
 drft::AbilityRegistry::AbilityMap drft::AbilityRegistry::_abilities = {};
 
 void drft::AbilityRegistry::bind()
 {
     _abilities.emplace(AbilityType::NullAbility, std::make_unique<NullAbility>());
+    _abilities.emplace(AbilityType::Sprint, std::make_unique<ToggleSprintAbility>());
 }
 
 const drft::IAbility& drft::AbilityRegistry::get(AbilityType ability)

@@ -14,6 +14,9 @@
 
 using namespace drft;
 constexpr float TARGET_FPS = 60.0f;
+static const std::string RESOURCE_PATH = "./resources/";
+static const std::string TEXTURE_PATH = RESOURCE_PATH + "Textures/";
+static const std::string FONTS_PATH = RESOURCE_PATH + "Fonts/";
 
 drft::Engine::Engine()
 	: _window(sf::VideoMode(1280, 720), "Drifter Engine")
@@ -33,7 +36,7 @@ void drft::Engine::run()
 		render(deltaTime.asSeconds());
 		if (_stateStack.isEmpty())
 		{
-			this->shutDown();
+			shutDown();
 		}
 	}
 }
@@ -43,16 +46,15 @@ void drft::Engine::initialize()
 	loadResources();
 	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
 	service::DebugInfo::instance().setPosition({ 16,8 });
-
 	registerStates();
 	_stateStack.pushState(States::Title);
 }
 
 void drft::Engine::loadResources()
 {
-	std::string resourcePath("./resources/");
-	_textures.load("Sprites", resourcePath + "Textures/simpleTileset.png");
-	_fonts.load("Terminus", resourcePath + "Fonts/terminus.ttf");
+	_textures.load("Sprites", TEXTURE_PATH + "simpleTileset.png");
+	_textures.load("Icons", TEXTURE_PATH + "icons.png");
+	_fonts.load("Terminus", FONTS_PATH + "terminus.ttf");
 }
 
 void drft::Engine::registerStates()

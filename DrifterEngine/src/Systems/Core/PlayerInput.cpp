@@ -3,6 +3,7 @@
 #include "Components/Components.h"
 #include "Components/Tags.h"
 #include "Systems/Helpers/InputBuffer.h"
+#include "Systems/Helpers/ToHotbarIndex.h"
 
 static constexpr unsigned int INPUT_BUFFER_MAX_SIZE = 2;
 static constexpr float REFRACTORY_PERIOD = 0.2f; // sec
@@ -52,18 +53,25 @@ void drft::system::PlayerInput::init()
 		entity.emplace<component::action::OpenCrafting>();
 		});
 	_actionMap.addAction(Key::S, [](entt::handle entity) {
-		entity.emplace<component::action::ToggleSprint>();
+			if (entity.all_of<component::Sprinting>())
+			{
+				entity.remove<component::Sprinting>();
+			}
+			else
+			{
+				entity.emplace<component::Sprinting>();
+			}
 		});
 	_actionMap.addAction(Key::Space, [](entt::handle entity) {
 		entity.emplace<component::action::TryInteract>();
 		});
 
 	// Hotbar //
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < HOTBAR_SIZE; ++i)
 	{
 		_actionMap.addAction(static_cast<sf::Keyboard::Key>(static_cast<int>(Key::Num0) + i), 
 			[i](entt::handle entity) {
-			entity.emplace<component::action::HotbarPressed>(i);
+			entity.emplace<component::action::HotbarPressed>(toHotbarIndex(i));
 		});
 	}
 }

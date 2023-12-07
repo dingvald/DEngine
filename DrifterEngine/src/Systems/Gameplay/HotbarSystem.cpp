@@ -4,6 +4,7 @@
 #include "Components/Tags.h"
 #include "Ability/AbilityRegistry.h"
 #include "Systems/Helpers/SpendActionPoints.h"
+#include "Systems/Helpers/ToHotbarIndex.h"
 
 void drft::system::HotbarSystem::init()
 {
@@ -17,7 +18,9 @@ void drft::system::HotbarSystem::onStart(bool isNewGame)
 		auto playerView = registry->view<component::Player>();
 		for (auto entity : playerView)
 		{
-			registry->emplace<component::Hotbar>(entity);
+			auto& hotbar = registry->emplace<component::Hotbar>(entity);
+			// For testing purposes:
+			hotbar.abilities[toHotbarIndex(1)] = static_cast<int>(AbilityType::Sprint);
 		}
 	}
 }

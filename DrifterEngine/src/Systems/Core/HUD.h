@@ -31,7 +31,8 @@ namespace drft::system
 
 		void addItemIcon(gui::Element& container, entt::entity item);
 
-		void queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl);
+		void queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl, bool fades = false);
+		void onHotbarPressed(entt::registry& registry, entt::entity entity);
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
 		void onConsumeStamina(entt::registry& registry, entt::entity entity);
 
@@ -39,10 +40,10 @@ namespace drft::system
 		struct FlashEffect
 		{
 			sf::RectangleShape shape;
+			bool fades = false;
 			int ttl = 0; // in frames
 		};
 
-		// Static HUD
 		sf::Text _lvlText{};
 		sf::Text _xpText{};
 

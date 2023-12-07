@@ -1,17 +1,16 @@
 #pragma once
 #include "Ability/IAbility.h"
-
 namespace drft
 {
-	class NullAbility : public IAbility
+	class ToggleSprintAbility : public IAbility
 	{
 		// Inherited via IAbility
+		virtual sf::Color getIconColor() const override;
+		virtual int getSpriteIndex() const override;
 		virtual AbilityTargetingType getTargetingType() const override;
 		virtual bool isValid(entt::const_handle actor) const override;
 		virtual void perform(entt::handle actor, std::optional<sf::Vector2i> targetPosition) const override;
-
-		virtual sf::Color getIconColor() const override;
-		virtual int getSpriteIndex() const override;
+		virtual int getCost() const override;
 	};
 }
 

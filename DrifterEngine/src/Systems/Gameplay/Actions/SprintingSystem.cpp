@@ -7,7 +7,8 @@ static constexpr float PI = 3.141592f;
 
 void drft::system::SprintingSystem::init()
 {
-	registry->on_construct<component::action::ToggleSprint>().connect<&SprintingSystem::onToggleSprint>(this);
+	registry->on_construct<component::Sprinting>().connect<&SprintingSystem::onSprintingAdded>(this);
+	registry->on_destroy<component::Sprinting>().connect<&SprintingSystem::onSprintingRemoved>(this);
 }
 
 void drft::system::SprintingSystem::fixedUpdate()
@@ -18,8 +19,6 @@ void drft::system::SprintingSystem::fixedUpdate()
 		if (stamina.current <= 0.f)
 		{
 			registry->remove<component::Sprinting>(entity);
-			removeSprintBuff(*registry, entity);
-			removeSprintEffect(*registry, entity);
 			continue;
 		}
 		if (!_sprintEffects.contains(entity))
@@ -43,10 +42,22 @@ void drft::system::SprintingSystem::onFixedUpdateEnd()
 
 void drft::system::SprintingSystem::shutdown()
 {
-	for (auto [sprinter, effect] : _sprintEffects)
+	for (auto&& [sprinter, effect] : _sprintEffects)
 	{
 		registry->destroy(effect);
 	}
+}
+
+void drft::system::SprintingSystem::onSprintingAdded(entt::registry& registry, entt::entity entity)
+{
+	applySprintBuff(registry, entity);
+	addSprintEffect(registry, entity);
+}
+
+void drft::system::SprintingSystem::onSprintingRemoved(entt::registry& registry, entt::entity entity)
+{
+	removeSprintBuff(registry, entity);
+	removeSprintEffect(registry, entity);
 }
 
 void drft::system::SprintingSystem::applySprintBuff(entt::registry& registry, entt::entity entity)
@@ -71,23 +82,6 @@ void drft::system::SprintingSystem::removeSprintBuff(entt::registry& registry, e
 	{
 		stamina->baseConsumption -= 1.f;
 	}
-}
-
-void drft::system::SprintingSystem::onToggleSprint(entt::registry& registry, entt::entity entity)
-{
-	if (registry.all_of<component::Sprinting>(entity))
-	{
-		registry.remove<component::Sprinting>(entity);
-		removeSprintBuff(registry, entity);
-		removeSprintEffect(registry, entity);
-	}
-	else
-	{
-		registry.emplace<component::Sprinting>(entity);
-		applySprintBuff(registry, entity);
-		addSprintEffect(registry, entity);
-	}
-	registry.remove<component::action::ToggleSprint>(entity);
 }
 
 void drft::system::SprintingSystem::addSprintEffect(entt::registry& registry, entt::entity entity)

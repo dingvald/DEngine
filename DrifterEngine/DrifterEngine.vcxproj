@@ -234,6 +234,7 @@
     <ClCompile Include="src\Systems\Helpers\AddToContainer.cpp" />
     <ClCompile Include="src\Systems\Helpers\RemoveFromContainer.cpp" />
     <ClCompile Include="src\Systems\Helpers\SpendActionPoints.cpp" />
+    <ClCompile Include="src\Systems\Helpers\ToHotbarIndex.cpp" />
     <ClCompile Include="src\Systems\Rendering\PlayerFOVSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DayNightCycleSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp" />
@@ -363,6 +364,7 @@
     <ClCompile Include="src\WorldMap\WorldMap.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\StateMachine.cpp" />
     <ClCompile Include="src\GOAP\WorldState.cpp" />
+    <ClCompile Include="src\Ability\Abilities\ToggleSprintAbility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ability\Abilities\NullAbility.h" />
@@ -434,6 +436,7 @@
     <ClInclude Include="src\Systems\Helpers\AddToContainer.h" />
     <ClInclude Include="src\Systems\Helpers\RemoveFromContainer.h" />
     <ClInclude Include="src\Systems\Helpers\SpendActionPoints.h" />
+    <ClInclude Include="src\Systems\Helpers\ToHotbarIndex.h" />
     <ClInclude Include="src\Systems\Rendering\PlayerFOVSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DayNightCycleSystem.h" />
     <ClInclude Include="src\Events\GameTickEvent.h" />
@@ -696,6 +699,7 @@
     <ClInclude Include="src\WorldMap\WorldMap.h" />
     <ClInclude Include="src\Systems\HelperClasses\StateMachine.h" />
     <ClInclude Include="src\GOAP\WorldState.h" />
+    <ClInclude Include="src\Ability\Abilities\ToggleSprintAbility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\biomes\biomes.json" />
@@ -710,6 +714,7 @@
     <None Include="src\Utility\ResourceHolder.inl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\Textures\icons.png" />
     <Image Include="resources\Textures\simpleTileset.png" />
   </ItemGroup>
   <ItemGroup>

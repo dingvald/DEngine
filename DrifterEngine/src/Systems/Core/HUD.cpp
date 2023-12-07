@@ -9,7 +9,9 @@
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Systems/Helpers/FindItemOwner.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
+#include "Systems/Helpers/ToHotbarIndex.h"
 #include "Components/Components.h"
+#include "Ability/AbilityRegistry.h"
 
 static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 32.f };
 static constexpr float HEALTHBAR_HEIGHT = 7;
@@ -18,6 +20,8 @@ static constexpr int HEALTHBAR_WIDTH_MULTIPLIER = 7;
 static const sf::Vector2f STAMINABAR_POSITION = HEALTHBAR_POSITION + sf::Vector2f(0.f, 16.f);
 static constexpr float STAMINABAR_HEIGHT = HEALTHBAR_HEIGHT;
 static constexpr int STAMINABAR_WIDTH_MULTIPLIER = HEALTHBAR_WIDTH_MULTIPLIER;
+
+static constexpr float HOTBAR_ICON_X_OFFSET = 48.f;
 
 void drft::system::HUD::init()
 {
@@ -30,6 +34,7 @@ void drft::system::HUD::init()
 
 	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
+	registry->on_construct<component::action::HotbarPressed>().connect<&HUD::onHotbarPressed>(this);
 }
 
 void drft::system::HUD::fixedUpdate()
@@ -158,7 +163,7 @@ void drft::system::HUD::createHotbar()
 
 	_hotbar.setPosition(position)
 		.setStyle(gui::ElementState::Idle, {
-					.childPadding = {48.f, 0.f}
+					.childPadding = {HOTBAR_ICON_X_OFFSET, 0.f}
 			});
 }
 
@@ -268,6 +273,12 @@ void drft::system::HUD::updateFlashEffects()
 	while (it != _flashEffects.end())
 	{
 		--(it->ttl);
+		if (it->fades)
+		{
+			sf::Color color = it->shape.getFillColor();
+			color.a = math::remap(0, 120, 0, 255, it->ttl);
+			it->shape.setFillColor(color);
+		}
 		if (it->ttl <= 0)
 		{
 			it = _flashEffects.erase(it);
@@ -285,29 +296,43 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 	_hotbar.clear();
 	if (auto hotbar = player.try_get<component::Hotbar>())
 	{
-		for (int i = 0; i < hotbar->abilities.size(); ++i) 
+		const int hotbarSize = hotbar->abilities.size();
+		auto& iconTexture = registry->ctx().get<sf::Texture&>("icons"_hs);
+		for (int i = 0; i < hotbarSize; ++i) 
 		{
-			auto& hotbarContainer = _hotbar.insert(std::to_string(i), gui::SingleContainer());
+			const auto& ability = AbilityRegistry::get(static_cast<AbilityType>(hotbar->abilities[i]));
+			const bool isValidAbility = ability.isValid(player);
+			auto& hotbarContainer = _hotbar.insert(std::to_string(i), gui::DualContainer());
 			hotbarContainer.setSize({ 32,32 });
 			hotbarContainer.setStyle(gui::ElementState::Idle, {
-					.fillColor = sf::Color(0,0,0,60),
-					.outlineColor = sf::Color(255,255,255,50),
+					.fillColor = isValidAbility ? sf::Color(0,0,0,60) : sf::Color(100,100,100,60),
+					.outlineColor = isValidAbility ? sf::Color(255,255,255,50) : sf::Color(100,100,100,100),
 					.outlineThickness = 1.f,
-					.innerPadding = {0.f, 0.f},
-					.childPadding = {0.f, 4.f}
+					.innerPadding = {0.f, 0.f}
 				});
 			hotbarContainer.setOrigin(gui::ElementPosition::CENTER);
+
+			
+			sf::Sprite abilitySprite;
+			abilitySprite.setTexture(iconTexture);
+			abilitySprite.setTextureRect(util::SpriteIndexer::get(static_cast<util::Sprite>(ability.getSpriteIndex()), iconTexture));
+			auto& abilityIconGUI = hotbarContainer.insert("icon", gui::Icon{ abilitySprite });
+			abilityIconGUI.setSize({ 32,32 });
+			abilityIconGUI.setStyle(gui::ElementState::Idle, {
+					.fillColor = isValidAbility ? ability.getIconColor() : sf::Color(100,100,100,100)
+				});
+
 			hotbarContainer.insert("Slot Abbrev", gui::Label())
-					.setLocalPosition({ -8, -8 })
-					.setStyle(gui::ElementState::Idle, {
-					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
-					.textColor = sf::Color(255,255,255,100)
+				.setLocalPosition({ -8, -8 })
+				.setStyle(gui::ElementState::Idle, {
+				.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+				.textColor = sf::Color::White
 					})
-					.setStyle(gui::ElementState::Focused, {
-					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
-					.textColor = sf::Color(255,255,255,50)
+				.setStyle(gui::ElementState::Focused, {
+				.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+				.textColor = sf::Color::White
 					})
-					.setTextString(std::to_string(i));
+				.setTextString(std::to_string(i+1));
 		}
 	}
 	_hotbar.update(0.f);
@@ -346,14 +371,23 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 	}
 }
 
-void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl)
+void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl, bool fades /*=false*/)
 {
 	sf::RectangleShape shape;
 	shape.setPosition(position);
 	shape.setSize(size);
 	shape.setFillColor(sf::Color::White);
 
-	_flashEffects.emplace_back(shape, ttl);
+	_flashEffects.emplace_back(shape, fades, ttl);
+}
+
+void drft::system::HUD::onHotbarPressed(entt::registry& registry, entt::entity entity)
+{
+	auto& hotbarPressed = registry.get<component::action::HotbarPressed>(entity);
+	sf::Vector2f hotbarPosition = _hotbar.getPosition();
+	hotbarPosition.x += hotbarPressed.slot * HOTBAR_ICON_X_OFFSET;
+	hotbarPosition += sf::Vector2f{ -16, -16 }; // to offset from center
+	queueFlashEffect(hotbarPosition, { 32,32 }, 60, true);
 }
 
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)

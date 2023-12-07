@@ -161,6 +161,7 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(*_world);
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace_as<sf::Texture&>("sprites"_hs, getContext().textures.get("Sprites"));
+	getContext().registry.ctx().emplace_as<sf::Texture&>("icons"_hs, getContext().textures.get("Icons"));
 	getContext().registry.ctx().emplace_as<sf::Font&>("terminus"_hs, getContext().fonts.get("Terminus"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);

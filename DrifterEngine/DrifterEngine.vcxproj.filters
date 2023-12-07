@@ -465,6 +465,12 @@
     <ClCompile Include="src\Ability\Abilities\NullAbility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ability\Abilities\ToggleSprintAbility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\ToHotbarIndex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1460,6 +1466,12 @@
     <ClInclude Include="src\Ability\Abilities\NullAbility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ability\Abilities\ToggleSprintAbility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\ToHotbarIndex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -1479,6 +1491,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\icons.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
