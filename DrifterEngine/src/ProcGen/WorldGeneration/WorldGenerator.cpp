@@ -493,7 +493,7 @@ void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::Vector2i coordinate, sp
 			{
 				return std::bitset<32>().reset(0);
 			}
-	return std::bitset<32>().set(0);
+			return std::bitset<32>().set(0);
 		});
 	NoiseMap noiseMap = rng::NoiseMap::generate({ bitgrid.width(), bitgrid.height() }, { 3,3 }, _seed + coordinate.x * coordinate.y, 8, 3.0f, 0.55f);
 	sf::Vector2i center = { bitgrid.width() / 2, bitgrid.height() / 2 };
@@ -527,6 +527,8 @@ void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::Vector2i coordinate, sp
 		{
 			for (int x = x_origin; x < x_origin + width; ++x)
 			{
+				if (x < 0 || x > noiseMap.width()) continue;
+				if (y < 0 || y > noiseMap.height()) continue;
 				int x_center = delta.y == 0 ? center.x : (delta.x != 0 ? center.x : x);
 				int y_center = delta.x == 0 ? center.y : (delta.y != 0 ? center.y : y);
 				int x_edge = delta.x == 0 ? x : (delta.x > 0 ? FULL_CHUNK.x + HALF_CHUNK.x : 0);
