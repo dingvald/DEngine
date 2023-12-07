@@ -7,6 +7,11 @@ int drft::IAbility::getCost() const
 	return 100;
 }
 
+bool drft::IAbility::isToggledOn(entt::const_handle actor) const
+{
+	return false;
+}
+
 drft::math::Range<int> drft::IAbility::getRange(entt::const_handle) const
 {
 	if (getTargetingType() == AbilityTargetingType::SelectSquare) throw std::exception("Need to override");

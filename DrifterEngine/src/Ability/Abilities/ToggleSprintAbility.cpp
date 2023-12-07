@@ -5,7 +5,7 @@
 
 sf::Color drft::ToggleSprintAbility::getIconColor() const
 {
-    return sf::Color::Green;
+    return sf::Color(101,122,98);
 }
 
 int drft::ToggleSprintAbility::getSpriteIndex() const
@@ -42,4 +42,13 @@ void drft::ToggleSprintAbility::perform(entt::handle actor, std::optional<sf::Ve
 int drft::ToggleSprintAbility::getCost() const
 {
 	return 0;
+}
+
+bool drft::ToggleSprintAbility::isToggledOn(entt::const_handle actor) const
+{
+	if (actor.all_of<component::Sprinting>())
+	{
+		return true;
+	}
+	return false;
 }

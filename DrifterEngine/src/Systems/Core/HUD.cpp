@@ -159,7 +159,7 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 void drft::system::HUD::createHotbar()
 {
 	const auto& view = registry->ctx().get<sf::RenderWindow&>().getView();
-	const sf::Vector2f position = { view.getCenter().x - 192, view.getCenter().y + (view.getSize().y / 2) - 64 };
+	const sf::Vector2f position = { view.getCenter().x - 208, view.getCenter().y + (view.getSize().y / 2) - 64 };
 
 	_hotbar.setPosition(position)
 		.setStyle(gui::ElementState::Idle, {
@@ -302,11 +302,12 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 		{
 			const auto& ability = AbilityRegistry::get(static_cast<AbilityType>(hotbar->abilities[i]));
 			const bool isValidAbility = ability.isValid(player);
+			const bool isToggledOn = ability.isToggledOn(player);
 			auto& hotbarContainer = _hotbar.insert(std::to_string(i), gui::DualContainer());
 			hotbarContainer.setSize({ 32,32 });
 			hotbarContainer.setStyle(gui::ElementState::Idle, {
 					.fillColor = isValidAbility ? sf::Color(0,0,0,60) : sf::Color(100,100,100,60),
-					.outlineColor = isValidAbility ? sf::Color(255,255,255,50) : sf::Color(100,100,100,100),
+					.outlineColor = isValidAbility ? (isToggledOn ? sf::Color::Yellow : sf::Color(255,255,255,50)) : sf::Color(100,100,100,100),
 					.outlineThickness = 1.f,
 					.innerPadding = {0.f, 0.f}
 				});
@@ -325,14 +326,14 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 			hotbarContainer.insert("Slot Abbrev", gui::Label())
 				.setLocalPosition({ -8, -8 })
 				.setStyle(gui::ElementState::Idle, {
-				.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
-				.textColor = sf::Color::White
+					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+					.textColor = sf::Color::White
 					})
 				.setStyle(gui::ElementState::Focused, {
-				.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
-				.textColor = sf::Color::White
+					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+					.textColor = sf::Color::White
 					})
-				.setTextString(std::to_string(i+1));
+				.setTextString(std::to_string((i+1)%10));
 		}
 	}
 	_hotbar.update(0.f);
