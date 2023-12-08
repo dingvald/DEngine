@@ -180,6 +180,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Rendering\AnimationSystem.cpp" />
+    <ClCompile Include="src\Systems\Core\EffectSystem.cpp" />
     <ClCompile Include="src\Ability\Abilities\NullAbility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HotbarSystem.cpp" />
     <ClCompile Include="src\Ability\AbilityRegistry.cpp" />
@@ -233,6 +235,7 @@
     <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\AddToContainer.cpp" />
     <ClCompile Include="src\Systems\Helpers\RemoveFromContainer.cpp" />
+    <ClCompile Include="src\Systems\Helpers\SpawnEffect.cpp" />
     <ClCompile Include="src\Systems\Helpers\SpendActionPoints.cpp" />
     <ClCompile Include="src\Systems\Helpers\ToHotbarIndex.cpp" />
     <ClCompile Include="src\Systems\Rendering\PlayerFOVSystem.cpp" />
@@ -367,6 +370,10 @@
     <ClCompile Include="src\Ability\Abilities\ToggleSprintAbility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\EngineConstants.h" />
+    <ClInclude Include="src\Systems\Rendering\AnimationSystem.h" />
+    <ClInclude Include="src\Events\SpawnEffectEvent.h" />
+    <ClInclude Include="src\Systems\Core\EffectSystem.h" />
     <ClInclude Include="src\Ability\Abilities\NullAbility.h" />
     <ClInclude Include="src\Systems\Gameplay\HotbarSystem.h" />
     <ClInclude Include="src\Ability\AbilityRegistry.h" />
@@ -435,6 +442,7 @@
     <ClInclude Include="src\Events\NightStartEvent.h" />
     <ClInclude Include="src\Systems\Helpers\AddToContainer.h" />
     <ClInclude Include="src\Systems\Helpers\RemoveFromContainer.h" />
+    <ClInclude Include="src\Systems\Helpers\SpawnEffect.h" />
     <ClInclude Include="src\Systems\Helpers\SpendActionPoints.h" />
     <ClInclude Include="src\Systems\Helpers\ToHotbarIndex.h" />
     <ClInclude Include="src\Systems\Rendering\PlayerFOVSystem.h" />
@@ -466,6 +474,7 @@
     <ClInclude Include="src\Events\RequestStateChange.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
+    <ClInclude Include="src\Systems\Rendering\RenderLayers.h" />
     <ClInclude Include="src\Utility\StringManipulation.h" />
     <ClInclude Include="src\Utility\GetTextCenter.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />

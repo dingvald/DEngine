@@ -5,6 +5,7 @@
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/SpriteBatch.h"
 #include "Spatial/Conversions.h"
+#include "RenderLayers.h"
 
 static const sf::Color seenTileColor = sf::Color(12, 12, 12);
 
@@ -12,7 +13,7 @@ void drft::system::EntityRenderer::init()
 {
 	using namespace entt::literals;
 	_sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
-	for (int l = 0; l < static_cast<int>(Layer::Total); ++l)
+	for (int l = 0; l < static_cast<int>(RenderLayer::Total); ++l)
 	{
 		_spriteLayers[l].setTexture(_sprites);
 	}

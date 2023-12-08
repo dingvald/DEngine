@@ -5,17 +5,6 @@
 
 namespace drft::system
 {
-    enum class Layer
-    {
-        Tiles,
-        Items,
-        Props,
-        Actors,
-        Effects,
-        Camera,
-        Total
-    };
-
     class EntityRenderer : public System
     {
     public:

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Engine.h"
+#include "EngineConstants.h"
 #include "States/GameState.h"
 #include "States/TitleScreenState.h"
 #include "States/MainMenuState.h"
@@ -13,7 +14,7 @@
 #include "Services/DebugInfo.h"
 
 using namespace drft;
-constexpr float TARGET_FPS = 60.0f;
+
 static const std::string RESOURCE_PATH = "./resources/";
 static const std::string TEXTURE_PATH = RESOURCE_PATH + "Textures/";
 static const std::string FONTS_PATH = RESOURCE_PATH + "Fonts/";

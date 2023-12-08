@@ -233,6 +233,21 @@ namespace component
 	{
 		std::array<int, 10> abilities;
 	};
+
+	struct Effect
+	{
+		int ttl = 0;
+		bool fades = false;
+	};
+
+	struct Animation
+	{
+		std::vector<unsigned int> sprites;
+		int index = 0;
+		float speed = 1.0; // animation frames / second
+		float elapsed = 0.0;
+		bool loops = false;
+	};
 }
 
 namespace component::action

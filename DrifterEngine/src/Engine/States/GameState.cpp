@@ -11,6 +11,7 @@
 #pragma region System Includes
 #include "Systems/SystemScheduler.h"
 #include "Systems/Rendering/CullingSystem.h"
+#include "Systems/Rendering/AnimationSystem.h"
 #include "Systems/Rendering/PlayerFOVSystem.h"
 #include "Systems/Rendering/EntityRenderer.h"
 #include "Systems/Rendering/LightingSystem.h"
@@ -24,6 +25,7 @@
 #include "Systems/Core/TurnManager.h"
 #include "Systems/Core/WorldGridResolver.h"
 #include "Systems/Core/FloatingTextSystem.h"
+#include "Systems/Core/EffectSystem.h"
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/HealthSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
@@ -245,8 +247,6 @@ void drft::GameState::importSystems()
 
 	using namespace system;
 
-	// Import all systems into game state
-	// Add an offset to adjust execution order of systems
 	_systems->add<RealityBubble>(					Phase::OnPreUpdate);
 	_systems->add<TurnManager>(						Phase::OnPreUpdate + 5);
 
@@ -283,6 +283,8 @@ void drft::GameState::importSystems()
 	_systems->add<LiquidSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
+	_systems->add<EffectSystem>(					Phase::OnFixedUpdate);
+	_systems->add<AnimationSystem>(					Phase::OnFixedUpdate);
 	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 5);
 	_systems->add<QuestingSystem>(					Phase::OnFixedUpdate + 10);
 
