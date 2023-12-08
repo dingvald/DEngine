@@ -245,7 +245,7 @@ namespace component
 		std::vector<unsigned int> sprites;
 		int index = 0;
 		float speed = 1.0; // animation frames / second
-		float elapsed = 0.0;
+		int elapsed = 0; // number of game frames elapsed
 		bool loops = false;
 	};
 }
