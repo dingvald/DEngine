@@ -7,7 +7,6 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void onStart(bool isNewgame) override;
 		void fixedUpdate() override;
 		void onFixedUpdateEnd() override;
 

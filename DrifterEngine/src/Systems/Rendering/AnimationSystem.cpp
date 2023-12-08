@@ -7,17 +7,6 @@ void drft::system::AnimationSystem::init()
 {
 }
 
-void drft::system::AnimationSystem::onStart(bool isNewgame)
-{
-	// for testing!
-	auto playerView = registry->view<component::Player>();
-	for (auto entity : playerView)
-	{
-		component::Animation animation = { .sprites = {1, 2, 3, 4, 5, 6}, .speed = 1.0f, .loops = false };
-		registry->emplace<component::Animation>(entity, animation);
-	}
-}
-
 void drft::system::AnimationSystem::fixedUpdate()
 {
 	auto view = registry->view<component::Render, component::Animation>();
@@ -34,7 +23,7 @@ void drft::system::AnimationSystem::fixedUpdate()
 			else
 			{
 				animation.index = std::min(animation.index + 1, static_cast<int>(animation.sprites.size()) - 1);
-				if (animation.index == animation.sprites.size() - 1)
+				if (animation.index >= animation.sprites.size() - 1)
 				{
 					_toRemoveAnimation.push_back(entity);
 				}
