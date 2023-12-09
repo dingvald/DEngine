@@ -190,6 +190,12 @@ namespace cereal
 	{
 		archive(hotbar.abilities);
 	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Animation& animation)
+	{
+		archive(animation.sprites, animation.index, animation.speed, animation.elapsed, animation.loops);
+	}
 }
 
 

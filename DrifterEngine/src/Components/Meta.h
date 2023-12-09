@@ -33,6 +33,7 @@ constexpr std::string_view TICKING_LIFETIME_STRING = "TickingLifetime";
 constexpr std::string_view LEVELING_STRING = "Leveling";
 constexpr std::string_view BASE_STATS_STRING = "BaseStats";
 constexpr std::string_view HOTBAR_STRING = "Hotbar";
+constexpr std::string_view ANIMATION_STRING = "Animation";
 
 namespace component
 {

@@ -244,8 +244,8 @@ namespace component
 	{
 		std::vector<unsigned int> sprites;
 		int index = 0;
-		float speed = 1.0; // animation frames / second
-		int elapsed = 0; // number of game frames elapsed
+		float speed = 1.0f; // animation frames / second
+		float elapsed = 0.0f; // number of game frames elapsed
 		bool loops = false;
 	};
 }

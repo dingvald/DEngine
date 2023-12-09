@@ -4,6 +4,7 @@
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/GetExperienceFromKilling.h"
 #include "Events/SendFloatingMessageEvent.h"
+#include "Systems/Helpers/SpawnEffect.h"
 
 void drft::system::HealthSystem::init()
 {
@@ -34,24 +35,41 @@ void drft::system::HealthSystem::update(const float dt)
 		{
 			std::string message;
 			sf::Color messageColor = sf::Color::White;
+			sf::Color effectColor = sf::Color::Red;
+			unsigned int effectSprite = registry->get<component::Render>(entity).sprite;
+			int effect_ttl = 30;
+
 			if (damage.amount == 0)
 			{
 				messageColor = sf::Color::Blue;
+				effectColor = sf::Color(180, 180, 180);
+				effectSprite = 18u;
+				effect_ttl = 60;
 			}
 			else if (damage.amount < 0)
 			{
 				message += "+";
 				messageColor = sf::Color::Green;
+				effectColor = sf::Color::Green;
 			}
+
 			auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
 			dispatcher.trigger(events::SendFloatingMessageEvent{
 				.message = message + std::to_string(std::abs(damage.amount)),
 				.color = messageColor,
-				.position = registry->get<component::Position>(entity).position,
+				.position = posComp->position,
 				.velocity = {0,-1},
 				.fades = true,
 				.isScreenSpace = false,
 				.ttl = 80
+				});
+
+			spawnEffect(*registry, {
+			.color = effectColor,
+			.sprites = {effectSprite},
+			.position = posComp->position,
+			.ttl = effect_ttl,
+			.fades = true,
 				});
 		}
 		

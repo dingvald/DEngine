@@ -6,6 +6,7 @@
 #include "Components/Components.h"
 #include "Components/Tags.h"
 #include "Utility/EntityHelpers.h"
+#include "Systems/Helpers/SpawnEffect.h"
 
 void drft::system::LaunchAttackSystem::init()
 {
@@ -40,6 +41,18 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		{
 			registry->emplace_or_replace<component::action::IncomingDamage>(target, attack.damageTypes, entity);
 		}
+		std::vector<unsigned int> sprites = { 8,9 }; // crushing
+		if (attack.damageTypes.contains("slashing") || attack.damageTypes.contains("piercing"))
+		{
+			sprites = { 16, 17 }; // slashing
+		}
+
+		spawnEffect(*registry, {
+			.color = sf::Color::White,
+			.sprites = sprites,
+			.position = targetPosition,
+			.animationSpeed = 20.0f
+			});
 		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *registry, entity });
 	}
 }

@@ -8,7 +8,6 @@ namespace drft::system
 	public:
 		void init() override;
 		void fixedUpdate() override;
-		void onFixedUpdateEnd() override;
 
 	private:
 		std::vector<entt::entity> _toDestroy;

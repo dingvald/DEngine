@@ -35,7 +35,6 @@
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/Actions/DropItemSystem.h"
 #include "Systems/Gameplay/Actions/EquipItemSystem.h"
-#include "Systems/Gameplay/HitEffectSystem.h"
 #include "Systems/Gameplay/Actions/CraftItemSystem.h"
 #include "Systems/Gameplay/Actions/MovementSystem.h"
 #include "Systems/Gameplay/Actions/WaitingSystem.h"
@@ -278,7 +277,6 @@ void drft::GameState::importSystems()
 	
 	_systems->add<DayNightCycleSystem>(				Phase::OnFixedUpdate);
 	_systems->add<SprintingSystem>(					Phase::OnFixedUpdate);
-	_systems->add<HitEffectSystem>(					Phase::OnFixedUpdate);
 	_systems->add<CullingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LiquidSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);

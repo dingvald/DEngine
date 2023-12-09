@@ -243,7 +243,6 @@
     <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp" />
     <ClCompile Include="src\Systems\Rendering\CullingSystem.cpp" />
     <ClCompile Include="src\Systems\Rendering\LightingSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\HitEffectSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\CraftItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
     <ClCompile Include="src\Engine\States\CraftingState.cpp" />
@@ -451,7 +450,6 @@
     <ClInclude Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.h" />
     <ClInclude Include="src\Systems\Rendering\CullingSystem.h" />
     <ClInclude Include="src\Systems\Rendering\LightingSystem.h" />
-    <ClInclude Include="src\Systems\Gameplay\HitEffectSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\CraftItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
     <ClInclude Include="src\Engine\States\CraftingState.h" />

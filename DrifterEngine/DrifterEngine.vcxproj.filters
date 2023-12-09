@@ -234,9 +234,6 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\CraftItemSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\HitEffectSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utility\stdHashing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1194,9 +1191,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\CraftItemSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\HitEffectSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\stdHashing.h">

@@ -21,15 +21,7 @@ void drft::system::EffectSystem::fixedUpdate()
 		}
 		if (effect.ttl <= 0)
 		{
-			_toDestroy.push_back(entity);
+			registry->destroy(entity);
 		}
-	}
-}
-
-void drft::system::EffectSystem::onFixedUpdateEnd()
-{
-	for (auto entity : _toDestroy)
-	{
-		registry->destroy(entity);
 	}
 }

@@ -145,4 +145,7 @@ void component::Meta::initialize()
 
 	snapshot::reflectComponent<Hotbar, HOTBAR_STRING>()
 		.prop("serialize"_hs);
+
+	snapshot::reflectComponent<Animation, ANIMATION_STRING>()
+		.prop("serialize"_hs);
 }

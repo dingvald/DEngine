@@ -13,6 +13,7 @@ void drft::system::AnimationSystem::fixedUpdate()
 	for (auto [entity, render, animation] : view.each())
 	{
 		++animation.elapsed;
+		// TODO: account for negative animation speeds so the animation goes backwards
 		const float numFramesTillNextIndex = TARGET_FPS / std::abs(animation.speed);
 		if (animation.elapsed >= numFramesTillNextIndex)
 		{
