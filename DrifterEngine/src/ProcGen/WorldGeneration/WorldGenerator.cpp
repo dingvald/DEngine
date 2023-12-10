@@ -325,7 +325,7 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 		for (auto& [entityName, algorithm] : entities)
 		{
 			auto positions = String2Algorithm.at(algorithm.name)(bitgrid, algorithm.parameters, _seed);
-			place(entityName,tileOrigin, positions, registry);
+			place(entityName, tileOrigin, positions, registry);
 		}
 	}
 }

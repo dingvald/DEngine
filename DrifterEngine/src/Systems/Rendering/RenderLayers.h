@@ -8,7 +8,8 @@ namespace drft::system
         Items,
         Props,
         Actors,
-        Effects,
+        EffectsBack,
+        EffectsFront,
         Camera,
         Total
     };

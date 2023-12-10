@@ -5,6 +5,7 @@
 #include "Systems/Helpers/GetExperienceFromKilling.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "Systems/Helpers/SpawnEffect.h"
+#include "Systems/Helpers/GetPrimaryMaterial.h"
 
 void drft::system::HealthSystem::init()
 {
@@ -33,24 +34,40 @@ void drft::system::HealthSystem::update(const float dt)
 		// send floating message
 		if (auto posComp = registry->try_get<component::Position>(entity))
 		{
+			auto handle = entt::const_handle{ *registry, entity };
+			auto& physical = registry->get<component::Physical>(entity);
+			
+			auto material = getPrimaryMaterial(handle);
+			sf::Color materialColor = material.get<component::Render>().color;
 			std::string message;
 			sf::Color messageColor = sf::Color::White;
-			sf::Color effectColor = sf::Color::Red;
-			unsigned int effectSprite = registry->get<component::Render>(entity).sprite;
-			int effect_ttl = 30;
+			sf::Color effectColor = materialColor;
+			std::vector<unsigned int> effectSprites = { handle.get<component::Render>().sprite };
+			int effect_ttl = 10;
 
 			if (damage.amount == 0)
 			{
 				messageColor = sf::Color::Blue;
 				effectColor = sf::Color(180, 180, 180);
-				effectSprite = 18u;
-				effect_ttl = 60;
+				effectSprites = { 18u };
+				effect_ttl = 30;
 			}
 			else if (damage.amount < 0)
 			{
 				message += "+";
 				messageColor = sf::Color::Green;
 				effectColor = sf::Color::Green;
+			}
+			else if (damage.amount > 0)
+			{
+				// Spawn Hit particles
+				spawnEffect(*registry, {
+					.color = materialColor,
+					.sprites = {80, 81, 82},
+					.layer = RenderLayer::EffectsBack,
+					.position = posComp->position,
+					.animationSpeed = 12.0f
+					});
 			}
 
 			auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
@@ -64,13 +81,18 @@ void drft::system::HealthSystem::update(const float dt)
 				.ttl = 80
 				});
 
+			// Spawn HurtEffect
 			spawnEffect(*registry, {
 			.color = effectColor,
-			.sprites = {effectSprite},
+			.sprites = effectSprites,
+			.layer = RenderLayer::EffectsBack,
 			.position = posComp->position,
+			.animationSpeed = 10.0f,
 			.ttl = effect_ttl,
-			.fades = true,
+			.fades = false,
 				});
+
+			
 		}
 		
 		health.current = std::clamp(health.current - damage.amount, 0.f, health.max);

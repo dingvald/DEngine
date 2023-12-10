@@ -18,7 +18,7 @@ void drft::gen::place(const std::string& name, sf::Vector2i origin, sf::Vector2i
 void drft::gen::place(const std::string& name, sf::Vector2i tileOrigin, const std::vector<sf::Vector2i>& positions, entt::registry& reg)
 {
 	const auto& factory = reg.ctx().get<const EntityFactory&>();
-	for (auto pos : positions)
+	for (auto&& pos : positions)
 	{
 		auto position = tileOrigin + pos;
 		factory.build(name, reg)

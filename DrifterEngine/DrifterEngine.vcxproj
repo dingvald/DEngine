@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Helpers\GetPrimaryMaterial.cpp" />
     <ClCompile Include="src\Systems\Rendering\AnimationSystem.cpp" />
     <ClCompile Include="src\Systems\Core\EffectSystem.cpp" />
     <ClCompile Include="src\Ability\Abilities\NullAbility.cpp" />
@@ -370,6 +371,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\EngineConstants.h" />
+    <ClInclude Include="src\Systems\Helpers\GetPrimaryMaterial.h" />
     <ClInclude Include="src\Systems\Rendering\AnimationSystem.h" />
     <ClInclude Include="src\Events\SpawnEffectEvent.h" />
     <ClInclude Include="src\Systems\Core\EffectSystem.h" />

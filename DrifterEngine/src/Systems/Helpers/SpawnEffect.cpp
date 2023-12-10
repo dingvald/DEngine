@@ -11,7 +11,7 @@ void drft::system::spawnEffect(entt::registry& registry, EffectStruct&& effect)
 	entt::handle effectHandle = { registry, registry.create() };
 	
 	effectHandle.emplace<component::Position>(effect.position);
-	effectHandle.emplace<component::Render>(static_cast<unsigned int>(effect.sprites.front()), static_cast<unsigned int>(RenderLayer::Effects), effect.color);
+	effectHandle.emplace<component::Render>(static_cast<unsigned int>(effect.sprites.front()), static_cast<unsigned int>(effect.layer), effect.color);
 	int ttl = effect.ttl;
 	if (effect.sprites.size() > 1) // must be an animation
 	{
