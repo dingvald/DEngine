@@ -32,7 +32,7 @@ void drft::system::LightingSystem::init()
 void drft::system::LightingSystem::fixedUpdate()
 {
 	auto globalLightView = registry->view<component::GlobalLightSource>();
-	auto positions = registry->view<const component::Position, component::tag::InViewport>();
+	auto positions = registry->view<const component::Position, component::tag::InViewport>(entt::exclude<component::Effect>);
 	// Apply global lighting
 	for (auto [_, globalLight] : globalLightView.each())
 	{
@@ -76,9 +76,7 @@ void drft::system::LightingSystem::fixedUpdate()
 			};
 			if (auto lit = registry->try_get<component::Lit>(entity))
 			{
-				lit->color.r = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(lit->color.r), (lit->color.r + lightColor.r) / 2), 0, 255));
-				lit->color.g = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(lit->color.g), (lit->color.g + lightColor.g) / 2), 0, 255));
-				lit->color.b = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(lit->color.b), (lit->color.b + lightColor.b) / 2), 0, 255));
+				lit->color = blendColor(lit->color, lightColor);
 			}
 			else
 			{
@@ -106,9 +104,7 @@ void drft::system::LightingSystem::fixedUpdate()
 			};
 			if (auto lit = registry->try_get<component::Lit>(entity))
 			{
-				lit->color.r = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(lit->color.r), (lit->color.r + lightColor.r) / 2), 0, 255));
-				lit->color.g = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(lit->color.g), (lit->color.g + lightColor.g) / 2), 0, 255));
-				lit->color.b = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(lit->color.b), (lit->color.b + lightColor.b) / 2), 0, 255));
+				lit->color = blendColor(lit->color, lightColor);
 			}
 			else
 			{
@@ -124,4 +120,13 @@ void drft::system::LightingSystem::fixedUpdate()
 void drft::system::LightingSystem::onFixedUpdateEnd()
 {
 	registry->clear<component::Lit>();
+}
+
+sf::Color drft::system::LightingSystem::blendColor(const sf::Color& color1, const sf::Color& color2)
+{
+	sf::Color result;
+	result.r = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(color1.r), (color1.r + color2.r) / 2), 0, 255));
+	result.g = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(color1.g), (color1.g + color2.g) / 2), 0, 255));
+	result.b = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(color1.b), (color1.b + color2.b) / 2), 0, 255));
+	return result;
 }

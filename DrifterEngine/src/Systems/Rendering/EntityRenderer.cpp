@@ -23,7 +23,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
 	auto camera = getCurrentCamera(*registry);
 	// Apply lighting to entities in the player's FOV
-	const auto view = registry->view< const component::Position, const component::Render, const component::Lit, const component::tag::InPlayerFOV, component::tag::InViewport>();
+	const auto view = registry->view< const component::Position, const component::Render, const component::Lit, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<component::Effect>);
 	for (auto const & [entity, pos, ren, lit] : view.each())
 	{
 		sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(ren.color.r * (static_cast<float>(lit.color.r) / 255.f), 0.f, 255.f));

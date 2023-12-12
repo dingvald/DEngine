@@ -14,6 +14,7 @@
 #include "Systems/Rendering/AnimationSystem.h"
 #include "Systems/Rendering/PlayerFOVSystem.h"
 #include "Systems/Rendering/EntityRenderer.h"
+#include "Systems/Rendering/EffectRenderer.h"
 #include "Systems/Rendering/LightingSystem.h"
 #include "Systems/Core/HUD.h"
 #include "Systems/Core/RealityBubble.h"
@@ -288,6 +289,7 @@ void drft::GameState::importSystems()
 	_systems->add<QuestingSystem>(					Phase::OnFixedUpdate + 10);
 
 	_systems->add<EntityRenderer>(					Phase::OnRender);
+	_systems->add<EffectRenderer>(					Phase::OnRender);
 	_systems->add<HUD>(								Phase::OnRender + 5);
 	_systems->add<FloatingTextSystem>(				Phase::OnRender + 5);
 

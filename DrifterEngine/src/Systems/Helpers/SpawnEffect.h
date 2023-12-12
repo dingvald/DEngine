@@ -13,6 +13,7 @@ namespace drft::system
 		int ttl = 60; // one second
 		bool fades = false;
 		bool loops = false;
+		bool requiresInFOV = true;
 	};
 
 	entt::entity spawnEffect(entt::registry& registry, EffectStruct&& effect);

@@ -13,6 +13,9 @@ namespace drft::system
 		void onFixedUpdateEnd() override;
 
 	private:
+		sf::Color blendColor(const sf::Color& color1, const sf::Color& color2);
+
+	private:
 		std::unique_ptr<Visibility> _fov;
 		std::unordered_set<sf::Vector2i> _lightBlockingPositions;
 		std::vector<entt::entity> _toLight;

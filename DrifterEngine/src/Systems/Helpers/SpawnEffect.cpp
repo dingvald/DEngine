@@ -19,6 +19,6 @@ entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& 
 		component::Animation animation = { .sprites = effect.sprites, .speed = effect.animationSpeed, .loops = effect.loops };
 		effectHandle.emplace<component::Animation>(animation);
 	}
-	effectHandle.emplace<component::Effect>(ttl, effect.fades);
+	effectHandle.emplace<component::Effect>(ttl, effect.fades, effect.requiresInFOV);
 	return effectHandle.entity();
 }
