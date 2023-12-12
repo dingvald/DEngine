@@ -1,6 +1,7 @@
 #pragma once
 #include "Systems/HelperClasses/BodyParts.h"
 #include "Systems/HelperClasses/AIStates.h"
+#include "Utility/Math.h"
 #include "GOAP/WorldState.h"
 #include "GOAP/Actions/AiActionTypes.h"
 #include "GOAP/SensorTypes.h"
@@ -12,9 +13,6 @@ namespace drft::goap
 
 namespace component
 {
-	struct Prototype 
-	{};
-
 	struct Info
 	{
 		std::string prototype = { "PROTOTYPE" };
@@ -283,6 +281,13 @@ namespace component::action
 	struct SelectDirection
 	{
 		std::function<bool(sf::Vector2i)> onDirectionSelect;
+	};
+
+	struct SelectTarget
+	{
+		drft::math::Range<int> range = { 0,1 };
+		std::vector<sf::Vector2i> targetShape = {};
+		std::function<bool(sf::Vector2i)> onTargetSelect;
 	};
 
 	struct ToggleDoor {};

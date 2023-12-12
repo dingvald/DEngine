@@ -21,6 +21,7 @@ void drft::system::HotbarSystem::onStart(bool isNewGame)
 			auto& hotbar = registry->emplace<component::Hotbar>(entity);
 			// For testing purposes:
 			hotbar.abilities[toHotbarIndex(1)] = static_cast<int>(AbilityType::Sprint);
+			hotbar.abilities[toHotbarIndex(2)] = static_cast<int>(AbilityType::Throw);
 		}
 	}
 }
@@ -46,7 +47,7 @@ void drft::system::HotbarSystem::update(float dt)
 			case AbilityTargetingType::SelectDirection:
 			{
 				auto tilePosition = handle.get<component::Position>().position;
-				registry->emplace<component::action::SelectDirection>(entity,
+				handle.emplace<component::action::SelectDirection>(
 					[tilePosition, &ability, &handle](sf::Vector2i direction) -> bool
 					{
 						ability.perform(handle, tilePosition + direction);
@@ -57,7 +58,15 @@ void drft::system::HotbarSystem::update(float dt)
 			break;
 			case AbilityTargetingType::SelectSquare:
 			{
-
+				auto range = ability.getRange(handle);
+				auto targetingShape = ability.getTargetingShape(handle);
+				handle.emplace<component::action::SelectTarget>(range, targetingShape,
+					[&ability, &handle](sf::Vector2i position) -> bool
+					{
+						ability.perform(handle, position);
+						spendActionPoints(ability.getCost(), ActionType::Act, handle);
+						return true;
+					});
 			}
 			default:
 				break;

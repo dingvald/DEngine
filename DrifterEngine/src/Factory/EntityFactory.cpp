@@ -46,7 +46,6 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 	{
 		entt::entity entity = _protoRegistry.create();
 		const std::string entityName = prototype.name.GetString();
-		_protoRegistry.emplace_or_replace<component::Prototype>(entity);
 		_prototypes[entityName] = entity;
 
 		const auto entityObject = prototype.value.GetObject();

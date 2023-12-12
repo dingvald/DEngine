@@ -15,5 +15,5 @@ namespace drft::system
 		bool loops = false;
 	};
 
-	void spawnEffect(entt::registry& registry, EffectStruct&& effect);
+	entt::entity spawnEffect(entt::registry& registry, EffectStruct&& effect);
 }

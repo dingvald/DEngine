@@ -4,7 +4,7 @@
 #include "Engine/EngineConstants.h"
 #include "Systems/Rendering/RenderLayers.h"
 
-void drft::system::spawnEffect(entt::registry& registry, EffectStruct&& effect)
+entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& effect)
 {
 	if (effect.sprites.empty()) throw std::exception("Cannot spawn effect with no sprites.");
 
@@ -20,4 +20,5 @@ void drft::system::spawnEffect(entt::registry& registry, EffectStruct&& effect)
 		effectHandle.emplace<component::Animation>(animation);
 	}
 	effectHandle.emplace<component::Effect>(ttl, effect.fades);
+	return effectHandle.entity();
 }

@@ -42,6 +42,7 @@
 #include "Systems/Gameplay/Actions/InteractionSystem.h"
 #include "Systems/Gameplay/Actions/LaunchAttackSystem.h"
 #include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
+#include "Systems/Gameplay/Actions/TargetSelectSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/QuestingSystem.h"
@@ -295,6 +296,7 @@ void drft::GameState::importSystems()
 	_systems->add<ItemUniqueIDGenerator>(			Phase::Reactive);
 	_systems->add<DetermineCraftableItemsSystem>(	Phase::Reactive);
 	_systems->add<TickingLifetimeSystem>(			Phase::Reactive);
+	_systems->add<TargetSelectSystem>(				Phase::Reactive);
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{

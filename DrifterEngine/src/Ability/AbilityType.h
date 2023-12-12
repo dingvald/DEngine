@@ -5,6 +5,7 @@ namespace drft
 	{
 		NullAbility,
 		Sprint,
+		Throw,
 		BumpAttack,
 		Block
 	};

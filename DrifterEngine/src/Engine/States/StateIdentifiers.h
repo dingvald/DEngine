@@ -15,6 +15,7 @@ namespace drft
 		Crafting,
 		DisplayText,
 		SelectDirection,
+		SelectTarget,
 		Total
 	};
 }
