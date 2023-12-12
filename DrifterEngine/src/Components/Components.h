@@ -236,6 +236,7 @@ namespace component
 	{
 		int ttl = 0;
 		bool fades = false;
+		bool requiresInFOV = true;
 	};
 
 	struct Animation

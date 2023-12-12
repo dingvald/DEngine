@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ThrowAbility.h"
+#include "Spatial/Helpers.h"
 
 sf::Color drft::ThrowAbility::getIconColor() const
 {
@@ -33,5 +34,5 @@ drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) co
 
 std::vector<sf::Vector2i> drft::ThrowAbility::getTargetingShape(entt::const_handle actor) const
 {
-	return { sf::Vector2i{0,0} };
+	return { {0,0} };
 }

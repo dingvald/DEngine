@@ -61,7 +61,7 @@ void drft::system::HotbarSystem::update(float dt)
 				auto range = ability.getRange(handle);
 				auto targetingShape = ability.getTargetingShape(handle);
 				handle.emplace<component::action::SelectTarget>(range, targetingShape,
-					[&ability, &handle](sf::Vector2i position) -> bool
+					[&ability, handle](sf::Vector2i position) -> bool
 					{
 						ability.perform(handle, position);
 						spendActionPoints(ability.getCost(), ActionType::Act, handle);
