@@ -247,6 +247,13 @@ namespace component
 		float elapsed = 0.0f; // number of game frames elapsed
 		bool loops = false;
 	};
+
+	struct Projectile
+	{
+		std::vector<sf::Vector2i> line;
+		int progress = 0;
+		float speed = 5.0f;
+	};
 }
 
 namespace component::action
@@ -368,4 +375,6 @@ namespace component::action
 	{
 		std::unordered_map<std::string, std::string> parameters;
 	};
+
+	
 }

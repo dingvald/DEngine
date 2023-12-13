@@ -492,6 +492,9 @@
     <ClCompile Include="src\Systems\Rendering\EffectRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\ProjectileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1521,6 +1524,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Rendering\EffectRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\ProjectileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
