@@ -35,7 +35,7 @@ bool drft::ThrowAbility::isValid(entt::const_handle actor) const
 
 void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i> targetPosition) const
 {
-	const float throwSpeed = 5.0f;
+	const float throwSpeed = 3.0f;
 	if (!targetPosition.has_value()) throw std::exception("You need a target to throw at.");
 	if (auto body = actor.try_get<component::Body>())
 	{
@@ -44,13 +44,13 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i>
 			auto optionalItem = rightHand->getSlotItem(EquipmentLayer::Held);
 			if (optionalItem.has_value())
 			{
+				body->parts.unequipItem(optionalItem.value());
 				auto& throwerPos = actor.get<component::Position>();
 				auto line = spatial::getIntPointsAlongLine(throwerPos.position, targetPosition.value());
 				
 				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalItem.value());
 				actor.registry()->emplace<component::Position>(itemEntity, line.front());
 				actor.registry()->emplace<component::Projectile>(itemEntity, std::move(line), 1, throwSpeed);
-				body->parts.unequipItem(optionalItem.value());
 			}
 		}
 	}

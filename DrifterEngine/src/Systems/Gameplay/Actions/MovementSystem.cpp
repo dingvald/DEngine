@@ -14,7 +14,7 @@ void drft::system::MovementSystem::init()
 void drft::system::MovementSystem::update(const float dt)
 {
 	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
-	auto moveView = registry->view<component::action::Move, component::Position, component::tag::Active>();
+	auto moveView = registry->view<component::action::Move, component::Position>();
 	for (auto [entity, move, pos] : moveView.each())
 	{
 		if (move.direction == sf::Vector2i{ 0,0 })
@@ -45,7 +45,10 @@ void drft::system::MovementSystem::update(const float dt)
 				{
 					pos.position = targetPosition;
 				});
-			registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
+			if (registry->all_of<component::Stamina>(entity))
+			{
+				registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
+			}
 			spendActionPoints(BASE_ACTION_COST, ActionType::Move, { *registry, entity });
 		}
 		else

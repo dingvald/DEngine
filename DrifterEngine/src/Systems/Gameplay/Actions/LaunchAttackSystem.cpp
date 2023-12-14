@@ -54,6 +54,8 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 			.animationSpeed = 20.0f
 			});
 		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *registry, entity });
+		// HACKZ: Should it care about projectiles? No..
+		registry->remove<component::Projectile>(entity);
 	}
 }
 

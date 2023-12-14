@@ -6,6 +6,7 @@
 void drft::system::ProjectileSystem::init()
 {
 	registry->on_construct<component::Projectile>().connect<&ProjectileSystem::onProjectileAdded>(this);
+	registry->on_destroy<component::Projectile>().connect<&ProjectileSystem::onProjectileRemoved>(this);
 }
 
 void drft::system::ProjectileSystem::update(float dt)
@@ -16,17 +17,33 @@ void drft::system::ProjectileSystem::update(float dt)
 		if (proj.progress >= proj.line.size())
 		{
 			registry->remove<component::Projectile>(entity);
-			registry->remove<component::Actor>(entity);
 			continue;
 		}
 
 		auto delta = proj.line.at(proj.progress++) - pos.position;
-		registry->emplace<component::action::Move>(entity, delta);
+		registry->emplace_or_replace<component::action::Move>(entity, delta);
 	}
 }
 
 void drft::system::ProjectileSystem::onProjectileAdded(entt::registry& registry, entt::entity entity)
 {
 	auto& projectile = registry.get<component::Projectile>(entity);
-	registry.emplace<component::Actor>(entity, 100, projectile.speed);
+	registry.emplace<component::Actor>(entity, 0, projectile.speed);
+
+	if (registry.any_of<component::Attacker>(entity)) return;
+	if (auto physical = registry.try_get<component::Physical>(entity))
+	{
+		registry.emplace<component::Attacker>(entity, static_cast<int>(physical->weight));
+		_attackerAdded.insert(entity);
+	}
+}
+
+void drft::system::ProjectileSystem::onProjectileRemoved(entt::registry& registry, entt::entity entity)
+{
+	registry.remove<component::Actor>(entity);
+	if (_attackerAdded.contains(entity))
+	{
+		registry.remove<component::Attacker>(entity);
+		_attackerAdded.erase(entity);
+	}
 }

@@ -255,8 +255,8 @@ void drft::GameState::importSystems()
 	_systems->add<PlayerInput>(						Phase::OnProcessInput);
 	_systems->add<ArtificialInput>(					Phase::OnProcessInput);
 
-	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<ProjectileSystem>(				Phase::OnUpdate);
+	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
 	_systems->add<SelectDirectionSystem>(			Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
