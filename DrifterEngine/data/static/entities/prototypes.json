@@ -1134,8 +1134,8 @@
           "actSpeed": 1.0
         },
         "Health": {
-          "max": 25.0,
-          "current": 25.0
+          "max": 8.0,
+          "current": 8.0
         },
         "Attacker": {
           "baseDamage": 2

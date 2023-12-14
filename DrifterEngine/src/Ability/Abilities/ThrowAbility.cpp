@@ -35,7 +35,7 @@ bool drft::ThrowAbility::isValid(entt::const_handle actor) const
 
 void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i> targetPosition) const
 {
-	const float throwSpeed = 3.0f;
+	const float throwSpeed = 6.0f;
 	if (!targetPosition.has_value()) throw std::exception("You need a target to throw at.");
 	if (auto body = actor.try_get<component::Body>())
 	{
