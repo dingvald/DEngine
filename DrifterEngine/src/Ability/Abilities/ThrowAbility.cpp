@@ -58,7 +58,24 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i>
 
 drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) const
 {
-	return {0, 9};
+	const int maxRange = 12;
+	if (auto body = actor.try_get<component::Body>())
+	{
+		if (const auto rightHand = body->parts.search("Right Hand"))
+		{
+			auto optionalItem = rightHand->getSlotItem(EquipmentLayer::Held);
+			if (optionalItem.has_value())
+			{
+				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalItem.value());
+				if (auto physical = actor.registry()->try_get<component::Physical>(itemEntity))
+				{
+					int rangeVal = std::max(1, (maxRange - static_cast<int>(physical->weight)));
+					return { 0, rangeVal };
+				}
+			}
+		}
+	}
+	return {0, 0};
 }
 
 std::vector<sf::Vector2i> drft::ThrowAbility::getTargetingShape(entt::const_handle actor) const
