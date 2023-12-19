@@ -20,13 +20,13 @@ static constexpr int WORN_ITEMS_HEIGHT = 4;
 
 static constexpr int PANEL_HEIGHT_OFFSET = -128;
 
-static constexpr int HELD_PANEL_WIDTH_OFFSET = 0;
+static constexpr int HELD_PANEL_WIDTH_OFFSET = -256;
 static constexpr int HELD_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET - 36;
 
 static constexpr int WORN_PANEL_WIDTH_OFFSET = HELD_PANEL_WIDTH_OFFSET;
 static constexpr int WORN_PANEL_HEIGHT_OFFSET = HELD_PANEL_HEIGHT_OFFSET + 84;
 
-static constexpr int INVENTORY_PANEL_WIDTH_OFFSET = -256;
+static constexpr int INVENTORY_PANEL_WIDTH_OFFSET = 0;
 static constexpr int INVENTORY_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET;
 
 
@@ -347,7 +347,7 @@ void drft::InventoryState::updateWornItemsDisplay()
 			parts.insert(parts.end(), p.begin(), p.end());
 		}
 
-		for (auto&& part : parts)
+		for (const auto& part : parts)
 		{
 			auto& partRow = wornItemsDisplay.insert(std::string(part), gui::DualContainer());
 			partRow.setStyle(gui::ElementState::Idle, {
