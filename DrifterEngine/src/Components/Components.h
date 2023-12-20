@@ -5,6 +5,7 @@
 #include "GOAP/WorldState.h"
 #include "GOAP/Actions/AiActionTypes.h"
 #include "GOAP/SensorTypes.h"
+#include "Ability/AbilityType.h"
 
 namespace drft::goap
 {
@@ -229,7 +230,7 @@ namespace component
 
 	struct Hotbar
 	{
-		std::array<int, 10> abilities;
+		std::array<drft::AbilityType, 10> abilities;
 	};
 
 	struct Effect

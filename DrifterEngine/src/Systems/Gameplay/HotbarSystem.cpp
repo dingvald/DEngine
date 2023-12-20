@@ -20,8 +20,8 @@ void drft::system::HotbarSystem::onStart(bool isNewGame)
 		{
 			auto& hotbar = registry->emplace<component::Hotbar>(entity);
 			// For testing purposes:
-			hotbar.abilities[toHotbarIndex(1)] = static_cast<int>(AbilityType::Sprint);
-			hotbar.abilities[toHotbarIndex(2)] = static_cast<int>(AbilityType::Throw);
+			hotbar.abilities[toHotbarIndex(1)] = AbilityType::Sprint;
+			hotbar.abilities[toHotbarIndex(2)] = AbilityType::Throw;
 		}
 	}
 }
@@ -32,44 +32,46 @@ void drft::system::HotbarSystem::update(float dt)
 	for (auto&& [entity, hotbar, hotbarSlot] : view.each())
 	{
 		entt::handle handle = { *registry, entity };
-		auto abilityType = static_cast<AbilityType>(hotbar.abilities[hotbarSlot.slot]);
+		AbilityType abilityType = hotbar.abilities[hotbarSlot.slot];
 		const auto& ability = AbilityRegistry::get(abilityType);
 		if (ability.isValid(handle))
 		{
 			switch (ability.getTargetingType())
 			{
-			case AbilityTargetingType::Auto:
-			{
-				ability.perform(handle);
-				spendActionPoints(ability.getCost(), ActionType::Act, handle);
-			}
-			break;
-			case AbilityTargetingType::SelectDirection:
-			{
-				auto tilePosition = handle.get<component::Position>().position;
-				handle.emplace<component::action::SelectDirection>(
-					[tilePosition, &ability, &handle](sf::Vector2i direction) -> bool
-					{
-						ability.perform(handle, tilePosition + direction);
-						spendActionPoints(ability.getCost(), ActionType::Act, handle);
-						return true;
-					});
-			}
-			break;
-			case AbilityTargetingType::SelectSquare:
-			{
-				auto range = ability.getRange(handle);
-				auto targetingShape = ability.getTargetingShape(handle);
-				handle.emplace<component::action::SelectTarget>(range, targetingShape,
-					[&ability, handle](sf::Vector2i position) -> bool
-					{
-						ability.perform(handle, position);
-						spendActionPoints(ability.getCost(), ActionType::Act, handle);
-						return true;
-					});
-			}
-			default:
+				case AbilityTargetingType::Auto:
+				{
+					ability.perform(handle);
+					spendActionPoints(ability.getCost(), ActionType::Act, handle);
+				}
 				break;
+				case AbilityTargetingType::SelectDirection:
+				{
+					auto tilePosition = handle.get<component::Position>().position;
+					handle.emplace<component::action::SelectDirection>(
+						[tilePosition, &ability, &handle](sf::Vector2i direction) -> bool
+						{
+							ability.perform(handle, tilePosition + direction);
+							spendActionPoints(ability.getCost(), ActionType::Act, handle);
+							return true;
+						});
+				}
+				break;
+				case AbilityTargetingType::SelectSquare:
+				{
+					auto range = ability.getRange(handle);
+					auto targetingShape = ability.getTargetingShape(handle);
+					handle.emplace<component::action::SelectTarget>(range, targetingShape,
+						[&ability, handle](sf::Vector2i position) -> bool
+						{
+							ability.perform(handle, position);
+							spendActionPoints(ability.getCost(), ActionType::Act, handle);
+							return true;
+						});
+				}
+				break;
+				default:
+					throw std::exception("Unhandled targetting type for ability.");
+					break;
 			}
 		}
 	}
