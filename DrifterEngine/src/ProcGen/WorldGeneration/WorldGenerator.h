@@ -3,6 +3,7 @@
 #include "ProcGen/Biome.h"
 #include "Spatial/Grid.h"
 #include "Utility/stdHashing.h"
+#include "Structures/StructureFactory.h"
 
 namespace drft::gen
 {
@@ -36,6 +37,7 @@ namespace drft::gen
 		sf::Vector2i _dimensions;
 		std::unordered_map<std::string, BiomeType> _biomeTypes;
 		spatial::Grid<const BiomeType*> _biomeMap;
+		StructureFactory _structureFactory;
 		
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
 		std::unordered_map<unsigned int, BiomeZone> _zones;

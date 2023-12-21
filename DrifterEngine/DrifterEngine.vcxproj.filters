@@ -495,6 +495,18 @@
     <ClCompile Include="src\Systems\Gameplay\ProjectileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Structures\StructureBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\StructureFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\ProceduralStructure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\StaticStructure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1529,6 +1541,21 @@
     <ClInclude Include="src\Systems\Gameplay\ProjectileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Structures\StructureBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\StructureFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\StructureBuildTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\ProceduralStructure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\StaticStructure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -1545,6 +1572,7 @@
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\wearables.json" />
     <None Include="data\static\entities\bases.json" />
+    <None Include="data\static\structures\wooden_house.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">

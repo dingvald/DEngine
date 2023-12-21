@@ -50,6 +50,13 @@ namespace drft::gen
 		std::string name;
 		BiomeIcon icon;
 		std::unordered_map<std::string, Range> ranges;
+		struct StructureProbabilityPair
+		{
+			std::string structure;
+			// Chance from 0.0 - 1.0
+			float probability = 0.5f;
+		};
+		std::vector<StructureProbabilityPair> structures;
 
 		struct SpawningAlgorithm
 		{
@@ -83,7 +90,6 @@ namespace drft::gen
 
 	class Biome
 	{
-
 		unsigned int zoneID = 0;
 		spatial::Grid<int> reservedSpaces;
 	};

@@ -3,8 +3,9 @@
 
 namespace drft::gen
 {
-	enum GridBitFlags
+	enum GridBitFlags : std::size_t
 	{
-		Reserved
+		Reserved,
+		Structure
 	};
 }

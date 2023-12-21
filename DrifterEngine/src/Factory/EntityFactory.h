@@ -17,6 +17,8 @@ namespace drft
 		// Returns the entity prototype with the given name. Returns entt::null if not found.
 		entt::entity get(const std::string& name) const;
 
+		const std::string& getName(entt::entity prototype) const;
+
 		// Access the prototype registry (read-only).
 		const entt::registry& prototypes() const;
 
@@ -29,6 +31,7 @@ namespace drft
 	private:
 		entt::registry _protoRegistry;
 		std::unordered_map<std::string, entt::entity> _prototypes;
+		std::unordered_map<entt::entity, std::string> _prototypeNames;
 	};
 }
 

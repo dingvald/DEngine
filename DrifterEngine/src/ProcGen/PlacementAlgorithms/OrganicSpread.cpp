@@ -45,7 +45,5 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(const spatial::Grid<std::bits
 		}
 		positions.insert(positions.end(), positionsToAdd.begin(), positionsToAdd.end());
 	}
-
-
 	return positions;
 }

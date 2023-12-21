@@ -47,6 +47,7 @@ bool drft::EntityFactory::loadPrototypes(const std::string& filename)
 		entt::entity entity = _protoRegistry.create();
 		const std::string entityName = prototype.name.GetString();
 		_prototypes[entityName] = entity;
+		_prototypeNames[entity] = entityName;
 
 		const auto entityObject = prototype.value.GetObject();
 
@@ -221,6 +222,13 @@ entt::entity drft::EntityFactory::get(const std::string& name) const
 		return entt::null;
 	}
 	return _prototypes.at(name);
+}
+
+const std::string& drft::EntityFactory::getName(entt::entity prototype) const
+{
+	if (!_protoRegistry.valid(prototype)) throw std::exception("Entity does not belong to prototypes");
+	if (!_prototypeNames.contains(prototype)) throw std::exception("Entity does not belong to prototypes"); // Something went wrong...
+	return _prototypeNames.at(prototype);
 }
 
 const entt::registry& drft::EntityFactory::prototypes() const

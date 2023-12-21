@@ -61,7 +61,10 @@
             }
           }
         }
-      } 
+      },
+      "Structures": {
+        "Wooden House": 0.1
+      }
     },
     "Nordic Foothills": {
       "Icon": {

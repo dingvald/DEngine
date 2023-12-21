@@ -8,6 +8,7 @@
 #include "Random/RandomNoise.h"
 #include "Random/NoiseMap.h"
 #include "ProcGen/PlacementAlgorithms/Algorithms.h"
+#include "ProcGen/GridBitFlags.h"
 #include "ShapingFunctions.h"
 #include "Utility/stdHashing.h"
 #include "Utility/Math.h"
@@ -21,6 +22,8 @@
 static const sf::Vector2i FULL_CHUNK = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 static const sf::Vector2i HALF_CHUNK = { FULL_CHUNK.x / 2, FULL_CHUNK.y / 2 };
 static const sf::Vector2i QUARTER_CHUNK = { FULL_CHUNK.x / 4, FULL_CHUNK.y / 4 };
+
+static const std::string STATIC_DATA_PATH = ".\\data\\static\\";
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
@@ -38,13 +41,22 @@ void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 	{
 		noiseMap.resize(dimensions.x, dimensions.y);
 	}
+	
+	// Load all structure files
+	std::cout << "Loading structures..." << std::endl;
+	const std::string structuresDirectory = STATIC_DATA_PATH + "structures";
+	for (const auto& fileName : std::filesystem::directory_iterator(structuresDirectory))
+	{
+		std::cout << "Loading " << fileName.path().filename() << std::endl;
+		_structureFactory.loadStructures(fileName.path().filename().string());
+	}
 }
 
 void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 {
 	using namespace rapidjson;
 
-	std::string filepath = ".\\data\\static\\biomes\\" + JSONfilename;
+	std::string filepath = STATIC_DATA_PATH + "biomes\\" + JSONfilename;
 
 	std::ifstream ifs{ filepath };
 
@@ -145,6 +157,13 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 						throw std::exception("Parsed entity does not have a placement algorithm");
 					}
 				}
+			}
+		}
+		if (biome.value.HasMember("Structures"))
+		{
+			for (auto& structure : biome.value["Structure"].GetObject())
+			{
+				biomeObj.structures.emplace_back(structure.name.GetString(), structure.value.GetFloat());
 			}
 		}
 		_biomeTypes.emplace(biomeObj.name, biomeObj);
@@ -311,15 +330,43 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
     // Always place tiles
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
 	//
-	
-	// blend into adjacent chunks
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate) - QUARTER_CHUNK;
 	spatial::Grid<std::bitset<32>> bitgrid(FULL_CHUNK.x + HALF_CHUNK.x, FULL_CHUNK.y + HALF_CHUNK.y);
 
+	auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
+
+	// Place structures
+	for (auto& [name, probability] : biomeType->structures)
+	{
+		if (rng::RandomNumberGenerator::realInRange(0.0, 1.0) > probability) continue;
+		auto& structure = _structureFactory.build(name);
+		auto maxBounds = structure.getMaximumBounds();
+		auto minBounds = structure.getMinimumBounds();
+
+		int rand_x = rng::RandomNumberGenerator::intInRange(0, FULL_CHUNK.x - maxBounds.x);
+		int rand_y = rng::RandomNumberGenerator::intInRange(0, FULL_CHUNK.y - maxBounds.y);
+		int safetyCount = 10;
+
+		while (bitgrid.at(rand_x, rand_y).any() 
+			|| bitgrid.at(rand_x + maxBounds.x, rand_y + maxBounds.y).any()
+			&& safetyCount > 0)
+		{
+			rand_x = rng::RandomNumberGenerator::intInRange(0, FULL_CHUNK.x - maxBounds.x);
+			rand_y = rng::RandomNumberGenerator::intInRange(0, FULL_CHUNK.y - maxBounds.y);
+			--safetyCount;
+		}
+
+		if (safetyCount <= 0) continue;
+		
+		auto rect = structure.stamp({ rand_x, rand_y }, registry);
+		auto structureBit = std::bitset<32u>{}.set(gen::Structure);
+		bitgrid.fill(structureBit, rect.left, rect.top, rect.width, rect.height);
+	}
+	
+	// blend into adjacent chunks
 	blendBiomeBoundaries(coordinate, bitgrid);
 
 	// Place entities into available spaces
-	auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 	for (auto& [category, entities] : biomeType->entityCategories)
 	{
 		for (auto& [entityName, algorithm] : entities)
@@ -336,7 +383,7 @@ sf::Vector2i drft::gen::WorldGenerator::getStartingPosition(std::string biomeTyp
 	int largestSize = 0;
 	for (auto& [id, zone] : _zones)
 	{
-		if (zone.getType()->name.compare(biomeType) == 0)
+		if (zone.getType()->name == biomeType)
 		{
 			if (zone.size() > largestSize)
 			{
