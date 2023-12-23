@@ -29,7 +29,8 @@ namespace drft::gen
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		std::unordered_set<std::string> determinePotentialBiomes(sf::Vector2i coordinate) const;
 		const BiomeType* selectBiomeType(sf::Vector2i coordinate) const;
-		void blendBiomeBoundaries(sf::Vector2i coordinate, spatial::Grid<std::bitset<32>>& bitgrid) const;
+		void blendBiomeBoundaries(sf::Vector2i coordinate) const;
+		std::bitset<32>& getBitsAt(sf::Vector2i tilePosition) const;
 
 	private:
 		using NoiseMap = spatial::Grid<double>;
@@ -37,9 +38,10 @@ namespace drft::gen
 		sf::Vector2i _dimensions;
 		std::unordered_map<std::string, BiomeType> _biomeTypes;
 		spatial::Grid<const BiomeType*> _biomeMap;
-		StructureFactory _structureFactory;
+		std::unique_ptr<StructureFactory> _structureFactory;
 		
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
+		mutable std::unordered_map<sf::Vector2i, spatial::Grid<std::bitset<32>>> _tileBits;
 		std::unordered_map<unsigned int, BiomeZone> _zones;
 		std::unordered_map<std::string, NoiseMap> _noiseMaps;
 		std::unordered_map<std::string, Range> _ranges;

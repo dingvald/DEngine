@@ -17,9 +17,6 @@ namespace drft
 		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
 
 	private:
-
-
-	private:
 		sf::Vector2i _dimensions;
 		std::unordered_map<sf::Vector2i, std::string> _coordinates;
 		gen::WorldGenerator _worldGenerator;

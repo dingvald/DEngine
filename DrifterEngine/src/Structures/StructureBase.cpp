@@ -11,6 +11,11 @@ sf::Vector2i drft::StructureBase::getMinimumBounds() const
 	return _minBounds;
 }
 
+const std::string& drft::StructureBase::name() const
+{
+	return _name;
+}
+
 void drft::StructureBase::setMaximumBounds(sf::Vector2i bounds)
 {
 	_maxBounds = bounds;

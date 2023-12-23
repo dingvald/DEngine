@@ -1,5 +1,5 @@
 #pragma once
-#include "StructureBase.h"
+#include "Structures/StructureBase.h"
 
 namespace drft
 {
@@ -7,11 +7,14 @@ namespace drft
 	{
 	public:
 		bool loadStructures(const std::string& JSONfilename);
-		void initAllStructures();
-		StructureBase& build(const std::string& structureName) const;
+		void resolveAllSubstructures();
+		const StructureBase& build(const std::string& structureName) const;
 
 	private:
-		std::unordered_map<std::string, std::unique_ptr<StructureBase>> _structures;
+		void resolve(StructureBase& toResolve, std::unordered_set<std::string>& resolved);
+
+	private:
+		std::unordered_map< std::string, std::unique_ptr<StructureBase> > _structures;
 	};
 }
 

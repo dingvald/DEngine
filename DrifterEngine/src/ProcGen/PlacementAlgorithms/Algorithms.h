@@ -8,7 +8,7 @@
 namespace drft::gen
 {
 	using PositionList = std::vector<sf::Vector2i>;
-	using GenAlgorithm = std::function<PositionList(const spatial::Grid<std::bitset<32>>&, GenerationParameters, int)>;
+	using GenAlgorithm = std::function<PositionList(sf::IntRect, const spatial::Grid<std::bitset<32>>&, GenerationParameters, int)>;
 
 	const std::unordered_map<std::string, GenAlgorithm> String2Algorithm =
 	{

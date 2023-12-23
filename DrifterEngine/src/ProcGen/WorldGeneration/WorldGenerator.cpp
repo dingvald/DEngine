@@ -10,6 +10,7 @@
 #include "ProcGen/PlacementAlgorithms/Algorithms.h"
 #include "ProcGen/GridBitFlags.h"
 #include "ShapingFunctions.h"
+#include "Structures/StructureBase.h"
 #include "Utility/stdHashing.h"
 #include "Utility/Math.h"
 #include "Utility/stdHashing.h"
@@ -27,7 +28,7 @@ static const std::string STATIC_DATA_PATH = ".\\data\\static\\";
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
-    
+	_structureFactory = std::make_unique<StructureFactory>();
 }
 
 void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
@@ -48,8 +49,9 @@ void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 	for (const auto& fileName : std::filesystem::directory_iterator(structuresDirectory))
 	{
 		std::cout << "Loading " << fileName.path().filename() << std::endl;
-		_structureFactory.loadStructures(fileName.path().filename().string());
+		_structureFactory->loadStructures(fileName.path().filename().string());
 	}
+	_structureFactory->resolveAllSubstructures();
 }
 
 void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
@@ -161,7 +163,7 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 		}
 		if (biome.value.HasMember("Structures"))
 		{
-			for (auto& structure : biome.value["Structure"].GetObject())
+			for (auto& structure : biome.value["Structures"].GetObject())
 			{
 				biomeObj.structures.emplace_back(structure.name.GetString(), structure.value.GetFloat());
 			}
@@ -330,8 +332,13 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
     // Always place tiles
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
 	//
-	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate) - QUARTER_CHUNK;
-	spatial::Grid<std::bitset<32>> bitgrid(FULL_CHUNK.x + HALF_CHUNK.x, FULL_CHUNK.y + HALF_CHUNK.y);
+	if (!_tileBits.contains(coordinate))
+	{
+		_tileBits.emplace(coordinate, spatial::Grid<std::bitset<32>>{FULL_CHUNK.x, FULL_CHUNK.y});
+	}
+
+	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
+	sf::Vector2i chunkDimensions = FULL_CHUNK;
 
 	auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 
@@ -339,39 +346,43 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 	for (auto& [name, probability] : biomeType->structures)
 	{
 		if (rng::RandomNumberGenerator::realInRange(0.0, 1.0) > probability) continue;
-		auto& structure = _structureFactory.build(name);
+
+		const auto& structure = _structureFactory->build(name);
 		auto maxBounds = structure.getMaximumBounds();
 		auto minBounds = structure.getMinimumBounds();
 
-		int rand_x = rng::RandomNumberGenerator::intInRange(0, FULL_CHUNK.x - maxBounds.x);
-		int rand_y = rng::RandomNumberGenerator::intInRange(0, FULL_CHUNK.y - maxBounds.y);
+		int rand_x = rng::RandomNumberGenerator::intInRange(0, chunkDimensions.x - maxBounds.x - 1);
+		int rand_y = rng::RandomNumberGenerator::intInRange(0, chunkDimensions.y - maxBounds.y - 1);
 		int safetyCount = 10;
 
-		while (bitgrid.at(rand_x, rand_y).any() 
-			|| bitgrid.at(rand_x + maxBounds.x, rand_y + maxBounds.y).any()
+		while (getBitsAt(tileOrigin + sf::Vector2i{rand_x, rand_y}).any()
+			|| getBitsAt(tileOrigin + maxBounds + sf::Vector2i{ rand_y, rand_y }).any()
 			&& safetyCount > 0)
 		{
-			rand_x = rng::RandomNumberGenerator::intInRange(0, FULL_CHUNK.x - maxBounds.x);
-			rand_y = rng::RandomNumberGenerator::intInRange(0, FULL_CHUNK.y - maxBounds.y);
+			rand_x = rng::RandomNumberGenerator::intInRange(0, chunkDimensions.x - maxBounds.x - 1);
+			rand_y = rng::RandomNumberGenerator::intInRange(0, chunkDimensions.y - maxBounds.y - 1);
 			--safetyCount;
 		}
 
 		if (safetyCount <= 0) continue;
 		
-		auto rect = structure.stamp({ rand_x, rand_y }, registry);
+		auto rect = structure.stamp(tileOrigin + sf::Vector2i{rand_x, rand_y}, registry);
+		/*
 		auto structureBit = std::bitset<32u>{}.set(gen::Structure);
-		bitgrid.fill(structureBit, rect.left, rect.top, rect.width, rect.height);
+		_tileStatus.fill(structureBit, tileOrigin.x + rand_x, tileOrigin.y + rand_y, rect.width, rect.height);
+		*/
 	}
-	
+
+	sf::IntRect placementArea = { tileOrigin.x, tileOrigin.y, chunkDimensions.x, chunkDimensions.y };
 	// blend into adjacent chunks
-	blendBiomeBoundaries(coordinate, bitgrid);
+	blendBiomeBoundaries(coordinate);
 
 	// Place entities into available spaces
 	for (auto& [category, entities] : biomeType->entityCategories)
 	{
 		for (auto& [entityName, algorithm] : entities)
 		{
-			auto positions = String2Algorithm.at(algorithm.name)(bitgrid, algorithm.parameters, _seed);
+			auto positions = String2Algorithm.at(algorithm.name)(placementArea, _tileBits.at(coordinate), algorithm.parameters, _seed);
 			place(entityName, tileOrigin, positions, registry);
 		}
 	}
@@ -531,19 +542,11 @@ const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vecto
 	return nullptr;
 }
 
-void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::Vector2i coordinate, spatial::Grid<std::bitset<32>>& bitgrid) const
+void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::Vector2i coordinate) const
 {
-	bitgrid.fill([q_chunk = QUARTER_CHUNK, f_chunk = FULL_CHUNK](int x, int y) -> std::bitset<32>
-		{
-			if ((x >= q_chunk.x && x < q_chunk.x + f_chunk.x)
-			&& (y >= q_chunk.y && y < q_chunk.y + f_chunk.y))
-			{
-				return std::bitset<32>().reset(0);
-			}
-			return std::bitset<32>().set(0);
-		});
-	NoiseMap noiseMap = rng::NoiseMap::generate({ bitgrid.width(), bitgrid.height() }, { 3,3 }, _seed + coordinate.x * coordinate.y, 8, 3.0f, 0.55f);
-	sf::Vector2i center = { bitgrid.width() / 2, bitgrid.height() / 2 };
+	NoiseMap noiseMap = rng::NoiseMap::generate(FULL_CHUNK + HALF_CHUNK, { 3,3 }, _seed + coordinate.x * coordinate.y, 8, 3.0f, 0.55f);
+	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
+	sf::Vector2i center = tileOrigin + HALF_CHUNK;
 
 	std::vector<sf::Vector2i> differentSurroundings;
 	auto surroundings = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
@@ -583,11 +586,22 @@ void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::Vector2i coordinate, sp
 
 				float distance = std::min(radius, spatial::distance(sf::Vector2i(x_center, y_center), { x, y }));
 
-				if (noiseMap.at(x, y) > 0.9 * std::powf(distance / radius, 4.f))
+				if (noiseMap.at(x, y) < 0.9 * std::powf(distance / radius, 4.f))
 				{
-					bitgrid.at(x, y).reset(0);
+					getBitsAt(tileOrigin + sf::Vector2i{x, y}).set(gen::Reserved);
 				}
 			}
 		}
 	}
+}
+
+std::bitset<32>& drft::gen::WorldGenerator::getBitsAt(sf::Vector2i tilePosition) const
+{
+	auto coordinate = spatial::toChunkCoordinate(tilePosition);
+	auto localSpace = spatial::toLocalChunkSpace(tilePosition);
+	if (!_tileBits.contains(coordinate))
+	{
+		_tileBits.emplace(coordinate, spatial::Grid<std::bitset<32>>{FULL_CHUNK.x, FULL_CHUNK.y});
+	}
+	return _tileBits.at(coordinate).at(localSpace.x, localSpace.y);
 }

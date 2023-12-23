@@ -88,8 +88,11 @@ void drft::GameState::init()
 
 	_systems = std::make_unique<system::SystemScheduler>(getContext().registry);
 	_world = std::make_unique<spatial::WorldGrid>();
+	_worldMap = std::make_unique<WorldMap>();
 	_factory = std::make_unique<EntityFactory>();
 	_dispatcher = std::make_unique<entt::dispatcher>();
+
+	_worldMap->init({ 160, 90 }, rng::RandomNumberGenerator::getSeed());
 
 	connectEventHandlers();
 	setupRegistryContext();
@@ -163,13 +166,13 @@ void drft::GameState::setupRegistryContext()
 
 	getContext().registry.ctx().emplace<system::InputBuffer&>(_inputBuffer);
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(*_world);
+	getContext().registry.ctx().emplace<WorldMap&>(*_worldMap);
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace_as<sf::Texture&>("sprites"_hs, getContext().textures.get("Sprites"));
 	getContext().registry.ctx().emplace_as<sf::Texture&>("icons"_hs, getContext().textures.get("Icons"));
 	getContext().registry.ctx().emplace_as<sf::Font&>("terminus"_hs, getContext().fonts.get("Terminus"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
-	getContext().registry.ctx().get<WorldMap&>().init({ 160, 90 }, rng::RandomNumberGenerator::getSeed());
 	_startingPosition = getContext().registry.ctx().get<WorldMap&>().getStartingPosition("Forest");
 }
 

@@ -6,7 +6,9 @@ namespace drft
 	class ProceduralStructure : public StructureBase
 	{
 	public:
-		virtual sf::IntRect stamp(sf::Vector2i origin, entt::registry& registry) override;
+		ProceduralStructure(std::string name)
+			: StructureBase(name) {}
+		virtual sf::IntRect stamp(sf::Vector2i origin, entt::registry& registry) const override;
 
 	private:
 		struct EntityProbabilityPair
@@ -17,7 +19,6 @@ namespace drft
 		
 		std::unordered_map<std::string, std::vector<EntityProbabilityPair>> _entityCategories;
 		std::unordered_map<std::string, float> _parameters;
-		std::function<
 	};
 }
 

@@ -5,6 +5,7 @@
 namespace drft
 {
 	class EntityFactory;
+	class WorldMap;
 
 	namespace events
 	{
@@ -49,6 +50,7 @@ namespace drft
 		system::InputBuffer _inputBuffer{ 2 };
 		std::unique_ptr<system::SystemScheduler> _systems;
 		std::unique_ptr<spatial::WorldGrid> _world;
+		std::unique_ptr<WorldMap> _worldMap;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
 		sf::Vector2i _startingPosition;

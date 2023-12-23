@@ -2,7 +2,7 @@
 #include "RandomSpread.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::randomSpread(const spatial::Grid<std::bitset<32>>& grid, GenerationParameters params, int seed)
+std::vector<sf::Vector2i> drft::gen::randomSpread(sf::IntRect area, const spatial::Grid<std::bitset<32>>& grid, GenerationParameters params, int seed)
 {
 	int minimum = static_cast<int>(params.at("Minimum"));
 	int maximum = static_cast<int>(params.at("Maximum"));
@@ -17,11 +17,11 @@ std::vector<sf::Vector2i> drft::gen::randomSpread(const spatial::Grid<std::bitse
 		int y = 0;
 		int tries = 0;
 		do {
-			x = rng::RandomNumberGenerator::intInRange(0, grid.width() - 1);
-			y = rng::RandomNumberGenerator::intInRange(0, grid.height() - 1);
+			x = rng::RandomNumberGenerator::intInRange(0, area.width - 1);
+			y = rng::RandomNumberGenerator::intInRange(0, area.height - 1);
 			++tries;
 		} 
-		while (grid.at(x, y).any() && tries < 10);
+		while (grid.at(area.left + x, area.top + y).any() && tries < 10);
 		if (tries < 10)
 		{
 			result.emplace_back(x, y);
