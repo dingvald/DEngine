@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
-#include "Spatial/Grid.h"
+#include "Spatial/AutoGrid.h"
 
 namespace drft::gen
 {

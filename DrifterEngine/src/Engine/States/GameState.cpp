@@ -142,9 +142,10 @@ bool drft::GameState::loadOrCreatePlayer()
 	{
 		assert(_factory->has("Player"), "No player prototype found - is JSON loaded?");
 		_player = _factory->build("Player", getContext().registry);
-		_player.patch<component::Position>([this](component::Position& pos)
+		auto startingPosition = getContext().registry.ctx().get<WorldMap&>().getStartingPosition("Forest");
+		_player.patch<component::Position>([startingPosition](component::Position& pos)
 			{
-				pos.position = this->_startingPosition;
+				pos.position = startingPosition;
 			});
 		return true;
 	}
@@ -173,7 +174,6 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace_as<sf::Font&>("terminus"_hs, getContext().fonts.get("Terminus"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
-	_startingPosition = getContext().registry.ctx().get<WorldMap&>().getStartingPosition("Forest");
 }
 
 void drft::GameState::loadRegistry()

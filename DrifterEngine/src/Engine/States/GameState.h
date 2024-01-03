@@ -53,7 +53,6 @@ namespace drft
 		std::unique_ptr<WorldMap> _worldMap;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
-		sf::Vector2i _startingPosition;
 		entt::handle _player{};
 	};
 

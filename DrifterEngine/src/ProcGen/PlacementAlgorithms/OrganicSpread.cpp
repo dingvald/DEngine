@@ -3,7 +3,7 @@
 #include "Spatial/Helpers.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::organicSpread(sf::IntRect area, const spatial::Grid<std::bitset<32>>& grid, GenerationParameters params, int seed)
+std::vector<sf::Vector2i> drft::gen::organicSpread(sf::IntRect area, const spatial::AutoGrid<std::bitset<32>>& grid, GenerationParameters params, int seed)
 {
 	std::vector<sf::Vector2i> positions;
 	const int generations = static_cast<int>(params.at("Generations"));
@@ -37,8 +37,7 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(sf::IntRect area, const spati
 			{
 				const int index = rng::RandomNumberGenerator::intInRange(0, surroundings.size() - 1);
 				auto pos = surroundings.at(index);
-				if (grid.contains(area.left + pos.x, area.top + pos.y) 
-					&& grid.at(area.left + pos.x, area.top + pos.y).none())
+				if (grid.at(area.left + pos.x, area.top + pos.y).none())
 				{
 					positionsToAdd.emplace_back(pos);
 				}

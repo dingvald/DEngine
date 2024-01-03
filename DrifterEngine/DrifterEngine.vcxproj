@@ -379,6 +379,7 @@
     <ClCompile Include="src\Structures\StaticStructure.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Spatial\AutoGrid.h" />
     <ClInclude Include="src\Structures\ProceduralStructure.h" />
     <ClInclude Include="src\Structures\StructureBuildTypes.h" />
     <ClInclude Include="src\Systems\Rendering\EffectRenderer.h" />
@@ -739,6 +740,7 @@
     <None Include="data\static\structures\wooden_house.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="packages.config" />
+    <None Include="src\Spatial\AutoGrid.inl" />
     <None Include="src\Spatial\Grid.inl" />
     <None Include="src\Utility\ResourceHolder.inl" />
   </ItemGroup>

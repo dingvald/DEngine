@@ -2,7 +2,7 @@
 #include "RandomSpread.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::randomSpread(sf::IntRect area, const spatial::Grid<std::bitset<32>>& grid, GenerationParameters params, int seed)
+std::vector<sf::Vector2i> drft::gen::randomSpread(sf::IntRect area, const spatial::AutoGrid<std::bitset<32>>& grid, GenerationParameters params, int)
 {
 	int minimum = static_cast<int>(params.at("Minimum"));
 	int maximum = static_cast<int>(params.at("Maximum"));

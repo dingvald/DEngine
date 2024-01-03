@@ -1556,6 +1556,9 @@
     <ClInclude Include="src\Structures\StaticStructure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spatial\AutoGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -1573,6 +1576,9 @@
     <None Include="data\static\entities\wearables.json" />
     <None Include="data\static\entities\bases.json" />
     <None Include="data\static\structures\wooden_house.json" />
+    <None Include="src\Spatial\AutoGrid.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">
