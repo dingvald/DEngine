@@ -36,7 +36,6 @@ void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 {
 	_dimensions = dimensions;
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
-
     _seed = seed;
 
 	for (auto& [_, noiseMap] : _noiseMaps)

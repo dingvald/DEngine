@@ -52,7 +52,7 @@ std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(const sf::Vector2i
 std::vector<sf::Vector2i> drft::spatial::getIntRectAroundOrigin(sf::Vector2i origin, int width, int height)
 {
 	std::vector<sf::Vector2i> result;
-
+	result.reserve(width * height);
 	for (int y = origin.y - height/2; y <= origin.y + height/2; ++y)
 	{
 		for (int x = origin.x - width/2; x <= origin.x + width/2; ++x)
