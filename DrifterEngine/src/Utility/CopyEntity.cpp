@@ -26,12 +26,11 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 	{
 		if (fromStorage.contains(from))
 		{
-			
 			auto toStorage = toRegistry.storage(id);
 			if (!toStorage)
 			{
 				const auto meta = entt::resolve(fromStorage.type());
-				const auto func = meta.func("emplace"_hs);
+				const auto func = meta.func("emplace"_hs); // entt::registry::emplace_or_replace
 				if (func)
 				{
 					func.invoke(meta, entt::forward_as_meta(toRegistry), to);

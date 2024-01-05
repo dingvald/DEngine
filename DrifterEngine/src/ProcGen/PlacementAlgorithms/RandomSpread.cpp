@@ -15,17 +15,16 @@ std::vector<sf::Vector2i> drft::gen::randomSpread(sf::IntRect area, const spatia
 	{
 		int x = 0;
 		int y = 0;
-		int tries = 0;
+		int tries = 10;
 		do {
 			x = rng::RandomNumberGenerator::intInRange(0, area.width - 1);
 			y = rng::RandomNumberGenerator::intInRange(0, area.height - 1);
-			++tries;
+			--tries;
 		} 
-		while (grid.at(area.left + x, area.top + y).any() && tries < 10);
-		if (tries < 10)
-		{
-			result.emplace_back(x, y);
-		}	
+		while (grid.at(area.left + x, area.top + y).any() && tries > 0);
+		if (tries <= 0) continue;
+
+		result.emplace_back(x, y);
 	}
 	return result;
 }

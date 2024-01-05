@@ -317,11 +317,11 @@ double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Ve
 {
 	if (!_noiseMaps.contains(mapType))
 	{
-		throw std::exception(std::string("Map type does not exist." + mapType).c_str());
+		throw std::exception(std::string("Map type " + mapType +  " does not exist.").c_str());
 	}
 	if (!_noiseMaps.at(mapType).contains(coordinate.x, coordinate.y))
 	{
-		throw std::exception(std::string("Map type does not contain point." + coordinate.x + std::string(", ") + std::to_string(coordinate.y)).c_str());
+		throw std::exception(std::string("Map type " + mapType + " does not contain point " + std::to_string(coordinate.x) + ", " + std::to_string(coordinate.y)).c_str());
 	}
 
 	return _noiseMaps.at(mapType).at(coordinate.x, coordinate.y);
@@ -329,16 +329,14 @@ double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Ve
 
 void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
-    // Always place tiles
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
-	//
 
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
 	sf::IntRect placementArea = { tileOrigin.x, tileOrigin.y, FULL_CHUNK.x, FULL_CHUNK.y };
-	auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
+	const auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 
+	blendBiomeBoundaries(placementArea, coordinate);
 	placeStructures(placementArea, biomeType, registry);
-	blendBiomeBoundaries(coordinate);
 	placeEntities(placementArea, biomeType, registry);
 	updateCompletedChunks(coordinate);
 }
@@ -497,10 +495,47 @@ const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vecto
 	return nullptr;
 }
 
-void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::Vector2i coordinate) const
+void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::IntRect area, sf::Vector2i coordinate) const
 {
-	auto biome = _biomeMap.at(coordinate.x, coordinate.y);
+	const auto biome = _biomeMap.at(coordinate.x, coordinate.y);
+	auto neighbours = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
+	bool onBoundary = false;
+	std::vector<sf::Vector2i> diffs;
+	diffs.reserve(9);
+	for (auto neighbour : neighbours)
+	{
+		if (biome == _biomeMap.at(neighbour.x, neighbour.y)) continue;
+		onBoundary = true;
+		diffs.push_back(neighbour - coordinate);
+	}
+	if (!onBoundary) return;
+	auto noiseMap = rng::NoiseMap::generate({ area.width, area.height }, { 3,3 }, coordinate.x + coordinate.y + _seed);
+	sf::Vector2i centerPoint = { area.width / 2, area.height / 2 };
+	for (auto diff : diffs)
+	{
+		if (diff.x != 0 && diff.y != 0) continue; // Do not consider diagonals... yet?
+		sf::IntRect noisyRect;
+		noisyRect.width = diff.x != 0 ? 8 : area.width;
+		noisyRect.height = diff.y != 0 ? 8 : area.height;
+		noisyRect.left = 0;
+		noisyRect.top = 0;
 
+		if (diff.x == 1) noisyRect.left += area.width - noisyRect.width;
+		if (diff.y == 1) noisyRect.top += area.height - noisyRect.height;
+
+		for (int y = noisyRect.top; y < noisyRect.height; ++y)
+		{
+			for (int x = noisyRect.left; x < noisyRect.width; ++x)
+			{
+				sf::Vector2i testPoint = diff.x == 0 ? sf::Vector2i{centerPoint.x, y} : sf::Vector2i{x, centerPoint.y };
+				auto distance = spatial::distance(centerPoint, testPoint);
+				if (noiseMap.at(x, y) * (distance/centerPoint.x) > 0.5)
+				{
+					_bitGrid->at(area.left + x, area.top + y).set(gen::Reserved);
+				}
+			}
+		}
+	}
 }
 
 void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const
@@ -517,15 +552,14 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeTyp
 		int rand_y = rng::RandomNumberGenerator::intInRange(0, area.height - maxBounds.y - 1);
 		int safetyCount = 10;
 
-		while (_bitGrid->at(area.left + rand_x, area.top + rand_y).any()
-			|| _bitGrid->at(area.left + maxBounds.x + rand_x, area.top + maxBounds.y + rand_y).any()
+		while (_bitGrid->at(area.left + rand_x, area.top + rand_y).test(gen::Structure)
+			|| _bitGrid->at(area.left + maxBounds.x + rand_x, area.top + maxBounds.y + rand_y).test(gen::Structure)
 			&& safetyCount > 0)
 		{
 			rand_x = rng::RandomNumberGenerator::intInRange(0, area.width - maxBounds.x - 1);
 			rand_y = rng::RandomNumberGenerator::intInRange(0, area.height - maxBounds.y - 1);
 			--safetyCount;
 		}
-
 		if (safetyCount <= 0) continue;
 
 		auto rect = structure.stamp(sf::Vector2i{ area.left + rand_x, area.top + rand_y }, registry);
@@ -551,7 +585,7 @@ void drft::gen::WorldGenerator::updateCompletedChunks(sf::Vector2i coordinate) c
 	for (auto neighbour : neighbours)
 	{
 		_completedChunks[neighbour]++;
-		if (_completedChunks.at(neighbour) >= 9)
+		if (_completedChunks.at(neighbour) >= 9) // Chunk is surrounded (includes self)
 		{
 			// prevents the accumulation of unnecessary bit grids
 			_bitGrid->discard(neighbour);
