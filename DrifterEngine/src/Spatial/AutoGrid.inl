@@ -12,9 +12,9 @@ inline AutoGrid<T>::AutoGrid(int subchunk_width, int subchunk_height)
 template<typename T>
 inline void drft::spatial::AutoGrid<T>::fill(T val, int left, int top, int width, int height)
 {
-	for (int y = top; y < height; ++y)
+	for (int y = top; y < top + height; ++y)
 	{
-		for (int x = left; x < width; ++x)
+		for (int x = left; x < left + width; ++x)
 		{
 			this->at(x, y) = val;
 		}

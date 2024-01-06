@@ -34,6 +34,7 @@ namespace drft::gen
 		void placeStructures(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
 		void placeEntities(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
 		void updateCompletedChunks(sf::Vector2i coordinate) const;
+		sf::IntRect determinePlacementArea(sf::Vector2i coordinate) const;
 
 	private:
 		using NoiseMap = spatial::Grid<double>;

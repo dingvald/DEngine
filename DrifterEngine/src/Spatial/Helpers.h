@@ -13,6 +13,18 @@ namespace drft::spatial
 	float distance(sf::Vector2i pt1, sf::Vector2i pt2);
 	// Returns the distance bewteen two points.
 	float distance(sf::Vector2f pt1, sf::Vector2f pt2);
+
+	enum class AdjacentType
+	{
+		Ordinal,
+		Cardinal,
+		OrdinalCardinal
+	};
+	// Returns a list of integer points touching a given integer point.
+	// Cardinal: N, S, E, W	
+	// Ordinal: NE, NW, SE, SW
+	std::vector<sf::Vector2i> getAdjacentPoints(sf::Vector2i point, AdjacentType type = AdjacentType::OrdinalCardinal);
+	std::vector<sf::Vector2i> getPointDeltas(sf::Vector2i point, const std::vector<sf::Vector2i>& points);
 }
 
 

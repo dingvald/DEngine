@@ -110,3 +110,72 @@ float drft::spatial::distance(sf::Vector2f pt1, sf::Vector2f pt2)
 	const auto delta = pt1 - pt2;
 	return std::hypotf(delta.x, delta.y);
 }
+
+std::vector<sf::Vector2i> drft::spatial::getAdjacentPoints(sf::Vector2i point, AdjacentType type)
+{
+	constexpr auto ordinals = [](sf::Vector2i point) -> std::vector<sf::Vector2i>
+	{
+		std::vector<sf::Vector2i> result =
+		{
+			{point + sf::Vector2i{-1,-1}},
+			{point + sf::Vector2i{-1, 1}},
+			{point + sf::Vector2i{ 1,-1}},
+			{point + sf::Vector2i{ 1, 1}}
+		};
+		return result;
+	};
+	constexpr auto cardinals = [](sf::Vector2i point) -> std::vector<sf::Vector2i>
+	{
+		std::vector<sf::Vector2i> result =
+		{
+			{point + sf::Vector2i{-1, 0}},
+			{point + sf::Vector2i{ 0, 1}},
+			{point + sf::Vector2i{ 1, 0}},
+			{point + sf::Vector2i{ 0,-1}}
+		};
+		return result;
+	};
+	constexpr auto both = [](sf::Vector2i point) -> std::vector<sf::Vector2i>
+	{
+		std::vector<sf::Vector2i> result =
+		{
+			{point + sf::Vector2i{-1, 0}},
+			{point + sf::Vector2i{ 0, 1}},
+			{point + sf::Vector2i{ 1, 0}},
+			{point + sf::Vector2i{ 0,-1}},
+			{point + sf::Vector2i{-1,-1}},
+			{point + sf::Vector2i{-1, 1}},
+			{point + sf::Vector2i{ 1,-1}},
+			{point + sf::Vector2i{ 1, 1}}
+		};
+		return result;
+	};
+
+	switch (type)
+	{
+	case drft::spatial::AdjacentType::Ordinal:
+		return ordinals(point);
+		break;
+	case drft::spatial::AdjacentType::Cardinal:
+		return cardinals(point);
+		break;
+	case drft::spatial::AdjacentType::OrdinalCardinal:
+		return both(point);
+		break;
+	default:
+		throw std::exception("Unhandled enum type.");
+		break;
+	}
+	return {};
+}
+
+std::vector<sf::Vector2i> drft::spatial::getPointDeltas(sf::Vector2i point, const std::vector<sf::Vector2i>& points)
+{
+	std::vector<sf::Vector2i> result;
+	result.reserve(points.size());
+	for (auto pt : points)
+	{
+		result.push_back(pt - point);
+	}
+	return result;
+}

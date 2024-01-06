@@ -331,9 +331,8 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 {
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
 
-	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
-	sf::IntRect placementArea = { tileOrigin.x, tileOrigin.y, FULL_CHUNK.x, FULL_CHUNK.y };
 	const auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
+	const auto placementArea = determinePlacementArea(coordinate);
 
 	blendBiomeBoundaries(placementArea, coordinate);
 	placeStructures(placementArea, biomeType, registry);
@@ -498,22 +497,23 @@ const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vecto
 void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::IntRect area, sf::Vector2i coordinate) const
 {
 	const auto biome = _biomeMap.at(coordinate.x, coordinate.y);
-	auto neighbours = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
+	auto neighbours = spatial::getAdjacentPoints(coordinate, AdjacentType::Cardinal);
 	bool onBoundary = false;
 	std::vector<sf::Vector2i> diffs;
-	diffs.reserve(9);
+	diffs.reserve(neighbours.size());
 	for (auto neighbour : neighbours)
 	{
+		if (!_biomeMap.contains(neighbour.x, neighbour.y)) continue;
 		if (biome == _biomeMap.at(neighbour.x, neighbour.y)) continue;
 		onBoundary = true;
 		diffs.push_back(neighbour - coordinate);
 	}
 	if (!onBoundary) return;
-	auto noiseMap = rng::NoiseMap::generate({ area.width, area.height }, { 3,3 }, coordinate.x + coordinate.y + _seed);
+
+	auto noiseMap = rng::NoiseMap::generate({ area.width, area.height }, { 8,8 }, coordinate.x + coordinate.y + _seed);
 	sf::Vector2i centerPoint = { area.width / 2, area.height / 2 };
 	for (auto diff : diffs)
 	{
-		if (diff.x != 0 && diff.y != 0) continue; // Do not consider diagonals... yet?
 		sf::IntRect noisyRect;
 		noisyRect.width = diff.x != 0 ? 8 : area.width;
 		noisyRect.height = diff.y != 0 ? 8 : area.height;
@@ -523,13 +523,14 @@ void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::IntRect area, sf::Vecto
 		if (diff.x == 1) noisyRect.left += area.width - noisyRect.width;
 		if (diff.y == 1) noisyRect.top += area.height - noisyRect.height;
 
-		for (int y = noisyRect.top; y < noisyRect.height; ++y)
+		for (int y = noisyRect.top; y < noisyRect.top + noisyRect.height; ++y)
 		{
-			for (int x = noisyRect.left; x < noisyRect.width; ++x)
+			for (int x = noisyRect.left; x < noisyRect.left + noisyRect.width; ++x)
 			{
 				sf::Vector2i testPoint = diff.x == 0 ? sf::Vector2i{centerPoint.x, y} : sf::Vector2i{x, centerPoint.y };
 				auto distance = spatial::distance(centerPoint, testPoint);
-				if (noiseMap.at(x, y) * (distance/centerPoint.x) > 0.5)
+				float normalizedDistance = (distance / centerPoint.x);
+				if ( ((noiseMap.at(x, y) + normalizedDistance) / 2.f) > 0.65)
 				{
 					_bitGrid->at(area.left + x, area.top + y).set(gen::Reserved);
 				}
@@ -591,5 +592,15 @@ void drft::gen::WorldGenerator::updateCompletedChunks(sf::Vector2i coordinate) c
 			_bitGrid->discard(neighbour);
 		}
 	}
+}
+
+sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coordinate) const
+{
+	auto neighbours = spatial::getAdjacentPoints(coordinate, AdjacentType::Cardinal);
+	auto diffs = spatial::getPointDeltas(coordinate, neighbours);
+
+
+	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
+	return { tileOrigin.x, tileOrigin.y, FULL_CHUNK.x, FULL_CHUNK.y };
 }
 
