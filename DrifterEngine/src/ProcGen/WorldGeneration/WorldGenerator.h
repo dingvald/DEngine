@@ -4,7 +4,7 @@
 #include "Spatial/Grid.h"
 #include "Spatial/AutoGrid.h"
 #include "Utility/stdHashing.h"
-#include "Structures/StructureFactory.h"
+#include "Structures/StructureRegistry.h"
 
 namespace drft::gen
 {
@@ -25,7 +25,7 @@ namespace drft::gen
 		void generateTerrain();
 		void removeIsolatedBiomes();
 		void generateZones();
-		std::unordered_set<sf::Vector2i> floodFillZone(sf::Vector2i startingNode, const BiomeType* type);
+		void fillBiomeMap();
 		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		std::unordered_set<std::string> determinePotentialBiomes(sf::Vector2i coordinate) const;
@@ -45,7 +45,7 @@ namespace drft::gen
 		std::unordered_map<std::string, BiomeType> _biomeTypes;
 		mutable std::unordered_map<sf::Vector2i, int> _completedChunks;
 		spatial::Grid<const BiomeType*> _biomeMap;
-		std::unique_ptr<StructureFactory> _structureFactory;
+		StructureRegistry _structureRegistry;
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
 		mutable BitGridPtr _bitGrid;
 		std::unordered_map<unsigned int, BiomeZone> _zones;

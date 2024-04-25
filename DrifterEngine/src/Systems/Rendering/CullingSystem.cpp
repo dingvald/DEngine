@@ -19,7 +19,6 @@ void drft::system::CullingSystem::fixedUpdate()
 	viewport.width += 2 * spatial::TILE_WIDTH;
 	viewport.height += 2 * spatial::TILE_HEIGHT;
 	
-
 	auto view = registry->view<component::Position>();
 	for (auto [entity, pos] : view.each())
 	{

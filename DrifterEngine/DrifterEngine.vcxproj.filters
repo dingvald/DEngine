@@ -498,13 +498,16 @@
     <ClCompile Include="src\Structures\StructureBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\StructureFactory.cpp">
+    <ClCompile Include="src\Structures\StructureRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Structures\ProceduralStructure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Structures\StaticStructure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Algorithms\FloodFill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1544,7 +1547,7 @@
     <ClInclude Include="src\Structures\StructureBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\StructureFactory.h">
+    <ClInclude Include="src\Structures\StructureRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Structures\StructureBuildTypes.h">
@@ -1557,6 +1560,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\AutoGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Algorithms\FloodFill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

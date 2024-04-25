@@ -1,12 +1,12 @@
 #include "pch.h"
-#include "StructureFactory.h"
+#include "StructureRegistry.h"
 #include "Spatial/Helpers.h"
 #include "StaticStructure.h"
 #include "ProceduralStructure.h"
 
 static const std::string STATIC_DATA_PATH = ".\\data\\static\\";
 
-bool drft::StructureFactory::loadStructures(const std::string& JSONfilename)
+bool drft::StructureRegistry::loadStructures(const std::string& JSONfilename)
 {
 	using namespace rapidjson;
 
@@ -100,7 +100,7 @@ bool drft::StructureFactory::loadStructures(const std::string& JSONfilename)
     return true;
 }
 
-void drft::StructureFactory::resolveAllSubstructures()
+void drft::StructureRegistry::resolveAllSubstructures()
 {
     std::unordered_set<std::string> fullyResolvedStructures;
     for (auto& [name, structure] : _structures)
@@ -109,13 +109,13 @@ void drft::StructureFactory::resolveAllSubstructures()
     }
 }
 
-const drft::StructureBase& drft::StructureFactory::build(const std::string& structureName) const
+const drft::StructureBase& drft::StructureRegistry::lookup(const std::string& structureName) const
 {
     if (!_structures.contains(structureName)) throw std::exception("No such structure exists.");
     return *_structures.at(structureName);
 }
 
-void drft::StructureFactory::resolve(StructureBase& toResolve, std::unordered_set<std::string>& resolved)
+void drft::StructureRegistry::resolve(StructureBase& toResolve, std::unordered_set<std::string>& resolved)
 {
     if (resolved.contains(toResolve.name())) return;
 

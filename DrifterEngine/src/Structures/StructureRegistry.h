@@ -3,12 +3,12 @@
 
 namespace drft
 {
-	class StructureFactory
+	class StructureRegistry
 	{
 	public:
 		bool loadStructures(const std::string& JSONfilename);
 		void resolveAllSubstructures();
-		const StructureBase& build(const std::string& structureName) const;
+		const StructureBase& lookup(const std::string& structureName) const;
 
 	private:
 		void resolve(StructureBase& toResolve, std::unordered_set<std::string>& resolved);

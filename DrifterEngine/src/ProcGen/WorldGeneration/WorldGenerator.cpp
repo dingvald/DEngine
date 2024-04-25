@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "WorldGenerator.h"
+#include "Algorithms/FloodFill.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/Grid.h"
@@ -7,18 +8,13 @@
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
 #include "Random/NoiseMap.h"
+#include "Random/PercentChance.h"
 #include "ProcGen/PlacementAlgorithms/Algorithms.h"
 #include "ProcGen/GridBitFlags.h"
 #include "ShapingFunctions.h"
 #include "Structures/StructureBase.h"
 #include "Utility/stdHashing.h"
 #include "Utility/Math.h"
-#include "Utility/stdHashing.h"
-
-#include "Machines/Chest.h"
-#include "Machines/HeartShrine.h"
-#include "Machines/WildernessHorde.h"
-#include "Machines/OreDeposit.h"
 
 static const sf::Vector2i FULL_CHUNK = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 static const sf::Vector2i HALF_CHUNK = { FULL_CHUNK.x / 2, FULL_CHUNK.y / 2 };
@@ -28,7 +24,6 @@ static const std::string STATIC_DATA_PATH = ".\\data\\static\\";
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
-	_structureFactory = std::make_unique<StructureFactory>();
 	_bitGrid = std::make_unique<spatial::AutoGrid<std::bitset<32>>>(FULL_CHUNK.x, FULL_CHUNK.y);
 }
 
@@ -49,9 +44,9 @@ void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 	for (const auto& fileName : std::filesystem::directory_iterator(structuresDirectory))
 	{
 		std::cout << "Loading " << fileName.path().filename() << std::endl;
-		_structureFactory->loadStructures(fileName.path().filename().string());
+		_structureRegistry.loadStructures(fileName.path().filename().string());
 	}
-	_structureFactory->resolveAllSubstructures();
+	_structureRegistry.resolveAllSubstructures();
 }
 
 void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
@@ -192,7 +187,7 @@ void drft::gen::WorldGenerator::generateTerrain()
 	unsigned int currentSeed = _seed;
 	for (auto& [name, noiseMap] : _noiseMaps)
 	{
-		noiseMap = rng::NoiseMap::generate(_dimensions, { 4,4 }, currentSeed);
+		noiseMap = rng::NoiseMap::generate(_dimensions, { 1,1 }, currentSeed);
 		currentSeed = rng::noise(currentSeed);
 	}
 	_noiseMaps.at("Volcanism") = rng::NoiseMap::generate(_dimensions, { 1,1 }, currentSeed, 16, 2.0, 0.55);
@@ -209,13 +204,8 @@ void drft::gen::WorldGenerator::generateTerrain()
 			val = std::clamp(val - 0.97, 0.0, 1.0);
 		});
 
-	for (int y = 0; y < _dimensions.y; ++y)
-	{
-		for (int x = 0; x < _dimensions.x; ++x)
-		{
-			_biomeMap.at(x, y) = selectBiomeType({ x, y });
-		}
-	}
+	fillBiomeMap();
+
 	removeIsolatedBiomes();
 	// Post process
 }
@@ -269,48 +259,42 @@ void drft::gen::WorldGenerator::generateZones()
 	{
 		sf::Vector2i position = *possibleSpaces.begin();
 		const BiomeType* workingType = _biomeMap.at(position.x, position.y);
-		auto zonePositions = floodFillZone(position, workingType);
+		auto biomeTypeChecker = [workingType, this](sf::Vector2i testPosition) -> bool
+		{
+			if (_biomeMap.contains(testPosition.x, testPosition.y)
+				&& _biomeMap.at(testPosition.x, testPosition.y) == workingType)
+			{
+				return true;
+			}
+			return false;
+		};
+		const auto zonePositions = algo::floodFill(position, biomeTypeChecker);
 		BiomeZone zone(workingType);
 		zone.setID(zoneID);
-		for (auto pos : zonePositions)
+		for (auto&& pos : zonePositions)
 		{
 			possibleSpaces.erase(pos);
 			zone.put(pos);
 		}
 		_zones.emplace(zoneID++, zone);
+
 	}
 
 	std::cout << "Zones identified: " << _zones.size() << std::endl;
 }
 
-std::unordered_set<sf::Vector2i> drft::gen::WorldGenerator::floodFillZone(sf::Vector2i startingNode, const BiomeType* type)
+void drft::gen::WorldGenerator::fillBiomeMap()
 {
-	std::queue<sf::Vector2i> q;
-	std::unordered_set<sf::Vector2i> result;
-	std::unordered_set<sf::Vector2i> visited;
-	q.push(startingNode);
-
-	while (!q.empty())
+	for (int y = 0; y < _dimensions.y; ++y)
 	{
-		sf::Vector2i current = q.front();
-		q.pop();
-		visited.insert(current);
-		if (_biomeMap.contains(current.x, current.y) && _biomeMap.at(current.x, current.y) == type)
+		for (int x = 0; x < _dimensions.x; ++x)
 		{
-			result.insert(current);
-			for (int y = -1; y <= 1; ++y)
+			if (auto biomeType = selectBiomeType({ x, y }))
 			{
-				for (int x = -1; x <= 1; ++x)
-				{
-					if (visited.contains(current + sf::Vector2i(x, y))) continue;
-					q.push(current + sf::Vector2i(x, y));
-					visited.insert(current + sf::Vector2i(x, y));
-				}
+				_biomeMap.at(x, y) = biomeType;
 			}
 		}
 	}
-
-	return result;
 }
 
 double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const
@@ -429,14 +413,11 @@ std::unordered_set<std::string> drft::gen::WorldGenerator::determinePotentialBio
 		for (int i = 1; i < distanceMap.size(); ++i)
 		{
 			auto& [otherMatch, distance] = distanceMap.at(i);
-			if (std::abs(closestDistance - distance) < ACCEPTANCE_DISTANCE)
-			{
-				result.insert(otherMatch->name);
-			}
-			else
+			if (std::abs(closestDistance - distance) >= ACCEPTANCE_DISTANCE)
 			{
 				break;
 			}
+			result.insert(otherMatch->name);
 		}
 	}
 	
@@ -445,11 +426,11 @@ std::unordered_set<std::string> drft::gen::WorldGenerator::determinePotentialBio
 
 const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vector2i coordinate) const
 {
-
-	auto potentialBiomes = determinePotentialBiomes(coordinate);
+	const auto potentialBiomes = determinePotentialBiomes(coordinate);
 
 	if (potentialBiomes.empty())
 	{
+		throw std::exception("No biome type found for coordinate");
 		return nullptr;
 	}
 	else if (potentialBiomes.size() == 1)
@@ -458,13 +439,10 @@ const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vecto
 	}
 	else if (potentialBiomes.size() > 1)
 	{
-		/*
 		// if there are multiple potential biomes, high chance to continue placing the same type that is nearby
-		*/
-		constexpr int CHANCE_MAX = 9;
-		int choice = rng::RandomNumberGenerator::intInRange(0, CHANCE_MAX);
+		constexpr int CHANCE = 90;
 
-		if (choice > 1)
+		if (rng::percentChance(CHANCE))
 		{
 			// Place same biome type
 			auto surroundings = spatial::getIntRectAroundOrigin({ coordinate.x, coordinate.y }, 3, 3);
@@ -545,9 +523,9 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeTyp
 	{
 		if (rng::RandomNumberGenerator::realInRange(0.0, 1.0) > probability) continue;
 
-		const auto& structure = _structureFactory->build(name);
-		auto maxBounds = structure.getMaximumBounds();
-		auto minBounds = structure.getMinimumBounds();
+		const auto& structure = _structureRegistry.lookup(name);
+		const auto maxBounds = structure.getMaximumBounds();
+		const auto minBounds = structure.getMinimumBounds();
 
 		int rand_x = rng::RandomNumberGenerator::intInRange(0, area.width - maxBounds.x - 1);
 		int rand_y = rng::RandomNumberGenerator::intInRange(0, area.height - maxBounds.y - 1);
@@ -598,9 +576,39 @@ sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coord
 {
 	auto neighbours = spatial::getAdjacentPoints(coordinate, AdjacentType::Cardinal);
 	auto diffs = spatial::getPointDeltas(coordinate, neighbours);
-
-
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
-	return { tileOrigin.x, tileOrigin.y, FULL_CHUNK.x, FULL_CHUNK.y };
+	sf::IntRect result = { tileOrigin.x, tileOrigin.y, FULL_CHUNK.x, FULL_CHUNK.y };
+
+	for (auto diff : diffs)
+	{
+		if (!_biomeMap.contains(coordinate.x + diff.x, coordinate.y + diff.y)) continue;
+		
+		// Lower biomes overlap higher ones
+		const double myHeight = getPerlinAt("Altitude", coordinate);
+		const double otherHeight = getPerlinAt("Altitude", coordinate + diff);
+		if (myHeight > otherHeight) continue;
+
+		if (diff.x < 0)
+		{
+			result.left -= QUARTER_CHUNK.x;
+			result.width += QUARTER_CHUNK.x;
+		}
+		else if (diff.x > 0)
+		{
+			result.width += QUARTER_CHUNK.x;
+		}
+
+		if (diff.y < 0)
+		{
+			result.top -= QUARTER_CHUNK.y;
+			result.height += QUARTER_CHUNK.y;
+		}
+		else if (diff.y > 0)
+		{
+			result.height += QUARTER_CHUNK.y;
+		}
+	}
+
+	return result;
 }
 

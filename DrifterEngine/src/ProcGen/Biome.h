@@ -64,9 +64,9 @@ namespace drft::gen
 			std::unordered_map<std::string, float> parameters;
 		};
 		// { entity name, map of {algorithm, params} }
-		using EntityAlgorithm = std::unordered_map<std::string, SpawningAlgorithm>;
+		using EntityAlgorithms = std::unordered_map<std::string, SpawningAlgorithm>;
 		// { category name, list of {entity, algorithm} }
-		using EntityCategories = std::unordered_map<std::string, EntityAlgorithm>;
+		using EntityCategories = std::unordered_map<std::string, EntityAlgorithms>;
 
 		EntityCategories entityCategories;
 	};

@@ -14,7 +14,7 @@ namespace drft
 		const std::string& name() const;
 
 	private:
-		friend class StructureFactory;
+		friend class StructureRegistry;
 		// For parsing
 		void setMaximumBounds(sf::Vector2i bounds);
 		void setMinimumBounds(sf::Vector2i bounds);
