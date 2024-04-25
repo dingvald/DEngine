@@ -7,7 +7,7 @@
 #include "Random/RandomNumberGenerator.h"
 #include "Random/PerlinNoise.h"
 #include "Random/RandomNoise.h"
-#include "Random/NoiseMap.h"
+#include "Random/NoiseLayer.h"
 #include "Random/PercentChance.h"
 #include "ProcGen/PlacementAlgorithms/Algorithms.h"
 #include "ProcGen/GridBitFlags.h"
@@ -33,9 +33,14 @@ void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
     _seed = seed;
 
-	for (auto& [_, noiseMap] : _noiseMaps)
+
+	// Setup all noise layers
+	unsigned int currentSeed = _seed;
+	for (auto& [_, noiseLayer] : _noiseLayers)
 	{
-		noiseMap.resize(dimensions.x, dimensions.y);
+		noiseLayer.setNoise(rng::PerlinNoise(currentSeed));
+		noiseLayer.setDimensions(_dimensions);
+		currentSeed = rng::noise(currentSeed);
 	}
 	
 	// Load all structure files
@@ -94,9 +99,9 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 			{
 				auto name = climateRange.name.GetString();
 				auto range = climateRange.value.GetArray();
-				if (!_noiseMaps.contains(name))
+				if (!_noiseLayers.contains(name))
 				{
-					_noiseMaps.emplace(name, NoiseMap());
+					_noiseLayers.emplace(name, rng::NoiseLayer());
 				}
 				if (range[0].IsString())
 				{
@@ -183,25 +188,18 @@ void drft::gen::WorldGenerator::generate()
 
 void drft::gen::WorldGenerator::generateTerrain()
 {
-	// Generate starting noise maps
-	unsigned int currentSeed = _seed;
-	for (auto& [name, noiseMap] : _noiseMaps)
-	{
-		noiseMap = rng::NoiseMap::generate(_dimensions, { 1,1 }, currentSeed);
-		currentSeed = rng::noise(currentSeed);
-	}
-	_noiseMaps.at("Volcanism") = rng::NoiseMap::generate(_dimensions, { 1,1 }, currentSeed, 16, 2.0, 0.55);
-
-	// Set north pole
-	customShaper(_noiseMaps.at("Temperature"), [](double& val, sf::Vector2i position)
+	// Add north pole
+	_noiseLayers.at("Temperature").addBiasingFunction(
+		[](double val, sf::Vector2i position)
 		{
 			double mod = std::clamp(0.02 * position.y, 0.0, 1.1);
-			val = std::clamp(val * mod, 0.0, 1.0);
+			return std::clamp(val * mod, 0.0, 1.0);
 		});
-	// Make volcanism rarer
-	customShaper(_noiseMaps.at("Volcanism"), [](double& val, sf::Vector2i position)
+	// Make Volcanism rarer
+	_noiseLayers.at("Volcanism").addBiasingFunction(
+		[](double val, sf::Vector2i position)
 		{
-			val = std::clamp(val - 0.97, 0.0, 1.0);
+			return std::clamp(val - 0.97, 0.0, 1.0);
 		});
 
 	fillBiomeMap();
@@ -299,16 +297,12 @@ void drft::gen::WorldGenerator::fillBiomeMap()
 
 double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const
 {
-	if (!_noiseMaps.contains(mapType))
+	if (!_noiseLayers.contains(mapType))
 	{
 		throw std::exception(std::string("Map type " + mapType +  " does not exist.").c_str());
 	}
-	if (!_noiseMaps.at(mapType).contains(coordinate.x, coordinate.y))
-	{
-		throw std::exception(std::string("Map type " + mapType + " does not contain point " + std::to_string(coordinate.x) + ", " + std::to_string(coordinate.y)).c_str());
-	}
 
-	return _noiseMaps.at(mapType).at(coordinate.x, coordinate.y);
+	return _noiseLayers.at(mapType).at(spatial::toTileSpace(coordinate));
 }
 
 void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
@@ -318,7 +312,6 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 	const auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 	const auto placementArea = determinePlacementArea(coordinate);
 
-	blendBiomeBoundaries(placementArea, coordinate);
 	placeStructures(placementArea, biomeType, registry);
 	placeEntities(placementArea, biomeType, registry);
 	updateCompletedChunks(coordinate);
@@ -374,7 +367,7 @@ std::unordered_set<std::string> drft::gen::WorldGenerator::determinePotentialBio
 		std::vector<float> distances;
 		for (auto& [rangeName, range] : _ranges)
 		{
-			double perlin = _noiseMaps.at(rangeName).at(coordinate.x, coordinate.y);
+			double perlin = _noiseLayers.at(rangeName).at(spatial::toTileSpace(coordinate));
 			float val = getRangeFromPerlin(rangeName, perlin);
 			if (biome.ranges.contains(rangeName))
 			{
@@ -472,50 +465,6 @@ const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vecto
 	return nullptr;
 }
 
-void drft::gen::WorldGenerator::blendBiomeBoundaries(sf::IntRect area, sf::Vector2i coordinate) const
-{
-	const auto biome = _biomeMap.at(coordinate.x, coordinate.y);
-	auto neighbours = spatial::getAdjacentPoints(coordinate, AdjacentType::Cardinal);
-	bool onBoundary = false;
-	std::vector<sf::Vector2i> diffs;
-	diffs.reserve(neighbours.size());
-	for (auto neighbour : neighbours)
-	{
-		if (!_biomeMap.contains(neighbour.x, neighbour.y)) continue;
-		if (biome == _biomeMap.at(neighbour.x, neighbour.y)) continue;
-		onBoundary = true;
-		diffs.push_back(neighbour - coordinate);
-	}
-	if (!onBoundary) return;
-
-	auto noiseMap = rng::NoiseMap::generate({ area.width, area.height }, { 8,8 }, coordinate.x + coordinate.y + _seed);
-	sf::Vector2i centerPoint = { area.width / 2, area.height / 2 };
-	for (auto diff : diffs)
-	{
-		sf::IntRect noisyRect;
-		noisyRect.width = diff.x != 0 ? 8 : area.width;
-		noisyRect.height = diff.y != 0 ? 8 : area.height;
-		noisyRect.left = 0;
-		noisyRect.top = 0;
-
-		if (diff.x == 1) noisyRect.left += area.width - noisyRect.width;
-		if (diff.y == 1) noisyRect.top += area.height - noisyRect.height;
-
-		for (int y = noisyRect.top; y < noisyRect.top + noisyRect.height; ++y)
-		{
-			for (int x = noisyRect.left; x < noisyRect.left + noisyRect.width; ++x)
-			{
-				sf::Vector2i testPoint = diff.x == 0 ? sf::Vector2i{centerPoint.x, y} : sf::Vector2i{x, centerPoint.y };
-				auto distance = spatial::distance(centerPoint, testPoint);
-				float normalizedDistance = (distance / centerPoint.x);
-				if ( ((noiseMap.at(x, y) + normalizedDistance) / 2.f) > 0.65)
-				{
-					_bitGrid->at(area.left + x, area.top + y).set(gen::Reserved);
-				}
-			}
-		}
-	}
-}
 
 void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const
 {

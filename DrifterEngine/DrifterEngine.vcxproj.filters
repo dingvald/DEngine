@@ -510,6 +510,9 @@
     <ClCompile Include="src\Algorithms\FloodFill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Random\NoiseLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1563,6 +1566,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Algorithms\FloodFill.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random\NoiseLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

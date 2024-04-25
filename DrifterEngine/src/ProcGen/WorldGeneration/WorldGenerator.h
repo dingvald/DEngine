@@ -1,5 +1,5 @@
 #pragma once
-#include "Random/PerlinNoise.h"
+#include "Random/NoiseLayer.h"
 #include "ProcGen/Biome.h"
 #include "Spatial/Grid.h"
 #include "Spatial/AutoGrid.h"
@@ -30,7 +30,6 @@ namespace drft::gen
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		std::unordered_set<std::string> determinePotentialBiomes(sf::Vector2i coordinate) const;
 		const BiomeType* selectBiomeType(sf::Vector2i coordinate) const;
-		void blendBiomeBoundaries(sf::IntRect area, sf::Vector2i coordinate) const;
 		void placeStructures(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
 		void placeEntities(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
 		void updateCompletedChunks(sf::Vector2i coordinate) const;
@@ -49,7 +48,7 @@ namespace drft::gen
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
 		mutable BitGridPtr _bitGrid;
 		std::unordered_map<unsigned int, BiomeZone> _zones;
-		std::unordered_map<std::string, NoiseMap> _noiseMaps;
+		std::unordered_map<std::string, rng::NoiseLayer> _noiseLayers;
 		std::unordered_map<std::string, Range> _ranges;
 	};
 }

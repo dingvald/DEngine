@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Random\NoiseLayer.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
     <ClCompile Include="src\Structures\ProceduralStructure.cpp" />
     <ClCompile Include="src\Systems\Rendering\EffectRenderer.cpp" />
@@ -380,6 +381,7 @@
     <ClCompile Include="src\Structures\StaticStructure.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Random\NoiseLayer.h" />
     <ClInclude Include="src\Algorithms\FloodFill.h" />
     <ClInclude Include="src\Spatial\AutoGrid.h" />
     <ClInclude Include="src\Structures\ProceduralStructure.h" />
