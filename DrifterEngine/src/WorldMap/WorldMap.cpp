@@ -6,7 +6,6 @@ void drft::WorldMap::init(sf::Vector2i dimensions, unsigned int seed)
 	_dimensions = dimensions;
 
 	_worldGenerator.init(dimensions, seed);
-	_worldGenerator.loadBiomes("biomes.json");
 	_worldGenerator.generate();
 }
 

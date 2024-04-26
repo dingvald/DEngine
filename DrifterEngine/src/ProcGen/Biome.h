@@ -1,6 +1,7 @@
 #pragma once
 #include "Spatial/Grid.h"
 #include "Utility/stdHashing.h"
+#include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
 
 namespace drft::gen
 {
@@ -61,7 +62,7 @@ namespace drft::gen
 		struct SpawningAlgorithm
 		{
 			std::string name;
-			std::unordered_map<std::string, float> parameters;
+			drft::gen::GenerationParameters parameters;
 		};
 		// { entity name, map of {algorithm, params} }
 		using EntityAlgorithms = std::unordered_map<std::string, SpawningAlgorithm>;

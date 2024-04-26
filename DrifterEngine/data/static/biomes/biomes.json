@@ -60,6 +60,15 @@
               "Maximum": 8
             }
           }
+        },
+        "Liquid": {
+          "Water": {
+            "Algorithm": "NoiseLayer",
+            "Parameters": {
+              "Layer": "Altitude",
+              "Threshold": 0.1
+            }
+          }
         }
       },
       "Structures": {
@@ -343,7 +352,7 @@
         "Altitude": [ 50, 1000 ]
       }
     },
-    "Water": {
+    "Ocean": {
       "Icon": {
         "Sprite": 25,
         "Color": [ 27, 149, 224 ]

@@ -18,7 +18,7 @@ namespace drft::gen
 		void generate();
 		// Generates the concrete chunk.
 		void finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const;
-		sf::Vector2i getStartingPosition(std::string biomeType) const;
+		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
 		BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
 
 	private:
@@ -31,6 +31,7 @@ namespace drft::gen
 		std::unordered_set<std::string> determinePotentialBiomes(sf::Vector2i coordinate) const;
 		const BiomeType* selectBiomeType(sf::Vector2i coordinate) const;
 		void placeStructures(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
+		void placeLiquids(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
 		void placeEntities(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
 		void updateCompletedChunks(sf::Vector2i coordinate) const;
 		sf::IntRect determinePlacementArea(sf::Vector2i coordinate) const;

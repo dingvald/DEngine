@@ -3,13 +3,13 @@
 #include "Spatial/Helpers.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::organicSpread(sf::IntRect area, const spatial::AutoGrid<std::bitset<32>>& grid, GenerationParameters params, int seed)
+std::vector<sf::Vector2i> drft::gen::organicSpread(const GenerationContext& ctx, const GenerationParameters& params)
 {
 	std::vector<sf::Vector2i> positions;
-	const int generations = static_cast<int>(params.at("Generations"));
-	const int startingSeeds = static_cast<int>(params.at("StartingSeeds"));
-	const int seedsPerGeneration = static_cast<int>(params.at("SeedsPerGeneration"));
-	const int radius = static_cast<int>(params.at("Radius"));
+	const int generations = (int)std::get<float>(params.at("Generations"));
+	const int startingSeeds = (int)std::get<float>(params.at("StartingSeeds"));
+	const int seedsPerGeneration = (int)std::get<float>(params.at("SeedsPerGeneration"));
+	const int radius = (int)std::get<float>(params.at("Radius"));
 
 	for (int ss = 0; ss < startingSeeds; ++ss)
 	{
@@ -18,9 +18,9 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(sf::IntRect area, const spati
 		int safetyCount = 20;
 		do {
 			--safetyCount;
-			x = rng::RandomNumberGenerator::intInRange(0, area.width - 1);
-			y = rng::RandomNumberGenerator::intInRange(0, area.height - 1);
-		} while (grid.at(area.left + x, area.top + y).any() && safetyCount > 0);
+			x = rng::RandomNumberGenerator::intInRange(0, ctx.area.width - 1);
+			y = rng::RandomNumberGenerator::intInRange(0, ctx.area.height - 1);
+		} while (ctx.grid.at(ctx.area.left + x, ctx.area.top + y).any() && safetyCount > 0);
 		if (safetyCount > 0)
 		{
 			positions.emplace_back(x, y);
@@ -30,14 +30,14 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(sf::IntRect area, const spati
 	for (int gen = 0; gen < generations; ++gen)
 	{
 		std::vector<sf::Vector2i> positionsToAdd;
-		for (auto position : positions)
+		for (auto&& position : positions)
 		{
 			const auto surroundings = spatial::getIntCircleInRadius(position, radius);
 			for (int spg = 0; spg < seedsPerGeneration; ++spg)
 			{
 				const int index = rng::RandomNumberGenerator::intInRange(0, surroundings.size() - 1);
 				auto pos = surroundings.at(index);
-				if (grid.at(area.left + pos.x, area.top + pos.y).none())
+				if (ctx.grid.at(ctx.area.left + pos.x, ctx.area.top + pos.y).none())
 				{
 					positionsToAdd.emplace_back(pos);
 				}

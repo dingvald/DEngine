@@ -1,7 +1,7 @@
 #pragma once
-#include "GenerationParameters.h"
+#include "GenerationContext.h"
 
 namespace drft::gen
 {
-	std::vector<sf::Vector2i> fill(sf::IntRect area, const spatial::AutoGrid<std::bitset<32>>&, GenerationParameters, int);
+	std::vector<sf::Vector2i> fill(const GenerationContext& ctx, const GenerationParameters& params);
 }

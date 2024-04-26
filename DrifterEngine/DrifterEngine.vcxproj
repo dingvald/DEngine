@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ProcGen\PlacementAlgorithms\NoiseLayerSpread.cpp" />
     <ClCompile Include="src\Random\NoiseLayer.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
     <ClCompile Include="src\Structures\ProceduralStructure.cpp" />
@@ -213,7 +214,6 @@
     <ClCompile Include="src\GOAP\Sensors\Utility\GetClosestEntity.cpp" />
     <ClCompile Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp" />
     <ClCompile Include="src\GOAP\Sensors\Utility\IsHostile.cpp" />
-    <ClCompile Include="src\ProcGen\WorldGeneration\ShapingFunctions.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Random\NoiseMap.cpp" />
     <ClCompile Include="src\ProcGen\Biome.cpp" />
@@ -381,6 +381,8 @@
     <ClCompile Include="src\Structures\StaticStructure.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GenerationContext.h" />
+    <ClInclude Include="src\ProcGen\PlacementAlgorithms\NoiseLayerSpread.h" />
     <ClInclude Include="src\Random\NoiseLayer.h" />
     <ClInclude Include="src\Algorithms\FloodFill.h" />
     <ClInclude Include="src\Spatial\AutoGrid.h" />
@@ -424,7 +426,6 @@
     <ClInclude Include="src\GOAP\SensorTypes.h" />
     <ClInclude Include="src\GOAP\WorldStateTypes.h" />
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
-    <ClInclude Include="src\ProcGen\WorldGeneration\ShapingFunctions.h" />
     <ClInclude Include="src\Random\PercentChance.h" />
     <ClInclude Include="src\Random\NoiseMap.h" />
     <ClInclude Include="src\ProcGen\Biome.h" />
