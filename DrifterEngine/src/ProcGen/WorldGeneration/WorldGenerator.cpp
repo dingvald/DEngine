@@ -11,6 +11,8 @@
 #include "ProcGen/PlacementAlgorithms/Algorithms.h"
 #include "ProcGen/GridBitFlags.h"
 #include "Structures/StructureBase.h"
+#include "Services/DebugInfo.h"
+#include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/stdHashing.h"
 #include "Utility/Math.h"
 
@@ -26,11 +28,9 @@ drft::gen::WorldGenerator::WorldGenerator()
 	_bitGrid = std::make_unique<spatial::AutoGrid<std::bitset<32>>>(FULL_CHUNK.x, FULL_CHUNK.y);
 }
 
-void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
+void drft::gen::WorldGenerator::init()
 {
-	_dimensions = dimensions;
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
-    _seed = seed;
 
 	// Load all structure files
 	std::cout << "Loading structures..." << std::endl;
@@ -44,17 +44,71 @@ void drft::gen::WorldGenerator::init(sf::Vector2i dimensions, unsigned int seed)
 	std::cout << "Structures loaded." << std::endl;
 
 	loadBiomes("biomes.json");
+}
 
-	// Setup all noise layers
-	std::cout << "Creating noise layers..." << std::endl;
-	unsigned int currentSeed = _seed;
-	for (auto& [_, noiseLayer] : _noiseLayers)
+void drft::gen::WorldGenerator::loadWorldMapSettings(const std::string& JSONfilename)
+{
+	using namespace rapidjson;
+
+	std::string filepath = STATIC_DATA_PATH + JSONfilename;
+
+	std::ifstream ifs{ filepath };
+
+	std::cout << "Loading " << JSONfilename << "..." << std::endl;
+
+	if (!ifs.is_open())
 	{
-		rng::PerlinNoise noise = { currentSeed, 8, 2.2};
-		noiseLayer.init(spatial::toTileSpace(_dimensions), 4, std::move(noise));
-		currentSeed = rng::noise(currentSeed);
+		std::cerr << "Could not open file " << filepath << std::endl;
+		return;
 	}
-	std::cout << "Noise layers complete." << std::endl;
+	IStreamWrapper isw{ ifs };
+	Document doc{};
+	doc.ParseStream<kParseCommentsFlag>(isw);
+
+	if (!doc.HasMember("WorldSettings") || doc.HasParseError())
+	{
+		std::cout << JSONfilename << " could not be parsed." << std::endl;
+		return;
+	}
+
+	auto& worldSettings = doc["WorldSettings"];
+
+	std::cout << "Parsing " << JSONfilename << "..." << std::endl;
+
+	// TODO: check for saved seed first
+	if (worldSettings.HasMember("Seed"))
+	{
+		auto& seed = worldSettings["Seed"];
+		if (seed.IsString())
+		{
+			if (std::strcmp(seed.GetString(), "random") != 0)
+			{
+				throw std::exception("Invalid string.");
+			}
+			_seed = rng::generateSeed();
+		}
+		else if (seed.IsUint())
+		{
+			_seed = seed.GetUint();
+		}
+		rng::RandomNumberGenerator::setSeed(_seed);
+	}
+	if (worldSettings.HasMember("Dimensions"))
+	{
+		_dimensions.x = worldSettings["Dimensions"].GetArray()[0].GetInt();
+		_dimensions.y = worldSettings["Dimensions"].GetArray()[1].GetInt();
+	}
+	if (worldSettings.HasMember("NoiseLayers"))
+	{
+		unsigned int currentSeed = _seed;
+		for (auto&& noiseLayer : worldSettings["NoiseLayers"].GetObject())
+		{
+			rng::NoiseLayer layer = { spatial::toTileSpace(_dimensions), currentSeed };
+			layer.createFromJSON(noiseLayer.value);
+			_noiseLayers.emplace(noiseLayer.name.GetString(), layer);
+			currentSeed = rng::noise(currentSeed);
+		}
+	}
 }
 
 void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
@@ -104,7 +158,7 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 				auto range = climateRange.value.GetArray();
 				if (!_noiseLayers.contains(name))
 				{
-					_noiseLayers.emplace(name, rng::NoiseLayer());
+					throw std::exception("Noise layer name does not exists. Please refer to world_settings.json for allowed values.");
 				}
 				if (range[0].IsString())
 				{
@@ -154,6 +208,10 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 							if (param.value.IsString())
 							{
 								spawningAlgorithm.parameters[param.name.GetString()] = param.value.GetString();
+							}
+							else if (param.value.IsBool())
+							{
+								spawningAlgorithm.parameters[param.name.GetString()] = param.value.GetBool();
 							}
 							else
 							{
@@ -227,7 +285,7 @@ void drft::gen::WorldGenerator::removeIsolatedBiomes()
 			auto centerBiome = _biomeMap.at(x, y);
 			bool isolated = true;
 			auto surroundings = spatial::getIntRectAroundOrigin({ x, y }, 3, 3);
-			for (auto cell : surroundings)
+			for (auto&& cell : surroundings)
 			{
 				if (!_biomeMap.contains(cell.x, cell.y) || cell == sf::Vector2i(x, y)) continue;
 				if (_biomeMap.at(cell.x, cell.y) == centerBiome)
@@ -312,14 +370,13 @@ double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Ve
 		throw std::exception(std::string("Map type " + mapType +  " does not exist.").c_str());
 	}
 
-	const unsigned int SAMPLE_POINTS = 5;
+	const unsigned int SAMPLE_POINTS = 8;
 	sf::Vector2i tileSpace = spatial::toTileSpace(coordinate);
 	double sum = 0.0;
 	for (unsigned int i = 0; i < SAMPLE_POINTS; ++i)
 	{
-		// Sample 5 points close to the center of the chunk coordinate
-		int x_sample = rng::RandomNumberGenerator::intInRange(tileSpace.x + QUARTER_CHUNK.x, tileSpace.x + 3 * QUARTER_CHUNK.x);
-		int y_sample = rng::RandomNumberGenerator::intInRange(tileSpace.y + QUARTER_CHUNK.y, tileSpace.y + 3 * QUARTER_CHUNK.y);
+		int x_sample = rng::RandomNumberGenerator::intInRange(tileSpace.x, tileSpace.x + FULL_CHUNK.x);
+		int y_sample = rng::RandomNumberGenerator::intInRange(tileSpace.y, tileSpace.y + FULL_CHUNK.y);
 		sum += _noiseLayers.at(mapType).getValueAt({x_sample, y_sample});
 	}
 
@@ -329,14 +386,16 @@ double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Ve
 
 void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
+	if (!_biomeMap.contains(coordinate.x, coordinate.y)) return;
+
     gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
 
 	const auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 	const auto placementArea = determinePlacementArea(coordinate);
 
 	placeLiquids(placementArea, biomeType, registry);
-	placeStructures(placementArea, biomeType, registry);
-	placeEntities(placementArea, biomeType, registry);
+	//placeStructures(placementArea, biomeType, registry);
+	//placeEntities(placementArea, biomeType, registry);
 
 	updateCompletedChunks(coordinate);
 }
@@ -368,6 +427,18 @@ drft::gen::BiomeIcon drft::gen::WorldGenerator::getBiomeIcon(sf::Vector2i coordi
 		return biome->icon;
 	}
 	return BiomeIcon{};
+}
+
+sf::Vector2i drft::gen::WorldGenerator::getDimensions() const
+{
+	return _dimensions;
+}
+
+void drft::gen::WorldGenerator::fixedUpdate(const entt::registry& registry)
+{
+	auto camera = system::getCurrentCamera(registry);
+	float altitude = getRangeFromPerlin("Altitude", _noiseLayers.at("Altitude").getValueAt(camera.position));
+	service::DebugInfo::instance().putInfo("Altitude", std::to_string(altitude));
 }
 
 float drft::gen::WorldGenerator::getRangeFromPerlin(const std::string& mapName, double perlinValue) const
@@ -465,7 +536,7 @@ const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vecto
 			auto surroundings = spatial::getIntRectAroundOrigin({ coordinate.x, coordinate.y }, 3, 3);
 			// Shuffle to prevent bias towards top-left
 			std::shuffle(surroundings.begin(), surroundings.end(), rng::RandomNumberGenerator::getGenerator());
-			for (auto position : surroundings)
+			for (auto&& position : surroundings)
 			{
 				if (position.x < 0 || position.y < 0
 					|| position.x >= _dimensions.x || position.y >= _dimensions.y) continue;
@@ -493,7 +564,7 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeTyp
 {
 	for (auto& [name, probability] : biomeType->structures)
 	{
-		if (rng::RandomNumberGenerator::realInRange(0.0, 1.0) > probability) continue;
+		if (!rng::percentChance(probability*100)) continue;
 
 		const auto& structure = _structureRegistry.lookup(name);
 		const auto maxBounds = structure.getMaximumBounds();
@@ -520,13 +591,22 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeTyp
 
 void drft::gen::WorldGenerator::placeLiquids(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const
 {
-	GenerationContext context = { area, *_bitGrid, _noiseLayers, _seed };
-	if (!biomeType->entityCategories.contains("Liquid")) return;
-	for (auto& [entityName, algorithm] : biomeType->entityCategories.at("Liquid"))
+	std::string altitude = "Altitude";
+	std::vector<sf::Vector2i> positions;
+	for (int y = 0; y < area.height; ++y)
 	{
-		auto positions = String2SpawnAlgorithm.at(algorithm.name)(context, algorithm.parameters);
-		place(entityName, { area.left, area.top }, positions, registry);
+		for (int x = 0; x < area.width; ++x)
+		{
+			double val = _noiseLayers.at(altitude).getValueAt({ area.left + x, area.top + y });
+			float height = getRangeFromPerlin(altitude, val);
+			if (height > 100.f) continue;
+			positions.push_back({ x, y });
+		}
 	}
+
+	if (positions.empty()) return;
+
+	place("Water", {area.left, area.top}, positions, registry);
 }
 
 void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const
@@ -546,7 +626,7 @@ void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const BiomeType*
 void drft::gen::WorldGenerator::updateCompletedChunks(sf::Vector2i coordinate) const
 {
 	auto neighbours = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
-	for (auto neighbour : neighbours)
+	for (auto&& neighbour : neighbours)
 	{
 		_completedChunks[neighbour]++;
 		if (_completedChunks.at(neighbour) >= 9) // Chunk is surrounded (includes self)

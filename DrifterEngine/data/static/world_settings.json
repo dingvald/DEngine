@@ -1,0 +1,38 @@
+{
+  "WorldSettings": {
+    "Seed": 3,
+    "Dimensions": [160, 90],
+    "NoiseLayers": {
+      "Altitude": {
+        "Resolution": 4,
+        "Octaves": 8,
+        "Lacunarity": 2.0,
+        "Gain": 0.5
+      },
+      "Temperature": {
+        "Resolution": 4,
+        "Octaves": 8,
+        "Lacunarity": 2.0,
+        "Gain": 0.5
+      },
+      "Humidity": {
+        "Resolution": 4,
+        "Octaves": 8,
+        "Lacunarity": 2.0,
+        "Gain": 0.5
+      },
+      "Volcanism": {
+        "Resolution": 4,
+        "Octaves": 8,
+        "Lacunarity": 2.0,
+        "Gain": 0.5
+      },
+      "Ocean": {
+        "Resolution": 4,
+        "Octaves": 8,
+        "Lacunarity": 2.0,
+        "Gain": 0.5
+      }
+    }
+  }
+}

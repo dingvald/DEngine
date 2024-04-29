@@ -5,5 +5,5 @@
 
 namespace drft::gen
 {
-	using GenerationParameters = std::unordered_map<std::string, std::variant<float, std::string>>;
+	using GenerationParameters = std::unordered_map<std::string, std::variant<bool, float, std::string>>;
 }

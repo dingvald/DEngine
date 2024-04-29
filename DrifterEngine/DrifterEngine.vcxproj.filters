@@ -1594,6 +1594,7 @@
     <None Include="src\Spatial\AutoGrid.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="data\static\world_settings.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simpleTileset.png">

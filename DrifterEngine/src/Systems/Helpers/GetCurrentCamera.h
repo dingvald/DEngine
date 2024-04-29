@@ -10,7 +10,7 @@ namespace drft::system
 	};
 
 	// Assumes only one entity has the camera component
-	CameraInfo getCurrentCamera(entt::registry& registry);
+	CameraInfo getCurrentCamera(const entt::registry& registry);
 
 	sf::Vector2f toScreenSpace(sf::Vector2i tilePosition, CameraInfo camera);
 }

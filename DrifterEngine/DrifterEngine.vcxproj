@@ -736,6 +736,7 @@
     <ClInclude Include="src\Structures\StaticStructure.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\static\world_settings.json" />
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\bases.json" />
     <None Include="data\static\entities\materials.json" />

@@ -7,10 +7,15 @@ namespace drft
 	class WorldMap
 	{
 	public:
-		void init(sf::Vector2i dimensions, unsigned int seed);
-
 		// Takes the abstract proc gen layers created so far and creates a concrete chunk
-		void finalizeBuild(sf::Vector2i coordinate, entt::registry& registry) const;
+		void finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const;
+
+		void create();
+
+		void load(cereal::JSONInputArchive& iarchive);
+		void save(cereal::JSONOutputArchive& oarchive) const;
+
+		void fixedUpdate(const entt::registry& registry);
 
 		sf::Vector2i getDimensions() const;
 		gen::BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;

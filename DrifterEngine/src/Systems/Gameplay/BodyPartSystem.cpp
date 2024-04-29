@@ -59,7 +59,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 	std::unordered_map<std::string, int> result;
 	if (auto body = registry->try_get<component::Body>(attacker))
 	{
-		if (const auto rightHand = body->parts.search("Right Hand"))
+		if (const auto rightHand = body->parts.search("Right Hand")) // TODO: Use preferred hand - don't hard code right hand
 		{
 			auto optionalHeld = rightHand->getSlotItem(EquipmentLayer::Held);
 			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(component::Item::NONE));

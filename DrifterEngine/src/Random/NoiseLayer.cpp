@@ -3,16 +3,36 @@
 #include "Utility/Math.h"
 
 
-void drft::rng::NoiseLayer::init(sf::Vector2i dimensions, double resolution, PerlinNoise noise)
+drft::rng::NoiseLayer::NoiseLayer(sf::Vector2i dimensions, unsigned int seed)
+    : _dimensions(dimensions)
+    , _seed(seed)
+{}
+
+void drft::rng::NoiseLayer::createFromJSON(const rapidjson::Value& json)
 {
-    _dimensions = dimensions;
-    _noise = noise;
-    _resolution = resolution;
+    if (json.HasMember("Resolution"))
+    {
+        _resolution = json["Resolution"].GetInt();
+    }
+    if (json.HasMember("Octaves"))
+    {
+        _octaves = json["Octaves"].GetInt();
+    }
+    if (json.HasMember("Lacunarity"))
+    {
+        _lacunarity = json["Lacunarity"].GetFloat();
+    }
+    if (json.HasMember("Gain"))
+    {
+        _gain = json["Gain"].GetFloat();
+    }
+
+    _noise = rng::PerlinNoise{ _seed, _octaves, _lacunarity, _gain };
 
     // find min and max for remapping
-    for (int y = 0; y < _dimensions.y; y+=32)
+    for (int y = 0; y < _dimensions.y; y += 32)
     {
-        for (int x = 0; x < _dimensions.x; x+=32)
+        for (int x = 0; x < _dimensions.x; x += 32)
         {
             double val = _getValueAt({ x, y });
             _min = std::min(_min, val);

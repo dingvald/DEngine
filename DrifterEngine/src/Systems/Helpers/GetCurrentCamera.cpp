@@ -3,7 +3,7 @@
 #include "Components/Components.h"
 #include "Spatial/Conversions.h"
 
-drft::system::CameraInfo drft::system::getCurrentCamera(entt::registry& registry)
+drft::system::CameraInfo drft::system::getCurrentCamera(const entt::registry& registry)
 {
 	CameraInfo result;
 	auto cameraView = registry.view<component::Camera, component::Position>();

@@ -84,21 +84,19 @@ void drft::GameState::init()
 {
 	std::cout << "Initializing GameState..." << std::endl;
 
-	loadOrCreateGameSeed();
-
 	_systems = std::make_unique<system::SystemScheduler>(getContext().registry);
 	_world = std::make_unique<spatial::WorldGrid>();
 	_worldMap = std::make_unique<WorldMap>();
 	_factory = std::make_unique<EntityFactory>();
 	_dispatcher = std::make_unique<entt::dispatcher>();
-
-	_worldMap->init({ 160, 90 }, rng::RandomNumberGenerator::getSeed());
-
+	
 	connectEventHandlers();
 	setupRegistryContext();
 	importSystems();
+	loadOrCreateWorldMap();
 	loadEntityPrototypes();
 	loadRegistry();
+
 	bool isNewGame = loadOrCreatePlayer();
 
 	std::cout << "Starting Gamestate" << std::endl;
@@ -110,21 +108,19 @@ void drft::GameState::connectEventHandlers()
 	_dispatcher->sink<events::RequestStateStackPush>().connect<&GameState::onRequestStatePush>(this);
 }
 
-void drft::GameState::loadOrCreateGameSeed()
+void drft::GameState::loadOrCreateWorldMap()
 {
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{
-		unsigned int seed = 0;
 		std::ifstream ifs(GAME_STATE_SAVE_FILENAME.data());
 		{
 			cereal::JSONInputArchive iarchive(ifs);
-			iarchive(cereal::make_nvp("GameSeed", seed));
+			_worldMap->load(iarchive);
 		}
-		rng::RandomNumberGenerator::setSeed(seed);
 	}
 	else
 	{
-		rng::RandomNumberGenerator::setSeed(rng::generateSeed());
+		_worldMap->create();
 	}
 }
 
@@ -213,6 +209,7 @@ bool drft::GameState::update(const float dt)
 bool drft::GameState::fixedUpdate()
 {
 	_systems->fixedUpdate();
+	_worldMap->fixedUpdate(getContext().registry);
 	return true;
 }
 
@@ -234,7 +231,8 @@ void drft::GameState::onPop()
 		std::ofstream ofs{ GAME_STATE_SAVE_FILENAME.data() };
 		{
 			cereal::JSONOutputArchive oarchive(ofs);
-			oarchive(cereal::make_nvp("GameSeed", rng::RandomNumberGenerator::getSeed()));
+
+			_worldMap->save(oarchive);
 			_systems->saveAll(oarchive);
 		}
 	}

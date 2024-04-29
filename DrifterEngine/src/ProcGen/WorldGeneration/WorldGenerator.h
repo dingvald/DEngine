@@ -12,14 +12,24 @@ namespace drft::gen
 	{
 	public:
 		WorldGenerator();
-		void init(sf::Vector2i dimensions, unsigned int seed);
+		void init();
+		void loadWorldMapSettings(const std::string& JSONfilename);
 		void loadBiomes(const std::string& JSONfilename);
 		// Generates the entire world other than chunks.
 		void generate();
 		// Generates the concrete chunk.
 		void finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const;
+
 		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
 		BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
+		sf::Vector2i getDimensions() const;
+
+		void fixedUpdate(const entt::registry& registry);
+
+		template<class Archive>
+		void load(Archive& iarchive);
+		template<class Archive>
+		void save(Archive& oarchive) const;
 
 	private:
 		void generateTerrain();
@@ -52,6 +62,23 @@ namespace drft::gen
 		std::unordered_map<std::string, rng::NoiseLayer> _noiseLayers;
 		std::unordered_map<std::string, Range> _ranges;
 	};
+
+	template<class Archive>
+	inline void WorldGenerator::load(Archive& archive)
+	{
+		archive(cereal::make_nvp("Seed", _seed));
+		archive(cereal::make_nvp("Width", _dimensions.x));
+		archive(cereal::make_nvp("Height", _dimensions.y));
+		archive(_noiseLayers);
+	}
+	template<class Archive>
+	inline void WorldGenerator::save(Archive& archive) const
+	{
+		archive(cereal::make_nvp("Seed", _seed));
+		archive(cereal::make_nvp("Width", _dimensions.x));
+		archive(cereal::make_nvp("Height", _dimensions.y));
+		archive(_noiseLayers);
+	}
 }
 
 

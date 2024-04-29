@@ -38,7 +38,7 @@ namespace drft
 	private:
 		void init();
 		void connectEventHandlers();
-		void loadOrCreateGameSeed();
+		void loadOrCreateWorldMap();
 		bool loadOrCreatePlayer();
 		void loadEntityPrototypes();
 		void setupRegistryContext();

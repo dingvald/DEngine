@@ -66,7 +66,8 @@
             "Algorithm": "NoiseLayer",
             "Parameters": {
               "Layer": "Altitude",
-              "Threshold": 0.1
+              "Threshold": 0.45,
+              "Comparison": "Less"
             }
           }
         }
@@ -365,9 +366,11 @@
       "Entities": {
         "Liquid": {
           "Water": {
-            "Algorithm": "Fill",
+            "Algorithm": "NoiseLayer",
             "Parameters": {
-
+              "Layer": "Altitude",
+              "Threshold": 0.45,
+              "Comparison": "Less"
             }
           }
         }
