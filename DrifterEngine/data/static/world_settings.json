@@ -1,6 +1,6 @@
 {
   "WorldSettings": {
-    "Seed": 3,
+    "Seed": 10,
     "Dimensions": [160, 90],
     "NoiseLayers": {
       "Altitude": {
@@ -22,12 +22,6 @@
         "Gain": 0.5
       },
       "Volcanism": {
-        "Resolution": 4,
-        "Octaves": 8,
-        "Lacunarity": 2.0,
-        "Gain": 0.5
-      },
-      "Ocean": {
         "Resolution": 4,
         "Octaves": 8,
         "Lacunarity": 2.0,

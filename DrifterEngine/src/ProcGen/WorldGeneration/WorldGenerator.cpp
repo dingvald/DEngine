@@ -447,15 +447,15 @@ float drft::gen::WorldGenerator::getRangeFromPerlin(const std::string& mapName, 
 	{
 		throw std::exception(std::string("Noise map name" + mapName + " does not exist.").c_str());
 	}
-
-	return math::remap(0.0, 1.0, _ranges.at(mapName).getMin(), _ranges.at(mapName).getMax(), perlinValue);
+	double result = math::remap(0.0, 1.0, _ranges.at(mapName).getMin(), _ranges.at(mapName).getMax(), perlinValue);
+	return static_cast<float>(result);
 }
 
-std::unordered_set<std::string> drft::gen::WorldGenerator::determinePotentialBiomes(sf::Vector2i coordinate) const
+const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vector2i coordinate) const
 {
-	std::unordered_set<std::string> result;
 	std::vector<std::pair<const BiomeType*, float>> distanceMap;
-	
+	std::map<float, const BiomeType*> ranking;
+
 	for (auto& [name, biome] : _biomeTypes)
 	{
 		std::vector<float> distances;
@@ -463,108 +463,29 @@ std::unordered_set<std::string> drft::gen::WorldGenerator::determinePotentialBio
 		{
 			double perlin = getPerlinAt(rangeName, coordinate);
 			float val = getRangeFromPerlin(rangeName, perlin);
-			if (biome.ranges.contains(rangeName))
-			{
-				float dist = biome.ranges.at(rangeName).distance(val);
-				dist = math::remap(0.0, range.getMax() - range.getMin() - val, 0.0, 1.0, dist);
-				distances.push_back(dist);
-			}
-			else
+
+			if (!biome.ranges.contains(rangeName))
 			{
 				distances.push_back(1.0);
+				continue;
 			}
+
+			float dist = biome.ranges.at(rangeName).distance(val);
+			dist = static_cast<float>(math::remap(0.0, range.getMax() - range.getMin() - val, 0.0, 1.0, dist));
+			distances.push_back(dist);
 		}
 		float total = std::accumulate(distances.begin(), distances.end(), 0.0f);
-		// if perfect match found
-		if (total < FLT_EPSILON)
-		{
-			result.insert(name);
-		}
-		else
-		{
-			distanceMap.push_back(std::make_pair(&biome, total / distances.size()));
-		}
-	}
-	
-	// If no perfect matches, find closest
-	constexpr float ACCEPTANCE_DISTANCE = 0.02; // percent "closeness" to best match
-	if (result.empty())
-	{
-		std::stable_sort(distanceMap.begin(), distanceMap.end(), 
-			[](const std::pair<const BiomeType*, float>& a, const std::pair<const BiomeType*, float>& b)
-			{
-				return a.second < b.second;
-			});
-
-		auto& [bestMatch, closestDistance] = distanceMap.at(0);
-		result.insert(bestMatch->name);
-		for (int i = 1; i < distanceMap.size(); ++i)
-		{
-			auto& [otherMatch, distance] = distanceMap.at(i);
-			if (std::abs(closestDistance - distance) >= ACCEPTANCE_DISTANCE)
-			{
-				break;
-			}
-			result.insert(otherMatch->name);
-		}
-	}
-	
-	return result;
-}
-
-const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vector2i coordinate) const
-{
-	const auto potentialBiomes = determinePotentialBiomes(coordinate);
-
-	if (potentialBiomes.empty())
-	{
-		throw std::exception("No biome type found for coordinate");
-		return nullptr;
-	}
-	else if (potentialBiomes.size() == 1)
-	{
-		return &_biomeTypes.at(*potentialBiomes.begin());
-	}
-	else if (potentialBiomes.size() > 1)
-	{
-		// if there are multiple potential biomes, high chance to continue placing the same type that is nearby
-		constexpr int CHANCE = 90;
-
-		if (rng::percentChance(CHANCE))
-		{
-			// Place same biome type
-			auto surroundings = spatial::getIntRectAroundOrigin({ coordinate.x, coordinate.y }, 3, 3);
-			// Shuffle to prevent bias towards top-left
-			std::shuffle(surroundings.begin(), surroundings.end(), rng::RandomNumberGenerator::getGenerator());
-			for (auto&& position : surroundings)
-			{
-				if (position.x < 0 || position.y < 0
-					|| position.x >= _dimensions.x || position.y >= _dimensions.y) continue;
-				if (_biomeMap.at(position.x, position.y) && potentialBiomes.contains(_biomeMap.at(position.x, position.y)->name))
-				{
-					return _biomeMap.at(position.x, position.y);
-				}
-			}
-		}
-
-		// if no matches, choose at random
-		if (!_biomeMap.at(coordinate.x, coordinate.y))
-		{
-			int choice = rng::RandomNumberGenerator::intInRange(0, potentialBiomes.size() - 1);
-			auto itr = potentialBiomes.begin();
-			std::advance(itr, choice);
-			return &_biomeTypes.at(*itr);
-		}
+		ranking.emplace(total, &biome);
 	}
 
-	return nullptr;
+	return ranking.begin()->second;
 }
 
 void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const
 {
 	for (auto& [name, probability] : biomeType->structures)
 	{
-		if (!rng::percentChance(probability*100)) continue;
+		if (!rng::percentChance(static_cast<int>(probability*100))) continue;
 
 		const auto& structure = _structureRegistry.lookup(name);
 		const auto maxBounds = structure.getMaximumBounds();
@@ -599,7 +520,7 @@ void drft::gen::WorldGenerator::placeLiquids(sf::IntRect area, const BiomeType* 
 		{
 			double val = _noiseLayers.at(altitude).getValueAt({ area.left + x, area.top + y });
 			float height = getRangeFromPerlin(altitude, val);
-			if (height > 100.f) continue;
+			if (height > 0.f) continue;
 			positions.push_back({ x, y });
 		}
 	}
@@ -614,7 +535,6 @@ void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const BiomeType*
 	GenerationContext context = { area, *_bitGrid, _noiseLayers, _seed };
 	for (auto& [category, entities] : biomeType->entityCategories)
 	{
-		if (category == "Liquid") continue;
 		for (auto& [entityName, algorithm] : entities)
 		{
 			auto positions = String2SpawnAlgorithm.at(algorithm.name)(context, algorithm.parameters);
@@ -641,6 +561,37 @@ sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coord
 {
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
 	sf::IntRect result = { tileOrigin.x, tileOrigin.y, FULL_CHUNK.x, FULL_CHUNK.y };
+	const auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
+	const double myHeight = getPerlinAt("Altitude", coordinate);
+
+	auto neighbors = spatial::getAdjacentPoints(coordinate, spatial::AdjacentType::Cardinal);
+	for (auto&& neighbor : neighbors)
+	{
+		const auto otherBiomeType = _biomeMap.at(neighbor.x, neighbor.y);
+		if (biomeType == otherBiomeType) continue;
+		const double otherHeight = getPerlinAt("Altitude", neighbor);
+		if (myHeight > otherHeight) continue;
+
+		auto delta = neighbor - coordinate;
+		if (delta.x < 0)
+		{
+			result.left -= QUARTER_CHUNK.x;
+		}
+		else if (delta.x > 0)
+		{
+			result.width += QUARTER_CHUNK.x;
+		}
+
+		if (delta.y < 0)
+		{
+			result.top -= QUARTER_CHUNK.y;
+		}
+		else if (delta.y > 0)
+		{
+			result.height += QUARTER_CHUNK.y;
+		}
+	}
+
 	return result;
 }
 

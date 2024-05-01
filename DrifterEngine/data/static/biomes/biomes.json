@@ -60,16 +60,6 @@
               "Maximum": 8
             }
           }
-        },
-        "Liquid": {
-          "Water": {
-            "Algorithm": "NoiseLayer",
-            "Parameters": {
-              "Layer": "Altitude",
-              "Threshold": 0.45,
-              "Comparison": "Less"
-            }
-          }
         }
       },
       "Structures": {
@@ -362,18 +352,6 @@
         "Temperature": [ "Any" ],
         "Humidity": [ "Any" ],
         "Altitude": [ -2700, -200 ]
-      },
-      "Entities": {
-        "Liquid": {
-          "Water": {
-            "Algorithm": "NoiseLayer",
-            "Parameters": {
-              "Layer": "Altitude",
-              "Threshold": 0.45,
-              "Comparison": "Less"
-            }
-          }
-        }
       }
     }
   }
