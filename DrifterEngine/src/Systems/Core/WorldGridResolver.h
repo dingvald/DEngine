@@ -20,8 +20,8 @@ namespace drft::system
 		void onPositionRemove(entt::registry& registry, entt::entity);
 
 	private:
-		spatial::WorldGrid* _grid;
-		entt::dispatcher* _dispatcher;
+		spatial::WorldGrid* _grid = nullptr;
+		entt::dispatcher* _dispatcher = nullptr;
 	};
 
 } // namespace dft::system

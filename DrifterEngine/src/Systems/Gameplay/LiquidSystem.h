@@ -29,7 +29,7 @@ namespace drft::system
 		void onRemoveInLiquid(entt::registry& registry, entt::entity entity);
 
 	private:
-		spatial::WorldGrid* _grid;
+		spatial::WorldGrid* _grid = nullptr;
 		std::vector<entt::entity> _inLiquidEffects;
 	};
 }
