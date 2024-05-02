@@ -4,6 +4,7 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/Grid.h"
+#include "JSON/JSONHelpers.h"
 #include "Random/RandomNumberGenerator.h"
 #include "Random/RandomNoise.h"
 #include "Random/NoiseLayer.h"
@@ -26,7 +27,8 @@ static const sf::Vector2i FULL_CHUNK = { drft::spatial::CHUNK_WIDTH, drft::spati
 static const sf::Vector2i HALF_CHUNK = { FULL_CHUNK.x / 2, FULL_CHUNK.y / 2 };
 static const sf::Vector2i QUARTER_CHUNK = { FULL_CHUNK.x / 4, FULL_CHUNK.y / 4 };
 
-static const std::string STATIC_DATA_PATH = ".\\data\\static\\";
+static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
+static const std::filesystem::path BIOME_FOLDER_PATH = STATIC_DATA_PATH.string() + "biomes";
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
@@ -43,215 +45,59 @@ void drft::gen::WorldGenerator::init()
 
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
 
-	// Load all structure files
-	std::cout << "Loading structures..." << std::endl;
-	const std::string structuresDirectory = STATIC_DATA_PATH + "structures";
-	for (const auto& fileName : std::filesystem::directory_iterator(structuresDirectory))
-	{
-		std::cout << "Loading " << fileName.path().filename() << std::endl;
-		_structureRegistry.loadStructures(fileName.path().filename().string());
-	}
-	_structureRegistry.resolveAllSubstructures();
-	std::cout << "Structures loaded." << std::endl;
+	_biomeRegistry.createBiomesFromJSON(BIOME_FOLDER_PATH);
 
-	loadBiomes("biomes.json");
+	initializeGlobalRanges();
 }
 
 void drft::gen::WorldGenerator::loadWorldMapSettings(const std::string& JSONfilename)
 {
-	using namespace rapidjson;
+	std::filesystem::path worldSettingsFilePath;
+	worldSettingsFilePath /= STATIC_DATA_PATH;
+	worldSettingsFilePath /= "world_settings.json";
+	auto optionalWorldSettingsDocument = drft::json::extractDOM(worldSettingsFilePath, "WorldSettings");
 
-	std::string filepath = STATIC_DATA_PATH + JSONfilename;
-
-	std::ifstream ifs{ filepath };
-
-	std::cout << "Loading " << JSONfilename << "..." << std::endl;
-
-	if (!ifs.is_open())
+	if (!optionalWorldSettingsDocument.has_value())
 	{
-		std::cerr << "Could not open file " << filepath << std::endl;
-		return;
+		std::cout << "Failed: " << worldSettingsFilePath << " could not be parsed." << std::endl;
 	}
-	IStreamWrapper isw{ ifs };
-	Document doc{};
-	doc.ParseStream<kParseCommentsFlag>(isw);
-
-	if (!doc.HasMember("WorldSettings") || doc.HasParseError())
+	else
 	{
-		std::cout << JSONfilename << " could not be parsed." << std::endl;
-		return;
-	}
-
-	auto& worldSettings = doc["WorldSettings"];
-
-	std::cout << "Parsing " << JSONfilename << "..." << std::endl;
-
-	// TODO: check for saved seed first
-	if (worldSettings.HasMember("Seed"))
-	{
-		auto& seed = worldSettings["Seed"];
-		if (seed.IsString())
+		auto& worldSettingsDocument = optionalWorldSettingsDocument.value();
+		auto& worldSettings = worldSettingsDocument["WorldSettings"];
+		if (worldSettings.HasMember("Seed"))
 		{
-			if (std::strcmp(seed.GetString(), "random") != 0)
+			auto& seed = worldSettings["Seed"];
+			if (seed.IsString())
 			{
-				throw std::exception("Invalid string.");
+				if (std::strcmp(seed.GetString(), "random") != 0)
+				{
+					throw std::exception("Invalid string.");
+				}
+				_seed = rng::generateSeed();
 			}
-			_seed = rng::generateSeed();
-		}
-		else if (seed.IsUint())
-		{
-			_seed = seed.GetUint();
-		}
-		rng::RandomNumberGenerator::setSeed(_seed);
-	}
-	if (worldSettings.HasMember("Dimensions"))
-	{
-		_dimensions.x = worldSettings["Dimensions"].GetArray()[0].GetInt();
-		_dimensions.y = worldSettings["Dimensions"].GetArray()[1].GetInt();
-	}
-	if (worldSettings.HasMember("NoiseLayers"))
-	{
-		unsigned int currentSeed = _seed;
-		for (auto&& noiseLayer : worldSettings["NoiseLayers"].GetObject())
-		{
-			rng::NoiseLayer layer = { spatial::toTileSpace(_dimensions), currentSeed };
-			layer.createFromJSON(noiseLayer.value);
-			_noiseLayers.emplace(noiseLayer.name.GetString(), layer);
-			currentSeed = rng::noise(currentSeed);
-		}
-	}
-}
-
-void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
-{
-	using namespace rapidjson;
-
-	std::string filepath = STATIC_DATA_PATH + "biomes\\" + JSONfilename;
-
-	std::ifstream ifs{ filepath };
-
-	std::cout << "Loading " << JSONfilename << "..." << std::endl;
-
-	if (!ifs.is_open())
-	{
-		std::cerr << "Could not open file " << filepath << std::endl;
-		return;
-	}
-	IStreamWrapper isw{ ifs };
-	Document doc{};
-	doc.ParseStream<kParseCommentsFlag>(isw);
-
-	if (!doc.HasMember("Biomes") || doc.HasParseError())
-	{
-		std::cout << JSONfilename << " could not be parsed." << std::endl;
-		return;
-	}
-
-	std::cout << "Parsing " << JSONfilename << "..." << std::endl;
-
-	// Iterate each biome
-	for (auto&& biome : doc["Biomes"].GetObject())
-	{
-		BiomeType biomeObj;
-		biomeObj.name = biome.name.GetString();
-		if (biome.value.HasMember("Icon"))
-		{
-			biomeObj.icon.sprite = biome.value["Icon"]["Sprite"].GetInt();
-			biomeObj.icon.color.r = biome.value["Icon"]["Color"].GetArray()[0].GetInt();
-			biomeObj.icon.color.g = biome.value["Icon"]["Color"].GetArray()[1].GetInt();
-			biomeObj.icon.color.b = biome.value["Icon"]["Color"].GetArray()[2].GetInt();
-		}
-		if (biome.value.HasMember("Climate"))
-		{
-			for (auto& climateRange : biome.value["Climate"].GetObject())
+			else if (seed.IsUint())
 			{
-				auto name = climateRange.name.GetString();
-				auto range = climateRange.value.GetArray();
-				if (!_noiseLayers.contains(name))
-				{
-					throw std::exception("Noise layer name does not exists. Please refer to world_settings.json for allowed values.");
-				}
-				if (range[0].IsString())
-				{
-					if (std::string(range[0].GetString()).compare("Any") == 0)
-					{
-						biomeObj.ranges[name].setMax(FLT_MAX);
-						biomeObj.ranges[name].setMin(-FLT_MAX);
-					}
-					else
-					{
-						throw std::invalid_argument("Unexpected parsed value.");
-					}
-				}
-				else
-				{
-					biomeObj.ranges[name].setMin(range[0].GetFloat());
-					biomeObj.ranges[name].setMax(range[1].GetFloat());
-
-					if (_ranges.contains(name))
-					{
-						_ranges[name].setMin(std::min(range[0].GetFloat(), _ranges[name].getMin()));
-						_ranges[name].setMax(std::max(range[1].GetFloat(), _ranges[name].getMax()));
-					}
-					else
-					{
-						_ranges[name].setMin(range[0].GetFloat());
-						_ranges[name].setMax(range[1].GetFloat());
-					}
-					
-				}
+				_seed = seed.GetUint();
+			}
+			rng::RandomNumberGenerator::setSeed(_seed);
+		}
+		if (worldSettings.HasMember("Dimensions"))
+		{
+			_dimensions.x = worldSettings["Dimensions"].GetArray()[0].GetInt();
+			_dimensions.y = worldSettings["Dimensions"].GetArray()[1].GetInt();
+		}
+		if (worldSettings.HasMember("NoiseLayers"))
+		{
+			unsigned int currentSeed = _seed;
+			for (auto&& noiseLayer : worldSettings["NoiseLayers"].GetObject())
+			{
+				rng::NoiseLayer layer = { spatial::toTileSpace(_dimensions), currentSeed };
+				layer.createFromJSON(noiseLayer.value);
+				_noiseLayers.emplace(noiseLayer.name.GetString(), layer);
+				currentSeed = rng::noise(currentSeed);
 			}
 		}
-		if (biome.value.HasMember("Entities"))
-		{
-			for (auto& category : biome.value["Entities"].GetObject())
-			{
-				for (auto& entity : category.value.GetObject())
-				{
-					if (entity.value.HasMember("Algorithm")
-						&& entity.value.HasMember("Parameters"))
-					{
-						std::string algoName = entity.value["Algorithm"].GetString();
-						if (!_spawningAlgorithms.contains(algoName))
-						{
-							throw std::exception("Spawning algorithm does not exist");
-						}
-						BiomeType::SpawningAlgorithm spawningAlgorithm;
-						spawningAlgorithm.name = algoName;
-						for (auto& param : entity.value["Parameters"].GetObject())
-						{
-							if (param.value.IsString())
-							{
-								spawningAlgorithm.parameters[param.name.GetString()] = param.value.GetString();
-							}
-							else if (param.value.IsBool())
-							{
-								spawningAlgorithm.parameters[param.name.GetString()] = param.value.GetBool();
-							}
-							else
-							{
-								spawningAlgorithm.parameters[param.name.GetString()] = param.value.GetFloat();
-							}
-						}
-						biomeObj.entityCategories
-							[category.name.GetString()]
-							[entity.name.GetString()] = spawningAlgorithm;
-					}
-					else
-					{
-						throw std::exception("Parsed entity does not have a placement algorithm");
-					}
-				}
-			}
-		}
-		if (biome.value.HasMember("Structures"))
-		{
-			for (auto& structure : biome.value["Structures"].GetObject())
-			{
-				biomeObj.structures.emplace_back(structure.name.GetString(), structure.value.GetFloat());
-			}
-		}
-		_biomeTypes.emplace(biomeObj.name, biomeObj);
 	}
 }
 
@@ -282,7 +128,7 @@ void drft::gen::WorldGenerator::generateTerrain()
 	_noiseLayers.at("Volcanism").addBiasingFunction(
 		[](double val, sf::Vector2i position)
 		{
-			return val - 0.90;
+			return val - 3.00;
 		});
 
 	fillBiomeMap();
@@ -339,7 +185,7 @@ void drft::gen::WorldGenerator::generateZones()
 	while (!possibleSpaces.empty())
 	{
 		sf::Vector2i position = *possibleSpaces.begin();
-		const BiomeType* workingType = _biomeMap.at(position.x, position.y);
+		const Biome* workingType = _biomeMap.at(position.x, position.y);
 		auto biomeTypeChecker = [workingType, this](sf::Vector2i testPosition) -> bool
 		{
 			if (_biomeMap.contains(testPosition.x, testPosition.y)
@@ -370,9 +216,9 @@ void drft::gen::WorldGenerator::fillBiomeMap()
 	{
 		for (int x = 0; x < _dimensions.x; ++x)
 		{
-			if (auto biomeType = selectBiomeType({ x, y }))
+			if (auto biome = determineBiome({ x, y }))
 			{
-				_biomeMap.at(x, y) = biomeType;
+				_biomeMap.at(x, y) = biome;
 			}
 		}
 	}
@@ -419,9 +265,11 @@ sf::Vector2i drft::gen::WorldGenerator::getStartingPosition(const std::string& b
 {
 	unsigned int largestForestID = 0;
 	int largestSize = 0;
+
+	const auto& biome = _biomeRegistry.get(biomeType);
 	for (auto& [id, zone] : _zones)
 	{
-		if (zone.getType()->name == biomeType)
+		if (zone.getType() == &biome)
 		{
 			if (zone.size() > largestSize)
 			{
@@ -435,11 +283,11 @@ sf::Vector2i drft::gen::WorldGenerator::getStartingPosition(const std::string& b
 	return spatial::toTileSpace(coordinate);
 }
 
-drft::gen::BiomeIcon drft::gen::WorldGenerator::getBiomeIcon(sf::Vector2i coordinate) const
+BiomeIcon drft::gen::WorldGenerator::getBiomeIcon(sf::Vector2i coordinate) const
 {
-	if (auto biome = _biomeMap.at(coordinate.x, coordinate.y))
+	if (const auto* biome = _biomeMap.at(coordinate.x, coordinate.y))
 	{
-		return biome->icon;
+		return biome->getIcon();
 	}
 	return BiomeIcon{};
 }
@@ -458,47 +306,47 @@ void drft::gen::WorldGenerator::fixedUpdate(const entt::registry& registry)
 
 float drft::gen::WorldGenerator::getRangeFromPerlin(const std::string& mapName, double perlinValue) const
 {
-	if (!_ranges.contains(mapName))
+	if (!_globalRanges.contains(mapName))
 	{
 		throw std::exception(std::string("Noise map name" + mapName + " does not exist.").c_str());
 	}
-	double result = math::remap(0.0, 1.0, _ranges.at(mapName).getMin(), _ranges.at(mapName).getMax(), perlinValue);
+	double result = math::remap(0.0, 1.0, _globalRanges.at(mapName).getMin(), _globalRanges.at(mapName).getMax(), perlinValue);
 	return static_cast<float>(result);
 }
 
-const drft::gen::BiomeType* drft::gen::WorldGenerator::selectBiomeType(sf::Vector2i coordinate) const
+const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i coordinate) const
 {
-	std::vector<std::pair<const BiomeType*, float>> distanceMap;
-	std::map<float, const BiomeType*> ranking;
+	std::map<float, const Biome*> ranking;
 
-	for (auto& [name, biome] : _biomeTypes)
-	{
-		std::vector<float> distances;
-		for (auto& [rangeName, range] : _ranges)
+	_biomeRegistry.forEachBiome(
+		[&](const std::string& name, const Biome& biome)
 		{
-			double perlin = getPerlinAt(rangeName, coordinate);
-			float val = getRangeFromPerlin(rangeName, perlin);
-
-			if (!biome.ranges.contains(rangeName))
+			std::vector<float> distances;
+			for (auto& [rangeName, range] : _globalRanges)
 			{
-				distances.push_back(1.0);
-				continue;
-			}
+				double perlin = getPerlinAt(rangeName, coordinate);
+				float val = getRangeFromPerlin(rangeName, perlin);
 
-			float dist = biome.ranges.at(rangeName).distance(val);
-			dist = static_cast<float>(math::remap(0.0, range.getMax() - range.getMin() - val, 0.0, 1.0, dist));
-			distances.push_back(dist);
-		}
-		float total = std::accumulate(distances.begin(), distances.end(), 0.0f);
-		ranking.emplace(total, &biome);
-	}
+				if (!biome.containsClimateRange(rangeName))
+				{
+					distances.push_back(1.0);
+					continue;
+				}
+
+				float dist = biome.getClimateRange(rangeName).distance(val);
+				dist = static_cast<float>(math::remap(0.0, range.getMax() - range.getMin() - val, 0.0, 1.0, dist));
+				distances.push_back(dist);
+			}
+			float total = std::accumulate(distances.begin(), distances.end(), 0.0f);
+			ranking.emplace(total, &biome);
+		});
 
 	return ranking.begin()->second;
 }
 
-void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const Biome* biome, entt::registry& registry) const
 {
-	for (auto& [name, probability] : biomeType->structures)
+	for (auto& [name, probability] : biome->getStructureProbabilities())
 	{
 		if (!rng::percentChance(static_cast<int>(probability*100))) continue;
 
@@ -525,7 +373,7 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const BiomeTyp
 	}
 }
 
-void drft::gen::WorldGenerator::placeLiquids(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeLiquids(sf::IntRect area, const Biome* biomeType, entt::registry& registry) const
 {
 	std::string altitude = "Altitude";
 	std::vector<sf::Vector2i> positions;
@@ -545,10 +393,10 @@ void drft::gen::WorldGenerator::placeLiquids(sf::IntRect area, const BiomeType* 
 	place("Water", {area.left, area.top}, positions, registry);
 }
 
-void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const Biome* biome, entt::registry& registry) const
 {
 	GenerationContext context = { area, *_bitGrid, _noiseLayers, _seed };
-	for (auto& [category, entities] : biomeType->entityCategories)
+	for (auto& [category, entities] : biome->getEntitySpawningAlgorithms())
 	{
 		for (auto& [entityName, algorithm] : entities)
 		{
@@ -612,5 +460,26 @@ sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coord
 	}
 
 	return result;
+}
+
+void drft::gen::WorldGenerator::initializeGlobalRanges()
+{
+	_biomeRegistry.forEachBiome(
+		[this](const std::string& name, const Biome& biome)
+		{
+			for (const auto& [layerName, layer] : _noiseLayers)
+			{
+				if (!biome.containsClimateRange(layerName)) continue;
+
+				auto& globalRange = _globalRanges[layerName];
+				const auto biomeRange = biome.getClimateRange(layerName);
+				if (biomeRange.isInfinite()) continue;
+
+				float min = std::min(globalRange.getMin(), biomeRange.getMin());
+				float max = std::max(globalRange.getMax(), biomeRange.getMax());
+				globalRange.setMin(min);
+				globalRange.setMax(max);
+			}
+		});
 }
 

@@ -50,7 +50,7 @@ double drft::rng::NoiseLayer::getValueAt(sf::Vector2i tilePosition) const
         val = func(val, tilePosition);
     }
 
-    return std::clamp(val, 0.0, 1.0);
+    return val;
 }
 
 void drft::rng::NoiseLayer::addBiasingFunction(BiasingFunction&& func)

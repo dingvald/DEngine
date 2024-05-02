@@ -127,7 +127,7 @@ void drft::SelectTargetState::onPush()
 		requestStackPop();
 	}
 
-	auto radius = spatial::getIntCircleInRadius(_startPosition, _targetSelect->range.max);
+	auto radius = spatial::getIntCircleInRadius(_startPosition, _targetSelect->range.getMax());
 	for (auto&& tile : radius)
 	{
 		auto effect = system::spawnEffect(getContext().registry,
@@ -188,7 +188,7 @@ void drft::SelectTargetState::moveCursor(sf::Vector2i direction)
 				pos.position += direction;
 			});
 		auto& render = getContext().registry.get<component::Render>(effect);
-		if (spatial::distance(pos.position, _startPosition) > _targetSelect->range.max)
+		if (spatial::distance(pos.position, _startPosition) > _targetSelect->range.getMax())
 		{
 			render.color = TARGET_AOE_OUT_OF_RANGE_COLOR;
 		}

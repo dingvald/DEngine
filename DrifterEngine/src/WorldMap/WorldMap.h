@@ -18,7 +18,7 @@ namespace drft
 		void fixedUpdate(const entt::registry& registry);
 
 		sf::Vector2i getDimensions() const;
-		gen::BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
+		BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
 		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
 
 	private:

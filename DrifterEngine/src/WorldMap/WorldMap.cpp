@@ -30,7 +30,7 @@ sf::Vector2i drft::WorldMap::getDimensions() const
 	return _worldGenerator.getDimensions();
 }
 
-drft::gen::BiomeIcon drft::WorldMap::getBiomeIcon(sf::Vector2i coordinate) const
+BiomeIcon drft::WorldMap::getBiomeIcon(sf::Vector2i coordinate) const
 {
 	return _worldGenerator.getBiomeIcon(coordinate);
 }

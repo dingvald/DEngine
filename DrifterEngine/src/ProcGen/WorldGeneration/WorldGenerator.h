@@ -1,10 +1,11 @@
 #pragma once
 #include "Random/NoiseLayer.h"
-#include "ProcGen/Biome.h"
 #include "Spatial/Grid.h"
 #include "Spatial/AutoGrid.h"
 #include "Utility/stdHashing.h"
 #include "Structures/StructureRegistry.h"
+#include "Biomes/BiomeRegistry.h"
+#include "Biomes/BiomeZone.h"
 #include "ProcGen/SpawningAlgorithms/SpawningAlgorithmRegistry.h"
 
 namespace drft::gen
@@ -15,7 +16,6 @@ namespace drft::gen
 		WorldGenerator();
 		void init();
 		void loadWorldMapSettings(const std::string& JSONfilename);
-		void loadBiomes(const std::string& JSONfilename);
 		// Generates the entire world other than chunks.
 		void generate();
 		// Generates the concrete chunk.
@@ -39,12 +39,13 @@ namespace drft::gen
 		void fillBiomeMap();
 		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
-		const BiomeType* selectBiomeType(sf::Vector2i coordinate) const;
-		void placeStructures(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
-		void placeLiquids(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
-		void placeEntities(sf::IntRect area, const BiomeType* biomeType, entt::registry& registry) const;
+		const Biome* determineBiome(sf::Vector2i coordinate) const;
+		void placeStructures(sf::IntRect area, const Biome* biomeType, entt::registry& registry) const;
+		void placeLiquids(sf::IntRect area, const Biome* biomeType, entt::registry& registry) const;
+		void placeEntities(sf::IntRect area, const Biome* biomeType, entt::registry& registry) const;
 		void updateCompletedChunks(sf::Vector2i coordinate) const;
 		sf::IntRect determinePlacementArea(sf::Vector2i coordinate) const;
+		void initializeGlobalRanges();
 
 	private:
 		using NoiseMap = spatial::Grid<double>;
@@ -52,16 +53,16 @@ namespace drft::gen
 
 		unsigned int _seed = 0;
 		sf::Vector2i _dimensions;
-		std::unordered_map<std::string, BiomeType> _biomeTypes;
 		mutable std::unordered_map<sf::Vector2i, int> _completedChunks;
-		spatial::Grid<const BiomeType*> _biomeMap;
+		spatial::Grid<const Biome*> _biomeMap;
 		StructureRegistry _structureRegistry;
+		BiomeRegistry _biomeRegistry;
 		SpawningAlgorithmRegistry _spawningAlgorithms;
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
 		mutable BitGridPtr _bitGrid;
 		std::unordered_map<unsigned int, BiomeZone> _zones;
 		std::unordered_map<std::string, rng::NoiseLayer> _noiseLayers;
-		std::unordered_map<std::string, Range> _ranges;
+		std::unordered_map<std::string, drft::math::Range<float>> _globalRanges;
 	};
 
 	template<class Archive>

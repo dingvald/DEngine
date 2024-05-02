@@ -4,7 +4,7 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "WorldMap/WorldMap.h"
-#include "ProcGen/Biome.h"
+#include "Biomes/Biome.h"
 
 static constexpr float FLASH_RATE = 1.0;
 static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";

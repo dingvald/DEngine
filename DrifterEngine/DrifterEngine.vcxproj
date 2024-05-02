@@ -180,6 +180,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Biomes\BiomeRegistry.cpp" />
+    <ClCompile Include="src\Biomes\Biome.cpp" />
+    <ClCompile Include="src\JSON\JSONHelpers.cpp" />
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\FastFill.cpp" />
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\FillSpawn.cpp" />
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.cpp" />
@@ -223,12 +226,6 @@
     <ClCompile Include="src\GOAP\Sensors\Utility\IsHostile.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Random\NoiseMap.cpp" />
-    <ClCompile Include="src\ProcGen\Biome.cpp" />
-    <ClCompile Include="src\Machines\OreDeposit.cpp" />
-    <ClCompile Include="src\Machines\HeartShrine.cpp" />
-    <ClCompile Include="src\Machines\Chest.cpp" />
-    <ClCompile Include="src\Factory\MachineFactory.cpp" />
-    <ClCompile Include="src\Machines\Machine.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\BodyParts.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp" />
@@ -371,7 +368,6 @@
     <ClCompile Include="src\Engine\States\SelectDirectionState.cpp" />
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
-    <ClCompile Include="src\Machines\WildernessHorde.cpp" />
     <ClCompile Include="src\WorldMap\WorldMap.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\StateMachine.cpp" />
     <ClCompile Include="src\GOAP\WorldState.cpp" />
@@ -383,6 +379,10 @@
     <ClCompile Include="src\Structures\StaticStructure.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Biomes\BiomeZone.h" />
+    <ClInclude Include="src\Biomes\BiomeRegistry.h" />
+    <ClInclude Include="src\Biomes\Biome.h" />
+    <ClInclude Include="src\JSON\JSONHelpers.h" />
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\FastFill.h" />
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.h" />
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.h" />
@@ -437,13 +437,7 @@
     <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\Random\PercentChance.h" />
     <ClInclude Include="src\Random\NoiseMap.h" />
-    <ClInclude Include="src\ProcGen\Biome.h" />
     <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />
-    <ClInclude Include="src\Machines\OreDeposit.h" />
-    <ClInclude Include="src\Machines\HeartShrine.h" />
-    <ClInclude Include="src\Machines\Chest.h" />
-    <ClInclude Include="src\Factory\MachineFactory.h" />
-    <ClInclude Include="src\Machines\Machine.h" />
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h" />
     <ClInclude Include="src\Systems\HelperClasses\AIStates.h" />
     <ClInclude Include="src\Systems\HelperClasses\BodyParts.h" />
@@ -728,7 +722,6 @@
     <ClInclude Include="src\Engine\States\SelectDirectionState.h" />
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h" />
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h" />
-    <ClInclude Include="src\Machines\WildernessHorde.h" />
     <ClInclude Include="src\WorldMap\WorldMap.h" />
     <ClInclude Include="src\Systems\HelperClasses\StateMachine.h" />
     <ClInclude Include="src\GOAP\WorldState.h" />
