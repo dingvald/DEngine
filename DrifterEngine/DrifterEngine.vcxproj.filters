@@ -48,9 +48,6 @@
     <ClCompile Include="src\Components\Components.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\RandomSpread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Spatial\WorldGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -204,22 +201,10 @@
     <ClCompile Include="src\Random\RandomNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\Algorithms.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\OrganicSpread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\States\WorldMapState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\Fill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.cpp">
@@ -510,7 +495,28 @@
     <ClCompile Include="src\Random\NoiseLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\NoiseLayerSpread.cpp">
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\NoiseLayerSpawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\OrganicSpawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\FastFill.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\FillSpawn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -549,9 +555,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\Components.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\RandomSpread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\Grid.h">
@@ -1196,25 +1199,13 @@
     <ClInclude Include="src\Random\RandomNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\Algorithms.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GenerationParameters.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\OrganicSpread.h">
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\GenerationParameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\States\WorldMapState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\Fill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h">
@@ -1568,10 +1559,31 @@
     <ClInclude Include="src\Random\NoiseLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\NoiseLayerSpread.h">
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\GenerationContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GenerationContext.h">
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\FillSpawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\NoiseLayerSpawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\OrganicSpawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\FastFill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

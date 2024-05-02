@@ -13,7 +13,7 @@
       "Entities": {
         "Geological": {
           "Stone": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 3,
               "Maximum": 7
@@ -22,28 +22,28 @@
         },
         "Vegetation": {
           "Grass": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 200,
               "Maximum": 300
             }
           },
           "Herb": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 2,
               "Maximum": 6
             }
           },
           "Tall Grass": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 100,
               "Maximum": 250
             }
           },
           "Tree": {
-            "Algorithm": "OrganicSpread",
+            "Algorithm": "Organic",
             "Parameters": {
               "Generations": 3,
               "StartingSeeds": 5,
@@ -54,7 +54,7 @@
         },
         "Wildlife": {
           "Rat": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 1,
               "Maximum": 8
@@ -79,14 +79,14 @@
       "Entities": {
         "Geological": {
           "Stone": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 20,
               "Maximum": 50
             }
           },
           "Boulder": {
-            "Algorithm": "OrganicSpread",
+            "Algorithm": "Organic",
             "Parameters": {
               "Generations": 2,
               "StartingSeeds": 5,
@@ -97,14 +97,14 @@
         },
         "Vegetation": {
           "Grass": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 10,
               "Maximum": 20
             }
           },
           "Pine Tree": {
-            "Algorithm": "OrganicSpread",
+            "Algorithm": "Organic",
             "Parameters": {
               "Generations": 3,
               "StartingSeeds": 5,
@@ -128,14 +128,14 @@
       "Entities": {
         "Geological": {
           "Stone": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 20,
               "Maximum": 50
             }
           },
           "Boulder": {
-            "Algorithm": "PerlinSpread",
+            "Algorithm": "Perlin",
             "Parameters": {
               "Threshold": 0.52
             }
@@ -143,14 +143,14 @@
         },
         "Vegetation": {
           "Grass": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 100,
               "Maximum": 200
             }
           },
           "Pine Tree": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 25,
               "Maximum": 25
@@ -207,7 +207,7 @@
       "Entities": {
         "Liquid": {
           "Water": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 600,
               "Maximum": 800
@@ -216,7 +216,7 @@
         },
         "Vegetation": {
           "Tall Grass": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 100,
               "Maximum": 250
@@ -225,7 +225,7 @@
         },
         "Wildlife": {
           "Alligator": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 0,
               "Maximum": 3
@@ -291,28 +291,28 @@
       "Entities": {
         "Vegetation": {
           "Grass": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 200,
               "Maximum": 400
             }
           },
           "Herb": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 3,
               "Maximum": 9
             }
           },
           "Tall Grass": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 400,
               "Maximum": 700
             }
           },
           "Tree": {
-            "Algorithm": "RandomSpread",
+            "Algorithm": "Random",
             "Parameters": {
               "Minimum": 20,
               "Maximum": 30

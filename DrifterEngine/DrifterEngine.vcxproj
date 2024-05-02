@@ -180,7 +180,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\NoiseLayerSpread.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\FastFill.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\FillSpawn.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\OrganicSpawn.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\NoiseLayerSpawn.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.cpp" />
     <ClCompile Include="src\Random\NoiseLayer.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
     <ClCompile Include="src\Structures\ProceduralStructure.cpp" />
@@ -254,11 +261,7 @@
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
     <ClCompile Include="src\Engine\States\CraftingState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.cpp" />
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\Fill.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.cpp" />
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\Algorithms.cpp" />
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\OrganicSpread.cpp" />
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.cpp" />
     <ClCompile Include="src\Random\PerlinNoise.cpp" />
     <ClCompile Include="src\Random\RandomNoise.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenEquipmentSystem.cpp" />
@@ -347,7 +350,6 @@
     <ClCompile Include="src\Utility\SmoothTransition.cpp" />
     <ClCompile Include="src\Utility\SpriteBatch.cpp" />
     <ClCompile Include="src\Utility\SpriteIndexer.cpp" />
-    <ClCompile Include="src\ProcGen\PlacementAlgorithms\RandomSpread.cpp" />
     <ClCompile Include="src\Spatial\WorldGrid.cpp" />
     <ClCompile Include="src\Spatial\WorldChunk.cpp" />
     <ClCompile Include="src\Systems\Core\WorldGridResolver.cpp" />
@@ -381,8 +383,15 @@
     <ClCompile Include="src\Structures\StaticStructure.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GenerationContext.h" />
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\NoiseLayerSpread.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\FastFill.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\OrganicSpawn.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\NoiseLayerSpawn.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\FillSpawn.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\GenerationContext.h" />
     <ClInclude Include="src\Random\NoiseLayer.h" />
     <ClInclude Include="src\Algorithms\FloodFill.h" />
     <ClInclude Include="src\Spatial\AutoGrid.h" />
@@ -476,12 +485,8 @@
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
     <ClInclude Include="src\Engine\States\CraftingState.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h" />
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\Fill.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.h" />
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\Algorithms.h" />
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\GenerationParameters.h" />
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\OrganicSpread.h" />
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\PerlinSpread.h" />
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\GenerationParameters.h" />
     <ClInclude Include="src\Random\PerlinNoise.h" />
     <ClInclude Include="src\Random\RandomNoise.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenEquipmentSystem.h" />
@@ -702,7 +707,6 @@
     <ClInclude Include="src\Utility\SmoothTransition.h" />
     <ClInclude Include="src\Utility\SpriteBatch.h" />
     <ClInclude Include="src\Utility\SpriteIndexer.h" />
-    <ClInclude Include="src\ProcGen\PlacementAlgorithms\RandomSpread.h" />
     <ClInclude Include="src\Spatial\WorldGrid.h" />
     <ClInclude Include="src\Spatial\WorldChunk.h" />
     <ClInclude Include="src\Systems\Core\WorldGridResolver.h" />

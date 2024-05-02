@@ -1,24 +1,24 @@
 {
   "WorldSettings": {
-    "Seed": 10,
+    "Seed": 99,
     "Dimensions": [160, 90],
     "NoiseLayers": {
       "Altitude": {
         "Resolution": 4,
-        "Octaves": 8,
-        "Lacunarity": 2.0,
-        "Gain": 0.5
+        "Octaves": 16,
+        "Lacunarity": 1.8,
+        "Gain": 0.7
       },
       "Temperature": {
-        "Resolution": 4,
+        "Resolution": 2,
         "Octaves": 8,
-        "Lacunarity": 2.0,
+        "Lacunarity": 1.5,
         "Gain": 0.5
       },
       "Humidity": {
         "Resolution": 4,
         "Octaves": 8,
-        "Lacunarity": 2.0,
+        "Lacunarity": 1.5,
         "Gain": 0.5
       },
       "Volcanism": {

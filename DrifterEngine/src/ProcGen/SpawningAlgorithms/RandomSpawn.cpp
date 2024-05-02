@@ -1,27 +1,25 @@
 #include "pch.h"
-#include "RandomSpread.h"
+#include "RandomSpawn.h"
 #include "Random/RandomNumberGenerator.h"
 
-std::vector<sf::Vector2i> drft::gen::randomSpread(const GenerationContext& ctx, const GenerationParameters& params)
+drft::gen::PositionList drft::gen::RandomSpawn::generateSpawnPositions(const GenerationContext& context, const GenerationParameters& params) const
 {
+	PositionList result;
 	int minimum = (int)std::get<float>(params.at("Minimum"));
 	int maximum = (int)std::get<float>(params.at("Maximum"));
-
 	int number = rng::RandomNumberGenerator::intInRange(minimum, maximum);
-
-	std::vector<sf::Vector2i> result;
 	result.reserve(number);
+	
 	for (int i = 0; i < number; ++i)
 	{
 		int x = 0;
 		int y = 0;
 		int tries = 10;
 		do {
-			x = rng::RandomNumberGenerator::intInRange(0, ctx.area.width - 1);
-			y = rng::RandomNumberGenerator::intInRange(0, ctx.area.height - 1);
+			x = rng::RandomNumberGenerator::intInRange(0, context.area.width - 1);
+			y = rng::RandomNumberGenerator::intInRange(0, context.area.height - 1);
 			--tries;
-		} 
-		while (ctx.grid.at(ctx.area.left + x, ctx.area.top + y).any() && tries > 0);
+		} while (context.grid.at(context.area.left + x, context.area.top + y).any() && tries > 0);
 		if (tries <= 0) continue;
 
 		result.emplace_back(x, y);

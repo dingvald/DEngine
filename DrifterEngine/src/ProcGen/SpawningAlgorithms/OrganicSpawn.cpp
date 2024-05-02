@@ -1,11 +1,11 @@
-#include <pch.h>
-#include "OrganicSpread.h"
-#include "Spatial/Helpers.h"
+#include "pch.h"
+#include "OrganicSpawn.h"
 #include "Random/RandomNumberGenerator.h"
+#include "Spatial/Helpers.h"
 
-std::vector<sf::Vector2i> drft::gen::organicSpread(const GenerationContext& ctx, const GenerationParameters& params)
+drft::gen::PositionList drft::gen::OrganicSpawn::generateSpawnPositions(const GenerationContext& context, const GenerationParameters& params) const
 {
-	std::vector<sf::Vector2i> positions;
+	PositionList positions;
 	const int generations = (int)std::get<float>(params.at("Generations"));
 	const int startingSeeds = (int)std::get<float>(params.at("StartingSeeds"));
 	const int seedsPerGeneration = (int)std::get<float>(params.at("SeedsPerGeneration"));
@@ -18,9 +18,9 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(const GenerationContext& ctx,
 		int safetyCount = 20;
 		do {
 			--safetyCount;
-			x = rng::RandomNumberGenerator::intInRange(0, ctx.area.width - 1);
-			y = rng::RandomNumberGenerator::intInRange(0, ctx.area.height - 1);
-		} while (ctx.grid.at(ctx.area.left + x, ctx.area.top + y).any() && safetyCount > 0);
+			x = rng::RandomNumberGenerator::intInRange(0, context.area.width - 1);
+			y = rng::RandomNumberGenerator::intInRange(0, context.area.height - 1);
+		} while (context.grid.at(context.area.left + x, context.area.top + y).any() && safetyCount > 0);
 		if (safetyCount > 0)
 		{
 			positions.emplace_back(x, y);
@@ -37,7 +37,7 @@ std::vector<sf::Vector2i> drft::gen::organicSpread(const GenerationContext& ctx,
 			{
 				const int index = rng::RandomNumberGenerator::intInRange(0, surroundings.size() - 1);
 				auto pos = surroundings.at(index);
-				if (ctx.grid.at(ctx.area.left + pos.x, ctx.area.top + pos.y).none())
+				if (context.grid.at(context.area.left + pos.x, context.area.top + pos.y).none())
 				{
 					positionsToAdd.emplace_back(pos);
 				}

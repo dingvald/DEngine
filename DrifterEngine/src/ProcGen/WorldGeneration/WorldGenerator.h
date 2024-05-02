@@ -5,6 +5,7 @@
 #include "Spatial/AutoGrid.h"
 #include "Utility/stdHashing.h"
 #include "Structures/StructureRegistry.h"
+#include "ProcGen/SpawningAlgorithms/SpawningAlgorithmRegistry.h"
 
 namespace drft::gen
 {
@@ -55,6 +56,7 @@ namespace drft::gen
 		mutable std::unordered_map<sf::Vector2i, int> _completedChunks;
 		spatial::Grid<const BiomeType*> _biomeMap;
 		StructureRegistry _structureRegistry;
+		SpawningAlgorithmRegistry _spawningAlgorithms;
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
 		mutable BitGridPtr _bitGrid;
 		std::unordered_map<unsigned int, BiomeZone> _zones;

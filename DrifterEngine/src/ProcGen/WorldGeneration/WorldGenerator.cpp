@@ -8,7 +8,12 @@
 #include "Random/RandomNoise.h"
 #include "Random/NoiseLayer.h"
 #include "Random/PercentChance.h"
-#include "ProcGen/PlacementAlgorithms/Algorithms.h"
+#include "ProcGen/SpawningAlgorithms/FillSpawn.h"
+#include "ProcGen/SpawningAlgorithms/NoiseLayerSpawn.h"
+#include "ProcGen/SpawningAlgorithms/OrganicSpawn.h"
+#include "ProcGen/SpawningAlgorithms/PerlinSpawn.h"
+#include "ProcGen/SpawningAlgorithms/RandomSpawn.h"
+#include "ProcGen/SpawningAlgorithms/FastFill.h"
 #include "ProcGen/GridBitFlags.h"
 #include "Structures/StructureBase.h"
 #include "Services/DebugInfo.h"
@@ -30,6 +35,12 @@ drft::gen::WorldGenerator::WorldGenerator()
 
 void drft::gen::WorldGenerator::init()
 {
+	_spawningAlgorithms.registerAlgorithm<FillSpawn>("Fill");
+	_spawningAlgorithms.registerAlgorithm<NoiseLayerSpawn>("NoiseLayer");
+	_spawningAlgorithms.registerAlgorithm<OrganicSpawn>("Organic");
+	_spawningAlgorithms.registerAlgorithm<PerlinSpawn>("Perlin");
+	_spawningAlgorithms.registerAlgorithm<RandomSpawn>("Random");
+
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
 
 	// Load all structure files
@@ -201,6 +212,10 @@ void drft::gen::WorldGenerator::loadBiomes(const std::string& JSONfilename)
 						&& entity.value.HasMember("Parameters"))
 					{
 						std::string algoName = entity.value["Algorithm"].GetString();
+						if (!_spawningAlgorithms.contains(algoName))
+						{
+							throw std::exception("Spawning algorithm does not exist");
+						}
 						BiomeType::SpawningAlgorithm spawningAlgorithm;
 						spawningAlgorithm.name = algoName;
 						for (auto& param : entity.value["Parameters"].GetObject())
@@ -388,14 +403,14 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 {
 	if (!_biomeMap.contains(coordinate.x, coordinate.y)) return;
 
-    gen::fastFill("Tile", spatial::toTileSpace(coordinate), registry);
+    fastFill("Tile", spatial::toTileSpace(coordinate), registry);
 
 	const auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 	const auto placementArea = determinePlacementArea(coordinate);
 
 	placeLiquids(placementArea, biomeType, registry);
 	//placeStructures(placementArea, biomeType, registry);
-	//placeEntities(placementArea, biomeType, registry);
+	placeEntities(placementArea, biomeType, registry);
 
 	updateCompletedChunks(coordinate);
 }
@@ -537,7 +552,7 @@ void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const BiomeType*
 	{
 		for (auto& [entityName, algorithm] : entities)
 		{
-			auto positions = String2SpawnAlgorithm.at(algorithm.name)(context, algorithm.parameters);
+			auto positions = _spawningAlgorithms.get(algorithm.name).generateSpawnPositions(context, algorithm.parameters);
 			place(entityName, {area.left, area.top}, positions, registry);
 		}
 	}
@@ -567,6 +582,8 @@ sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coord
 	auto neighbors = spatial::getAdjacentPoints(coordinate, spatial::AdjacentType::Cardinal);
 	for (auto&& neighbor : neighbors)
 	{
+		if (!_biomeMap.contains(neighbor.x, neighbor.y)) continue;
+
 		const auto otherBiomeType = _biomeMap.at(neighbor.x, neighbor.y);
 		if (biomeType == otherBiomeType) continue;
 		const double otherHeight = getPerlinAt("Altitude", neighbor);
@@ -576,6 +593,7 @@ sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coord
 		if (delta.x < 0)
 		{
 			result.left -= QUARTER_CHUNK.x;
+			result.width += QUARTER_CHUNK.x;
 		}
 		else if (delta.x > 0)
 		{
@@ -585,6 +603,7 @@ sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coord
 		if (delta.y < 0)
 		{
 			result.top -= QUARTER_CHUNK.y;
+			result.height += QUARTER_CHUNK.y;
 		}
 		else if (delta.y > 0)
 		{

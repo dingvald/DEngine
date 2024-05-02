@@ -1,7 +1,7 @@
 #pragma once
 #include "Spatial/Grid.h"
 #include "Utility/stdHashing.h"
-#include "ProcGen/PlacementAlgorithms/GenerationParameters.h"
+#include "ProcGen/SpawningAlgorithms/GenerationParameters.h"
 
 namespace drft::gen
 {

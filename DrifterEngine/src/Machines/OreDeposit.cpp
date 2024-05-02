@@ -3,7 +3,6 @@
 #include "ProcGen/Biome.h"
 #include "Factory/EntityFactory.h"
 #include "Random/RandomNumberGenerator.h"
-#include "ProcGen/PlacementAlgorithms/OrganicSpread.h"
 
 sf::Vector2i drft::machine::OreDeposit::getDimensions() const
 {
