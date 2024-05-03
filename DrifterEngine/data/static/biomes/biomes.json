@@ -6,9 +6,9 @@
         "Color": [ 65, 97, 63 ]
       },
       "Climate": {
-        "Temperature": [ 0.0, 20.0 ],
-        "Humidity": [ 30.0, 70.0 ],
-        "Altitude": [ 50, 1500 ]
+        "Temperature": [ 0.0, 15.0 ],
+        "Humidity": [ 30.0, 60.0 ],
+        "Altitude": [ 50, 1200 ]
       },
       "Entities": {
         "Geological": {
@@ -72,7 +72,7 @@
         "Color": [ 0, 74, 54 ]
       },
       "Climate": {
-        "Temperature": [ -1.0, 8.0 ],
+        "Temperature": [ -1.0, 10.0 ],
         "Humidity": [ 10.0, 50.0 ],
         "Altitude": [ 1000, 2000 ]
       },
@@ -165,9 +165,9 @@
         "Color": [ 255, 255, 255 ]
       },
       "Climate": {
-        "Temperature": [ -20.0, 0.0 ],
+        "Temperature": [ -20.0, 5.0 ],
         "Humidity": [ 0.0, 50.0 ],
-        "Altitude": [ 2500, 3000 ]
+        "Altitude": [ 2000, 3000 ]
       }
     },
     "Volcano": {
@@ -241,7 +241,7 @@
       },
       "Climate": {
         "Temperature": [ 15.0, 30.0 ],
-        "Humidity": [ 60.0, 100.0 ],
+        "Humidity": [ 50.0, 100.0 ],
         "Altitude": [ 100, 1500 ]
       }
     },
@@ -251,7 +251,7 @@
         "Color": [ 150, 160, 191 ]
       },
       "Climate": {
-        "Temperature": [ 20.0, 28.0 ],
+        "Temperature": [ 18.0, 32.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 1500, 3000 ]
       }

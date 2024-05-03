@@ -128,7 +128,7 @@ void drft::gen::WorldGenerator::generateTerrain()
 	_noiseLayers.at("Volcanism").addBiasingFunction(
 		[](double val, sf::Vector2i position)
 		{
-			return val - 3.00;
+			return val - 5.00;
 		});
 
 	fillBiomeMap();
@@ -317,25 +317,32 @@ float drft::gen::WorldGenerator::getRangeFromPerlin(const std::string& mapName, 
 const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i coordinate) const
 {
 	std::map<float, const Biome*> ranking;
+	std::unordered_map<std::string, float> values;
+
+	for (auto& [rangeName, range] : _globalRanges)
+	{
+		double perlin = getPerlinAt(rangeName, coordinate);
+		float val = getRangeFromPerlin(rangeName, perlin);
+		values.emplace(rangeName, val);
+	}
 
 	_biomeRegistry.forEachBiome(
 		[&](const std::string& name, const Biome& biome)
 		{
 			std::vector<float> distances;
-			for (auto& [rangeName, range] : _globalRanges)
+			for (auto& [rangeName, value] : values)
 			{
-				double perlin = getPerlinAt(rangeName, coordinate);
-				float val = getRangeFromPerlin(rangeName, perlin);
-
 				if (!biome.containsClimateRange(rangeName))
 				{
-					distances.push_back(1.0);
+					distances.push_back(0.0f);
 					continue;
 				}
+				const auto& range = _globalRanges.at(rangeName);
 
+				float val = values.at(rangeName);
 				float dist = biome.getClimateRange(rangeName).distance(val);
-				dist = static_cast<float>(math::remap(0.0, range.getMax() - range.getMin() - val, 0.0, 1.0, dist));
-				distances.push_back(dist);
+				float distNormalized = math::remap(0.0f, range.getMax() - range.getMin(), 0.f, 1.f, dist);
+				distances.push_back(distNormalized);
 			}
 			float total = std::accumulate(distances.begin(), distances.end(), 0.0f);
 			ranking.emplace(total, &biome);
