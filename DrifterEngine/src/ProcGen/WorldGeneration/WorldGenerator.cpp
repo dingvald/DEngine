@@ -16,7 +16,6 @@
 #include "ProcGen/SpawningAlgorithms/RandomSpawn.h"
 #include "ProcGen/SpawningAlgorithms/FastFill.h"
 #include "ProcGen/GridBitFlags.h"
-#include "Structures/StructureBase.h"
 #include "Services/DebugInfo.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/stdHashing.h"
@@ -29,6 +28,7 @@ static const sf::Vector2i QUARTER_CHUNK = { FULL_CHUNK.x / 4, FULL_CHUNK.y / 4 }
 
 static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
 static const std::filesystem::path BIOME_FOLDER_PATH = STATIC_DATA_PATH.string() + "biomes";
+static const std::filesystem::path STRUCTUREE_FOLDER_PATH = STATIC_DATA_PATH.string() + "structures";
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
@@ -46,6 +46,7 @@ void drft::gen::WorldGenerator::init()
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
 
 	_biomeRegistry.createBiomesFromJSON(BIOME_FOLDER_PATH);
+	_structureFactory.createStructureBlueprintsFromJSON(STRUCTUREE_FOLDER_PATH);
 
 	initializeGlobalRanges();
 }
@@ -121,14 +122,14 @@ void drft::gen::WorldGenerator::generateTerrain()
 	_noiseLayers.at("Temperature").addBiasingFunction(
 		[](double val, sf::Vector2i position)
 		{
-			double mod = std::clamp(0.02 * position.y, 0.0, 1.1);
+			double mod = std::clamp(0.001 * position.y, 0.0, 1.1);
 			return val * mod;
 		});
 	// Make Volcanism rarer
 	_noiseLayers.at("Volcanism").addBiasingFunction(
 		[](double val, sf::Vector2i position)
 		{
-			return val - 5.00;
+			return val - 0.5;
 		});
 
 	fillBiomeMap();
@@ -355,28 +356,7 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const Biome* b
 {
 	for (auto& [name, probability] : biome->getStructureProbabilities())
 	{
-		if (!rng::percentChance(static_cast<int>(probability*100))) continue;
-
-		const auto& structure = _structureRegistry.lookup(name);
-		const auto maxBounds = structure.getMaximumBounds();
-		const auto minBounds = structure.getMinimumBounds();
-
-		int rand_x = rng::RandomNumberGenerator::intInRange(0, area.width - maxBounds.x - 1);
-		int rand_y = rng::RandomNumberGenerator::intInRange(0, area.height - maxBounds.y - 1);
-		int safetyCount = 10;
-
-		while (_bitGrid->at(area.left + rand_x, area.top + rand_y).test(gen::Structure)
-			|| _bitGrid->at(area.left + maxBounds.x + rand_x, area.top + maxBounds.y + rand_y).test(gen::Structure)
-			&& safetyCount > 0)
-		{
-			rand_x = rng::RandomNumberGenerator::intInRange(0, area.width - maxBounds.x - 1);
-			rand_y = rng::RandomNumberGenerator::intInRange(0, area.height - maxBounds.y - 1);
-			--safetyCount;
-		}
-		if (safetyCount <= 0) continue;
-
-		auto rect = structure.stamp(sf::Vector2i{ area.left + rand_x, area.top + rand_y }, registry);
-		_bitGrid->fill({ gen::Structure }, area.left + rand_x, area.top + rand_y, rect.width, rect.height);
+		
 	}
 }
 

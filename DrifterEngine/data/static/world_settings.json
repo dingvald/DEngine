@@ -1,6 +1,6 @@
 {
   "WorldSettings": {
-    "Seed": 42,
+    "Seed": "random",
     "Dimensions": [160, 90],
     "NoiseLayers": {
       "Altitude": {

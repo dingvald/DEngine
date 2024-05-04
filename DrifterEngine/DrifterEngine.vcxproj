@@ -193,7 +193,6 @@
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.cpp" />
     <ClCompile Include="src\Random\NoiseLayer.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
-    <ClCompile Include="src\Structures\ProceduralStructure.cpp" />
     <ClCompile Include="src\Systems\Rendering\EffectRenderer.cpp" />
     <ClCompile Include="src\Engine\States\SelectTargetState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\TargetSelectSystem.cpp" />
@@ -374,9 +373,9 @@
     <ClCompile Include="src\Ability\Abilities\ToggleSprintAbility.cpp" />
     <ClCompile Include="src\Ability\Abilities\ThrowAbility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ProjectileSystem.cpp" />
-    <ClCompile Include="src\Structures\StructureBase.cpp" />
-    <ClCompile Include="src\Structures\StructureRegistry.cpp" />
-    <ClCompile Include="src\Structures\StaticStructure.cpp" />
+    <ClCompile Include="src\Structures\StructureFactory.cpp" />
+    <ClCompile Include="src\Structures\StructureBlueprint.cpp" />
+    <ClCompile Include="src\Structures\StructureInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Biomes\BiomeZone.h" />
@@ -395,8 +394,6 @@
     <ClInclude Include="src\Random\NoiseLayer.h" />
     <ClInclude Include="src\Algorithms\FloodFill.h" />
     <ClInclude Include="src\Spatial\AutoGrid.h" />
-    <ClInclude Include="src\Structures\ProceduralStructure.h" />
-    <ClInclude Include="src\Structures\StructureBuildTypes.h" />
     <ClInclude Include="src\Systems\Rendering\EffectRenderer.h" />
     <ClInclude Include="src\Engine\EngineConstants.h" />
     <ClInclude Include="src\Engine\States\SelectTargetState.h" />
@@ -728,9 +725,9 @@
     <ClInclude Include="src\Ability\Abilities\ToggleSprintAbility.h" />
     <ClInclude Include="src\Ability\Abilities\ThrowAbility.h" />
     <ClInclude Include="src\Systems\Gameplay\ProjectileSystem.h" />
-    <ClInclude Include="src\Structures\StructureBase.h" />
-    <ClInclude Include="src\Structures\StructureRegistry.h" />
-    <ClInclude Include="src\Structures\StaticStructure.h" />
+    <ClInclude Include="src\Structures\StructureFactory.h" />
+    <ClInclude Include="src\Structures\StructureBlueprint.h" />
+    <ClInclude Include="src\Structures\StructureInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\world_settings.json" />

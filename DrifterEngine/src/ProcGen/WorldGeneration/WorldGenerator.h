@@ -3,7 +3,7 @@
 #include "Spatial/Grid.h"
 #include "Spatial/AutoGrid.h"
 #include "Utility/stdHashing.h"
-#include "Structures/StructureRegistry.h"
+#include "Structures/StructureFactory.h"
 #include "Biomes/BiomeRegistry.h"
 #include "Biomes/BiomeZone.h"
 #include "ProcGen/SpawningAlgorithms/SpawningAlgorithmRegistry.h"
@@ -55,7 +55,7 @@ namespace drft::gen
 		sf::Vector2i _dimensions;
 		mutable std::unordered_map<sf::Vector2i, int> _completedChunks;
 		spatial::Grid<const Biome*> _biomeMap;
-		StructureRegistry _structureRegistry;
+		StructureFactory _structureFactory;
 		BiomeRegistry _biomeRegistry;
 		SpawningAlgorithmRegistry _spawningAlgorithms;
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;

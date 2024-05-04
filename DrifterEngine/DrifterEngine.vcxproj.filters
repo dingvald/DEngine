@@ -456,16 +456,7 @@
     <ClCompile Include="src\Systems\Gameplay\ProjectileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\StructureBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Structures\StructureRegistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Structures\ProceduralStructure.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Structures\StaticStructure.cpp">
+    <ClCompile Include="src\Structures\StructureFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Algorithms\FloodFill.cpp">
@@ -505,6 +496,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\JSON\JSONHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\StructureBlueprint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\StructureInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1502,19 +1499,7 @@
     <ClInclude Include="src\Systems\Gameplay\ProjectileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\StructureBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Structures\StructureRegistry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Structures\StructureBuildTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Structures\ProceduralStructure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Structures\StaticStructure.h">
+    <ClInclude Include="src\Structures\StructureFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\AutoGrid.h">
@@ -1563,6 +1548,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Biomes\BiomeZone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\StructureBlueprint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\StructureInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
