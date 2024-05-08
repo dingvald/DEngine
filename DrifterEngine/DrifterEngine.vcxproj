@@ -376,6 +376,7 @@
     <ClCompile Include="src\Structures\StructureFactory.cpp" />
     <ClCompile Include="src\Structures\StructureBlueprint.cpp" />
     <ClCompile Include="src\Structures\StructureInstance.cpp" />
+    <ClCompile Include="src\Structures\StructureComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Biomes\BiomeZone.h" />
@@ -728,6 +729,7 @@
     <ClInclude Include="src\Structures\StructureFactory.h" />
     <ClInclude Include="src\Structures\StructureBlueprint.h" />
     <ClInclude Include="src\Structures\StructureInstance.h" />
+    <ClInclude Include="src\Structures\StructureComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\world_settings.json" />

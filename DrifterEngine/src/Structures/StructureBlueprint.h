@@ -3,6 +3,7 @@
 namespace drft
 {
 	class StructureInstance;
+	class StructureComponent;
 	using StructureInstancePtr = std::unique_ptr<StructureInstance>;
 
 	class StructureBlueprint
@@ -14,7 +15,9 @@ namespace drft
 		StructureInstancePtr build() const;
 
 	private:
+		using ComponentPtr = std::unique_ptr<StructureComponent>;
 		std::string _name;
+		std::vector<ComponentPtr> _components;
 	};
 }
 

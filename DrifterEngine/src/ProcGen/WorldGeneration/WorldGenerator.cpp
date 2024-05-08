@@ -4,6 +4,7 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/Grid.h"
+#include "Structures/StructureInstance.h"
 #include "JSON/JSONHelpers.h"
 #include "Random/RandomNumberGenerator.h"
 #include "Random/RandomNoise.h"
@@ -28,7 +29,7 @@ static const sf::Vector2i QUARTER_CHUNK = { FULL_CHUNK.x / 4, FULL_CHUNK.y / 4 }
 
 static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
 static const std::filesystem::path BIOME_FOLDER_PATH = STATIC_DATA_PATH.string() + "biomes";
-static const std::filesystem::path STRUCTUREE_FOLDER_PATH = STATIC_DATA_PATH.string() + "structures";
+static const std::filesystem::path STRUCTURE_FOLDER_PATH = STATIC_DATA_PATH.string() + "structures";
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
@@ -46,7 +47,7 @@ void drft::gen::WorldGenerator::init()
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
 
 	_biomeRegistry.createBiomesFromJSON(BIOME_FOLDER_PATH);
-	_structureFactory.createStructureBlueprintsFromJSON(STRUCTUREE_FOLDER_PATH);
+	_structureFactory.createStructureBlueprintsFromJSON(STRUCTURE_FOLDER_PATH);
 
 	initializeGlobalRanges();
 }
@@ -356,7 +357,14 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const Biome* b
 {
 	for (auto& [name, probability] : biome->getStructureProbabilities())
 	{
-		
+		if (!rng::percentChance(probability * 100)) continue;
+
+		sf::Vector2i placementPosition;
+		auto structure = _structureFactory.build(name);
+
+		// Find spot that fits structure...
+
+		structure->stamp(placementPosition, registry);
 	}
 }
 
