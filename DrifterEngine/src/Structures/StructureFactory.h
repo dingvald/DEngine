@@ -8,6 +8,7 @@ namespace drft
 	class StructureFactory
 	{
 	public:
+		void bindStructureComponents() const;
 		void createStructureBlueprintsFromJSON(const std::filesystem::path& directoryPath);
 		[[nodiscard]] StructureInstancePtr build(const std::string& name) const;
 

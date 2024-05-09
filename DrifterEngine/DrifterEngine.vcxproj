@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Structures\Components\SquareComponent.cpp" />
     <ClCompile Include="src\Biomes\BiomeRegistry.cpp" />
     <ClCompile Include="src\Biomes\Biome.cpp" />
     <ClCompile Include="src\JSON\JSONHelpers.cpp" />
@@ -377,8 +378,10 @@
     <ClCompile Include="src\Structures\StructureBlueprint.cpp" />
     <ClCompile Include="src\Structures\StructureInstance.cpp" />
     <ClCompile Include="src\Structures\StructureComponent.cpp" />
+    <ClCompile Include="src\Structures\StructureComponentFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Structures\Components\SquareComponent.h" />
     <ClInclude Include="src\Biomes\BiomeZone.h" />
     <ClInclude Include="src\Biomes\BiomeRegistry.h" />
     <ClInclude Include="src\Biomes\Biome.h" />
@@ -730,6 +733,7 @@
     <ClInclude Include="src\Structures\StructureBlueprint.h" />
     <ClInclude Include="src\Structures\StructureInstance.h" />
     <ClInclude Include="src\Structures\StructureComponent.h" />
+    <ClInclude Include="src\Structures\StructureComponentFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\world_settings.json" />

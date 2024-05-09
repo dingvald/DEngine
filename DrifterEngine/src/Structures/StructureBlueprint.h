@@ -1,4 +1,5 @@
 #pragma once
+#include "StructureComponent.h"
 
 namespace drft
 {

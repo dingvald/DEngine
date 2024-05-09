@@ -257,7 +257,7 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 	const auto placementArea = determinePlacementArea(coordinate);
 
 	placeLiquids(placementArea, biomeType, registry);
-	//placeStructures(placementArea, biomeType, registry);
+	placeStructures(placementArea, biomeType, registry);
 	placeEntities(placementArea, biomeType, registry);
 
 	updateCompletedChunks(coordinate);
@@ -361,6 +361,8 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const Biome* b
 
 		sf::Vector2i placementPosition;
 		auto structure = _structureFactory.build(name);
+
+		if (!structure) continue;
 
 		// Find spot that fits structure...
 
