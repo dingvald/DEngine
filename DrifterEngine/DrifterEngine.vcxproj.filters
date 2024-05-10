@@ -513,6 +513,9 @@
     <ClCompile Include="src\Structures\StructureComponentFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1572,6 +1575,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Structures\StructureComponentFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

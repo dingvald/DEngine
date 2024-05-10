@@ -14,6 +14,7 @@
 #include "ProcGen/SpawningAlgorithms/NoiseLayerSpawn.h"
 #include "ProcGen/SpawningAlgorithms/OrganicSpawn.h"
 #include "ProcGen/SpawningAlgorithms/PerlinSpawn.h"
+#include "ProcGen/SpawningAlgorithms/PlaceEntities.h"
 #include "ProcGen/SpawningAlgorithms/RandomSpawn.h"
 #include "ProcGen/SpawningAlgorithms/FastFill.h"
 #include "ProcGen/GridBitFlags.h"
@@ -355,18 +356,18 @@ const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i coordinate) 
 
 void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const Biome* biome, entt::registry& registry) const
 {
-	for (auto& [name, probability] : biome->getStructureProbabilities())
+	for (auto&& [name, probability] : biome->getStructureProbabilities())
 	{
 		if (!rng::percentChance(probability * 100)) continue;
 
-		sf::Vector2i placementPosition;
-		auto structure = _structureFactory.build(name);
+		if (auto structure = _structureFactory.build(name))
+		{
+			sf::Vector2i placementPosition;
 
-		if (!structure) continue;
+			// Find spot that fits structure...
 
-		// Find spot that fits structure...
-
-		structure->stamp(placementPosition, registry);
+			structure->stamp(placementPosition, registry);
+		}
 	}
 }
 
@@ -387,7 +388,7 @@ void drft::gen::WorldGenerator::placeLiquids(sf::IntRect area, const Biome* biom
 
 	if (positions.empty()) return;
 
-	place("Water", {area.left, area.top}, positions, registry);
+	placeMany("Water", {area.left, area.top}, positions, registry);
 }
 
 void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const Biome* biome, entt::registry& registry) const
@@ -398,7 +399,7 @@ void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const Biome* bio
 		for (auto& [entityName, algorithm] : entities)
 		{
 			auto positions = _spawningAlgorithms.get(algorithm.name).generateSpawnPositions(context, algorithm.parameters);
-			place(entityName, {area.left, area.top}, positions, registry);
+			placeMany(entityName, {area.left, area.top}, positions, registry);
 		}
 	}
 }
