@@ -1580,6 +1580,9 @@
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Random\WeightedSelection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">

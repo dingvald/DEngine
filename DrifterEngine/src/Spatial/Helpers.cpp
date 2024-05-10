@@ -5,13 +5,33 @@
 std::vector<sf::Vector2i> drft::spatial::getIntRect(sf::Vector2i origin, int width, int height)
 {
 	std::vector<sf::Vector2i> result;
-
-	for (int y = origin.y; y <= origin.y + height; ++y)
+	result.reserve(width * height);
+	for (int y = origin.y; y < origin.y + height; ++y)
 	{
-		for (int x = origin.x; x <= origin.x + width; ++x)
+		for (int x = origin.x; x < origin.x + width; ++x)
 		{
 			result.emplace_back(x, y);
 		}
+	}
+
+	return result;
+}
+
+std::vector<sf::Vector2i> drft::spatial::getOutlineIntRect(sf::Vector2i origin, int width, int height)
+{
+	std::vector<sf::Vector2i> result;
+	result.reserve(2 * width + 2 * (height - 2));
+	// top and bottom
+	for (int x = 0; x < width; ++x)
+	{
+		result.push_back({ x, 0 });
+		result.push_back({ x, height - 1 });
+	}
+	// left and right
+	for (int y = 1; y < height - 1; ++y)
+	{
+		result.push_back({ 0, y });
+		result.push_back({ width - 1, y });
 	}
 
 	return result;

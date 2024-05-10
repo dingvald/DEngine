@@ -3,6 +3,7 @@
 namespace drft::spatial
 {
 	std::vector<sf::Vector2i> getIntRect(sf::Vector2i origin, int width, int height);
+	std::vector<sf::Vector2i> getOutlineIntRect(sf::Vector2i origin, int width, int height);
 	// Returns a list of integer points located in a circle around the given center.
 	std::vector<sf::Vector2i> getIntCircleInRadius(sf::Vector2i centerPosition, int radius);
 	// Returns a list of integer points located in a rect around the given origin.

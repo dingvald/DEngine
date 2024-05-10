@@ -1,8 +1,36 @@
 #include "pch.h"
 #include "SquareComponent.h"
+#include "Random/RandomNumberGenerator.h"
+#include "Random/PercentChance.h"
+#include "Random/WeightedSelection.h"
+#include "Spatial/Helpers.h"
 
-void drft::SquareComponent::apply(std::unordered_map<entt::entity, PositionList>& layout) const
+void drft::SquareComponent::apply(std::unordered_map<std::string, PositionList>& layout) const
 {
+	const int width = rng::RandomNumberGenerator::intInRange(_width.getMin(), _width.getMax());
+	const int height = rng::RandomNumberGenerator::intInRange(_height.getMin(), _height.getMax());
+	auto outline = spatial::getOutlineIntRect(_origin, width, height);
+	for (auto&& position : outline)
+	{
+		if (!rng::percentChance(_outlineIntegrity * 100)) continue;
+		size_t index = rng::weightedSelection(_outlineEntityWeights);
+		if (index >= 0)
+		{
+			const auto& [name, weight] = _outlineEntityWeights.at(index);
+			layout[name].push_back(position);
+		}
+	}
+	auto fill = spatial::getIntRect(_origin + sf::Vector2i{ 1, 1 }, width - 2, height - 2);
+	for (auto&& position : fill)
+	{
+		if (!rng::percentChance(_fillIntegrity * 100)) continue;
+		size_t index = rng::weightedSelection(_fillEntityWeights);
+		if (index >= 0)
+		{
+			const auto& [name, weight] = _fillEntityWeights.at(index);
+			layout[name].push_back(position);
+		}
+	}
 }
 
 void drft::SquareComponent::createFromJSON(const rapidjson::Value& json)

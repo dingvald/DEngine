@@ -8,7 +8,7 @@ namespace drft
 	public:
 		virtual ~StructureComponent() = default;
 		virtual void createFromJSON(const rapidjson::Value& json) = 0;
-		virtual void apply(std::unordered_map<entt::entity, PositionList>& layout) const = 0;
+		virtual void apply(std::unordered_map<std::string, PositionList>& layout) const = 0;
 	};
 }
 

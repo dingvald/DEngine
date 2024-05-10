@@ -31,7 +31,7 @@ void drft::StructureBlueprint::createFromJSON(const rapidjson::Value & json)
 
 drft::StructureInstancePtr drft::StructureBlueprint::build() const
 {
-	std::unordered_map<entt::entity, PositionList> layout;
+	std::unordered_map<std::string, PositionList> layout;
 	
 	for (auto&& comp : _components)
 	{

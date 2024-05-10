@@ -10,12 +10,14 @@
 
 namespace drft::gen
 {
+	struct GenerationContext;
+
 	class WorldGenerator
 	{
 	public:
 		WorldGenerator();
 		void init();
-		void loadWorldMapSettings(const std::string& JSONfilename);
+		void createWorldMapSettingsFromJSON(const std::string& JSONfilename);
 		// Generates the entire world other than chunks.
 		void generate();
 		// Generates the concrete chunk.
@@ -40,9 +42,9 @@ namespace drft::gen
 		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		const Biome* determineBiome(sf::Vector2i coordinate) const;
-		void placeStructures(sf::IntRect area, const Biome* biomeType, entt::registry& registry) const;
-		void placeLiquids(sf::IntRect area, const Biome* biomeType, entt::registry& registry) const;
-		void placeEntities(sf::IntRect area, const Biome* biomeType, entt::registry& registry) const;
+		void placeStructures(const GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
+		void placeLiquids(const GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
+		void placeEntities(const GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
 		void updateCompletedChunks(sf::Vector2i coordinate) const;
 		sf::IntRect determinePlacementArea(sf::Vector2i coordinate) const;
 		void initializeGlobalRanges();

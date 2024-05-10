@@ -3,7 +3,7 @@
 
 void drft::WorldMap::create()
 {
-	_worldGenerator.loadWorldMapSettings("world_settings.json");
+	_worldGenerator.createWorldMapSettingsFromJSON("world_settings.json");
 	_worldGenerator.init();
 	_worldGenerator.generate();
 }

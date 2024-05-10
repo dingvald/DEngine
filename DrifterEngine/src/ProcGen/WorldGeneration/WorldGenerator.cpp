@@ -53,7 +53,7 @@ void drft::gen::WorldGenerator::init()
 	initializeGlobalRanges();
 }
 
-void drft::gen::WorldGenerator::loadWorldMapSettings(const std::string& JSONfilename)
+void drft::gen::WorldGenerator::createWorldMapSettingsFromJSON(const std::string& JSONfilename)
 {
 	std::filesystem::path worldSettingsFilePath;
 	worldSettingsFilePath /= STATIC_DATA_PATH;
@@ -257,9 +257,11 @@ void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::reg
 	const auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
 	const auto placementArea = determinePlacementArea(coordinate);
 
-	placeLiquids(placementArea, biomeType, registry);
-	placeStructures(placementArea, biomeType, registry);
-	placeEntities(placementArea, biomeType, registry);
+	GenerationContext context = { .area = placementArea, .grid = *_bitGrid, .noiseLayers = _noiseLayers, .seed = _seed };
+
+	placeLiquids(context, biomeType, registry);
+	placeStructures(context, biomeType, registry);
+	placeEntities(context, biomeType, registry);
 
 	updateCompletedChunks(coordinate);
 }
@@ -354,7 +356,7 @@ const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i coordinate) 
 	return ranking.begin()->second;
 }
 
-void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const Biome* biome, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeStructures(const GenerationContext& context, const Biome* biome, entt::registry& registry) const
 {
 	for (auto&& [name, probability] : biome->getStructureProbabilities())
 	{
@@ -362,44 +364,44 @@ void drft::gen::WorldGenerator::placeStructures(sf::IntRect area, const Biome* b
 
 		if (auto structure = _structureFactory.build(name))
 		{
-			sf::Vector2i placementPosition;
-
 			// Find spot that fits structure...
+			int randx = rng::RandomNumberGenerator::intInRange(context.area.left, context.area.left + context.area.width);
+			int randy = rng::RandomNumberGenerator::intInRange(context.area.top, context.area.top + context.area.height);
 
-			structure->stamp(placementPosition, registry);
+			structure->stamp({ randx, randy }, context, registry);
 		}
 	}
 }
 
-void drft::gen::WorldGenerator::placeLiquids(sf::IntRect area, const Biome* biomeType, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeLiquids(const GenerationContext& context, const Biome* biomeType, entt::registry& registry) const
 {
 	std::string altitude = "Altitude";
 	std::vector<sf::Vector2i> positions;
-	for (int y = 0; y < area.height; ++y)
+	for (int y = 0; y < context.area.height; ++y)
 	{
-		for (int x = 0; x < area.width; ++x)
+		for (int x = 0; x < context.area.width; ++x)
 		{
-			double val = _noiseLayers.at(altitude).getValueAt({ area.left + x, area.top + y });
+			double val = _noiseLayers.at(altitude).getValueAt({ context.area.left + x, context.area.top + y });
 			float height = getRangeFromPerlin(altitude, val);
 			if (height > 0.f) continue;
 			positions.push_back({ x, y });
+			_bitGrid->at(x, y).set(GridBitFlags::Liquid, true);
 		}
 	}
 
 	if (positions.empty()) return;
 
-	placeMany("Water", {area.left, area.top}, positions, registry);
+	placeMany("Water", {context.area.left, context.area.top}, positions, registry);
 }
 
-void drft::gen::WorldGenerator::placeEntities(sf::IntRect area, const Biome* biome, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeEntities(const GenerationContext& context, const Biome* biome, entt::registry& registry) const
 {
-	GenerationContext context = { area, *_bitGrid, _noiseLayers, _seed };
 	for (auto& [category, entities] : biome->getEntitySpawningAlgorithms())
 	{
 		for (auto& [entityName, algorithm] : entities)
 		{
 			auto positions = _spawningAlgorithms.get(algorithm.name).generateSpawnPositions(context, algorithm.parameters);
-			placeMany(entityName, {area.left, area.top}, positions, registry);
+			placeMany(entityName, {context.area.left, context.area.top}, positions, registry);
 		}
 	}
 }

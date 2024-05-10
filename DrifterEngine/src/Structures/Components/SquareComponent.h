@@ -8,7 +8,7 @@ namespace drft
 	{
 	public:
 		virtual void createFromJSON(const rapidjson::Value& json) override;
-		virtual void apply(std::unordered_map<entt::entity, PositionList>& layout) const override;
+		virtual void apply(std::unordered_map<std::string, PositionList>& layout) const override;
 
 	private:
 		sf::Vector2i _origin;
