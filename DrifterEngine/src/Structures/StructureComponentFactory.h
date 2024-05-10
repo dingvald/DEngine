@@ -10,6 +10,7 @@ namespace drft
 		template<typename T>
 		static void registerComponent(std::string name)
 		{
+			static_assert(std::is_base_of<StructureComponent, T>::value, "Type must be derived from StructureComponent");
 			_factoryMethods.emplace(name, []() {return std::make_unique<T>(); });
 		}
 		
