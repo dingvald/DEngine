@@ -5,17 +5,22 @@
 
 #include "StructureInstance.h"
 
-#include "StructureComponentFactory.h"
-#include "Components/SquareComponent.h"
+#include "StructureDecorationFactory.h"
+#include "Shapes/SquareShape.h"
 
-void drft::StructureFactory::bindStructureComponents() const
+
+void drft::StructureFactory::bindStructureShapes() const
 {
-	StructureComponentFactory::registerComponent<SquareComponent>("Square");
+}
+
+void drft::StructureFactory::bindStructureDecorations() const
+{
 }
 
 void drft::StructureFactory::createStructureBlueprintsFromJSON(const std::filesystem::path& directoryPath)
 {
-	bindStructureComponents();
+	bindStructureShapes();
+	bindStructureDecorations();
 
 	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
 	{

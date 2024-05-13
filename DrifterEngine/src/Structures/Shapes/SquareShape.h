@@ -1,14 +1,14 @@
 #pragma once
-#include "Structures/StructureComponent.h"
+#include "Structures/StructureBaseShape.h"
 #include "Utility/Math.h"
 
 namespace drft
 {
-	class SquareComponent : public StructureComponent
+	class SquareShape : public StructureBaseShape
 	{
 	public:
 		virtual void createFromJSON(const rapidjson::Value& json) override;
-		virtual void apply(std::unordered_map<std::string, PositionList>& layout) const override;
+		virtual void generateLayout() override;
 
 	private:
 		sf::Vector2i _origin;

@@ -504,16 +504,19 @@
     <ClCompile Include="src\Structures\StructureInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\StructureComponent.cpp">
+    <ClCompile Include="src\Structures\StructureDecoration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\Components\SquareComponent.cpp">
+    <ClCompile Include="src\Structures\Shapes\SquareShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\StructureComponentFactory.cpp">
+    <ClCompile Include="src\Structures\StructureDecorationFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\StructureBaseShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1568,19 +1571,22 @@
     <ClInclude Include="src\Structures\StructureInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\StructureComponent.h">
+    <ClInclude Include="src\Structures\StructureDecoration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\Components\SquareComponent.h">
+    <ClInclude Include="src\Structures\Shapes\SquareShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\StructureComponentFactory.h">
+    <ClInclude Include="src\Structures\StructureDecorationFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\WeightedSelection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\StructureBaseShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,11 +1,11 @@
 #include "pch.h"
-#include "SquareComponent.h"
+#include "SquareShape.h"
 #include "Random/RandomNumberGenerator.h"
 #include "Random/PercentChance.h"
 #include "Random/WeightedSelection.h"
 #include "Spatial/Helpers.h"
 
-void drft::SquareComponent::apply(std::unordered_map<std::string, PositionList>& layout) const
+void drft::SquareShape::generateLayout()
 {
 	const int width = rng::RandomNumberGenerator::intInRange(_width.getMin(), _width.getMax());
 	const int height = rng::RandomNumberGenerator::intInRange(_height.getMin(), _height.getMax());
@@ -17,7 +17,7 @@ void drft::SquareComponent::apply(std::unordered_map<std::string, PositionList>&
 		if (index >= 0)
 		{
 			const auto& [name, weight] = _outlineEntityWeights.at(index);
-			layout[name].push_back(position);
+			AddToLayout(name, position);
 		}
 	}
 	auto fill = spatial::getIntRect(_origin + sf::Vector2i{ 1, 1 }, width - 2, height - 2);
@@ -28,12 +28,12 @@ void drft::SquareComponent::apply(std::unordered_map<std::string, PositionList>&
 		if (index >= 0)
 		{
 			const auto& [name, weight] = _fillEntityWeights.at(index);
-			layout[name].push_back(position);
+			AddToLayout(name, position);
 		}
 	}
 }
 
-void drft::SquareComponent::createFromJSON(const rapidjson::Value& json)
+void drft::SquareShape::createFromJSON(const rapidjson::Value& json)
 {
 	if (json.HasMember("Origin"))
 	{

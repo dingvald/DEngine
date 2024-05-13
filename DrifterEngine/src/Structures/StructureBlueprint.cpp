@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "StructureBlueprint.h"
 #include "StructureInstance.h"
-#include "StructureComponentFactory.h"
+#include "StructureBaseShape.h"
+#include "StructureDecorationFactory.h"
 
 drft::StructureBlueprint::StructureBlueprint(std::string name)
 	: _name(name)
@@ -9,33 +10,37 @@ drft::StructureBlueprint::StructureBlueprint(std::string name)
 
 void drft::StructureBlueprint::createFromJSON(const rapidjson::Value & json)
 {
-	if (json.HasMember("Components"))
+	if (json.HasMember("BaseShape"))
 	{
-		if (!json["Components"].IsArray())
+
+	}
+	if (json.HasMember("Decorations"))
+	{
+		if (!json["Decorations"].IsArray())
 		{
-			throw std::exception("Components must be an array.");
+			throw std::exception("Decorations must be an array.");
 			return;
 		}
-		for (auto&& component : json["Components"].GetArray())
+		for (auto&& decoration : json["Decorations"].GetArray())
 		{
-			auto componentObj = component.GetObject().MemberBegin();
-			auto componentName = componentObj->name.GetString();
-			auto componentInstance = StructureComponentFactory::build(componentName);
-			if (!componentInstance) continue;
+			auto decorationObj = decoration.GetObject().MemberBegin();
+			auto decorationName = decorationObj->name.GetString();
+			auto decorationInstance = StructureDecorationFactory::build(decorationName);
+			if (!decorationInstance) continue;
 
-			componentInstance->createFromJSON(componentObj->value);
-			_components.emplace_back(std::move(componentInstance));
+			decorationInstance->createFromJSON(decorationObj->value);
+			_decorations.emplace_back(std::move(decorationInstance));
 		}
 	}
 }
 
 drft::StructureInstancePtr drft::StructureBlueprint::build() const
 {
-	std::unordered_map<std::string, PositionList> layout;
+	_baseShape->generateLayout();
 	
-	for (auto&& comp : _components)
+	for (auto&& decoration : _decorations)
 	{
-		comp->apply(layout);
+		decoration->apply(*_baseShape);
 	} 
-	return std::make_unique<StructureInstance>(std::move(layout));
+	return std::make_unique<StructureInstance>(_baseShape->getLayout());
 }
