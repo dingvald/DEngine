@@ -17,17 +17,17 @@ void drft::gen::placeMany(const std::string& name, sf::Vector2i origin, const st
 	}
 }
 
-void drft::gen::placeMany(entt::entity prototype, sf::Vector2i origin, const std::vector<sf::Vector2i>& positions, entt::registry& reg)
+void drft::gen::placeMany(const std::string& name, sf::Vector2i origin, const std::vector<sf::Vector2i>& positions, entt::registry& reg, std::function<void(entt::handle, sf::Vector2i)> onPlaceFunc)
 {
 	const auto& factory = reg.ctx().get<const EntityFactory&>();
-	const std::string name = factory.getName(prototype);
 	for (auto&& pos : positions)
 	{
 		auto position = origin + pos;
-		factory.build(name, reg)
-			.patch<component::Position>([position](auto& pos)
-				{
-					pos.position = position;
-				});
+		auto handle = factory.build(name, reg);
+		handle.patch<component::Position>([position](auto& pos)
+			{
+				pos.position = position;
+			});
+		onPlaceFunc(handle, pos);
 	}
 }

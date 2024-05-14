@@ -9,7 +9,7 @@ namespace drft
 	{
 	public:
 		void bindStructureShapes() const;
-		void bindStructureDecorations() const;
+		void bindStructureDecorators() const;
 		void createStructureBlueprintsFromJSON(const std::filesystem::path& directoryPath);
 		[[nodiscard]] StructureInstancePtr build(const std::string& name) const;
 

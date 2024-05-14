@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "StructureBlueprint.h"
 #include "StructureInstance.h"
-#include "StructureBaseShape.h"
-#include "StructureDecorationFactory.h"
+#include "StructureDecoratorFactory.h"
+#include "StructureShapeFactory.h"
 
 drft::StructureBlueprint::StructureBlueprint(std::string name)
 	: _name(name)
@@ -12,35 +12,49 @@ void drft::StructureBlueprint::createFromJSON(const rapidjson::Value & json)
 {
 	if (json.HasMember("BaseShape"))
 	{
-
-	}
-	if (json.HasMember("Decorations"))
-	{
-		if (!json["Decorations"].IsArray())
+		auto shapeObj = json["BaseShape"].GetObject().MemberBegin();
+		auto shapeName = shapeObj->name.GetString();
+		auto shapeInstance = StructureShapeFactory::build(shapeName);
+		if (!shapeInstance)
 		{
-			throw std::exception("Decorations must be an array.");
+			std::cout << "Structure " << shapeName << " could not be created." << std::endl;
 			return;
 		}
-		for (auto&& decoration : json["Decorations"].GetArray())
+		shapeInstance->createFromJSON(shapeObj->value);
+		_baseShape = std::move(shapeInstance);
+	}
+	else
+	{
+		std::cout << "Structure " << _name << " has no BaseShape. Please add to the JSON definition." << std::endl;
+		return;
+	}
+	if (json.HasMember("Decorators"))
+	{
+		if (!json["Decorators"].IsArray())
 		{
-			auto decorationObj = decoration.GetObject().MemberBegin();
-			auto decorationName = decorationObj->name.GetString();
-			auto decorationInstance = StructureDecorationFactory::build(decorationName);
-			if (!decorationInstance) continue;
+			throw std::exception("Decorators must be an array.");
+			return;
+		}
+		for (auto&& decorator : json["Decorators"].GetArray())
+		{
+			auto decoratorObj = decorator.GetObject().MemberBegin();
+			auto decoratorName = decoratorObj->name.GetString();
+			auto decoratorInstance = StructureDecoratorFactory::build(decoratorName);
+			if (!decoratorInstance) continue;
 
-			decorationInstance->createFromJSON(decorationObj->value);
-			_decorations.emplace_back(std::move(decorationInstance));
+			decoratorInstance->createFromJSON(decoratorObj->value);
+			_decorators.emplace_back(std::move(decoratorInstance));
 		}
 	}
 }
 
 drft::StructureInstancePtr drft::StructureBlueprint::build() const
 {
-	_baseShape->generateLayout();
-	
-	for (auto&& decoration : _decorations)
+	auto shapeInstance = _baseShape->generate();
+	for (auto&& decorator : _decorators)
 	{
-		decoration->apply(*_baseShape);
-	} 
-	return std::make_unique<StructureInstance>(_baseShape->getLayout());
+		decorator->apply(*shapeInstance);
+	}
+
+	return std::make_unique<StructureInstance>(std::move(shapeInstance));
 }

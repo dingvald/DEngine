@@ -42,9 +42,9 @@ namespace drft::gen
 		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		const Biome* determineBiome(sf::Vector2i coordinate) const;
-		void placeStructures(const GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
-		void placeLiquids(const GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
-		void placeEntities(const GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
+		void placeStructures(GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
+		void placeLiquids(GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
+		void placeEntities(GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
 		void updateCompletedChunks(sf::Vector2i coordinate) const;
 		sf::IntRect determinePlacementArea(sf::Vector2i coordinate) const;
 		void initializeGlobalRanges();

@@ -5,22 +5,27 @@
 
 #include "StructureInstance.h"
 
-#include "StructureDecorationFactory.h"
-#include "Shapes/SquareShape.h"
+#include "StructureDecoratorFactory.h"
+#include "Decorators/WallDecorator.h"
+
+#include "StructureShapeFactory.h"
+#include "Shapes/RectangleShape.h"
 
 
 void drft::StructureFactory::bindStructureShapes() const
 {
+	StructureShapeFactory::registerShape<RectangleShape>("Rectangle");
 }
 
-void drft::StructureFactory::bindStructureDecorations() const
+void drft::StructureFactory::bindStructureDecorators() const
 {
+	StructureDecoratorFactory::registerDecorator<WallDecorator>("Wall");
 }
 
 void drft::StructureFactory::createStructureBlueprintsFromJSON(const std::filesystem::path& directoryPath)
 {
 	bindStructureShapes();
-	bindStructureDecorations();
+	bindStructureDecorators();
 
 	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
 	{

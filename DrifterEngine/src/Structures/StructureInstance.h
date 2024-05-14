@@ -1,4 +1,5 @@
 #pragma once
+#include "StructureShapeInstance.h"
 
 namespace drft
 {
@@ -6,16 +7,18 @@ namespace drft
 	{
 		struct GenerationContext;
 	}
-	class StructureBaseShape;
+
+	using PositionList = std::vector<sf::Vector2i>;
+	using Layout = std::unordered_map<std::string, PositionList>;
 	class StructureInstance
 	{
 	public:
-		StructureInstance(drft::LayoutPtr layout);
-		void stamp(sf::Vector2i tileOrigin, const gen::GenerationContext& context, entt::registry& registry) const;
+		StructureInstance(std::unique_ptr<StructureShapeInstance> shape);
+		void stamp(sf::Vector2i tileOrigin, gen::GenerationContext& context, entt::registry& registry) const;
 
 	private:
 		sf::Vector2i _dimensions;
-		drft::LayoutPtr _layout;
+		std::unique_ptr<StructureShapeInstance> _shape;
 	};
 }
 

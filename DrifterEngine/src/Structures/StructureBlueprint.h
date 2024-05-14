@@ -1,11 +1,10 @@
 #pragma once
-#include "StructureDecoration.h"
+#include "StructureDecorator.h"
+#include "StructureBaseShape.h"
 
 namespace drft
 {
 	class StructureInstance;
-	class StructureDecoration;
-	class StructureBaseShape;
 
 	using BaseShapePtr = std::unique_ptr<StructureBaseShape>;
 	using StructureInstancePtr = std::unique_ptr<StructureInstance>;
@@ -19,10 +18,10 @@ namespace drft
 		StructureInstancePtr build() const;
 
 	private:
-		using DecorationPtr = std::unique_ptr<StructureDecoration>;
+		using DecorationPtr = std::unique_ptr<StructureDecorator>;
 		std::string _name;
 		BaseShapePtr _baseShape;
-		std::vector<DecorationPtr> _decorations;
+		std::vector<DecorationPtr> _decorators;
 	};
 }
 

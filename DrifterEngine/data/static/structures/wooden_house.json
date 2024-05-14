@@ -1,24 +1,19 @@
 {
   "Structure": {
     "Wooden House": {
-      "Components": [
+      "BaseShape": {
+        "Rectangle": {
+          "Width": [ 5, 9 ],
+          "Height": [ 5, 9 ]
+        }
+      },
+      "Decorators": [
         {
-          "Square": {
-            "Origin": [0, 0],
-            "Width": [ 3, 10 ],
-            "Height": [ 3, 10 ],
-            "Outline": {
-              "Integrity": 1.0,
-              "Entities": [
-                [ "Barricade", 1 ]
-              ]
-            },
-            "Fill": {
-              "Integrity": 0.1,
-              "Entities": [
-                ["Sand", 1]
-              ]
-            }
+          "Wall": {
+            "Integrity": 1.0,
+            "Entities": [
+              [ "Barricade", 1 ]
+            ]
           }
         }
       ]

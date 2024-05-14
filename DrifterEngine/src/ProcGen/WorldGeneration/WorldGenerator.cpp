@@ -356,7 +356,7 @@ const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i coordinate) 
 	return ranking.begin()->second;
 }
 
-void drft::gen::WorldGenerator::placeStructures(const GenerationContext& context, const Biome* biome, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeStructures(GenerationContext& context, const Biome* biome, entt::registry& registry) const
 {
 	for (auto&& [name, probability] : biome->getStructureProbabilities())
 	{
@@ -373,7 +373,7 @@ void drft::gen::WorldGenerator::placeStructures(const GenerationContext& context
 	}
 }
 
-void drft::gen::WorldGenerator::placeLiquids(const GenerationContext& context, const Biome* biomeType, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeLiquids(GenerationContext& context, const Biome* biomeType, entt::registry& registry) const
 {
 	std::string altitude = "Altitude";
 	std::vector<sf::Vector2i> positions;
@@ -394,7 +394,7 @@ void drft::gen::WorldGenerator::placeLiquids(const GenerationContext& context, c
 	placeMany("Water", {context.area.left, context.area.top}, positions, registry);
 }
 
-void drft::gen::WorldGenerator::placeEntities(const GenerationContext& context, const Biome* biome, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeEntities(GenerationContext& context, const Biome* biome, entt::registry& registry) const
 {
 	for (auto& [category, entities] : biome->getEntitySpawningAlgorithms())
 	{
