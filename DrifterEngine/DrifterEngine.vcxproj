@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp" />
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp" />
     <ClCompile Include="src\Structures\Shapes\RectangleShape.cpp" />
     <ClCompile Include="src\Biomes\BiomeRegistry.cpp" />
@@ -386,6 +387,7 @@
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h" />
     <ClInclude Include="src\Random\WeightedSelection.h" />
     <ClInclude Include="src\Structures\Shapes\RectangleShape.h" />

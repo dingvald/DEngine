@@ -124,7 +124,7 @@ void drft::gen::WorldGenerator::generateTerrain()
 	_noiseLayers.at("Temperature").addBiasingFunction(
 		[](double val, sf::Vector2i position)
 		{
-			double mod = std::clamp(0.001 * position.y, 0.0, 1.1);
+			double mod = std::clamp(0.0005 * position.y, 0.0, 1.1);
 			return val * mod;
 		});
 	// Make Volcanism rarer
@@ -364,9 +364,9 @@ void drft::gen::WorldGenerator::placeStructures(GenerationContext& context, cons
 
 		if (auto structure = _structureFactory.build(name))
 		{
-			// Find spot that fits structure...
-			int randx = rng::RandomNumberGenerator::intInRange(context.area.left, context.area.left + context.area.width);
-			int randy = rng::RandomNumberGenerator::intInRange(context.area.top, context.area.top + context.area.height);
+			// TODO: Find spot that fits structure... (anywhere with no liquid?) - Random for now
+			const int randx = rng::RandomNumberGenerator::intInRange(context.area.left, context.area.left + context.area.width);
+			const int randy = rng::RandomNumberGenerator::intInRange(context.area.top, context.area.top + context.area.height);
 
 			structure->stamp({ randx, randy }, context, registry);
 		}

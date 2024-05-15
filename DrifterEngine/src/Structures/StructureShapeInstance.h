@@ -9,13 +9,15 @@ namespace drft
 		Reserved,
 		Wall,
 		Floor,
-		Room
+		Room,
+		Door
 	};
 
 	class StructureShapeInstance
 	{	
 	public:
 		void addEntity(const std::string& name, sf::Vector2i position);
+		void clearPosition(sf::Vector2i position);
 		const std::unordered_map<std::string, std::vector<sf::Vector2i>>& getEntityPositions() const;
 
 		bool checkBit(sf::Vector2i position, StructureBit bit) const;

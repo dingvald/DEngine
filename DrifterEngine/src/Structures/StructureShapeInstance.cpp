@@ -6,6 +6,30 @@ void drft::StructureShapeInstance::addEntity(const std::string& name, sf::Vector
 	_entityPositions[name].push_back(position);
 }
 
+void drft::StructureShapeInstance::clearPosition(sf::Vector2i position)
+{
+	_bitGrid.at(position.x, position.y).reset();
+	for (auto&& [bit, positions] : _bitPositions)
+	{
+		positions.erase(position);
+	}
+	for (auto&& [entityName, positions] : _entityPositions)
+	{
+		auto it = positions.begin();
+		while (it != positions.end())
+		{
+			if (*it == position)
+			{
+				it = positions.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
+}
+
 const std::unordered_map<std::string, std::vector<sf::Vector2i>>& drft::StructureShapeInstance::getEntityPositions() const
 {
 	return _entityPositions;

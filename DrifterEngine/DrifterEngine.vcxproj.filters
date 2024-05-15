@@ -528,6 +528,9 @@
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1605,6 +1608,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Structures\StructureShapeInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\Decorators\DoorDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

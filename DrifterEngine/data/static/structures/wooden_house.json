@@ -15,6 +15,14 @@
               [ "Barricade", 1 ]
             ]
           }
+        },
+        {
+          "Door": {
+            "Number": [ 1, 2 ],
+            "Entities": [
+              ["Wood Door", 1]
+            ]
+          }
         }
       ]
     }
