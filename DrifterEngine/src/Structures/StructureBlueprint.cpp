@@ -55,6 +55,5 @@ drft::StructureInstancePtr drft::StructureBlueprint::build() const
 	{
 		decorator->apply(*shapeInstance);
 	}
-
 	return std::make_unique<StructureInstance>(std::move(shapeInstance));
 }
