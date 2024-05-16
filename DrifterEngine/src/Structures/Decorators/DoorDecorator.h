@@ -11,6 +11,9 @@ namespace drft
 		virtual void apply(StructureShapeInstance& shape) const override;
 
 	private:
+		bool isPositionSuitable(sf::Vector2i position, const StructureShapeInstance& shape) const;
+
+	private:
 		math::Range<int> _numberOfDoors = { 1,1 };
 		std::vector<std::pair<std::string, int>> _entityWeights;
 	};

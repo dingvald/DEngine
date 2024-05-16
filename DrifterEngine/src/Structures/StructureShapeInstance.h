@@ -20,6 +20,7 @@ namespace drft
 		void clearPosition(sf::Vector2i position);
 		const std::unordered_map<std::string, std::vector<sf::Vector2i>>& getEntityPositions() const;
 
+		bool anyBits(sf::Vector2i position) const;
 		bool checkBit(sf::Vector2i position, StructureBit bit) const;
 		void setBit(sf::Vector2i position, StructureBit bit);
 		void clearBit(sf::Vector2i position, StructureBit bit);

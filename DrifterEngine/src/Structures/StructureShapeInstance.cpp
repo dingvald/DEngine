@@ -35,6 +35,11 @@ const std::unordered_map<std::string, std::vector<sf::Vector2i>>& drft::Structur
 	return _entityPositions;
 }
 
+bool drft::StructureShapeInstance::anyBits(sf::Vector2i position) const
+{
+	return _bitGrid.at(position.x, position.y).any();
+}
+
 bool drft::StructureShapeInstance::checkBit(sf::Vector2i position, StructureBit bit) const
 {
 	return _bitGrid.at(position.x, position.y).test((size_t)bit);

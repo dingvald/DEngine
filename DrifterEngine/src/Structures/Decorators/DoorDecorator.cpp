@@ -3,6 +3,7 @@
 #include "Random/RandomNumberGenerator.h"
 #include "Random/WeightedSelection.h"
 #include "Structures/StructureShapeInstance.h"
+#include "Spatial/Helpers.h"
 
 void drft::DoorDecorator::createFromJSON(const rapidjson::Value& json)
 {
@@ -44,18 +45,50 @@ void drft::DoorDecorator::apply(StructureShapeInstance& shape) const
 		const auto& walls = shape.getPositionsFor(StructureBit::Wall);
 		if (walls.size() == 0) return;
 
+		const auto choice = rng::weightedSelection(_entityWeights);
+		if (choice < 0) continue;
+		const auto& entityName = _entityWeights.at(choice).first;
+
 		size_t index = rng::RandomNumberGenerator::intInRange(0, walls.size() - 1);
 		auto it = walls.begin();
 		std::advance(it, index);
-
-		sf::Vector2i position = *it;
-		shape.clearPosition(position);
-		shape.setBit(position, StructureBit::Door);
+		bool foundPosition = false;
+		int iterations = 0;
 		
-		const auto choice = rng::weightedSelection(_entityWeights);
-		if (choice < 0) continue;
-
-		const auto& entityName = _entityWeights.at(choice).first;
-		shape.addEntity(entityName, position);
+		while (!foundPosition && iterations < walls.size())
+		{
+			sf::Vector2i position = *it;
+			if (isPositionSuitable(position, shape))
+			{
+				foundPosition = true;
+				shape.clearPosition(position);
+				shape.setBit(position, StructureBit::Door);
+				shape.addEntity(entityName, position);
+			}
+			else
+			{
+				it = std::next(it);
+				++iterations;
+				if (it == walls.end())
+				{
+					it = walls.begin();
+				}
+			}
+		}
 	}
+}
+
+bool drft::DoorDecorator::isPositionSuitable(sf::Vector2i position, const StructureShapeInstance& shape) const
+{
+	auto neighbors = spatial::getAdjacentPoints(position, spatial::AdjacentType::Cardinal);
+	bool emptyFound = false;
+	bool roomFound = false;
+
+	for (auto&& neighbor : neighbors)
+	{
+		emptyFound = emptyFound || !shape.anyBits(neighbor);
+		roomFound = roomFound || shape.checkBit(neighbor, StructureBit::Room);
+	}
+
+	return emptyFound && roomFound;
 }
