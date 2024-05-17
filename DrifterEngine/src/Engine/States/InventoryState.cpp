@@ -764,17 +764,17 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 			[this, itemEntity]() -> bool
 			{
 				auto& itemInfo = getContext().registry.get<component::Info>(itemEntity);
-	auto& itemPhysical = getContext().registry.get<component::Physical>(itemEntity);
-	_inventoryStack.insert("ItemInfoList", gui::List(false));
-	_inventoryStack["ItemInfoList"]
-		.setPosition(getContext().window.getView().getCenter())
-		.setStyle(gui::ElementState::Focused, {
-				.fillColor = sf::Color::Black,
-				.outlineColor = sf::Color(100,100,100,255),
-				.outlineThickness = 2.f,
-				.innerPadding = {4,4},
-				.childPadding = {0, 16}
-			})
+				auto& itemPhysical = getContext().registry.get<component::Physical>(itemEntity);
+				_inventoryStack.insert("ItemInfoList", gui::List(false));
+				_inventoryStack["ItemInfoList"]
+					.setPosition(getContext().window.getView().getCenter())
+					.setStyle(gui::ElementState::Focused, {
+						.fillColor = sf::Color::Black,
+						.outlineColor = sf::Color(100,100,100,255),
+						.outlineThickness = 2.f,
+						.innerPadding = {4,4},
+						.childPadding = {0, 16}
+					})
 		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 	_inventoryStack["ItemInfoList"].insert("Name", gui::Label())
 		.setStyle(gui::ElementState::Idle, {

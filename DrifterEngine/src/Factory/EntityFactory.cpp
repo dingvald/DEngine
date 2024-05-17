@@ -140,7 +140,7 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 			for (auto&& base : relationship.bases)
 			{
 				auto baseEntity = get(base);
-				util::copyEntity(entity, baseEntity, _protoRegistry);
+				util::copyEntity(entity, baseEntity, _protoRegistry, false);
 				inheritanceComp.bases.insert(base);
 			}
 			_resolvedInheritance.insert(relationship.entityName);
