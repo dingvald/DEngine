@@ -10,8 +10,8 @@ bool drft::system::containerHasItem(entt::registry& registry, entt::entity entit
         for (auto itemID : container->contents)
         {
             auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
-            auto info = registry.get<component::Info>(itemEntity);
-            if (info.prototype.compare(itemName) == 0)
+            auto& prototype = registry.get<component::Prototype>(itemEntity);
+            if (prototype.name.compare(itemName) == 0)
             {
                 return true;
             }

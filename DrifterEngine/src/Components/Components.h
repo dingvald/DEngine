@@ -14,9 +14,18 @@ namespace drft::goap
 
 namespace component
 {
+	struct Inheritance
+	{
+		std::unordered_set<std::string> bases;
+	};
+
+	struct Prototype
+	{
+		std::string name = { "PROTOTYPE" };
+	};
+
 	struct Info
 	{
-		std::string prototype = { "PROTOTYPE" };
 		std::string name = { "" };
 		std::string extendedName = { "" };
 		std::string description = { "" };

@@ -20,7 +20,7 @@ void drft::system::TurnManager::onStart(bool)
 	_timeKeeper = registry->create();
 	registry->emplace<component::Actor>(_timeKeeper, 0, 1.0f, 1.0f);
 	registry->emplace<component::tag::Active>(_timeKeeper);
-	registry->emplace<component::Info>(_timeKeeper, "", "Time Keeper", "", "");
+	registry->emplace<component::Info>(_timeKeeper, "Time Keeper", "", "");
 
 	_actorQueue->setSentinel(_timeKeeper);
 	_managedEntities.insert(_timeKeeper);

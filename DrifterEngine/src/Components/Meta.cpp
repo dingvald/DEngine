@@ -10,6 +10,9 @@ void component::Meta::initialize()
 {
 	// Meta types initialized here. Use the current ones as examples to 'meta' new compenents
 
+	snapshot::reflectComponent<Prototype, PROTOTYPE_STRING>()
+		.prop("serialize"_hs);
+
 	snapshot::reflectComponent<Info, INFO_STRING>()
 		.prop("serialize"_hs)
 		.data<&Info::name>("name"_hs)

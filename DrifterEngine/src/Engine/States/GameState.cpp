@@ -74,6 +74,9 @@ static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";
 static constexpr std::string_view PLAYER_FILE_NAME = "playerSaveData";
 static constexpr std::string_view GAME_STATE_SAVE_FILENAME = ".\\data\\savegame\\gamestate.json"; // file extension added because it will always be json
 
+static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
+static const std::filesystem::path ENTITIES_FOLDER_PATH = STATIC_DATA_PATH.string() + "entities";
+
 drft::GameState::GameState(StateStack& stack, StateContext& context) 
 	: State(stack, context)
 {
@@ -150,11 +153,7 @@ bool drft::GameState::loadOrCreatePlayer()
 
 void drft::GameState::loadEntityPrototypes()
 {
-	_factory->loadPrototypes("bases.json");
-	_factory->loadPrototypes("materials.json");
-	_factory->loadPrototypes("prototypes.json");
-	_factory->loadPrototypes("wearables.json");
-	_factory->loadPrototypes("player.json");
+	_factory->loadPrototypes(ENTITIES_FOLDER_PATH);
 }
 
 void drft::GameState::setupRegistryContext()

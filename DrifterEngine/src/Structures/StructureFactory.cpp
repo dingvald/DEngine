@@ -34,7 +34,7 @@ void drft::StructureFactory::createStructureBlueprintsFromJSON(const std::filesy
 		auto optionalStuctureDocument = drft::json::extractDOM(filename.path(), "Structure");
 		if (!optionalStuctureDocument.has_value())
 		{
-			std::cout << "Failure: " << directoryPath << " could not be parsed." << std::endl;
+			std::cout << "Failure: " << filename << " could not be parsed." << std::endl;
 		}
 		else
 		{

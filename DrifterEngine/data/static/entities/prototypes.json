@@ -460,9 +460,7 @@
       }
     },
     "Human Body": {
-      "Inherits": [
-        ""
-      ],
+      "Inherits": [],
       "Components": {
         "Render": {
           "sprite": 1,

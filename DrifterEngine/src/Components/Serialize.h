@@ -6,9 +6,15 @@ namespace cereal
 	using namespace component;
 
 	template<class Archive>
+	void serialize(Archive& archive, Prototype& prototype)
+	{
+		archive(prototype.name);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Info& info)
 	{
-		archive(info.prototype, info.name, info.extendedName, info.description);
+		archive(info.name, info.extendedName, info.description);
 	}
 
 	template<class Archive>

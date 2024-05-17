@@ -2,6 +2,7 @@
 
 #include "Components.h"
 
+constexpr std::string_view PROTOTYPE_STRING = "Prototype";
 constexpr std::string_view INFO_STRING = "Info";
 constexpr std::string_view POSITION_STRING = "Position";
 constexpr std::string_view RENDER_STRING = "Render";

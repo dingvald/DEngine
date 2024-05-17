@@ -5,7 +5,7 @@
 
 using namespace entt::literals;
 
-void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& registry)
+void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& registry, bool overwrite)
 {
 	for (auto [id, storage] : registry.storage())
 	{
@@ -13,6 +13,7 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 		{
 			if (storage.contains(to))
 			{
+				if (!overwrite) continue;
 				storage.erase(to);
 			}
 			storage.emplace(to, storage.get(from));

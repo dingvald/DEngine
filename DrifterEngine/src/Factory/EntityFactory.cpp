@@ -3,9 +3,7 @@
 #include "Components/Meta.h"
 #include "Utility/CopyEntity.h"
 #include <EnTT/meta/container.hpp>
-#include "../deps/Cereal/external/rapidjson/istreamwrapper.h"
-#include "../deps/Cereal/external/rapidjson/document.h"
-#include "../deps/Cereal/external/rapidjson/stringbuffer.h"
+#include "JSON/JSONHelpers.h"
 
 using namespace entt::literals;
 
@@ -14,203 +12,30 @@ drft::EntityFactory::EntityFactory()
 	component::Meta::initialize();
 }
 
-bool drft::EntityFactory::loadPrototypes(const std::string& filename)
+bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryPath)
 {
-	using namespace rapidjson;
-
-	std::string filepath = ".\\data\\static\\entities\\" + filename;
-
-	std::ifstream ifs{ filepath };
-
-	std::cout << "Loading " << filename << "..." << std::endl;
-
-	if (!ifs.is_open())
+	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
 	{
-		std::cerr << "Could not open file " << filepath << std::endl;
-		return false;
-	}
-	IStreamWrapper isw{ ifs };
-	Document doc{};
-	doc.ParseStream<kParseCommentsFlag>(isw);
-
-	if (!doc.HasMember("Prototypes") || doc.HasParseError())
-	{
-		std::cout << filename << " could not be parsed." << std::endl;
-		return false;
-	}
-
-	std::cout << "Parsing " << filename << "..." << std::endl;
-
-	// Iterate each prototype
-	for (auto&& prototype : doc["Prototypes"].GetObject())
-	{
-		entt::entity entity = _protoRegistry.create();
-		const std::string entityName = prototype.name.GetString();
-		_prototypes[entityName] = entity;
-		_prototypeNames[entity] = entityName;
-
-		const auto entityObject = prototype.value.GetObject();
-
-		if (entityObject.HasMember("Inherits"))
+		auto optionalPrototypesDocument = drft::json::extractDOM(filename.path(), "Prototypes");
+		if (!optionalPrototypesDocument.has_value())
 		{
-			// Copy all inherited values into entity
-			for (auto&& base : entityObject["Inherits"].GetArray())
-			{
-				const auto baseName = std::string(base.GetString());
-				if (!_prototypes.contains(baseName)) continue;
-				util::copyEntity(entity, _prototypes[baseName], _protoRegistry);
-			}
-			
+			std::cout << "Failure: " << filename << " could not be parsed." << std::endl;
 		}
-		if (entityObject.HasMember("Components"))
+		else
 		{
-			// Iterate each component
-			for (auto&& component : entityObject["Components"].GetObject())
+			for (auto&& node : optionalPrototypesDocument.value()["Prototypes"].GetObject())
 			{
-				auto componentName = component.name.GetString();
+				entt::entity entity = _protoRegistry.create();
+				const std::string entityName = node.name.GetString();
+				_prototypes[entityName] = entity;
+				_prototypeNames[entity] = entityName;
 
-				// SPECIAL CASE: parse Body component
-				if (std::string(componentName) == BODY_STRING)
-				{
-					auto bodyObj = component.value.GetObject();
-					auto& root = *bodyObj.begin();
-					auto parseBodyPart = [&](decltype(root)& rootObj, auto&& parse) -> std::unique_ptr<BodyPart>
-					{
-						BodyPart root;
-						root.name = rootObj.name.GetString();
-						root.type = string2PartType.at(rootObj.value.GetObject()["type"].GetString());
-						root.size = rootObj.value.GetObject()["size"].GetInt();
-						if (rootObj.value.HasMember("attachedParts"))
-						{
-							for (auto& attachedPart : rootObj.value["attachedParts"].GetObject())
-							{
-								root.attach(parse(attachedPart, parse));
-							}
-						}
-						return std::make_unique<BodyPart>(root);
-					};
-					PartTree parts(parseBodyPart(root, parseBodyPart));
-					_protoRegistry.emplace<component::Body>(entity, parts);
-				}
-				// DEFAULT CASE: parse generic
-				else
-				{
-					auto meta = entt::resolve(entt::hashed_string(componentName));
-					auto any = meta.func("emplace"_hs).invoke(meta, entt::forward_as_meta(_protoRegistry), entity);
-					// Iterate component data
-					for (auto&& data : component.value.GetObject())
-					{
-						const auto memberName = data.name.GetString();
-						if (data.value.IsArray())
-						{
-							// HACKZZ: Inflexible - assumes certain types in arrays
-							auto arr = data.value.GetArray();
-							int size = arr.Size();
-							if (size == 0) continue;
-							if (size == 2 && arr[0].IsInt())
-							{
-								sf::Vector2i vec2 = { arr[0].GetInt(), arr[1].GetInt() };
-								meta.data(entt::hashed_string(memberName)).set(any, vec2);
-							}
-							else if (size == 3 && arr[0].IsInt())
-							{
-								sf::Color col = {
-									static_cast<sf::Uint8>(arr[0].GetInt()),
-									static_cast<sf::Uint8>(arr[1].GetInt()),
-									static_cast<sf::Uint8>(arr[2].GetInt())
-								};
-								meta.data(entt::hashed_string(memberName)).set(any, col);
-							}
-							else if (arr[0].IsString())
-							{
-								// Either a unordered set of strings or a vector of strings
-								if (meta.data(entt::hashed_string(memberName)).type().is_associative_container())
-								{
-									std::unordered_set<std::string> strings;
-									for (int i = 0; i < size; ++i)
-									{
-										strings.insert(arr[i].GetString());
-									}
-									meta.data(entt::hashed_string(memberName)).set(any, strings);
-								}
-								else if (meta.data(entt::hashed_string(memberName)).type().is_sequence_container())
-								{
-									std::vector<std::string> strings;
-									for (int i = 0; i < size; ++i)
-									{
-										strings.push_back(arr[i].GetString());
-									}
-									meta.data(entt::hashed_string(memberName)).set(any, strings);
-								}
-							}
-						}
-						else if (data.value.IsString())
-						{
-							std::string val(data.value.GetString());
-							meta.data(entt::hashed_string(memberName)).set(any, val);
-						}
-						else if (data.value.IsInt())
-						{
-							meta.data(entt::hashed_string(memberName)).set(any, data.value.GetInt());
-						}
-						else if (data.value.IsFloat())
-						{
-							meta.data(entt::hashed_string(memberName)).set(any, data.value.GetFloat());
-						}
-						else if (data.value.IsObject())
-						{
-							if (data.value.GetObject().MemberCount() == 0) continue;
-							if (data.value.GetObject().begin()->value.IsInt())
-							{
-								if (auto varAny = meta.data(entt::hashed_string(memberName)).get(any).try_cast<std::unordered_map<std::string, int>>())
-								{
-									std::unordered_map<std::string, int> map;
-									for (auto&& mapData : data.value.GetObject())
-									{
-										map.emplace(mapData.name.GetString(), mapData.value.GetInt());
-									}
-
-									meta.data(entt::hashed_string(memberName)).set(any, map);
-								}
-								else if (auto varAny = meta.data(entt::hashed_string(memberName)).get(any).try_cast<std::unordered_map<std::string, unsigned long>>())
-								{
-									std::unordered_map<std::string, unsigned long> map;
-									for (auto&& mapData : data.value.GetObject())
-									{
-										map.emplace(mapData.name.GetString(), mapData.value.GetInt());
-									}
-
-									meta.data(entt::hashed_string(memberName)).set(any, map);
-								}
-							}
-							else if (data.value.GetObject().begin()->value.IsFloat())
-							{
-								std::unordered_map<std::string, float> map;
-								for (auto&& mapData : data.value.GetObject())
-								{
-									map.emplace(mapData.name.GetString(), mapData.value.GetFloat());
-								}
-								meta.data(entt::hashed_string(memberName)).set(any, map);
-							}
-							else if (data.value.GetObject().begin()->value.IsString())
-							{
-								std::unordered_map<std::string, std::string> map;
-								for (auto&& mapData : data.value.GetObject())
-								{
-									map.emplace(mapData.name.GetString(), mapData.value.GetString());
-								}
-								meta.data(entt::hashed_string(memberName)).set(any, map);
-							}
-						}
-						else if (data.value.IsBool())
-						{
-							meta.data(entt::hashed_string(memberName)).set(any, data.value.GetBool());
-						}
-					}
-				}
+				createEntitiyPrototypeFromJSON(entity, entityName, node.value);
 			}
 		}
 	}
+
+	resolvePrototypeInheritance();
 
 	return true;
 }
@@ -231,6 +56,22 @@ const std::string& drft::EntityFactory::getName(entt::entity prototype) const
 	return _prototypeNames.at(prototype);
 }
 
+const std::unordered_set<std::string> drft::EntityFactory::getFlattenedInheritance(entt::const_handle entity) const
+{
+	std::unordered_set<std::string> result;
+	if (auto inheritance = entity.try_get<component::Inheritance>())
+	{
+		for (auto&& base : inheritance->bases)
+		{
+			auto baseEntity = get(base);
+			auto theirInheritance = getFlattenedInheritance({ _protoRegistry, baseEntity });
+			result.merge(theirInheritance);
+		}
+	}
+
+	return result;
+}
+
 const entt::registry& drft::EntityFactory::prototypes() const
 {
 	return _protoRegistry;
@@ -246,10 +87,7 @@ entt::handle drft::EntityFactory::build(const std::string& name, entt::registry&
 	entt::entity newEntity = registry.create();
 	util::copyEntity(newEntity, _prototypes.at(name), registry, _protoRegistry);
 
-	if (auto info = registry.try_get<component::Info>(newEntity))
-	{
-		info->prototype = name;
-	}
+	registry.emplace<component::Prototype>(newEntity, name);
 
 	return entt::handle(registry, newEntity);
 }
@@ -257,6 +95,261 @@ entt::handle drft::EntityFactory::build(const std::string& name, entt::registry&
 bool drft::EntityFactory::has(const std::string& name) const
 {
 	return _prototypes.contains(name);
+}
+
+void drft::EntityFactory::resolvePrototypeInheritance()
+{
+	std::cout << "Resolving entity inheritance..." << std::endl;
+	const int numEntitiesToResolve = _inheritanceQueue.size();
+	std::cout << "Entities to resolve: " << numEntitiesToResolve << std::endl;
+
+	int currentQueueSize = numEntitiesToResolve;
+	int oldQueueSize = currentQueueSize;
+	int iterations = 0;
+	bool resolutionSuccessful = true;
+
+	while (!_inheritanceQueue.empty())
+	{
+		auto& relationship = _inheritanceQueue.front();
+		bool canResolve = false;
+		if (relationship.bases.empty())
+		{
+			canResolve = true;
+		}
+		else
+		{
+			bool allBasesResolved = true;
+			for (auto&& base : relationship.bases)
+			{
+				if (!_resolvedInheritance.contains(base))
+				{
+					allBasesResolved = false;
+					break;
+				}
+			}
+			if (allBasesResolved)
+			{
+				canResolve = true;
+			}
+		}
+
+		if (canResolve)
+		{
+			auto entity = get(relationship.entityName);
+			auto& inheritanceComp = _protoRegistry.emplace<component::Inheritance>(entity);
+			for (auto&& base : relationship.bases)
+			{
+				auto baseEntity = get(base);
+				util::copyEntity(entity, baseEntity, _protoRegistry);
+				inheritanceComp.bases.insert(base);
+			}
+			_resolvedInheritance.insert(relationship.entityName);
+		}
+		else
+		{
+			_inheritanceQueue.push(relationship);
+		}
+		_inheritanceQueue.pop();
+
+		currentQueueSize = _inheritanceQueue.size();
+		if (oldQueueSize == currentQueueSize)
+		{
+			++iterations;
+			if (iterations > currentQueueSize)
+			{
+				// we have a problem
+				resolutionSuccessful = false;
+				break;
+			}
+		}
+		oldQueueSize = currentQueueSize;
+	}
+
+	if (resolutionSuccessful)
+	{
+		std::cout << "All entities resolved." << std::endl;
+	}
+	else
+	{
+		std::cout << _inheritanceQueue.size() << " entities could not be resolved:" << std::endl;
+		while (!_inheritanceQueue.empty())
+		{
+			auto& relationship = _inheritanceQueue.front();
+			std::cout << relationship.entityName << std::endl;
+			_inheritanceQueue.pop();
+		}
+	}
+	
+}
+
+void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, const std::string& entityName, const rapidjson::Value& json)
+{
+	const auto entityObject = json.GetObject();
+
+	if (entityObject.HasMember("Inherits"))
+	{
+		InheritanceRelationship newRelationship;
+		newRelationship.entityName = entityName;
+		for (auto&& base : entityObject["Inherits"].GetArray())
+		{
+			auto baseName = std::string(base.GetString());
+			if (baseName.empty()) continue;
+			newRelationship.bases.emplace_back(std::move(baseName));
+		}
+		_inheritanceQueue.push(newRelationship);
+	}
+	else
+	{
+		_resolvedInheritance.insert(entityName);
+	}
+	if (entityObject.HasMember("Components"))
+	{
+		// Iterate each component
+		for (auto&& component : entityObject["Components"].GetObject())
+		{
+			auto componentName = component.name.GetString();
+
+			// SPECIAL CASE: parse Body component
+			if (std::string(componentName) == BODY_STRING)
+			{
+				auto bodyObj = component.value.GetObject();
+				auto& root = *bodyObj.begin();
+				auto parseBodyPart = [&](decltype(root)& rootObj, auto&& parse) -> std::unique_ptr<BodyPart>
+				{
+					BodyPart root;
+					root.name = rootObj.name.GetString();
+					root.type = string2PartType.at(rootObj.value.GetObject()["type"].GetString());
+					root.size = rootObj.value.GetObject()["size"].GetInt();
+					if (rootObj.value.HasMember("attachedParts"))
+					{
+						for (auto& attachedPart : rootObj.value["attachedParts"].GetObject())
+						{
+							root.attach(parse(attachedPart, parse));
+						}
+					}
+					return std::make_unique<BodyPart>(root);
+				};
+				PartTree parts(parseBodyPart(root, parseBodyPart));
+				_protoRegistry.emplace<component::Body>(entity, parts);
+			}
+			// DEFAULT CASE: parse generic
+			else
+			{
+				auto meta = entt::resolve(entt::hashed_string(componentName));
+				auto any = meta.func("emplace"_hs).invoke(meta, entt::forward_as_meta(_protoRegistry), entity);
+				// Iterate component data
+				for (auto&& data : component.value.GetObject())
+				{
+					const auto memberName = data.name.GetString();
+					if (data.value.IsArray())
+					{
+						// HACKZZ: Inflexible - assumes certain types in arrays
+						auto arr = data.value.GetArray();
+						int size = arr.Size();
+						if (size == 0) continue;
+						if (size == 2 && arr[0].IsInt())
+						{
+							sf::Vector2i vec2 = { arr[0].GetInt(), arr[1].GetInt() };
+							meta.data(entt::hashed_string(memberName)).set(any, vec2);
+						}
+						else if (size == 3 && arr[0].IsInt())
+						{
+							sf::Color col = {
+								static_cast<sf::Uint8>(arr[0].GetInt()),
+								static_cast<sf::Uint8>(arr[1].GetInt()),
+								static_cast<sf::Uint8>(arr[2].GetInt())
+							};
+							meta.data(entt::hashed_string(memberName)).set(any, col);
+						}
+						else if (arr[0].IsString())
+						{
+							// Either a unordered set of strings or a vector of strings
+							if (meta.data(entt::hashed_string(memberName)).type().is_associative_container())
+							{
+								std::unordered_set<std::string> strings;
+								for (int i = 0; i < size; ++i)
+								{
+									strings.insert(arr[i].GetString());
+								}
+								meta.data(entt::hashed_string(memberName)).set(any, strings);
+							}
+							else if (meta.data(entt::hashed_string(memberName)).type().is_sequence_container())
+							{
+								std::vector<std::string> strings;
+								for (int i = 0; i < size; ++i)
+								{
+									strings.push_back(arr[i].GetString());
+								}
+								meta.data(entt::hashed_string(memberName)).set(any, strings);
+							}
+						}
+					}
+					else if (data.value.IsString())
+					{
+						std::string val(data.value.GetString());
+						meta.data(entt::hashed_string(memberName)).set(any, val);
+					}
+					else if (data.value.IsInt())
+					{
+						meta.data(entt::hashed_string(memberName)).set(any, data.value.GetInt());
+					}
+					else if (data.value.IsFloat())
+					{
+						meta.data(entt::hashed_string(memberName)).set(any, data.value.GetFloat());
+					}
+					else if (data.value.IsObject())
+					{
+						if (data.value.GetObject().MemberCount() == 0) continue;
+						if (data.value.GetObject().begin()->value.IsInt())
+						{
+							if (auto varAny = meta.data(entt::hashed_string(memberName)).get(any).try_cast<std::unordered_map<std::string, int>>())
+							{
+								std::unordered_map<std::string, int> map;
+								for (auto&& mapData : data.value.GetObject())
+								{
+									map.emplace(mapData.name.GetString(), mapData.value.GetInt());
+								}
+
+								meta.data(entt::hashed_string(memberName)).set(any, map);
+							}
+							else if (auto varAny = meta.data(entt::hashed_string(memberName)).get(any).try_cast<std::unordered_map<std::string, unsigned long>>())
+							{
+								std::unordered_map<std::string, unsigned long> map;
+								for (auto&& mapData : data.value.GetObject())
+								{
+									map.emplace(mapData.name.GetString(), mapData.value.GetInt());
+								}
+
+								meta.data(entt::hashed_string(memberName)).set(any, map);
+							}
+						}
+						else if (data.value.GetObject().begin()->value.IsFloat())
+						{
+							std::unordered_map<std::string, float> map;
+							for (auto&& mapData : data.value.GetObject())
+							{
+								map.emplace(mapData.name.GetString(), mapData.value.GetFloat());
+							}
+							meta.data(entt::hashed_string(memberName)).set(any, map);
+						}
+						else if (data.value.GetObject().begin()->value.IsString())
+						{
+							std::unordered_map<std::string, std::string> map;
+							for (auto&& mapData : data.value.GetObject())
+							{
+								map.emplace(mapData.name.GetString(), mapData.value.GetString());
+							}
+							meta.data(entt::hashed_string(memberName)).set(any, map);
+						}
+					}
+					else if (data.value.IsBool())
+					{
+						meta.data(entt::hashed_string(memberName)).set(any, data.value.GetBool());
+					}
+				}
+			}
+		}
+	}
 }
 
 

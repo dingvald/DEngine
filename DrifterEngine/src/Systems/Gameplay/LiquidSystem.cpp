@@ -92,9 +92,9 @@ void drft::system::LiquidSystem::onEnterTileEvent(events::EnterTileEvent& ev) co
 
 	if (!liquids.empty() && isAffectedByLiquids(ev.entity))
 	{
-		auto liquid = registry->get<component::Liquid>(liquids.front());
-		auto info = registry->get<component::Info>(liquids.front());
-		registry->emplace_or_replace<component::InLiquid>(ev.entity, info.prototype, liquid.volume);
+		auto& liquid = registry->get<component::Liquid>(liquids.front());
+		auto& prototype = registry->get<component::Prototype>(liquids.front());
+		registry->emplace_or_replace<component::InLiquid>(ev.entity, prototype.name, liquid.volume);
 	}
 }
 

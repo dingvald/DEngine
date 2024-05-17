@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "EntityHelpers.h"
+#include "Factory/EntityFactory.h"
 #include "Components/Components.h"
 #include "Spatial/Helpers.h"
 
@@ -10,6 +11,15 @@ std::string drft::util::getEntityName(const entt::const_handle entity)
 		return info->name;
 	}
 	return "UNNAMED";
+}
+
+bool drft::util::isType(entt::const_handle entity, const std::string& typeName)
+{
+	if (!entity.registry()->ctx().contains<const EntityFactory&>()) return false;
+
+	const auto& factory = entity.registry()->ctx().get<const EntityFactory&>();
+
+	return factory.getFlattenedInheritance(entity).contains(typeName);
 }
 
 int drft::util::getDistanceBetween(entt::const_handle e1, entt::const_handle e2)
