@@ -536,59 +536,48 @@
           "Torso": {
             "type": "Torso",
             "size": 36,
-            "layers": 2,
             "attachedParts": {
               "Head": {
                 "type": "Head",
-                "size": 9,
-                "layers": 1
+                "size": 9
               },
-              "Right Arm": {
-                "type": "Upper Limb",
-                "size": 7,
-                "layers": 1,
-                "attachedParts": {
-                  "Right Hand": {
-                    "type": "Hand",
-                    "size": 2,
-                    "layers": 1,
-                    "preffered": true
-                  }
-                }
-              },
-              "Left Arm": {
-                "type": "Upper Limb",
-                "size": 7,
-                "layers": 1,
-                "attachedParts": {
-                  "Left Hand": {
-                    "type": "Hand",
-                    "size": 2,
-                    "layers": 1
-                  }
-                }
-              },
-              "Right Leg": {
+              "Right Foreleg": {
                 "type": "Lower Limb",
-                "size": 15,
-                "layers": 2,
+                "size": 10,
                 "attachedParts": {
                   "Right Foot": {
                     "type": "Foot",
-                    "size": 3,
-                    "layers": 2
+                    "size": 2
                   }
                 }
               },
-              "Left Leg": {
+              "Left Foreleg": {
                 "type": "Lower Limb",
-                "size": 15,
-                "layers": 2,
+                "size": 10,
                 "attachedParts": {
                   "Left Foot": {
                     "type": "Foot",
-                    "size": 3,
-                    "layers": 2
+                    "size": 2
+                  }
+                }
+              },
+              "Right Hindleg": {
+                "type": "Lower Limb",
+                "size": 12,
+                "attachedParts": {
+                  "Right Foot": {
+                    "type": "Foot",
+                    "size": 2
+                  }
+                }
+              },
+              "Left Hindleg": {
+                "type": "Lower Limb",
+                "size": 12,
+                "attachedParts": {
+                  "Left Foot": {
+                    "type": "Foot",
+                    "size": 2
                   }
                 }
               }
@@ -792,38 +781,6 @@
         }
       }
     },
-    "Ephemera": {
-      "Inherits": [
-        "BaseItem"
-      ],
-      "Components": {
-        "Info": {
-          "name": "Ephemera",
-          "extendedName": "",
-          "description": "Old paper containing old words."
-        },
-        "Render": {
-          "sprite": 52,
-          "layer": 1,
-          "color": [ 224, 201, 166 ]
-        },
-        "Physical": {
-          "blocks": false,
-          "weight": 0.3,
-          "materials": [
-            "Plant Fibre"
-          ]
-        },
-        "Usable": {
-          "action": "Read",
-          "params": {
-            "Type": "Text",
-            "Content": ""
-          },
-          "consumes": false
-        }
-      }
-    },
     "Dungeon Key": {
       "Inherits": [
         "BaseItem"
@@ -850,14 +807,6 @@
           "radius": 6,
           "dropOff": 0.2,
           "color": [ 255, 255, 0 ]
-        },
-        "Usable": {
-          "action": "Read",
-          "params": {
-            "Type": "Text",
-            "Content": ""
-          },
-          "consumes": false
         }
       }
     },
@@ -1100,7 +1049,7 @@
     },
     "Rat": {
       "Inherits": [
-        ""
+        "Quadruped"
       ],
       "Components": {
         "Info": {
@@ -1442,186 +1391,6 @@
         },
         "AI": {
           "sightRange": 6,
-          "goals": [
-            "explore",
-            "kill_hostile",
-            "escape_hostile"
-          ]
-        }
-      }
-    },
-    "Birdman Horror": {
-      "Inherits": [
-        ""
-      ],
-      "Components": {
-        "Info": {
-          "name": "Birdman Horror",
-          "extendedName": "",
-          "description": " An inexplicable horror."
-        },
-        "Render": {
-          "sprite": 11,
-          "layer": 2,
-          "color": [ 60, 50, 50 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
-        },
-        "BaseStats": {
-          "strength": 10,
-          "agility": 10,
-          "vitality": 10
-        },
-        "Physical": {
-          "blocks": true,
-          "weight": 100.0,
-          "materials": [ "Ash" ]
-        },
-        "LightSource": {
-          "radius": 6,
-          "dropOff": 0.3,
-          "color": [ 255, 0, 0 ]
-        },
-        "Actor": {
-          "moveSpeed": 1.2,
-          "actSpeed": 1.0
-        },
-        "Health": {
-          "max": 100.0,
-          "current": 100.0
-        },
-        "Attacker": {
-          "baseDamage": 5
-        },
-        "Faction": {
-          "name": "horror"
-        },
-        "Leveling": {
-          "currentLevel": 4
-        },
-        "AI": {
-          "sightRange": 10,
-          "goals": [
-            "explore",
-            "kill_hostile",
-            "escape_hostile"
-          ]
-        }
-      }
-    },
-    "Skeletal Horror": {
-      "Inherits": [
-        ""
-      ],
-      "Components": {
-        "Info": {
-          "name": "Skeletal Horror",
-          "extendedName": "",
-          "description": " An inexplicable horror."
-        },
-        "Render": {
-          "sprite": 44,
-          "layer": 2,
-          "color": [ 60, 50, 50 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
-        },
-        "BaseStats": {
-          "strength": 10,
-          "agility": 10,
-          "vitality": 10
-        },
-        "Physical": {
-          "blocks": true,
-          "weight": 50.0,
-          "materials": [ "Ash" ]
-        },
-        "LightSource": {
-          "radius": 6,
-          "dropOff": 0.3,
-          "color": [ 255, 0, 0 ]
-        },
-        "Actor": {
-          "moveSpeed": 1.2,
-          "actSpeed": 1.0
-        },
-        "Health": {
-          "max": 100.0,
-          "current": 100.0
-        },
-        "Attacker": {
-          "baseDamage": 5
-        },
-        "Faction": {
-          "name": "horror"
-        },
-        "Leveling": {
-          "currentLevel": 4
-        },
-        "AI": {
-          "sightRange": 10,
-          "goals": [
-            "explore",
-            "kill_hostile",
-            "escape_hostile"
-          ]
-        }
-      }
-    },
-    "Unknown Horror": {
-      "Inherits": [
-        ""
-      ],
-      "Components": {
-        "Info": {
-          "name": "Unknown Horror",
-          "extendedName": "",
-          "description": " An inexplicable horror."
-        },
-        "Render": {
-          "sprite": 33,
-          "layer": 2,
-          "color": [ 60, 50, 50 ]
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
-        },
-        "BaseStats": {
-          "strength": 10,
-          "agility": 10,
-          "vitality": 10
-        },
-        "Physical": {
-          "blocks": true,
-          "weight": 100.0,
-          "materials": [ "Ash" ]
-        },
-        "LightSource": {
-          "radius": 6,
-          "dropOff": 0.3,
-          "color": [ 255, 0, 0 ]
-        },
-        "Actor": {
-          "moveSpeed": 1.2,
-          "actSpeed": 1.0
-        },
-        "Health": {
-          "max": 100.0,
-          "current": 100.0
-        },
-        "Attacker": {
-          "baseDamage": 5
-        },
-        "Faction": {
-          "name": "horror"
-        },
-        "Leveling": {
-          "currentLevel": 4
-        },
-        "AI": {
-          "sightRange": 10,
           "goals": [
             "explore",
             "kill_hostile",
