@@ -1,6 +1,11 @@
 #pragma once
 #include "Systems/System.h"
 
+namespace drft::spatial
+{
+	class WorldGrid;
+}
+
 namespace drft::system
 {
 	class InteractionSystem : public System
@@ -11,10 +16,9 @@ namespace drft::system
 		void onUpdateEnd() override;
 
 	private:
-		void onTargetSelected(entt::entity actor, sf::Vector2i target);
+		std::vector<entt::entity> getUsableSurroundings(sf::Vector2i position, const spatial::WorldGrid& grid);
+		bool onTargetSelected(entt::entity actor, sf::Vector2i target);
 		void onContructDoInteract(entt::registry& registry, entt::entity entity);
-
-	private:
 	};
 }
 
