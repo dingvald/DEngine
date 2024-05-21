@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp" />
     <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp" />
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp" />
     <ClCompile Include="src\Structures\Shapes\RectangleShape.cpp" />
@@ -364,7 +365,6 @@
     <ClCompile Include="src\Engine\States\WorldMapState.cpp" />
     <ClCompile Include="src\Utility\stdHashing.cpp" />
     <ClCompile Include="src\Utility\Visibility.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\Actions\UseItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\StaminaSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\WaitingSystem.cpp" />
     <ClCompile Include="src\Engine\States\SelectDirectionState.cpp" />
@@ -387,6 +387,7 @@
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h" />
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h" />
     <ClInclude Include="src\Random\WeightedSelection.h" />
@@ -726,7 +727,6 @@
     <ClInclude Include="src\Engine\States\WorldMapState.h" />
     <ClInclude Include="src\Utility\stdHashing.h" />
     <ClInclude Include="src\Utility\Visibility.h" />
-    <ClInclude Include="src\Systems\Gameplay\Actions\UseItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\StaminaSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\WaitingSystem.h" />
     <ClInclude Include="src\Engine\States\SelectDirectionState.h" />

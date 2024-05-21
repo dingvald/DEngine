@@ -8,11 +8,6 @@ void drft::system::SelectDirectionSystem::init()
 	registry->on_construct<component::action::SelectDirection>().connect<&SelectDirectionSystem::onSelectDirection>(this);
 }
 
-void drft::system::SelectDirectionSystem::onUpdateEnd()
-{
-	
-}
-
 void drft::system::SelectDirectionSystem::onSelectDirection(entt::registry& registry, entt::entity entity)
 {
 	registry.ctx().get<entt::dispatcher&>().trigger(events::RequestStateStackPush{ States::SelectDirection });

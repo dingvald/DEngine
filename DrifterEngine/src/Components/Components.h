@@ -211,12 +211,9 @@ namespace component
 		std::vector<entt::entity> partialCraftables;
 	};
 
-	struct Usable
+	struct Interactable
 	{
-		using Parameters = std::unordered_map<std::string, std::string>;
-		std::string action;
-		Parameters params;
-		bool consumes = false;
+		std::unordered_map<std::string, std::function<void(entt::entity, entt::entity)>> interactions;
 	};
 
 	struct Openable
@@ -292,8 +289,7 @@ namespace component::action
 
 	struct DoInteract 
 	{
-		entt::entity actor;
-		entt::entity subject;
+		std::vector<entt::entity> subjects;
 	};
 
 	struct SelectDirection
@@ -385,6 +381,4 @@ namespace component::action
 	{
 		std::unordered_map<std::string, std::string> parameters;
 	};
-
-	
 }

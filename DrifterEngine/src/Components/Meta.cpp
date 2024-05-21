@@ -128,12 +128,6 @@ void component::Meta::initialize()
 		.prop("serialize"_hs)
 		.data<&Craftable::recipe>("recipe"_hs);
 
-	snapshot::reflectComponent<Usable, USABLE_STRING>()
-		.prop("serialize"_hs)
-		.data<&Usable::action>("action"_hs)
-		.data<&Usable::params>("params"_hs)
-		.data<&Usable::consumes>("consumes"_hs);
-
 	snapshot::reflectComponent<Openable, OPENABLE_STRING>()
 		.prop("serialize"_hs)
 		.data<&Openable::keyName>("keyName"_hs);

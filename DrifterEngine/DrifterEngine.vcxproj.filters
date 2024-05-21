@@ -234,9 +234,6 @@
     <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\UseItemSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\DayNightCycleSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -529,6 +526,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1247,9 +1247,6 @@
     <ClInclude Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\UseItemSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Events\GameTickEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1611,6 +1608,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

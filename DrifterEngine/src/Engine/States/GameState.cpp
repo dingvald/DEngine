@@ -45,6 +45,7 @@
 #include "Systems/Gameplay/Actions/LaunchAttackSystem.h"
 #include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
 #include "Systems/Gameplay/Actions/TargetSelectSystem.h"
+#include "Systems/Gameplay/Actions/OpenableSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/QuestingSystem.h"
@@ -55,7 +56,6 @@
 #include "Systems/Gameplay/Actions/OpenCraftingSystem.h"
 #include "Systems/Gameplay/Actions/OpenWorldMapSystem.h"
 #include "Systems/Gameplay/DetermineCraftableItemsSystem.h"
-#include "Systems/Gameplay/Actions/UseItemSystem.h"
 #pragma endregion
 #pragma region Component Includes
 #include "Components/Components.h"
@@ -258,13 +258,11 @@ void drft::GameState::importSystems()
 	_systems->add<ProjectileSystem>(				Phase::OnUpdate);
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
-	_systems->add<SelectDirectionSystem>(			Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
 	_systems->add<PickUpSystem>(					Phase::OnUpdate);
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
 	_systems->add<EquipItemSystem>(					Phase::OnUpdate);
 	_systems->add<CraftItemSystem>(					Phase::OnUpdate);
-	_systems->add<UseItemSystem>(					Phase::OnUpdate);
 	_systems->add<OpenEquipmentSystem>(				Phase::OnUpdate);
 	_systems->add<OpenWorldMapSystem>(				Phase::OnUpdate);
 	_systems->add<OpenCraftingSystem>(				Phase::OnUpdate);
@@ -301,6 +299,8 @@ void drft::GameState::importSystems()
 	_systems->add<DetermineCraftableItemsSystem>(	Phase::Reactive);
 	_systems->add<TickingLifetimeSystem>(			Phase::Reactive);
 	_systems->add<TargetSelectSystem>(				Phase::Reactive);
+	_systems->add<SelectDirectionSystem>(			Phase::Reactive);
+	_systems->add<OpenableSystem>(					Phase::Reactive);
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{

@@ -7,7 +7,6 @@ namespace drft::system
 	{
 	public:
 		void init() override;
-		void onUpdateEnd() override;
 
 	private:
 		void onSelectDirection(entt::registry& registry, entt::entity entity);

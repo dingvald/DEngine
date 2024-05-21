@@ -619,29 +619,9 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 	{
 	case CommandListType::Inventory:
 		{
-			if (auto usable = getContext().registry.try_get<component::Usable>(itemEntity))
+			if (const auto usable = getContext().registry.try_get<component::Interactable>(itemEntity))
 			{
-				commandList.insert("Use", gui::Label())
-					.setStyle(gui::ElementState::Idle, {
-						.font = &getContext().fonts.get("Terminus"),
-						.textColor = sf::Color::White,
-						.textSize = 16
-						})
-					.setStyle(gui::ElementState::Focused, {
-						.font = &getContext().fonts.get("Terminus"),
-						.textColor = sf::Color::Yellow,
-						.textSize = 16
-						})
-					.setTextString("use")
-					.setTextOrigin(gui::ElementPosition::TOP_LEFT)
-					.registerCallback(gui::ElementCallbackType::OnSelect,
-						[this, itemEntity, itemID]() -> bool
-						{
-							requestStackPop();
-				getContext().registry.emplace_or_replace<component::action::Use>(_sessionEntities.front(), itemEntity, itemID);
-
-				return true;
-						});
+				// Add a bunch of options depending on how it can be interacted with
 			}
 
 			commandList.insert("Swap", gui::Label())

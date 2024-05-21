@@ -145,13 +145,6 @@
           "blocks": false,
           "weight": 0.2,
           "materials": [ "Plant Fibre" ]
-        },
-        "Usable": {
-          "action": "Heal",
-          "params": {
-            "Amount": "2"
-          },
-          "consumes": true
         }
       }
     },
@@ -183,13 +176,6 @@
             "Herb": 3,
             "Mountain Flower": 1
           }
-        },
-        "Usable": {
-          "action": "Heal",
-          "params": {
-            "Amount": "10"
-          },
-          "consumes": true
         }
       }
     },
@@ -1473,11 +1459,6 @@
             "Wood": 4
           }
         },
-        "Usable": {
-          "action": "Open",
-          "params": {},
-          "consumes": false
-        },
         "Openable": {
           "keyName": ""
         }
@@ -1511,11 +1492,6 @@
         },
         "Container": {
           "capacity": 10
-        },
-        "Usable": {
-          "action": "Open",
-          "params": {},
-          "consumes": false
         },
         "Openable": {
           "keyName": ""
@@ -1552,13 +1528,6 @@
         "Health": {
           "max": 200.0,
           "current": 200.0
-        },
-        "Usable": {
-          "action": "Heal",
-          "params": {
-            "Amount": "999"
-          },
-          "consumes": true
         }
       }
     }

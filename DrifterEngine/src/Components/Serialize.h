@@ -162,12 +162,6 @@ namespace cereal
 	}
 
 	template<class Archive>
-	void serialize(Archive& archive, Usable& usable)
-	{
-		archive(usable.action, usable.params, usable.consumes);
-	}
-
-	template<class Archive>
 	void serialize(Archive& archive, Openable& openable)
 	{
 		archive(openable.isOpen, openable.keyName);
