@@ -10,34 +10,34 @@ static const int REALITY_RADIUS = 96; // in tiles
 
 void drft::system::RealityBubble::init()
 {
-	registry->on_construct<component::Actor>().connect<&RealityBubble::onActorAddOrUpdate>(this);
-	registry->on_update<component::Actor>().connect<&RealityBubble::onActorAddOrUpdate>(this);
-	registry->on_destroy<component::Actor>().connect<&RealityBubble::onActorRemove>(this);
+	_registry->on_construct<component::Actor>().connect<&RealityBubble::onActorAddOrUpdate>(this);
+	_registry->on_update<component::Actor>().connect<&RealityBubble::onActorAddOrUpdate>(this);
+	_registry->on_destroy<component::Actor>().connect<&RealityBubble::onActorRemove>(this);
 
-	registry->on_construct<component::tag::Active>().connect<&RealityBubble::onActiveAdd>(this);
-	registry->on_destroy<component::tag::Active>().connect<&RealityBubble::onActiveRemove>(this);
+	_registry->on_construct<component::tag::Active>().connect<&RealityBubble::onActiveAdd>(this);
+	_registry->on_destroy<component::tag::Active>().connect<&RealityBubble::onActiveRemove>(this);
 }
 
 void drft::system::RealityBubble::update(const float)
 {
-	auto cameraView = registry->view<const component::Camera, const component::Position>();
+	auto cameraView = _registry->view<const component::Camera, const component::Position>();
 	for (auto&& [entity, camera, position] : cameraView.each())
 	{
 		_cameraPosition = position.position;
 	}
 
-	auto actorView = registry->view<const component::Actor, const component::Position>();
+	auto actorView = _registry->view<const component::Actor, const component::Position>();
 	for (auto&& [entity, actor, pos] : actorView.each())
 	{
 		const auto distance = spatial::distance(_cameraPosition, pos.position);
 
 		if (distance > REALITY_RADIUS)
 		{
-			registry->remove<component::tag::Active>(entity);
+			_registry->remove<component::tag::Active>(entity);
 		}
 		else
 		{
-			registry->emplace_or_replace<component::tag::Active>(entity);
+			_registry->emplace_or_replace<component::tag::Active>(entity);
 		}
 	}
 

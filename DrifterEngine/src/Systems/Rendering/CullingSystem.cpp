@@ -11,7 +11,7 @@ void drft::system::CullingSystem::init()
 
 void drft::system::CullingSystem::fixedUpdate()
 {
-	auto camera = getCurrentCamera(*registry);
+	auto camera = getCurrentCamera(*_registry);
 	sf::FloatRect viewport = camera.viewport;
 	// Add buffer to viewport
 	viewport.left -= spatial::TILE_WIDTH;
@@ -19,17 +19,17 @@ void drft::system::CullingSystem::fixedUpdate()
 	viewport.width += 2 * spatial::TILE_WIDTH;
 	viewport.height += 2 * spatial::TILE_HEIGHT;
 	
-	auto view = registry->view<component::Position>();
+	auto view = _registry->view<component::Position>();
 	for (auto [entity, pos] : view.each())
 	{
 		if (viewport.contains(spatial::toFloatSpace(pos.position - camera.position)))
 		{
-			registry->emplace<component::tag::InViewport>(entity);
+			_registry->emplace<component::tag::InViewport>(entity);
 		}
 	}
 }
 
 void drft::system::CullingSystem::onFixedUpdateEnd()
 {
-	registry->clear<component::tag::InViewport>();
+	_registry->clear<component::tag::InViewport>();
 }

@@ -6,44 +6,44 @@
 
 void drft::system::OpenableSystem::init()
 {
-	registry->on_construct<component::Openable>().connect<&OpenableSystem::onConstructOpenable>(this);
-	registry->on_destroy<component::Openable>().connect<&OpenableSystem::onDestroyOpenable>(this);
+	_registry->on_construct<component::Openable>().connect<&OpenableSystem::onConstructOpenable>(this);
+	_registry->on_destroy<component::Openable>().connect<&OpenableSystem::onDestroyOpenable>(this);
 }
 
 void drft::system::OpenableSystem::openInteraction(entt::entity actor, entt::entity subject) const
 {
-	if (auto openable = registry->try_get<component::Openable>(subject))
+	if (auto openable = _registry->try_get<component::Openable>(subject))
 	{
 		bool canOpen = true;
 		if (openable->keyName != "")
 		{
-			canOpen = containerHasItem(*registry, actor, openable->keyName);
+			canOpen = containerHasItem(*_registry, actor, openable->keyName);
 			//TODO: Consume key
 		}
 
 		if (canOpen)
 		{
 			// chest if container - door otherwise
-			bool isContainer = registry->any_of<component::Container>(subject);
-			auto& render = registry->get<component::Render>(subject);
+			bool isContainer = _registry->any_of<component::Container>(subject);
+			auto& render = _registry->get<component::Render>(subject);
 			render.sprite += 1;
 			render.layer = 1;
-			auto& physical = registry->get<component::Physical>(subject);
+			auto& physical = _registry->get<component::Physical>(subject);
 			physical.blocks = false;
 			if (!isContainer)
 			{
-				registry->remove<component::LightBlocking>(subject);
+				_registry->remove<component::LightBlocking>(subject);
 			}
 			openable->isOpen = true;
 			toggleInteractionFunction(subject);
 		}
 		else
 		{
-			auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+			auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 			dispatcher.trigger(events::SendFloatingMessageEvent{
 				.message = "Key required.",
 				.color = sf::Color::Red,
-				.position = registry->get<component::Position>(actor).position,
+				.position = _registry->get<component::Position>(actor).position,
 				.velocity = {0,0},
 				.isScreenSpace = false,
 				.ttl = 120
@@ -54,19 +54,19 @@ void drft::system::OpenableSystem::openInteraction(entt::entity actor, entt::ent
 
 void drft::system::OpenableSystem::closeInteraction(entt::entity actor, entt::entity subject) const
 {
-	if (auto openable = registry->try_get<component::Openable>(subject))
+	if (auto openable = _registry->try_get<component::Openable>(subject))
 	{
-		auto& render = registry->get<component::Render>(subject);
+		auto& render = _registry->get<component::Render>(subject);
 		render.sprite -= 1;
 		render.layer = 2;
 
-		auto& physical = registry->get<component::Physical>(subject);
+		auto& physical = _registry->get<component::Physical>(subject);
 		physical.blocks = true;
 
-		bool isContainer = registry->any_of<component::Container>(subject);
+		bool isContainer = _registry->any_of<component::Container>(subject);
 		if (!isContainer)
 		{
-			registry->emplace_or_replace<component::LightBlocking>(subject);
+			_registry->emplace_or_replace<component::LightBlocking>(subject);
 		}
 		openable->isOpen = false;
 		toggleInteractionFunction(subject);
@@ -75,7 +75,7 @@ void drft::system::OpenableSystem::closeInteraction(entt::entity actor, entt::en
 
 void drft::system::OpenableSystem::toggleInteractionFunction(entt::entity openable) const
 {
-	if (auto interactable = registry->try_get<component::Interactable>(openable))
+	if (auto interactable = _registry->try_get<component::Interactable>(openable))
 	{
 		if (interactable->interactions.contains("Open"))
 		{

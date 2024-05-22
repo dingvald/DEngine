@@ -76,6 +76,11 @@ void component::Meta::initialize()
 		.data<&Health::current>("current"_hs)
 		.data<&Health::recovery>("recovery"_hs);
 
+	snapshot::reflectComponent<Healing, HEALING_STRING>()
+		.prop("serialize"_hs)
+		.data<&Healing::amount>("amount"_hs)
+		.data<&Healing::ticks>("ticks"_hs);
+
 	snapshot::reflectComponent<Stamina, STAMINA_STRING>()
 		.prop("serialize"_hs)
 		.data<&Stamina::max>("max"_hs)
@@ -127,6 +132,10 @@ void component::Meta::initialize()
 	snapshot::reflectComponent<Craftable, CRAFTABLE_STRING>()
 		.prop("serialize"_hs)
 		.data<&Craftable::recipe>("recipe"_hs);
+
+	snapshot::reflectComponent<Consumable, CONSUMABLE_STRING>()
+		.prop("serialize"_hs)
+		.data<&Consumable::destroy>("destroy"_hs);
 
 	snapshot::reflectComponent<Openable, OPENABLE_STRING>()
 		.prop("serialize"_hs)

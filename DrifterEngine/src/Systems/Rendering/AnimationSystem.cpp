@@ -9,7 +9,7 @@ void drft::system::AnimationSystem::init()
 
 void drft::system::AnimationSystem::fixedUpdate()
 {
-	auto view = registry->view<component::Render, component::Animation>();
+	auto view = _registry->view<component::Render, component::Animation>();
 	for (auto [entity, render, animation] : view.each())
 	{
 		++animation.elapsed;
@@ -39,6 +39,6 @@ void drft::system::AnimationSystem::onFixedUpdateEnd()
 {
 	for (auto entity : _toRemoveAnimation)
 	{
-		registry->remove<component::Animation>(entity);
+		_registry->remove<component::Animation>(entity);
 	}
 }

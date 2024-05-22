@@ -4,20 +4,20 @@
 
 void drft::system::TickingLifetimeSystem::init()
 {
-	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::GameTickEvent>().connect<&TickingLifetimeSystem::onGameTickEvent>(this);
 }
 
 void drft::system::TickingLifetimeSystem::onGameTickEvent(events::GameTickEvent& ev)
 {
 	// Has position so that items in inventory don't tick their lifetimes
-	auto view = registry->view<component::TickingLifetime, component::Position>();
+	auto view = _registry->view<component::TickingLifetime, component::Position>();
 	for (auto [entity, lifetime, pos] : view.each())
 	{
 		--lifetime.ticksRemaining;
 		if (lifetime.ticksRemaining <= 0)
 		{
-			registry->destroy(entity);
+			_registry->destroy(entity);
 		}
 	}
 }

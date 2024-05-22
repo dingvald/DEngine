@@ -32,15 +32,15 @@ void drft::system::HUD::init()
 	createItemsOnGroundDisplay();
 	createHotbar();
 
-	registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
-	registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
-	registry->on_construct<component::action::HotbarPressed>().connect<&HUD::onHotbarPressed>(this);
+	_registry->on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
+	_registry->on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
+	_registry->on_construct<component::action::HotbarPressed>().connect<&HUD::onHotbarPressed>(this);
 }
 
 void drft::system::HUD::fixedUpdate()
 {
-	auto view = registry->view<component::Player>();
-	auto player = entt::handle(*registry, view.front());
+	auto view = _registry->view<component::Player>();
+	auto player = entt::handle(*_registry, view.front());
 
 	// Player relevant displays
 	updateLevelInfo(player);
@@ -80,7 +80,7 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 void drft::system::HUD::createLevelInfo()
 {
 	using namespace entt::literals;
-	const auto& font = registry->ctx().get<sf::Font&>("terminus"_hs);
+	const auto& font = _registry->ctx().get<sf::Font&>("terminus"_hs);
 
 	_lvlText.setFont(font);
 	_xpText.setFont(font);
@@ -97,7 +97,7 @@ void drft::system::HUD::createLevelInfo()
 void drft::system::HUD::createHealthBar()
 {
 	using namespace entt::literals;
-	const auto& texture = registry->ctx().get<sf::Texture&>("sprites"_hs);
+	const auto& texture = _registry->ctx().get<sf::Texture&>("sprites"_hs);
 	_heartIcon.setTexture(texture);
 	_heartIcon.setTextureRect(util::SpriteIndexer::get(util::Sprite::Heart, texture));
 	_heartIcon.setPosition(HEALTHBAR_POSITION - sf::Vector2f(20.f, 4.f));
@@ -115,7 +115,7 @@ void drft::system::HUD::createHealthBar()
 void drft::system::HUD::createStaminaBar()
 {
 	using namespace entt::literals;
-	const auto& texture = registry->ctx().get<sf::Texture&>("sprites"_hs);
+	const auto& texture = _registry->ctx().get<sf::Texture&>("sprites"_hs);
 	_staminaIcon.setTexture(texture);
 	_staminaIcon.setTextureRect(util::SpriteIndexer::get(util::Sprite::Diamond, texture));
 	_staminaIcon.setPosition(STAMINABAR_POSITION - sf::Vector2f(20.f, 4.f));
@@ -142,14 +142,14 @@ void drft::system::HUD::createInHandsDisplay()
 void drft::system::HUD::createItemsOnGroundDisplay()
 {
 	using namespace entt::literals;
-	const auto& view = registry->ctx().get<sf::RenderWindow&>().getView();
+	const auto& view = _registry->ctx().get<sf::RenderWindow&>().getView();
 	_itemsOnGround.setPosition({ view.getCenter().x + (view.getSize().x / 2) - 80, view.getCenter().y + (view.getSize().y / 2) - 64 })
 		.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,100),
 			.outlineThickness = 1.f,
 			.innerPadding = {0.f, 0.f},
 			.childPadding = {0.f, 4.f},
-			.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+			.font = &_registry->ctx().get<sf::Font&>("terminus"_hs),
 			.textColor = sf::Color(200,200,200,200),
 			.textSize = 16
 			})
@@ -158,7 +158,7 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 
 void drft::system::HUD::createHotbar()
 {
-	const auto& view = registry->ctx().get<sf::RenderWindow&>().getView();
+	const auto& view = _registry->ctx().get<sf::RenderWindow&>().getView();
 	const sf::Vector2f position = { view.getCenter().x - 208, view.getCenter().y + (view.getSize().y / 2) - 64 };
 
 	_hotbar.setPosition(position)
@@ -206,7 +206,7 @@ void drft::system::HUD::updateStaminaBar(entt::const_handle player)
 void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 {
 	using namespace entt::literals;
-	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
 
 	_itemsOnGround.clear();
 
@@ -215,8 +215,8 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 		auto entities = grid.entitiesAt(pos->position,
 			[this](entt::entity entity) -> bool
 			{
-				if (registry->all_of<component::Info>(entity)
-				&& !registry->any_of<component::Player>(entity))
+				if (_registry->all_of<component::Info>(entity)
+				&& !_registry->any_of<component::Player>(entity))
 				{
 					return true;
 				}
@@ -227,12 +227,12 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 		{
 			_itemsOnGround.insert(std::to_string(count), gui::Label())
 				.setStyle(gui::ElementState::Idle, {
-					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+					.font = &_registry->ctx().get<sf::Font&>("terminus"_hs),
 					.textColor = sf::Color::White,
 					.textSize = 16
 					})
 				.setOrigin(gui::ElementPosition::CENTER_LEFT)
-				.setTextString(util::getEntityName({ *registry, entity }));
+				.setTextString(util::getEntityName({ *_registry, entity }));
 		}
 	}
 	
@@ -297,7 +297,7 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 	if (auto hotbar = player.try_get<component::Hotbar>())
 	{
 		const int hotbarSize = hotbar->abilities.size();
-		auto& iconTexture = registry->ctx().get<sf::Texture&>("icons"_hs);
+		auto& iconTexture = _registry->ctx().get<sf::Texture&>("icons"_hs);
 		for (int i = 0; i < hotbarSize; ++i) 
 		{
 			const auto& ability = AbilityRegistry::get(static_cast<AbilityType>(hotbar->abilities[i]));
@@ -326,11 +326,11 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 			hotbarContainer.insert("Slot Abbrev", gui::Label())
 				.setLocalPosition({ -8, -8 })
 				.setStyle(gui::ElementState::Idle, {
-					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+					.font = &_registry->ctx().get<sf::Font&>("terminus"_hs),
 					.textColor = sf::Color::White
 					})
 				.setStyle(gui::ElementState::Focused, {
-					.font = &registry->ctx().get<sf::Font&>("terminus"_hs),
+					.font = &_registry->ctx().get<sf::Font&>("terminus"_hs),
 					.textColor = sf::Color::White
 					})
 				.setTextString(std::to_string((i+1)%10));
@@ -342,8 +342,8 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 {
 	using namespace entt::literals;
-	const auto& itemRender = registry->get<component::Render>(item);
-	const auto& sprites = registry->ctx().get<sf::Texture&>("sprites"_hs);
+	const auto& itemRender = _registry->get<component::Render>(item);
+	const auto& sprites = _registry->ctx().get<sf::Texture&>("sprites"_hs);
 
 	sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
 	container.insert("Icon", gui::Icon(sprite))
@@ -356,7 +356,7 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 					.fillColor = itemRender.color
 			});
 
-	if (auto health = registry->try_get<component::Health>(item))
+	if (auto health = _registry->try_get<component::Health>(item))
 	{
 		float scalingFactor = health->current / health->max;
 		container.insert("Health", gui::Panel())

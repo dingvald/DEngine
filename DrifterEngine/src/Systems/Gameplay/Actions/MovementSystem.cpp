@@ -13,14 +13,14 @@ void drft::system::MovementSystem::init()
 
 void drft::system::MovementSystem::update(const float dt)
 {
-	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
-	auto moveView = registry->view<component::action::Move, component::Position>();
+	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
+	auto moveView = _registry->view<component::action::Move, component::Position>();
 	for (auto [entity, move, pos] : moveView.each())
 	{
 		if (move.direction == sf::Vector2i{ 0,0 })
 		{
-			registry->emplace_or_replace<component::action::Wait>(entity);
-			registry->remove<component::action::Move>(entity);
+			_registry->emplace_or_replace<component::action::Wait>(entity);
+			_registry->remove<component::action::Move>(entity);
 			continue;
 		}
 
@@ -28,7 +28,7 @@ void drft::system::MovementSystem::update(const float dt)
 		const auto blockers = grid.entitiesAt(targetPosition,
 			[this](entt::entity entity) -> bool
 			{
-				if (auto physical = registry->try_get<component::Physical>(entity))
+				if (auto physical = _registry->try_get<component::Physical>(entity))
 				{
 					if (physical->blocks)
 					{
@@ -40,25 +40,25 @@ void drft::system::MovementSystem::update(const float dt)
 
 		if (blockers.empty())
 		{
-			registry->patch<component::Position>(entity,
+			_registry->patch<component::Position>(entity,
 				[targetPosition](component::Position& pos)
 				{
 					pos.position = targetPosition;
 				});
-			if (registry->all_of<component::Stamina>(entity))
+			if (_registry->all_of<component::Stamina>(entity))
 			{
-				registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
+				_registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
 			}
-			spendActionPoints(BASE_ACTION_COST, ActionType::Move, { *registry, entity });
+			spendActionPoints(BASE_ACTION_COST, ActionType::Move, { *_registry, entity });
 		}
 		else
 		{
-			registry->emplace_or_replace<component::action::LaunchAttack>(entity, move.direction);
+			_registry->emplace_or_replace<component::action::LaunchAttack>(entity, move.direction);
 		}
 	}
 }
 
 void drft::system::MovementSystem::onUpdateEnd()
 {
-	registry->clear<component::action::Move>();
+	_registry->clear<component::action::Move>();
 }

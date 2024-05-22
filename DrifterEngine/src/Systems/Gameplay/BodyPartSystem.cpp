@@ -11,10 +11,10 @@ static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 15;
 
 void drft::system::BodyPartSystem::init()
 {
-	registry->on_construct<component::action::IncomingDamage>().connect<&BodyPartSystem::onIncomingDamage>(this);
-	registry->on_construct<component::action::LaunchAttack>().connect<&BodyPartSystem::onLaunchAttack>(this);
+	_registry->on_construct<component::action::IncomingDamage>().connect<&BodyPartSystem::onIncomingDamage>(this);
+	_registry->on_construct<component::action::LaunchAttack>().connect<&BodyPartSystem::onLaunchAttack>(this);
 
-	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::ItemBreakEvent>().connect<&BodyPartSystem::onItemBreakEvent>(this);
 }
 
@@ -50,14 +50,14 @@ void drft::system::BodyPartSystem::onLaunchAttack(entt::registry& registry, entt
 
 void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
-	auto& body = registry->get<component::Body>(ev.owner);
+	auto& body = _registry->get<component::Body>(ev.owner);
 	body.parts.unequipItem(ev.itemID);
 }
 
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDamageTypesFromHeld(entt::entity attacker)
 {
 	std::unordered_map<std::string, int> result;
-	if (auto body = registry->try_get<component::Body>(attacker))
+	if (auto body = _registry->try_get<component::Body>(attacker))
 	{
 		if (const auto rightHand = body->parts.search("Right Hand")) // TODO: Use preferred hand - don't hard code right hand
 		{
@@ -65,11 +65,11 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(component::Item::NONE));
 			if (itemEntity != entt::null)
 			{
-				if (auto physical = registry->try_get<component::Physical>(itemEntity))
+				if (auto physical = _registry->try_get<component::Physical>(itemEntity))
 				{
 					result["crushing"] += physical->weight;
 				}
-				if (auto sharp = registry->try_get<component::Sharp>(itemEntity))
+				if (auto sharp = _registry->try_get<component::Sharp>(itemEntity))
 				{
 					result["slashing"] += sharp->sharpness;
 				}
@@ -78,7 +78,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 			if (rng::percentChance(CHANCE_TO_DAMAGE_EQUIPPED_WEAPON))
 			{
 				component::action::TakeDamage damage{ .amount = 1, .source = entt::null };
-				registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
+				_registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
 			}
 		}
 	}
@@ -95,7 +95,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 		if (itemEntity != entt::null)
 		{
-			if (auto wearable = registry->try_get<component::Wearable>(itemEntity))
+			if (auto wearable = _registry->try_get<component::Wearable>(itemEntity))
 			{
 				int sum = 0;
 				for (auto& [damageType, amount] : result)
@@ -107,10 +107,10 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 					}
 				}
 
-				if (auto health = registry->try_get<component::Health>(itemEntity))
+				if (auto health = _registry->try_get<component::Health>(itemEntity))
 				{
 					component::action::TakeDamage damage{ .amount = sum, .source = entt::null };
-					registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
+					_registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
 				}
 			}
 		}

@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\Actions\ConsumableSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp" />
     <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp" />
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp" />
@@ -387,6 +388,8 @@
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Events\ConsumeEntityEvent.h" />
+    <ClInclude Include="src\Systems\Gameplay\Actions\ConsumableSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h" />
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h" />

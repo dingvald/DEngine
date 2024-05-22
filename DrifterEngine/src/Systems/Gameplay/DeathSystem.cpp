@@ -17,8 +17,8 @@ void drft::system::DeathSystem::init()
 
 void drft::system::DeathSystem::update(const float dt)
 {
-	const auto& factory = registry->ctx().get<EntityFactory&>();
-	auto view = registry->view<component::action::Die, component::Physical, component::Position>();
+	const auto& factory = _registry->ctx().get<EntityFactory&>();
+	auto view = _registry->view<component::action::Die, component::Physical, component::Position>();
 	for (auto [entity, physical, pos] : view.each())
 	{
 		int chance = 100;
@@ -27,14 +27,14 @@ void drft::system::DeathSystem::update(const float dt)
 			int roll = rng::RandomNumberGenerator::intInRange(0, 100);
 			if (roll <= chance)
 			{
-				auto dropped = factory.build(matName, *registry);
+				auto dropped = factory.build(matName, *_registry);
 				dropped.patch<component::Position>([&pos](auto& position)
 					{
 						position.position = pos.position;
 					});
 				if (matName.compare("Corpse") == 0)
 				{
-					auto entityName = util::getEntityName({ *registry, entity });
+					auto entityName = util::getEntityName({ *_registry, entity });
 					dropped.patch<component::Physical>([&physical](component::Physical& phy)
 						{
 							phy.weight = physical.weight;
@@ -47,31 +47,31 @@ void drft::system::DeathSystem::update(const float dt)
 			}
 			chance *= 0.5;
 		}
-		if (registry->any_of<component::Player>(entity))
+		if (_registry->any_of<component::Player>(entity))
 		{
 			std::filesystem::remove_all(".\\data\\savegame\\");
-			auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+			auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 			dispatcher.trigger(events::RequestStateStackPush(States::GameOver));
 		}
-		registry->destroy(entity);
+		_registry->destroy(entity);
 	}
 
 	// Equipped item breaking
-	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
-	auto itemView = registry->view<component::action::Die, component::Item>(entt::exclude<component::Position>);
+	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
+	auto itemView = _registry->view<component::action::Die, component::Item>(entt::exclude<component::Position>);
 	for (auto [entity, item] : itemView.each())
 	{
-		auto owner = findItemOwner(*registry, item.id, WhereToLook::Bodies);
+		auto owner = findItemOwner(*_registry, item.id, WhereToLook::Bodies);
 		dispatcher.trigger(events::ItemBreakEvent(item.id, owner));
 		dispatcher.trigger(events::SendFloatingMessageEvent{
-			.message = util::getEntityName({*registry, entity}) + " broke!",
+			.message = util::getEntityName({*_registry, entity}) + " broke!",
 			.color = sf::Color::Yellow,
 			.tracksEntity = owner,
-			.position = registry->get<component::Position>(owner).position,
+			.position = _registry->get<component::Position>(owner).position,
 			.velocity = {0,-0.25},
 			.isScreenSpace = false,
 			.ttl = 100
 			});
-		registry->destroy(entity);
+		_registry->destroy(entity);
 	}
 }

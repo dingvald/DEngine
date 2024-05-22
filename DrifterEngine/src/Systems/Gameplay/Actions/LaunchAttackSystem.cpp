@@ -14,22 +14,22 @@ void drft::system::LaunchAttackSystem::init()
 
 void drft::system::LaunchAttackSystem::update(const float dt)
 {
-	auto attackerView = registry->view<component::action::LaunchAttack, component::Attacker, component::tag::Active>();
+	auto attackerView = _registry->view<component::action::LaunchAttack, component::Attacker, component::tag::Active>();
 	for (auto [entity, attack, attacker] : attackerView.each())
 	{
 		attack.damageTypes["crushing"] += attacker.baseDamage;
 	}
 
-	auto launchAttackView = registry->view<component::action::LaunchAttack, component::Position, component::tag::Active>();
+	auto launchAttackView = _registry->view<component::action::LaunchAttack, component::Position, component::tag::Active>();
 	for (auto [entity, attack, pos] : launchAttackView.each())
 	{
-		const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+		const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
 		sf::Vector2i targetPosition = pos.position + attack.direction;
 
 		const auto targets = grid.entitiesAt(targetPosition,
 			[this](entt::entity entity) -> bool
 			{
-				if (auto physical = registry->try_get<component::Physical>(entity))
+				if (auto physical = _registry->try_get<component::Physical>(entity))
 				{
 					if (physical->blocks) return true;
 				}
@@ -39,7 +39,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		if (targets.empty()) continue;
 		for (auto target : targets)
 		{
-			registry->emplace_or_replace<component::action::IncomingDamage>(target, attack.damageTypes, entity);
+			_registry->emplace_or_replace<component::action::IncomingDamage>(target, attack.damageTypes, entity);
 		}
 		std::vector<unsigned int> sprites = { 8,9 }; // crushing
 		if (attack.damageTypes.contains("slashing") || attack.damageTypes.contains("piercing"))
@@ -47,19 +47,19 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 			sprites = { 16, 17 }; // slashing
 		}
 
-		spawnEffect(*registry, {
+		spawnEffect(*_registry, {
 			.color = sf::Color::White,
 			.sprites = sprites,
 			.position = targetPosition,
 			.animationSpeed = 20.0f
 			});
-		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *registry, entity });
+		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *_registry, entity });
 		// HACKZ: Should it care about projectiles? No..
-		registry->remove<component::Projectile>(entity);
+		_registry->remove<component::Projectile>(entity);
 	}
 }
 
 void drft::system::LaunchAttackSystem::onUpdateEnd()
 {
-	registry->clear<component::action::LaunchAttack>();
+	_registry->clear<component::action::LaunchAttack>();
 }

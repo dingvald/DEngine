@@ -7,25 +7,25 @@ static constexpr float PI = 3.141592f;
 
 void drft::system::SprintingSystem::init()
 {
-	registry->on_construct<component::Sprinting>().connect<&SprintingSystem::onSprintingAdded>(this);
-	registry->on_destroy<component::Sprinting>().connect<&SprintingSystem::onSprintingRemoved>(this);
+	_registry->on_construct<component::Sprinting>().connect<&SprintingSystem::onSprintingAdded>(this);
+	_registry->on_destroy<component::Sprinting>().connect<&SprintingSystem::onSprintingRemoved>(this);
 }
 
 void drft::system::SprintingSystem::fixedUpdate()
 {
-	auto sprintView = registry->view<component::Sprinting, component::Stamina, const component::Position>();
+	auto sprintView = _registry->view<component::Sprinting, component::Stamina, const component::Position>();
 	for (auto [entity, sprinting, stamina, pos] : sprintView.each())
 	{
 		if (stamina.current <= 0.f)
 		{
-			registry->remove<component::Sprinting>(entity);
+			_registry->remove<component::Sprinting>(entity);
 			continue;
 		}
 		if (!_sprintEffects.contains(entity))
 		{
-			addSprintEffect(*registry, entity);
+			addSprintEffect(*_registry, entity);
 		}
-		registry->patch<component::Position>(_sprintEffects[entity],
+		_registry->patch<component::Position>(_sprintEffects[entity],
 			[pos](component::Position& position)
 			{
 				position.position = pos.position;
@@ -44,7 +44,7 @@ void drft::system::SprintingSystem::shutdown()
 {
 	for (auto&& [sprinter, effect] : _sprintEffects)
 	{
-		registry->destroy(effect);
+		_registry->destroy(effect);
 	}
 }
 
@@ -105,7 +105,7 @@ void drft::system::SprintingSystem::animateSprintEffects() const
 	if (frames >= 360) frames = 0;
 	for (auto [sprinter, effect] : _sprintEffects)
 	{
-		auto& render = registry->get<component::Render>(effect);
+		auto& render = _registry->get<component::Render>(effect);
 		float alpha = 255 * ((std::sinf(frames * (PI / 180.f)) + 1.f) / 2.f);
 		render.color.a = static_cast<sf::Uint8>(alpha);
 	}

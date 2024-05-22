@@ -11,7 +11,7 @@ void drft::system::LightSourceSystem::init()
 
 void drft::system::LightSourceSystem::fixedUpdate()
 {
-	auto bodyView = registry->view<component::Body, component::tag::InViewport>();
+	auto bodyView = _registry->view<component::Body, component::tag::InViewport>();
 	for (auto [entity, body] : bodyView.each())
 	{
 		for (const auto part : body.parts.flatten())
@@ -19,9 +19,9 @@ void drft::system::LightSourceSystem::fixedUpdate()
 			for (auto item : part->getAllSlotted())
 			{
 				const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-				if (const auto light = registry->try_get<component::LightSource>(itemEntity))
+				if (const auto light = _registry->try_get<component::LightSource>(itemEntity))
 				{
-					if (auto tempLight = registry->try_get<component::TempLightSource>(entity))
+					if (auto tempLight = _registry->try_get<component::TempLightSource>(entity))
 					{
 						sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(tempLight->color.r * (static_cast<float>(light->color.r) / 255.f), 0.f, 255.f));
 						sf::Uint8 g = static_cast<sf::Uint8>(std::clamp(tempLight->color.g * (static_cast<float>(light->color.g) / 255.f), 0.f, 255.f));
@@ -29,11 +29,11 @@ void drft::system::LightSourceSystem::fixedUpdate()
 
 						const float radius = std::max(tempLight->radius, light->radius);
 						const float dropOff = std::min(tempLight->dropOff, light->dropOff);
-						registry->emplace_or_replace<component::TempLightSource>(entity, radius, dropOff, sf::Color(r, g, b, tempLight->color.a));
+						_registry->emplace_or_replace<component::TempLightSource>(entity, radius, dropOff, sf::Color(r, g, b, tempLight->color.a));
 					}
 					else
 					{
-						registry->emplace_or_replace<component::TempLightSource>(entity, light->radius, light->dropOff, light->color);
+						_registry->emplace_or_replace<component::TempLightSource>(entity, light->radius, light->dropOff, light->color);
 					}
 				}
 			}
@@ -43,6 +43,6 @@ void drft::system::LightSourceSystem::fixedUpdate()
 
 void drft::system::LightSourceSystem::onFixedUpdateEnd()
 {
-	registry->clear<component::TempLightSource>();
+	_registry->clear<component::TempLightSource>();
 }
 

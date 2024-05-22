@@ -5,7 +5,8 @@
 
 void drft::system::System::setRegistry(entt::registry& registry)
 {
-	this->registry = &registry;
+	this->_registry = &registry;
+	this->_dispatcher = &registry.ctx().get<entt::dispatcher>();
 }
 
 void drft::system::System::onStart(bool)

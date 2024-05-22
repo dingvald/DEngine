@@ -9,7 +9,7 @@
 
 void drft::system::PlayerFOVSystem::init()
 {
-	auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+	auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
 
 	auto blocksLight = [this](sf::Vector2i position) -> bool
 	{
@@ -30,27 +30,27 @@ void drft::system::PlayerFOVSystem::init()
 
 void drft::system::PlayerFOVSystem::fixedUpdate()
 {
-	auto positions = registry->view<const component::Position, component::tag::InViewport>();
+	auto positions = _registry->view<const component::Position, component::tag::InViewport>();
 	_lightBlockingPositions.reserve(positions.size_hint());
 	for (auto [entity, pos] : positions.each())
 	{
-		if (registry->any_of<component::LightBlocking>(entity))
+		if (_registry->any_of<component::LightBlocking>(entity))
 		{
 			_lightBlockingPositions.emplace(pos.position);
 		}
 	}
 
-	auto playerView = registry->view<component::Player, component::Position>();
+	auto playerView = _registry->view<component::Player, component::Position>();
 	for (auto [_, player, pos] : playerView.each())
 	{
 		_fov->compute(pos.position, player.sightRange);
 		for (auto entityToLight : _toLight)
 		{
-			registry->emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);
-			if (!registry->all_of<component::Actor>(entityToLight) 
-				&& registry->all_of<component::tag::InViewport>(entityToLight))
+			_registry->emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);
+			if (!_registry->all_of<component::Actor>(entityToLight) 
+				&& _registry->all_of<component::tag::InViewport>(entityToLight))
 			{
-				registry->emplace_or_replace<component::PlayerHasSeen>(entityToLight);
+				_registry->emplace_or_replace<component::PlayerHasSeen>(entityToLight);
 			}
 		}
 		_toLight.clear();
@@ -60,5 +60,5 @@ void drft::system::PlayerFOVSystem::fixedUpdate()
 
 void drft::system::PlayerFOVSystem::onFixedUpdateEnd()
 {
-	registry->clear<component::tag::InPlayerFOV>();
+	_registry->clear<component::tag::InPlayerFOV>();
 }

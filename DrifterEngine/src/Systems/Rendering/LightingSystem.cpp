@@ -10,7 +10,7 @@
 
 void drft::system::LightingSystem::init()
 {
-	auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+	auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
 
 	auto blocksLight = [this](sf::Vector2i position) -> bool
 	{
@@ -31,20 +31,20 @@ void drft::system::LightingSystem::init()
 
 void drft::system::LightingSystem::fixedUpdate()
 {
-	auto globalLightView = registry->view<component::GlobalLightSource>();
-	auto positions = registry->view<const component::Position, component::tag::InViewport>(entt::exclude<component::Effect>);
+	auto globalLightView = _registry->view<component::GlobalLightSource>();
+	auto positions = _registry->view<const component::Position, component::tag::InViewport>(entt::exclude<component::Effect>);
 	// Apply global lighting
 	for (auto [_, globalLight] : globalLightView.each())
 	{
 		for (auto entity : positions)
 		{
-			if (auto lit = registry->try_get<component::Lit>(entity))
+			if (auto lit = _registry->try_get<component::Lit>(entity))
 			{
 				lit->color = globalLight.color;
 			}
 			else
 			{
-				registry->emplace<component::Lit>(entity, globalLight.color);
+				_registry->emplace<component::Lit>(entity, globalLight.color);
 			}
 		}
 	}
@@ -52,19 +52,19 @@ void drft::system::LightingSystem::fixedUpdate()
 	_lightBlockingPositions.reserve(positions.size_hint());
 	for (auto [entity, pos] : positions.each())
 	{
-		if (registry->any_of<component::LightBlocking>(entity))
+		if (_registry->any_of<component::LightBlocking>(entity))
 		{
 			_lightBlockingPositions.emplace(pos.position);
 		}
 	}
 	// Apply light from permenant light sources
-	auto lighting = registry->view<const component::LightSource, const component::Position, component::tag::InViewport>();
+	auto lighting = _registry->view<const component::LightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : lighting.each())
 	{
 		_fov->compute(lightpos.position, static_cast<int>(light.radius));
 		for (auto entity : _toLight)
 		{
-			auto pos = registry->get<component::Position>(entity);
+			auto pos = _registry->get<component::Position>(entity);
 			auto tileDistance = spatial::distance(pos.position, lightpos.position);
 			float denom = (tileDistance / light.radius) + (1.f*light.dropOff);
 			float i = std::clamp( 1 / (denom*denom), 0.0f, 1.0f);
@@ -74,25 +74,25 @@ void drft::system::LightingSystem::fixedUpdate()
 				static_cast<sf::Uint8>(light.color.g * i),
 				static_cast<sf::Uint8>(light.color.b * i)
 			};
-			if (auto lit = registry->try_get<component::Lit>(entity))
+			if (auto lit = _registry->try_get<component::Lit>(entity))
 			{
 				lit->color = blendColor(lit->color, lightColor);
 			}
 			else
 			{
-				registry->emplace<component::Lit>(entity, lightColor);
+				_registry->emplace<component::Lit>(entity, lightColor);
 			}
 		}
 		_toLight.clear();
 	}
 	// Apply light from temporary light sources
-	auto tempLighting = registry->view<const component::TempLightSource, const component::Position, component::tag::InViewport>();
+	auto tempLighting = _registry->view<const component::TempLightSource, const component::Position, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : tempLighting.each())
 	{
 		_fov->compute(lightpos.position, static_cast<int>(light.radius));
 		for (auto entity : _toLight)
 		{
-			auto pos = registry->get<component::Position>(entity);
+			auto pos = _registry->get<component::Position>(entity);
 			auto tileDistance = spatial::distance(pos.position, lightpos.position);
 			float denom = (tileDistance / light.radius) + (1.f * light.dropOff);
 			float i = std::clamp(1 / (denom * denom), 0.0f, 1.0f);
@@ -102,13 +102,13 @@ void drft::system::LightingSystem::fixedUpdate()
 				static_cast<sf::Uint8>(light.color.g * i),
 				static_cast<sf::Uint8>(light.color.b * i)
 			};
-			if (auto lit = registry->try_get<component::Lit>(entity))
+			if (auto lit = _registry->try_get<component::Lit>(entity))
 			{
 				lit->color = blendColor(lit->color, lightColor);
 			}
 			else
 			{
-				registry->emplace<component::Lit>(entity, lightColor);
+				_registry->emplace<component::Lit>(entity, lightColor);
 			}
 		}
 		_toLight.clear();
@@ -119,7 +119,7 @@ void drft::system::LightingSystem::fixedUpdate()
 
 void drft::system::LightingSystem::onFixedUpdateEnd()
 {
-	registry->clear<component::Lit>();
+	_registry->clear<component::Lit>();
 }
 
 sf::Color drft::system::LightingSystem::blendColor(const sf::Color& color1, const sf::Color& color2)

@@ -7,17 +7,17 @@
 
 void drft::system::CraftItemSystem::init()
 {
-	registry->on_construct<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
-	registry->on_update<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
+	_registry->on_construct<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
+	_registry->on_update<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
 }
 
 void drft::system::CraftItemSystem::update(const float dt)
 {
-	auto equipView = registry->view<component::action::Craft>();
+	auto equipView = _registry->view<component::action::Craft>();
 
 	for (auto entity : equipView)
 	{
-		registry->remove<component::action::Craft>(entity);
+		_registry->remove<component::action::Craft>(entity);
 	}
 }
 

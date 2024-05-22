@@ -123,6 +123,13 @@ namespace component
 		float recovery = 0.f;
 	};
 
+	struct Healing
+	{
+		int amount = 1;
+		// if > 1, then it applies the amount over time
+		int ticks = 0;
+	};
+
 	struct Stamina
 	{
 		float max = 10.f;
@@ -203,6 +210,11 @@ namespace component
 	struct Craftable
 	{
 		std::unordered_map<std::string, unsigned long> recipe;
+	};
+
+	struct Consumable
+	{
+		bool destroy = true;
 	};
 
 	struct MyCraftableItems

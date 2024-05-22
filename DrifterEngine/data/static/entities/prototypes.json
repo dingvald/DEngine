@@ -145,6 +145,12 @@
           "blocks": false,
           "weight": 0.2,
           "materials": [ "Plant Fibre" ]
+        },
+        "Healing": {
+          "amount": 3
+        },
+        "Consumable": {
+          "destroy": true
         }
       }
     },
@@ -176,7 +182,14 @@
             "Herb": 3,
             "Mountain Flower": 1
           }
+        },
+        "Healing": {
+          "amount": 10
+        },
+        "Consumable": {
+          "destroy": true
         }
+
       }
     },
     "Roots": {

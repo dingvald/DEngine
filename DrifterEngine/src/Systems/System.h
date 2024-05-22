@@ -36,7 +36,8 @@ namespace drft::system
 		virtual void shutdown();
 
 	protected:
-		entt::registry* registry = nullptr;
+		entt::registry* _registry = nullptr;
+		entt::dispatcher* _dispatcher = nullptr;
 	};
 
 } // namespace drft::system

@@ -5,7 +5,7 @@
 
 void drft::system::SelectDirectionSystem::init()
 {
-	registry->on_construct<component::action::SelectDirection>().connect<&SelectDirectionSystem::onSelectDirection>(this);
+	_registry->on_construct<component::action::SelectDirection>().connect<&SelectDirectionSystem::onSelectDirection>(this);
 }
 
 void drft::system::SelectDirectionSystem::onSelectDirection(entt::registry& registry, entt::entity entity)

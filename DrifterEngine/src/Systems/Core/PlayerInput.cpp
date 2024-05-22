@@ -78,7 +78,7 @@ void drft::system::PlayerInput::init()
 
 void drft::system::PlayerInput::update(const float dt)
 {
-	auto& inputBuffer = registry->ctx().get<InputBuffer&>();
+	auto& inputBuffer = _registry->ctx().get<InputBuffer&>();
 	if (!inputBuffer.isEmpty())
 	{
 		const auto key = inputBuffer.popKey();
@@ -122,11 +122,11 @@ void drft::system::PlayerInput::update(const float dt)
 		}
 	}
 
-	auto turnView = registry->view<component::Player, component::tag::CurrentActor>();
+	auto turnView = _registry->view<component::Player, component::tag::CurrentActor>();
 	for (auto entity : turnView)
 	{
 		if (_bufferedActions.empty()) continue;
-		_bufferedActions.front()({ *registry, entity });
+		_bufferedActions.front()({ *_registry, entity });
 		_bufferedActions.pop();
 	}
 }

@@ -5,7 +5,7 @@
 
 void drft::system::TargetSelectSystem::init()
 {
-	registry->on_construct<component::action::SelectTarget>().connect<&TargetSelectSystem::onTargetSelect>(this);
+	_registry->on_construct<component::action::SelectTarget>().connect<&TargetSelectSystem::onTargetSelect>(this);
 }
 
 void drft::system::TargetSelectSystem::onTargetSelect(entt::registry& registry, entt::entity entity)

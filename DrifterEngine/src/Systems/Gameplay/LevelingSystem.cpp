@@ -6,14 +6,14 @@
 
 void drft::system::LevelingSystem::init()
 {
-	registry->on_construct<component::action::GainExperience>().connect<&LevelingSystem::onXPGained>(this);
-	registry->on_construct<component::action::LevelUp>().connect<&LevelingSystem::onLevelUp>(this);
+	_registry->on_construct<component::action::GainExperience>().connect<&LevelingSystem::onXPGained>(this);
+	_registry->on_construct<component::action::LevelUp>().connect<&LevelingSystem::onLevelUp>(this);
 }
 
 void drft::system::LevelingSystem::onUpdateEnd()
 {
-	registry->clear<component::action::GainExperience>();
-	registry->clear<component::action::LevelUp>();
+	_registry->clear<component::action::GainExperience>();
+	_registry->clear<component::action::LevelUp>();
 }
 
 void drft::system::LevelingSystem::onXPGained(entt::registry& registry, entt::entity entity)

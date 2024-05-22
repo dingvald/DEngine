@@ -9,18 +9,18 @@
 
 void drft::system::TurnManager::init()
 {
-	registry->on_destroy<component::Actor>().connect<&TurnManager::onActorRemove>(this);
-	registry->on_destroy<component::tag::Active>().connect<&TurnManager::onActorRemove>(this);
+	_registry->on_destroy<component::Actor>().connect<&TurnManager::onActorRemove>(this);
+	_registry->on_destroy<component::tag::Active>().connect<&TurnManager::onActorRemove>(this);
 
-	_actorQueue = std::make_unique<ActorQueue>(*registry);
+	_actorQueue = std::make_unique<ActorQueue>(*_registry);
 }
 
 void drft::system::TurnManager::onStart(bool)
 {
-	_timeKeeper = registry->create();
-	registry->emplace<component::Actor>(_timeKeeper, 0, 1.0f, 1.0f);
-	registry->emplace<component::tag::Active>(_timeKeeper);
-	registry->emplace<component::Info>(_timeKeeper, "Time Keeper", "", "");
+	_timeKeeper = _registry->create();
+	_registry->emplace<component::Actor>(_timeKeeper, 0, 1.0f, 1.0f);
+	_registry->emplace<component::tag::Active>(_timeKeeper);
+	_registry->emplace<component::Info>(_timeKeeper, "Time Keeper", "", "");
 
 	_actorQueue->setSentinel(_timeKeeper);
 	_managedEntities.insert(_timeKeeper);
@@ -35,7 +35,7 @@ void drft::system::TurnManager::update(const float)
 
 	if (_currentActor != _previousActor)
 	{
-		auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+		auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 		if (_previousActor != _timeKeeper)
 		{
 			dispatcher.trigger(events::TurnEndEvent(_previousActor));
@@ -46,7 +46,7 @@ void drft::system::TurnManager::update(const float)
 		}
 	}
 
-	registry->clear<component::tag::CurrentActor>();
+	_registry->clear<component::tag::CurrentActor>();
 	_previousActor = _currentActor;
 	if (_currentActor == _timeKeeper)
 	{
@@ -56,12 +56,12 @@ void drft::system::TurnManager::update(const float)
 		return;
 	}
 
-	registry->emplace_or_replace<component::tag::CurrentActor>(_currentActor);
+	_registry->emplace_or_replace<component::tag::CurrentActor>(_currentActor);
 }
 
 void drft::system::TurnManager::shutdown()
 {
-	registry->destroy(_timeKeeper);
+	_registry->destroy(_timeKeeper);
 }
 
 void drft::system::TurnManager::onActorRemove(entt::registry& registry, entt::entity entity)
@@ -76,11 +76,11 @@ void drft::system::TurnManager::onActorRemove(entt::registry& registry, entt::en
 
 void drft::system::TurnManager::processSpentPoints()
 {
-	auto spendPointsView = registry->view<component::action::SpendPoints, component::Actor>();
+	auto spendPointsView = _registry->view<component::action::SpendPoints, component::Actor>();
 	for (auto [entity, points, actor] : spendPointsView.each())
 	{
 		actor.ap -= points.amount;
-		registry->remove<component::action::SpendPoints>(entity);
+		_registry->remove<component::action::SpendPoints>(entity);
 	}
 }
 
@@ -88,13 +88,13 @@ entt::entity drft::system::TurnManager::determineCurrentActor()
 {
 	if (_managedEntities.size() == 1) return _actorQueue->front();
 	auto currentActor = _actorQueue->front();
-	int actorAP = registry->get<component::Actor>(currentActor).ap;
+	int actorAP = _registry->get<component::Actor>(currentActor).ap;
 	while (actorAP < 0)
 	{
-		registry->remove<component::tag::CurrentActor>(currentActor);
+		_registry->remove<component::tag::CurrentActor>(currentActor);
 		_actorQueue->rotate();
 		currentActor = _actorQueue->front();
-		actorAP = registry->get<component::Actor>(currentActor).ap;
+		actorAP = _registry->get<component::Actor>(currentActor).ap;
 	}
 
 	return currentActor;

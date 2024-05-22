@@ -21,17 +21,17 @@ static const sf::Color DAY_COLOR = { 225,225,225 };
 
 void drft::system::DayNightCycleSystem::init()
 {
-	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::GameTickEvent>().connect<&DayNightCycleSystem::onGameTickEvent>(this);
 }
 
 void drft::system::DayNightCycleSystem::fixedUpdate()
 {
 	const auto color = determineSunColor();
-	auto cameraView = registry->view<component::Camera>();
+	auto cameraView = _registry->view<component::Camera>();
 	for (auto entity : cameraView)
 	{
-		registry->emplace_or_replace<component::GlobalLightSource>(entity, color);
+		_registry->emplace_or_replace<component::GlobalLightSource>(entity, color);
 	}
 }
 
@@ -72,8 +72,8 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 
 	if (_hours == NIGHT_START_HOUR && _minutes == 0 && _seconds == 0)
 	{
-		auto camera = getCurrentCamera(*registry);
-		auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+		auto camera = getCurrentCamera(*_registry);
+		auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 		dispatcher.trigger(events::NightStartEvent());
 		dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dusk has fallen...",
@@ -86,8 +86,8 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 	}
 	else if (_hours == DAY_START_HOUR && _minutes == 0 && _seconds == 0)
 	{
-		auto camera = getCurrentCamera(*registry);
-		auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+		auto camera = getCurrentCamera(*_registry);
+		auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 		dispatcher.trigger(events::DayStartEvent());
 		dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dawn has broken...",

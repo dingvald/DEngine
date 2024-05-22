@@ -46,6 +46,7 @@
 #include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
 #include "Systems/Gameplay/Actions/TargetSelectSystem.h"
 #include "Systems/Gameplay/Actions/OpenableSystem.h"
+#include "Systems/Gameplay/Actions/ConsumableSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/QuestingSystem.h"
@@ -301,6 +302,7 @@ void drft::GameState::importSystems()
 	_systems->add<TargetSelectSystem>(				Phase::Reactive);
 	_systems->add<SelectDirectionSystem>(			Phase::Reactive);
 	_systems->add<OpenableSystem>(					Phase::Reactive);
+	_systems->add<ConsumableSystem>(				Phase::Reactive);
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{

@@ -11,7 +11,7 @@ void drft::system::EffectSystem::init()
 
 void drft::system::EffectSystem::fixedUpdate()
 {
-	auto view = registry->view<component::Position, component::Effect, component::Render>();
+	auto view = _registry->view<component::Position, component::Effect, component::Render>();
 	for (auto [entity, pos, effect, render] : view.each())
 	{
 		// Effects with their ttl set to negative need to be destroyed manually
@@ -24,7 +24,7 @@ void drft::system::EffectSystem::fixedUpdate()
 		}
 		if (effect.ttl <= 0)
 		{
-			registry->destroy(entity);
+			_registry->destroy(entity);
 		}
 	}
 }

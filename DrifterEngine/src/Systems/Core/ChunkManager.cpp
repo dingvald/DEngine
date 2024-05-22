@@ -22,7 +22,7 @@ void drft::system::ChunkManager::init()
 
 void drft::system::ChunkManager::update(const float dt)
 {
-	auto cameraView = registry->view<const component::Camera, const component::Position>();
+	auto cameraView = _registry->view<const component::Camera, const component::Position>();
 	sf::Vector2i cameraPosition = { 0,0 };
 
 	for (auto [entity, cam, pos] : cameraView.each())
@@ -43,7 +43,7 @@ void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
 {
 	for (auto& [_, chunk] : _chunks)
 	{
-		chunk.save(*registry, CHUNK_SAVE_PATH.data());
+		chunk.save(*_registry, CHUNK_SAVE_PATH.data());
 	}
 }
 
@@ -123,7 +123,7 @@ void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
 			toDelete.push_back(coord);
 		}
 	}
-	auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+	auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
 	for (auto pair : toDelete)
 	{
 		grid.removeChunk({ pair.first, pair.second });
@@ -145,13 +145,13 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 	switch (type)
 	{
 	case BUILD:
-		status = _chunks.at(keyablePair).build(*registry);
+		status = _chunks.at(keyablePair).build(*_registry);
 		break;
 	case SAVE:
-		status = _chunks.at(keyablePair).asyncSave(*registry, CHUNK_SAVE_PATH.data());
+		status = _chunks.at(keyablePair).asyncSave(*_registry, CHUNK_SAVE_PATH.data());
 		break;
 	case LOAD:
-		status = _chunks.at(keyablePair).asyncLoad(*registry, CHUNK_SAVE_PATH.data());
+		status = _chunks.at(keyablePair).asyncLoad(*_registry, CHUNK_SAVE_PATH.data());
 		break;
 	}
 	if (status == spatial::ioStatus::Busy)

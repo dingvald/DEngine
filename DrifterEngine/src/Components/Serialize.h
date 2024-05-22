@@ -78,6 +78,12 @@ namespace cereal
 	}
 
 	template<class Archive>
+	void serialize(Archive& archive, Healing& healing)
+	{
+		archive(healing.amount, healing.ticks);
+	}
+
+	template<class Archive>
 	void serialize(Archive& archive, Stamina& stamina)
 	{
 		archive(stamina.max, stamina.current, stamina.baseConsumption);
@@ -153,6 +159,12 @@ namespace cereal
 	void serialize(Archive& archive, Craftable& craftable)
 	{
 		archive(craftable.recipe);
+	}
+
+	template<class Archive>
+	void serialize(Archive& archive, Consumable& consumable)
+	{
+		archive(consumable.destroy);
 	}
 
 	template<class Archive>

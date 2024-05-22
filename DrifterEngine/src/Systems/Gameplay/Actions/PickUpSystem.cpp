@@ -12,8 +12,8 @@ void drft::system::PickUpSystem::init()
 
 void drft::system::PickUpSystem::update(const float dt)
 {
-	auto view = registry->view<component::action::PickUp, component::Position, component::Container>();
-	auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+	auto view = _registry->view<component::action::PickUp, component::Position, component::Container>();
+	auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
 	for (auto [entity, pos, container] : view.each())
 	{
 		if (container.contents.size() >= container.capacity) continue;
@@ -21,17 +21,17 @@ void drft::system::PickUpSystem::update(const float dt)
 		const auto myTilePosition = pos.position;
 		const auto items = grid.entitiesAt(myTilePosition, [this](entt::entity entity) -> bool
 			{
-				return registry->all_of<component::Item>(entity);
+				return _registry->all_of<component::Item>(entity);
 			});
 
 		if (!items.empty())
 		{
-			registry->remove<component::Position>(items.front());
+			_registry->remove<component::Position>(items.front());
 
-			auto& item = registry->get<component::Item>(items.front());
+			auto& item = _registry->get<component::Item>(items.front());
 
 			bool putDirectlyInHand = false;
-			if (auto body = registry->try_get<component::Body>(entity))
+			if (auto body = _registry->try_get<component::Body>(entity))
 			{
 				const auto handParts = body->parts.search(PartType::Hand);
 				for (auto hand : handParts)
@@ -47,18 +47,18 @@ void drft::system::PickUpSystem::update(const float dt)
 			// otherwise put into inventory
 			if (!putDirectlyInHand)
 			{
-				registry->patch<component::Container>(entity,
+				_registry->patch<component::Container>(entity,
 					[item](component::Container& cont)
 					{
 						cont.contents.push_back(item.id);
 					});
 			}
-			spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *registry, entity });
+			spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *_registry, entity });
 		}
 	}
 }
 
 void drft::system::PickUpSystem::onUpdateEnd()
 {
-	registry->clear<component::action::PickUp>();
+	_registry->clear<component::action::PickUp>();
 }

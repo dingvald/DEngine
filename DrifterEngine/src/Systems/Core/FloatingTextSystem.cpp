@@ -9,7 +9,7 @@
 
 void drft::system::FloatingTextSystem::init()
 {
-	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::SendFloatingMessageEvent>().connect<&FloatingTextSystem::onSendFloatingMessageEvent>(this);
 }
 
@@ -34,8 +34,8 @@ void drft::system::FloatingTextSystem::onSendFloatingMessageEvent(events::SendFl
 void drft::system::FloatingTextSystem::queueFloatingMessage(const std::string& message, sf::Color color, entt::entity trackedEntity, sf::Vector2i position, sf::Vector2f velocity, bool fades, int ttl, bool isScreenSpace)
 {
 	using namespace entt::literals;
-	const auto& font = registry->ctx().get<sf::Font&>("terminus"_hs);
-	const auto camera = getCurrentCamera(*registry);
+	const auto& font = _registry->ctx().get<sf::Font&>("terminus"_hs);
+	const auto camera = getCurrentCamera(*_registry);
 
 	if (isScreenSpace)
 	{
@@ -51,7 +51,7 @@ void drft::system::FloatingTextSystem::queueFloatingMessage(const std::string& m
 
 void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 {
-	const auto camera = getCurrentCamera(*registry);
+	const auto camera = getCurrentCamera(*_registry);
 	const sf::Vector2f offset = { spatial::TILE_WIDTH / 2.f, 0.f }; // So messages originate from the center of cells
 
 	auto it = _floatingMessages.begin();
@@ -59,7 +59,7 @@ void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 	{
 		if (it->trackedEntity != entt::null)
 		{
-			if (auto posComp = registry->try_get<component::Position>(it->trackedEntity))
+			if (auto posComp = _registry->try_get<component::Position>(it->trackedEntity))
 			{
 				it->position = posComp->position;
 			}

@@ -9,15 +9,14 @@
 
 void drft::system::HealthSystem::init()
 {
-	auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
-	dispatcher.sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
-	registry->on_update<component::action::LevelUp>().connect<&HealthSystem::onLevelUp>(this);
+	_dispatcher->sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
+	_registry->on_update<component::action::LevelUp>().connect<&HealthSystem::onLevelUp>(this);
 }
 
 void drft::system::HealthSystem::update(const float dt)
 {
 	// This sepration of incoming / taking damage allows for event handlers to react to the events separately
-	auto incomingDamageView = registry->view<component::action::IncomingDamage>();
+	auto incomingDamageView = _registry->view<component::action::IncomingDamage>();
 	for (auto [entity, incoming] : incomingDamageView.each())
 	{
 		int total = 0;
@@ -25,17 +24,17 @@ void drft::system::HealthSystem::update(const float dt)
 		{
 			total += damage;
 		}
-		registry->emplace<component::action::TakeDamage>(entity, total, incoming.source);
+		_registry->emplace<component::action::TakeDamage>(entity, total, incoming.source);
 	}
 
-	auto damageView = registry->view<component::action::TakeDamage, component::Health>();
+	auto damageView = _registry->view<component::action::TakeDamage, component::Health>();
 	for (auto [entity, damage, health] : damageView.each())
 	{
 		// send floating message
-		if (auto posComp = registry->try_get<component::Position>(entity))
+		if (auto posComp = _registry->try_get<component::Position>(entity))
 		{
-			auto handle = entt::const_handle{ *registry, entity };
-			auto& physical = registry->get<component::Physical>(entity);
+			auto handle = entt::const_handle{ *_registry, entity };
+			auto& physical = _registry->get<component::Physical>(entity);
 			
 			auto material = getPrimaryMaterial(handle);
 			sf::Color materialColor = material.get<component::Render>().color;
@@ -61,7 +60,7 @@ void drft::system::HealthSystem::update(const float dt)
 			else if (damage.amount > 0)
 			{
 				// Spawn Hit particles
-				spawnEffect(*registry, {
+				spawnEffect(*_registry, {
 					.color = materialColor,
 					.sprites = {80, 81, 82},
 					.layer = RenderLayer::EffectsBack,
@@ -70,7 +69,7 @@ void drft::system::HealthSystem::update(const float dt)
 					});
 			}
 
-			auto& dispatcher = registry->ctx().get<entt::dispatcher&>();
+			auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 			dispatcher.trigger(events::SendFloatingMessageEvent{
 				.message = message + std::to_string(std::abs(damage.amount)),
 				.color = messageColor,
@@ -82,7 +81,7 @@ void drft::system::HealthSystem::update(const float dt)
 				});
 
 			// Spawn HurtEffect
-			spawnEffect(*registry, {
+			spawnEffect(*_registry, {
 			.color = effectColor,
 			.sprites = effectSprites,
 			.layer = RenderLayer::EffectsBack,
@@ -91,28 +90,26 @@ void drft::system::HealthSystem::update(const float dt)
 			.ttl = effect_ttl,
 			.fades = false,
 				});
-
-			
 		}
 		
 		health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
 		if (health.current == 0)
 		{
-			registry->emplace<component::action::Die>(entity);
-			registry->emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(entity, *registry));
+			_registry->emplace<component::action::Die>(entity);
+			_registry->emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(entity, *_registry));
 		}
 	}
 }
 
 void drft::system::HealthSystem::onUpdateEnd()
 {
-	registry->clear<component::action::IncomingDamage>();
-	registry->clear<component::action::TakeDamage>();
+	_registry->clear<component::action::IncomingDamage>();
+	_registry->clear<component::action::TakeDamage>();
 }
 
 void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)
 {
-	if (auto health = registry->try_get<component::Health>(ev.entity))
+	if (auto health = _registry->try_get<component::Health>(ev.entity))
 	{
 		health->current = std::clamp(health->current + health->recovery, 1.f, health->max);
 	}

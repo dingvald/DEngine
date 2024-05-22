@@ -9,24 +9,24 @@
 
 void drft::system::InteractionSystem::init()
 {
-	registry->on_construct<component::action::DoInteract>().connect<&InteractionSystem::onContructDoInteract>(this);
+	_registry->on_construct<component::action::DoInteract>().connect<&InteractionSystem::onContructDoInteract>(this);
 }
 
 void drft::system::InteractionSystem::update(const float dt)
 {
-	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
-	auto interactView = registry->view<const component::Position, component::action::TryInteract>();
+	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
+	auto interactView = _registry->view<const component::Position, component::action::TryInteract>();
 	for (auto [entity, pos] : interactView.each())
 	{
 		auto usableEntities = getInteractableSurroundings(pos.position, grid);
 		if (usableEntities.size() == 1)
 		{
-			registry->emplace<component::action::DoInteract>(entity, std::move(usableEntities));
+			_registry->emplace<component::action::DoInteract>(entity, std::move(usableEntities));
 		}
 		else if (usableEntities.size() > 1)
 		{
 			auto tilePosition = pos.position;
-			registry->emplace<component::action::SelectDirection>(entity,
+			_registry->emplace<component::action::SelectDirection>(entity,
 				[this, tilePosition, entity](sf::Vector2i direction) -> bool
 				{
 					sf::Vector2i targetPosition = tilePosition + direction;
@@ -38,20 +38,20 @@ void drft::system::InteractionSystem::update(const float dt)
 
 void drft::system::InteractionSystem::onUpdateEnd()
 {
-	registry->clear<component::action::TryInteract>();
-	registry->clear<component::action::DoInteract>();
+	_registry->clear<component::action::TryInteract>();
+	_registry->clear<component::action::DoInteract>();
 }
 
 std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurroundings(sf::Vector2i position, const spatial::WorldGrid& grid)
 {
 	std::vector<entt::entity> result;
-	auto surroundings = spatial::getAdjacentPoints(position);
+	auto surroundings = spatial::getIntRectAroundOrigin(position, 3, 3);
 	for (auto&& tile : surroundings)
 	{
 		auto entities = grid.entitiesAt(tile,
 			[this](entt::entity entity) -> bool 
 			{
-				return registry->any_of<component::Interactable>(entity);
+				return _registry->any_of<component::Interactable>(entity);
 			});
 		result.insert(result.end(), entities.begin(), entities.end());
 	}
@@ -60,15 +60,15 @@ std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurrou
 
 bool drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::Vector2i target)
 {
-	const auto& grid = registry->ctx().get<spatial::WorldGrid&>();
+	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
 	auto entities = grid.entitiesAt(target, [this](entt::entity entity) -> bool 
 		{
-			return registry->any_of<component::Interactable>(entity);
+			return _registry->any_of<component::Interactable>(entity);
 		});
 
 	if (entities.empty()) return false;
 
-	registry->emplace<component::action::DoInteract>(actor, std::move(entities));
+	_registry->emplace<component::action::DoInteract>(actor, std::move(entities));
 
 	return true;
 }

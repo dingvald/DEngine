@@ -6,27 +6,27 @@
 
 void drft::system::ProjectileSystem::init()
 {
-	registry->on_construct<component::Projectile>().connect<&ProjectileSystem::onProjectileAdded>(this);
-	registry->on_destroy<component::Projectile>().connect<&ProjectileSystem::onProjectileRemoved>(this);
+	_registry->on_construct<component::Projectile>().connect<&ProjectileSystem::onProjectileAdded>(this);
+	_registry->on_destroy<component::Projectile>().connect<&ProjectileSystem::onProjectileRemoved>(this);
 }
 
 void drft::system::ProjectileSystem::update(float dt)
 {
-	auto view = registry->view<component::Position, component::Projectile, component::tag::CurrentActor>();
+	auto view = _registry->view<component::Position, component::Projectile, component::tag::CurrentActor>();
 	for (auto [entity, pos, proj] : view.each())
 	{
 		if (proj.progress >= proj.line.size())
 		{
-			registry->remove<component::Projectile>(entity);
+			_registry->remove<component::Projectile>(entity);
 			continue;
 		}
 
 		auto delta = proj.line.at(proj.progress++) - pos.position;
-		registry->emplace_or_replace<component::action::Move>(entity, delta);
+		_registry->emplace_or_replace<component::action::Move>(entity, delta);
 
-		if (auto render = registry->try_get<component::Render>(entity))
+		if (auto render = _registry->try_get<component::Render>(entity))
 		{
-			spawnEffect(*registry,
+			spawnEffect(*_registry,
 				{
 					.color = sf::Color::White,
 					.sprites = {render->sprite},
