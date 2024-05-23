@@ -6,7 +6,7 @@
 #include "Engine/States/StateIdentifiers.h"
 #include "Spatial/Conversions.h"
 #include "Systems/Helpers/FindItemOwner.h"
-#include "Random/RandomNumberGenerator.h"
+#include "Random/PercentChance.h"
 #include "Utility/EntityHelpers.h"
 #include "Events/ItemBreakEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
@@ -21,11 +21,10 @@ void drft::system::DeathSystem::update(const float dt)
 	auto view = _registry->view<component::action::Die, component::Physical, component::Position>();
 	for (auto [entity, physical, pos] : view.each())
 	{
-		int chance = 100;
+		int chance = 80;
 		for (auto& matName : physical.materials)
 		{
-			int roll = rng::RandomNumberGenerator::intInRange(0, 100);
-			if (roll <= chance)
+			if (rng::percentChance(chance))
 			{
 				auto dropped = factory.build(matName, *_registry);
 				dropped.patch<component::Position>([&pos](auto& position)
@@ -57,13 +56,12 @@ void drft::system::DeathSystem::update(const float dt)
 	}
 
 	// Equipped item breaking
-	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 	auto itemView = _registry->view<component::action::Die, component::Item>(entt::exclude<component::Position>);
 	for (auto [entity, item] : itemView.each())
 	{
 		auto owner = findItemOwner(*_registry, item.id, WhereToLook::Bodies);
-		dispatcher.trigger(events::ItemBreakEvent(item.id, owner));
-		dispatcher.trigger(events::SendFloatingMessageEvent{
+		_dispatcher->trigger(events::ItemBreakEvent(item.id, owner));
+		_dispatcher->trigger(events::SendFloatingMessageEvent{
 			.message = util::getEntityName({*_registry, entity}) + " broke!",
 			.color = sf::Color::Yellow,
 			.tracksEntity = owner,

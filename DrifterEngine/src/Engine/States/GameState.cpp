@@ -35,6 +35,7 @@
 #include "Systems/Gameplay/DayNightCycleSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/ProjectileSystem.h"
+#include "Systems/Gameplay/HealingSystem.h"
 #include "Systems/Gameplay/Actions/DropItemSystem.h"
 #include "Systems/Gameplay/Actions/EquipItemSystem.h"
 #include "Systems/Gameplay/Actions/CraftItemSystem.h"
@@ -303,6 +304,7 @@ void drft::GameState::importSystems()
 	_systems->add<SelectDirectionSystem>(			Phase::Reactive);
 	_systems->add<OpenableSystem>(					Phase::Reactive);
 	_systems->add<ConsumableSystem>(				Phase::Reactive);
+	_systems->add<HealingSystem>(					Phase::Reactive);
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{

@@ -27,7 +27,7 @@ void drft::system::CraftItemSystem::onCraftItem(entt::registry& registry, entt::
 	auto& craft = registry.get<component::action::Craft>(entity);
 
 	std::vector<component::Item::ID> toRemove;
-	for (auto [matName, amount] : craft.recipe)
+	for (auto&& [matName, amount] : craft.recipe)
 	{
 		int count = 0;
 		for (auto item : container.contents)

@@ -21,7 +21,6 @@ namespace drft::system
 
 	private:
 		spatial::WorldGrid* _grid = nullptr;
-		entt::dispatcher* _dispatcher = nullptr;
 	};
 
 } // namespace dft::system

@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\HealingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\ConsumableSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp" />
     <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp" />
@@ -255,7 +256,6 @@
     <ClCompile Include="src\Systems\Helpers\ToHotbarIndex.cpp" />
     <ClCompile Include="src\Systems\Rendering\PlayerFOVSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DayNightCycleSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.cpp" />
     <ClCompile Include="src\Systems\Rendering\CullingSystem.cpp" />
     <ClCompile Include="src\Systems\Rendering\LightingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\CraftItemSystem.cpp" />
@@ -388,7 +388,8 @@
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Events\ConsumeEntityEvent.h" />
+    <ClInclude Include="src\Systems\Gameplay\HealingSystem.h" />
+    <ClInclude Include="src\Events\EntityConsumeEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\ConsumableSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h" />
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />
@@ -486,7 +487,6 @@
     <ClInclude Include="src\Systems\Rendering\PlayerFOVSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DayNightCycleSystem.h" />
     <ClInclude Include="src\Events\GameTickEvent.h" />
-    <ClInclude Include="src\Systems\Gameplay\UseItemFunctions\UseItemFunctions.h" />
     <ClInclude Include="src\Systems\Rendering\CullingSystem.h" />
     <ClInclude Include="src\Systems\Rendering\LightingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\CraftItemSystem.h" />

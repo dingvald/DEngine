@@ -9,12 +9,11 @@
 
 void drft::system::WorldGridResolver::init()
 {
-	_grid = &registry->ctx().get<spatial::WorldGrid&>();
-	_dispatcher = &registry->ctx().get<entt::dispatcher&>();
+	_grid = &_registry->ctx().get<spatial::WorldGrid&>();
 
-	registry->on_construct<component::Position>().connect<&WorldGridResolver::onPositionAdd>(this);
-	registry->on_update<component::Position>().connect<&WorldGridResolver::onPositionUpdate>(this);
-	registry->on_destroy<component::Position>().connect<&WorldGridResolver::onPositionRemove>(this);
+	_registry->on_construct<component::Position>().connect<&WorldGridResolver::onPositionAdd>(this);
+	_registry->on_update<component::Position>().connect<&WorldGridResolver::onPositionUpdate>(this);
+	_registry->on_destroy<component::Position>().connect<&WorldGridResolver::onPositionRemove>(this);
 }
 
 void drft::system::WorldGridResolver::onPositionAdd(entt::registry& registry, entt::entity entity)

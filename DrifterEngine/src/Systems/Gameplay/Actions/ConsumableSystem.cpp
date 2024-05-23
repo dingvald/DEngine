@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ConsumableSystem.h"
 #include "Components/Components.h"
-#include "Events/ConsumeEntityEvent.h"
+#include "Events/EntityConsumeEvent.h"
 
 void drft::system::ConsumableSystem::init()
 {
@@ -13,7 +13,7 @@ void drft::system::ConsumableSystem::consumeInteraction(entt::entity actor, entt
 {
 	if (auto consumable = _registry->try_get<component::Consumable>(subject))
 	{
-		_dispatcher->trigger(events::ConsumeEntityEvent{.consumer = actor, .consumed = subject});
+		_dispatcher->trigger(events::EntityConsumeEvent{.consumer = actor, .consumed = subject});
 		if (consumable->destroy)
 		{
 			_registry->destroy(subject);
