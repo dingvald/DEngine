@@ -19,42 +19,42 @@ void drft::system::PickUpSystem::update(const float dt)
 		if (container.contents.size() >= container.capacity) continue;
 
 		const auto myTilePosition = pos.position;
-		const auto items = grid.entitiesAt(myTilePosition, [this](entt::entity entity) -> bool
-			{
-				return _registry->all_of<component::Item>(entity);
-			});
-
-		if (!items.empty())
+		auto containsItem = [this](entt::entity entity) -> bool
 		{
-			_registry->remove<component::Position>(items.front());
+			return _registry->all_of<component::Item>(entity);
+		};
+		const auto items = grid.entitiesAt(myTilePosition, containsItem);
 
-			auto& item = _registry->get<component::Item>(items.front());
+		if (items.empty()) continue;
 
-			bool putDirectlyInHand = false;
-			if (auto body = _registry->try_get<component::Body>(entity))
+		_registry->remove<component::Position>(items.front());
+
+		auto& item = _registry->get<component::Item>(items.front());
+
+		bool putDirectlyInHand = false;
+		if (auto body = _registry->try_get<component::Body>(entity))
+		{
+			const auto handParts = body->parts.search(PartType::Hand);
+			for (auto hand : handParts)
 			{
-				const auto handParts = body->parts.search(PartType::Hand);
-				for (auto hand : handParts)
+				if (!hand->getSlotItem(EquipmentLayer::Held).has_value())
 				{
-					if (!hand->getSlotItem(EquipmentLayer::Held).has_value())
-					{
-						hand->addSlotItem(item.id, EquipmentLayer::Held);
-						putDirectlyInHand = true;
-						break;
-					}
+					hand->addSlotItem(item.id, EquipmentLayer::Held);
+					putDirectlyInHand = true;
+					break;
 				}
 			}
-			// otherwise put into inventory
-			if (!putDirectlyInHand)
-			{
-				_registry->patch<component::Container>(entity,
-					[item](component::Container& cont)
-					{
-						cont.contents.push_back(item.id);
-					});
-			}
-			spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *_registry, entity });
 		}
+		// otherwise put into inventory
+		if (!putDirectlyInHand)
+		{
+			_registry->patch<component::Container>(entity,
+				[item](component::Container& cont)
+				{
+					cont.contents.push_back(item.id);
+				});
+		}
+		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *_registry, entity });
 	}
 }
 

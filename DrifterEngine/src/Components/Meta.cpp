@@ -96,8 +96,7 @@ void component::Meta::initialize()
 		.data<&Sharp::sharpness>("sharpness"_hs);
 
 	snapshot::reflectComponent<Flying, FLYING_STRING>()
-		.prop("serialize"_hs)
-		.data<&Flying::standin>("standin"_hs);
+		.prop("serialize"_hs);
 
 	snapshot::reflectComponent<Sprinting, SPRINTING_STRING>()
 		.prop("serialize"_hs);

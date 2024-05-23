@@ -843,9 +843,7 @@
           "max": 5.0,
           "current": 5.0
         },
-        "Flying": {
-          "standin": 0
-        },
+        "Flying": {},
         "Attacker": {
           "baseDamage": 1
         },
@@ -902,9 +900,7 @@
           "moveSpeed": 2.0,
           "actSpeed": 1.0
         },
-        "Flying": {
-          "standin": 0
-        },
+        "Flying": {},
         "Health": {
           "max": 5.0,
           "current": 5.0
@@ -960,9 +956,7 @@
           "moveSpeed": 2.0,
           "actSpeed": 1.0
         },
-        "Flying": {
-          "standin": 0
-        },
+        "Flying": {},
         "Health": {
           "max": 5.0,
           "current": 5.0
@@ -1018,9 +1012,7 @@
           "moveSpeed": 1.8,
           "actSpeed": 1.0
         },
-        "Flying": {
-          "standin": 0
-        },
+        "Flying": {},
         "Health": {
           "max": 30.0,
           "current": 30.0

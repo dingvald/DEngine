@@ -374,6 +374,11 @@ namespace component::action
 
 	struct OpenCrafting {};
 
+	struct ConsumeEntity
+	{
+		entt::entity consumed;
+	};
+
 	struct ConsumeStamina
 	{
 		float amount = 0.f;

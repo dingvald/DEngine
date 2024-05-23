@@ -389,7 +389,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Systems\Gameplay\HealingSystem.h" />
-    <ClInclude Include="src\Events\EntityConsumeEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\ConsumableSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h" />
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />

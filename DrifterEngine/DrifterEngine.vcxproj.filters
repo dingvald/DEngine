@@ -1616,9 +1616,6 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\ConsumableSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\EntityConsumeEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\HealingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>

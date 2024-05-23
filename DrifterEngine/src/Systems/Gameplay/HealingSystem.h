@@ -14,7 +14,7 @@ namespace drft::system
 		void init() override;
 
 	private:
-		void onEntityConsumeEvent(events::EntityConsumeEvent& ev);
+		void onConstructConsumeEntity(entt::registry& registry, entt::entity entity) const;
 	};
 }
 

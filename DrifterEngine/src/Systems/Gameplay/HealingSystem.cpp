@@ -1,18 +1,18 @@
 #include "pch.h"
 #include "HealingSystem.h"
 #include "Components/Components.h"
-#include "Events/EntityConsumeEvent.h"
 
 void drft::system::HealingSystem::init()
 {
-	_dispatcher->sink<events::EntityConsumeEvent>().connect<&HealingSystem::onEntityConsumeEvent>(this);
+	_registry->on_construct<component::action::ConsumeEntity>().connect<&HealingSystem::onConstructConsumeEntity>(this);
 }
 
-void drft::system::HealingSystem::onEntityConsumeEvent(events::EntityConsumeEvent& ev)
+void drft::system::HealingSystem::onConstructConsumeEntity(entt::registry& registry, entt::entity entity) const
 {
-	if (auto healing = _registry->try_get<component::Healing>(ev.consumed))
+	auto& consumeEntity = registry.get<component::action::ConsumeEntity>(entity);
+	if (auto healing = _registry->try_get<component::Healing>(consumeEntity.consumed))
 	{
-		component::action::TakeDamage damage = { .amount = - (healing->amount), .source = ev.consumed };
-		_registry->emplace<component::action::TakeDamage>(ev.consumer, std::move(damage));
+		component::action::TakeDamage damage = { .amount = -(healing->amount), .source = consumeEntity.consumed };
+		_registry->emplace<component::action::TakeDamage>(entity, std::move(damage));
 	}
 }

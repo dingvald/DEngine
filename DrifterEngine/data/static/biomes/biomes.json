@@ -53,7 +53,7 @@
           }
         },
         "Wildlife": {
-          "Rat": {
+          "Mosquito": {
             "Algorithm": "Random",
             "Parameters": {
               "Minimum": 1,

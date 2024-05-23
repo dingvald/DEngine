@@ -25,26 +25,19 @@ void drft::system::MovementSystem::update(const float dt)
 		}
 
 		sf::Vector2i targetPosition = pos.position + move.direction;
-		const auto blockers = grid.entitiesAt(targetPosition,
-			[this](entt::entity entity) -> bool
+		auto containsBlockers = [this](entt::entity entity) -> bool
+		{
+			if (auto physical = _registry->try_get<component::Physical>(entity))
 			{
-				if (auto physical = _registry->try_get<component::Physical>(entity))
-				{
-					if (physical->blocks)
-					{
-						return true;
-					}
-				}
-				return false;
-			});
+				return physical->blocks;
+			}
+			return false;
+		};
+		const auto blockers = grid.entitiesAt(targetPosition, containsBlockers);
 
 		if (blockers.empty())
 		{
-			_registry->patch<component::Position>(entity,
-				[targetPosition](component::Position& pos)
-				{
-					pos.position = targetPosition;
-				});
+			_registry->patch<component::Position>(entity, [targetPosition](component::Position& pos) { pos.position = targetPosition;});
 			if (_registry->all_of<component::Stamina>(entity))
 			{
 				_registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
