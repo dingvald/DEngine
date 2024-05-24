@@ -50,11 +50,6 @@ namespace component
 		int vitality = 1;
 	};
 
-	struct PlayerHasSeen
-	{
-		bool standin = false;
-	};
-
 	struct Lit
 	{
 		sf::Color color = sf::Color::Black;
@@ -84,7 +79,7 @@ namespace component
 		float opacity = 1.0f;
 	};
 
-	struct Physical
+	struct Physical // MaterialComponent
 	{
 		bool blocks = false;
 		float weight = 0.0f;
@@ -148,9 +143,7 @@ namespace component
 	};
 
 	struct Flying
-	{
-		int standin = 0;
-	};
+	{};
 
 	struct Sprinting
 	{
@@ -251,7 +244,7 @@ namespace component
 		std::array<drft::AbilityType, 10> abilities;
 	};
 
-	struct Effect
+	struct Effect // VisualEffect
 	{
 		int ttl = 0;
 		bool fades = false;

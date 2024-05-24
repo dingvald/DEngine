@@ -1,5 +1,6 @@
 #pragma once
 #include "Components.h"
+#include "Components/Tags.h"
 
 namespace cereal
 {
@@ -30,10 +31,8 @@ namespace cereal
 	}
 
 	template<class Archive>
-	void serialize(Archive& archive, PlayerHasSeen& playerHasSeen)
-	{
-		archive(playerHasSeen.standin);
-	}
+	void serialize(Archive& archive, tag::PlayerHasSeen& playerHasSeen)
+	{}
 
 	template<class Archive>
 	void serialize(Archive& archive, LightSource& source)
@@ -103,9 +102,7 @@ namespace cereal
 
 	template<class Archive>
 	void serialize(Archive& archive, Flying& flying)
-	{
-		archive(flying.standin);
-	}
+	{}
 
 	template<class Archive>
 	void serialize(Archive& archive, Sprinting& sprinting)
