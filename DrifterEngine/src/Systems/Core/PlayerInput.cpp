@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "PlayerInput.h"
 #include "Components/Components.h"
+#include "Components/SprintingComponent.h"
+#include "Components/PlayerComponent.h"
+
 #include "Components/Tags.h"
 #include "Systems/Helpers/InputBuffer.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
@@ -53,13 +56,13 @@ void drft::system::PlayerInput::init()
 		entity.emplace<component::action::OpenCrafting>();
 		});
 	_actionMap.addAction(Key::S, [](entt::handle entity) {
-			if (entity.all_of<component::Sprinting>())
+			if (entity.all_of<SprintingComponent>())
 			{
-				entity.remove<component::Sprinting>();
+				entity.remove<SprintingComponent>();
 			}
 			else
 			{
-				entity.emplace<component::Sprinting>();
+				entity.emplace<SprintingComponent>();
 			}
 		});
 	_actionMap.addAction(Key::Space, [](entt::handle entity) {
@@ -122,7 +125,7 @@ void drft::system::PlayerInput::update(const float dt)
 		}
 	}
 
-	auto turnView = _registry->view<component::Player, component::tag::CurrentActor>();
+	auto turnView = _registry->view<PlayerComponent, component::tag::CurrentActor>();
 	for (auto entity : turnView)
 	{
 		if (_bufferedActions.empty()) continue;

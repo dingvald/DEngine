@@ -12,10 +12,7 @@ namespace drft::goap
 	using Plan = std::deque<AiAction>;
 }
 
-namespace component
-{
-	struct AI;
-}
+struct AIComponent;
 
 namespace drft::events
 {
@@ -32,26 +29,26 @@ namespace drft::system
 
 	private:
 		using GoalName = std::string;
-		bool inSightRange(sf::Vector2i position, const component::AI&) const;
+		bool inSightRange(sf::Vector2i position, const AIComponent&) const;
 		void moveToTarget(entt::handle entity, sf::Vector2i targetPosition) const;
 		void pathToTarget(entt::handle, sf::Vector2i targetPosition) const;
 		void clearPathCache(entt::entity entity) const;
 
-		entt::handle getHandle(const component::AI& ai) const;
+		entt::handle getHandle(const AIComponent& ai) const;
 
 		void onTurnEndEvent(const events::TurnEndEvent& ev);
-		void senseWorldState(component::AI& ai);
-		std::deque<goap::AiAction> generatePlan(component::AI& ai, std::deque<GoalName>& goals) const;
+		void senseWorldState(AIComponent& ai);
+		std::deque<goap::AiAction> generatePlan(AIComponent& ai, std::deque<GoalName>& goals) const;
 		bool isPlanValid(const goap::WorldState& worldState, const goap::Plan& plan) const;
-		std::deque<GoalName> prioritizeGoals(const component::AI& ai) const;
-		std::unordered_set<goap::AiAction> getAiActions(const component::AI& ai) const;
-		void setNextState(component::AI& ai, AIState state) const;
-		void executeStateNow(component::AI& ai, AIState state) const;
+		std::deque<GoalName> prioritizeGoals(const AIComponent& ai) const;
+		std::unordered_set<goap::AiAction> getAiActions(const AIComponent& ai) const;
+		void setNextState(AIComponent& ai, AIState state) const;
+		void executeStateNow(AIComponent& ai, AIState state) const;
 
 		// States
-		void aiThink(component::AI& ai) const;
-		void aiMoveTo(component::AI& ai) const;
-		void aiPerformAction(component::AI& ai) const;
+		void aiThink(AIComponent& ai) const;
+		void aiMoveTo(AIComponent& ai) const;
+		void aiPerformAction(AIComponent& ai) const;
 
 	private:
 		goap::SensorRunner _sensorySystem;

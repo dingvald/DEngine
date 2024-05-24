@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TurnManager.h"
 #include "Components/Components.h"
+#include "Components/ActorComponent.h"
+#include "Components/DescriptionComponent.h"
 #include "Components/Tags.h"
 #include "Events/GameTickEvent.h"
 #include "Events/TurnStartEvent.h"
@@ -9,7 +11,7 @@
 
 void drft::system::TurnManager::init()
 {
-	_registry->on_destroy<component::Actor>().connect<&TurnManager::onActorRemove>(this);
+	_registry->on_destroy<ActorComponent>().connect<&TurnManager::onActorRemove>(this);
 	_registry->on_destroy<component::tag::Active>().connect<&TurnManager::onActorRemove>(this);
 
 	_actorQueue = std::make_unique<ActorQueue>(*_registry);
@@ -18,9 +20,9 @@ void drft::system::TurnManager::init()
 void drft::system::TurnManager::onStart(bool)
 {
 	_timeKeeper = _registry->create();
-	_registry->emplace<component::Actor>(_timeKeeper, 0, 1.0f, 1.0f);
+	_registry->emplace<ActorComponent>(_timeKeeper, 0, 1.0f, 1.0f);
 	_registry->emplace<component::tag::Active>(_timeKeeper);
-	_registry->emplace<component::Info>(_timeKeeper, "Time Keeper", "", "");
+	_registry->emplace<DescriptionComponent>(_timeKeeper, "Time Keeper", "");
 
 	_actorQueue->setSentinel(_timeKeeper);
 	_managedEntities.insert(_timeKeeper);
@@ -76,7 +78,7 @@ void drft::system::TurnManager::onActorRemove(entt::registry& registry, entt::en
 
 void drft::system::TurnManager::processSpentPoints()
 {
-	auto spendPointsView = _registry->view<component::action::SpendPoints, component::Actor>();
+	auto spendPointsView = _registry->view<component::action::SpendPoints, ActorComponent>();
 	for (auto [entity, points, actor] : spendPointsView.each())
 	{
 		actor.ap -= points.amount;
@@ -88,13 +90,13 @@ entt::entity drft::system::TurnManager::determineCurrentActor()
 {
 	if (_managedEntities.size() == 1) return _actorQueue->front();
 	auto currentActor = _actorQueue->front();
-	int actorAP = _registry->get<component::Actor>(currentActor).ap;
+	int actorAP = _registry->get<ActorComponent>(currentActor).ap;
 	while (actorAP < 0)
 	{
 		_registry->remove<component::tag::CurrentActor>(currentActor);
 		_actorQueue->rotate();
 		currentActor = _actorQueue->front();
-		actorAP = _registry->get<component::Actor>(currentActor).ap;
+		actorAP = _registry->get<ActorComponent>(currentActor).ap;
 	}
 
 	return currentActor;
@@ -111,7 +113,7 @@ drft::system::ActorQueue::ActorQueue(entt::registry& registry)
 
 void drft::system::ActorQueue::refresh(std::set<entt::entity>& currentEntities)
 {
-	auto actorView = registry.view<component::Actor, component::tag::Active>();
+	auto actorView = registry.view<ActorComponent, component::tag::Active>();
 	for (auto entity : actorView)
 	{
 		if (currentEntities.contains(entity)) continue;
@@ -132,8 +134,8 @@ void drft::system::ActorQueue::sort()
 	std::stable_sort(_queue.begin(), _queue.end(),
 		[this](const entt::entity& a, const entt::entity& b)
 		{
-			auto& actor_a = this->registry.get<component::Actor>(a);
-			auto& actor_b = this->registry.get<component::Actor>(b);
+			auto& actor_a = this->registry.get<ActorComponent>(a);
+			auto& actor_b = this->registry.get<ActorComponent>(b);
 			return actor_a.ap > actor_b.ap;
 		}
 	);
@@ -152,7 +154,7 @@ void drft::system::ActorQueue::tick()
 	for (auto& e : _queue)
 	{
 		if (e == _sentinel) continue;
-		registry.get<component::Actor>(e).ap += AP_PER_TICK;
+		registry.get<ActorComponent>(e).ap += AP_PER_TICK;
 	}
 }
 
@@ -163,7 +165,7 @@ void drft::system::ActorQueue::printQueue() const
 	for (auto entity : _queue)
 	{
 		std::cout << count << ". Entity: " << util::getEntityName({ registry, entity }) 
-			<< " pts: " << registry.get<component::Actor>(entity).ap << std::endl;
+			<< " pts: " << registry.get<ActorComponent>(entity).ap << std::endl;
 		++count;
 	}
 	std::cout << "---END QUEUE---" << std::endl;

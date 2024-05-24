@@ -75,9 +75,6 @@
     <ClCompile Include="src\Factory\EntityFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Components\Meta.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Core\TurnManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -97,9 +94,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\CopyEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\Serialize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Snapshot\Archive.cpp">
@@ -423,7 +417,7 @@
     <ClCompile Include="src\Systems\Helpers\ToHotbarIndex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Core\EffectSystem.cpp">
+    <ClCompile Include="src\Systems\Core\VisualEffectSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\SpawnEffect.cpp">
@@ -824,9 +818,6 @@
     <ClInclude Include="deps\EnTT\fwd.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Meta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="deps\cereal\archives\adapters.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1101,9 +1092,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\CopyEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\Serialize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Snapshot\Archive.h">
@@ -1490,7 +1478,7 @@
     <ClInclude Include="src\Systems\Helpers\ToHotbarIndex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Core\EffectSystem.h">
+    <ClInclude Include="src\Systems\Core\VisualEffectSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\SpawnEffectEvent.h">
@@ -1622,127 +1610,127 @@
     <ClInclude Include="src\Systems\Gameplay\HealingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\InheritanceComponent.h">
+    <ClInclude Include="src\Components\InheritanceComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\PrototypeComponent.h">
+    <ClInclude Include="src\Components\PrototypeComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\DescriptionComponent.h">
+    <ClInclude Include="src\Components\DescriptionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\PositionComponent.h">
+    <ClInclude Include="src\Components\PositionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\RenderComponent.h">
+    <ClInclude Include="src\Components\RenderComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\LitComponent.h">
+    <ClInclude Include="src\Components\LitComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\LocalLightSourceComponent.h">
+    <ClInclude Include="src\Components\LocalLightSourceComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\GlobalLightSourceComponent.h">
+    <ClInclude Include="src\Components\GlobalLightSourceComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\TemporaryLightSourceComponent.h">
+    <ClInclude Include="src\Components\TemporaryLightSourceComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\LightBlockingComponent.h">
+    <ClInclude Include="src\Components\LightBlockingComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\MaterialComponent.h">
+    <ClInclude Include="src\Components\MaterialComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\LiquidComponent.h">
+    <ClInclude Include="src\Components\LiquidComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\InLiquidComponent.h">
+    <ClInclude Include="src\Components\InLiquidComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\CameraComponent.h">
+    <ClInclude Include="src\Components\CameraComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\ActorComponent.h">
+    <ClInclude Include="src\Components\ActorComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\HealthComponent.h">
+    <ClInclude Include="src\Components\HealthComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\HealingComponent.h">
+    <ClInclude Include="src\Components\HealingComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\StaminaComponent.h">
+    <ClInclude Include="src\Components\StaminaComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\AttackerComponent.h">
+    <ClInclude Include="src\Components\AttackerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\SharpComponent.h">
+    <ClInclude Include="src\Components\SharpComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\FlyingComponent.h">
+    <ClInclude Include="src\Components\FlyingComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\SprintingComponent.h">
+    <ClInclude Include="src\Components\SprintingComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\BodyComponent.h">
+    <ClInclude Include="src\Components\BodyComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\WearableComponent.h">
+    <ClInclude Include="src\Components\WearableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\PlayerComponent.h">
+    <ClInclude Include="src\Components\PlayerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\AIComponent.h">
+    <ClInclude Include="src\Components\AIComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\FactionComponent.h">
+    <ClInclude Include="src\Components\FactionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\ItemComponent.h">
+    <ClInclude Include="src\Components\ItemComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\ContainerComponent.h">
+    <ClInclude Include="src\Components\ContainerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\CraftableComponent.h">
+    <ClInclude Include="src\Components\CraftableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\ConsumableComponent.h">
+    <ClInclude Include="src\Components\ConsumableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\InteractableComponent.h">
+    <ClInclude Include="src\Components\InteractableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\OpenableComponent.h">
+    <ClInclude Include="src\Components\OpenableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\TickingLifetimeComponent.h">
+    <ClInclude Include="src\Components\TickingLifetimeComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\LevelingComponent.h">
+    <ClInclude Include="src\Components\LevelingComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\HotbarComponent.h">
+    <ClInclude Include="src\Components\HotbarComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\VisualEffectComponent.h">
+    <ClInclude Include="src\Components\VisualEffectComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\AnimationComponent.h">
+    <ClInclude Include="src\Components\AnimationComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\ProjectileComponent.h">
+    <ClInclude Include="src\Components\ProjectileComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\ComponentMetaBinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Components\MyCraftableItemsComponent.h">
+    <ClInclude Include="src\Components\MyCraftableItemsComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

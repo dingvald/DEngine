@@ -2,11 +2,6 @@
 #include "Systems/System.h"
 
 
-namespace component
-{
-	struct Actor;
-}
-
 namespace drft::system
 {
 	const int AP_PER_TICK = 100;

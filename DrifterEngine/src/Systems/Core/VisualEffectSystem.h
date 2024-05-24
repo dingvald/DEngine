@@ -3,7 +3,7 @@
 
 namespace drft::system
 {
-	class EffectSystem : public System
+	class VisualEffectSystem : public System
 	{
 	public:
 		void init() override;

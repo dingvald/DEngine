@@ -26,7 +26,7 @@
 #include "Systems/Core/TurnManager.h"
 #include "Systems/Core/WorldGridResolver.h"
 #include "Systems/Core/FloatingTextSystem.h"
-#include "Systems/Core/EffectSystem.h"
+#include "Systems/Core/VisualEffectSystem.h"
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/HealthSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
@@ -60,9 +60,9 @@
 #include "Systems/Gameplay/DetermineCraftableItemsSystem.h"
 #pragma endregion
 #pragma region Component Includes
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
 #include "Components/Tags.h"
-#include "Components/Meta.h"
+
 #pragma endregion
 #include "Utility/SaveEntity.h"
 #include "Utility/LoadEntity.h"
@@ -144,7 +144,7 @@ bool drft::GameState::loadOrCreatePlayer()
 		assert(_factory->has("Player"), "No player prototype found - is JSON loaded?");
 		_player = _factory->build("Player", getContext().registry);
 		auto startingPosition = getContext().registry.ctx().get<WorldMap&>().getStartingPosition("Forest");
-		_player.patch<component::Position>([startingPosition](component::Position& pos)
+		_player.patch<PositionComponent>([startingPosition](PositionComponent& pos)
 			{
 				pos.position = startingPosition;
 			});
@@ -251,7 +251,7 @@ void drft::GameState::importSystems()
 
 	using namespace system;
 
-	_systems->add<RealityBubble>(					Phase::OnPreUpdate);
+	_systems->add<RealityBubble>(					Phase::OnPreUpdate); // This should go first - determines which actors are "active"
 	_systems->add<TurnManager>(						Phase::OnPreUpdate + 5);
 
 	_systems->add<PlayerInput>(						Phase::OnProcessInput);
@@ -285,7 +285,7 @@ void drft::GameState::importSystems()
 	_systems->add<LiquidSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
-	_systems->add<EffectSystem>(					Phase::OnFixedUpdate);
+	_systems->add<VisualEffectSystem>(				Phase::OnFixedUpdate);
 	_systems->add<AnimationSystem>(					Phase::OnFixedUpdate);
 	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 5);
 	_systems->add<QuestingSystem>(					Phase::OnFixedUpdate + 10);

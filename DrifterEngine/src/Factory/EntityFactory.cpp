@@ -1,16 +1,20 @@
 #include "pch.h"
 #include "EntityFactory.h"
-#include "Components/Meta.h"
+#include "Components/ComponentMetaBinder.h"
 #include "Utility/CopyEntity.h"
 #include <EnTT/meta/container.hpp>
 #include "JSON/JSONHelpers.h"
+
+#include "Components/InheritanceComponent.h"
+#include "Components/PrototypeComponent.h"
+#include "Components/BodyComponent.h"
 
 using namespace entt::literals;
 
 drft::EntityFactory::EntityFactory()
 {
-	component::Meta::initialize();
-}
+	ComponentMetaBinder::bindComponents();
+} 
 
 bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryPath)
 {
@@ -59,7 +63,7 @@ const std::string& drft::EntityFactory::getName(entt::entity prototype) const
 const std::unordered_set<std::string> drft::EntityFactory::getFlattenedInheritance(entt::const_handle entity) const
 {
 	std::unordered_set<std::string> result;
-	if (auto inheritance = entity.try_get<component::Inheritance>())
+	if (auto inheritance = entity.try_get<InheritanceComponent>())
 	{
 		for (auto&& base : inheritance->bases)
 		{
@@ -87,7 +91,7 @@ entt::handle drft::EntityFactory::build(const std::string& name, entt::registry&
 	entt::entity newEntity = registry.create();
 	util::copyEntity(newEntity, _prototypes.at(name), registry, _protoRegistry);
 
-	registry.emplace<component::Prototype>(newEntity, name);
+	registry.emplace<PrototypeComponent>(newEntity, name);
 
 	return entt::handle(registry, newEntity);
 }
@@ -136,7 +140,7 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 		if (canResolve)
 		{
 			auto entity = get(relationship.entityName);
-			auto& inheritanceComp = _protoRegistry.emplace<component::Inheritance>(entity);
+			auto& inheritanceComp = _protoRegistry.emplace<InheritanceComponent>(entity);
 			for (auto&& base : relationship.bases)
 			{
 				auto baseEntity = get(base);
@@ -210,7 +214,7 @@ void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, co
 			auto componentName = component.name.GetString();
 
 			// SPECIAL CASE: parse Body component
-			if (std::string(componentName) == BODY_STRING)
+			if (std::string(componentName) == "Body")
 			{
 				auto bodyObj = component.value.GetObject();
 				auto& root = *bodyObj.begin();
@@ -230,7 +234,7 @@ void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, co
 					return std::make_unique<BodyPart>(root);
 				};
 				PartTree parts(parseBodyPart(root, parseBodyPart));
-				_protoRegistry.emplace<component::Body>(entity, parts);
+				_protoRegistry.emplace<BodyComponent>(entity, parts);
 			}
 			// DEFAULT CASE: parse generic
 			else

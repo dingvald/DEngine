@@ -1,7 +1,13 @@
 #include "pch.h"
 #include "ArtificialInput.h"
+
 #include "Components/Components.h"
+#include "Components/AIComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/FactionComponent.h"
+#include "Components/MaterialComponent.h"
 #include "Components/Tags.h"
+
 #include "Events/TurnEndEvent.h"
 #include "Random/RandomNumberGenerator.h"
 #include "Spatial/WorldGrid.h"
@@ -30,7 +36,7 @@ void drft::system::ArtificialInput::init()
 
 void drft::system::ArtificialInput::update(const float dt)
 {
-	auto view = _registry->view<component::AI, const component::Position, component::tag::CurrentActor>();
+	auto view = _registry->view<AIComponent, const PositionComponent, component::tag::CurrentActor>();
 	for (auto [entity, ai, myPos] : view.each())
 	{
 		senseWorldState(ai);
@@ -38,16 +44,16 @@ void drft::system::ArtificialInput::update(const float dt)
 	}
 }
 
-bool drft::system::ArtificialInput::inSightRange(sf::Vector2i position, const component::AI& ai) const
+bool drft::system::ArtificialInput::inSightRange(sf::Vector2i position, const AIComponent& ai) const
 {
-	auto myPosition = _registry->get<component::Position>(entt::to_entity(*_registry, ai)).position;
+	auto myPosition = _registry->get<PositionComponent>(entt::to_entity(*_registry, ai)).position;
 	if (spatial::distance(myPosition, position) < ai.sightRange) return true;
 	return false;
 }
 
 void drft::system::ArtificialInput::moveToTarget(entt::handle entity, sf::Vector2i targetPosition) const
 {
-	auto& position = entity.get<component::Position>().position;
+	auto& position = entity.get<PositionComponent>().position;
 	auto line = spatial::getIntPointsAlongLine(position, targetPosition);
 	sf::Vector2i delta;
 	if (line.empty())
@@ -66,7 +72,7 @@ void drft::system::ArtificialInput::moveToTarget(entt::handle entity, sf::Vector
 
 void drft::system::ArtificialInput::pathToTarget(entt::handle entity, sf::Vector2i targetPosition) const
 {
-	auto& position = entity.get<component::Position>().position;
+	auto& position = entity.get<PositionComponent>().position;
 	if (!_cachedPaths.contains(entity.entity()) || _cachedPaths.at(entity.entity()).empty())
 	{
 		const auto& grid = _registry->ctx().get<const spatial::WorldGrid&>();
@@ -75,9 +81,9 @@ void drft::system::ArtificialInput::pathToTarget(entt::handle entity, sf::Vector
 			{
 				for (auto entity : entities)
 				{
-					if (auto physical = _registry->try_get<component::Physical>(entity))
+					if (auto material = _registry->try_get<MaterialComponent>(entity))
 					{
-						if (physical->blocks) return 1000;
+						if (material->blocks) return 1000;
 					}
 				}
 				return 0;
@@ -100,7 +106,7 @@ void drft::system::ArtificialInput::clearPathCache(entt::entity entity) const
 	_cachedPaths.erase(entity);
 }
 
-entt::handle drft::system::ArtificialInput::getHandle(const component::AI& ai) const
+entt::handle drft::system::ArtificialInput::getHandle(const AIComponent& ai) const
 {
 	entt::entity entity = entt::to_entity(*_registry, ai);
 	entt::handle aiHandle = { *_registry, entity };
@@ -109,7 +115,7 @@ entt::handle drft::system::ArtificialInput::getHandle(const component::AI& ai) c
 
 void drft::system::ArtificialInput::onTurnEndEvent(const events::TurnEndEvent& ev)
 {
-	if (auto ai = _registry->try_get<component::AI>(ev.entity))
+	if (auto ai = _registry->try_get<AIComponent>(ev.entity))
 	{
 		if (_sensorySystem.decayMemory(ai->surroundings))
 		{
@@ -119,12 +125,12 @@ void drft::system::ArtificialInput::onTurnEndEvent(const events::TurnEndEvent& e
 	}
 }
 
-void drft::system::ArtificialInput::senseWorldState(component::AI& ai)
+void drft::system::ArtificialInput::senseWorldState(AIComponent& ai)
 {
 	_sensorySystem.runSensors(getHandle(ai));
 }
 
-std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(component::AI& ai, std::deque<GoalName>& goals) const
+std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(AIComponent& ai, std::deque<GoalName>& goals) const
 {
 	while (!goals.empty())
 	{
@@ -154,7 +160,7 @@ bool drft::system::ArtificialInput::isPlanValid(const goap::WorldState& worldSta
 	return worldState.contains(firstAction.preconditions());
 }
 
-std::deque<drft::system::ArtificialInput::GoalName> drft::system::ArtificialInput::prioritizeGoals(const component::AI& ai) const
+std::deque<drft::system::ArtificialInput::GoalName> drft::system::ArtificialInput::prioritizeGoals(const AIComponent& ai) const
 {
 	const float THRESHOLD = 0.15f;
 	std::deque<std::string> result;
@@ -199,13 +205,13 @@ std::deque<drft::system::ArtificialInput::GoalName> drft::system::ArtificialInpu
 	return result;
 }
 
-std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiActions(const component::AI& ai) const
+std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiActions(const AIComponent& ai) const
 {
 	std::unordered_set<goap::AiAction> result;
 	entt::const_handle entity = { *_registry, entt::to_entity(*_registry, ai) };
 	result.insert(goap::AiAction::RandomMove);
 
-	if (entity.all_of<component::Faction>())
+	if (entity.all_of<FactionComponent>())
 	{
 		result.insert(goap::AiAction::SpotHostile);
 		result.insert(goap::AiAction::AttackHostile);
@@ -216,12 +222,12 @@ std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiAct
 	return result;
 }
 
-void drft::system::ArtificialInput::setNextState(component::AI& ai, AIState state) const
+void drft::system::ArtificialInput::setNextState(AIComponent& ai, AIState state) const
 {
 	ai.state = state;
 }
 
-void drft::system::ArtificialInput::executeStateNow(component::AI& ai, AIState state) const
+void drft::system::ArtificialInput::executeStateNow(AIComponent& ai, AIState state) const
 {
 	ai.state = state;
 	switch (ai.state)
@@ -241,7 +247,7 @@ void drft::system::ArtificialInput::executeStateNow(component::AI& ai, AIState s
 
 // AI State Machine
 
-void drft::system::ArtificialInput::aiThink(component::AI& ai) const
+void drft::system::ArtificialInput::aiThink(AIComponent& ai) const
 {
 	auto goals = prioritizeGoals(ai);
 	if (goals.front() != ai.currentGoal
@@ -252,7 +258,7 @@ void drft::system::ArtificialInput::aiThink(component::AI& ai) const
 	executeStateNow(ai, AIState::MoveTo);
 }
 
-void drft::system::ArtificialInput::aiMoveTo(component::AI& ai) const
+void drft::system::ArtificialInput::aiMoveTo(AIComponent& ai) const
 {
 	if (!isPlanValid(ai.blackboard, ai.plan))
 	{
@@ -292,7 +298,7 @@ void drft::system::ArtificialInput::aiMoveTo(component::AI& ai) const
 	}
 }
 
-void drft::system::ArtificialInput::aiPerformAction(component::AI& ai) const
+void drft::system::ArtificialInput::aiPerformAction(AIComponent& ai) const
 {
 	if (!isPlanValid(ai.blackboard, ai.plan))
 	{

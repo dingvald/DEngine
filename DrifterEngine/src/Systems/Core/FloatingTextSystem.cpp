@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "FloatingTextSystem.h"
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/GetTextCenter.h"
 #include "Spatial/Helpers.h"
@@ -59,7 +59,7 @@ void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 	{
 		if (it->trackedEntity != entt::null)
 		{
-			if (auto posComp = _registry->try_get<component::Position>(it->trackedEntity))
+			if (auto posComp = _registry->try_get<PositionComponent>(it->trackedEntity))
 			{
 				it->position = posComp->position;
 			}

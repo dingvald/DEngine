@@ -1,17 +1,19 @@
 #include "pch.h"
-#include "EffectSystem.h"
-#include "Components/Components.h"
+#include "VisualEffectSystem.h"
+#include "Components/PositionComponent.h"
+#include "Components/VisualEffectComponent.h"
+#include "Components/RenderComponent.h"
 #include "Utility/Math.h"
 
 
 
-void drft::system::EffectSystem::init()
+void drft::system::VisualEffectSystem::init()
 {
 }
 
-void drft::system::EffectSystem::fixedUpdate()
+void drft::system::VisualEffectSystem::fixedUpdate()
 {
-	auto view = _registry->view<component::Position, component::Effect, component::Render>();
+	auto view = _registry->view<PositionComponent, VisualEffectComponent, RenderComponent>();
 	for (auto [entity, pos, effect, render] : view.each())
 	{
 		// Effects with their ttl set to negative need to be destroyed manually

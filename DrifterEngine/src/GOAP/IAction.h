@@ -3,10 +3,7 @@
 #include "GOAP/WorldState.h"
 #include "GOAP/WorldStateTypes.h"
 
-namespace component
-{
-	struct AI;
-}
+struct AIComponent;
 
 namespace drft::goap
 {
@@ -47,8 +44,8 @@ namespace drft::goap
 		void addPrecondition(WorldStateType state, int val);
 		// Adds an effect that occurs as a result of this action being performed.
 		void addEffect(WorldStateType state, int val);
-		const component::AI& getAI(entt::const_handle aiEntity) const;
-		component::AI& getAI(entt::handle aiEntity) const;
+		const AIComponent& getAI(entt::const_handle aiEntity) const;
+		AIComponent& getAI(entt::handle aiEntity) const;
 	
 	private:
 		WorldState _preconditions;

@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "ItemUniqueIDGenerator.h"
-#include "Components/Components.h"
+#include "Components/ItemComponent.h"
 
 std::unordered_map<unsigned long, entt::entity> drft::system::ItemUniqueIDGenerator::_itemToEntityCache;
 
 void drft::system::ItemUniqueIDGenerator::init()
 {
-	_registry->on_construct<component::Item>().connect<&ItemUniqueIDGenerator::onItemAdd>(this);
+	_registry->on_construct<ItemComponent>().connect<&ItemUniqueIDGenerator::onItemAdd>(this);
 }
 
 void drft::system::ItemUniqueIDGenerator::save(cereal::JSONOutputArchive& oarchive)
@@ -21,8 +21,8 @@ void drft::system::ItemUniqueIDGenerator::load(cereal::JSONInputArchive& iarchiv
 
 void drft::system::ItemUniqueIDGenerator::onItemAdd(entt::registry& registry, entt::entity entity)
 {
-	auto& item = registry.get<component::Item>(entity);
-	if (item.id == component::Item::NONE)
+	auto& item = registry.get<ItemComponent>(entity);
+	if (item.id == ItemComponent::NONE)
 	{
 		item.id = _nextAvailableID++;
 	}

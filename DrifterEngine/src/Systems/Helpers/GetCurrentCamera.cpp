@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "GetCurrentCamera.h"
-#include "Components/Components.h"
+#include "Components/CameraComponent.h"
+#include "Components/PositionComponent.h"
 #include "Spatial/Conversions.h"
 
 drft::system::CameraInfo drft::system::getCurrentCamera(const entt::registry& registry)
 {
 	CameraInfo result;
-	auto cameraView = registry.view<component::Camera, component::Position>();
+	auto cameraView = registry.view<CameraComponent, PositionComponent>();
 	for (auto [_, camera, pos] : cameraView.each())
 	{
 		result.position = pos.position;

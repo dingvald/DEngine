@@ -2,10 +2,7 @@
 #include "WorldState.h"
 #include "SensorTypes.h"
 
-namespace component
-{
-	struct AI;
-}
+struct AIComponent;
 
 namespace drft::goap
 {
@@ -23,8 +20,8 @@ namespace drft::goap
 		// Merges the results of the sense attempt.
 		void mergeResults(const WorldState& fromSurroundings, const WorldState& fromMemory, component::AI& ai) const;
 
-		component::AI& getAI(entt::handle agent) const;
-		const component::AI& getAI(entt::const_handle agent) const;
+		AIComponent& getAI(entt::handle agent) const;
+		const AIComponent& getAI(entt::const_handle agent) const;
 	};
 }
 
