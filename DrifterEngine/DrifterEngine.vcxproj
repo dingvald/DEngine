@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HealingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\ConsumableSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp" />
@@ -388,6 +389,7 @@
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\ComponentMetaBinder.h" />
     <ClInclude Include="src\Components\Components\ActorComponent.h" />
     <ClInclude Include="src\Components\Components\AIComponent.h" />
     <ClInclude Include="src\Components\Components\AnimationComponent.h" />
@@ -414,6 +416,7 @@
     <ClInclude Include="src\Components\Components\LocalLightSourceComponent.h" />
     <ClInclude Include="src\Components\Components\LitComponent.h" />
     <ClInclude Include="src\Components\Components\MaterialComponent.h" />
+    <ClInclude Include="src\Components\Components\MyCraftableItemsComponent.h" />
     <ClInclude Include="src\Components\Components\OpenableComponent.h" />
     <ClInclude Include="src\Components\Components\PlayerComponent.h" />
     <ClInclude Include="src\Components\Components\PositionComponent.h" />

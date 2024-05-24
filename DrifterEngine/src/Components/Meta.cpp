@@ -2,6 +2,7 @@
 #include "Meta.h"
 #include "Serialize.h"
 #include "Snapshot/Reflection.h"
+#include "Components/Tags.h"
 #include <Entt/core/hashed_string.hpp>
 
 using namespace entt::literals;
@@ -35,7 +36,7 @@ void component::Meta::initialize()
 		.data<&BaseStats::agility>("agility"_hs)
 		.data<&BaseStats::vitality>("vitality"_hs);
 
-	snapshot::reflectComponent<PlayerHasSeen, PLAYER_SEEN_STRING>()
+	snapshot::reflectComponent<tag::PlayerHasSeen, PLAYER_SEEN_STRING>()
 		.prop("serialize"_hs);
 
 	snapshot::reflectComponent<LightSource, LIGHTSOURCE_STRING>()
