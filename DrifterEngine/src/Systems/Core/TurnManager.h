@@ -10,9 +10,8 @@ namespace drft::system
 	{
 	public:
 		ActorQueue(entt::registry& registry);
-		void refresh(std::set<entt::entity>& currentEntities);
+		void refresh(std::unordered_set<entt::entity>& currentEntities);
 		void rotate();
-		void sort();
 		entt::entity front() const;
 		void tick();
 		void printQueue() const;
@@ -30,16 +29,18 @@ namespace drft::system
 		void init() override;
 		void onStart(bool isNewGame) override;
 		void update(const float dt) override;
+		void onUpdateEnd() override;
 		void shutdown() override;
 
 	private:
 		void onActorRemove(entt::registry& registry, entt::entity entity);
-		void processSpentPoints();
+		void onSpendActionPoints(entt::registry& registry, entt::entity entity);
+
 		entt::entity determineCurrentActor();
 
 	private:
 		std::unique_ptr<ActorQueue> _actorQueue;
-		std::set<entt::entity> _managedEntities;
+		std::unordered_set<entt::entity> _managedEntities;
 		entt::entity _timeKeeper = entt::null;
 		entt::entity _currentActor = entt::null;
 		entt::entity _previousActor = entt::null;

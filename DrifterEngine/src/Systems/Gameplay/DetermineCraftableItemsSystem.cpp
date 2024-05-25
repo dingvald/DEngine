@@ -1,21 +1,24 @@
 #include "pch.h"
 #include "DetermineCraftableItemsSystem.h"
-#include "Components/Components.h"
+#include "Components/ContainerComponent.h"
+#include "Components/CraftableComponent.h"
+#include "Components/MyCraftableItemsComponent.h"
+
 #include "Factory/EntityFactory.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::DetermineCraftableItemsSystem::init()
 {
-	_registry->on_construct<component::Container>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
-	_registry->on_update<component::Container>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
+	_registry->on_construct<ContainerComponent>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
+	_registry->on_update<ContainerComponent>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
 }
 
 void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::registry& registry, entt::entity entity)
 {
 	const auto& prototypeReg = registry.ctx().get<const EntityFactory&>().prototypes();
-	auto craftableView = prototypeReg.view<component::Craftable>();
-	auto& container = registry.get<component::Container>(entity);
+	auto craftableView = prototypeReg.view<CraftableComponent>();
+	auto& container = registry.get<ContainerComponent>(entity);
 	std::unordered_map<std::string, int> inventoryContents;
 
 	std::vector<entt::entity> craftables;
@@ -57,5 +60,5 @@ void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::regis
 		}
 	}
 
-	registry.emplace_or_replace<component::MyCraftableItems>(entity, craftables, partialCraftables);
+	registry.emplace_or_replace<MyCraftableItemsComponent>(entity, craftables, partialCraftables);
 }
