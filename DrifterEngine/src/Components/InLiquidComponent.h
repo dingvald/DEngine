@@ -7,7 +7,6 @@
 
 struct InLiquidComponent
 {
-	std::string liquidPrototype;
 	float volume = 0.0f;
 
 private:
@@ -26,7 +25,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, InLiquidComponent& inLiquid)
 	{
-		archive(inLiquid.liquidPrototype, inLiquid.volume);
+		archive(inLiquid.volume);
 	}
 }
 

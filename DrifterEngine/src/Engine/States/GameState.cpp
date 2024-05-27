@@ -50,7 +50,6 @@
 #include "Systems/Gameplay/Actions/ConsumableSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
-#include "Systems/Gameplay/QuestingSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
@@ -288,7 +287,6 @@ void drft::GameState::importSystems()
 	_systems->add<VisualEffectSystem>(				Phase::OnFixedUpdate);
 	_systems->add<AnimationSystem>(					Phase::OnFixedUpdate);
 	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 5);
-	_systems->add<QuestingSystem>(					Phase::OnFixedUpdate + 10);
 
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<EffectRenderer>(					Phase::OnRender);

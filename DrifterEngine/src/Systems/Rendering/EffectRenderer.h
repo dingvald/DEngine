@@ -6,7 +6,7 @@ namespace drft::system
 {
 	class EffectRenderer : public System
 	{
-    public:
+    private:
         virtual void init() override;
         virtual void render(sf::RenderTarget& target) override;
 

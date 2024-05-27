@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "PlayerFOVSystem.h"
 #include "Components/Components.h"
+#include "Components/PlayerComponent.h"
+#include "Components/ActorComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/LightBlockingComponent.h"
 #include "Components/Tags.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Helpers.h"
@@ -30,27 +34,27 @@ void drft::system::PlayerFOVSystem::init()
 
 void drft::system::PlayerFOVSystem::fixedUpdate()
 {
-	auto positions = _registry->view<const component::Position, component::tag::InViewport>();
-	_lightBlockingPositions.reserve(positions.size_hint());
+	auto positions = _registry->view<const PositionComponent, component::tag::InViewport>();
+	_lightBlockingPositions.reserve(positions.size_hint() / 4);
 	for (auto [entity, pos] : positions.each())
 	{
-		if (_registry->any_of<component::LightBlocking>(entity))
+		if (_registry->any_of<LightBlockingComponent>(entity))
 		{
 			_lightBlockingPositions.emplace(pos.position);
 		}
 	}
 
-	auto playerView = _registry->view<component::Player, component::Position>();
+	auto playerView = _registry->view<PlayerComponent, PositionComponent>();
 	for (auto [_, player, pos] : playerView.each())
 	{
 		_fov->compute(pos.position, player.sightRange);
 		for (auto entityToLight : _toLight)
 		{
 			_registry->emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);
-			if (!_registry->all_of<component::Actor>(entityToLight) 
+			if (!_registry->all_of<ActorComponent>(entityToLight) 
 				&& _registry->all_of<component::tag::InViewport>(entityToLight))
 			{
-				_registry->emplace_or_replace<component::PlayerHasSeen>(entityToLight);
+				_registry->emplace_or_replace<component::tag::PlayerHasSeen>(entityToLight);
 			}
 		}
 		_toLight.clear();

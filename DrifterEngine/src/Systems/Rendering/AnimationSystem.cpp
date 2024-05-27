@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "AnimationSystem.h"
 #include "Engine/EngineConstants.h"
-#include "Components/Components.h"
+#include "Components/RenderComponent.h"
+#include "Components/AnimationComponent.h"
 
 void drft::system::AnimationSystem::init()
 {
@@ -9,7 +10,7 @@ void drft::system::AnimationSystem::init()
 
 void drft::system::AnimationSystem::fixedUpdate()
 {
-	auto view = _registry->view<component::Render, component::Animation>();
+	auto view = _registry->view<RenderComponent, AnimationComponent>();
 	for (auto [entity, render, animation] : view.each())
 	{
 		++animation.elapsed;
@@ -39,6 +40,7 @@ void drft::system::AnimationSystem::onFixedUpdateEnd()
 {
 	for (auto entity : _toRemoveAnimation)
 	{
-		_registry->remove<component::Animation>(entity);
+		_registry->remove<AnimationComponent>(entity);
 	}
+	_toRemoveAnimation.clear();
 }

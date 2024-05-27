@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "EffectRenderer.h"
-#include "Components/Components.h"
+
+#include "Components/PositionComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/VisualEffectComponent.h"
 #include "Components/Tags.h"
+
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/SpriteBatch.h"
 #include "Spatial/Conversions.h"
@@ -20,7 +24,7 @@ void drft::system::EffectRenderer::init()
 void drft::system::EffectRenderer::render(sf::RenderTarget& target)
 {
 	auto camera = getCurrentCamera(*_registry);
-	const auto view = _registry->view< const component::Position, const component::Render, const component::Effect, component::tag::InViewport>();
+	const auto view = _registry->view< const PositionComponent, const RenderComponent, const VisualEffectComponent, component::tag::InViewport>();
 	for (auto const& [entity, pos, ren, effect] : view.each())
 	{
 		if (effect.requiresInFOV && !_registry->all_of<component::tag::InPlayerFOV>(entity))

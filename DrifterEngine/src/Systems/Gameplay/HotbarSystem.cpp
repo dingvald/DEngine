@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "HotbarSystem.h"
+
 #include "Components/Components.h"
+#include "Components/PlayerComponent.h"
+#include "Components/HotbarComponent.h"
+#include "Components/PositionComponent.h"
+
 #include "Components/Tags.h"
 #include "Ability/AbilityRegistry.h"
 #include "Systems/Helpers/SpendActionPoints.h"
@@ -15,10 +20,10 @@ void drft::system::HotbarSystem::onStart(bool isNewGame)
 {
 	if (isNewGame)
 	{
-		auto playerView = _registry->view<component::Player>();
+		auto playerView = _registry->view<PlayerComponent>();
 		for (auto entity : playerView)
 		{
-			auto& hotbar = _registry->emplace<component::Hotbar>(entity);
+			auto& hotbar = _registry->emplace<HotbarComponent>(entity);
 			// For testing purposes:
 			hotbar.abilities[toHotbarIndex(1)] = AbilityType::Sprint;
 			hotbar.abilities[toHotbarIndex(2)] = AbilityType::Throw;
@@ -28,7 +33,7 @@ void drft::system::HotbarSystem::onStart(bool isNewGame)
 
 void drft::system::HotbarSystem::update(float dt)
 {
-	auto view = _registry->view<component::Hotbar, component::action::HotbarPressed, component::tag::CurrentActor>();
+	auto view = _registry->view<HotbarComponent, component::action::HotbarPressed, component::tag::CurrentActor>();
 	for (auto&& [entity, hotbar, hotbarSlot] : view.each())
 	{
 		entt::handle handle = { *_registry, entity };
@@ -46,7 +51,7 @@ void drft::system::HotbarSystem::update(float dt)
 				break;
 				case AbilityTargetingType::SelectDirection:
 				{
-					auto tilePosition = handle.get<component::Position>().position;
+					auto tilePosition = handle.get<PositionComponent>().position;
 					handle.emplace<component::action::SelectDirection>(
 						[tilePosition, &ability, &handle](sf::Vector2i direction) -> bool
 						{

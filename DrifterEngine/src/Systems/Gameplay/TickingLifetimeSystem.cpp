@@ -1,17 +1,17 @@
 #include "pch.h"
 #include "TickingLifetimeSystem.h"
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
+#include "Components/TickingLifetimeComponent.h"
 
 void drft::system::TickingLifetimeSystem::init()
 {
-	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
-	dispatcher.sink<events::GameTickEvent>().connect<&TickingLifetimeSystem::onGameTickEvent>(this);
+	_dispatcher->sink<events::GameTickEvent>().connect<&TickingLifetimeSystem::onGameTickEvent>(this);
 }
 
 void drft::system::TickingLifetimeSystem::onGameTickEvent(events::GameTickEvent& ev)
 {
 	// Has position so that items in inventory don't tick their lifetimes
-	auto view = _registry->view<component::TickingLifetime, component::Position>();
+	auto view = _registry->view<TickingLifetimeComponent, PositionComponent>();
 	for (auto [entity, lifetime, pos] : view.each())
 	{
 		--lifetime.ticksRemaining;

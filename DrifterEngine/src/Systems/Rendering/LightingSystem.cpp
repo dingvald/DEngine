@@ -1,7 +1,16 @@
 #include "pch.h"
 #include "LightingSystem.h"
+
 #include "Components/Components.h"
+#include "Components/GlobalLightSourceComponent.h"
+#include "Components/LocalLightSourceComponent.h"
+#include "Components/TemporaryLightSourceComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/VisualEffectComponent.h"
+#include "Components/LightBlockingComponent.h"
+#include "Components/LitComponent.h"
 #include "Components/Tags.h"
+
 #include "Spatial/Helpers.h"
 #include "Spatial/Conversions.h"
 #include "Utility/Visibility.h"
@@ -31,40 +40,42 @@ void drft::system::LightingSystem::init()
 
 void drft::system::LightingSystem::fixedUpdate()
 {
-	auto globalLightView = _registry->view<component::GlobalLightSource>();
-	auto positions = _registry->view<const component::Position, component::tag::InViewport>(entt::exclude<component::Effect>);
+	auto globalLightView = _registry->view<GlobalLightSourceComponent>();
+	auto positions = _registry->view<const PositionComponent, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
 	// Apply global lighting
 	for (auto [_, globalLight] : globalLightView.each())
 	{
 		for (auto entity : positions)
 		{
-			if (auto lit = _registry->try_get<component::Lit>(entity))
+			if (auto lit = _registry->try_get<LitComponent>(entity))
 			{
 				lit->color = globalLight.color;
 			}
 			else
 			{
-				_registry->emplace<component::Lit>(entity, globalLight.color);
+				_registry->emplace<LitComponent>(entity, globalLight.color);
 			}
 		}
 	}
+
 	// Get all light blocking entities to be checked by the FOV algo
-	_lightBlockingPositions.reserve(positions.size_hint());
+	_lightBlockingPositions.reserve(positions.size_hint() / 4); // Arbitrarily reserve a fourth of the positions.
 	for (auto [entity, pos] : positions.each())
 	{
-		if (_registry->any_of<component::LightBlocking>(entity))
+		if (_registry->any_of<LightBlockingComponent>(entity))
 		{
 			_lightBlockingPositions.emplace(pos.position);
 		}
 	}
-	// Apply light from permenant light sources
-	auto lighting = _registry->view<const component::LightSource, const component::Position, component::tag::InViewport>();
+
+	// Apply light from local light sources
+	auto lighting = _registry->view<const LocalLightSourceComponent, const PositionComponent, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : lighting.each())
 	{
 		_fov->compute(lightpos.position, static_cast<int>(light.radius));
 		for (auto entity : _toLight)
 		{
-			auto pos = _registry->get<component::Position>(entity);
+			auto& pos = _registry->get<PositionComponent>(entity);
 			auto tileDistance = spatial::distance(pos.position, lightpos.position);
 			float denom = (tileDistance / light.radius) + (1.f*light.dropOff);
 			float i = std::clamp( 1 / (denom*denom), 0.0f, 1.0f);
@@ -74,25 +85,26 @@ void drft::system::LightingSystem::fixedUpdate()
 				static_cast<sf::Uint8>(light.color.g * i),
 				static_cast<sf::Uint8>(light.color.b * i)
 			};
-			if (auto lit = _registry->try_get<component::Lit>(entity))
+			if (auto lit = _registry->try_get<LitComponent>(entity))
 			{
 				lit->color = blendColor(lit->color, lightColor);
 			}
 			else
 			{
-				_registry->emplace<component::Lit>(entity, lightColor);
+				_registry->emplace<LitComponent>(entity, lightColor);
 			}
 		}
 		_toLight.clear();
 	}
+
 	// Apply light from temporary light sources
-	auto tempLighting = _registry->view<const component::TempLightSource, const component::Position, component::tag::InViewport>();
+	auto tempLighting = _registry->view<const TemporaryLightSourceComponent, const PositionComponent, component::tag::InViewport>();
 	for (auto [_, light, lightpos] : tempLighting.each())
 	{
 		_fov->compute(lightpos.position, static_cast<int>(light.radius));
 		for (auto entity : _toLight)
 		{
-			auto pos = _registry->get<component::Position>(entity);
+			auto& pos = _registry->get<PositionComponent>(entity);
 			auto tileDistance = spatial::distance(pos.position, lightpos.position);
 			float denom = (tileDistance / light.radius) + (1.f * light.dropOff);
 			float i = std::clamp(1 / (denom * denom), 0.0f, 1.0f);
@@ -102,13 +114,13 @@ void drft::system::LightingSystem::fixedUpdate()
 				static_cast<sf::Uint8>(light.color.g * i),
 				static_cast<sf::Uint8>(light.color.b * i)
 			};
-			if (auto lit = _registry->try_get<component::Lit>(entity))
+			if (auto lit = _registry->try_get<LitComponent>(entity))
 			{
-				lit->color = blendColor(lit->color, lightColor);
+				lit->color = LightingSystem::blendColor(lit->color, lightColor);
 			}
 			else
 			{
-				_registry->emplace<component::Lit>(entity, lightColor);
+				_registry->emplace<LitComponent>(entity, lightColor);
 			}
 		}
 		_toLight.clear();
@@ -119,7 +131,7 @@ void drft::system::LightingSystem::fixedUpdate()
 
 void drft::system::LightingSystem::onFixedUpdateEnd()
 {
-	_registry->clear<component::Lit>();
+	_registry->clear<LitComponent>();
 }
 
 sf::Color drft::system::LightingSystem::blendColor(const sf::Color& color1, const sf::Color& color2)

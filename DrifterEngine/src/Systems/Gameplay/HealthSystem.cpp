@@ -1,6 +1,11 @@
 #include <pch.h>
 #include "HealthSystem.h"
+
 #include "Components/Components.h"
+#include "Components/HealthComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/RenderComponent.h"
+
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/GetExperienceFromKilling.h"
 #include "Events/SendFloatingMessageEvent.h"
@@ -27,21 +32,27 @@ void drft::system::HealthSystem::update(const float dt)
 		_registry->emplace<component::action::TakeDamage>(entity, total, incoming.source);
 	}
 
-	auto damageView = _registry->view<component::action::TakeDamage, component::Health>();
+	auto damageView = _registry->view<component::action::TakeDamage, HealthComponent>();
 	for (auto [entity, damage, health] : damageView.each())
 	{
 		// send floating message
-		if (auto posComp = _registry->try_get<component::Position>(entity))
+		if (auto posComp = _registry->try_get<PositionComponent>(entity))
 		{
 			auto handle = entt::const_handle{ *_registry, entity };
-			auto& physical = _registry->get<component::Physical>(entity);
-			
-			auto material = getPrimaryMaterial(handle);
-			sf::Color materialColor = material.get<component::Render>().color;
+
+			sf::Color materialColor = sf::Color::White;
+			auto optionalMaterial = getPrimaryMaterial(handle);
+			if (optionalMaterial.has_value())
+			{
+				const RenderComponent& materialRender = optionalMaterial.value().get<RenderComponent>();
+				materialColor = materialRender.color;
+			}
+
 			std::string message;
 			sf::Color messageColor = sf::Color::White;
+			
 			sf::Color effectColor = materialColor;
-			std::vector<unsigned int> effectSprites = { handle.get<component::Render>().sprite };
+			std::vector<unsigned int> effectSprites = { handle.get<RenderComponent>().sprite };
 			int effect_ttl = 10;
 
 			if (damage.amount == 0)
@@ -69,8 +80,7 @@ void drft::system::HealthSystem::update(const float dt)
 					});
 			}
 
-			auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
-			dispatcher.trigger(events::SendFloatingMessageEvent{
+			_dispatcher->trigger(events::SendFloatingMessageEvent{
 				.message = message + std::to_string(std::abs(damage.amount)),
 				.color = messageColor,
 				.position = posComp->position,
@@ -109,7 +119,7 @@ void drft::system::HealthSystem::onUpdateEnd()
 
 void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)
 {
-	if (auto health = _registry->try_get<component::Health>(ev.entity))
+	if (auto health = _registry->try_get<HealthComponent>(ev.entity))
 	{
 		health->current = std::clamp(health->current + health->recovery, 1.f, health->max);
 	}
@@ -117,7 +127,7 @@ void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)
 
 void drft::system::HealthSystem::onLevelUp(entt::registry& registry, entt::entity entity)
 {
-	if (auto health = registry.try_get<component::Health>(entity))
+	if (auto health = registry.try_get<HealthComponent>(entity))
 	{
 		const auto& levelUp = registry.get<component::action::LevelUp>(entity);
 		if (levelUp.statChanges.contains("vitality"))

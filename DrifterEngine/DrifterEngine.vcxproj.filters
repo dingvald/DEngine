@@ -252,9 +252,6 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\SprintingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\QuestingSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Helpers\AddToContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -325,9 +322,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Random\PercentChance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Systems\HelperClasses\StateMachine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp">
@@ -1289,9 +1283,6 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\SprintingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\QuestingSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Helpers\AddToContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1368,9 +1359,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\PercentChance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\HelperClasses\StateMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\HelperClasses\AIStates.h">

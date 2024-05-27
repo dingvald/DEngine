@@ -5,7 +5,7 @@ namespace drft::system
 {
 	class AnimationSystem : public System
 	{
-	public:
+	private:
 		void init() override;
 		void fixedUpdate() override;
 		void onFixedUpdateEnd() override;

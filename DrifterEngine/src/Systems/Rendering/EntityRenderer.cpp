@@ -1,11 +1,16 @@
 #include "pch.h"
 #include "EntityRenderer.h"
 #include "Components/Components.h"
+#include "Components/PositionComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/LitComponent.h"
+#include "Components/VisualEffectComponent.h"
 #include "Components/Tags.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/SpriteBatch.h"
 #include "Spatial/Conversions.h"
 #include "RenderLayers.h"
+#include "LightingSystem.h"
 
 static const sf::Color seenTileColor = sf::Color(12, 12, 12);
 
@@ -23,18 +28,18 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
 	auto camera = getCurrentCamera(*_registry);
 	// Apply lighting to entities in the player's FOV
-	const auto view = _registry->view< const component::Position, const component::Render, const component::Lit, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<component::Effect>);
+	const auto view = _registry->view< const PositionComponent, const RenderComponent, const LitComponent, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
 	for (auto const & [entity, pos, ren, lit] : view.each())
 	{
-		sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(ren.color.r * (static_cast<float>(lit.color.r) / 255.f), 0.f, 255.f));
-		sf::Uint8 g = static_cast<sf::Uint8>(std::clamp(ren.color.g * (static_cast<float>(lit.color.g) / 255.f), 0.f, 255.f));
-		sf::Uint8 b = static_cast<sf::Uint8>(std::clamp(ren.color.b * (static_cast<float>(lit.color.b) / 255.f), 0.f, 255.f));
+		auto litColor = LightingSystem::blendColor(ren.color, lit.color);
+		litColor.a = ren.color.a;
+
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		_spriteLayers[ren.layer].addSprite(ren.sprite, sf::Color(r,g,b, ren.color.a), renderPosition);
+		_spriteLayers[ren.layer].addSprite(ren.sprite, litColor, renderPosition);
 	}
 	// Apply darkened light to entities outside the player's FOV
-	const auto seenView = _registry->view< const component::Position, const component::Render, const component::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
-	for (auto const& [entity, pos, ren, seen] : seenView.each())
+	const auto seenView = _registry->view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
+	for (auto const& [entity, pos, ren] : seenView.each())
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
 		_spriteLayers[ren.layer].addSprite(ren.sprite, seenTileColor, renderPosition);
