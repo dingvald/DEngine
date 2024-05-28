@@ -2,7 +2,7 @@
 #include "FastFill.h"
 #include "Factory/EntityFactory.h"
 #include "Spatial/Conversions.h"
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
 
 void drft::gen::fastFill(const std::string& name, sf::Vector2i origin, entt::registry& reg)
 {
@@ -13,7 +13,7 @@ void drft::gen::fastFill(const std::string& name, sf::Vector2i origin, entt::reg
 		{
 			const auto position = origin + sf::Vector2i(x, y);
 			factory.build(name, reg)
-				.patch<component::Position>([position](auto& pos)
+				.patch<PositionComponent>([position](auto& pos)
 					{
 						pos.position = position;
 					});

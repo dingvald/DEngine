@@ -35,11 +35,10 @@ void drft::system::HealthSystem::update(const float dt)
 	auto damageView = _registry->view<component::action::TakeDamage, HealthComponent>();
 	for (auto [entity, damage, health] : damageView.each())
 	{
+		auto handle = entt::const_handle{ *_registry, entity };
 		// send floating message
-		if (auto posComp = _registry->try_get<PositionComponent>(entity))
+		if (auto posComp = handle.try_get<PositionComponent>())
 		{
-			auto handle = entt::const_handle{ *_registry, entity };
-
 			sf::Color materialColor = sf::Color::White;
 			auto optionalMaterial = getPrimaryMaterial(handle);
 			if (optionalMaterial.has_value())
@@ -105,8 +104,8 @@ void drft::system::HealthSystem::update(const float dt)
 		health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
 		if (health.current == 0)
 		{
-			_registry->emplace<component::action::Die>(entity);
-			_registry->emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(entity, *_registry));
+			handle.emplace<component::action::Die>(entity);
+			_registry->emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(handle));
 		}
 	}
 }

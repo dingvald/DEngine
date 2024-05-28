@@ -1,15 +1,17 @@
 #include "pch.h"
 #include "RemoveFromContainer.h"
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
+#include "Components/ContainerComponent.h"
+#include "Components/ItemComponent.h"
 
 void drft::system::removeFromContainer(entt::registry& registry, entt::entity container, entt::entity item, bool destroyAfterRemoval)
 {
-	auto hasContainer = registry.all_of<component::Container>(container);
-	auto itemComp = registry.try_get<component::Item>(item);
+	auto hasContainer = registry.all_of<ContainerComponent>(container);
+	auto itemComp = registry.try_get<ItemComponent>(item);
 	if (hasContainer && itemComp)
 	{
-		registry.patch<component::Container>(container,
-			[itemComp](component::Container& cont)
+		registry.patch<ContainerComponent>(container,
+			[itemComp](ContainerComponent& cont)
 			{
 				cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), itemComp->id), cont.contents.end());
 			});
@@ -21,16 +23,16 @@ void drft::system::removeFromContainer(entt::registry& registry, entt::entity co
 	}
 	else
 	{
-		auto& position = registry.get<component::Position>(container);
-		registry.emplace_or_replace<component::Position>(item, position);
+		auto& position = registry.get<PositionComponent>(container);
+		registry.emplace_or_replace<PositionComponent>(item, position);
 	}
 	
 }
 
-void drft::system::removeFromContainer(entt::registry& registry, component::Container& container, component::Item& item, bool destroyAfterRemoval)
+void drft::system::removeFromContainer(entt::registry& registry, ContainerComponent& container, ItemComponent& item, bool destroyAfterRemoval = false)
 {
-	registry.patch<component::Container>(entt::to_entity(registry, container),
-		[item](component::Container& cont)
+	registry.patch<ContainerComponent>(entt::to_entity(registry, container),
+		[item](ContainerComponent& cont)
 		{
 			cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), item.id), cont.contents.end());
 		});
@@ -40,7 +42,7 @@ void drft::system::removeFromContainer(entt::registry& registry, component::Cont
 	}
 	else
 	{
-		auto& position = registry.get<component::Position>(entt::to_entity(registry, container));
-		registry.emplace_or_replace<component::Position>(entt::to_entity(registry, item), position);
+		auto& position = registry.get<PositionComponent>(entt::to_entity(registry, container));
+		registry.emplace_or_replace<PositionComponent>(entt::to_entity(registry, item), position);
 	}
 }

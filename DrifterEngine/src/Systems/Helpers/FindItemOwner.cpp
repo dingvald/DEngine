@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "FindItemOwner.h"
-#include "Components/Components.h"
+#include "Components/ContainerComponent.h"
+#include "Components/BodyComponent.h"
 
 entt::entity drft::system::findItemOwner(entt::registry& registry, unsigned long itemID, WhereToLook whereToLook)
 {
@@ -8,7 +9,7 @@ entt::entity drft::system::findItemOwner(entt::registry& registry, unsigned long
 	{
 		case WhereToLook::Containers:
 		{
-			auto containerView = registry.view<component::Container>();
+			auto containerView = registry.view<ContainerComponent>();
 			for (auto [entity, container] : containerView.each())
 			{
 				for (auto item : container.contents)
@@ -23,7 +24,7 @@ entt::entity drft::system::findItemOwner(entt::registry& registry, unsigned long
 		break;
 		case WhereToLook::Bodies:
 		{
-			auto bodyView = registry.view<component::Body>();
+			auto bodyView = registry.view<BodyComponent>();
 			for (auto [entity, body] : bodyView.each())
 			{
 				for (auto part : body.parts.flatten())

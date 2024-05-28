@@ -2,5 +2,5 @@
 
 namespace drft::system
 {
-	unsigned int getExperienceFromKilling(entt::entity entity, entt::registry& registry);
+	unsigned int getExperienceFromKilling(entt::const_handle entity);
 }

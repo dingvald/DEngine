@@ -5,7 +5,7 @@
 #include "Components/PlayerComponent.h"
 
 #include "Components/Tags.h"
-#include "Systems/Helpers/InputBuffer.h"
+#include "Systems/HelperClasses/InputBuffer.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
 
 static constexpr unsigned int INPUT_BUFFER_MAX_SIZE = 2;

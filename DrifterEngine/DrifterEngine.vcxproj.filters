@@ -255,9 +255,6 @@
     <ClCompile Include="src\Systems\Helpers\AddToContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\DisplayTextState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utility\Statistics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -285,7 +282,7 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Helpers\InputBuffer.cpp">
+    <ClCompile Include="src\Systems\HelperClasses\InputBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp">
@@ -513,7 +510,7 @@
     <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp">
+    <ClCompile Include="src\Systems\Gameplay\OpenableSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\ConsumableSystem.cpp">
@@ -1286,9 +1283,6 @@
     <ClInclude Include="src\Systems\Helpers\AddToContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\DisplayTextState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\Statistics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1316,7 +1310,7 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Helpers\InputBuffer.h">
+    <ClInclude Include="src\Systems\HelperClasses\InputBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h">
@@ -1589,7 +1583,7 @@
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h">
+    <ClInclude Include="src\Systems\Gameplay\OpenableSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\ConsumableSystem.h">

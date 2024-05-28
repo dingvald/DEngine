@@ -5,9 +5,10 @@ namespace drft::system
 {
 	class OpenWorldMapSystem : public System
 	{
-	public:
+	private:
 		void init() override;
-		void update(const float dt) override;
+		
+		void onOpenWorldMapAction(entt::registry& registry, entt::entity entity) const;
 	};
 }
 

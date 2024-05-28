@@ -46,8 +46,8 @@
 #include "Systems/Gameplay/Actions/LaunchAttackSystem.h"
 #include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
 #include "Systems/Gameplay/Actions/TargetSelectSystem.h"
-#include "Systems/Gameplay/Actions/OpenableSystem.h"
-#include "Systems/Gameplay/Actions/ConsumableSystem.h"
+#include "Systems/Gameplay/OpenableSystem.h"
+#include "Systems/Gameplay/ConsumableSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
@@ -260,13 +260,10 @@ void drft::GameState::importSystems()
 	_systems->add<MovementSystem>(					Phase::OnUpdate);
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
-	_systems->add<PickUpSystem>(					Phase::OnUpdate);
+	
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
 	_systems->add<EquipItemSystem>(					Phase::OnUpdate);
 	_systems->add<CraftItemSystem>(					Phase::OnUpdate);
-	_systems->add<OpenEquipmentSystem>(				Phase::OnUpdate);
-	_systems->add<OpenWorldMapSystem>(				Phase::OnUpdate);
-	_systems->add<OpenCraftingSystem>(				Phase::OnUpdate);
 	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
 	_systems->add<HotbarSystem>(					Phase::OnUpdate);
 	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
@@ -303,6 +300,10 @@ void drft::GameState::importSystems()
 	_systems->add<OpenableSystem>(					Phase::Reactive);
 	_systems->add<ConsumableSystem>(				Phase::Reactive);
 	_systems->add<HealingSystem>(					Phase::Reactive);
+	_systems->add<OpenCraftingSystem>(				Phase::Reactive);
+	_systems->add<OpenEquipmentSystem>(				Phase::Reactive);
+	_systems->add<OpenWorldMapSystem>(				Phase::Reactive);
+	_systems->add<PickUpSystem>(					Phase::Reactive);
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{

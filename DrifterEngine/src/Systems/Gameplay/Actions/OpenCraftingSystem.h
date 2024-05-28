@@ -5,9 +5,10 @@ namespace drft::system
 {
 	class OpenCraftingSystem :public System
 	{
-	public:
+	private:
 		void init() override;
-		void update(const float dt) override;
+
+		void onOpenCraftingAction(entt::registry& registry, entt::entity entity) const;
 	};
 
 }

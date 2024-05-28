@@ -5,13 +5,10 @@
 
 void drft::system::OpenWorldMapSystem::init()
 {
+	_registry->on_construct<component::action::OpenWorldMap>().connect<&OpenWorldMapSystem::onOpenWorldMapAction>(this);
 }
 
-void drft::system::OpenWorldMapSystem::update(const float dt)
+void drft::system::OpenWorldMapSystem::onOpenWorldMapAction(entt::registry& registry, entt::entity entity) const
 {
-	auto view = _registry->view<component::action::OpenWorldMap>();
-	if (view.front() != entt::null)
-	{
-		_registry->ctx().get<entt::dispatcher&>().trigger(events::RequestStateStackPush{ States::Map });
-	}
+	_dispatcher->trigger(events::RequestStateStackPush{ States::Map });
 }

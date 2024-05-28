@@ -183,7 +183,7 @@
     <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HealingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ConsumableSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\OpenableSystem.cpp" />
     <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp" />
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp" />
     <ClCompile Include="src\Structures\Shapes\RectangleShape.cpp" />
@@ -239,13 +239,12 @@
     <ClCompile Include="src\Systems\Helpers\ContainerHasItem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp" />
     <ClCompile Include="src\Systems\Helpers\HasLineOfSight.cpp" />
-    <ClCompile Include="src\Systems\Helpers\InputBuffer.cpp" />
+    <ClCompile Include="src\Systems\HelperClasses\InputBuffer.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\InteractionSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\FindItemOwner.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetCurrentCamera.cpp" />
     <ClCompile Include="src\Systems\Helpers\ItemDatabase.cpp" />
-    <ClCompile Include="src\Engine\States\DisplayTextState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\SprintingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LiquidSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LightSourceSystem.cpp" />
@@ -428,7 +427,7 @@
     <ClInclude Include="src\Components\WearableComponent.h" />
     <ClInclude Include="src\Systems\Gameplay\HealingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\ConsumableSystem.h" />
-    <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\OpenableSystem.h" />
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h" />
     <ClInclude Include="src\Random\WeightedSelection.h" />
@@ -498,13 +497,12 @@
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h" />
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h" />
     <ClInclude Include="src\Systems\Helpers\HasLineOfSight.h" />
-    <ClInclude Include="src\Systems\Helpers\InputBuffer.h" />
+    <ClInclude Include="src\Systems\HelperClasses\InputBuffer.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\InteractionSystem.h" />
     <ClInclude Include="src\Systems\Helpers\FindItemOwner.h" />
     <ClInclude Include="src\Systems\Helpers\GetCurrentCamera.h" />
     <ClInclude Include="src\Systems\Helpers\ItemDatabase.h" />
-    <ClInclude Include="src\Engine\States\DisplayTextState.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\SprintingSystem.h" />
     <ClInclude Include="src\Events\LeaveTileEvent.h" />
     <ClInclude Include="src\Events\EnterTileEvent.h" />

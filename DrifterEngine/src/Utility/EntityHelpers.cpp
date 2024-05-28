@@ -1,14 +1,15 @@
 #include "pch.h"
 #include "EntityHelpers.h"
 #include "Factory/EntityFactory.h"
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
+#include "Components/DescriptionComponent.h"
 #include "Spatial/Helpers.h"
 
 std::string drft::util::getEntityName(const entt::const_handle entity)
 {
-	if (auto info = entity.try_get<component::Info>())
+	if (auto description = entity.try_get<DescriptionComponent>())
 	{
-		return info->name;
+		return description->name;
 	}
 	return "UNNAMED";
 }
@@ -24,9 +25,9 @@ bool drft::util::isType(entt::const_handle entity, const std::string& typeName)
 
 int drft::util::getDistanceBetween(entt::const_handle e1, entt::const_handle e2)
 {
-	if (auto pos1 = e1.try_get<component::Position>())
+	if (auto pos1 = e1.try_get<PositionComponent>())
 	{
-		if (auto pos2 = e2.try_get<component::Position>())
+		if (auto pos2 = e2.try_get<PositionComponent>())
 		{
 			return spatial::distance(pos1->position, pos2->position);
 		}

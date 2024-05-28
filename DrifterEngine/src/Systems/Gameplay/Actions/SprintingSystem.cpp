@@ -1,43 +1,47 @@
 #include "pch.h"
 #include "SprintingSystem.h"
+
 #include "Components/Components.h"
+#include "Components/SprintingComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/StaminaComponent.h"
+#include "Components/ActorComponent.h"
+#include "Components/RenderComponent.h"
+
 #include "Utility/SpriteIndexer.h"
 
 static constexpr float PI = 3.141592f;
 
+// TODO: Refactor sprintig animations into the visual effect system
+
 void drft::system::SprintingSystem::init()
 {
-	_registry->on_construct<component::Sprinting>().connect<&SprintingSystem::onSprintingAdded>(this);
-	_registry->on_destroy<component::Sprinting>().connect<&SprintingSystem::onSprintingRemoved>(this);
+	_registry->on_construct<SprintingComponent>().connect<&SprintingSystem::onSprintingAdded>(this);
+	_registry->on_destroy<SprintingComponent>().connect<&SprintingSystem::onSprintingRemoved>(this);
 }
 
 void drft::system::SprintingSystem::fixedUpdate()
 {
-	auto sprintView = _registry->view<component::Sprinting, component::Stamina, const component::Position>();
+	auto sprintView = _registry->view<SprintingComponent, StaminaComponent, const PositionComponent>();
 	for (auto [entity, sprinting, stamina, pos] : sprintView.each())
 	{
 		if (stamina.current <= 0.f)
 		{
-			_registry->remove<component::Sprinting>(entity);
+			_registry->remove<SprintingComponent>(entity);
 			continue;
 		}
 		if (!_sprintEffects.contains(entity))
 		{
 			addSprintEffect(*_registry, entity);
 		}
-		_registry->patch<component::Position>(_sprintEffects[entity],
-			[pos](component::Position& position)
+		_registry->patch<PositionComponent>(_sprintEffects[entity],
+			[pos](PositionComponent& position)
 			{
 				position.position = pos.position;
 			});
 	}
 
 	animateSprintEffects();
-}
-
-void drft::system::SprintingSystem::onFixedUpdateEnd()
-{
-
 }
 
 void drft::system::SprintingSystem::shutdown()
@@ -62,11 +66,11 @@ void drft::system::SprintingSystem::onSprintingRemoved(entt::registry& registry,
 
 void drft::system::SprintingSystem::applySprintBuff(entt::registry& registry, entt::entity entity)
 {
-	if (auto actor = registry.try_get<component::Actor>(entity))
+	if (auto actor = registry.try_get<ActorComponent>(entity))
 	{
 		actor->moveSpeed += 2.f;
 	}
-	if (auto stamina = registry.try_get<component::Stamina>(entity))
+	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
 		stamina->baseConsumption += 1.f;
 	}
@@ -74,11 +78,11 @@ void drft::system::SprintingSystem::applySprintBuff(entt::registry& registry, en
 
 void drft::system::SprintingSystem::removeSprintBuff(entt::registry& registry, entt::entity entity)
 {
-	if (auto actor = registry.try_get<component::Actor>(entity))
+	if (auto actor = registry.try_get<ActorComponent>(entity))
 	{
 		actor->moveSpeed -= 2.f;
 	}
-	if (auto stamina = registry.try_get<component::Stamina>(entity))
+	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
 		stamina->baseConsumption -= 1.f;
 	}
@@ -88,8 +92,8 @@ void drft::system::SprintingSystem::addSprintEffect(entt::registry& registry, en
 {
 	if (_sprintEffects.contains(entity)) return;
 	auto effect = entt::handle{ registry, registry.create() };
-	effect.emplace<component::Render>(static_cast<unsigned int>(util::Sprite::StatusEffect), 4u, sf::Color(50,150,50));
-	effect.emplace<component::Position>(sf::Vector2i(0,0));
+	effect.emplace<RenderComponent>(static_cast<unsigned int>(util::Sprite::StatusEffect), 4u, sf::Color(50,150,50));
+	effect.emplace<PositionComponent>(sf::Vector2i(0,0));
 	_sprintEffects.emplace(entity, effect.entity());
 }
 
@@ -103,9 +107,9 @@ void drft::system::SprintingSystem::animateSprintEffects() const
 {
 	static int frames = 0;
 	if (frames >= 360) frames = 0;
-	for (auto [sprinter, effect] : _sprintEffects)
+	for (auto&& [sprinter, effect] : _sprintEffects)
 	{
-		auto& render = _registry->get<component::Render>(effect);
+		auto& render = _registry->get<RenderComponent>(effect);
 		float alpha = 255 * ((std::sinf(frames * (PI / 180.f)) + 1.f) / 2.f);
 		render.color.a = static_cast<sf::Uint8>(alpha);
 	}

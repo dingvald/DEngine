@@ -5,10 +5,9 @@ namespace drft::system
 {
 	class OpenableSystem : public System
 	{
-	public:
+	private:
 		void init() override;
 
-	private:
 		void openInteraction(entt::entity actor, entt::entity subject) const;
 		void closeInteraction(entt::entity actor, entt::entity subject) const;
 

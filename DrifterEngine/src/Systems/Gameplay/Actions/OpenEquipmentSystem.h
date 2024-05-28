@@ -5,9 +5,10 @@ namespace drft::system
 {
 	class OpenEquipmentSystem : public System
 	{
-	public:
+	private:
 		void init() override;
-		void update(const float dt) override;
+		
+		void onOpenEquipmentAction(entt::registry& registry, entt::entity entity) const;
 	};
 
 }

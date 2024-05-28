@@ -5,7 +5,7 @@ namespace drft::system
 {
 	class MovementSystem : public System
 	{
-	public:
+	private:
 		void init() override;
 		void update(const float dt) override;
 		void onUpdateEnd() override;

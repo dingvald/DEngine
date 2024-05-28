@@ -1,5 +1,6 @@
 #pragma once
 #include "Utility/Math.h"
+#include "Systems/HelperClasses/BodyParts.h"
 
 
 namespace component::action

@@ -1,6 +1,6 @@
 #pragma once
 #include "State.h"
-#include "Systems/Helpers/InputBuffer.h"
+#include "Systems/HelperClasses/InputBuffer.h"
 
 namespace drft
 {

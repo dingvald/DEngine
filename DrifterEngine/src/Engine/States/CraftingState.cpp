@@ -1,6 +1,12 @@
 #include "pch.h"
 #include "CraftingState.h"
+
 #include "Components/Components.h"
+#include "Components/MyCraftableItemsComponent.h"
+#include "Components/CraftableComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/ContainerComponent.h"
+
 #include "Factory/EntityFactory.h"
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
@@ -130,7 +136,7 @@ void drft::CraftingState::refreshCraftingList()
 {
 	_craftingList.clear();
 
-	const auto craftableItems = getContext().registry.try_get<component::MyCraftableItems>(_sessionEntity);
+	const auto craftableItems = getContext().registry.try_get<MyCraftableItemsComponent>(_sessionEntity);
 	const auto& factory = getContext().registry.ctx().get<const EntityFactory&>();
 	const auto& prototypeReg = factory.prototypes();
 
@@ -138,7 +144,7 @@ void drft::CraftingState::refreshCraftingList()
 	{
 		// Determine which materials the session entity has
 		std::unordered_map<std::string, int> materialCount;
-		const auto& container = getContext().registry.get<component::Container>(_sessionEntity);
+		const auto& container = getContext().registry.get<ContainerComponent>(_sessionEntity);
 		for (auto itemID : container.contents)
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
@@ -162,7 +168,7 @@ void drft::CraftingState::refreshCraftingList()
 		for (auto craftable : craftables)
 		{
 			const auto craftableName = util::getEntityName({ prototypeReg, craftable });
-			const auto& recipe = prototypeReg.get<component::Craftable>(factory.get(craftableName)).recipe;
+			const auto& recipe = prototypeReg.get<CraftableComponent>(factory.get(craftableName)).recipe;
 
 			std::string countStr = std::to_string(count);
 			_craftingList.insert(countStr.data(), gui::DualContainer())
@@ -210,7 +216,7 @@ void drft::CraftingState::refreshCraftingList()
 					});
 
 
-			const auto& itemRender = prototypeReg.get<component::Render>(craftable);
+			const auto& itemRender = prototypeReg.get<RenderComponent>(craftable);
 			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
 			_craftingList[countStr.data()].insert("Item", gui::DualContainer())
 				.setStyle(gui::ElementState::Idle, {
@@ -282,7 +288,7 @@ void drft::CraftingState::refreshCraftingList()
 
 			for (auto& [matName, amount] : recipe)
 			{
-				const auto& matRender = prototypeReg.get<component::Render>(factory.get(matName));
+				const auto& matRender = prototypeReg.get<RenderComponent>(factory.get(matName));
 				sf::Sprite matSprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(matRender.sprite), sprites) };
 				std::string matstr = std::to_string(matCount);
 				sf::Color numberColor = sf::Color::White;
