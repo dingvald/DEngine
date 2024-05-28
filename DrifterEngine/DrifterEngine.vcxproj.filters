@@ -516,7 +516,7 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\ConsumableSystem.cpp">
+    <ClCompile Include="src\Systems\Gameplay\ConsumableSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\HealingSystem.cpp">
@@ -1592,7 +1592,7 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\ConsumableSystem.h">
+    <ClInclude Include="src\Systems\Gameplay\ConsumableSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\HealingSystem.h">

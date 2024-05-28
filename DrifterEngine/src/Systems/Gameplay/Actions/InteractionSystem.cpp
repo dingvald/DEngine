@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "InteractionSystem.h"
+
 #include "Components/Components.h"
+#include "Components/PositionComponent.h"
+#include "Components/InteractableComponent.h"
+
 #include "Events/RequestStateChange.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
@@ -15,7 +19,7 @@ void drft::system::InteractionSystem::init()
 void drft::system::InteractionSystem::update(const float dt)
 {
 	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
-	auto interactView = _registry->view<const component::Position, component::action::TryInteract>();
+	auto interactView = _registry->view<const PositionComponent, component::action::TryInteract>();
 	for (auto [entity, pos] : interactView.each())
 	{
 		auto usableEntities = getInteractableSurroundings(pos.position, grid);
@@ -51,7 +55,7 @@ std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurrou
 		auto entities = grid.entitiesAt(tile,
 			[this](entt::entity entity) -> bool 
 			{
-				return _registry->any_of<component::Interactable>(entity);
+				return _registry->any_of<InteractableComponent>(entity);
 			});
 		result.insert(result.end(), entities.begin(), entities.end());
 	}
@@ -63,7 +67,7 @@ bool drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::V
 	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
 	auto entities = grid.entitiesAt(target, [this](entt::entity entity) -> bool 
 		{
-			return _registry->any_of<component::Interactable>(entity);
+			return _registry->any_of<InteractableComponent>(entity);
 		});
 
 	if (entities.empty()) return false;
@@ -75,12 +79,12 @@ bool drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::V
 
 void drft::system::InteractionSystem::onContructDoInteract(entt::registry& registry, entt::entity entity)
 {
-	auto& interaction = registry.get<component::action::DoInteract>(entity);
+	auto& interactionAction = registry.get<component::action::DoInteract>(entity);
 	const auto& actorName = util::getEntityName({ registry, entity });
-	for (auto&& subject : interaction.subjects)
+	for (auto&& subject : interactionAction.subjects)
 	{
 		const auto& subjectName = util::getEntityName({ registry, subject });
-		if (auto interactable = registry.try_get<component::Interactable>(subject))
+		if (auto interactable = registry.try_get<InteractableComponent>(subject))
 		{
 			if (interactable->interactions.size() == 1)
 			{

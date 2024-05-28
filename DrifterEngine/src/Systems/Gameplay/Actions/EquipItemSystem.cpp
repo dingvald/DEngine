@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "EquipItemSystem.h"
+
 #include "Components/Components.h"
+#include "Components/ContainerComponent.h"
+#include "Components/BodyComponent.h"
+
 #include "Systems/Helpers/ItemDatabase.h"
 
 void drft::system::EquipItemSystem::init()
@@ -20,9 +24,9 @@ void drft::system::EquipItemSystem::onUpdateEnd()
 
 void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, entt::entity entity)
 {
-	auto& container = registry.get<component::Container>(entity);
+	auto& container = registry.get<ContainerComponent>(entity);
 	const auto& equipItem = registry.get<component::action::Equip>(entity);
-	auto& body = registry.get<component::Body>(entity);
+	auto& body = registry.get<BodyComponent>(entity);
 
 	auto itemItr = std::find(container.contents.begin(), container.contents.end(), equipItem.toEquip);
 	if (itemItr != container.contents.end())
@@ -35,7 +39,7 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 		}
 		else
 		{
-			registry.patch<component::Container>(entity, [itemItr](component::Container& cont)
+			registry.patch<ContainerComponent>(entity, [itemItr](ContainerComponent& cont)
 				{
 					cont.contents.erase(itemItr);
 				});
@@ -46,12 +50,12 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 
 void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, entt::entity entity)
 {
-	auto& container = registry.get<component::Container>(entity);
+	auto& container = registry.get<ContainerComponent>(entity);
 	const auto& unequipItem = registry.get<component::action::Unequip>(entity);
-	auto& body = registry.get<component::Body>(entity);
+	auto& body = registry.get<BodyComponent>(entity);
 
 	if (container.contents.size() >= container.capacity) return;
-	registry.patch<component::Container>(entity, [&unequipItem](component::Container& cont)
+	registry.patch<ContainerComponent>(entity, [&unequipItem](ContainerComponent& cont)
 		{
 			cont.contents.push_back(unequipItem.toUnequip);
 		});

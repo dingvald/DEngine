@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "DropItemSystem.h"
 #include "Components/Components.h"
+#include "Components/PositionComponent.h"
+#include "Components/ContainerComponent.h"
 #include "Spatial/Conversions.h"
 #include "Systems/Helpers/ItemDatabase.h"
 
@@ -12,14 +14,14 @@ void drft::system::DropItemSystem::init()
 
 void drft::system::DropItemSystem::update(const float dt)
 {
-	auto view = _registry->view<component::action::Drop, component::Position>();
+	auto view = _registry->view<component::action::Drop, PositionComponent>();
 
-	for (auto [entity, items, pos] : view.each())
+	for (auto [entity, dropAction, pos] : view.each())
 	{
-		for (auto item : items.toDrop)
+		for (auto item : dropAction.toDrop)
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-			_registry->emplace<component::Position>(itemEntity, pos.position);
+			_registry->emplace<PositionComponent>(itemEntity, pos.position);
 		}
 	}
 }
@@ -31,16 +33,16 @@ void drft::system::DropItemSystem::onUpdateEnd()
 
 void drft::system::DropItemSystem::onItemDropped(entt::registry& registry, entt::entity entity)
 {
-	auto& container = registry.get<component::Container>(entity);
-	auto& dropItems = registry.get<component::action::Drop>(entity);
+	auto& container = registry.get<ContainerComponent>(entity);
+	auto& dropAction = registry.get<component::action::Drop>(entity);
 
-	for (auto item : dropItems.toDrop)
+	for (auto item : dropAction.toDrop)
 	{
 		auto itemItr = std::find(container.contents.begin(), container.contents.end(), item);
 		if (itemItr != container.contents.end())
 		{
-			registry.patch<component::Container>(entity,
-				[itemItr](component::Container& cont)
+			registry.patch<ContainerComponent>(entity,
+				[itemItr](ContainerComponent& cont)
 				{
 					cont.contents.erase(itemItr);
 				});

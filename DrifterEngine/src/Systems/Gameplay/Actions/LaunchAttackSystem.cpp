@@ -3,7 +3,13 @@
 #include "Systems/Helpers/SpendActionPoints.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
+
 #include "Components/Components.h"
+#include "Components/AttackerComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/MaterialComponent.h"
+#include "Components/ProjectileComponent.h"
+
 #include "Components/Tags.h"
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/SpawnEffect.h"
@@ -14,13 +20,13 @@ void drft::system::LaunchAttackSystem::init()
 
 void drft::system::LaunchAttackSystem::update(const float dt)
 {
-	auto attackerView = _registry->view<component::action::LaunchAttack, component::Attacker, component::tag::Active>();
+	auto attackerView = _registry->view<component::action::LaunchAttack, AttackerComponent, component::tag::Active>();
 	for (auto [entity, attack, attacker] : attackerView.each())
 	{
 		attack.damageTypes["crushing"] += attacker.baseDamage;
 	}
 
-	auto launchAttackView = _registry->view<component::action::LaunchAttack, component::Position, component::tag::Active>();
+	auto launchAttackView = _registry->view<component::action::LaunchAttack, PositionComponent, component::tag::Active>();
 	for (auto [entity, attack, pos] : launchAttackView.each())
 	{
 		const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
@@ -29,9 +35,9 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 		const auto targets = grid.entitiesAt(targetPosition,
 			[this](entt::entity entity) -> bool
 			{
-				if (auto physical = _registry->try_get<component::Physical>(entity))
+				if (auto material = _registry->try_get<MaterialComponent>(entity))
 				{
-					if (physical->blocks) return true;
+					if (material->blocks) return true;
 				}
 				return false;
 			});
@@ -55,7 +61,7 @@ void drft::system::LaunchAttackSystem::update(const float dt)
 			});
 		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *_registry, entity });
 		// HACKZ: Should it care about projectiles? No..
-		_registry->remove<component::Projectile>(entity);
+		_registry->remove<ProjectileComponent>(entity);
 	}
 }
 

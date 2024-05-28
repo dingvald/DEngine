@@ -182,7 +182,7 @@
   <ItemGroup>
     <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HealingSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\Actions\ConsumableSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\ConsumableSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenableSystem.cpp" />
     <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp" />
     <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp" />
@@ -427,7 +427,7 @@
     <ClInclude Include="src\Components\VisualEffectComponent.h" />
     <ClInclude Include="src\Components\WearableComponent.h" />
     <ClInclude Include="src\Systems\Gameplay\HealingSystem.h" />
-    <ClInclude Include="src\Systems\Gameplay\Actions\ConsumableSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\ConsumableSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenableSystem.h" />
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />
     <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h" />

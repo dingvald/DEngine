@@ -8,10 +8,9 @@ namespace drft::system
 {
 	class BodyPartSystem : public System
 	{
-	public:
+	private:
 		void init() override;
 
-	private:
 		void onIncomingDamage(entt::registry& registry, entt::entity entity);
 		void onLaunchAttack(entt::registry& registry, entt::entity entity);
 		void onItemBreakEvent(events::ItemBreakEvent& ev);
