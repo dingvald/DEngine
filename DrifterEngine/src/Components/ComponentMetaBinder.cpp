@@ -8,6 +8,7 @@
 #include "BodyComponent.h"
 #include "ConsumableComponent.h"
 #include "ContainerComponent.h"
+#include "CraftableComponent.h"
 #include "DescriptionComponent.h"
 #include "FactionComponent.h"
 #include "FlyingComponent.h"
@@ -46,7 +47,8 @@ void ComponentMetaBinder::bindComponents()
 	AttackerComponent::bind();
 	BodyComponent::bind();
 	ContainerComponent::bind();
-	ContainerComponent::bind();
+	ConsumableComponent::bind();
+	CraftableComponent::bind();
 	DescriptionComponent::bind();
 	FactionComponent::bind();
 	FlyingComponent::bind();

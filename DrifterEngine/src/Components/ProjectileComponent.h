@@ -1,9 +1,10 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
+#include <Utility/Vector2Serialization.h>
 #include <string>
-#include "EnTT/entt.hpp"
-#include "Snapshot/Reflection.h"
+#include <EnTT/entt.hpp>
+#include <Snapshot/Reflection.h>
 
 struct ProjectileComponent
 {

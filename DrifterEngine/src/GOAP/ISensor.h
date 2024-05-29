@@ -18,7 +18,7 @@ namespace drft::goap
 		// Returns true if the agent's memory of the sensor's type contains an entity .
 		virtual WorldState checkMemory(entt::const_handle agent) const = 0;
 		// Merges the results of the sense attempt.
-		void mergeResults(const WorldState& fromSurroundings, const WorldState& fromMemory, component::AI& ai) const;
+		void mergeResults(const WorldState& fromSurroundings, const WorldState& fromMemory, AIComponent& ai) const;
 
 		AIComponent& getAI(entt::handle agent) const;
 		const AIComponent& getAI(entt::const_handle agent) const;

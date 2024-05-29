@@ -2,6 +2,7 @@
 #include "IAction.h"
 #include "Spatial/Helpers.h"
 #include "Components/Components.h"
+#include "Components/AIComponent.h"
 #include "Components/Tags.h"
 #include "Systems/Helpers/HasLineOfSight.h"
 
@@ -36,18 +37,18 @@ void drft::goap::IAction::addEffect(WorldStateType state, int val)
 	_effects.add(state, val);
 }
 
-const component::AI& drft::goap::IAction::getAI(entt::const_handle aiEntity) const
+const AIComponent& drft::goap::IAction::getAI(entt::const_handle aiEntity) const
 {
-	if (auto ai = aiEntity.try_get<component::AI>())
+	if (auto ai = aiEntity.try_get<AIComponent>())
 	{
 		return *ai;
 	}
 	throw std::exception("Entity does not have AI component.");
 }
 
-component::AI& drft::goap::IAction::getAI(entt::handle aiEntity) const
+AIComponent& drft::goap::IAction::getAI(entt::handle aiEntity) const
 {
-	if (auto ai = aiEntity.try_get<component::AI>())
+	if (auto ai = aiEntity.try_get<AIComponent>())
 	{
 		return *ai;
 	}

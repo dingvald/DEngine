@@ -5,7 +5,7 @@
 
 void drft::system::StaminaSystem::init()
 {
-
+	_registry->on_construct<StaminaComponent>().connect<&StaminaSystem::onStaminaAdded>(this);
 }
 
 void drft::system::StaminaSystem::update(const float dt)
@@ -20,4 +20,13 @@ void drft::system::StaminaSystem::update(const float dt)
 void drft::system::StaminaSystem::onUpdateEnd()
 {
 	_registry->clear<component::action::ConsumeStamina>();
+}
+
+void drft::system::StaminaSystem::onStaminaAdded(entt::registry& registry, entt::entity entity) const
+{
+	auto& staminaComponent = registry.get<StaminaComponent>(entity);
+	if (staminaComponent.current == std::numeric_limits<float>::min())
+	{
+		staminaComponent.current = staminaComponent.max;
+	}
 }

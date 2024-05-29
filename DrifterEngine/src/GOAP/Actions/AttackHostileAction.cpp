@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "AttackHostileAction.h"
 #include "Components/Components.h"
+#include "Components/AIComponent.h"
+#include "Components/PositionComponent.h"
 #include "Spatial/Helpers.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "GOAP/Sensors/Utility/GetClosestEntity.h"
@@ -24,7 +26,7 @@ std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::
 	}
 	if (ai.target != entt::null && agent.registry()->valid(ai.target))
 	{
-		result = agent.registry()->get<component::Position>(ai.target).position;
+		result = agent.registry()->get<PositionComponent>(ai.target).position;
 	}
 
 	return result;
@@ -35,9 +37,9 @@ drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle a
 	auto& ai = getAI(agent);
 	if (ai.target == entt::null) return ActionResult::Failed;
 
-	if (auto targetPos = agent.registry()->try_get<component::Position>(ai.target))
+	if (auto targetPos = agent.registry()->try_get<PositionComponent>(ai.target))
 	{
-		const auto& pos = agent.get<component::Position>();
+		const auto& pos = agent.get<PositionComponent>();
 		sf::Vector2i targetDirection = targetPos->position - pos.position;
 		agent.emplace_or_replace<component::action::LaunchAttack>(targetDirection);
 		std::cout << "Success!" << std::endl;
@@ -59,8 +61,8 @@ bool drft::goap::AttackHostileAction::isInRange(entt::handle agent) const
 		return false;
 	}
 
-	auto& pos = agent.get<component::Position>();
-	if (auto targetPos = agent.registry()->try_get<component::Position>(ai.target))
+	auto& pos = agent.get<PositionComponent>();
+	if (auto targetPos = agent.registry()->try_get<PositionComponent>(ai.target))
 	{
 		if (spatial::distance(pos.position, targetPos->position) <= 1)
 		{

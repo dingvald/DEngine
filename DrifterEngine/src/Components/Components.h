@@ -67,12 +67,12 @@ namespace component::action
 
 	struct Drop
 	{
-		std::vector<unsigned int> toDrop;
+		std::vector<unsigned long> toDrop;
 	};
 
 	struct Equip
 	{
-		unsigned int toEquip = 0;
+		unsigned long toEquip = 0;
 		std::string partName = {};
 		EquipmentLayer layer = EquipmentLayer::Base;
 	};

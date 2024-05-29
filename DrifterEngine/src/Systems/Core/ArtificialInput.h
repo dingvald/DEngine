@@ -1,6 +1,5 @@
 #pragma once
 #include "Systems/System.h"
-#include "Systems/HelperClasses/StateMachine.h"
 #include "Systems/HelperClasses/AIStates.h"
 #include "GOAP/Actions/AiActionTypes.h"
 #include "GOAP/IGoal.h"

@@ -1,7 +1,12 @@
 #include "pch.h"
 #include "ThrowAbility.h"
 #include "Spatial/Helpers.h"
-#include "Components/Components.h"
+
+#include "Components/BodyComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/ProjectileComponent.h"
+#include "Components/MaterialComponent.h"
+
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Spatial/Helpers.h"
 
@@ -22,7 +27,7 @@ drft::AbilityTargetingType drft::ThrowAbility::getTargetingType() const
 
 bool drft::ThrowAbility::isValid(entt::const_handle actor) const
 {
-	if (auto body = actor.try_get<component::Body>())
+	if (auto body = actor.try_get<BodyComponent>())
 	{
 		if (const auto rightHand = body->parts.search("Right Hand"))
 		{
@@ -37,7 +42,7 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i>
 {
 	const float throwSpeed = 6.0f;
 	if (!targetPosition.has_value()) throw std::exception("You need a target to throw at.");
-	if (auto body = actor.try_get<component::Body>())
+	if (auto body = actor.try_get<BodyComponent>())
 	{
 		if (const auto rightHand = body->parts.search("Right Hand"))
 		{
@@ -45,12 +50,12 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i>
 			if (optionalItem.has_value())
 			{
 				body->parts.unequipItem(optionalItem.value());
-				auto& throwerPos = actor.get<component::Position>();
+				auto& throwerPos = actor.get<PositionComponent>();
 				auto line = spatial::getIntPointsAlongLine(throwerPos.position, targetPosition.value());
 				
 				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalItem.value());
-				actor.registry()->emplace<component::Position>(itemEntity, line.front());
-				actor.registry()->emplace<component::Projectile>(itemEntity, std::move(line), 1, throwSpeed);
+				actor.registry()->emplace<PositionComponent>(itemEntity, line.front());
+				actor.registry()->emplace<ProjectileComponent>(itemEntity, std::move(line), 1, throwSpeed);
 			}
 		}
 	}
@@ -59,7 +64,7 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i>
 drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) const
 {
 	const int maxRange = 12;
-	if (auto body = actor.try_get<component::Body>())
+	if (auto body = actor.try_get<BodyComponent>())
 	{
 		if (const auto rightHand = body->parts.search("Right Hand"))
 		{
@@ -67,9 +72,9 @@ drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) co
 			if (optionalItem.has_value())
 			{
 				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalItem.value());
-				if (auto physical = actor.registry()->try_get<component::Physical>(itemEntity))
+				if (auto material = actor.registry()->try_get<MaterialComponent>(itemEntity))
 				{
-					int rangeVal = std::max(1, (maxRange - static_cast<int>(physical->weight)));
+					int rangeVal = std::max(1, (maxRange - static_cast<int>(material->weight)));
 					return { 0, rangeVal };
 				}
 			}

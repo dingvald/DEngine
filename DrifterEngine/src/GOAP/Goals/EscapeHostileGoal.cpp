@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EscapeHostileGoal.h"
-#include "Components/Components.h"
+#include "Components/HealthComponent.h"
 
 drft::goap::EscapeHostileGoal::EscapeHostileGoal()
 {
@@ -9,7 +9,7 @@ drft::goap::EscapeHostileGoal::EscapeHostileGoal()
 
 float drft::goap::EscapeHostileGoal::utility(entt::const_handle agent) const
 {
-	if (auto health = agent.try_get<component::Health>())
+	if (auto health = agent.try_get<HealthComponent>())
 	{
 		return (1.0f - (health->current / health->max));
 	}

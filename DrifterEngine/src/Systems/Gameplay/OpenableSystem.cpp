@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "OpenableSystem.h"
 
+#include "Components/ContainerComponent.h"
 #include "Components/OpenableComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
@@ -31,7 +32,7 @@ void drft::system::OpenableSystem::openInteraction(entt::entity actor, entt::ent
 		if (canOpen)
 		{
 			// chest if container - door otherwise
-			bool isContainer = _registry->any_of<component::Container>(subject);
+			bool isContainer = _registry->any_of<ContainerComponent>(subject);
 			auto& render = _registry->get<RenderComponent>(subject);
 			render.sprite += 1;
 			render.layer = 1;
@@ -69,7 +70,7 @@ void drft::system::OpenableSystem::closeInteraction(entt::entity actor, entt::en
 		auto& material = _registry->get<MaterialComponent>(subject);
 		material.blocks = true;
 
-		bool isContainer = _registry->any_of<component::Container>(subject);
+		bool isContainer = _registry->any_of<ContainerComponent>(subject);
 		if (!isContainer)
 		{
 			_registry->emplace_or_replace<LightBlockingComponent>(subject);

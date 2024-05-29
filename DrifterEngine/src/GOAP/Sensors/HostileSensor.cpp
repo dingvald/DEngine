@@ -1,7 +1,12 @@
 #include "pch.h"
 #include "HostileSensor.h"
+
 #include "Components/Components.h"
+#include "Components/AIComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/FactionComponent.h"
 #include "Components/Tags.h"
+
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "Utility/EntityHelpers.h"
@@ -17,9 +22,9 @@ drft::goap::SensorType drft::goap::HostileSensor::getType() const
 drft::goap::WorldState drft::goap::HostileSensor::checkAndFillSurroundings(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
 {
 	auto& ai = getAI(agent);
-	auto& myPos = agent.get<component::Position>();
+	auto& myPos = agent.get<PositionComponent>();
 	bool success = false;
-	auto view = agent.registry()->view<component::Position, component::Faction, component::tag::Active>();
+	auto view = agent.registry()->view<PositionComponent, FactionComponent, component::tag::Active>();
 	int magnitude = 0;
 	for (const auto& [entity, pos, faction] : view.each())
 	{

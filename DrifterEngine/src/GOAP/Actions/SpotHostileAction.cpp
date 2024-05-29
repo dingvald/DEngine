@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "SpotHostileAction.h"
 #include "Components/Components.h"
+#include "Components/PositionComponent.h"
+#include "Components/AIComponent.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "Utility/EntityHelpers.h"
 #include "Spatial/Helpers.h"
@@ -20,7 +22,7 @@ drft::goap::ActionResult drft::goap::SpotHostileAction::perform(entt::handle age
 		.message = "!",
 		.color = sf::Color::Yellow,
 		.tracksEntity = agent.entity(),
-		.position = agent.get<component::Position>().position,
+		.position = agent.get<PositionComponent>().position,
 		.velocity = {0,0},
 		.isScreenSpace = false,
 		.ttl = 80

@@ -26,6 +26,6 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, PositionComponent& position)
 	{
-		archive(position.position);
+		archive(position.position.x, position.position.y);
 	}
 }

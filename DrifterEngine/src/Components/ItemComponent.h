@@ -24,7 +24,7 @@ private:
 namespace cereal
 {
 	template<class Archive>
-	void serialize(Archive& archve, ItemComponent& item)
+	void serialize(Archive& archive, ItemComponent& item)
 	{
 		archive(item.id);
 	}

@@ -2,10 +2,10 @@
 #include "SensorRunner.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/WorldGrid.h"
-#include "Components/Components.h"
+#include "Components/AIComponent.h"
 #include "Systems/Helpers/HasLineOfSight.h"
 
-bool drft::goap::SensorRunner::decayMemory(component::AI::SurroundingsMemory& surroundings) const
+bool drft::goap::SensorRunner::decayMemory(AIComponent::SurroundingsMemory& surroundings) const
 {
 	std::unordered_set<entt::entity> keysToDelete;
 	int emptySensorMemories = 0;

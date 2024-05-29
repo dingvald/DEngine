@@ -761,6 +761,7 @@
     <ClInclude Include="src\ProcGen\WorldGeneration\WorldGenerator.h" />
     <ClInclude Include="src\Engine\States\WorldMapState.h" />
     <ClInclude Include="src\Utility\stdHashing.h" />
+    <ClInclude Include="src\Utility\Vector2Serialization.h" />
     <ClInclude Include="src\Utility\Visibility.h" />
     <ClInclude Include="src\Systems\Gameplay\StaminaSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\WaitingSystem.h" />

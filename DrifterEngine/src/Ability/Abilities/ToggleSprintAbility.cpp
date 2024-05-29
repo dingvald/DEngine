@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ToggleSprintAbility.h"
-#include "Components/Components.h"
+#include "Components/StaminaComponent.h"
+#include "Components/SprintingComponent.h"
 #include "Events/SendFloatingMessageEvent.h"
 
 sf::Color drft::ToggleSprintAbility::getIconColor() const
@@ -20,7 +21,7 @@ drft::AbilityTargetingType drft::ToggleSprintAbility::getTargetingType() const
 
 bool drft::ToggleSprintAbility::isValid(entt::const_handle actor) const
 {
-    if (auto stamina = actor.try_get<component::Stamina>())
+    if (auto stamina = actor.try_get<StaminaComponent>())
     {
         if (stamina->current > 0) return true;
     }
@@ -29,13 +30,13 @@ bool drft::ToggleSprintAbility::isValid(entt::const_handle actor) const
 
 void drft::ToggleSprintAbility::perform(entt::handle actor, std::optional<sf::Vector2i> targetPosition) const
 {
-	if (actor.all_of<component::Sprinting>())
+	if (actor.all_of<SprintingComponent>())
 	{
-		actor.remove<component::Sprinting>();
+		actor.remove<SprintingComponent>();
 	}
 	else
 	{
-		actor.emplace<component::Sprinting>();
+		actor.emplace<SprintingComponent>();
 	}
 }
 
@@ -46,7 +47,7 @@ int drft::ToggleSprintAbility::getCost() const
 
 bool drft::ToggleSprintAbility::isToggledOn(entt::const_handle actor) const
 {
-	if (actor.all_of<component::Sprinting>())
+	if (actor.all_of<SprintingComponent>())
 	{
 		return true;
 	}

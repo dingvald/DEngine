@@ -8,7 +8,7 @@
 struct StaminaComponent
 {
 	float max = 10.f;
-	float current = 10.f;
+	float current = std::numeric_limits<float>::min();
 	float baseConsumption = 0.f;
 
 private:

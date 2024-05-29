@@ -5,9 +5,8 @@
         "Human Body"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Player",
-          "extendedName": "The Player",
           "description": "The Player character. Can be anything the player wants..."
         },
         "Render": {
@@ -18,12 +17,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 5,
-          "agility": 5,
-          "vitality": 5
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 80.0,
           "materials": [ "Corpse" ]
@@ -34,12 +28,10 @@
         },
         "Health": {
           "max": 25.0,
-          "current": 25.0,
           "recovery": 0.05
         },
         "Stamina": {
-          "max": 25.0,
-          "current": 25.0
+          "max": 25.0
         },
         "Player": {
           "sightRange": 24

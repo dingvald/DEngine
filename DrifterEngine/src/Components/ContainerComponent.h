@@ -17,7 +17,8 @@ private:
 	{
 		using namespace entt::literals;
 		snapshot::reflectComponent<ContainerComponent, NAME>()
-			.prop("serialize"_hs);
+			.prop("serialize"_hs)
+			.data<&ContainerComponent::capacity>("capacity"_hs);
 	}
 };
 

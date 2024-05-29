@@ -29,7 +29,7 @@ void drft::system::removeFromContainer(entt::registry& registry, entt::entity co
 	
 }
 
-void drft::system::removeFromContainer(entt::registry& registry, ContainerComponent& container, ItemComponent& item, bool destroyAfterRemoval = false)
+void drft::system::removeFromContainer(entt::registry& registry, ContainerComponent& container, ItemComponent& item, bool destroyAfterRemoval)
 {
 	registry.patch<ContainerComponent>(entt::to_entity(registry, container),
 		[item](ContainerComponent& cont)

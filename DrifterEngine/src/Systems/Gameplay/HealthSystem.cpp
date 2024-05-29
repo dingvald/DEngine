@@ -16,6 +16,7 @@ void drft::system::HealthSystem::init()
 {
 	_dispatcher->sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
 	_registry->on_update<component::action::LevelUp>().connect<&HealthSystem::onLevelUp>(this);
+	_registry->on_construct<HealthComponent>().connect<&HealthSystem::onHealthComponentAdded>(this);
 }
 
 void drft::system::HealthSystem::update(const float dt)
@@ -35,7 +36,7 @@ void drft::system::HealthSystem::update(const float dt)
 	auto damageView = _registry->view<component::action::TakeDamage, HealthComponent>();
 	for (auto [entity, damage, health] : damageView.each())
 	{
-		auto handle = entt::const_handle{ *_registry, entity };
+		auto handle = entt::handle{ *_registry, entity };
 		// send floating message
 		if (auto posComp = handle.try_get<PositionComponent>())
 		{
@@ -104,7 +105,7 @@ void drft::system::HealthSystem::update(const float dt)
 		health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
 		if (health.current == 0)
 		{
-			handle.emplace<component::action::Die>(entity);
+			handle.emplace<component::action::Die>();
 			_registry->emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(handle));
 		}
 	}
@@ -121,6 +122,15 @@ void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)
 	if (auto health = _registry->try_get<HealthComponent>(ev.entity))
 	{
 		health->current = std::clamp(health->current + health->recovery, 1.f, health->max);
+	}
+}
+
+void drft::system::HealthSystem::onHealthComponentAdded(entt::registry& registry, entt::entity entity)
+{
+	auto& healthComponent = registry.get<HealthComponent>(entity);
+	if (healthComponent.current == std::numeric_limits<float>::min())
+	{
+		healthComponent.current = healthComponent.max;
 	}
 }
 

@@ -683,7 +683,7 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 			}
 			else
 			{
-				getContext().registry.emplace<component::action::Drop>(sessionEntity, std::vector<ItemComponent::ID>{itemID});
+				getContext().registry.emplace<component::action::Drop>(sessionEntity, std::vector<unsigned long>{itemID});
 			}
 
 			_inventoryStack.clear();
