@@ -738,9 +738,7 @@
         },
         "Craftable": {
           "recipe": {
-            "Wood": 1,
-            "Twine": 1,
-            "Flint": 1
+            "Wood": 1
           }
         }
       }

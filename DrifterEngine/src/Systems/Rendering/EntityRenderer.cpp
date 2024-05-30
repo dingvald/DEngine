@@ -31,11 +31,11 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 	const auto view = _registry->view< const PositionComponent, const RenderComponent, const LitComponent, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
 	for (auto const & [entity, pos, ren, lit] : view.each())
 	{
-		auto litColor = LightingSystem::blendColor(ren.color, lit.color);
-		litColor.a = ren.color.a;
+		auto finalColor = LightingSystem::blendLight(ren.color, lit.color);
+		finalColor.a = ren.color.a;
 
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		_spriteLayers[ren.layer].addSprite(ren.sprite, litColor, renderPosition);
+		_spriteLayers[ren.layer].addSprite(ren.sprite, finalColor, renderPosition);
 	}
 	// Apply darkened light to entities outside the player's FOV
 	const auto seenView = _registry->view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);

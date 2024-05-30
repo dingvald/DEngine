@@ -21,7 +21,6 @@ void drft::system::TurnManager::onStart(bool)
 {
 	_timeKeeper = _registry->create();
 	_registry->emplace<ActorComponent>(_timeKeeper, 0, 1.0f, 1.0f);
-	_registry->emplace<component::tag::Active>(_timeKeeper);
 	_registry->emplace<DescriptionComponent>(_timeKeeper, "Time Keeper", "");
 
 	_actorQueue->setSentinel(_timeKeeper);
@@ -31,7 +30,6 @@ void drft::system::TurnManager::onStart(bool)
 
 void drft::system::TurnManager::update(const float)
 {
-	_registry->emplace<component::tag::Active>(_timeKeeper);
 	_actorQueue->refresh(_managedEntities);
 	_currentActor = determineCurrentActor();
 
@@ -115,6 +113,7 @@ drft::system::ActorQueue::ActorQueue(entt::registry& registry)
 
 void drft::system::ActorQueue::refresh(std::unordered_set<entt::entity>& currentEntities)
 {
+	registry.emplace_or_replace<component::tag::Active>(_sentinel); // Sentinel should always be active
 	auto actorView = registry.view<ActorComponent, component::tag::Active>();
 	for (auto entity : currentEntities)
 	{
@@ -146,7 +145,6 @@ entt::entity drft::system::ActorQueue::front() const
 
 void drft::system::ActorQueue::tick()
 {
-	std::cout << "Tick!" << std::endl;
 	auto& dispatcher = registry.ctx().get<entt::dispatcher&>();
 	dispatcher.trigger(events::GameTickEvent());
 	for (auto& e : _queue)

@@ -8,6 +8,7 @@
 #include "Spatial/Conversions.h"
 #include "Utility/SmoothTransition.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
+#include "Services/DebugInfo.h"
 
 static constexpr int DAY_START_HOUR = 5;
 static constexpr int NIGHT_START_HOUR = 23;
@@ -34,6 +35,9 @@ void drft::system::DayNightCycleSystem::fixedUpdate()
 	{
 		_registry->emplace_or_replace<GlobalLightSourceComponent>(entity, color);
 	}
+
+	auto time = std::format("Day {} - {}:{:02} {}", _days, _hours > 12 ? _hours - 12 : _hours, _minutes, _hours >= 12 ? "pm" : "am");
+	service::DebugInfo::instance().putInfo("Time", time);
 }
 
 void drft::system::DayNightCycleSystem::save(cereal::JSONOutputArchive& oarchive)
