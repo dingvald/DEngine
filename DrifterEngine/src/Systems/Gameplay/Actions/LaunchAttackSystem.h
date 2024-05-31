@@ -9,6 +9,8 @@ namespace drft::system
 		void init() override;
 		void update(const float dt) override;
 		void onUpdateEnd() override;
+
+		void onLaunchAttackAction(entt::registry& registry, entt::entity entity) const;
 	};
 }
 

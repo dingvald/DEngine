@@ -50,14 +50,14 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 		{
 			auto line = spatial::getIntPointsAlongLine(myPos.position, { targetX, targetY });
 			auto diff = line.front() - myPos.position;
-			agent.emplace_or_replace<component::action::Move>(diff);
+			agent.emplace_or_replace<component::action::TryMove>(diff);
 		}
 		break;
 	case 2:
 		{
 			auto line = spatial::getIntPointsAlongLine(myPos.position, { targetX, targetY });
 			auto diff = line.front() - myPos.position;
-			agent.emplace_or_replace<component::action::Move>(diff);
+			agent.emplace_or_replace<component::action::TryMove>(diff);
 		}
 		break;
 	case 3:

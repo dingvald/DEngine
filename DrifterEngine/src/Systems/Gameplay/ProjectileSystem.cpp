@@ -30,7 +30,7 @@ void drft::system::ProjectileSystem::update(float dt)
 		}
 
 		auto delta = proj.line.at(proj.progress++) - pos.position;
-		_registry->emplace_or_replace<component::action::Move>(entity, delta);
+		_registry->emplace_or_replace<component::action::TryMove>(entity, delta);
 
 		if (auto render = _registry->try_get<RenderComponent>(entity))
 		{

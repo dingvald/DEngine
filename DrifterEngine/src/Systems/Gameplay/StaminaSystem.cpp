@@ -6,15 +6,8 @@
 void drft::system::StaminaSystem::init()
 {
 	_registry->on_construct<StaminaComponent>().connect<&StaminaSystem::onStaminaAdded>(this);
-}
-
-void drft::system::StaminaSystem::update(const float dt)
-{
-	auto spendStaminaView = _registry->view<StaminaComponent, component::action::ConsumeStamina>();
-	for (auto [entity, stamina, staminaSpend] : spendStaminaView.each())
-	{
-		stamina.current = std::clamp(stamina.current - (stamina.baseConsumption + staminaSpend.amount), 0.f, stamina.max);
-	}
+	_registry->on_construct<component::action::ConsumeStamina>().connect<&StaminaSystem::onStaminaConsumed>(this);
+	_registry->on_construct<component::action::DoMove>().connect<&StaminaSystem::onDoMoveAction>(this);
 }
 
 void drft::system::StaminaSystem::onUpdateEnd()
@@ -28,5 +21,22 @@ void drft::system::StaminaSystem::onStaminaAdded(entt::registry& registry, entt:
 	if (staminaComponent.current == std::numeric_limits<float>::min())
 	{
 		staminaComponent.current = staminaComponent.max;
+	}
+}
+
+void drft::system::StaminaSystem::onStaminaConsumed(entt::registry& registry, entt::entity entity) const
+{
+	if (auto stamina = registry.try_get<StaminaComponent>(entity))
+	{
+		auto& consumeStaminaAction = registry.get<component::action::ConsumeStamina>(entity);
+		stamina->current = std::clamp(stamina->current - (stamina->baseConsumption + consumeStaminaAction.amount), 0.f, stamina->max);
+	}
+}
+
+void drft::system::StaminaSystem::onDoMoveAction(entt::registry& registry, entt::entity entity) const
+{
+	if (auto stamina = registry.try_get<StaminaComponent>(entity))
+	{
+		_registry->emplace_or_replace<component::action::ConsumeStamina>(entity, -0.25f);
 	}
 }

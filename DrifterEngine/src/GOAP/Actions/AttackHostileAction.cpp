@@ -8,6 +8,8 @@
 #include "GOAP/Sensors/Utility/GetClosestEntity.h"
 #include "GOAP/Sensors/Utility/IsHostile.h"
 
+constexpr float MELEE_RANGE = 1.5f; // Close enough to sqrt(2)
+
 drft::goap::AttackHostileAction::AttackHostileAction()
 {
 	addPrecondition(spotted_hostile, true);
@@ -41,8 +43,7 @@ drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle a
 	{
 		const auto& pos = agent.get<PositionComponent>();
 		sf::Vector2i targetDirection = targetPos->position - pos.position;
-		agent.emplace_or_replace<component::action::LaunchAttack>(targetDirection);
-		std::cout << "Success!" << std::endl;
+		agent.emplace_or_replace<component::action::TryMove>(targetDirection);
 		return ActionResult::Continue;
 	}
 	return ActionResult::Failed;
@@ -64,10 +65,7 @@ bool drft::goap::AttackHostileAction::isInRange(entt::handle agent) const
 	auto& pos = agent.get<PositionComponent>();
 	if (auto targetPos = agent.registry()->try_get<PositionComponent>(ai.target))
 	{
-		if (spatial::distance(pos.position, targetPos->position) <= 1)
-		{
-			return true;
-		}
+		return ( spatial::distance(pos.position, targetPos->position) <= MELEE_RANGE );
 	}
 	
 	return false;

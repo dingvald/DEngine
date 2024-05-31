@@ -24,7 +24,6 @@
 #include "LitComponent.h"
 #include "LocalLightSourceComponent.h"
 #include "MaterialComponent.h"
-#include "MyCraftableItemsComponent.h"
 #include "OpenableComponent.h"
 #include "PlayerComponent.h"
 #include "PositionComponent.h"
@@ -64,7 +63,6 @@ void ComponentMetaBinder::bindComponents()
 	LitComponent::bind();
 	LocalLightSourceComponent::bind();
 	MaterialComponent::bind();
-	MyCraftableItemsComponent::bind();
 	OpenableComponent::bind();
 	PlayerComponent::bind();
 	PositionComponent::bind();

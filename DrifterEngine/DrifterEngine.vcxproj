@@ -180,6 +180,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Gameplay\CollisionSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\MotionSystem.cpp" />
     <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HealingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ConsumableSystem.cpp" />
@@ -288,7 +290,7 @@
     <ClCompile Include="src\Systems\Core\ArtificialInput.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DeathSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\LaunchAttackSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\Actions\MovementSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\Actions\MoveActionSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HealthSystem.cpp" />
     <ClCompile Include="src\Snapshot\Archive.cpp" />
     <ClCompile Include="src\Snapshot\Reflection.cpp" />
@@ -384,6 +386,9 @@
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Systems\Gameplay\CollisionSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\MotionSystem.h" />
+    <ClInclude Include="src\Components\CollisionComponent.h" />
     <ClInclude Include="src\Components\ComponentMetaBinder.h" />
     <ClInclude Include="src\Components\ActorComponent.h" />
     <ClInclude Include="src\Components\AIComponent.h" />
@@ -411,6 +416,7 @@
     <ClInclude Include="src\Components\LocalLightSourceComponent.h" />
     <ClInclude Include="src\Components\LitComponent.h" />
     <ClInclude Include="src\Components\MaterialComponent.h" />
+    <ClInclude Include="src\Components\MotionComponent.h" />
     <ClInclude Include="src\Components\MyCraftableItemsComponent.h" />
     <ClInclude Include="src\Components\OpenableComponent.h" />
     <ClInclude Include="src\Components\PlayerComponent.h" />
@@ -558,7 +564,7 @@
     <ClInclude Include="src\Systems\Core\ArtificialInput.h" />
     <ClInclude Include="src\Systems\Gameplay\DeathSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\LaunchAttackSystem.h" />
-    <ClInclude Include="src\Systems\Gameplay\Actions\MovementSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\Actions\MoveActionSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\HealthSystem.h" />
     <ClInclude Include="src\Snapshot\Archive.h" />
     <ClInclude Include="src\Snapshot\EnTTSnapshot.h" />
