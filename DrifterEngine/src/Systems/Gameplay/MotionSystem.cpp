@@ -34,7 +34,7 @@ void drft::system::MotionSystem::onMotionAdded(entt::registry& registry, entt::e
 		}
 		return false;
 	};
-	const auto blockers = grid.entitiesAt(targetPosition, checkForBlockers);
+	auto blockers = grid.entitiesAt(targetPosition, checkForBlockers);
 
 	if (blockers.empty())
 	{
@@ -42,6 +42,6 @@ void drft::system::MotionSystem::onMotionAdded(entt::registry& registry, entt::e
 	}
 	else
 	{
-		_registry->emplace_or_replace<CollisionComponent>(entity, motionComponent.direction, blockers);
+		_registry->emplace_or_replace<CollisionComponent>(entity, motionComponent.direction, std::move(blockers));
 	}
 }

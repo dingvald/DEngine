@@ -33,8 +33,7 @@ void drft::system::CollisionSystem::onCollisionAdded(entt::registry& registry, e
 	case drft::system::Relationship::Neutral:
 	case drft::system::Relationship::Hostile:
 	{
-		component::action::LaunchAttack launchAttackAction = { .direction = collisionComponent.direction, .targets = collisionComponent.blockers };
-		_registry->emplace_or_replace<component::action::LaunchAttack>(entity, launchAttackAction);
+		_registry->emplace_or_replace<component::action::LaunchAttack>(entity, collisionComponent.direction, collisionComponent.blockers);
 	}
 		break;
 	default:
