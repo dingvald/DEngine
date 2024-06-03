@@ -44,14 +44,13 @@
 #include "Systems/Gameplay/Actions/WaitingSystem.h"
 #include "Systems/Gameplay/Actions/PickUpSystem.h"
 #include "Systems/Gameplay/Actions/InteractionSystem.h"
-#include "Systems/Gameplay/Actions/LaunchAttackSystem.h"
+#include "Systems/Gameplay/Actions/MeleeAttackActionSystem.h"
 #include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
 #include "Systems/Gameplay/Actions/TargetSelectSystem.h"
 #include "Systems/Gameplay/OpenableSystem.h"
 #include "Systems/Gameplay/ConsumableSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
-#include "Systems/Gameplay/MotionSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
@@ -267,7 +266,6 @@ void drft::GameState::importSystems()
 	_systems->add<CraftItemSystem>(					Phase::OnUpdate);
 	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
 	_systems->add<HotbarSystem>(					Phase::OnUpdate);
-	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
 	_systems->add<HealthSystem>(					Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);
 	_systems->add<LevelingSystem>(					Phase::OnUpdate + 20);
@@ -304,9 +302,10 @@ void drft::GameState::importSystems()
 	_systems->add<OpenWorldMapSystem>(				Phase::Reactive);
 	_systems->add<PickUpSystem>(					Phase::Reactive);
 	_systems->add<MoveActionSystem>(				Phase::Reactive);
-	_systems->add<MotionSystem>(					Phase::Reactive);
+	_systems->add<MeleeAttackActionSystem>(			Phase::Reactive);
 	_systems->add<CollisionSystem>(					Phase::Reactive);
 	_systems->add<StaminaSystem>(					Phase::Reactive);
+
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{

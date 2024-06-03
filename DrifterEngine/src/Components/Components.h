@@ -5,23 +5,6 @@
 
 namespace component::action
 {
-	struct TryMove
-	{
-		sf::Vector2i direction = { 0,0 };
-	};
-
-	struct DoMove
-	{
-		sf::Vector2i direction = { 0,0 };
-	};
-
-	struct LaunchAttack
-	{
-		sf::Vector2i direction = { 0,0 };
-		std::vector<entt::entity> targets;
-		std::unordered_map<std::string, int> damageTypes;
-	};
-
 	struct HotbarPressed
 	{
 		int slot = 0;

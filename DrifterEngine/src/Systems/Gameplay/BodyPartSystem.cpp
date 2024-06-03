@@ -2,6 +2,7 @@
 #include "BodyPartSystem.h"
 
 #include "Components/Components.h"
+#include "Components/Actions/MeleeAttackAction.h"
 #include "Components/BodyComponent.h"
 #include "Components/MaterialComponent.h"
 #include "Components/ItemComponent.h"
@@ -20,7 +21,7 @@ static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 15;
 void drft::system::BodyPartSystem::init()
 {
 	_registry->on_construct<component::action::IncomingDamage>().connect<&BodyPartSystem::onIncomingDamage>(this);
-	_registry->on_construct<component::action::LaunchAttack>().connect<&BodyPartSystem::onLaunchAttack>(this);
+	_registry->on_construct<TryMeleeAttackAction>().connect<&BodyPartSystem::onTryMeleeAttack>(this);
 
 	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::ItemBreakEvent>().connect<&BodyPartSystem::onItemBreakEvent>(this);
@@ -43,11 +44,11 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 	}
 }
 
-void drft::system::BodyPartSystem::onLaunchAttack(entt::registry& registry, entt::entity entity)
+void drft::system::BodyPartSystem::onTryMeleeAttack(entt::registry& registry, entt::entity entity)
 {
 	if (auto body = registry.try_get<BodyComponent>(entity))
 	{
-		auto& attack = registry.get<component::action::LaunchAttack>(entity);
+		auto& attack = registry.get<TryMeleeAttackAction>(entity);
 		auto weaponDamageTypes = calculateDamageTypesFromHeld(entity);
 		for (auto& [typeName, damage] : weaponDamageTypes)
 		{

@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "StaminaSystem.h"
 #include "Components/Components.h"
+#include "Components/Actions/MoveAction.h"
 #include "Components/StaminaComponent.h"
 
 void drft::system::StaminaSystem::init()
 {
 	_registry->on_construct<StaminaComponent>().connect<&StaminaSystem::onStaminaAdded>(this);
 	_registry->on_construct<component::action::ConsumeStamina>().connect<&StaminaSystem::onStaminaConsumed>(this);
-	_registry->on_construct<component::action::DoMove>().connect<&StaminaSystem::onDoMoveAction>(this);
+	_registry->on_construct<DoMoveAction>().connect<&StaminaSystem::onDoMoveAction>(this);
 }
 
 void drft::system::StaminaSystem::onUpdateEnd()

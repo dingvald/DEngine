@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ArtificialInput.h"
 
-#include "Components/Components.h"
+#include "Components/Actions/MoveAction.h"
 #include "Components/AIComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/FactionComponent.h"
@@ -67,7 +67,7 @@ void drft::system::ArtificialInput::moveToTarget(entt::handle entity, sf::Vector
 	int xMove = delta.x == 0 ? 0 : -(delta.x / abs(delta.x));
 	int yMove = delta.y == 0 ? 0 : -(delta.y / abs(delta.y));
 
-	entity.emplace_or_replace<component::action::TryMove>(sf::Vector2i{ xMove, yMove });
+	entity.emplace_or_replace<PerformMoveAction>(sf::Vector2i{ xMove, yMove });
 }
 
 void drft::system::ArtificialInput::pathToTarget(entt::handle entity, sf::Vector2i targetPosition) const

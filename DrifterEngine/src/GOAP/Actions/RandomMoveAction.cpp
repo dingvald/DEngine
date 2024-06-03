@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RandomMoveAction.h"
 #include "Spatial/WorldGrid.h"
-#include "Components/Components.h"
+#include "Components/Actions/MoveAction.h"
 #include "Components/PositionComponent.h"
 #include "Components/MaterialComponent.h"
 #include "Random/RandomNumberGenerator.h"
@@ -38,7 +38,7 @@ drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agen
 		++safetyCount;
 	}
 
-	agent.emplace_or_replace<component::action::TryMove>(sf::Vector2i(randx, randy));
+	agent.emplace_or_replace<PerformMoveAction>(sf::Vector2i(randx, randy));
     return ActionResult::Complete;
 }
 

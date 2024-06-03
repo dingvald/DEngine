@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "AttackHostileAction.h"
-#include "Components/Components.h"
+
+#include "Components/Actions/MeleeAttackAction.h"
+#include "Components/Actions/MoveAction.h"
 #include "Components/AIComponent.h"
 #include "Components/PositionComponent.h"
+
 #include "Spatial/Helpers.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "GOAP/Sensors/Utility/GetClosestEntity.h"
@@ -43,7 +46,7 @@ drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle a
 	{
 		const auto& pos = agent.get<PositionComponent>();
 		sf::Vector2i targetDirection = targetPos->position - pos.position;
-		agent.emplace_or_replace<component::action::TryMove>(targetDirection);
+		agent.emplace_or_replace<PerformMeleeAttackAction>(targetDirection, std::vector<entt::entity>{ai.target});
 		return ActionResult::Continue;
 	}
 	return ActionResult::Failed;

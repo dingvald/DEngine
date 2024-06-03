@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ProjectileSystem.h"
 
-#include "Components/Components.h"
+#include "Components/Actions/MoveAction.h"
 #include "Components/ProjectileComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
@@ -30,7 +30,7 @@ void drft::system::ProjectileSystem::update(float dt)
 		}
 
 		auto delta = proj.line.at(proj.progress++) - pos.position;
-		_registry->emplace_or_replace<component::action::TryMove>(entity, delta);
+		_registry->emplace_or_replace<PerformMoveAction>(entity, delta);
 
 		if (auto render = _registry->try_get<RenderComponent>(entity))
 		{

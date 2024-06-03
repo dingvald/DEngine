@@ -2,6 +2,7 @@
 #include "CollisionSystem.h"
 
 #include "Components/Components.h"
+#include "Components/Actions/MeleeAttackAction.h"
 #include "Components/PositionComponent.h"
 #include "Components/CollisionComponent.h"
 #include "Components/FactionComponent.h"
@@ -33,7 +34,7 @@ void drft::system::CollisionSystem::onCollisionAdded(entt::registry& registry, e
 	case drft::system::Relationship::Neutral:
 	case drft::system::Relationship::Hostile:
 	{
-		_registry->emplace_or_replace<component::action::LaunchAttack>(entity, collisionComponent.direction, collisionComponent.blockers);
+		_registry->emplace_or_replace<PerformMeleeAttackAction>(entity, collisionComponent.direction, collisionComponent.blockers);
 	}
 		break;
 	default:

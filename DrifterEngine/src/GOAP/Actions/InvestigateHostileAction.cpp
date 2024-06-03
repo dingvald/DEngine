@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "InvestigateHostileAction.h"
-#include "Components/Components.h"
+
+#include "Components/Actions/MoveAction.h"
 #include "Components/PositionComponent.h"
 #include "Components/AIComponent.h"
 #include "Systems/Gameplay/FactionSystem.h"
@@ -42,7 +43,7 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 				.isScreenSpace = false,
 				.ttl = 80
 				});
-			agent.emplace_or_replace<component::action::Wait>();
+			agent.emplace_or_replace<PerformMoveAction>(sf::Vector2i{ 0,0 });
 			return ActionResult::Continue;
 		}
 		break;
@@ -50,14 +51,14 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 		{
 			auto line = spatial::getIntPointsAlongLine(myPos.position, { targetX, targetY });
 			auto diff = line.front() - myPos.position;
-			agent.emplace_or_replace<component::action::TryMove>(diff);
+			agent.emplace_or_replace<PerformMoveAction>(diff);
 		}
 		break;
 	case 2:
 		{
 			auto line = spatial::getIntPointsAlongLine(myPos.position, { targetX, targetY });
 			auto diff = line.front() - myPos.position;
-			agent.emplace_or_replace<component::action::TryMove>(diff);
+			agent.emplace_or_replace<PerformMoveAction>(diff);
 		}
 		break;
 	case 3:

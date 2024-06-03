@@ -9,6 +9,7 @@ namespace drft::system
 		void init() override;
 		void onUpdateEnd() override;
 
+		void onPerformMoveAction(entt::registry& registry, entt::entity entity) const;
 		void onTryMoveAction(entt::registry& registry, entt::entity entity) const;
 		void onDoMoveAction(entt::registry& registry, entt::entity entity) const;
 	};
