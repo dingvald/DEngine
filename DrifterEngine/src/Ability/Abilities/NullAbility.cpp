@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "NullAbility.h"
 #include "Events/SendFloatingMessageEvent.h"
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
 
 drft::AbilityTargetingType drft::NullAbility::getTargetingType() const
 {
@@ -20,7 +20,7 @@ void drft::NullAbility::perform(entt::handle actor, std::optional<sf::Vector2i> 
 		.message = "Cannot perform action.",
 		.color = sf::Color::Red,
 		.tracksEntity = actor.entity(),
-		.position = actor.get<component::Position>().position,
+		.position = actor.get<PositionComponent>().position,
 		.velocity = {0,-0.2},
 		.fades = true,
 		.isScreenSpace = false,

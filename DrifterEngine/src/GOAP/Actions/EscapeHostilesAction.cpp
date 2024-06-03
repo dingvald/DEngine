@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "EscapeHostilesAction.h"
+
 #include "Components/Components.h"
+#include "Components/AIComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/MaterialComponent.h"
+
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Helpers.h"
@@ -20,16 +25,16 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 	auto& ai = getAI(agent);
 	std::optional<sf::Vector2i> result = {};
 	std::optional<sf::Vector2i> closestHostile = {};
-	auto& myPos = agent.get<component::Position>().position;
+	auto& myPos = agent.get<PositionComponent>().position;
 
 	for (auto&& [entity, _] : ai.surroundings.at(SensorType::Visual))
 	{
 		auto otherHandle = entt::const_handle{ *agent.registry(), entity };
-		if (!otherHandle.all_of<component::Position>()) continue;
+		if (!otherHandle.all_of<PositionComponent>()) continue;
 		if (system::FactionSystem::resolveRelationship(agent, otherHandle) != system::Relationship::Hostile) continue;
 
 		
-		auto& otherPos = otherHandle.get<component::Position>();
+		auto& otherPos = otherHandle.get<PositionComponent>();
 		if (!closestHostile.has_value())
 		{
 			closestHostile = otherPos.position;
@@ -55,11 +60,11 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 		int randx = rng::RandomNumberGenerator::intInRange(-1, 1);
 		int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
 		const auto& grid = agent.registry()->ctx().get<const spatial::WorldGrid&>();
-		const auto& tilepos = agent.get<component::Position>().position;
+		const auto& tilepos = agent.get<PositionComponent>().position;
 
 		auto blockerFilter = [&agent](entt::entity entity) -> bool
 		{
-			if (auto physical = agent.registry()->try_get<component::Physical>(entity))
+			if (auto physical = agent.registry()->try_get<MaterialComponent>(entity))
 			{
 				return physical->blocks;
 			}

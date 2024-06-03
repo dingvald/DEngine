@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "SpawnEffect.h"
-#include "Components/Components.h"
+
+#include "Components/PositionComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/AnimationComponent.h"
+#include "Components/VisualEffectComponent.h"
+
 #include "Engine/EngineConstants.h"
 #include "Systems/Rendering/RenderLayers.h"
 
@@ -10,15 +15,15 @@ entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& 
 
 	entt::handle effectHandle = { registry, registry.create() };
 	
-	effectHandle.emplace<component::Position>(effect.position);
-	effectHandle.emplace<component::Render>(static_cast<unsigned int>(effect.sprites.front()), static_cast<unsigned int>(effect.layer), effect.color);
+	effectHandle.emplace<PositionComponent>(effect.position);
+	effectHandle.emplace<RenderComponent>(static_cast<unsigned int>(effect.sprites.front()), static_cast<unsigned int>(effect.layer), effect.color);
 	int ttl = effect.ttl;
 	if (effect.sprites.size() > 1) // must be an animation
 	{
 		ttl = effect.loops ? ttl : (TARGET_FPS / effect.animationSpeed) * effect.sprites.size();
-		component::Animation animation = { .sprites = effect.sprites, .speed = effect.animationSpeed, .loops = effect.loops };
-		effectHandle.emplace<component::Animation>(animation);
+		AnimationComponent animation = { .sprites = effect.sprites, .speed = effect.animationSpeed, .loops = effect.loops };
+		effectHandle.emplace<AnimationComponent>(animation);
 	}
-	effectHandle.emplace<component::Effect>(ttl, effect.fades, effect.requiresInFOV);
+	effectHandle.emplace<VisualEffectComponent>(ttl, effect.fades, effect.requiresInFOV);
 	return effectHandle.entity();
 }

@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "InvestigateHostileAction.h"
-#include "Components/Components.h"
+
+#include "Components/Actions/MoveAction.h"
+#include "Components/PositionComponent.h"
+#include "Components/AIComponent.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Spatial/Helpers.h"
 #include "Events/SendFloatingMessageEvent.h"
@@ -16,7 +19,7 @@ drft::goap::InvestigateHostileAction::InvestigateHostileAction()
 drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::handle agent) const
 {
 	auto& ai = getAI(agent);
-	auto& myPos = agent.get<component::Position>();
+	auto& myPos = agent.get<PositionComponent>();
 	int targetX = ai.blackboard[target_x];
 	int targetY = ai.blackboard[target_y];
 
@@ -27,7 +30,7 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 		{
 			auto closestEntityHandle = getClosestEntity(agent, { SensorType::Visual }, filter::isHostile);
 			if (!closestEntityHandle.valid()) return ActionResult::Failed;
-			auto& pos = closestEntityHandle.get<component::Position>();
+			auto& pos = closestEntityHandle.get<PositionComponent>();
 			ai.blackboard[target_x] = pos.position.x;
 			ai.blackboard[target_y] = pos.position.y;
 			auto& dispatcher = agent.registry()->ctx().get<entt::dispatcher&>();
@@ -35,12 +38,12 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 				.message = "?",
 				.color = sf::Color::Yellow,
 				.tracksEntity = agent.entity(),
-				.position = agent.get<component::Position>().position,
+				.position = myPos.position,
 				.velocity = {0,0},
 				.isScreenSpace = false,
 				.ttl = 80
 				});
-			agent.emplace_or_replace<component::action::Wait>();
+			agent.emplace_or_replace<PerformMoveAction>(sf::Vector2i{ 0,0 });
 			return ActionResult::Continue;
 		}
 		break;
@@ -48,14 +51,14 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 		{
 			auto line = spatial::getIntPointsAlongLine(myPos.position, { targetX, targetY });
 			auto diff = line.front() - myPos.position;
-			agent.emplace_or_replace<component::action::Move>(diff);
+			agent.emplace_or_replace<PerformMoveAction>(diff);
 		}
 		break;
 	case 2:
 		{
 			auto line = spatial::getIntPointsAlongLine(myPos.position, { targetX, targetY });
 			auto diff = line.front() - myPos.position;
-			agent.emplace_or_replace<component::action::Move>(diff);
+			agent.emplace_or_replace<PerformMoveAction>(diff);
 		}
 		break;
 	case 3:

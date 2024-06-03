@@ -8,12 +8,11 @@ namespace drft::system
 {
 	class BodyPartSystem : public System
 	{
-	public:
+	private:
 		void init() override;
 
-	private:
 		void onIncomingDamage(entt::registry& registry, entt::entity entity);
-		void onLaunchAttack(entt::registry& registry, entt::entity entity);
+		void onTryMeleeAttack(entt::registry& registry, entt::entity entity);
 		void onItemBreakEvent(events::ItemBreakEvent& ev);
 
 		std::unordered_map<std::string, int> calculateDamageTypesFromHeld(entt::entity attacker);

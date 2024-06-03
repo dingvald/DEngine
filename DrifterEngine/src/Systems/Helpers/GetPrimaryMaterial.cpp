@@ -1,17 +1,17 @@
 #include "pch.h"
 #include "GetPrimaryMaterial.h"
-#include "Components/Components.h"
+#include "Components/MaterialComponent.h"
 #include "Factory/EntityFactory.h"
 
-entt::const_handle drft::system::getPrimaryMaterial(entt::const_handle entity)
+std::optional<entt::const_handle> drft::system::getPrimaryMaterial(entt::const_handle entity)
 {
-    if (auto physical = entity.try_get<component::Physical>())
+    if (auto material = entity.try_get<MaterialComponent>())
     {
-        const auto& primaryMaterialName = physical->materials.front();
+        const auto& primaryMaterialName = material->materials.front();
         const auto& factory = entity.registry()->ctx().get<const EntityFactory&>();
         auto primaryMaterial = factory.get(primaryMaterialName);
-        return { factory.prototypes(), primaryMaterial };
+        return entt::const_handle{ factory.prototypes(), primaryMaterial };
     }
     
-    return entt::const_handle();
+    return std::nullopt;
 }

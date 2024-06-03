@@ -20,9 +20,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Grass",
-          "extendedName": "",
           "description": "Just simple grass."
         },
         "Render": {
@@ -40,9 +39,8 @@
         "Grass"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Tall Grass",
-          "extendedName": "",
           "description": "Just grass but longer."
         },
         "Render": {
@@ -60,9 +58,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Sand",
-          "extendedName": "",
           "description": "Just simple sand."
         },
         "Render": {
@@ -80,9 +77,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Water",
-          "extendedName": "",
           "description": "Just simple water."
         },
         "Render": {
@@ -103,9 +99,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Mountain Flower",
-          "extendedName": "",
           "description": "A beautiful, fragile flower."
         },
         "Render": {
@@ -116,7 +111,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 0.2,
           "materials": [ "Plant Fibre" ]
@@ -128,9 +123,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Herb",
-          "extendedName": "",
           "description": "A common herb."
         },
         "Render": {
@@ -141,7 +135,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 0.2,
           "materials": [ "Plant Fibre" ]
@@ -159,10 +153,9 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Potion",
-          "extendedName": "",
-          "description": "Restores a small amount of health."
+          "description": "Restores a small amount of Health."
         },
         "Render": {
           "sprite": 40,
@@ -172,7 +165,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 0.6,
           "materials": [ "Herb" ]
@@ -197,9 +190,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Roots",
-          "extendedName": "",
           "description": "Roots of an old tree."
         },
         "Render": {
@@ -210,14 +202,13 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 80.0,
           "materials": [ "Wood" ]
         },
         "Health": {
-          "max": 20.0,
-          "current": 20.0
+          "max": 20.0
         }
       }
     },
@@ -226,9 +217,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Brambles",
-          "extendedName": "",
           "description": "A spiky plant."
         },
         "Render": {
@@ -239,7 +229,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 5.0,
           "materials": [
@@ -247,8 +237,7 @@
           ]
         },
         "Health": {
-          "max": 20.0,
-          "current": 20.0
+          "max": 20.0
         }
       }
     },
@@ -257,9 +246,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Tree",
-          "extendedName": "",
           "description": "A wooden trunk with many leaves."
         },
         "Render": {
@@ -270,7 +258,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 400.0,
           "materials": [
@@ -279,8 +267,7 @@
           ]
         },
         "Health": {
-          "max": 70.0,
-          "current": 70.0
+          "max": 70.0
         },
         "LightBlocking": {
           "opacity": 1.0
@@ -292,9 +279,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Pine Tree",
-          "extendedName": "",
           "description": "A wooden trunk with many needles."
         },
         "Render": {
@@ -305,7 +291,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 400.0,
           "materials": [
@@ -314,8 +300,7 @@
           ]
         },
         "Health": {
-          "max": 100.0,
-          "current": 100.0
+          "max": 100.0
         },
         "LightBlocking": {
           "opacity": 1.0
@@ -327,9 +312,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Jungle Tree",
-          "extendedName": "",
           "description": "A tree found in tropical climates."
         },
         "Render": {
@@ -340,7 +324,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 300.0,
           "materials": [
@@ -349,8 +333,7 @@
           ]
         },
         "Health": {
-          "max": 50.0,
-          "current": 50.0
+          "max": 50.0
         },
         "LightBlocking": {
           "opacity": 1.0
@@ -362,9 +345,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Cactus",
-          "extendedName": "",
           "description": "A common desert succulent."
         },
         "Render": {
@@ -375,14 +357,13 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 50.0,
           "materials": [ "Plant Fibre" ]
         },
         "Health": {
-          "max": 40.0,
-          "current": 40.0
+          "max": 40.0
         }
       }
     },
@@ -391,9 +372,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Boulder",
-          "extendedName": "",
           "description": "A very large chunk of rock."
         },
         "Render": {
@@ -404,14 +384,13 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 1000.0,
           "materials": [ "Stone" ]
         },
         "Health": {
-          "max": 500.0,
-          "current": 500.0
+          "max": 500.0
         },
         "LightBlocking": {
           "opacity": 1.0
@@ -423,9 +402,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Iron Deposit",
-          "extendedName": "",
           "description": "A deposit of iron ore."
         },
         "Render": {
@@ -436,7 +414,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 800.0,
           "materials": [
@@ -445,13 +423,12 @@
           ]
         },
         "Health": {
-          "max": 300.0,
-          "current": 300.0
+          "max": 300.0
         },
         "LightBlocking": {
           "opacity": 1.0
         },
-        "LightSource": {
+        "LocalLightSource": {
           "radius": 3,
           "dropOff": 0.4,
           "color": [ 180, 180, 180 ]
@@ -588,9 +565,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Wooden Axe",
-          "extendedName": "",
           "description": "A simple axe for chopping."
         },
         "Render": {
@@ -598,7 +574,7 @@
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 1.8,
           "materials": [
@@ -607,8 +583,7 @@
           ]
         },
         "Health": {
-          "max": 80.0,
-          "current": 80.0
+          "max": 80.0
         },
         "Sharp": {
           "sharpness": 1
@@ -626,9 +601,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Stone Axe",
-          "extendedName": "",
           "description": "A durable axe for chopping."
         },
         "Render": {
@@ -636,7 +610,7 @@
           "layer": 1,
           "color": [ 128, 132, 135 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 2.0,
           "materials": [
@@ -646,8 +620,7 @@
           ]
         },
         "Health": {
-          "max": 120.0,
-          "current": 120.0
+          "max": 120.0
         },
         "Sharp": {
           "sharpness": 3
@@ -666,9 +639,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Wooden Sword",
-          "extendedName": "Wooden Sword",
           "description": "A simple sword usually used for training."
         },
         "Render": {
@@ -676,7 +648,7 @@
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 2.5,
           "materials": [
@@ -685,8 +657,7 @@
           ]
         },
         "Health": {
-          "max": 60.0,
-          "current": 60.0
+          "max": 60.0
         },
         "Sharp": {
           "sharpness": 2
@@ -704,9 +675,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Machete",
-          "extendedName": "",
           "description": "A broad blade used for hacking."
         },
         "Render": {
@@ -714,7 +684,7 @@
           "layer": 1,
           "color": [ 161, 157, 148 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 1.3,
           "materials": [
@@ -722,8 +692,7 @@
           ]
         },
         "Health": {
-          "max": 150.0,
-          "current": 150.0
+          "max": 150.0
         },
         "Sharp": {
           "sharpness": 3
@@ -741,9 +710,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Torch",
-          "extendedName": "",
           "description": "Used to provide light."
         },
         "Render": {
@@ -751,7 +719,7 @@
           "layer": 1,
           "color": [ 253, 146, 87 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 1.3,
           "materials": [
@@ -761,19 +729,16 @@
           ]
         },
         "Health": {
-          "max": 30.0,
-          "current": 30.0
+          "max": 30.0
         },
-        "LightSource": {
+        "LocalLightSource": {
           "radius": 10,
           "dropOff": 0.4,
           "color": [ 255, 223, 205 ]
         },
         "Craftable": {
           "recipe": {
-            "Wood": 1,
-            "Twine": 1,
-            "Flint": 1
+            "Wood": 1
           }
         }
       }
@@ -783,9 +748,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Dungeon Key",
-          "extendedName": "",
           "description": "A mysterious key. What does it open?"
         },
         "Render": {
@@ -793,14 +757,14 @@
           "layer": 1,
           "color": [ 212, 175, 55 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 0.3,
           "materials": [
             "Gold"
           ]
         },
-        "LightSource": {
+        "LocalLightSource": {
           "radius": 6,
           "dropOff": 0.2,
           "color": [ 255, 255, 0 ]
@@ -812,9 +776,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Firefly",
-          "extendedName": "",
           "description": "A bug that lights up."
         },
         "Render": {
@@ -825,12 +788,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 1,
-          "agility": 1,
-          "vitality": 1
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 0.1,
           "materials": [ "Corpse" ]
@@ -840,8 +798,7 @@
           "actSpeed": 1.0
         },
         "Health": {
-          "max": 5.0,
-          "current": 5.0
+          "max": 5.0
         },
         "Flying": {},
         "Attacker": {
@@ -853,7 +810,7 @@
         "Leveling": {
           "currentLevel": 0
         },
-        "LightSource": {
+        "LocalLightSource": {
           "radius": 4,
           "dropOff": 0.3,
           "color": [ 255, 255, 0 ]
@@ -873,9 +830,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Butterfly",
-          "extendedName": "",
           "description": "A colorful flying insect."
         },
         "Render": {
@@ -886,12 +842,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 1,
-          "agility": 1,
-          "vitality": 1
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 0.1,
           "materials": [ "Corpse" ]
@@ -902,8 +853,7 @@
         },
         "Flying": {},
         "Health": {
-          "max": 5.0,
-          "current": 5.0
+          "max": 5.0
         },
         "Attacker": {
           "baseDamage": 1
@@ -929,9 +879,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Mosquito",
-          "extendedName": "",
           "description": "The most annoying thing alive."
         },
         "Render": {
@@ -942,12 +891,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 1,
-          "agility": 1,
-          "vitality": 1
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 0.1,
           "materials": [ "Corpse" ]
@@ -958,8 +902,7 @@
         },
         "Flying": {},
         "Health": {
-          "max": 5.0,
-          "current": 5.0
+          "max": 5.0
         },
         "Attacker": {
           "baseDamage": 2
@@ -985,9 +928,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Vulture",
-          "extendedName": "",
           "description": "Carrion bird with sharp beak and talons."
         },
         "Render": {
@@ -998,12 +940,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 3,
-          "agility": 3,
-          "vitality": 3
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 0.1,
           "materials": [ "Corpse" ]
@@ -1014,8 +951,7 @@
         },
         "Flying": {},
         "Health": {
-          "max": 30.0,
-          "current": 30.0
+          "max": 30.0
         },
         "Attacker": {
           "baseDamage": 4
@@ -1041,9 +977,8 @@
         "Quadruped"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Rat",
-          "extendedName": "",
           "description": "A small mammal with big ears."
         },
         "Render": {
@@ -1054,12 +989,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 2,
-          "agility": 5,
-          "vitality": 5
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 5.0,
           "materials": [
@@ -1072,8 +1002,7 @@
           "actSpeed": 1.0
         },
         "Health": {
-          "max": 8.0,
-          "current": 8.0
+          "max": 8.0
         },
         "Attacker": {
           "baseDamage": 2
@@ -1099,9 +1028,8 @@
         "Quadruped"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Cougar",
-          "extendedName": "",
           "description": "A fearsome mammal that stalks its prey."
         },
         "Render": {
@@ -1112,12 +1040,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 7,
-          "agility": 8,
-          "vitality": 5
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 90.0,
           "materials": [
@@ -1132,8 +1055,7 @@
           "actSpeed": 1.0
         },
         "Health": {
-          "max": 45.0,
-          "current": 45.0
+          "max": 45.0
         },
         "Attacker": {
           "baseDamage": 3
@@ -1159,9 +1081,8 @@
         "Cougar"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Panther",
-          "extendedName": "",
           "description": "A fearsome mammal that stalks its prey."
         },
         "Render": {
@@ -1176,9 +1097,8 @@
         "Cougar"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Mountain Lion",
-          "extendedName": "",
           "description": "If you see it, it's too late."
         },
         "Render": {
@@ -1193,9 +1113,8 @@
         "Quadruped"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Alligator",
-          "extendedName": "",
           "description": "A fearsome reptile."
         },
         "Render": {
@@ -1206,12 +1125,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 8,
-          "agility": 3,
-          "vitality": 7
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 150,
           "materials": [ "Corpse" ]
@@ -1221,8 +1135,7 @@
           "actSpeed": 1.0
         },
         "Health": {
-          "max": 100.0,
-          "current": 100.0
+          "max": 100.0
         },
         "Attacker": {
           "baseDamage": 6
@@ -1247,9 +1160,8 @@
         "Quadruped"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Golem",
-          "extendedName": "",
           "description": "A powerful mythical creature."
         },
         "Render": {
@@ -1260,12 +1172,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 10,
-          "agility": 2,
-          "vitality": 10
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 500.0,
           "materials": [ "Corpse" ]
@@ -1275,8 +1182,7 @@
           "actSpeed": 1.0
         },
         "Health": {
-          "max": 120.0,
-          "current": 120.0
+          "max": 120.0
         },
         "Attacker": {
           "baseDamage": 6
@@ -1302,9 +1208,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Snake",
-          "extendedName": "",
           "description": "A fearsome reptile with no legs."
         },
         "Render": {
@@ -1315,12 +1220,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "BaseStats": {
-          "strength": 3,
-          "agility": 8,
-          "vitality": 8
-        },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 40,
           "materials": [ "Corpse" ]
@@ -1330,8 +1230,7 @@
           "actSpeed": 1.0
         },
         "Health": {
-          "max": 50.0,
-          "current": 50.0
+          "max": 50.0
         },
         "Attacker": {
           "baseDamage": 4
@@ -1357,9 +1256,8 @@
         "Snake"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Rattler",
-          "extendedName": "",
           "description": "If you can hear it it's too late'."
         },
         "Render": {
@@ -1375,8 +1273,7 @@
           "actSpeed": 2.0
         },
         "Health": {
-          "max": 20.0,
-          "current": 20.0
+          "max": 20.0
         },
         "AI": {
           "sightRange": 6,
@@ -1393,9 +1290,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Barricade",
-          "extendedName": "",
           "description": "A wooden structure used to prevent passage."
         },
         "Render": {
@@ -1406,7 +1302,7 @@
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 50.0,
           "materials": [
@@ -1414,14 +1310,10 @@
           ]
         },
         "Health": {
-          "max": 200.0,
-          "current": 200.0
+          "max": 200.0
         },
         "LightBlocking": {
           "opacity": 1.0
-        },
-        "Item": {
-          "id": 0
         },
         "Craftable": {
           "recipe": {
@@ -1435,9 +1327,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Wood Door",
-          "extendedName": "",
           "description": "A wooden structure used to allow selective passage."
         },
         "Render": {
@@ -1445,7 +1336,7 @@
           "layer": 2,
           "color": [ 121, 92, 50 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 30.0,
           "materials": [
@@ -1453,8 +1344,7 @@
           ]
         },
         "Health": {
-          "max": 200.0,
-          "current": 200.0
+          "max": 200.0
         },
         "LightBlocking": {
           "opacity": 1.0
@@ -1474,9 +1364,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Chest",
-          "extendedName": "",
           "description": "A container holding valuables."
         },
         "Render": {
@@ -1484,7 +1373,7 @@
           "layer": 2,
           "color": [ 121, 92, 50 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 30.0,
           "materials": [
@@ -1492,8 +1381,7 @@
           ]
         },
         "Health": {
-          "max": 200.0,
-          "current": 200.0
+          "max": 200.0
         },
         "Container": {
           "capacity": 10
@@ -1508,9 +1396,8 @@
         ""
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Heart Shrine",
-          "extendedName": "",
           "description": "A shrine that heals you fully."
         },
         "Render": {
@@ -1518,21 +1405,20 @@
           "layer": 2,
           "color": [ 150, 120, 120 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": true,
           "weight": 30.0,
           "materials": [
             "Stone"
           ]
         },
-        "LightSource": {
+        "LocalLightSource": {
           "radius": 7,
           "dropOff": 0.2,
           "color": [ 255, 180, 180 ]
         },
         "Health": {
-          "max": 200.0,
-          "current": 200.0
+          "max": 200.0
         }
       }
     }

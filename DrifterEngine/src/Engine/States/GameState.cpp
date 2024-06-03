@@ -26,8 +26,9 @@
 #include "Systems/Core/TurnManager.h"
 #include "Systems/Core/WorldGridResolver.h"
 #include "Systems/Core/FloatingTextSystem.h"
-#include "Systems/Core/EffectSystem.h"
+#include "Systems/Core/VisualEffectSystem.h"
 #include "Systems/Gameplay/BodyPartSystem.h"
+#include "Systems/Gameplay/CollisionSystem.h"
 #include "Systems/Gameplay/HealthSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
 #include "Systems/Gameplay/HotbarSystem.h"
@@ -39,18 +40,17 @@
 #include "Systems/Gameplay/Actions/DropItemSystem.h"
 #include "Systems/Gameplay/Actions/EquipItemSystem.h"
 #include "Systems/Gameplay/Actions/CraftItemSystem.h"
-#include "Systems/Gameplay/Actions/MovementSystem.h"
+#include "Systems/Gameplay/Actions/MoveActionSystem.h"
 #include "Systems/Gameplay/Actions/WaitingSystem.h"
 #include "Systems/Gameplay/Actions/PickUpSystem.h"
 #include "Systems/Gameplay/Actions/InteractionSystem.h"
-#include "Systems/Gameplay/Actions/LaunchAttackSystem.h"
+#include "Systems/Gameplay/Actions/MeleeAttackActionSystem.h"
 #include "Systems/Gameplay/Actions/SelectDirectionSystem.h"
 #include "Systems/Gameplay/Actions/TargetSelectSystem.h"
-#include "Systems/Gameplay/Actions/OpenableSystem.h"
-#include "Systems/Gameplay/Actions/ConsumableSystem.h"
+#include "Systems/Gameplay/OpenableSystem.h"
+#include "Systems/Gameplay/ConsumableSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
-#include "Systems/Gameplay/QuestingSystem.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
@@ -60,9 +60,9 @@
 #include "Systems/Gameplay/DetermineCraftableItemsSystem.h"
 #pragma endregion
 #pragma region Component Includes
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
 #include "Components/Tags.h"
-#include "Components/Meta.h"
+
 #pragma endregion
 #include "Utility/SaveEntity.h"
 #include "Utility/LoadEntity.h"
@@ -144,7 +144,7 @@ bool drft::GameState::loadOrCreatePlayer()
 		assert(_factory->has("Player"), "No player prototype found - is JSON loaded?");
 		_player = _factory->build("Player", getContext().registry);
 		auto startingPosition = getContext().registry.ctx().get<WorldMap&>().getStartingPosition("Forest");
-		_player.patch<component::Position>([startingPosition](component::Position& pos)
+		_player.patch<PositionComponent>([startingPosition](PositionComponent& pos)
 			{
 				pos.position = startingPosition;
 			});
@@ -251,31 +251,24 @@ void drft::GameState::importSystems()
 
 	using namespace system;
 
-	_systems->add<RealityBubble>(					Phase::OnPreUpdate);
+	_systems->add<RealityBubble>(					Phase::OnPreUpdate); // This should go first - determines which actors are "active"
 	_systems->add<TurnManager>(						Phase::OnPreUpdate + 5);
 
 	_systems->add<PlayerInput>(						Phase::OnProcessInput);
 	_systems->add<ArtificialInput>(					Phase::OnProcessInput);
 
 	_systems->add<ProjectileSystem>(				Phase::OnUpdate);
-	_systems->add<MovementSystem>(					Phase::OnUpdate);
+	
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
-	_systems->add<PickUpSystem>(					Phase::OnUpdate);
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
 	_systems->add<EquipItemSystem>(					Phase::OnUpdate);
 	_systems->add<CraftItemSystem>(					Phase::OnUpdate);
-	_systems->add<OpenEquipmentSystem>(				Phase::OnUpdate);
-	_systems->add<OpenWorldMapSystem>(				Phase::OnUpdate);
-	_systems->add<OpenCraftingSystem>(				Phase::OnUpdate);
 	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
 	_systems->add<HotbarSystem>(					Phase::OnUpdate);
-	_systems->add<LaunchAttackSystem>(				Phase::OnUpdate + 10);
 	_systems->add<HealthSystem>(					Phase::OnUpdate + 10);
-	_systems->add<StaminaSystem>(					Phase::OnUpdate + 10);
 	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);
 	_systems->add<LevelingSystem>(					Phase::OnUpdate + 20);
-
 	_systems->add<Camera>(							Phase::OnPostUpdate);
 	_systems->add<ChunkManager>(					Phase::OnPostUpdate);
 	
@@ -285,10 +278,9 @@ void drft::GameState::importSystems()
 	_systems->add<LiquidSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
-	_systems->add<EffectSystem>(					Phase::OnFixedUpdate);
+	_systems->add<VisualEffectSystem>(				Phase::OnFixedUpdate);
 	_systems->add<AnimationSystem>(					Phase::OnFixedUpdate);
 	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 5);
-	_systems->add<QuestingSystem>(					Phase::OnFixedUpdate + 10);
 
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<EffectRenderer>(					Phase::OnRender);
@@ -305,6 +297,15 @@ void drft::GameState::importSystems()
 	_systems->add<OpenableSystem>(					Phase::Reactive);
 	_systems->add<ConsumableSystem>(				Phase::Reactive);
 	_systems->add<HealingSystem>(					Phase::Reactive);
+	_systems->add<OpenCraftingSystem>(				Phase::Reactive);
+	_systems->add<OpenEquipmentSystem>(				Phase::Reactive);
+	_systems->add<OpenWorldMapSystem>(				Phase::Reactive);
+	_systems->add<PickUpSystem>(					Phase::Reactive);
+	_systems->add<MoveActionSystem>(				Phase::Reactive);
+	_systems->add<MeleeAttackActionSystem>(			Phase::Reactive);
+	_systems->add<CollisionSystem>(					Phase::Reactive);
+	_systems->add<StaminaSystem>(					Phase::Reactive);
+
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{

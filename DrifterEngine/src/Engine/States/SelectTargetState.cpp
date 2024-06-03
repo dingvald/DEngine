@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "SelectTargetState.h"
+
 #include "Components/Components.h"
+#include "Components/RenderComponent.h"
+#include "Components/PositionComponent.h"
+
 #include "Spatial/Helpers.h"
 #include "Spatial/Grid.h"
 #include "Systems/Helpers/SpawnEffect.h"
@@ -117,7 +121,7 @@ void drft::SelectTargetState::onPush()
 		throw std::exception("No entities are trying to select a target... why are you here?");
 	}
 
-	if (auto startPos = getContext().registry.try_get<component::Position>(selectTargetView.front()))
+	if (auto startPos = getContext().registry.try_get<PositionComponent>(selectTargetView.front()))
 	{
 		_startPosition = startPos->position;
 		_cursorPosition = _startPosition;
@@ -182,12 +186,12 @@ void drft::SelectTargetState::moveCursor(sf::Vector2i direction)
 {
 	for (auto effect : _aoeEffects)
 	{
-		const auto& pos = getContext().registry.patch<component::Position>(effect,
-			[direction](component::Position& pos)
+		const auto& pos = getContext().registry.patch<PositionComponent>(effect,
+			[direction](PositionComponent& pos)
 			{
 				pos.position += direction;
 			});
-		auto& render = getContext().registry.get<component::Render>(effect);
+		auto& render = getContext().registry.get<RenderComponent>(effect);
 		if (spatial::distance(pos.position, _startPosition) > _targetSelect->range.getMax())
 		{
 			render.color = TARGET_AOE_OUT_OF_RANGE_COLOR;
@@ -197,8 +201,8 @@ void drft::SelectTargetState::moveCursor(sf::Vector2i direction)
 			render.color = DEFAULT_TARGET_AOE_COLOR;
 		}
 	}
-	const auto& pos = getContext().registry.patch<component::Position>(_cursor,
-		[direction](component::Position& pos)
+	const auto& pos = getContext().registry.patch<PositionComponent>(_cursor,
+		[direction](PositionComponent& pos)
 		{
 			pos.position += direction;
 		});

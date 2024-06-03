@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "RandomMoveAction.h"
 #include "Spatial/WorldGrid.h"
-#include "Components/Components.h"
+#include "Components/Actions/MoveAction.h"
+#include "Components/PositionComponent.h"
+#include "Components/MaterialComponent.h"
 #include "Random/RandomNumberGenerator.h"
 
 drft::goap::RandomMoveAction::RandomMoveAction()
@@ -14,13 +16,13 @@ drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agen
 	int randx = rng::RandomNumberGenerator::intInRange(-1, 1);
 	int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
 	const auto& grid = agent.registry()->ctx().get<const spatial::WorldGrid&>();
-	const auto& tilepos = agent.get<component::Position>().position;
+	const auto& tilepos = agent.get<PositionComponent>().position;
 
 	auto blockerFilter = [&agent](entt::entity entity) -> bool
 	{
-		if (auto physical = agent.registry()->try_get<component::Physical>(entity))
+		if (auto material = agent.registry()->try_get<MaterialComponent>(entity))
 		{
-			return physical->blocks;
+			return material->blocks;
 		}
 		return false;
 	};
@@ -36,7 +38,7 @@ drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agen
 		++safetyCount;
 	}
 
-	agent.emplace<component::action::Move>(sf::Vector2i(randx, randy));
+	agent.emplace_or_replace<PerformMoveAction>(sf::Vector2i(randx, randy));
     return ActionResult::Complete;
 }
 

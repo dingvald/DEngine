@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "DayNightCycleSystem.h"
-#include "Components/Components.h"
+#include "Components/CameraComponent.h"
+#include "Components/GlobalLightSourceComponent.h"
 #include "Events/DayStartEvent.h"
 #include "Events/NightStartEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "Spatial/Conversions.h"
 #include "Utility/SmoothTransition.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
+#include "Services/DebugInfo.h"
 
 static constexpr int DAY_START_HOUR = 5;
 static constexpr int NIGHT_START_HOUR = 23;
@@ -28,11 +30,14 @@ void drft::system::DayNightCycleSystem::init()
 void drft::system::DayNightCycleSystem::fixedUpdate()
 {
 	const auto color = determineSunColor();
-	auto cameraView = _registry->view<component::Camera>();
+	auto cameraView = _registry->view<CameraComponent>();
 	for (auto entity : cameraView)
 	{
-		_registry->emplace_or_replace<component::GlobalLightSource>(entity, color);
+		_registry->emplace_or_replace<GlobalLightSourceComponent>(entity, color);
 	}
+
+	auto time = std::format("Day {} - {}:{:02} {}", _days, _hours > 12 ? _hours - 12 : _hours, _minutes, _hours >= 12 ? "pm" : "am");
+	service::DebugInfo::instance().putInfo("Time", time);
 }
 
 void drft::system::DayNightCycleSystem::save(cereal::JSONOutputArchive& oarchive)
@@ -73,9 +78,8 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 	if (_hours == NIGHT_START_HOUR && _minutes == 0 && _seconds == 0)
 	{
 		auto camera = getCurrentCamera(*_registry);
-		auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
-		dispatcher.trigger(events::NightStartEvent());
-		dispatcher.trigger(events::SendFloatingMessageEvent{
+		_dispatcher->trigger(events::NightStartEvent());
+		_dispatcher->trigger(events::SendFloatingMessageEvent{
 			.message = "Dusk has fallen...",
 			.color = sf::Color(125,0,255),
 			.position = camera.position,
@@ -87,9 +91,8 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 	else if (_hours == DAY_START_HOUR && _minutes == 0 && _seconds == 0)
 	{
 		auto camera = getCurrentCamera(*_registry);
-		auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
-		dispatcher.trigger(events::DayStartEvent());
-		dispatcher.trigger(events::SendFloatingMessageEvent{
+		_dispatcher->trigger(events::DayStartEvent());
+		_dispatcher->trigger(events::SendFloatingMessageEvent{
 			.message = "Dawn has broken...",
 			.color = sf::Color::Yellow,
 			.position = camera.position,

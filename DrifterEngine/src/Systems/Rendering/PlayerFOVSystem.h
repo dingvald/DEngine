@@ -7,7 +7,7 @@ namespace drft::system
 {
 	class PlayerFOVSystem : public System
 	{
-	public:
+	private:
 		void init() override;
 		void fixedUpdate() override;
 		void onFixedUpdateEnd() override;

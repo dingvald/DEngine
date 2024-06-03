@@ -13,7 +13,6 @@ namespace drft
 		GameOver,
 		Map,
 		Crafting,
-		DisplayText,
 		SelectDirection,
 		SelectTarget,
 		Total

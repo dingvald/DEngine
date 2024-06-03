@@ -5,10 +5,11 @@ namespace drft::system
 {
 	class WaitingSystem : public System
 	{
-	public:
+	private:
 		void init() override;
-		void update(const float dt) override;
 		void onUpdateEnd() override;
+
+		void onWaitAction(entt::registry& registry, entt::entity entity) const;
 	};
 }
 

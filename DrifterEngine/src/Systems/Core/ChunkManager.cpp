@@ -3,7 +3,8 @@
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
-#include "Components/Components.h"
+#include "Components/CameraComponent.h"
+#include "Components/PositionComponent.h"
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include "Services/DebugInfo.h"
 #include "Random/RandomNumberGenerator.h"
@@ -22,7 +23,7 @@ void drft::system::ChunkManager::init()
 
 void drft::system::ChunkManager::update(const float dt)
 {
-	auto cameraView = _registry->view<const component::Camera, const component::Position>();
+	auto cameraView = _registry->view<const CameraComponent, const PositionComponent>();
 	sf::Vector2i cameraPosition = { 0,0 };
 
 	for (auto [entity, cam, pos] : cameraView.each())

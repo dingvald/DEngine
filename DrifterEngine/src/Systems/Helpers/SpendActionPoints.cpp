@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "SpendActionPoints.h"
 #include "Components/Components.h"
+#include "Components/ActorComponent.h"
 
 void drft::system::spendActionPoints(int cost, ActionType type, entt::handle entity)
 {
 	float actionCost = cost;
-	if (const auto& actorComp = entity.try_get<component::Actor>())
+	if (const auto& actorComp = entity.try_get<ActorComponent>())
 	{
 		switch (type)
 		{

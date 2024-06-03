@@ -7,7 +7,7 @@ namespace drft::system
 {
     class EntityRenderer : public System
     {
-    public:
+    private:
         virtual void init() override;
         virtual void render(sf::RenderTarget& target) override;
 

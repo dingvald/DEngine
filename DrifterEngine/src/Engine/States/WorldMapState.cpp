@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "WorldMapState.h"
 #include "Components/Components.h"
+#include "Systems/Helpers/GetCurrentCamera.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "WorldMap/WorldMap.h"
@@ -149,11 +150,9 @@ void drft::WorldMapState::onPush()
 	
 	loadMapNotes();
 
-	auto view = getContext().registry.view<component::Camera, component::Position>();
-	for (auto [entity, camera, pos] : view.each())
-	{
-		_currentPosition = spatial::toChunkCoordinate(pos.position);
-	}
+	auto cameraInfo = system::getCurrentCamera(getContext().registry);
+	_currentPosition = spatial::toChunkCoordinate(cameraInfo.position);
+
 
 	refreshMapSprites();
 

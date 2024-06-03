@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "CopyEntity.h"
-#include "Components/Components.h"
-#include "Components/Meta.h"
 
 using namespace entt::literals;
 

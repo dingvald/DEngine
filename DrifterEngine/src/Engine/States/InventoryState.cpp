@@ -1,6 +1,17 @@
 #include "pch.h"
 #include "InventoryState.h"
+
 #include "Components/Components.h"
+#include "Components/RenderComponent.h"
+#include "Components/BodyComponent.h"
+#include "Components/HealthComponent.h"
+#include "Components/ContainerComponent.h"
+#include "Components/InteractableComponent.h"
+#include "Components/ItemComponent.h"
+#include "Components/WearableComponent.h"
+#include "Components/DescriptionComponent.h"
+#include "Components/MaterialComponent.h"
+
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/SpriteIndexer.h"
@@ -93,7 +104,7 @@ void drft::InventoryState::onPop()
 
 void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity item, sf::Vector2f iconSize)
 {
-	const auto& itemRender = getContext().registry.get<component::Render>(item);
+	const auto& itemRender = getContext().registry.get<RenderComponent>(item);
 	const auto& sprites = getContext().textures.get("Sprites");
 
 	sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
@@ -113,7 +124,7 @@ void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity ite
 				.fillColor = sf::Color(60,60,60,200)
 			});
 
-	if (auto health = getContext().registry.try_get<component::Health>(item))
+	if (auto health = getContext().registry.try_get<HealthComponent>(item))
 	{
 		float scalingFactor = health->current / health->max;
 		container.insert("Health", gui::Panel())
@@ -188,7 +199,7 @@ void drft::InventoryState::setupInventoryDisplay()
 	inventoryGrid.setTextPosition(gui::ElementPosition::TOP_LEFT);
 	inventoryGrid.setTextOrigin(gui::ElementPosition::BOTTOM_LEFT);
 
-	const auto& entityContainer = getContext().registry.get<component::Container>(_sessionEntities.front());
+	const auto& entityContainer = getContext().registry.get<ContainerComponent>(_sessionEntities.front());
 	for (int row = 0; row < INVENTORY_HEIGHT; ++row)
 	{
 		for (int col = 0; col < INVENTORY_WIDTH; ++col)
@@ -322,7 +333,7 @@ void drft::InventoryState::updateInventoryDisplay()
 		inventoryGrid[i].clear();
 	}
 
-	const auto& entityContainer = getContext().registry.get<component::Container>(_sessionEntities.front());
+	const auto& entityContainer = getContext().registry.get<ContainerComponent>(_sessionEntities.front());
 	int count = 0;
 	for (auto& item : entityContainer.contents)
 	{
@@ -338,7 +349,7 @@ void drft::InventoryState::updateWornItemsDisplay()
 {
 	auto& wornItemsDisplay = _flowControl["WornItemsDisplay"];
 	wornItemsDisplay.clear();
-	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
+	if (auto body = getContext().registry.try_get<BodyComponent>(_sessionEntities.front()))
 	{
 		std::vector<std::string> parts;
 		for (int typeIndex = 0; typeIndex < static_cast<int>(EquipmentSlot::Total); ++typeIndex)
@@ -500,7 +511,7 @@ void drft::InventoryState::updateHeldItemsDisplay()
 {
 	auto& heldItemsDisplay = _flowControl["HeldItemsDisplay"];
 	heldItemsDisplay.clear();
-	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
+	if (auto body = getContext().registry.try_get<BodyComponent>(_sessionEntities.front()))
 	{
 		auto heldItems = body->parts.getAllEquipped({ EquipmentLayer::Held });
 		for (auto& [partName, item] : heldItems)
@@ -619,7 +630,7 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 	{
 	case CommandListType::Inventory:
 		{
-			if (const auto usable = getContext().registry.try_get<component::Interactable>(itemEntity))
+			if (const auto usable = getContext().registry.try_get<InteractableComponent>(itemEntity))
 			{
 				// Add a bunch of options depending on how it can be interacted with
 			}
@@ -672,7 +683,7 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 			}
 			else
 			{
-				getContext().registry.emplace<component::action::Drop>(sessionEntity, std::vector<component::Item::ID>{itemID});
+				getContext().registry.emplace<component::action::Drop>(sessionEntity, std::vector<unsigned long>{itemID});
 			}
 
 			_inventoryStack.clear();
@@ -743,8 +754,8 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 		.registerCallback(gui::ElementCallbackType::OnSelect,
 			[this, itemEntity]() -> bool
 			{
-				auto& itemInfo = getContext().registry.get<component::Info>(itemEntity);
-				auto& itemPhysical = getContext().registry.get<component::Physical>(itemEntity);
+				auto& descriptionComponent = getContext().registry.get<DescriptionComponent>(itemEntity);
+				auto& materialComponent = getContext().registry.get<MaterialComponent>(itemEntity);
 				_inventoryStack.insert("ItemInfoList", gui::List(false));
 				_inventoryStack["ItemInfoList"]
 					.setPosition(getContext().window.getView().getCenter())
@@ -761,31 +772,31 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 				.font = &getContext().fonts.get("Terminus"),
 				.textSize = 16
 			})
-		.setTextString("Name:\n" + itemInfo.name)
+		.setTextString("Name:\n" + descriptionComponent.name)
 		.setTextOrigin(gui::ElementPosition::TOP_LEFT);
 	_inventoryStack["ItemInfoList"].insert("Description", gui::Label())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textSize = 16
 			})
-		.setTextString("Description:\n" + itemInfo.description)
+		.setTextString("Description:\n" + descriptionComponent.description)
 		.setTextOrigin(gui::ElementPosition::TOP_LEFT);
 	_inventoryStack["ItemInfoList"].insert("Weight", gui::Label())
 		.setStyle(gui::ElementState::Idle, {
 			.font = &getContext().fonts.get("Terminus"),
 			.textSize = 16
 			})
-		.setTextString("Weight:\n" + std::format("{:.1f}", itemPhysical.weight) + "kg")
+		.setTextString("Weight:\n" + std::format("{:.1f}", materialComponent.weight) + "kg")
 		.setTextOrigin(gui::ElementPosition::TOP_LEFT);
 
 	std::stringstream ss;
 	ss << "[";
-	for (int i = 0; i < itemPhysical.materials.size(); ++i)
+	for (int i = 0; i < materialComponent.materials.size(); ++i)
 	{
-		if (itemPhysical.materials[i].compare("") == 0) continue;
+		if (materialComponent.materials[i].compare("") == 0) continue;
 
-		ss << itemPhysical.materials[i];
-		if (i < itemPhysical.materials.size() - 1)
+		ss << materialComponent.materials[i];
+		if (i < materialComponent.materials.size() - 1)
 		{
 			ss << ", ";
 		}
@@ -806,7 +817,7 @@ void drft::InventoryState::createItemCommandList(CommandListType type, sf::Vecto
 
 void drft::InventoryState::tryEquipItem(unsigned long itemID, sf::Vector2f position)
 {
-	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
+	if (auto body = getContext().registry.try_get<BodyComponent>(_sessionEntities.front()))
 	{
 		const auto& VIEW = getContext().window.getView();
 		const auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
@@ -829,7 +840,7 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID, sf::Vector2f posit
 			.setOrigin(gui::ElementPosition::TOP_LEFT)
 			.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
-		if (auto wearable = getContext().registry.try_get<component::Wearable>(itemEntity))
+		if (auto wearable = getContext().registry.try_get<WearableComponent>(itemEntity))
 		{
 			auto partNames = body->parts.getPartsWithSlots(convertStringsToSlots(wearable->slots));
 			for (auto& part : partNames)
@@ -891,9 +902,9 @@ void drft::InventoryState::tryEquipItem(unsigned long itemID, sf::Vector2f posit
 
 void drft::InventoryState::tryUnequipItem(unsigned long itemID)
 {
-	if (auto body = getContext().registry.try_get<component::Body>(_sessionEntities.front()))
+	if (auto body = getContext().registry.try_get<BodyComponent>(_sessionEntities.front()))
 	{
-		if (auto container = getContext().registry.try_get<component::Container>(_sessionEntities.front()))
+		if (auto container = getContext().registry.try_get<ContainerComponent>(_sessionEntities.front()))
 		{
 			if (container->contents.size() < container->capacity)
 			{

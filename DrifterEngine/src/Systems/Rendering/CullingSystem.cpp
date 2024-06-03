@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CullingSystem.h"
-#include "Components/Components.h"
+#include "Components/PositionComponent.h"
 #include "Components/Tags.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Spatial/Conversions.h"
@@ -19,7 +19,7 @@ void drft::system::CullingSystem::fixedUpdate()
 	viewport.width += 2 * spatial::TILE_WIDTH;
 	viewport.height += 2 * spatial::TILE_HEIGHT;
 	
-	auto view = _registry->view<component::Position>();
+	auto view = _registry->view<PositionComponent>();
 	for (auto [entity, pos] : view.each())
 	{
 		if (viewport.contains(spatial::toFloatSpace(pos.position - camera.position)))

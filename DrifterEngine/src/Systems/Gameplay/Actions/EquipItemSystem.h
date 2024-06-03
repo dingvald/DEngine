@@ -5,11 +5,10 @@ namespace drft::system
 {
 	class EquipItemSystem : public System
 	{
-	public:
+	private:
 		void init() override;
 		void onUpdateEnd() override;
 
-	private:
 		void onItemEquipped(entt::registry& registry, entt::entity entity);
 		void onItemUnequipped(entt::registry& registry, entt::entity entity);
 	};

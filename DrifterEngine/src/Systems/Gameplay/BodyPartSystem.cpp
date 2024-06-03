@@ -1,7 +1,16 @@
 #include "pch.h"
 #include "BodyPartSystem.h"
+
 #include "Components/Components.h"
+#include "Components/Actions/MeleeAttackAction.h"
+#include "Components/BodyComponent.h"
+#include "Components/MaterialComponent.h"
+#include "Components/ItemComponent.h"
+#include "Components/SharpComponent.h"
+#include "Components/HealthComponent.h"
+#include "Components/WearableComponent.h"
 #include "Components/Tags.h"
+
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Random/RandomNumberGenerator.h"
 #include "Random/PercentChance.h"
@@ -12,7 +21,7 @@ static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 15;
 void drft::system::BodyPartSystem::init()
 {
 	_registry->on_construct<component::action::IncomingDamage>().connect<&BodyPartSystem::onIncomingDamage>(this);
-	_registry->on_construct<component::action::LaunchAttack>().connect<&BodyPartSystem::onLaunchAttack>(this);
+	_registry->on_construct<TryMeleeAttackAction>().connect<&BodyPartSystem::onTryMeleeAttack>(this);
 
 	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::ItemBreakEvent>().connect<&BodyPartSystem::onItemBreakEvent>(this);
@@ -20,7 +29,7 @@ void drft::system::BodyPartSystem::init()
 
 void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, entt::entity entity)
 {
-	if (auto body = registry.try_get<component::Body>(entity))
+	if (auto body = registry.try_get<BodyComponent>(entity))
 	{
 		auto& incomingDamage = registry.get<component::action::IncomingDamage>(entity);
 		if (incomingDamage.damageTypes.empty()) return;
@@ -35,11 +44,11 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 	}
 }
 
-void drft::system::BodyPartSystem::onLaunchAttack(entt::registry& registry, entt::entity entity)
+void drft::system::BodyPartSystem::onTryMeleeAttack(entt::registry& registry, entt::entity entity)
 {
-	if (auto body = registry.try_get<component::Body>(entity))
+	if (auto body = registry.try_get<BodyComponent>(entity))
 	{
-		auto& attack = registry.get<component::action::LaunchAttack>(entity);
+		auto& attack = registry.get<TryMeleeAttackAction>(entity);
 		auto weaponDamageTypes = calculateDamageTypesFromHeld(entity);
 		for (auto& [typeName, damage] : weaponDamageTypes)
 		{
@@ -50,26 +59,26 @@ void drft::system::BodyPartSystem::onLaunchAttack(entt::registry& registry, entt
 
 void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
-	auto& body = _registry->get<component::Body>(ev.owner);
+	auto& body = _registry->get<BodyComponent>(ev.owner);
 	body.parts.unequipItem(ev.itemID);
 }
 
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDamageTypesFromHeld(entt::entity attacker)
 {
 	std::unordered_map<std::string, int> result;
-	if (auto body = _registry->try_get<component::Body>(attacker))
+	if (auto body = _registry->try_get<BodyComponent>(attacker))
 	{
 		if (const auto rightHand = body->parts.search("Right Hand")) // TODO: Use preferred hand - don't hard code right hand
 		{
 			auto optionalHeld = rightHand->getSlotItem(EquipmentLayer::Held);
-			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(component::Item::NONE));
+			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(ItemComponent::NONE));
 			if (itemEntity != entt::null)
 			{
-				if (auto physical = _registry->try_get<component::Physical>(itemEntity))
+				if (auto material = _registry->try_get<MaterialComponent>(itemEntity))
 				{
-					result["crushing"] += physical->weight;
+					result["crushing"] += material->weight;
 				}
-				if (auto sharp = _registry->try_get<component::Sharp>(itemEntity))
+				if (auto sharp = _registry->try_get<SharpComponent>(itemEntity))
 				{
 					result["slashing"] += sharp->sharpness;
 				}
@@ -95,7 +104,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 		if (itemEntity != entt::null)
 		{
-			if (auto wearable = _registry->try_get<component::Wearable>(itemEntity))
+			if (auto wearable = _registry->try_get<WearableComponent>(itemEntity))
 			{
 				int sum = 0;
 				for (auto& [damageType, amount] : result)
@@ -107,7 +116,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 					}
 				}
 
-				if (auto health = _registry->try_get<component::Health>(itemEntity))
+				if (_registry->all_of<HealthComponent>(itemEntity))
 				{
 					component::action::TakeDamage damage{ .amount = sum, .source = entt::null };
 					_registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
@@ -122,7 +131,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 const BodyPart& drft::system::BodyPartSystem::determinePartHit(entt::handle entity)
 {
 	BodyPart partHit;
-	if (auto body = entity.try_get<component::Body>())
+	if (auto body = entity.try_get<BodyComponent>())
 	{
 		int sum = 0;
 		auto partsVector = body->parts.flatten();

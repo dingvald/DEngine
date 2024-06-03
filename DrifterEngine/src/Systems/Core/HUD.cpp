@@ -11,6 +11,17 @@
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
 #include "Components/Components.h"
+
+#include "Components/DescriptionComponent.h"
+#include "Components/PositionComponent.h"
+#include "Components/PlayerComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/HealthComponent.h"
+#include "Components/LevelingComponent.h"
+#include "Components/BodyComponent.h"
+#include "Components/StaminaComponent.h"
+#include "Components/HotbarComponent.h"
+
 #include "Ability/AbilityRegistry.h"
 
 static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 32.f };
@@ -39,7 +50,7 @@ void drft::system::HUD::init()
 
 void drft::system::HUD::fixedUpdate()
 {
-	auto view = _registry->view<component::Player>();
+	auto view = _registry->view<PlayerComponent>();
 	auto player = entt::handle(*_registry, view.front());
 
 	// Player relevant displays
@@ -169,7 +180,7 @@ void drft::system::HUD::createHotbar()
 
 void drft::system::HUD::updateLevelInfo(entt::const_handle player)
 {
-	if (auto level = player.try_get<component::Leveling>())
+	if (auto level = player.try_get<LevelingComponent>())
 	{
 		_lvlText.setString("Lvl " + std::to_string(level->currentLevel));
 		_xpText.setString("XP " + std::to_string(level->currentXP) + "/" + std::to_string(level->neededXP));
@@ -178,7 +189,7 @@ void drft::system::HUD::updateLevelInfo(entt::const_handle player)
 
 void drft::system::HUD::updateHealthBar(entt::const_handle player)
 {
-	if (auto health = player.try_get<component::Health>())
+	if (auto health = player.try_get<HealthComponent>())
 	{
 		_healthBarContainer.setSize({health->max * HEALTHBAR_WIDTH_MULTIPLIER, HEALTHBAR_HEIGHT + 2.f });
 		_healthBar.setSize({ (health->current / health->max)
@@ -192,7 +203,7 @@ void drft::system::HUD::updateHealthBar(entt::const_handle player)
 
 void drft::system::HUD::updateStaminaBar(entt::const_handle player)
 {
-	if (auto stamina = player.try_get<component::Stamina>())
+	if (auto stamina = player.try_get<StaminaComponent>())
 	{
 		_staminaBarContainer.setSize({ stamina->max * STAMINABAR_WIDTH_MULTIPLIER, STAMINABAR_HEIGHT + 2.f });
 		_staminaBar.setSize({ (stamina->current / stamina->max) * (stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.f, STAMINABAR_HEIGHT });
@@ -210,13 +221,13 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 
 	_itemsOnGround.clear();
 
-	if (auto pos = player.try_get<component::Position>())
+	if (auto pos = player.try_get<PositionComponent>())
 	{
 		auto entities = grid.entitiesAt(pos->position,
 			[this](entt::entity entity) -> bool
 			{
-				if (_registry->all_of<component::Info>(entity)
-				&& !_registry->any_of<component::Player>(entity))
+				if (_registry->all_of<DescriptionComponent>(entity)
+				&& !_registry->any_of<PlayerComponent>(entity))
 				{
 					return true;
 				}
@@ -242,7 +253,7 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
 {
 	_inHandsDisplay.clear();
-	if (auto body = player.try_get<component::Body>())
+	if (auto body = player.try_get<BodyComponent>())
 	{
 		auto handParts = body->parts.search(PartType::Hand);
 		for (auto hand : handParts)
@@ -294,7 +305,7 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 {
 	using namespace entt::literals;
 	_hotbar.clear();
-	if (auto hotbar = player.try_get<component::Hotbar>())
+	if (auto hotbar = player.try_get<HotbarComponent>())
 	{
 		const int hotbarSize = hotbar->abilities.size();
 		auto& iconTexture = _registry->ctx().get<sf::Texture&>("icons"_hs);
@@ -342,7 +353,7 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 {
 	using namespace entt::literals;
-	const auto& itemRender = _registry->get<component::Render>(item);
+	const auto& itemRender = _registry->get<RenderComponent>(item);
 	const auto& sprites = _registry->ctx().get<sf::Texture&>("sprites"_hs);
 
 	sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
@@ -356,7 +367,7 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 					.fillColor = itemRender.color
 			});
 
-	if (auto health = _registry->try_get<component::Health>(item))
+	if (auto health = _registry->try_get<HealthComponent>(item))
 	{
 		float scalingFactor = health->current / health->max;
 		container.insert("Health", gui::Panel())
@@ -394,8 +405,8 @@ void drft::system::HUD::onHotbarPressed(entt::registry& registry, entt::entity e
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)
 {
 	auto& damage = registry.get<component::action::TakeDamage>(entity);
-	if (auto health = registry.try_get<component::Health>(entity);
-		registry.all_of<component::Player>(entity))
+	if (auto health = registry.try_get<HealthComponent>(entity);
+		registry.all_of<PlayerComponent>(entity))
 	{
 		if (damage.amount != 0)
 		{
@@ -408,8 +419,8 @@ void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity enti
 
 void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity entity)
 {
-	if (!registry.all_of<component::Player>(entity)) return;
-	if (auto stamina = registry.try_get<component::Stamina>(entity))
+	if (!registry.all_of<PlayerComponent>(entity)) return;
+	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
 		auto consume = registry.get<component::action::ConsumeStamina>(entity);
 		if (stamina->baseConsumption + consume.amount > 0.f)

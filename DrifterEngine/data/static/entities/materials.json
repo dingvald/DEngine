@@ -5,9 +5,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Corpse",
-          "extendedName": "",
           "description": "A corpse."
         },
         "Render": {
@@ -15,7 +14,7 @@
           "layer": 1,
           "color": [ 88, 8, 8 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 60.0,
           "materials": [ "Corpse" ]
@@ -27,9 +26,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Ash",
-          "extendedName": "",
           "description": "The remains of something burned."
         },
         "Render": {
@@ -37,13 +35,13 @@
           "layer": 1,
           "color": [ 225, 225, 225 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 0.0,
           "materials": [ "Ash" ]
         },
         "TickingLifetime": {
-          "ticksRemaining": 1000
+          "ticks": 1000
         }
       }
     },
@@ -52,9 +50,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Wood",
-          "extendedName": "",
           "description": "A chunk of wood."
         },
         "Render": {
@@ -62,7 +59,7 @@
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 2.5,
           "materials": [ "Wood" ]
@@ -74,9 +71,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Stone",
-          "extendedName": "",
           "description": "A small rock."
         },
         "Render": {
@@ -84,7 +80,7 @@
           "layer": 1,
           "color": [ 128, 132, 135 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 1.5,
           "materials": [ "Stone" ]
@@ -96,9 +92,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Iron",
-          "extendedName": "",
           "description": "A common metal."
         },
         "Render": {
@@ -106,7 +101,7 @@
           "layer": 1,
           "color": [ 161, 157, 148 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 2.0,
           "materials": [ "Iron" ]
@@ -118,9 +113,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Flint",
-          "extendedName": "",
           "description": "Used to start fires."
         },
         "Render": {
@@ -128,7 +122,7 @@
           "layer": 1,
           "color": [ 65, 65, 65 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 1.0,
           "materials": [ "Flint" ]
@@ -140,9 +134,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Plant Fibre",
-          "extendedName": "",
           "description": "Tough planty material."
         },
         "Render": {
@@ -150,7 +143,7 @@
           "layer": 1,
           "color": [ 1, 50, 35 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 0.25,
           "materials": [ "Plant Fibre" ]
@@ -162,9 +155,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Twine",
-          "extendedName": "",
           "description": "Versatile and durable."
         },
         "Render": {
@@ -172,7 +164,7 @@
           "layer": 1,
           "color": [ 186, 161, 127 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 0.5,
           "materials": [ "Plant Fibre" ]
@@ -189,9 +181,8 @@
         "BaseMaterial"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Leather",
-          "extendedName": "",
           "description": "Tough and stylish material."
         },
         "Render": {
@@ -199,7 +190,7 @@
           "layer": 1,
           "color": [ 98, 74, 46 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 0.5,
           "materials": [ "Leather" ]

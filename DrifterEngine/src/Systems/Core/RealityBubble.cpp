@@ -1,77 +1,40 @@
 #include "pch.h"
 #include "RealityBubble.h"
-#include "Components/Components.h"
+#include "Components/ActorComponent.h"
+#include "Components/CameraComponent.h"
+#include "Components/PositionComponent.h"
 #include "Components/Tags.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Services/DebugInfo.h"
+#include "Systems/Helpers/GetCurrentCamera.h"
 
 static const int REALITY_RADIUS = 96; // in tiles
 
 void drft::system::RealityBubble::init()
 {
-	_registry->on_construct<component::Actor>().connect<&RealityBubble::onActorAddOrUpdate>(this);
-	_registry->on_update<component::Actor>().connect<&RealityBubble::onActorAddOrUpdate>(this);
-	_registry->on_destroy<component::Actor>().connect<&RealityBubble::onActorRemove>(this);
-
-	_registry->on_construct<component::tag::Active>().connect<&RealityBubble::onActiveAdd>(this);
-	_registry->on_destroy<component::tag::Active>().connect<&RealityBubble::onActiveRemove>(this);
 }
 
 void drft::system::RealityBubble::update(const float)
 {
-	auto cameraView = _registry->view<const component::Camera, const component::Position>();
-	for (auto&& [entity, camera, position] : cameraView.each())
-	{
-		_cameraPosition = position.position;
-	}
+	const auto camera = getCurrentCamera(*_registry);
 
-	auto actorView = _registry->view<const component::Actor, const component::Position>();
+	auto actorView = _registry->view<const ActorComponent, const PositionComponent>();
+	int activeActors = 0;
 	for (auto&& [entity, actor, pos] : actorView.each())
 	{
-		const auto distance = spatial::distance(_cameraPosition, pos.position);
-
-		if (distance > REALITY_RADIUS)
+		const auto distance = spatial::distance(camera.position, pos.position);
+		if (distance < REALITY_RADIUS)
 		{
-			_registry->remove<component::tag::Active>(entity);
-		}
-		else
-		{
-			_registry->emplace_or_replace<component::tag::Active>(entity);
+			_registry->emplace<component::tag::Active>(entity);
+			activeActors++;
 		}
 	}
 
-	service::DebugInfo::instance().putInfo("Actors Active", std::to_string(_activeActors));
+	service::DebugInfo::instance().putInfo("Actors Active", std::to_string(activeActors));
 }
 
-void drft::system::RealityBubble::onActorAddOrUpdate(entt::registry& registry, entt::entity entity)
+void drft::system::RealityBubble::onUpdateEnd()
 {
-	if (!registry.any_of<component::Position>(entity)) return;
-
-	const auto pos = registry.get<component::Position>(entity).position;
-	const auto distance = spatial::distance(_cameraPosition, pos);
-
-	if (distance > REALITY_RADIUS)
-	{
-		registry.remove<component::tag::Active>(entity);
-	}
-	else
-	{
-		registry.emplace_or_replace<component::tag::Active>(entity);
-	}
-}
-
-void drft::system::RealityBubble::onActorRemove(entt::registry& registry, entt::entity entity)
-{
-	registry.remove<component::tag::Active>(entity);
-}
-
-void drft::system::RealityBubble::onActiveAdd(entt::registry& registry, entt::entity entity)
-{
-	++_activeActors;
-}
-
-void drft::system::RealityBubble::onActiveRemove(entt::registry& registry, entt::entity entity)
-{
-	--_activeActors;
+	_registry->clear<component::tag::Active>();
 }

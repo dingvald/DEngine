@@ -5,9 +5,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Iron Breastplate",
-          "extendedName": "Iron Breastplate",
           "description": "A solid metal armor for the chest."
         },
         "Render": {
@@ -15,7 +14,7 @@
           "layer": 1,
           "color": [ 161, 157, 148 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 12.0,
           "materials": [
@@ -31,8 +30,7 @@
           }
         },
         "Health": {
-          "max": 100,
-          "current": 100
+          "max": 100
         },
         "Wearable": {
           "slots": [
@@ -52,9 +50,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Iron Legplates",
-          "extendedName": "Iron Legplates",
           "description": "A solid iron armor for the legs."
         },
         "Render": {
@@ -62,7 +59,7 @@
           "layer": 1,
           "color": [ 161, 157, 148 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 8.0,
           "materials": [
@@ -77,8 +74,7 @@
           }
         },
         "Health": {
-          "max": 100,
-          "current": 100
+          "max": 100
         },
         "Wearable": {
           "slots": [
@@ -98,9 +94,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Wood Breastplate",
-          "extendedName": "Wood Breastplate",
           "description": "A solid wood armor for the chest."
         },
         "Position": {
@@ -111,7 +106,7 @@
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 8.0,
           "materials": [
@@ -125,11 +120,7 @@
           }
         },
         "Health": {
-          "max": 60,
-          "current": 60
-        },
-        "Item": {
-          "id": 0
+          "max": 60
         },
         "Wearable": {
           "slots": [
@@ -149,9 +140,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Wood Legplates",
-          "extendedName": "Wood Legplates",
           "description": "A solid wood armor for the legs."
         },
         "Position": {
@@ -162,7 +152,7 @@
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 6.0,
           "materials": [
@@ -176,11 +166,7 @@
           }
         },
         "Health": {
-          "max": 50,
-          "current": 50
-        },
-        "Item": {
-          "id": 0
+          "max": 50
         },
         "Wearable": {
           "slots": [
@@ -200,9 +186,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Wood Shield",
-          "extendedName": "Wood Shield",
           "description": "A solid wooden shield."
         },
         "Position": {
@@ -213,7 +198,7 @@
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 6.0,
           "materials": [
@@ -226,8 +211,7 @@
           }
         },
         "Health": {
-          "max": 30,
-          "current": 30
+          "max": 30
         },
         "Wearable": {
           "slots": [
@@ -247,9 +231,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Woven Hood",
-          "extendedName": "",
           "description": "A hood woven together from various plant fibres."
         },
         "Position": {
@@ -260,7 +243,7 @@
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 1.0,
           "materials": [
@@ -273,11 +256,7 @@
           }
         },
         "Health": {
-          "max": 15,
-          "current": 15
-        },
-        "Item": {
-          "id": 0
+          "max": 15
         },
         "Wearable": {
           "slots": [
@@ -296,9 +275,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Woven Sandals",
-          "extendedName": "",
           "description": "Sandals woven together from various plant fibres."
         },
         "Position": {
@@ -309,7 +287,7 @@
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 2.0,
           "materials": [
@@ -322,11 +300,7 @@
           }
         },
         "Health": {
-          "max": 15,
-          "current": 15
-        },
-        "Item": {
-          "id": 0
+          "max": 15
         },
         "Wearable": {
           "slots": [
@@ -345,9 +319,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Woven Bracer",
-          "extendedName": "",
           "description": "Bracers woven together from various plant fibres."
         },
         "Position": {
@@ -358,7 +331,7 @@
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 2.0,
           "materials": [
@@ -371,11 +344,7 @@
           }
         },
         "Health": {
-          "max": 15,
-          "current": 15
-        },
-        "Item": {
-          "id": 0
+          "max": 15
         },
         "Wearable": {
           "slots": [
@@ -394,9 +363,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Woven Tunic",
-          "extendedName": "Woven Tunic",
           "description": "A soft garment that is good for travelling."
         },
         "Position": {
@@ -407,7 +375,7 @@
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 4.0,
           "materials": [
@@ -421,11 +389,7 @@
           }
         },
         "Health": {
-          "max": 30,
-          "current": 30
-        },
-        "Item": {
-          "id": 0
+          "max": 30
         },
         "Wearable": {
           "slots": [
@@ -443,9 +407,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Woven Pants",
-          "extendedName": "Woven Pants",
           "description": "Pants woven together using various plant fibres."
         },
         "Position": {
@@ -456,7 +419,7 @@
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 6.0,
           "materials": [
@@ -470,11 +433,7 @@
           }
         },
         "Health": {
-          "max": 30,
-          "current": 30
-        },
-        "Item": {
-          "id": 0
+          "max": 30
         },
         "Wearable": {
           "slots": [
@@ -492,9 +451,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Leather Sandals",
-          "extendedName": "",
           "description": "Sandals made from leather."
         },
         "Position": {
@@ -505,7 +463,7 @@
           "layer": 1,
           "color": [ 98, 74, 46 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 3.0,
           "materials": [
@@ -520,11 +478,7 @@
           }
         },
         "Health": {
-          "max": 40,
-          "current": 40
-        },
-        "Item": {
-          "id": 0
+          "max": 40
         },
         "Wearable": {
           "slots": [
@@ -544,9 +498,8 @@
         "BaseItem"
       ],
       "Components": {
-        "Info": {
+        "Description": {
           "name": "Leather Bracer",
-          "extendedName": "",
           "description": "A Bracer made from leather."
         },
         "Position": {
@@ -557,7 +510,7 @@
           "layer": 1,
           "color": [ 98, 74, 46 ]
         },
-        "Physical": {
+        "Material": {
           "blocks": false,
           "weight": 2.0,
           "materials": [
@@ -572,11 +525,7 @@
           }
         },
         "Health": {
-          "max": 40,
-          "current": 40
-        },
-        "Item": {
-          "id": 0
+          "max": 40
         },
         "Wearable": {
           "slots": [

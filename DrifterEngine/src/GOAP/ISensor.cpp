@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ISensor.h"
-#include "Components/Components.h"
+#include "Components/AIComponent.h"
 
 void drft::goap::ISensor::sense(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
 {
@@ -9,20 +9,20 @@ void drft::goap::ISensor::sense(entt::handle agent, std::function<bool(entt::con
 	mergeResults(stateFromSurroundings, stateFromMemory, getAI(agent));
 }
 
-void drft::goap::ISensor::mergeResults(const WorldState& fromSurroundings, const WorldState& fromMemory, component::AI& ai) const
+void drft::goap::ISensor::mergeResults(const WorldState& fromSurroundings, const WorldState& fromMemory, AIComponent& ai) const
 {
 	ai.blackboard.merge(fromSurroundings);
 	ai.blackboard.mergeIfGreater(fromMemory);
 }
 
-component::AI& drft::goap::ISensor::getAI(entt::handle agent) const
+AIComponent& drft::goap::ISensor::getAI(entt::handle agent) const
 {
-	if (auto ai = agent.try_get<component::AI>()) return *ai;
+	if (auto ai = agent.try_get<AIComponent>()) return *ai;
 	throw std::exception("Agent does not have AI component.");
 }
 
-const component::AI& drft::goap::ISensor::getAI(entt::const_handle agent) const
+const AIComponent& drft::goap::ISensor::getAI(entt::const_handle agent) const
 {
-	if (auto ai = agent.try_get<component::AI>()) return *ai;
+	if (auto ai = agent.try_get<AIComponent>()) return *ai;
 	throw std::exception("Agent does not have AI component.");
 }
