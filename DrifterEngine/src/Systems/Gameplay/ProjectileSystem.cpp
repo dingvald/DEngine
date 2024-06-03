@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ProjectileSystem.h"
 
+#include "Components/Actions/MeleeAttackAction.h"
 #include "Components/Actions/MoveAction.h"
 #include "Components/ProjectileComponent.h"
 #include "Components/PositionComponent.h"
@@ -14,6 +15,7 @@
 
 void drft::system::ProjectileSystem::init()
 {
+	_registry->on_construct<DoMeleeAttackAction>().connect<&ProjectileSystem::onDoMeleeAttackAction>(this);
 	_registry->on_construct<ProjectileComponent>().connect<&ProjectileSystem::onProjectileAdded>(this);
 	_registry->on_destroy<ProjectileComponent>().connect<&ProjectileSystem::onProjectileRemoved>(this);
 }
@@ -69,4 +71,9 @@ void drft::system::ProjectileSystem::onProjectileRemoved(entt::registry& registr
 		registry.remove<AttackerComponent>(entity);
 		_attackerAdded.erase(entity);
 	}
+}
+
+void drft::system::ProjectileSystem::onDoMeleeAttackAction(entt::registry& registry, entt::entity entity)
+{
+	registry.remove<ProjectileComponent>(entity);
 }

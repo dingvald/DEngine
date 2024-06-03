@@ -32,7 +32,10 @@ void drft::system::MeleeAttackActionSystem::onPerformMeleeAttackAction(entt::reg
 {
 	const auto& performMeleeAttack = registry.get<PerformMeleeAttackAction>(entity);
 	const auto& tryMeleeAttack = registry.emplace_or_replace<TryMeleeAttackAction>(entity, performMeleeAttack.direction, performMeleeAttack.targets);
-	registry.emplace_or_replace<DoMeleeAttackAction>(entity, tryMeleeAttack.direction, tryMeleeAttack.targets, tryMeleeAttack.damageTypes);
+	if (!tryMeleeAttack.cancel)
+	{
+		registry.emplace_or_replace<DoMeleeAttackAction>(entity, tryMeleeAttack.direction, tryMeleeAttack.targets, tryMeleeAttack.damageTypes);
+	}
 }
 
 void drft::system::MeleeAttackActionSystem::onTryMeleeAttackAction(entt::registry& registry, entt::entity entity) const
@@ -71,6 +74,4 @@ void drft::system::MeleeAttackActionSystem::onDoMeleeAttackAction(entt::registry
 	}
 	
 	spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *_registry, entity });
-	// HACKZ: Should it care about projectiles? No..
-	_registry->remove<ProjectileComponent>(entity);
 }

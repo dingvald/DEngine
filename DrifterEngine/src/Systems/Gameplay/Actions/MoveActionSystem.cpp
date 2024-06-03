@@ -30,21 +30,18 @@ void drft::system::MoveActionSystem::onUpdateEnd()
 void drft::system::MoveActionSystem::onPerformMoveAction(entt::registry& registry, entt::entity entity) const
 {
 	const auto& performMove = registry.get<PerformMoveAction>(entity);
-	if (performMove.direction == sf::Vector2i{ 0,0 })
+	const auto& tryMoveAction = registry.emplace_or_replace<TryMoveAction>(entity, performMove.direction);
+	if (!tryMoveAction.cancel)
 	{
-		_registry->emplace_or_replace<component::action::Wait>(entity);
-	}
-	else
-	{
-		registry.emplace_or_replace<TryMoveAction>(entity, performMove.direction);
+		_registry->emplace_or_replace<DoMoveAction>(entity);
 	}
 }
 
 void drft::system::MoveActionSystem::onTryMoveAction(entt::registry& registry, entt::entity entity) const
 {
 	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
-	const auto& tryMove = registry.get<TryMoveAction>(entity);
 	const auto& positionComponent = registry.get<PositionComponent>(entity);
+	auto& tryMove = registry.get<TryMoveAction>(entity);
 
 	sf::Vector2i targetPosition = positionComponent.position + tryMove.direction;
 	auto checkForBlockers = [this](entt::entity entity) -> bool
@@ -57,13 +54,10 @@ void drft::system::MoveActionSystem::onTryMoveAction(entt::registry& registry, e
 		};
 	auto blockers = grid.entitiesAt(targetPosition, checkForBlockers);
 
-	if (blockers.empty())
-	{
-		_registry->emplace_or_replace<DoMoveAction>(entity);
-	}
-	else
+	if (!blockers.empty())
 	{
 		_registry->emplace_or_replace<CollisionComponent>(entity, tryMove.direction, std::move(blockers));
+		tryMove.cancel = true;
 	}
 }
 

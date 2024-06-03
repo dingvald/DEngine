@@ -9,6 +9,8 @@ struct PerformMoveAction
 struct TryMoveAction
 {
 	sf::Vector2i direction = { 0,0 };
+
+	bool cancel = false;
 };
 
 struct DoMoveAction

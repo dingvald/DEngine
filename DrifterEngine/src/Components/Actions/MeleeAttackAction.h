@@ -5,22 +5,21 @@
 #include <unordered_map>
 #include <string>
 
-// Add to entity to perform the action
 struct PerformMeleeAttackAction
 {
 	sf::Vector2i direction = { 0,0 };
 	std::vector<entt::entity> targets;
 };
 
-// Should only be reacted to and/or modified (except for "owning" system)
 struct TryMeleeAttackAction
 {
 	sf::Vector2i direction = { 0,0 };
 	std::vector<entt::entity> targets;
 	std::unordered_map<std::string, int> damageTypes;
+
+	bool cancel = false;
 };
 
-// Should only be reacted to and/or modified (except for "owning" system)
 struct DoMeleeAttackAction
 {
 	sf::Vector2i direction;
