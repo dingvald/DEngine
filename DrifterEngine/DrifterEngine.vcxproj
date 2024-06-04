@@ -383,6 +383,7 @@
     <ClCompile Include="src\Structures\StructureShapeFactory.cpp" />
     <ClCompile Include="src\Structures\Decorators\WallDecorator.cpp" />
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
+    <ClCompile Include="src\Utility\TextureAtlas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Audio.hpp" />
@@ -885,6 +886,7 @@
     <ClInclude Include="src\Structures\StructureShapeFactory.h" />
     <ClInclude Include="src\Structures\Decorators\WallDecorator.h" />
     <ClInclude Include="src\Structures\StructureShapeInstance.h" />
+    <ClInclude Include="src\Utility\TextureAtlas.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\world_settings.json" />
