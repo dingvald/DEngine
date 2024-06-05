@@ -10,7 +10,7 @@ const std::unordered_set<std::string_view> SupportedImageTypes =
 	".bmp"
 };
 
-bool TextureAtlas::createAtlas(const std::filesystem::path& directoryPath)
+bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 {
 	std::cout << "Creating Texture Atlas from " << directoryPath << "..." << std::endl;
 

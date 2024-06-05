@@ -10,8 +10,8 @@ void drft::system::AnimationSystem::init()
 
 void drft::system::AnimationSystem::fixedUpdate()
 {
-	auto view = _registry->view<RenderComponent, AnimationComponent>();
-	for (auto [entity, render, animation] : view.each())
+	auto view = _registry->view<AnimationComponent>();
+	for (auto [entity, animation] : view.each())
 	{
 		++animation.elapsed;
 		// TODO: account for negative animation speeds so the animation goes backwards
@@ -32,7 +32,7 @@ void drft::system::AnimationSystem::fixedUpdate()
 			}
 			animation.elapsed = animation.elapsed - numFramesTillNextIndex;
 		}
-		render.sprite = animation.sprites[animation.index];
+		_registry->emplace_or_replace<RenderComponent>(entity, animation.sprites[animation.index]);
 	}
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Utility/ResourceHolder.h"
+#include "Utility/TextureAtlas.h"
 #include "StateStack.h"
 #include "Utility/Statistics.h"
 
@@ -23,7 +24,7 @@ namespace drft
 	private:
 		sf::RenderWindow _window;
 		entt::registry _registry;
-		ResourceHolder<sf::Texture, std::string> _textures;
+		TextureAtlas _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
 		StateStack _stateStack{ StateContext{_window, _registry, _textures, _fonts} };
 		util::Statistics _fpsStats{ 100000 };

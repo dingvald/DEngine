@@ -10,7 +10,9 @@
           "description": "A corpse."
         },
         "Render": {
-          "sprite": 7,
+          "texture": "simpleTileset",
+          "uv_size": [ 16.0, 16.0 ],
+          "uv_coords": [ 7, 0 ],
           "layer": 1,
           "color": [ 88, 8, 8 ]
         },
@@ -18,30 +20,6 @@
           "blocks": false,
           "weight": 60.0,
           "materials": [ "Corpse" ]
-        }
-      }
-    },
-    "Ash": {
-      "Inherits": [
-        "BaseMaterial"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Ash",
-          "description": "The remains of something burned."
-        },
-        "Render": {
-          "sprite": 47,
-          "layer": 1,
-          "color": [ 225, 225, 225 ]
-        },
-        "Material": {
-          "blocks": false,
-          "weight": 0.0,
-          "materials": [ "Ash" ]
-        },
-        "TickingLifetime": {
-          "ticks": 1000
         }
       }
     },
@@ -55,7 +33,9 @@
           "description": "A chunk of wood."
         },
         "Render": {
-          "sprite": 14,
+          "texture": "simpleTileset",
+          "uv_size": [ 16.0, 16.0 ],
+          "uv_coords": [ 4, 1 ],
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
@@ -76,7 +56,9 @@
           "description": "A small rock."
         },
         "Render": {
-          "sprite": 10,
+          "texture": "simpleTileset",
+          "uv_size": [ 16.0, 16.0 ],
+          "uv_coords": [ 0, 1 ],
           "layer": 1,
           "color": [ 128, 132, 135 ]
         },
@@ -84,48 +66,6 @@
           "blocks": false,
           "weight": 1.5,
           "materials": [ "Stone" ]
-        }
-      }
-    },
-    "Iron": {
-      "Inherits": [
-        "BaseMaterial"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Iron",
-          "description": "A common metal."
-        },
-        "Render": {
-          "sprite": 43,
-          "layer": 1,
-          "color": [ 161, 157, 148 ]
-        },
-        "Material": {
-          "blocks": false,
-          "weight": 2.0,
-          "materials": [ "Iron" ]
-        }
-      }
-    },
-    "Flint": {
-      "Inherits": [
-        "BaseMaterial"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Flint",
-          "description": "Used to start fires."
-        },
-        "Render": {
-          "sprite": 43,
-          "layer": 1,
-          "color": [ 65, 65, 65 ]
-        },
-        "Material": {
-          "blocks": false,
-          "weight": 1.0,
-          "materials": [ "Flint" ]
         }
       }
     },
@@ -139,7 +79,9 @@
           "description": "Tough planty material."
         },
         "Render": {
-          "sprite": 31,
+          "texture": "simpleTileset",
+          "uv_size": [ 16.0, 16.0 ],
+          "uv_coords": [ 1, 3 ],
           "layer": 1,
           "color": [ 1, 50, 35 ]
         },
@@ -160,7 +102,9 @@
           "description": "Versatile and durable."
         },
         "Render": {
-          "sprite": 32,
+          "texture": "simpleTileset",
+          "uv_size": [ 16.0, 16.0 ],
+          "uv_coords": [ 2, 3 ],
           "layer": 1,
           "color": [ 186, 161, 127 ]
         },
@@ -186,7 +130,9 @@
           "description": "Tough and stylish material."
         },
         "Render": {
-          "sprite": 74,
+          "texture": "simpleTileset",
+          "uv_size": [ 16.0, 16.0 ],
+          "uv_coords": [ 8, 0 ],
           "layer": 1,
           "color": [ 98, 74, 46 ]
         },

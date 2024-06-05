@@ -10,7 +10,9 @@
           "description": "The Player character. Can be anything the player wants..."
         },
         "Render": {
-          "sprite": 1,
+          "texture": "simpleTileset",
+          "uv_size": [ 16.0, 16.0 ],
+          "uv_coords": [ 1, 0 ],
           "layer": 2,
           "color": [ 120, 120, 120 ]
         },

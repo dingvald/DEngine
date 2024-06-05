@@ -13,7 +13,7 @@ namespace drft
 
 		void setTexture(const sf::Texture& texture);
 		void addSprite(unsigned int spriteNum, sf::Color color, sf::Vector2f position);
-		void addSprite(sf::Vector2u uvSize, sf::Vector2u uv, sf::Color color, sf::Vector2f position);
+		void addSprite(sf::Vector2f uvSize, sf::Vector2f uv, sf::Color color, sf::Vector2f position);
 		void clear();
 
 	private:

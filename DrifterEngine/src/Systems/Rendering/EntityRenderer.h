@@ -3,6 +3,8 @@
 #include "Utility/ResourceHolder.h"
 #include "Utility/SpriteBatch.h"
 
+class TextureAtlas;
+
 namespace drft::system
 {
     class EntityRenderer : public System
@@ -12,7 +14,7 @@ namespace drft::system
         virtual void render(sf::RenderTarget& target) override;
 
     private:
-        sf::Texture _sprites;
+        const TextureAtlas* _textureAtlas = nullptr;
         std::unordered_map<int, SpriteBatch> _spriteLayers;
     };
 

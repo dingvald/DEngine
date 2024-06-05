@@ -49,32 +49,38 @@ void drft::system::HealthSystem::update(const float dt)
 			}
 
 			std::string message;
+			const auto& renderComponent = handle.get<RenderComponent>();
 			sf::Color messageColor = sf::Color::White;
 			
-			sf::Color effectColor = materialColor;
-			std::vector<unsigned int> effectSprites = { handle.get<RenderComponent>().sprite };
+			RenderComponent effectRender = renderComponent;
 			int effect_ttl = 10;
 
 			if (damage.amount == 0)
 			{
 				messageColor = sf::Color::Blue;
-				effectColor = sf::Color(180, 180, 180);
-				effectSprites = { 18u };
+				effectRender.color = sf::Color(180, 180, 180);
+				effectRender.texture = "simpleTileset";
+				effectRender.uvCoords = { 0, 5 };
 				effect_ttl = 30;
 			}
 			else if (damage.amount < 0)
 			{
 				message += "+";
 				messageColor = sf::Color::Green;
-				effectColor = sf::Color::Green;
+				effectRender.color = sf::Color::Green;
 			}
 			else if (damage.amount > 0)
 			{
+
+				std::vector<RenderComponent> hitParticles =
+				{
+					RenderComponent{.texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{0, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+					RenderComponent{.texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{1, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+					RenderComponent{.texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{2, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+				};
 				// Spawn Hit particles
 				spawnEffect(*_registry, {
-					.color = materialColor,
-					.sprites = {80, 81, 82},
-					.layer = RenderLayer::EffectsBack,
+					.sprites = std::move(hitParticles),
 					.position = posComp->position,
 					.animationSpeed = 12.0f
 					});
@@ -92,14 +98,12 @@ void drft::system::HealthSystem::update(const float dt)
 
 			// Spawn HurtEffect
 			spawnEffect(*_registry, {
-			.color = effectColor,
-			.sprites = effectSprites,
-			.layer = RenderLayer::EffectsBack,
-			.position = posComp->position,
-			.animationSpeed = 10.0f,
-			.ttl = effect_ttl,
-			.fades = false,
-				});
+				.sprites = { effectRender },
+				.position = posComp->position,
+				.animationSpeed = 10.0f,
+				.ttl = effect_ttl,
+				.fades = false,
+			});
 		}
 		
 		health.current = std::clamp(health.current - damage.amount, 0.f, health.max);

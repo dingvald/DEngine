@@ -8,6 +8,7 @@
 #include "Components/Tags.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/SpriteBatch.h"
+#include "Utility/TextureAtlas.h"
 #include "Spatial/Conversions.h"
 #include "RenderLayers.h"
 #include "LightingSystem.h"
@@ -17,10 +18,10 @@ static const sf::Color seenTileColor = sf::Color(12, 12, 12);
 void drft::system::EntityRenderer::init()
 {
 	using namespace entt::literals;
-	_sprites = _registry->ctx().get<sf::Texture&>("sprites"_hs);
+	_textureAtlas = &_registry->ctx().get<const TextureAtlas&>();
 	for (int l = 0; l < static_cast<int>(RenderLayer::Total); ++l)
 	{
-		_spriteLayers[l].setTexture(_sprites);
+		_spriteLayers[l].setTexture(_textureAtlas->getTexture());
 	}
 }
 
@@ -35,15 +36,21 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		finalColor.a = ren.color.a;
 
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		_spriteLayers[ren.layer].addSprite(ren.sprite, finalColor, renderPosition);
+		const auto& subTexture = _textureAtlas->getSubTexture(ren.texture);
+		sf::Vector2f uvCoords = { subTexture.left + ren.uvCoords.x, subTexture.top + ren.uvCoords.y };
+		_spriteLayers[ren.layer].addSprite(ren.uvSize, uvCoords, finalColor, renderPosition);
 	}
+
 	// Apply darkened light to entities outside the player's FOV
 	const auto seenView = _registry->view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren] : seenView.each())
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		_spriteLayers[ren.layer].addSprite(ren.sprite, seenTileColor, renderPosition);
+		const auto& subTexture = _textureAtlas->getSubTexture(ren.texture);
+		sf::Vector2f uvCoords = { subTexture.left + ren.uvCoords.x, subTexture.top + ren.uvCoords.y };
+		_spriteLayers[ren.layer].addSprite(ren.uvSize, uvCoords, seenTileColor, renderPosition);
 	}
+
 	// Draw batches
 	for (auto& [layer, batch] : _spriteLayers)
 	{

@@ -36,11 +36,12 @@ void drft::system::ProjectileSystem::update(float dt)
 
 		if (auto render = _registry->try_get<RenderComponent>(entity))
 		{
+			RenderComponent effectRender = *render;
+			effectRender.layer = static_cast<unsigned int>(RenderLayer::EffectsFront);
+
 			spawnEffect(*_registry,
 				{
-					.color = sf::Color::White,
-					.sprites = {render->sprite},
-					.layer = RenderLayer::EffectsFront,
+					.sprites = { effectRender },
 					.position = pos.position,
 					.ttl = 30,
 					.fades = true

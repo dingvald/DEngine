@@ -48,14 +48,14 @@ void drft::SpriteBatch::addSprite(unsigned int spriteNum, sf::Color color, sf::V
 	_vertices.append(bottomLeft);
 }
 
-void drft::SpriteBatch::addSprite(sf::Vector2u uvSize, sf::Vector2u uv, sf::Color color, sf::Vector2f position)
+void drft::SpriteBatch::addSprite(sf::Vector2f uvSize, sf::Vector2f uv, sf::Color color, sf::Vector2f position)
 {
 	sf::Vertex topLeft, topRight, bottomLeft, bottomRight;
 
 	topLeft.position = position;
 	topRight.position = position + sf::Vector2f(uvSize.x, 0.0f);
 	bottomLeft.position = position + sf::Vector2f(0.0f, uvSize.y);
-	bottomRight.position = position + sf::Vector2f(uvSize);
+	bottomRight.position = position + uvSize;
 
 	topLeft.color = color;
 	topRight.color = color;

@@ -54,15 +54,8 @@ void drft::Engine::initialize()
 
 void drft::Engine::loadResources()
 {
-	_textures.load("Sprites", TEXTURE_PATH + "simpleTileset.png");
-	_textures.load("Icons", TEXTURE_PATH + "icons.png");
+	_textures.load(TEXTURE_PATH);
 	_fonts.load("Terminus", FONTS_PATH + "terminus.ttf");
-
-	TextureAtlas textureAtlas;
-	if (textureAtlas.createAtlas(TEXTURE_PATH))
-	{
-		const auto& texture = textureAtlas.getTexture();
-	}
 }
 
 void drft::Engine::registerStates()

@@ -8,16 +8,17 @@
 
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/SpriteBatch.h"
+#include "Utility/TextureAtlas.h"
 #include "Spatial/Conversions.h"
 #include "RenderLayers.h"
 
 void drft::system::EffectRenderer::init()
 {
 	using namespace entt::literals;
-	_sprites = _registry->ctx().get<sf::Texture&>("sprites"_hs);
+	_textureAtlas = &_registry->ctx().get<const TextureAtlas&>();
 	for (int l = 0; l < static_cast<int>(RenderLayer::Total); ++l)
 	{
-		_spriteLayers[l].setTexture(_sprites);
+		_spriteLayers[l].setTexture(_textureAtlas->getTexture());
 	}
 }
 
@@ -31,8 +32,11 @@ void drft::system::EffectRenderer::render(sf::RenderTarget& target)
 		{
 			continue;
 		}
+
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		_spriteLayers[ren.layer].addSprite(ren.sprite, ren.color, renderPosition);
+		const auto& subTexture = _textureAtlas->getSubTexture(ren.texture);
+		sf::Vector2f uvCoords = { subTexture.left + ren.uvCoords.x, subTexture.top + ren.uvCoords.y };
+		_spriteLayers[ren.layer].addSprite(ren.uvSize, uvCoords, ren.color, renderPosition);
 	}
 	// Draw batches
 	for (auto& [layer, batch] : _spriteLayers)

@@ -3,10 +3,11 @@
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
+#include "RenderComponent.h"
 
 struct AnimationComponent
 {
-	std::vector<unsigned int> sprites;
+	std::vector<RenderComponent> sprites;
 	int index = 0;
 	float speed = 1.0f; // animation frames / second
 	float elapsed = 0.0f; // number of game frames elapsed
