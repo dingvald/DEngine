@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TextureAtlas.h"
+#include <Utility/RectPacker.h>
 
 
 const std::unordered_set<std::string_view> SupportedImageTypes =
@@ -12,44 +13,69 @@ const std::unordered_set<std::string_view> SupportedImageTypes =
 bool TextureAtlas::createAtlas(const std::filesystem::path& directoryPath)
 {
 	std::cout << "Creating Texture Atlas from " << directoryPath << "..." << std::endl;
-	sf::Image image;
-	const unsigned int maxSizeInPixels = sf::Texture::getMaximumSize();
+
+	std::unordered_map<int, sf::Image> imageData;
+	std::unordered_map<int, entt::hashed_string> imageNames;
+	std::vector<PackingRect> rects;
+	int currentId = 0;
+	const int maxSizeInPixels = static_cast<int>(sf::Texture::getMaximumSize());
+
+	// Collect all images from directory
 	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
 	{
 		sf::Image subImage;
-		const auto extension = filename.path().extension();
-		if (!SupportedImageTypes.contains(extension.string()))
-		{
-			std::cout << filename << " not a supported image type. Skipping." << std::endl;
-			continue;
-		}
-
-		std::string imageName = filename.path().filename().string();
 		if (subImage.loadFromFile(filename.path().string()))
 		{
-			if (!addSubImage(image, subImage, imageName, maxSizeInPixels))
-			{
+			const auto imageName = filename.path().filename().replace_extension().string();
+			std::cout << "Adding " << imageName << std::endl;
+			PackingRect rect = {};
+			rect.id = currentId;
+			rect.w = subImage.getSize().x;
+			rect.h = subImage.getSize().y;
+			rects.emplace_back(std::move(rect));
 
-			}
+			entt::hashed_string hString{ imageName.c_str()};
+			imageNames.emplace(currentId, std::move(hString));
+			imageData.emplace(currentId++, std::move(subImage));
 		}
 	}
+	
+	// Pack image rects
+	RectPacker packer = { maxSizeInPixels, maxSizeInPixels };
+	if (packer.pack(rects))
+	{
+		sf::Image image;
+		image.create(packer.getActualSize().x, packer.getActualSize().y);
+		for (auto&& rect : rects)
+		{
+			if (!rect.was_packed) continue;
+			const auto& subImage = imageData.at(rect.id);
+			const auto& imageName = imageNames.at(rect.id);
 
+			image.copy(subImage, rect.x, rect.y);
 
-	return false;
+			sf::IntRect intRect = { rect.x, rect.y, rect.w, rect.h };
+			_subTextures.emplace(imageName.value(), std::move(intRect));
+		}
+		_texture.loadFromImage(image);
+	}
+	else
+	{
+		std::cout << "FAILED: Could not pack all textures into max texture size." << std::endl;
+		return false;
+	}
+
+	std::cout << "SUCCESS: All images added to atlas." << std::endl;
+	return true;
 }
 
 const sf::Texture& TextureAtlas::getTexture() const
 {
-	// TODO: insert return statement here
+	return _texture;
 }
 
-const sf::IntRect TextureAtlas::getSubTexture(const std::string& name) const
+sf::IntRect TextureAtlas::getSubTexture(const entt::hashed_string& name) const
 {
-	return sf::IntRect();
-}
-
-bool TextureAtlas::addSubImage(const sf::Image& image, const sf::Image& subImage, const std::string& subImageName, unsigned int maxSizeInPixels)
-{
-	return false;
+	return _subTextures.at(name.value());
 }
 

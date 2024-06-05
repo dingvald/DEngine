@@ -2,7 +2,6 @@
 
 namespace drft
 {
-
 	class SpriteBatch : public sf::Drawable, public sf::Transformable
 	{
 	public:
@@ -14,6 +13,7 @@ namespace drft
 
 		void setTexture(const sf::Texture& texture);
 		void addSprite(unsigned int spriteNum, sf::Color color, sf::Vector2f position);
+		void addSprite(sf::Vector2u uvSize, sf::Vector2u uv, sf::Color color, sf::Vector2f position);
 		void clear();
 
 	private:
@@ -21,7 +21,7 @@ namespace drft
 
 	private:
 		sf::VertexArray _vertices;
-		sf::Texture _spriteSheet;
+		const sf::Texture* _texture;
 	};
 
 } // namespace drft

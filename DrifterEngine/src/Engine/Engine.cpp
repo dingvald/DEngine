@@ -12,6 +12,7 @@
 #include "States/SelectDirectionState.h"
 #include "States/SelectTargetState.h"
 #include "Services/DebugInfo.h"
+#include "Utility/TextureAtlas.h"
 
 using namespace drft;
 
@@ -56,6 +57,12 @@ void drft::Engine::loadResources()
 	_textures.load("Sprites", TEXTURE_PATH + "simpleTileset.png");
 	_textures.load("Icons", TEXTURE_PATH + "icons.png");
 	_fonts.load("Terminus", FONTS_PATH + "terminus.ttf");
+
+	TextureAtlas textureAtlas;
+	if (textureAtlas.createAtlas(TEXTURE_PATH))
+	{
+		const auto& texture = textureAtlas.getTexture();
+	}
 }
 
 void drft::Engine::registerStates()

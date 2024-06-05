@@ -274,6 +274,7 @@
     <ClCompile Include="src\Engine\States\InventoryState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
+    <ClCompile Include="src\Utility\RectPacker.cpp" />
     <ClCompile Include="src\Utility\StringManipulation.cpp" />
     <ClCompile Include="src\Utility\GetTextCenter.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
@@ -484,6 +485,7 @@
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\Window.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowStyle.hpp" />
+    <ClInclude Include="deps\stb\stb_rect_pack.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
     <ClInclude Include="src\Components\Actions\MoveAction.h" />
     <ClInclude Include="src\Systems\Gameplay\CollisionSystem.h" />
@@ -646,6 +648,7 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
     <ClInclude Include="src\Systems\Rendering\RenderLayers.h" />
+    <ClInclude Include="src\Utility\RectPacker.h" />
     <ClInclude Include="src\Utility\StringManipulation.h" />
     <ClInclude Include="src\Utility\GetTextCenter.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />
