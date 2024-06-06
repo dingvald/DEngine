@@ -72,7 +72,7 @@
       "Icon": {
         "texture": "simpleTileset",
         "uv_size": [ 16, 16 ],
-        "uv_coords": [ 6,70 ],
+        "uv_coords": [ 6,7 ],
         "color": [ 0, 74, 54 ]
       },
       "Climate": {
