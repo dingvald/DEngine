@@ -24,6 +24,8 @@
 
 #include "Ability/AbilityRegistry.h"
 
+#include "Utility/TextureAtlas.h"
+
 static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 32.f };
 static constexpr float HEALTHBAR_HEIGHT = 7;
 static constexpr int HEALTHBAR_WIDTH_MULTIPLIER = 7;
@@ -108,9 +110,9 @@ void drft::system::HUD::createLevelInfo()
 void drft::system::HUD::createHealthBar()
 {
 	using namespace entt::literals;
-	const auto& texture = _registry->ctx().get<sf::Texture&>("sprites"_hs);
-	_heartIcon.setTexture(texture);
-	_heartIcon.setTextureRect(util::SpriteIndexer::get(util::Sprite::Heart, texture));
+	const auto& textureAtlas = _registry->ctx().get<TextureAtlas&>();
+
+	_heartIcon = textureAtlas.getSprite("simpleTileset"_hs, { 16, 16 }, { 5, 1 });
 	_heartIcon.setPosition(HEALTHBAR_POSITION - sf::Vector2f(20.f, 4.f));
 	_heartIcon.setColor(sf::Color(150, 60, 60, 200));
 
@@ -126,9 +128,9 @@ void drft::system::HUD::createHealthBar()
 void drft::system::HUD::createStaminaBar()
 {
 	using namespace entt::literals;
-	const auto& texture = _registry->ctx().get<sf::Texture&>("sprites"_hs);
-	_staminaIcon.setTexture(texture);
-	_staminaIcon.setTextureRect(util::SpriteIndexer::get(util::Sprite::Diamond, texture));
+	const auto& textureAtlas = _registry->ctx().get<TextureAtlas&>();
+
+	_staminaIcon = textureAtlas.getSprite("simpleTileset"_hs, { 16, 16 }, { 8, 1 });
 	_staminaIcon.setPosition(STAMINABAR_POSITION - sf::Vector2f(20.f, 4.f));
 	_staminaIcon.setColor(sf::Color(60, 150, 60, 200));
 
@@ -308,7 +310,7 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 	if (auto hotbar = player.try_get<HotbarComponent>())
 	{
 		const int hotbarSize = hotbar->abilities.size();
-		auto& iconTexture = _registry->ctx().get<sf::Texture&>("icons"_hs);
+		const auto& textureAtlas = _registry->ctx().get<TextureAtlas&>();
 		for (int i = 0; i < hotbarSize; ++i) 
 		{
 			const auto& ability = AbilityRegistry::get(static_cast<AbilityType>(hotbar->abilities[i]));
@@ -324,10 +326,8 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 				});
 			hotbarContainer.setOrigin(gui::ElementPosition::CENTER);
 
-			
-			sf::Sprite abilitySprite;
-			abilitySprite.setTexture(iconTexture);
-			abilitySprite.setTextureRect(util::SpriteIndexer::get(static_cast<util::Sprite>(ability.getSpriteIndex()), iconTexture));
+			const auto textureUV = ability.getTextureUV();
+			sf::Sprite abilitySprite = textureAtlas.getSprite("icons"_hs, { textureUV.width, textureUV.height }, { textureUV.left, textureUV.top });
 			auto& abilityIconGUI = hotbarContainer.insert("icon", gui::Icon{ abilitySprite });
 			abilityIconGUI.setSize({ 32,32 });
 			abilityIconGUI.setStyle(gui::ElementState::Idle, {
@@ -354,9 +354,9 @@ void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 {
 	using namespace entt::literals;
 	const auto& itemRender = _registry->get<RenderComponent>(item);
-	const auto& sprites = _registry->ctx().get<sf::Texture&>("sprites"_hs);
+	const auto& textureAtlas = _registry->ctx().get<TextureAtlas&>();
 
-	sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
+	sf::Sprite sprite = textureAtlas.getSprite(itemRender.texture, itemRender.uvSize, itemRender.uvCoords);
 	container.insert("Icon", gui::Icon(sprite))
 		.setSize({ 32,32 })
 		.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)

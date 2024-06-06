@@ -131,8 +131,10 @@ void drft::SelectTargetState::onPush()
 		requestStackPop();
 	}
 
+	const entt::id_type tileSetTexture = entt::hashed_string("simpleTileset").value();
+
 	auto radius = spatial::getIntCircleInRadius(_startPosition, _targetSelect->range.getMax());
-	RenderComponent radiusEffectRender = { .texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_RANGE_COLOR };
+	RenderComponent radiusEffectRender = { .texture = tileSetTexture, .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_RANGE_COLOR };
 	for (auto&& tile : radius)
 	{
 		auto effect = system::spawnEffect(getContext().registry,
@@ -144,7 +146,7 @@ void drft::SelectTargetState::onPush()
 		_radiusEffects.push_back(effect);
 	}
 
-	RenderComponent aoeEffectRender = { .texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_AOE_COLOR };
+	RenderComponent aoeEffectRender = { .texture = tileSetTexture, .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_AOE_COLOR };
 	for (auto&& tile : _targetSelect->targetShape)
 	{
 		auto effect = system::spawnEffect(getContext().registry,
@@ -157,7 +159,7 @@ void drft::SelectTargetState::onPush()
 		_aoeEffects.push_back(effect);
 	}
 
-	RenderComponent cursorEffectRender = { .texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::EffectsFront), .color = sf::Color(255,255,204,100) };
+	RenderComponent cursorEffectRender = { .texture = tileSetTexture, .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::EffectsFront), .color = sf::Color(255,255,204,100) };
 	_cursor = system::spawnEffect(getContext().registry,
 		{
 			.sprites = {cursorEffectRender},

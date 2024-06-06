@@ -74,8 +74,16 @@ const sf::Texture& TextureAtlas::getTexture() const
 	return _texture;
 }
 
-sf::IntRect TextureAtlas::getSubTexture(const entt::hashed_string& name) const
+sf::Vector2f TextureAtlas::getUVCoords(entt::id_type textureId, sf::Vector2f localUV) const
 {
-	return _subTextures.at(name.value());
+	sf::IntRect rect = _subTextures.at(textureId);
+	sf::Vector2f uvCoords = { rect.left + localUV.x, rect.top + localUV.y };
+	return uvCoords;
+}
+
+sf::Sprite TextureAtlas::getSprite(entt::id_type textureId, sf::Vector2f uvSize, sf::Vector2f localUV) const
+{
+	sf::Vector2f globalUV = getUVCoords(textureId, localUV);
+	return sf::Sprite(_texture, sf::IntRect{ sf::Vector2i{globalUV}, sf::Vector2i{uvSize} });
 }
 

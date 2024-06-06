@@ -92,7 +92,15 @@ void drft::system::SprintingSystem::addSprintEffect(entt::registry& registry, en
 {
 	if (_sprintEffects.contains(entity)) return;
 	auto effect = entt::handle{ registry, registry.create() };
-	effect.emplace<RenderComponent>(static_cast<unsigned int>(util::Sprite::StatusEffect), 4u, sf::Color(50,150,50));
+	RenderComponent renderComponent =
+	{
+		.texture = entt::hashed_string("simpleTileset"),
+		.uvSize = {16, 16},
+		.uvCoords = {1, 5},
+		.layer = 4u,
+		.color = { 50,150,50 }
+	};
+	effect.emplace<RenderComponent>(std::move(renderComponent));
 	effect.emplace<PositionComponent>(sf::Vector2i(0,0));
 	_sprintEffects.emplace(entity, effect.entity());
 }

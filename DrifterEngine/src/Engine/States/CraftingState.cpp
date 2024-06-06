@@ -9,6 +9,7 @@
 
 #include "Factory/EntityFactory.h"
 #include "Utility/EntityHelpers.h"
+#include "Utility/TextureAtlas.h"
 #include "Systems/Helpers/ItemDatabase.h"
 
 
@@ -151,7 +152,7 @@ void drft::CraftingState::refreshCraftingList()
 			++materialCount[util::getEntityName({ getContext().registry, itemEntity })];
 		}
 
-		const auto& sprites = getContext().textures.get("Sprites");
+		const TextureAtlas& textureAtlas = getContext().textures;
 		int count = 0;
 		int matCount = 0;
 		const int numCraftables = craftableItems->craftables.size();
@@ -217,7 +218,7 @@ void drft::CraftingState::refreshCraftingList()
 
 
 			const auto& itemRender = prototypeReg.get<RenderComponent>(craftable);
-			sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
+			sf::Sprite sprite = textureAtlas.getSprite(itemRender.texture, itemRender.uvSize, itemRender.uvCoords);
 			_craftingList[countStr.data()].insert("Item", gui::DualContainer())
 				.setStyle(gui::ElementState::Idle, {
 						.childPadding = {16.f, 0.f}
@@ -289,7 +290,7 @@ void drft::CraftingState::refreshCraftingList()
 			for (auto& [matName, amount] : recipe)
 			{
 				const auto& matRender = prototypeReg.get<RenderComponent>(factory.get(matName));
-				sf::Sprite matSprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(matRender.sprite), sprites) };
+				sf::Sprite matSprite = textureAtlas.getSprite(matRender.texture, matRender.uvSize, matRender.uvCoords);
 				std::string matstr = std::to_string(matCount);
 				sf::Color numberColor = sf::Color::White;
 				if (materialCount[matName] < static_cast<int>(amount))

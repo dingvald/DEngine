@@ -4,10 +4,11 @@
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
+#include "Utility/Vector2Serialization.h"
 
 struct RenderComponent
 {
-	entt::hashed_string texture;
+	entt::id_type texture;
 	sf::Vector2f uvSize;
 	sf::Vector2f uvCoords;
 	unsigned int layer = 0u;
@@ -16,16 +17,16 @@ struct RenderComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "Render";
-	static entt::hashed_string hashName(std::string name)
+	static int textureSetter(RenderComponent& r, std::string val)
 	{
-		return entt::hashed_string{ name.c_str()};
+		return r.texture = entt::hashed_string(val.c_str()).value();
 	}
 	static void bind()
 	{
 		using namespace entt::literals;
 		snapshot::reflectComponent<RenderComponent, NAME>()
 			.prop("serialize"_hs)
-			.data<&RenderComponent::hashName, &RenderComponent::texture>("texture"_hs)
+			.data<&RenderComponent::textureSetter, &RenderComponent::texture>("texture"_hs)
 			.data<&RenderComponent::uvSize>("uv_size"_hs)
 			.data<&RenderComponent::uvCoords>("uv_coords"_hs)
 			.data<&RenderComponent::layer>("layer"_hs)
@@ -38,7 +39,14 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, RenderComponent& render)
 	{
-		archive(render.sprite, render.layer, render.color.r, render.color.g, render.color.b);
+		archive(
+			render.texture,
+			render.uvSize,
+			render.uvCoords,
+			render.layer,
+			render.color.r,
+			render.color.g,
+			render.color.b);
 	}
 }
 

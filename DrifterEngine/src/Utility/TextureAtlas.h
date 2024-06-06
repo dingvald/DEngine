@@ -4,10 +4,11 @@ class TextureAtlas
 public:
 	bool load(const std::filesystem::path& directoryPath);
 	const sf::Texture& getTexture() const;
-	sf::IntRect getSubTexture(const entt::hashed_string& name) const;
+	sf::Vector2f getUVCoords(entt::id_type textureId, sf::Vector2f localUV) const;
+	sf::Sprite getSprite(entt::id_type textureId, sf::Vector2f uvSize, sf::Vector2f localUV) const;
 
 private:
 	sf::Texture _texture;
-	entt::dense_map<unsigned int, sf::IntRect> _subTextures;
+	entt::dense_map<entt::id_type, sf::IntRect> _subTextures;
 };
 

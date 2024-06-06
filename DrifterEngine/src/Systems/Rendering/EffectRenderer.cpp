@@ -34,8 +34,7 @@ void drft::system::EffectRenderer::render(sf::RenderTarget& target)
 		}
 
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		const auto& subTexture = _textureAtlas->getSubTexture(ren.texture);
-		sf::Vector2f uvCoords = { subTexture.left + ren.uvCoords.x, subTexture.top + ren.uvCoords.y };
+		sf::Vector2f uvCoords = _textureAtlas->getUVCoords(ren.texture, ren.uvCoords);
 		_spriteLayers[ren.layer].addSprite(ren.uvSize, uvCoords, ren.color, renderPosition);
 	}
 	// Draw batches

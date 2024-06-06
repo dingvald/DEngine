@@ -8,7 +8,7 @@ namespace drft
 	{
 	public:
 		virtual sf::Color getIconColor() const = 0;
-		virtual int getSpriteIndex() const = 0;
+		virtual sf::FloatRect getTextureUV() const = 0;
 
 		virtual AbilityTargetingType getTargetingType() const = 0;
 		virtual bool isValid(entt::const_handle actor) const = 0;

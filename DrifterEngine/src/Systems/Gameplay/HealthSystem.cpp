@@ -12,6 +12,8 @@
 #include "Systems/Helpers/SpawnEffect.h"
 #include "Systems/Helpers/GetPrimaryMaterial.h"
 
+using namespace entt::literals;
+
 void drft::system::HealthSystem::init()
 {
 	_dispatcher->sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
@@ -59,7 +61,7 @@ void drft::system::HealthSystem::update(const float dt)
 			{
 				messageColor = sf::Color::Blue;
 				effectRender.color = sf::Color(180, 180, 180);
-				effectRender.texture = "simpleTileset";
+				effectRender.texture = "simpleTileset"_hs;
 				effectRender.uvCoords = { 0, 5 };
 				effect_ttl = 30;
 			}
@@ -71,12 +73,11 @@ void drft::system::HealthSystem::update(const float dt)
 			}
 			else if (damage.amount > 0)
 			{
-
 				std::vector<RenderComponent> hitParticles =
 				{
-					RenderComponent{.texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{0, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
-					RenderComponent{.texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{1, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
-					RenderComponent{.texture = "simpleTileset", .uvSize = {16, 16}, .uvCoords{2, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+					RenderComponent{.texture = "simpleTileset"_hs, .uvSize = {16, 16}, .uvCoords{0, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+					RenderComponent{.texture = "simpleTileset"_hs, .uvSize = {16, 16}, .uvCoords{1, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+					RenderComponent{.texture = "simpleTileset"_hs, .uvSize = {16, 16}, .uvCoords{2, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
 				};
 				// Spawn Hit particles
 				spawnEffect(*_registry, {

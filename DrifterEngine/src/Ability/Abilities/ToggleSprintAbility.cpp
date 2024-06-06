@@ -9,9 +9,9 @@ sf::Color drft::ToggleSprintAbility::getIconColor() const
     return sf::Color(101,122,98);
 }
 
-int drft::ToggleSprintAbility::getSpriteIndex() const
+sf::FloatRect drft::ToggleSprintAbility::getTextureUV() const
 {
-    return 1;
+	return { 1, 0, 16, 16 };
 }
 
 drft::AbilityTargetingType drft::ToggleSprintAbility::getTargetingType() const

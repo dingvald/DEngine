@@ -36,8 +36,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		finalColor.a = ren.color.a;
 
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		const auto& subTexture = _textureAtlas->getSubTexture(ren.texture);
-		sf::Vector2f uvCoords = { subTexture.left + ren.uvCoords.x, subTexture.top + ren.uvCoords.y };
+		sf::Vector2f uvCoords = _textureAtlas->getUVCoords(ren.texture, ren.uvCoords);
 		_spriteLayers[ren.layer].addSprite(ren.uvSize, uvCoords, finalColor, renderPosition);
 	}
 
@@ -46,8 +45,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 	for (auto const& [entity, pos, ren] : seenView.each())
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		const auto& subTexture = _textureAtlas->getSubTexture(ren.texture);
-		sf::Vector2f uvCoords = { subTexture.left + ren.uvCoords.x, subTexture.top + ren.uvCoords.y };
+		sf::Vector2f uvCoords = _textureAtlas->getUVCoords(ren.texture, ren.uvCoords);
 		_spriteLayers[ren.layer].addSprite(ren.uvSize, uvCoords, seenTileColor, renderPosition);
 	}
 

@@ -90,7 +90,15 @@ void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector2i position, sf::Co
 {
 	sf::Color translucentColor = { color.r, color.g, color.b, 200 };
 	auto effect = entt::handle{ *_registry, _registry->create() };
-	effect.emplace<RenderComponent>(static_cast<unsigned int>(util::Sprite::InLiquidEffect), 4u, translucentColor);
+	RenderComponent renderComponent =
+	{
+		.texture = entt::hashed_string("simpleTileset"),
+		.uvSize = {16, 16},
+		.uvCoords = {8, 4},
+		.layer = 4u,
+		.color = translucentColor
+	};
+	effect.emplace<RenderComponent>(renderComponent);
 	effect.emplace<PositionComponent>(position);
 	effect.emplace<component::tag::InViewport>();
 	_inLiquidEffects.push_back(effect.entity());

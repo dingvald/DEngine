@@ -34,7 +34,7 @@ void drft::system::OpenableSystem::openInteraction(entt::entity actor, entt::ent
 			// chest if container - door otherwise
 			bool isContainer = _registry->any_of<ContainerComponent>(subject);
 			auto& render = _registry->get<RenderComponent>(subject);
-			render.sprite += 1;
+			render.uvCoords += {1, 0};
 			render.layer = 1;
 			auto& material = _registry->get<MaterialComponent>(subject);
 			material.blocks = false;
@@ -64,7 +64,7 @@ void drft::system::OpenableSystem::closeInteraction(entt::entity actor, entt::en
 	if (auto openable = _registry->try_get<OpenableComponent>(subject))
 	{
 		auto& render = _registry->get<RenderComponent>(subject);
-		render.sprite -= 1;
+		render.uvCoords -= {1, 0};
 		render.layer = 2;
 
 		auto& material = _registry->get<MaterialComponent>(subject);

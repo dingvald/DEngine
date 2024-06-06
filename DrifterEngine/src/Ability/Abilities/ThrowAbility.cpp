@@ -15,9 +15,9 @@ sf::Color drft::ThrowAbility::getIconColor() const
 	return sf::Color::Magenta;
 }
 
-int drft::ThrowAbility::getSpriteIndex() const
+sf::FloatRect drft::ThrowAbility::getTextureUV() const
 {
-	return 2;
+	return { 2, 0, 16, 16 };
 }
 
 drft::AbilityTargetingType drft::ThrowAbility::getTargetingType() const
