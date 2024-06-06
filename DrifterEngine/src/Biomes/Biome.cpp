@@ -9,10 +9,14 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 {
 	if (json.HasMember("Icon"))
 	{
-		_icon.sprite = json["Icon"]["Sprite"].GetInt();
-		_icon.color.r = json["Icon"]["Color"].GetArray()[0].GetInt();
-		_icon.color.g = json["Icon"]["Color"].GetArray()[1].GetInt();
-		_icon.color.b = json["Icon"]["Color"].GetArray()[2].GetInt();
+		_icon.texture = entt::hashed_string(json["Icon"]["texture"].GetString());
+		_icon.uvSize.x = json["Icon"]["uv_size"].GetArray()[0].GetFloat();
+		_icon.uvSize.y = json["Icon"]["uv_size"].GetArray()[1].GetFloat();
+		_icon.uvCoords.x = json["Icon"]["uv_coords"].GetArray()[0].GetFloat();
+		_icon.uvCoords.y = json["Icon"]["uv_coords"].GetArray()[1].GetFloat();
+		_icon.color.r = json["Icon"]["color"].GetArray()[0].GetInt();
+		_icon.color.g = json["Icon"]["color"].GetArray()[1].GetInt();
+		_icon.color.b = json["Icon"]["color"].GetArray()[2].GetInt();
 	}
 	if (json.HasMember("Climate"))
 	{

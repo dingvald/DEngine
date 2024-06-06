@@ -10,6 +10,16 @@
 static constexpr float FLASH_RATE = 1.0;
 static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";
 
+const std::vector<sf::Vector2i> IconUVs =
+{
+	{3, 7}, // House
+	{4, 7}, // Star
+	{5, 7}, // Dungeon
+	{0, 7}, // Chest
+};
+
+using namespace entt::literals;
+
 drft::WorldMapState::WorldMapState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
@@ -21,8 +31,8 @@ drft::WorldMapState::WorldMapState(StateStack& stack, StateContext& context)
 			.fillColor = sf::Color(0,0,0,200)
 		});
 
-	_map.setTexture(getContext().textures.get("Sprites"));
-	_mapNotes.noteSprites.setTexture(getContext().textures.get("Sprites"));
+	_map.setTexture(getContext().textures.getTexture());
+	_mapNotes.noteSprites.setTexture(getContext().textures.getTexture());
 }
 
 bool drft::WorldMapState::handleEvent(const sf::Event& ev)
@@ -181,35 +191,40 @@ void drft::WorldMapState::refreshMapSprites()
 	_mapNotes.noteSprites.clear();
 
 	const auto& VIEW = getContext().window.getView();
-	
+	const auto& textureAtlas = getContext().textures;
 	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
+
+	sf::IntRect squareUV = textureAtlas.getUV("simpleTileset"_hs, { 16, 16 }, { 4, 0 });
 	for (int y = 0; y < worldMap.getDimensions().y; ++y)
 	{
 		for (int x = 0; x < worldMap.getDimensions().x; ++x)
 		{
+			const auto& icon = worldMap.getBiomeIcon({ x, y });
 			sf::Vector2f screenPosition = spatial::toFloatSpace(sf::Vector2i(x,y));
-			_map.addSprite(static_cast<unsigned int>(util::Sprite::Square),
-				sf::Color::Black, screenPosition);
-			_map.addSprite(worldMap.getBiomeIcon({x,y}).sprite,
-				worldMap.getBiomeIcon({x,y}).color, screenPosition);
+
+			_map.addSprite(squareUV, sf::Color::Black, screenPosition);
+			const auto uv = getContext().textures.getUV(icon.texture, icon.uvSize, icon.uvCoords);
+			_map.addSprite(uv, icon.color, screenPosition);
 
 			if (_mapNotes.notes.contains({x,y}))
 			{
-				_mapNotes.noteSprites.addSprite(static_cast<unsigned int>(_mapNotes.notes.at({x,y}).icon),
-					_mapNotes.notes.at({x,y}).color, screenPosition);
+				sf::Vector2i localUV = IconUVs.at(_mapNotes.notes.at({ x, y }).index);
+				sf::IntRect iconUV = textureAtlas.getUV("simpleTileset"_hs, { 16, 16 }, localUV);
+				_mapNotes.noteSprites.addSprite(iconUV, _mapNotes.notes.at({x,y}).color, screenPosition);
 			}
 		}
 	}
 }
 
-void drft::WorldMapState::addMapNote(sf::Vector2i position, util::Sprite sprite, sf::Color color)
+void drft::WorldMapState::addMapNote(sf::Vector2i position, size_t iconIndex, sf::Color color)
 {
-	_mapNotes.notes[position] = { sprite, color };
+	const auto& textureAtlas = getContext().textures;
+	_mapNotes.notes[position] = { iconIndex, color };
 
 	const auto& VIEW = getContext().window.getView();
 	sf::Vector2f screenPosition = spatial::toFloatSpace(_cursorPosition);
-	_mapNotes.noteSprites.addSprite(static_cast<unsigned int>(_mapNotes.notes.at(position).icon),
-		_mapNotes.notes.at(position).color, screenPosition);
+	sf::IntRect uv = textureAtlas.getUV("simpleTileset"_hs, { 16, 16 }, IconUVs.at(iconIndex));
+	_mapNotes.noteSprites.addSprite(uv, color, screenPosition);
 }
 
 void drft::WorldMapState::moveCursor(sf::Vector2i direction)
@@ -312,7 +327,7 @@ void drft::WorldMapState::openIconSelection()
 	constexpr int ICON_GRID_WIDTH = 4;
 	constexpr int ICON_GRID_HEIGHT = 4;
 
-	const auto& sprites = getContext().textures.get("Sprites");
+	const auto& textureAtlas = getContext().textures;
 
 	const auto& VIEW = getContext().window.getView();
 	auto& iconGrid = _guiStack.insert("Icons", gui::Grid(ICON_GRID_WIDTH, ICON_GRID_HEIGHT))
@@ -332,11 +347,9 @@ void drft::WorldMapState::openIconSelection()
 		.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER)
 		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
 
-	for (int i = 0; i < IconSprites.size(); ++i)
+	for (size_t i = 0; i < IconUVs.size(); ++i)
 	{
-		sf::Sprite sprite;
-		sprite.setTexture(sprites);
-		sprite.setTextureRect(util::SpriteIndexer::get(IconSprites.at(i), sprites));
+		sf::Sprite sprite = textureAtlas.getSprite("simpleTileset"_hs, { 16, 16 }, IconUVs[i]);
 		sprite.setColor(sf::Color::White);
 
 		iconGrid.insert(std::to_string(i), gui::SingleContainer())
@@ -354,7 +367,7 @@ void drft::WorldMapState::openIconSelection()
 				})
 			.setChildrenOrigin(gui::ElementPosition::CENTER)
 			.registerCallback(gui::ElementCallbackType::OnSelect, [this, index = i]() -> bool {
-				openColorSelection(IconSprites.at(index));
+				openColorSelection(index);
 				return true;
 				})
 			.insert("Icon", gui::Icon(sprite))
@@ -369,7 +382,7 @@ void drft::WorldMapState::openIconSelection()
 	}
 }
 
-void drft::WorldMapState::openColorSelection(util::Sprite sprite)
+void drft::WorldMapState::openColorSelection(size_t index)
 {
 	const auto& VIEW = getContext().window.getView();
 	_guiStack.insert("Colors", gui::List(true))
@@ -406,8 +419,8 @@ void drft::WorldMapState::openColorSelection(util::Sprite sprite)
 				})
 			.setTextString(std::string{ colorName })
 			.setTextOrigin(gui::ElementPosition::CENTER)
-			.registerCallback(gui::ElementCallbackType::OnSelect, [this, color, sprite]() -> bool {
-				addMapNote(_cursorPosition, sprite, color);
+			.registerCallback(gui::ElementCallbackType::OnSelect, [this, color, index]() -> bool {
+				addMapNote(_cursorPosition, index, color);
 				_guiStack.clear();
 				return true;
 				});

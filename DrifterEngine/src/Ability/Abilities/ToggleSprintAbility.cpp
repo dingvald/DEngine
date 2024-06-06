@@ -9,7 +9,7 @@ sf::Color drft::ToggleSprintAbility::getIconColor() const
     return sf::Color(101,122,98);
 }
 
-sf::FloatRect drft::ToggleSprintAbility::getTextureUV() const
+sf::IntRect drft::ToggleSprintAbility::getTextureUV() const
 {
 	return { 1, 0, 16, 16 };
 }

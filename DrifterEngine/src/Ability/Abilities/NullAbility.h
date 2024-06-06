@@ -11,7 +11,7 @@ namespace drft
 		virtual void perform(entt::handle actor, std::optional<sf::Vector2i> targetPosition) const override;
 
 		virtual sf::Color getIconColor() const override;
-		virtual sf::FloatRect getTextureUV() const override;
+		virtual sf::IntRect getTextureUV() const override;
 	};
 }
 

@@ -10,7 +10,9 @@
           "description": "A solid metal armor for the chest."
         },
         "Render": {
-          "sprite": 59,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 9, 5 ],
           "layer": 1,
           "color": [ 161, 157, 148 ]
         },
@@ -25,8 +27,7 @@
         "Craftable": {
           "recipe": {
             "Iron": 6,
-            "Twine": 2,
-            "Flint": 1
+            "Twine": 2
           }
         },
         "Health": {
@@ -55,7 +56,9 @@
           "description": "A solid iron armor for the legs."
         },
         "Render": {
-          "sprite": 62,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 2, 6 ],
           "layer": 1,
           "color": [ 161, 157, 148 ]
         },
@@ -69,8 +72,7 @@
         "Craftable": {
           "recipe": {
             "Iron": 5,
-            "Twine": 1,
-            "Flint": 1
+            "Twine": 1
           }
         },
         "Health": {
@@ -102,7 +104,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 59,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 9, 5 ],
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
@@ -148,7 +152,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 62,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 2, 6 ],
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
@@ -194,7 +200,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 65,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 5, 6 ],
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
@@ -239,7 +247,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 60,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 0, 6 ],
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
@@ -283,7 +293,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 63,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 3, 6 ],
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
@@ -327,7 +339,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 64,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 4, 6 ],
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
@@ -371,7 +385,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 61,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 1, 6 ],
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
@@ -415,7 +431,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 20,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 0, 2 ],
           "layer": 1,
           "color": [ 190, 182, 160 ]
         },
@@ -459,7 +477,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 63,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 3, 6 ],
           "layer": 1,
           "color": [ 98, 74, 46 ]
         },
@@ -506,7 +526,9 @@
           "position": [ 0.0, 0.0 ]
         },
         "Render": {
-          "sprite": 64,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 4, 6 ],
           "layer": 1,
           "color": [ 98, 74, 46 ]
         },

@@ -11,7 +11,7 @@
         },
         "Render": {
           "texture": "simpleTileset",
-          "uv_size": [ 16.0, 16.0 ],
+          "uv_size": [ 16, 16 ],
           "uv_coords": [ 7, 0 ],
           "layer": 1,
           "color": [ 88, 8, 8 ]
@@ -34,7 +34,7 @@
         },
         "Render": {
           "texture": "simpleTileset",
-          "uv_size": [ 16.0, 16.0 ],
+          "uv_size": [ 16, 16 ],
           "uv_coords": [ 4, 1 ],
           "layer": 1,
           "color": [ 68, 48, 40 ]
@@ -57,7 +57,7 @@
         },
         "Render": {
           "texture": "simpleTileset",
-          "uv_size": [ 16.0, 16.0 ],
+          "uv_size": [ 16, 16 ],
           "uv_coords": [ 0, 1 ],
           "layer": 1,
           "color": [ 128, 132, 135 ]
@@ -66,6 +66,29 @@
           "blocks": false,
           "weight": 1.5,
           "materials": [ "Stone" ]
+        }
+      }
+    },
+    "Iron": {
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": {
+        "Description": {
+          "name": "Iron",
+          "description": "An iron ore."
+        },
+        "Render": {
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 3, 4 ],
+          "layer": 1,
+          "color": [ 161, 157, 148 ]
+        },
+        "Material": {
+          "blocks": false,
+          "weight": 3.0,
+          "materials": [ "Iron" ]
         }
       }
     },
@@ -80,7 +103,7 @@
         },
         "Render": {
           "texture": "simpleTileset",
-          "uv_size": [ 16.0, 16.0 ],
+          "uv_size": [ 16, 16 ],
           "uv_coords": [ 1, 3 ],
           "layer": 1,
           "color": [ 1, 50, 35 ]
@@ -103,7 +126,7 @@
         },
         "Render": {
           "texture": "simpleTileset",
-          "uv_size": [ 16.0, 16.0 ],
+          "uv_size": [ 16, 16 ],
           "uv_coords": [ 2, 3 ],
           "layer": 1,
           "color": [ 186, 161, 127 ]
@@ -131,7 +154,7 @@
         },
         "Render": {
           "texture": "simpleTileset",
-          "uv_size": [ 16.0, 16.0 ],
+          "uv_size": [ 16, 16 ],
           "uv_coords": [ 8, 0 ],
           "layer": 1,
           "color": [ 98, 74, 46 ]
@@ -143,6 +166,5 @@
         }
       }
     }
-
   }
 }

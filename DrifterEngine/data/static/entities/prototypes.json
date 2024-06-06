@@ -7,7 +7,7 @@
       "Components": {
         "Render": {
           "texture": "simpleTileset",
-          "uv_size": [ 16.0, 16.0 ],
+          "uv_size": [ 16, 16 ],
           "uv_coords": [ 3, 0 ],
           "layer": 0,
           "color": [ 75, 75, 75 ]
@@ -27,7 +27,9 @@
           "description": "Just simple grass."
         },
         "Render": {
-          "sprite": 6,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 6, 0 ],
           "layer": 1,
           "color": [ 72, 111, 56 ]
         },
@@ -46,7 +48,9 @@
           "description": "Just grass but longer."
         },
         "Render": {
-          "sprite": 79,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 9, 7 ],
           "layer": 1,
           "color": [ 72, 111, 56 ]
         },
@@ -65,7 +69,9 @@
           "description": "Just simple sand."
         },
         "Render": {
-          "sprite": 24,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 4, 2 ],
           "layer": 1,
           "color": [ 194, 178, 128 ]
         },
@@ -84,7 +90,9 @@
           "description": "Just simple water."
         },
         "Render": {
-          "sprite": 25,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 5, 2 ],
           "layer": 1,
           "color": [ 27, 149, 224 ]
         },
@@ -106,7 +114,9 @@
           "description": "A beautiful, fragile flower."
         },
         "Render": {
-          "sprite": 38,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 8, 3 ],
           "layer": 1,
           "color": [ 27, 55, 184 ]
         },
@@ -130,7 +140,9 @@
           "description": "A common herb."
         },
         "Render": {
-          "sprite": 39,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 9, 3 ],
           "layer": 1,
           "color": [ 98, 118, 73 ]
         },
@@ -160,7 +172,9 @@
           "description": "Restores a small amount of Health."
         },
         "Render": {
-          "sprite": 40,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 0, 4 ],
           "layer": 1,
           "color": [ 98, 118, 73 ]
         },
@@ -197,7 +211,9 @@
           "description": "Roots of an old tree."
         },
         "Render": {
-          "sprite": 29,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 9, 2 ],
           "layer": 2,
           "color": [ 68, 48, 40 ]
         },
@@ -224,7 +240,9 @@
           "description": "A spiky plant."
         },
         "Render": {
-          "sprite": 37,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 7, 3 ],
           "layer": 1,
           "color": [ 3, 64, 16 ]
         },
@@ -253,7 +271,9 @@
           "description": "A wooden trunk with many leaves."
         },
         "Render": {
-          "sprite": 5,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 5, 0 ],
           "layer": 2,
           "color": [ 65, 97, 63 ]
         },
@@ -286,7 +306,9 @@
           "description": "A wooden trunk with many needles."
         },
         "Render": {
-          "sprite": 76,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 6, 7 ],
           "layer": 2,
           "color": [ 0, 74, 54 ]
         },
@@ -319,7 +341,9 @@
           "description": "A tree found in tropical climates."
         },
         "Render": {
-          "sprite": 28,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 8, 2 ],
           "layer": 2,
           "color": [ 31, 51, 36 ]
         },
@@ -352,7 +376,9 @@
           "description": "A common desert succulent."
         },
         "Render": {
-          "sprite": 26,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 6, 2 ],
           "layer": 2,
           "color": [ 83, 113, 61 ]
         },
@@ -379,7 +405,9 @@
           "description": "A very large chunk of rock."
         },
         "Render": {
-          "sprite": 23,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 3, 2 ],
           "layer": 2,
           "color": [ 100, 100, 100 ]
         },
@@ -409,7 +437,9 @@
           "description": "A deposit of iron ore."
         },
         "Render": {
-          "sprite": 42,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 2, 4 ],
           "layer": 3,
           "color": [ 161, 157, 148 ]
         },
@@ -441,7 +471,9 @@
       "Inherits": [],
       "Components": {
         "Render": {
-          "sprite": 1,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 1, 0 ],
           "layer": 2,
           "color": [ 150, 150, 150 ]
         },
@@ -572,7 +604,9 @@
           "description": "A simple axe for chopping."
         },
         "Render": {
-          "sprite": 12,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 2, 1 ],
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
@@ -608,7 +642,9 @@
           "description": "A durable axe for chopping."
         },
         "Render": {
-          "sprite": 12,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 2, 1 ],
           "layer": 1,
           "color": [ 128, 132, 135 ]
         },
@@ -646,7 +682,9 @@
           "description": "A simple sword usually used for training."
         },
         "Render": {
-          "sprite": 66,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 6, 6 ],
           "layer": 1,
           "color": [ 68, 48, 40 ]
         },
@@ -682,7 +720,9 @@
           "description": "A broad blade used for hacking."
         },
         "Render": {
-          "sprite": 13,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 3, 1 ],
           "layer": 1,
           "color": [ 161, 157, 148 ]
         },
@@ -717,7 +757,9 @@
           "description": "Used to provide light."
         },
         "Render": {
-          "sprite": 45,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 5, 4 ],
           "layer": 1,
           "color": [ 253, 146, 87 ]
         },
@@ -726,8 +768,7 @@
           "weight": 1.3,
           "materials": [
             "Wood",
-            "Twine",
-            "Flint"
+            "Twine"
           ]
         },
         "Health": {
@@ -745,34 +786,6 @@
         }
       }
     },
-    "Dungeon Key": {
-      "Inherits": [
-        "BaseItem"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Dungeon Key",
-          "description": "A mysterious key. What does it open?"
-        },
-        "Render": {
-          "sprite": 54,
-          "layer": 1,
-          "color": [ 212, 175, 55 ]
-        },
-        "Material": {
-          "blocks": false,
-          "weight": 0.3,
-          "materials": [
-            "Gold"
-          ]
-        },
-        "LocalLightSource": {
-          "radius": 6,
-          "dropOff": 0.2,
-          "color": [ 255, 255, 0 ]
-        }
-      }
-    },
     "Firefly": {
       "Inherits": [
         ""
@@ -783,7 +796,9 @@
           "description": "A bug that lights up."
         },
         "Render": {
-          "sprite": 41,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 1, 4 ],
           "layer": 2,
           "color": [ 200, 200, 100 ]
         },
@@ -837,7 +852,9 @@
           "description": "A colorful flying insect."
         },
         "Render": {
-          "sprite": 49,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 9, 4 ],
           "layer": 2,
           "color": [ 100, 30, 150 ]
         },
@@ -886,7 +903,9 @@
           "description": "The most annoying thing alive."
         },
         "Render": {
-          "sprite": 34,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 4, 3 ],
           "layer": 2,
           "color": [ 129, 114, 101 ]
         },
@@ -935,7 +954,9 @@
           "description": "Carrion bird with sharp beak and talons."
         },
         "Render": {
-          "sprite": 56,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 6, 5 ],
           "layer": 2,
           "color": [ 80, 50, 50 ]
         },
@@ -984,7 +1005,9 @@
           "description": "A small mammal with big ears."
         },
         "Render": {
-          "sprite": 55,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 5, 5 ],
           "layer": 2,
           "color": [ 140, 140, 140 ]
         },
@@ -1035,7 +1058,9 @@
           "description": "A fearsome mammal that stalks its prey."
         },
         "Render": {
-          "sprite": 57,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 7, 5 ],
           "layer": 2,
           "color": [ 255, 177, 51 ]
         },
@@ -1088,7 +1113,9 @@
           "description": "A fearsome mammal that stalks its prey."
         },
         "Render": {
-          "sprite": 57,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 7, 5 ],
           "layer": 2,
           "color": [ 40, 40, 40 ]
         }
@@ -1104,7 +1131,9 @@
           "description": "If you see it, it's too late."
         },
         "Render": {
-          "sprite": 57,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 7, 5 ],
           "layer": 2,
           "color": [ 186, 161, 127 ]
         }
@@ -1120,7 +1149,9 @@
           "description": "A fearsome reptile."
         },
         "Render": {
-          "sprite": 35,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 5, 3 ],
           "layer": 2,
           "color": [ 48, 96, 72 ]
         },
@@ -1167,7 +1198,9 @@
           "description": "A powerful mythical creature."
         },
         "Render": {
-          "sprite": 58,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 8, 5 ],
           "layer": 2,
           "color": [ 115, 105, 103 ]
         },
@@ -1215,7 +1248,9 @@
           "description": "A fearsome reptile with no legs."
         },
         "Render": {
-          "sprite": 36,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 6, 3 ],
           "layer": 2,
           "color": [ 186, 84, 4 ]
         },
@@ -1263,7 +1298,9 @@
           "description": "If you can hear it it's too late'."
         },
         "Render": {
-          "sprite": 36,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 6, 3 ],
           "layer": 2,
           "color": [ 127, 118, 103 ]
         },
@@ -1297,7 +1334,9 @@
           "description": "A wooden structure used to prevent passage."
         },
         "Render": {
-          "sprite": 46,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 6, 4 ],
           "layer": 2,
           "color": [ 121, 92, 50 ]
         },
@@ -1334,7 +1373,9 @@
           "description": "A wooden structure used to allow selective passage."
         },
         "Render": {
-          "sprite": 67,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 7, 6 ],
           "layer": 2,
           "color": [ 121, 92, 50 ]
         },
@@ -1371,7 +1412,9 @@
           "description": "A container holding valuables."
         },
         "Render": {
-          "sprite": 70,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 0, 7 ],
           "layer": 2,
           "color": [ 121, 92, 50 ]
         },
@@ -1403,7 +1446,9 @@
           "description": "A shrine that heals you fully."
         },
         "Render": {
-          "sprite": 72,
+          "texture": "simpleTileset",
+          "uv_size": [ 16, 16 ],
+          "uv_coords": [ 2, 7 ],
           "layer": 2,
           "color": [ 150, 120, 120 ]
         },

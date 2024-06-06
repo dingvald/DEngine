@@ -16,6 +16,7 @@
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/SpriteIndexer.h"
 #include "Utility/StringManipulation.h"
+#include "Utility/TextureAtlas.h"
 
 //TODO: width and height should depend on player's container size
 static constexpr int INVENTORY_WIDTH = 5;
@@ -105,9 +106,9 @@ void drft::InventoryState::onPop()
 void drft::InventoryState::addItemIcon(gui::Element& container, entt::entity item, sf::Vector2f iconSize)
 {
 	const auto& itemRender = getContext().registry.get<RenderComponent>(item);
-	const auto& sprites = getContext().textures.get("Sprites");
+	const auto& textureAtlas = getContext().textures;
 
-	sf::Sprite sprite = { sprites, util::SpriteIndexer::get(static_cast<util::Sprite>(itemRender.sprite), sprites) };
+	sf::Sprite sprite = textureAtlas.getSprite(itemRender.texture, itemRender.uvSize, itemRender.uvCoords);
 	container.insert("Icon", gui::Icon(sprite))
 		.setSize(iconSize)
 		.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)

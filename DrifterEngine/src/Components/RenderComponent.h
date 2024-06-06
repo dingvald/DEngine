@@ -9,8 +9,8 @@
 struct RenderComponent
 {
 	entt::id_type texture;
-	sf::Vector2f uvSize;
-	sf::Vector2f uvCoords;
+	sf::Vector2i uvSize;
+	sf::Vector2i uvCoords;
 	unsigned int layer = 0u;
 	sf::Color color = sf::Color::Magenta;
 

@@ -33,7 +33,7 @@ sf::Color drft::NullAbility::getIconColor() const
 	return sf::Color::Magenta;
 }
 
-sf::FloatRect drft::NullAbility::getTextureUV() const
+sf::IntRect drft::NullAbility::getTextureUV() const
 {
 	return { 0,0,16,16 };
 }

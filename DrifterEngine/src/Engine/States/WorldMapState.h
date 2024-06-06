@@ -11,28 +11,8 @@ namespace drft
 {
 	struct MapNote
 	{
-		util::Sprite icon = util::Sprite::None;
+		size_t index;
 		sf::Color color = sf::Color::Magenta;
-	};
-
-	const std::vector<util::Sprite> IconSprites =
-	{
-		util::Sprite::Square,
-		util::Sprite::Heart,
-		util::Sprite::Diamond,
-		util::Sprite::Triangle,
-		util::Sprite::Star,
-		util::Sprite::X,
-		util::Sprite::Ephemera,
-		util::Sprite::ChestClosed,
-		util::Sprite::DoorClosed,
-		util::Sprite::HouseIcon,
-		util::Sprite::DungeonDoor,
-		util::Sprite::DungeonKey,
-		util::Sprite::OreDeposit,
-		util::Sprite::Tree,
-		util::Sprite::Barricade,
-		util::Sprite::Shield
 	};
 
 	const std::unordered_map<std::string, sf::Color> IconColors =
@@ -72,11 +52,11 @@ namespace drft
 
 	private:
 		void refreshMapSprites();
-		void addMapNote(sf::Vector2i position, util::Sprite sprite, sf::Color color);
+		void addMapNote(sf::Vector2i position, size_t iconIndex, sf::Color color);
 		void moveCursor(sf::Vector2i direction);
 		void openOnSelectMenu();
 		void openIconSelection();
-		void openColorSelection(util::Sprite sprite);
+		void openColorSelection(size_t iconIndex);
 		void pulseCurrentPositionTile(float dt);
 		void pulseCursor(float dt);
 		void pulseMapNotes(float dt);
@@ -111,7 +91,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, drft::MapNote& mapNote)
 	{
-		archive(mapNote.icon, mapNote.color.r, mapNote.color.g, mapNote.color.b);
+		archive(mapNote.index, mapNote.color.r, mapNote.color.g, mapNote.color.b);
 	}
 }
 

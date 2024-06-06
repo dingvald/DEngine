@@ -1,12 +1,10 @@
 #pragma once
 #include "Utility/Math.h"
 #include "ProcGen/SpawningAlgorithms/GenerationParameters.h"
+#include "Components/RenderComponent.h"
 
-struct BiomeIcon
-{
-	unsigned int sprite = 4;
-	sf::Color color = sf::Color::Magenta;
-};
+
+using BiomeIcon = RenderComponent;
 
 class Biome
 {

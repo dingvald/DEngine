@@ -2,8 +2,10 @@
   "Biomes": {
     "Forest": {
       "Icon": {
-        "Sprite": 5,
-        "Color": [ 65, 97, 63 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [5, 0],
+        "color": [ 65, 97, 63 ]
       },
       "Climate": {
         "Temperature": [ 0.0, 15.0 ],
@@ -68,8 +70,10 @@
     },
     "Nordic Foothills": {
       "Icon": {
-        "Sprite": 76,
-        "Color": [ 0, 74, 54 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 6,70 ],
+        "color": [ 0, 74, 54 ]
       },
       "Climate": {
         "Temperature": [ -1.0, 10.0 ],
@@ -117,8 +121,10 @@
     },
     "Mountain": {
       "Icon": {
-        "Sprite": 27,
-        "Color": [ 120, 120, 120 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 7, 2 ],
+        "color": [ 120, 120, 120 ]
       },
       "Climate": {
         "Temperature": [ 0.0, 15.0 ],
@@ -161,8 +167,10 @@
     },
     "Snowy Peak": {
       "Icon": {
-        "Sprite": 27,
-        "Color": [ 255, 255, 255 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 7, 2 ],
+        "color": [ 255, 255, 255 ]
       },
       "Climate": {
         "Temperature": [ -20.0, 5.0 ],
@@ -172,8 +180,10 @@
     },
     "Volcano": {
       "Icon": {
-        "Sprite": 27,
-        "Color": [ 247, 52, 43 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 7, 2 ],
+        "color": [ 247, 52, 43 ]
       },
       "Climate": {
         "Temperature": [ 20.0, 30.0 ],
@@ -184,8 +194,10 @@
     },
     "Lava Front": {
       "Icon": {
-        "Sprite": 25,
-        "Color": [ 247, 52, 43 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 5, 2 ],
+        "color": [ 247, 52, 43 ]
       },
       "Climate": {
         "Temperature": [ 20.0, 30.0 ],
@@ -196,8 +208,10 @@
     },
     "Swamp": {
       "Icon": {
-        "Sprite": 25,
-        "Color": [ 60, 92, 83 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 5, 2 ],
+        "color": [ 60, 92, 83 ]
       },
       "Climate": {
         "Temperature": [ 5.0, 25.0 ],
@@ -236,8 +250,10 @@
     },
     "Jungle": {
       "Icon": {
-        "Sprite": 28,
-        "Color": [ 31, 51, 36 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 8, 2 ],
+        "color": [ 31, 51, 36 ]
       },
       "Climate": {
         "Temperature": [ 15.0, 30.0 ],
@@ -247,8 +263,10 @@
     },
     "Cloud Forest": {
       "Icon": {
-        "Sprite": 28,
-        "Color": [ 150, 160, 191 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 8, 2 ],
+        "color": [ 150, 160, 191 ]
       },
       "Climate": {
         "Temperature": [ 18.0, 32.0 ],
@@ -258,8 +276,10 @@
     },
     "Desert Mesa": {
       "Icon": {
-        "Sprite": 78,
-        "Color": [ 168, 98, 44 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 8, 7 ],
+        "color": [ 168, 98, 44 ]
       },
       "Climate": {
         "Temperature": [ 20.0, 35.0 ],
@@ -269,8 +289,10 @@
     },
     "Desert": {
       "Icon": {
-        "Sprite": 24,
-        "Color": [ 194, 178, 128 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 4, 2 ],
+        "color": [ 194, 178, 128 ]
       },
       "Climate": {
         "Temperature": [ 20.0, 35.0 ],
@@ -280,8 +302,10 @@
     },
     "Prairie": {
       "Icon": {
-        "Sprite": 6,
-        "Color": [ 72, 111, 56 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 6, 0 ],
+        "color": [ 72, 111, 56 ]
       },
       "Climate": {
         "Temperature": [ 0.0, 20.0 ],
@@ -323,8 +347,10 @@
     },
     "Savanna": {
       "Icon": {
-        "Sprite": 6,
-        "Color": [ 194, 178, 128 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 6, 0 ],
+        "color": [ 194, 178, 128 ]
       },
       "Climate": {
         "Temperature": [ 20.0, 30.0 ],
@@ -334,8 +360,10 @@
     },
     "Tundra": {
       "Icon": {
-        "Sprite": 6,
-        "Color": [ 140, 140, 180 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 6, 0 ],
+        "color": [ 140, 140, 180 ]
       },
       "Climate": {
         "Temperature": [ -9.0, 1.0 ],
@@ -345,8 +373,10 @@
     },
     "Ocean": {
       "Icon": {
-        "Sprite": 25,
-        "Color": [ 27, 149, 224 ]
+        "texture": "simpleTileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 5, 2 ],
+        "color": [ 27, 149, 224 ]
       },
       "Climate": {
         "Temperature": [ "Any" ],

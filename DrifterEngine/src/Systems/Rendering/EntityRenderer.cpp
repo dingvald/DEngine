@@ -36,8 +36,8 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		finalColor.a = ren.color.a;
 
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		sf::Vector2f uvCoords = _textureAtlas->getUVCoords(ren.texture, ren.uvCoords);
-		_spriteLayers[ren.layer].addSprite(ren.uvSize, uvCoords, finalColor, renderPosition);
+		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
+		_spriteLayers[ren.layer].addSprite(uv, finalColor, renderPosition);
 	}
 
 	// Apply darkened light to entities outside the player's FOV
@@ -45,8 +45,8 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 	for (auto const& [entity, pos, ren] : seenView.each())
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
-		sf::Vector2f uvCoords = _textureAtlas->getUVCoords(ren.texture, ren.uvCoords);
-		_spriteLayers[ren.layer].addSprite(ren.uvSize, uvCoords, seenTileColor, renderPosition);
+		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
+		_spriteLayers[ren.layer].addSprite(uv, seenTileColor, renderPosition);
 	}
 
 	// Draw batches
