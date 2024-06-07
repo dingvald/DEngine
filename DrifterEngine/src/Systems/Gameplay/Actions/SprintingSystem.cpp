@@ -94,7 +94,7 @@ void drft::system::SprintingSystem::addSprintEffect(entt::registry& registry, en
 	auto effect = entt::handle{ registry, registry.create() };
 	RenderComponent renderComponent =
 	{
-		.texture = entt::hashed_string("simpleTileset"),
+		.texture = entt::hashed_string("simple_tileset"),
 		.uvSize = {16, 16},
 		.uvCoords = {1, 5},
 		.layer = 4u,

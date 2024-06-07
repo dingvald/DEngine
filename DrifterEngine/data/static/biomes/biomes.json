@@ -2,7 +2,7 @@
   "Biomes": {
     "Forest": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [5, 0],
         "color": [ 65, 97, 63 ]
@@ -70,7 +70,7 @@
     },
     "Nordic Foothills": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 6,7 ],
         "color": [ 0, 74, 54 ]
@@ -121,7 +121,7 @@
     },
     "Mountain": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 7, 2 ],
         "color": [ 120, 120, 120 ]
@@ -167,7 +167,7 @@
     },
     "Snowy Peak": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 7, 2 ],
         "color": [ 255, 255, 255 ]
@@ -180,7 +180,7 @@
     },
     "Volcano": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 7, 2 ],
         "color": [ 247, 52, 43 ]
@@ -194,7 +194,7 @@
     },
     "Lava Front": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 5, 2 ],
         "color": [ 247, 52, 43 ]
@@ -208,7 +208,7 @@
     },
     "Swamp": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 5, 2 ],
         "color": [ 60, 92, 83 ]
@@ -250,7 +250,7 @@
     },
     "Jungle": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 8, 2 ],
         "color": [ 31, 51, 36 ]
@@ -263,7 +263,7 @@
     },
     "Cloud Forest": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 8, 2 ],
         "color": [ 150, 160, 191 ]
@@ -276,7 +276,7 @@
     },
     "Desert Mesa": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 8, 7 ],
         "color": [ 168, 98, 44 ]
@@ -289,7 +289,7 @@
     },
     "Desert": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 4, 2 ],
         "color": [ 194, 178, 128 ]
@@ -302,7 +302,7 @@
     },
     "Prairie": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 6, 0 ],
         "color": [ 72, 111, 56 ]
@@ -347,7 +347,7 @@
     },
     "Savanna": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 6, 0 ],
         "color": [ 194, 178, 128 ]
@@ -360,7 +360,7 @@
     },
     "Tundra": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 6, 0 ],
         "color": [ 140, 140, 180 ]
@@ -373,7 +373,7 @@
     },
     "Ocean": {
       "Icon": {
-        "texture": "simpleTileset",
+        "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 5, 2 ],
         "color": [ 27, 149, 224 ]

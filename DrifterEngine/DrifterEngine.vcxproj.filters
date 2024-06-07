@@ -2503,10 +2503,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\Textures\simpleTileset.png">
+    <Image Include="resources\Textures\simple_tileset.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\icons.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\human_body.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

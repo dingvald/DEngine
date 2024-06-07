@@ -131,7 +131,7 @@ void drft::SelectTargetState::onPush()
 		requestStackPop();
 	}
 
-	const entt::id_type tileSetTexture = entt::hashed_string("simpleTileset").value();
+	const entt::id_type tileSetTexture = entt::hashed_string("simple_tileset").value();
 
 	auto radius = spatial::getIntCircleInRadius(_startPosition, _targetSelect->range.getMax());
 	RenderComponent radiusEffectRender = { .texture = tileSetTexture, .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_RANGE_COLOR };

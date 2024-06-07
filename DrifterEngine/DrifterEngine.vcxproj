@@ -1327,8 +1327,9 @@
     <None Include="src\Utility\ResourceHolder.inl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\Textures\human_body.png" />
     <Image Include="resources\Textures\icons.png" />
-    <Image Include="resources\Textures\simpleTileset.png" />
+    <Image Include="resources\Textures\simple_tileset.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />

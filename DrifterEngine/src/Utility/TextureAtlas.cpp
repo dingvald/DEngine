@@ -23,10 +23,22 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 	// Collect all images from directory
 	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
 	{
+		const std::string& extension = filename.path().extension().string();
+		if (!SupportedImageTypes.contains(extension))
+		{
+			std::cout << "WARNING: " << filename.path().filename() << " could not be added to the texture atlas." << std::endl;
+			std::cout << "All files in " << directoryPath << " must be the following types:" << std::endl;
+			for (auto&& ext : SupportedImageTypes)
+			{
+				std::cout << ext << std::endl;
+			}
+			continue;
+		}
+
 		sf::Image subImage;
 		if (subImage.loadFromFile(filename.path().string()))
 		{
-			const auto imageName = filename.path().filename().replace_extension().string();
+			const std::string& imageName = filename.path().filename().replace_extension().string();
 			std::cout << "Adding " << imageName << std::endl;
 			PackingRect rect = {};
 			rect.id = currentId;
@@ -65,7 +77,7 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 		return false;
 	}
 
-	std::cout << "SUCCESS: All images added to atlas." << std::endl;
+	std::cout << "SUCCESS: All supported images added to atlas." << std::endl;
 	return true;
 }
 

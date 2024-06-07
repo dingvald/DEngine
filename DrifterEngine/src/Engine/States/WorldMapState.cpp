@@ -194,7 +194,7 @@ void drft::WorldMapState::refreshMapSprites()
 	const auto& textureAtlas = getContext().textures;
 	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
 
-	sf::IntRect squareUV = textureAtlas.getUV("simpleTileset"_hs, { 16, 16 }, { 4, 0 });
+	sf::IntRect squareUV = textureAtlas.getUV("simple_tileset"_hs, { 16, 16 }, { 4, 0 });
 	for (int y = 0; y < worldMap.getDimensions().y; ++y)
 	{
 		for (int x = 0; x < worldMap.getDimensions().x; ++x)
@@ -209,7 +209,7 @@ void drft::WorldMapState::refreshMapSprites()
 			if (_mapNotes.notes.contains({x,y}))
 			{
 				sf::Vector2i localUV = IconUVs.at(_mapNotes.notes.at({ x, y }).index);
-				sf::IntRect iconUV = textureAtlas.getUV("simpleTileset"_hs, { 16, 16 }, localUV);
+				sf::IntRect iconUV = textureAtlas.getUV("simple_tileset"_hs, { 16, 16 }, localUV);
 				_mapNotes.noteSprites.addSprite(iconUV, _mapNotes.notes.at({x,y}).color, screenPosition);
 			}
 		}
@@ -223,7 +223,7 @@ void drft::WorldMapState::addMapNote(sf::Vector2i position, size_t iconIndex, sf
 
 	const auto& VIEW = getContext().window.getView();
 	sf::Vector2f screenPosition = spatial::toFloatSpace(_cursorPosition);
-	sf::IntRect uv = textureAtlas.getUV("simpleTileset"_hs, { 16, 16 }, IconUVs.at(iconIndex));
+	sf::IntRect uv = textureAtlas.getUV("simple_tileset"_hs, { 16, 16 }, IconUVs.at(iconIndex));
 	_mapNotes.noteSprites.addSprite(uv, color, screenPosition);
 }
 
@@ -349,7 +349,7 @@ void drft::WorldMapState::openIconSelection()
 
 	for (size_t i = 0; i < IconUVs.size(); ++i)
 	{
-		sf::Sprite sprite = textureAtlas.getSprite("simpleTileset"_hs, { 16, 16 }, IconUVs[i]);
+		sf::Sprite sprite = textureAtlas.getSprite("simple_tileset"_hs, { 16, 16 }, IconUVs[i]);
 		sprite.setColor(sf::Color::White);
 
 		iconGrid.insert(std::to_string(i), gui::SingleContainer())

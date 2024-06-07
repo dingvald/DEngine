@@ -112,7 +112,7 @@ void drft::system::HUD::createHealthBar()
 	using namespace entt::literals;
 	const auto& textureAtlas = _registry->ctx().get<TextureAtlas&>();
 
-	_heartIcon = textureAtlas.getSprite("simpleTileset"_hs, { 16, 16 }, { 5, 1 });
+	_heartIcon = textureAtlas.getSprite("simple_tileset"_hs, { 16, 16 }, { 5, 1 });
 	_heartIcon.setPosition(HEALTHBAR_POSITION - sf::Vector2f(20.f, 4.f));
 	_heartIcon.setColor(sf::Color(150, 60, 60, 200));
 
@@ -130,7 +130,7 @@ void drft::system::HUD::createStaminaBar()
 	using namespace entt::literals;
 	const auto& textureAtlas = _registry->ctx().get<TextureAtlas&>();
 
-	_staminaIcon = textureAtlas.getSprite("simpleTileset"_hs, { 16, 16 }, { 8, 1 });
+	_staminaIcon = textureAtlas.getSprite("simple_tileset"_hs, { 16, 16 }, { 8, 1 });
 	_staminaIcon.setPosition(STAMINABAR_POSITION - sf::Vector2f(20.f, 4.f));
 	_staminaIcon.setColor(sf::Color(60, 150, 60, 200));
 
