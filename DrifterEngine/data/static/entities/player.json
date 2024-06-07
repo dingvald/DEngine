@@ -10,7 +10,7 @@
           "description": "The Player character. Can be anything the player wants..."
         },
         "Render": {
-          "texture": "human_body",
+          "texture": "human_male",
           "uv_size": [ 16, 16 ],
           "uv_coords": [ 0, 0 ],
           "layer": 2,
