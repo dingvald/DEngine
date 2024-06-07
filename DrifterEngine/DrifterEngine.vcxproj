@@ -1327,7 +1327,7 @@
     <None Include="src\Utility\ResourceHolder.inl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\Textures\human_body.png" />
+    <Image Include="resources\Textures\human_male.png" />
     <Image Include="resources\Textures\icons.png" />
     <Image Include="resources\Textures\simple_tileset.png" />
   </ItemGroup>
