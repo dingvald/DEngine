@@ -32,6 +32,7 @@
 #include "RenderComponent.h"
 #include "SharpComponent.h"
 #include "SprintingComponent.h"
+#include "SpriteControllerComponent.h"
 #include "StaminaComponent.h"
 #include "TemporaryLightSourceComponent.h"
 #include "TickingLifetimeComponent.h"
@@ -71,6 +72,7 @@ void ComponentMetaBinder::bindComponents()
 	RenderComponent::bind();
 	SharpComponent::bind();
 	SprintingComponent::bind();
+	SpriteControllerComponent::bind();
 	StaminaComponent::bind();
 	TemporaryLightSourceComponent::bind();
 	TickingLifetimeComponent::bind();

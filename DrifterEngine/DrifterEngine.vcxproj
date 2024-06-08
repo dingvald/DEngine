@@ -488,6 +488,7 @@
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
     <ClInclude Include="src\Components\Actions\MoveAction.h" />
+    <ClInclude Include="src\Components\SpriteControllerComponent.h" />
     <ClInclude Include="src\Systems\Gameplay\CollisionSystem.h" />
     <ClInclude Include="src\Components\CollisionComponent.h" />
     <ClInclude Include="src\Components\ComponentMetaBinder.h" />

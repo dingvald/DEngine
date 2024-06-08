@@ -13,11 +13,13 @@ void drft::system::AnimationSystem::init()
 void drft::system::AnimationSystem::fixedUpdate()
 {
 	math::Range<int> indexRange(0, 0);
+
 	auto view = _registry->view<AnimationComponent>();
 	for (auto [entity, animation] : view.each())
 	{
-		++animation.elapsed;
+		_registry->emplace_or_replace<RenderComponent>(entity, animation.sprites[animation.index]);
 
+		++animation.elapsed;
 		const float numFramesTillNextIndex = TARGET_FPS / std::abs(animation.speed);
 		if (animation.elapsed >= numFramesTillNextIndex)
 		{
@@ -31,15 +33,12 @@ void drft::system::AnimationSystem::fixedUpdate()
 			}
 
 			indexRange.setMax(animation.sprites.size() - 1);
-			if (indexRange.isValueWithinInclusive(animation.index))
+			if (!indexRange.isValueWithinInclusive(animation.index))
 			{
-				animation.elapsed = animation.elapsed - numFramesTillNextIndex;
-				_registry->emplace_or_replace<RenderComponent>(entity, animation.sprites[animation.index]);
+				_toRemoveAnimation.push_back(entity);	
 			}
-			else
-			{
-				_toRemoveAnimation.push_back(entity);
-			}
+
+			animation.elapsed = animation.elapsed - numFramesTillNextIndex;
 		}
 	}
 }

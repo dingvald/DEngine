@@ -16,6 +16,21 @@
           "layer": 2,
           "color": [ 120, 120, 120 ]
         },
+        "SpriteController": {
+          "states": {
+            "default": [
+              {
+                "uv_coords": [ 0, 0 ]
+              }
+            ],
+            "sprinting": [
+              {
+                "uv_coords": [ 1, 0 ],
+                "next": "default"
+              }
+            ]
+          }
+        },
         "Position": {
           "position": [ 0.0, 0.0 ]
         },
