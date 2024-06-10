@@ -531,6 +531,9 @@
     <ClCompile Include="src\Utility\RectPacker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Rendering\SpriteControllerSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -2043,6 +2046,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\SpriteControllerComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Rendering\SpriteControllerSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\SpriteChangeRequestComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\SpriteOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\ColorSerialization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

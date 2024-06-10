@@ -9,24 +9,20 @@
           "name": "Player",
           "description": "The Player character. Can be anything the player wants..."
         },
-        "Render": {
-          "texture": "human_male",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 0, 0 ],
-          "layer": 2,
-          "color": [ 120, 120, 120 ]
-        },
         "SpriteController": {
           "states": {
             "default": [
               {
-                "uv_coords": [ 0, 0 ]
+                "texture": "human_male",
+                "uv_size": [16, 16],
+                "uv_coords": [ 0, 0 ],
+                "layer": 2,
+                "color": [130, 130, 130]
               }
             ],
             "sprinting": [
               {
-                "uv_coords": [ 1, 0 ],
-                "next": "default"
+                "uv_coords": [ 1, 0 ]
               }
             ]
           }

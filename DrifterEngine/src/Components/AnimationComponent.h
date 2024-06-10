@@ -4,10 +4,11 @@
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
 #include "RenderComponent.h"
+#include "Utility/SpriteOptions.h"
 
 struct AnimationComponent
 {
-	std::vector<RenderComponent> sprites;
+	std::vector<SpriteOptions> sprites;
 	int index = 0;
 	float speed = 1.0f; // animation frames / second
 	float elapsed = 0.0f; // number of game frames elapsed

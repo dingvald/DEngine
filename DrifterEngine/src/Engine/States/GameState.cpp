@@ -16,6 +16,7 @@
 #include "Systems/Rendering/EntityRenderer.h"
 #include "Systems/Rendering/EffectRenderer.h"
 #include "Systems/Rendering/LightingSystem.h"
+#include "Systems/Rendering/SpriteControllerSystem.h"
 #include "Systems/Core/HUD.h"
 #include "Systems/Core/RealityBubble.h"
 #include "Systems/Core/PlayerInput.h"
@@ -257,7 +258,6 @@ void drft::GameState::importSystems()
 	_systems->add<ArtificialInput>(					Phase::OnProcessInput);
 
 	_systems->add<ProjectileSystem>(				Phase::OnUpdate);
-	
 	_systems->add<InteractionSystem>(				Phase::OnUpdate);
 	_systems->add<WaitingSystem>(					Phase::OnUpdate);
 	_systems->add<DropItemSystem>(					Phase::OnUpdate);
@@ -278,6 +278,7 @@ void drft::GameState::importSystems()
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<VisualEffectSystem>(				Phase::OnFixedUpdate);
+	_systems->add<SpriteControllerSystem>(			Phase::OnFixedUpdate);
 	_systems->add<AnimationSystem>(					Phase::OnFixedUpdate);
 	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 5);
 

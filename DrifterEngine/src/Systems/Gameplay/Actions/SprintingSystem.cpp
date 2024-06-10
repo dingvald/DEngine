@@ -7,8 +7,11 @@
 #include "Components/StaminaComponent.h"
 #include "Components/ActorComponent.h"
 #include "Components/RenderComponent.h"
+#include "Components/SpriteChangeRequestComponent.h"
 
 #include "Utility/SpriteIndexer.h"
+
+using namespace entt::literals;
 
 static constexpr float PI = 3.141592f;
 
@@ -56,12 +59,14 @@ void drft::system::SprintingSystem::onSprintingAdded(entt::registry& registry, e
 {
 	applySprintBuff(registry, entity);
 	addSprintEffect(registry, entity);
+	registry.emplace_or_replace<SpriteChangeRequestComponent>(entity, "sprinting"_hs);
 }
 
 void drft::system::SprintingSystem::onSprintingRemoved(entt::registry& registry, entt::entity entity)
 {
 	removeSprintBuff(registry, entity);
 	removeSprintEffect(registry, entity);
+	registry.emplace_or_replace<SpriteChangeRequestComponent>(entity, "default"_hs);
 }
 
 void drft::system::SprintingSystem::applySprintBuff(entt::registry& registry, entt::entity entity)

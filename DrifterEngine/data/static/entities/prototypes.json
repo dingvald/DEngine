@@ -470,13 +470,6 @@
     "Human Body": {
       "Inherits": [],
       "Components": {
-        "Render": {
-          "texture": "human_body",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 1, 0 ],
-          "layer": 2,
-          "color": [ 150, 150, 150 ]
-        },
         "Body": {
           "Torso": {
             "type": "Torso",

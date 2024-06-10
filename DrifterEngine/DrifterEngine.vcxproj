@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Rendering\SpriteControllerSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\CollisionSystem.cpp" />
     <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
     <ClCompile Include="src\Systems\Gameplay\HealingSystem.cpp" />
@@ -486,6 +487,8 @@
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
+    <ClInclude Include="src\Components\SpriteChangeRequestComponent.h" />
+    <ClInclude Include="src\Systems\Rendering\SpriteControllerSystem.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
     <ClInclude Include="src\Components\Actions\MoveAction.h" />
     <ClInclude Include="src\Components\SpriteControllerComponent.h" />
@@ -649,7 +652,9 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
     <ClInclude Include="src\Systems\Rendering\RenderLayers.h" />
+    <ClInclude Include="src\Utility\ColorSerialization.h" />
     <ClInclude Include="src\Utility\RectPacker.h" />
+    <ClInclude Include="src\Utility\SpriteOptions.h" />
     <ClInclude Include="src\Utility\StringManipulation.h" />
     <ClInclude Include="src\Utility\GetTextCenter.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />
