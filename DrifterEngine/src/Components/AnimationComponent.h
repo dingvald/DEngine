@@ -8,7 +8,7 @@
 
 struct AnimationComponent
 {
-	std::vector<SpriteOptions> sprites;
+	std::vector<SpriteOptions> frames;
 	int index = 0;
 	float speed = 1.0f; // animation frames / second
 	float elapsed = 0.0f; // number of game frames elapsed
@@ -31,7 +31,7 @@ namespace cereal
 	void serialize(Archive& archive, AnimationComponent& animation)
 	{
 		archive(
-			animation.sprites, 
+			animation.frames, 
 			animation.index, 
 			animation.speed, 
 			animation.elapsed, 

@@ -2,6 +2,8 @@
 #include <Utility/Vector2Serialization.h>
 #include <Utility/ColorSerialization.h>
 
+struct RenderComponent;
+
 struct SpriteOptions
 {
 	std::optional<sf::Vector2i> uvCoords;
@@ -19,3 +21,7 @@ private:
 		archive(uvCoords, texture, uvSize, layer, color);
 	}
 };
+
+void createSpriteOptionsFromRenderComponent(SpriteOptions& options, const RenderComponent& render);
+
+void applySpriteOptionsToRenderComponent(RenderComponent& render, const SpriteOptions& options);

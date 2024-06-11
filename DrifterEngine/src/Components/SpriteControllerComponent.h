@@ -9,14 +9,12 @@
 #include "AnimationComponent.h"
 #include "Utility/SpriteOptions.h"
 
-
-
 struct SpriteControllerComponent
 {
 private:
 	struct StateNode
 	{
-		SpriteOptions options;
+		std::vector<SpriteOptions> frames;
 		std::optional<float> speed; // Frames / second
 
 	private:
@@ -24,11 +22,11 @@ private:
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(options, speed);
+			archive(frames, speed);
 		}
 	};
 public:
-	std::unordered_map<entt::id_type, std::vector<StateNode>> states;
+	std::unordered_map<entt::id_type, StateNode> states;
 
 private:
 	friend class ComponentMetaBinder;
@@ -40,46 +38,51 @@ private:
 
 		for (auto&& [name, value] : json["states"].GetObject())
 		{
-			std::vector<StateNode> nodes;
-			for (auto&& val : value.GetArray())
+			StateNode node;
+			if (value.HasMember("frames"))
 			{
-				StateNode node;
-				auto obj = val.GetObject();
-				if (obj.HasMember("uv_coords"))
+				
+				for (auto&& val : value["frames"].GetArray())
 				{
-					node.options.uvCoords = sf::Vector2i{};
-					node.options.uvCoords.value().x = obj["uv_coords"].GetArray()[0].GetInt();
-					node.options.uvCoords.value().y = obj["uv_coords"].GetArray()[1].GetInt();
-				}
-				if (obj.HasMember("texture"))
-				{
-					node.options.texture = entt::hashed_string(obj["texture"].GetString());
-				}
-				if (obj.HasMember("speed"))
-				{
-					node.speed = obj["speed"].GetFloat();
-				}
-				if (obj.HasMember("uv_size"))
-				{
-					node.options.uvSize = { 0,0 };
-					node.options.uvSize.value().x = obj["uv_size"].GetArray()[0].GetInt();
-					node.options.uvSize.value().y = obj["uv_size"].GetArray()[1].GetInt();
-				}
-				if (obj.HasMember("layer"))
-				{
-					node.options.layer = obj["layer"].GetInt();
-				}
-				if (obj.HasMember("color"))
-				{
-					node.options.color = sf::Color{};
-					node.options.color.value().r = obj["color"].GetArray()[0].GetInt();
-					node.options.color.value().g = obj["color"].GetArray()[1].GetInt();
-					node.options.color.value().b = obj["color"].GetArray()[2].GetInt();
-				}
+					SpriteOptions frame;
+					auto obj = val.GetObject();
+					if (obj.HasMember("uv_coords"))
+					{
+						frame.uvCoords = sf::Vector2i{};
+						frame.uvCoords.value().x = obj["uv_coords"].GetArray()[0].GetInt();
+						frame.uvCoords.value().y = obj["uv_coords"].GetArray()[1].GetInt();
+					}
+					if (obj.HasMember("texture"))
+					{
+						frame.texture = entt::hashed_string(obj["texture"].GetString());
+					}
+					if (obj.HasMember("uv_size"))
+					{
+						frame.uvSize = { 0,0 };
+						frame.uvSize.value().x = obj["uv_size"].GetArray()[0].GetInt();
+						frame.uvSize.value().y = obj["uv_size"].GetArray()[1].GetInt();
+					}
+					if (obj.HasMember("layer"))
+					{
+						frame.layer = obj["layer"].GetInt();
+					}
+					if (obj.HasMember("color"))
+					{
+						frame.color = sf::Color{};
+						frame.color.value().r = obj["color"].GetArray()[0].GetInt();
+						frame.color.value().g = obj["color"].GetArray()[1].GetInt();
+						frame.color.value().b = obj["color"].GetArray()[2].GetInt();
+					}
 
-				nodes.emplace_back(std::move(node));
+					node.frames.emplace_back(std::move(frame));
+				}
 			}
-			spriteController.states.emplace(entt::hashed_string(name.GetString()), std::move(nodes));
+			if (value.HasMember("speed"))
+			{
+				node.speed = value["speed"].GetFloat();
+			}
+
+			spriteController.states.emplace(entt::hashed_string(name.GetString()), std::move(node));
 		}
 	}
 

@@ -2,6 +2,7 @@
 #include "Systems/System.h"
 
 struct AnimationComponent;
+struct SpriteOptions;
 
 namespace drft::system
 {

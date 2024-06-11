@@ -534,6 +534,9 @@
     <ClCompile Include="src\Systems\Rendering\SpriteControllerSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility\SpriteOptions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -2528,6 +2531,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\human_male.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\liquid.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

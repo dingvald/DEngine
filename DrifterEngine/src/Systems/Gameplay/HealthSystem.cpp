@@ -7,10 +7,13 @@
 #include "Components/RenderComponent.h"
 
 #include "Utility/EntityHelpers.h"
+#include "Utility/SpriteOptions.h"
 #include "Systems/Helpers/GetExperienceFromKilling.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "Systems/Helpers/SpawnEffect.h"
 #include "Systems/Helpers/GetPrimaryMaterial.h"
+
+
 
 using namespace entt::literals;
 
@@ -54,33 +57,36 @@ void drft::system::HealthSystem::update(const float dt)
 			const auto& renderComponent = handle.get<RenderComponent>();
 			sf::Color messageColor = sf::Color::White;
 			
-			RenderComponent effectRender = renderComponent;
+			SpriteOptions damageEffectSprite;
+			createSpriteOptionsFromRenderComponent(damageEffectSprite, renderComponent);
+			damageEffectSprite.layer = static_cast<int>(RenderLayer::EffectsBack);
+
 			int effect_ttl = 10;
 
 			if (damage.amount == 0)
 			{
 				messageColor = sf::Color::Blue;
-				effectRender.color = sf::Color(255, 255, 255);
-				effectRender.texture = "simple_tileset"_hs;
-				effectRender.uvCoords = { 0, 5 };
+				damageEffectSprite.color = sf::Color(255, 255, 255);
+				damageEffectSprite.texture = "simple_tileset"_hs;
+				damageEffectSprite.uvCoords = { 0, 5 };
 				effect_ttl = 30;
 			}
 			else if (damage.amount < 0)
 			{
 				message += "+";
 				messageColor = sf::Color::Green;
-				effectRender.color = sf::Color::Green;
+				damageEffectSprite.color = sf::Color::Green;
 			}
 			else if (damage.amount > 0)
 			{
-				std::vector<RenderComponent> hitParticles =
+				std::vector<SpriteOptions> hitParticles =
 				{
-					RenderComponent{.texture = "simple_tileset"_hs, .uvSize = {16, 16}, .uvCoords{1, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
-					RenderComponent{.texture = "simple_tileset"_hs, .uvSize = {16, 16}, .uvCoords{2, 8}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+					SpriteOptions{.uvCoords = sf::Vector2i{1, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+					SpriteOptions{.uvCoords = sf::Vector2i{2, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
 				};
 				// Spawn Hit particles
 				spawnEffect(*_registry, {
-					.sprites = std::move(hitParticles),
+					.frames = std::move(hitParticles),
 					.position = posComp->position,
 					.animationSpeed = 8.0f
 					});
@@ -98,7 +104,7 @@ void drft::system::HealthSystem::update(const float dt)
 
 			// Spawn HurtEffect
 			spawnEffect(*_registry, {
-				.sprites = { effectRender },
+				.frames = { damageEffectSprite },
 				.position = posComp->position,
 				.animationSpeed = 10.0f,
 				.ttl = effect_ttl,

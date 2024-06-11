@@ -12,6 +12,7 @@
 #include "Components/Tags.h"
 
 #include "Systems/Helpers/SpawnEffect.h"
+#include "Utility/SpriteOptions.h"
 
 void drft::system::ProjectileSystem::init()
 {
@@ -36,12 +37,13 @@ void drft::system::ProjectileSystem::update(float dt)
 
 		if (auto render = _registry->try_get<RenderComponent>(entity))
 		{
-			RenderComponent effectRender = *render;
-			effectRender.layer = static_cast<unsigned int>(RenderLayer::EffectsFront);
+			SpriteOptions effectSprite;
+			createSpriteOptionsFromRenderComponent(effectSprite, *render);
+			effectSprite.layer = static_cast<unsigned int>(RenderLayer::EffectsFront);
 
 			spawnEffect(*_registry,
 				{
-					.sprites = { effectRender },
+					.frames = { effectSprite },
 					.position = pos.position,
 					.ttl = 30,
 					.fades = true

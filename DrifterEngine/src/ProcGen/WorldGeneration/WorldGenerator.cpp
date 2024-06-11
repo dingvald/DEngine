@@ -424,41 +424,6 @@ sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coord
 {
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
 	sf::IntRect result = { tileOrigin.x, tileOrigin.y, FULL_CHUNK.x, FULL_CHUNK.y };
-	const auto biomeType = _biomeMap.at(coordinate.x, coordinate.y);
-	const double myHeight = getPerlinAt("Altitude", coordinate);
-
-	auto neighbors = spatial::getAdjacentPoints(coordinate, spatial::AdjacentType::Cardinal);
-	for (auto&& neighbor : neighbors)
-	{
-		if (!_biomeMap.contains(neighbor.x, neighbor.y)) continue;
-
-		const auto otherBiomeType = _biomeMap.at(neighbor.x, neighbor.y);
-		if (biomeType == otherBiomeType) continue;
-		const double otherHeight = getPerlinAt("Altitude", neighbor);
-		if (myHeight > otherHeight) continue;
-
-		auto delta = neighbor - coordinate;
-		if (delta.x < 0)
-		{
-			result.left -= QUARTER_CHUNK.x;
-			result.width += QUARTER_CHUNK.x;
-		}
-		else if (delta.x > 0)
-		{
-			result.width += QUARTER_CHUNK.x;
-		}
-
-		if (delta.y < 0)
-		{
-			result.top -= QUARTER_CHUNK.y;
-			result.height += QUARTER_CHUNK.y;
-		}
-		else if (delta.y > 0)
-		{
-			result.height += QUARTER_CHUNK.y;
-		}
-	}
-
 	return result;
 }
 

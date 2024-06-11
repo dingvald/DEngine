@@ -11,20 +11,26 @@
         },
         "SpriteController": {
           "states": {
-            "default": [
-              {
-                "texture": "human_male",
-                "uv_size": [16, 16],
-                "uv_coords": [ 0, 0 ],
-                "layer": 2,
-                "color": [130, 130, 130]
-              }
-            ],
-            "sprinting": [
-              {
-                "uv_coords": [ 1, 0 ]
-              }
-            ]
+            "default": {
+              "frames": [
+                {
+                  "texture": "human_male",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 0, 0 ],
+                  "layer": 2,
+                  "color": [ 130, 130, 130 ]
+                }
+              ],
+              "speed": 1.0
+            },
+            "sprinting": {
+              "frames": [
+                {
+                  "uv_coords": [ 1, 0 ]
+                }
+              ],
+              "speed": 1.0
+            }
           }
         },
         "Position": {

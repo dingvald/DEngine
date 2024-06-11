@@ -89,12 +89,28 @@
           "name": "Water",
           "description": "Just simple water."
         },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 5, 2 ],
-          "layer": 1,
-          "color": [ 27, 149, 224 ]
+        "SpriteController": {
+          "states": {
+            "default": {
+              "frames": [
+                {
+                  "texture": "liquid",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 0, 0 ],
+                  "layer": 2,
+                  "color": [ 27, 149, 224 ]
+                },
+                {
+                  "texture": "liquid",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 1, 0 ],
+                  "layer": 2,
+                  "color": [ 27, 149, 224 ]
+                }
+              ],
+              "speed": 1.0
+            }
+          }
         },
         "Position": {
           "position": [ 0.0, 0.0 ]
@@ -102,8 +118,8 @@
         "Liquid": {
           "volume": 1000.0
         }
-      }
-    },
+        }
+      },
     "Mountain Flower": {
       "Inherits": [
         "BaseMaterial"

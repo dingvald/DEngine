@@ -50,3 +50,11 @@ namespace cereal
 	}
 }
 
+static const RenderComponent DebugRenderComponent =
+{
+	.texture = entt::hashed_string("simple_tileset"),
+	.uvSize = {16, 16},
+	.uvCoords = {4, 0},
+	.layer = 2u,
+	.color = sf::Color::Magenta
+};

@@ -2,12 +2,14 @@
 #include "SelectTargetState.h"
 
 #include "Components/Components.h"
-#include "Components/RenderComponent.h"
 #include "Components/PositionComponent.h"
+#include "Components/RenderComponent.h"
 
 #include "Spatial/Helpers.h"
 #include "Spatial/Grid.h"
 #include "Systems/Helpers/SpawnEffect.h"
+
+#include "Utility/SpriteOptions.h"
 
 static const sf::Color DEFAULT_TARGET_RANGE_COLOR = sf::Color(0, 0, 100, 100);
 static const sf::Color DEFAULT_TARGET_AOE_COLOR = sf::Color(50, 50, 200, 150);
@@ -134,24 +136,24 @@ void drft::SelectTargetState::onPush()
 	const entt::id_type tileSetTexture = entt::hashed_string("simple_tileset").value();
 
 	auto radius = spatial::getIntCircleInRadius(_startPosition, _targetSelect->range.getMax());
-	RenderComponent radiusEffectRender = { .texture = tileSetTexture, .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_RANGE_COLOR };
+	SpriteOptions radiusEffect = { .uvCoords = sf::Vector2i{4, 0}, .texture = tileSetTexture, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_RANGE_COLOR};
 	for (auto&& tile : radius)
 	{
 		auto effect = system::spawnEffect(getContext().registry,
 			{
-				.sprites = {radiusEffectRender},
+				.frames = {radiusEffect},
 				.position = tile,
 				.ttl = -1
 			});
 		_radiusEffects.push_back(effect);
 	}
 
-	RenderComponent aoeEffectRender = { .texture = tileSetTexture, .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_AOE_COLOR };
+	SpriteOptions aoeEffect = { .uvCoords = sf::Vector2i{4, 0}, .texture = tileSetTexture, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_AOE_COLOR };
 	for (auto&& tile : _targetSelect->targetShape)
 	{
 		auto effect = system::spawnEffect(getContext().registry,
 			{
-				.sprites = { aoeEffectRender },
+				.frames = { aoeEffect },
 				.position = tile + _startPosition,
 				.ttl = -1,
 				.requiresInFOV = false
@@ -159,10 +161,10 @@ void drft::SelectTargetState::onPush()
 		_aoeEffects.push_back(effect);
 	}
 
-	RenderComponent cursorEffectRender = { .texture = tileSetTexture, .uvSize = {16, 16}, .uvCoords{4, 0}, .layer = static_cast<unsigned int>(system::RenderLayer::EffectsFront), .color = sf::Color(255,255,204,100) };
+	SpriteOptions cursorEffect = { .uvCoords = sf::Vector2i{4, 0}, .texture = tileSetTexture, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = sf::Color{255, 255, 200, 150} };
 	_cursor = system::spawnEffect(getContext().registry,
 		{
-			.sprites = {cursorEffectRender},
+			.frames = {cursorEffect},
 			.position = _startPosition,
 			.ttl = -1,
 			.requiresInFOV = false

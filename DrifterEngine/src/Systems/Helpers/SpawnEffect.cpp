@@ -11,21 +11,22 @@
 
 entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& effect)
 {
-	if (effect.sprites.empty()) throw std::exception("Cannot spawn effect with no sprites.");
+	if (effect.frames.empty()) throw std::exception("Cannot spawn effect with no sprites.");
 
 	entt::handle effectHandle = { registry, registry.create() };
 	
 	effectHandle.emplace<PositionComponent>(effect.position);
 	
 	int ttl = effect.ttl;
-	if (effect.sprites.size() == 1)
+	if (effect.frames.size() == 1)
 	{
-		effectHandle.emplace<RenderComponent>(effect.sprites.front());
+		auto& render = effectHandle.emplace<RenderComponent>();
+		applySpriteOptionsToRenderComponent(render, effect.frames.front());
 	}
-	else if (effect.sprites.size() > 1) // must be an animation
+	else if (effect.frames.size() > 1) // must be an animation
 	{
-		ttl = effect.loops ? ttl : (TARGET_FPS / effect.animationSpeed) * effect.sprites.size();
-		AnimationComponent animation = { .sprites = effect.sprites, .speed = effect.animationSpeed, .loops = effect.loops };
+		ttl = effect.loops ? ttl : (TARGET_FPS / effect.animationSpeed) * effect.frames.size();
+		AnimationComponent animation = { .frames = effect.frames, .speed = effect.animationSpeed, .loops = effect.loops };
 		effectHandle.emplace<AnimationComponent>(animation);
 	}
 

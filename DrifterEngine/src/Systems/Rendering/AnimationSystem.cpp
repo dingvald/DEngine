@@ -14,10 +14,16 @@ void drft::system::AnimationSystem::fixedUpdate()
 {
 	math::Range<int> indexRange(0, 0);
 
-	auto view = _registry->view<AnimationComponent>();
-	for (auto [entity, animation] : view.each())
+	auto noRenderView = _registry->view<AnimationComponent>(entt::exclude<RenderComponent>);
+	for (auto [entity, animation] : noRenderView.each())
 	{
-		_registry->emplace_or_replace<RenderComponent>(entity, animation.sprites[animation.index]);
+		_registry->emplace<RenderComponent>(entity, DebugRenderComponent);
+	}
+
+	auto withRenderView = _registry->view<AnimationComponent, RenderComponent>();
+	for (auto [entity, animation, render] : withRenderView.each())
+	{
+		applySpriteOptionsToRenderComponent(render, animation.frames[animation.index]);
 
 		++animation.elapsed;
 		const float numFramesTillNextIndex = TARGET_FPS / std::abs(animation.speed);
@@ -32,7 +38,7 @@ void drft::system::AnimationSystem::fixedUpdate()
 				animation.index = moveToPreviousFrame(animation);
 			}
 
-			indexRange.setMax(animation.sprites.size() - 1);
+			indexRange.setMax(animation.frames.size() - 1);
 			if (!indexRange.isValueWithinInclusive(animation.index))
 			{
 				_toRemoveAnimation.push_back(entity);	
@@ -55,7 +61,7 @@ void drft::system::AnimationSystem::onFixedUpdateEnd()
 int drft::system::AnimationSystem::moveToNextFrame(const AnimationComponent& animation)
 {
 	int result = animation.index + 1;
-	if (animation.loops && result >= animation.sprites.size())
+	if (animation.loops && result >= animation.frames.size())
 	{
 		result = 0;
 	}
@@ -67,7 +73,7 @@ int drft::system::AnimationSystem::moveToPreviousFrame(const AnimationComponent&
 	int result = animation.index - 1;
 	if (animation.loops && result < 0)
 	{
-		result = animation.sprites.size() - 1;
+		result = animation.frames.size() - 1;
 	}
 	return result;
 }

@@ -28,40 +28,7 @@ void drft::system::SpriteControllerSystem::onSpriteControllerAdded(entt::registr
 		return;
 	}
 
-	const auto& nodes = controller.states.at("default"_hs);
-	if (nodes.size() == 1)
-	{
-		auto& node = nodes.front();
-		if (auto render = registry.try_get<RenderComponent>(entity))
-		{
-			render->uvCoords = node.options.uvCoords.value_or(sf::Vector2i{0,0});
-			render->texture = node.options.texture.value_or(render->texture);
-			render->uvSize = node.options.uvSize.value_or(render->uvSize);
-			render->layer = node.options.layer.value_or(render->layer);
-			render->color = node.options.color.value_or(render->color);
-		}
-		else
-		{
-			RenderComponent newRender;
-			newRender.uvCoords = node.options.uvCoords.value_or(sf::Vector2i{4, 0});
-			newRender.texture = node.options.texture.value_or("simple_tileset"_hs);
-			newRender.uvSize = node.options.uvSize.value_or(sf::Vector2i{16, 16});
-			newRender.layer = node.options.layer.value_or(2u);
-			newRender.color = node.options.color.value_or(sf::Color::Magenta);
-			registry.emplace<RenderComponent>(entity, newRender);
-		}
-	}
-	else
-	{
-		AnimationComponent animation;
-		for (auto&& node : nodes)
-		{
-			animation.sprites.emplace_back(node.options);
-			animation.speed = node.speed.value_or(1.0f);
-		}
-		
-		registry.emplace_or_replace<AnimationComponent>(entity, animation);
-	}
+	handleNewSpriteState({ registry, entity }, controller, "default"_hs);
 }
 
 void drft::system::SpriteControllerSystem::onSpriteChangeRequest(entt::registry& registry, entt::entity entity) const
@@ -70,31 +37,44 @@ void drft::system::SpriteControllerSystem::onSpriteChangeRequest(entt::registry&
 	{
 		auto& request = registry.get<SpriteChangeRequestComponent>(entity);
 		if (!controller->states.contains(request.stateId)) return;
-		if (controller->states.at(request.stateId).empty()) return;
+		if (controller->states.at(request.stateId).frames.empty()) return;
 
-		const auto& nodes = controller->states.at(request.stateId);
-		if (nodes.size() == 1)
+		handleNewSpriteState({ registry, entity }, *controller, request.stateId);
+	}
+}
+
+void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle handle, SpriteControllerComponent& controller, entt::id_type stateId) const
+{
+	const auto& node = controller.states.at(stateId);
+	if (node.frames.size() == 1)
+	{
+		auto& frame = node.frames.front();
+		joinWithRenderComponent(handle, frame);
+	}
+	else
+	{
+		AnimationComponent animation;
+		for (auto&& frame : node.frames)
 		{
-			auto& node = nodes.front();
-			if (auto render = registry.try_get<RenderComponent>(entity))
-			{
-				render->uvCoords = node.options.uvCoords.value_or(render->uvCoords);
-				render->texture = node.options.texture.value_or(render->texture);
-				render->uvSize = node.options.uvSize.value_or(render->uvSize);
-				render->layer = node.options.layer.value_or(render->layer);
-				render->color = node.options.color.value_or(render->color);
-			}
+			animation.frames.emplace_back(frame);
 		}
-		else
-		{
-			AnimationComponent animation;
-			for (auto&& node : nodes)
-			{
-				animation.sprites.emplace_back(node.options);
-				animation.speed = node.speed.value_or(1.0f);
-			}
-			registry.emplace_or_replace<AnimationComponent>(entity, animation);
-		}
+		animation.speed = node.speed.value_or(1.0f);
+		animation.loops = true;
+		handle.emplace_or_replace<AnimationComponent>(animation);
+	}
+}
+
+void drft::system::SpriteControllerSystem::joinWithRenderComponent(entt::handle entity, const SpriteOptions& options) const
+{
+	if (auto render = entity.try_get<RenderComponent>())
+	{
+		applySpriteOptionsToRenderComponent(*render, options);
+	}
+	else
+	{
+		RenderComponent newRender;
+		applySpriteOptionsToRenderComponent(newRender, options);
+		entity.emplace<RenderComponent>(newRender);
 	}
 }
 

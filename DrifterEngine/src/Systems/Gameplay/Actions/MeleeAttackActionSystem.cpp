@@ -12,6 +12,7 @@
 
 #include "Components/Tags.h"
 #include "Utility/EntityHelpers.h"
+#include "Utility/SpriteOptions.h"
 #include "Systems/Helpers/SpawnEffect.h"
 
 using namespace entt::literals;
@@ -62,23 +63,23 @@ void drft::system::MeleeAttackActionSystem::onDoMeleeAttackAction(entt::registry
 	{
 		sf::Color effectColor = sf::Color::White;
 
-		std::vector<RenderComponent> sprites = // crushing
+		std::vector<SpriteOptions> frames = // crushing
 		{
-			RenderComponent{.texture = "simple_tileset"_hs, .uvSize = {16, 16}, .uvCoords{8, 0}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
-			RenderComponent{.texture = "simple_tileset"_hs, .uvSize = {16, 16}, .uvCoords{9, 0}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{8, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{9, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
 		};
 		if (doAttackAction.damageTypes.contains("slashing")
 			|| doAttackAction.damageTypes.contains("piercing"))
 		{
-			sprites = // slashing
+			frames = // slashing
 			{
-				RenderComponent{.texture = "simple_tileset"_hs, .uvSize = {16, 16}, .uvCoords{6, 1}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
-				RenderComponent{.texture = "simple_tileset"_hs, .uvSize = {16, 16}, .uvCoords{7, 1}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{6, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{7, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
 			};
 		}
 		const sf::Vector2i targetPosition = positionComponent->position + doAttackAction.direction;
 		spawnEffect(*_registry, {
-			.sprites = sprites,
+			.frames = frames,
 			.position = targetPosition,
 			.animationSpeed = 20.0f
 			});
