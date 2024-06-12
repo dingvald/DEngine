@@ -1,9 +1,7 @@
 #pragma once
 #include "Systems/System.h"
-#include "Events/GameTickEvent.h"
-#include "Events/EnterTileEvent.h"
-#include "Events/LeaveTileEvent.h"
 #include "Events/TurnEndEvent.h"
+#include "Utility/stdHashing.h"
 
 namespace drft::spatial
 {
@@ -14,9 +12,6 @@ namespace drft::system
 {
 	class LiquidSystem : public System
 	{
-	public:
-		static bool isAffectedByLiquids(entt::const_handle entity);
-		
 	private:
 		void init() override;
 		void fixedUpdate() override;
@@ -30,6 +25,7 @@ namespace drft::system
 
 	private:
 		spatial::WorldGrid* _grid = nullptr;
+		entt::dense_map<sf::Vector2i, entt::entity> _liquidPositions;
 		std::vector<entt::entity> _inLiquidEffects;
 	};
 }

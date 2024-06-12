@@ -23,7 +23,7 @@ void drft::system::AnimationSystem::fixedUpdate()
 	auto withRenderView = _registry->view<AnimationComponent, RenderComponent>();
 	for (auto [entity, animation, render] : withRenderView.each())
 	{
-		applySpriteOptionsToRenderComponent(render, animation.frames[animation.index]);
+		applySpriteOptionsToRenderComponent(render, animation.frames[animation.index]); // TODO: Hit an assert here - no info in callstack - no info during variable inspection
 
 		++animation.elapsed;
 		const float numFramesTillNextIndex = TARGET_FPS / std::abs(animation.speed);

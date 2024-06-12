@@ -15,7 +15,8 @@ private:
 	struct StateNode
 	{
 		std::vector<SpriteOptions> frames;
-		std::optional<float> speed; // Frames / second
+		std::optional<float> speed; // Seconds / Frame
+		bool synced = false;
 
 	private:
 		friend class cereal::access;
@@ -80,6 +81,10 @@ private:
 			if (value.HasMember("speed"))
 			{
 				node.speed = value["speed"].GetFloat();
+			}
+			if (value.HasMember("synced"))
+			{
+				node.synced = value["synced"].GetBool();
 			}
 
 			spriteController.states.emplace(entt::hashed_string(name.GetString()), std::move(node));

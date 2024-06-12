@@ -4,6 +4,7 @@
 #include "Components/SpriteChangeRequestComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/AnimationComponent.h"
+#include "Components/SyncedAnimationComponent.h"
 #include "Components/SprintingComponent.h"
 
 using namespace entt::literals;
@@ -51,7 +52,7 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 		auto& frame = node.frames.front();
 		joinWithRenderComponent(handle, frame);
 	}
-	else
+	else if (!node.synced)
 	{
 		AnimationComponent animation;
 		for (auto&& frame : node.frames)
@@ -61,6 +62,17 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 		animation.speed = node.speed.value_or(1.0f);
 		animation.loops = true;
 		handle.emplace_or_replace<AnimationComponent>(animation);
+	}
+	else if (node.synced)
+	{
+		SyncedAnimationComponent animation;
+		for (auto&& frame : node.frames)
+		{
+			animation.frames.emplace_back(frame);
+		}
+		animation.speed = node.speed.value_or(1.0f);
+		animation.loops = true;
+		handle.emplace_or_replace<SyncedAnimationComponent>(animation);
 	}
 }
 

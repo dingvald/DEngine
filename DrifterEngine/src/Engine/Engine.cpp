@@ -20,6 +20,8 @@ static const std::string RESOURCE_PATH = "./resources/";
 static const std::string TEXTURE_PATH = RESOURCE_PATH + "Textures/";
 static const std::string FONTS_PATH = RESOURCE_PATH + "Fonts/";
 
+static const float TARGET_DT = (1.0f / TARGET_FPS);
+
 drft::Engine::Engine()
 	: _window(sf::VideoMode(1280, 720), "Drifter Engine")
 	, _showDebug(false)
@@ -95,23 +97,14 @@ void drft::Engine::handleEvents()
 
 void drft::Engine::update(const float dt)
 {
-	float fps = 1.0f / dt;
-	_fpsStats.sample(fps);
-	_dtStats.sample(dt);
-	service::DebugInfo::instance().putInfo("Avg FPS", std::to_string(_fpsStats.average()));
-	service::DebugInfo::instance().putInfo("Min FPS", std::to_string(_fpsStats.min()));
-
-	service::DebugInfo::instance().putInfo("Avg dt", std::to_string(_dtStats.average()));
-	service::DebugInfo::instance().putInfo("Max dt", std::to_string(_dtStats.max()));
-
 	_stateStack.update(dt);
 	
 	static float dtSinceFixedUpdate = 0.0f;
 	dtSinceFixedUpdate += dt;
-	if (dtSinceFixedUpdate >= (1.0f / TARGET_FPS))
+	if (dtSinceFixedUpdate > TARGET_DT)
 	{
 		_stateStack.fixedUpdate();
-		dtSinceFixedUpdate = 0.0f;
+		dtSinceFixedUpdate -= TARGET_DT;
 	}
 
 }
@@ -121,7 +114,7 @@ void drft::Engine::render(const float dt)
 	static float dtSinceRender = 0.0f;
 
 	dtSinceRender += dt;
-	if (dtSinceRender >= (1.0f / TARGET_FPS))
+	if (dtSinceRender > TARGET_DT)
 	{
 		_window.clear();
 		_stateStack.render(_window);
@@ -132,7 +125,7 @@ void drft::Engine::render(const float dt)
 		}
 			
 		_window.display();
-		dtSinceRender = 0.0f;
+		dtSinceRender -= TARGET_DT;
 	}
 }
 

@@ -8,6 +8,7 @@
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include "Services/DebugInfo.h"
 #include "Random/RandomNumberGenerator.h"
+#include "Systems/Helpers/GetCurrentCamera.h"
 
 using namespace drft::system;
 
@@ -23,21 +24,16 @@ void drft::system::ChunkManager::init()
 
 void drft::system::ChunkManager::update(const float dt)
 {
-	auto cameraView = _registry->view<const CameraComponent, const PositionComponent>();
-	sf::Vector2i cameraPosition = { 0,0 };
+	auto camera = getCurrentCamera(*_registry);
+	sf::Vector2i cameraChunkPosition = spatial::toChunkCoordinate(camera.position);
 
-	for (auto [entity, cam, pos] : cameraView.each())
-	{
-		cameraPosition = spatial::toChunkCoordinate(pos.position);
-	}
-
-	updateChunkStates(cameraPosition);
+	updateChunkStates(cameraChunkPosition);
 
 	process(_toBuild, BUILD);
 	process(_toLoad, LOAD);
 	process(_toSave, SAVE);
 
-	cleanUpChunks(cameraPosition);
+	cleanUpChunks(cameraChunkPosition);
 }
 
 void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
@@ -55,12 +51,11 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 	// Ensure active chunks are active or will be built
 	for (auto&& coord : activeCoords)
 	{
-		auto keyablePair = std::make_pair(coord.x, coord.y);
-		if (!_chunks.contains(keyablePair))
+		if (!_chunks.contains(coord))
 		{
-			_chunks.emplace(std::make_pair(keyablePair, spatial::VirtualChunk{ coord }));
+			_chunks.emplace(coord, spatial::VirtualChunk{ coord });
 		}
-		auto& chunk = _chunks.at(keyablePair);
+		auto& chunk = _chunks.at(coord);
 
 		switch (chunk.getState())
 		{
@@ -98,11 +93,10 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 		{
 			continue;
 		}
-		float distance = std::hypotf(static_cast<float>((newPosition.x - coord.first)),
-									static_cast<float>((newPosition.y - coord.second)));
+		float distance = spatial::distance(coord, newPosition);
 		if (distance > TO_SAVE_CHUNK_RADIUS)
 		{
-			_toSave.push({ coord.first, coord.second });
+			_toSave.push(coord);
 			chunk.setState(spatial::ChunkState::ToSave);
 		}
 	}
@@ -110,26 +104,25 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 
 void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
 {
-	std::vector<std::pair<int, int>> toDelete;
+	std::vector<sf::Vector2i> toDelete;
 	for (auto& [coord, chunk] : _chunks)
 	{
 		if (chunk.getState() != spatial::ChunkState::Saved)
 		{
 			continue;
 		}
-		float distance = std::hypotf(static_cast<float>((newPosition.x - coord.first)),
-									static_cast<float>((newPosition.y - coord.second)));
+		float distance = spatial::distance(coord, newPosition);
 		if (distance > TO_SAVE_CHUNK_RADIUS)
 		{
 			toDelete.push_back(coord);
 		}
 	}
 	auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
-	for (auto pair : toDelete)
+	for (auto&& coord : toDelete)
 	{
-		grid.removeChunk({ pair.first, pair.second });
-		_chunks.erase(pair);
-		std::cout << "Chunk " << pair.first << "_" << pair.second << " cleaned up." << std::endl;
+		grid.removeChunk(coord);
+		_chunks.erase(coord);
+		std::cout << "Chunk " << coord.x << "_" << coord.y << " cleaned up." << std::endl;
 	}
 }
 
@@ -140,19 +133,18 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 	std::vector<std::pair<int, int>> toDelete;
 
 	auto coord = chunkQueue.front();
-	auto keyablePair = std::make_pair(coord.x, coord.y);
 	auto status = spatial::ioStatus::Busy;
 
 	switch (type)
 	{
 	case BUILD:
-		status = _chunks.at(keyablePair).build(*_registry);
+		status = _chunks.at(coord).build(*_registry);
 		break;
 	case SAVE:
-		status = _chunks.at(keyablePair).asyncSave(*_registry, CHUNK_SAVE_PATH.data());
+		status = _chunks.at(coord).asyncSave(*_registry, CHUNK_SAVE_PATH.data());
 		break;
 	case LOAD:
-		status = _chunks.at(keyablePair).asyncLoad(*_registry, CHUNK_SAVE_PATH.data());
+		status = _chunks.at(coord).asyncLoad(*_registry, CHUNK_SAVE_PATH.data());
 		break;
 	}
 	if (status == spatial::ioStatus::Busy)

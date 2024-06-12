@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "LiquidSystem.h"
 
+#include "Systems/Rendering/RenderLayers.h"
+
 #include "Components/Components.h"
 #include "Components/Tags.h"
 #include "Components/LiquidComponent.h"
@@ -30,40 +32,36 @@ void drft::system::LiquidSystem::init()
 
 void drft::system::LiquidSystem::fixedUpdate()
 {
-	auto inViewportLiquidView = _registry->view<LiquidComponent, PositionComponent, RenderComponent, component::tag::InViewport>();
-	entt::dense_set<sf::Vector2i> liquidPositions;
-	for (auto [entity, liquid, pos, render] : inViewportLiquidView.each())
+	_liquidPositions.clear();
+	auto liquidView = _registry->view<LiquidComponent, PositionComponent>();
+	_liquidPositions.reserve(liquidView.size_hint());
+
+	for (const auto&& [entity, liquid, pos] : liquidView.each())
 	{
-		liquidPositions.insert(pos.position);
-		if (liquid.volume > 500)
-		{
-			auto entities = _grid->entitiesAt(pos.position,
-				[this](entt::entity entity) -> bool
-				{
-					return LiquidSystem::isAffectedByLiquids({ *_registry, entity });
-				});
-			if (!entities.empty())
-			{
-				addInLiquidEffect(pos.position, render.color);
-			}
-			for (auto&& entity : entities)
-			{
-				_registry->emplace_or_replace<InLiquidComponent>(entity, liquid.volume);
-			}
-		}
+		_liquidPositions.emplace(pos.position, entity);
 	}
 
-	auto outOfViewportLiquidView = _registry->view<LiquidComponent, PositionComponent>(entt::exclude<component::tag::InViewport>);
-	for (auto [entity, liquid, pos] : outOfViewportLiquidView.each())
+	auto liquidAffectedView = _registry->view<MaterialComponent, PositionComponent>(entt::exclude<LiquidComponent, FlyingComponent>);
+	for (auto [entity, material, pos] : liquidAffectedView.each())
 	{
-		liquidPositions.insert(pos.position);
+		if (!_liquidPositions.contains(pos.position)) continue;
+		_registry->emplace_or_replace<InLiquidComponent>(entity);
 	}
 
 	auto inLiquidView = _registry->view<InLiquidComponent, PositionComponent>();
 	for (auto [entity, inLiquid, pos] : inLiquidView.each())
 	{
-		if (!liquidPositions.contains(pos.position)) continue;
-		_registry->remove<InLiquidComponent>(entity);
+		if (_liquidPositions.contains(pos.position))
+		{
+			if (auto render = _registry->try_get<RenderComponent>(_liquidPositions.at(pos.position)))
+			{
+				addInLiquidEffect(pos.position, render->color);
+			}
+		}
+		else
+		{
+			_registry->remove<InLiquidComponent>(entity);
+		}
 	}
 }
 
@@ -76,16 +74,6 @@ void drft::system::LiquidSystem::onFixedUpdateEnd()
 	_inLiquidEffects.clear();
 }
 
-bool drft::system::LiquidSystem::isAffectedByLiquids(entt::const_handle entity)
-{
-	if (!entity.any_of<LiquidComponent, FlyingComponent>()
-		&& entity.all_of<MaterialComponent>())
-	{
-		return true;
-	}
-	return false;
-}
-
 void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector2i position, sf::Color color)
 {
 	sf::Color translucentColor = { color.r, color.g, color.b, 200 };
@@ -95,7 +83,7 @@ void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector2i position, sf::Co
 		.texture = entt::hashed_string("simple_tileset"),
 		.uvSize = {16, 16},
 		.uvCoords = {8, 4},
-		.layer = 4u,
+		.layer = 5u,
 		.color = translucentColor
 	};
 	effect.emplace<RenderComponent>(renderComponent);
@@ -110,9 +98,7 @@ void drft::system::LiquidSystem::onTurnEndEvent(events::TurnEndEvent& ev) const
 	auto stamina = _registry->try_get<StaminaComponent>(ev.entity);
 	auto isInLiquid = _registry->all_of<InLiquidComponent>(ev.entity);
 
-	if (health && stamina && isInLiquid 
-		&& LiquidSystem::isAffectedByLiquids({ *_registry, ev.entity })
-		&& stamina->current <= 0.f)
+	if (health && stamina && isInLiquid && stamina->current <= 0.f)
 	{
 		_registry->emplace_or_replace<component::action::TakeDamage>(ev.entity, static_cast<int>(health->max / 10));
 	}

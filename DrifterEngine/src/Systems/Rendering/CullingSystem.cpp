@@ -19,7 +19,7 @@ void drft::system::CullingSystem::fixedUpdate()
 	viewport.width += 2 * spatial::TILE_WIDTH;
 	viewport.height += 2 * spatial::TILE_HEIGHT;
 	
-	auto view = _registry->view<PositionComponent>();
+	const auto view = _registry->view<const PositionComponent>();
 	for (auto [entity, pos] : view.each())
 	{
 		if (viewport.contains(spatial::toFloatSpace(pos.position - camera.position)))

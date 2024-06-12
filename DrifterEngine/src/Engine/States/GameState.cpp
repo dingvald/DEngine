@@ -12,6 +12,7 @@
 #include "Systems/SystemScheduler.h"
 #include "Systems/Rendering/CullingSystem.h"
 #include "Systems/Rendering/AnimationSystem.h"
+#include "Systems/Rendering/SyncedAnimationSystem.h"
 #include "Systems/Rendering/PlayerFOVSystem.h"
 #include "Systems/Rendering/EntityRenderer.h"
 #include "Systems/Rendering/EffectRenderer.h"
@@ -65,6 +66,7 @@
 #include "Components/Tags.h"
 
 #pragma endregion
+
 #include "Utility/SaveEntity.h"
 #include "Utility/LoadEntity.h"
 #include "Utility/SaveRegistry.h"
@@ -275,12 +277,13 @@ void drft::GameState::importSystems()
 	_systems->add<SprintingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<CullingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LiquidSystem>(					Phase::OnFixedUpdate);
+	_systems->add<PlayerFOVSystem>(					Phase::OnFixedUpdate);
 	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
 	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
 	_systems->add<VisualEffectSystem>(				Phase::OnFixedUpdate);
 	_systems->add<SpriteControllerSystem>(			Phase::OnFixedUpdate);
 	_systems->add<AnimationSystem>(					Phase::OnFixedUpdate);
-	_systems->add<PlayerFOVSystem>(                 Phase::OnFixedUpdate + 5);
+	_systems->add<SyncedAnimationSystem>(			Phase::OnFixedUpdate);
 
 	_systems->add<EntityRenderer>(					Phase::OnRender);
 	_systems->add<EffectRenderer>(					Phase::OnRender);

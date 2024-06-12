@@ -387,6 +387,7 @@
     <ClCompile Include="src\Structures\Decorators\WallDecorator.cpp" />
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
     <ClCompile Include="src\Utility\TextureAtlas.cpp" />
+    <ClCompile Include="src\Systems\Rendering\SyncedAnimationSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Audio.hpp" />
@@ -489,6 +490,7 @@
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
     <ClInclude Include="src\Components\SpriteChangeRequestComponent.h" />
+    <ClInclude Include="src\Components\SyncedAnimationComponent.h" />
     <ClInclude Include="src\Systems\Rendering\SpriteControllerSystem.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
     <ClInclude Include="src\Components\Actions\MoveAction.h" />
@@ -897,6 +899,7 @@
     <ClInclude Include="src\Structures\Decorators\WallDecorator.h" />
     <ClInclude Include="src\Structures\StructureShapeInstance.h" />
     <ClInclude Include="src\Utility\TextureAtlas.h" />
+    <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\world_settings.json" />

@@ -1,6 +1,7 @@
 #pragma once
 #include "Systems/System.h"
 #include "Spatial/VirtualChunk.h"
+#include "Utility/stdHashing.h"
 
 namespace drft::system
 {
@@ -27,7 +28,7 @@ namespace drft::system
 		void process(std::queue<sf::Vector2i>& chunkQueue, ProcessType type);
 
 	private:
-		std::map<std::pair<int, int>, spatial::VirtualChunk> _chunks;
+		std::unordered_map<sf::Vector2i, spatial::VirtualChunk> _chunks;
 		sf::Vector2i _currentPosition = { 0, 0 };
 
 		std::queue<sf::Vector2i> _toBuild;

@@ -34,6 +34,7 @@
 #include "SprintingComponent.h"
 #include "SpriteControllerComponent.h"
 #include "StaminaComponent.h"
+#include "SyncedAnimationComponent.h"
 #include "TemporaryLightSourceComponent.h"
 #include "TickingLifetimeComponent.h"
 #include "VisualEffectComponent.h"
@@ -74,6 +75,7 @@ void ComponentMetaBinder::bindComponents()
 	SprintingComponent::bind();
 	SpriteControllerComponent::bind();
 	StaminaComponent::bind();
+	SyncedAnimationComponent::bind();
 	TemporaryLightSourceComponent::bind();
 	TickingLifetimeComponent::bind();
 	VisualEffectComponent::bind();
