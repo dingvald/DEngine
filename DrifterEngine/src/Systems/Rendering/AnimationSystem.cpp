@@ -12,8 +12,6 @@ void drft::system::AnimationSystem::init()
 
 void drft::system::AnimationSystem::fixedUpdate()
 {
-	math::Range<int> indexRange(0, 0);
-
 	auto noRenderView = _registry->view<AnimationComponent>(entt::exclude<RenderComponent>);
 	for (auto [entity, animation] : noRenderView.each())
 	{
@@ -23,29 +21,20 @@ void drft::system::AnimationSystem::fixedUpdate()
 	auto withRenderView = _registry->view<AnimationComponent, RenderComponent>();
 	for (auto [entity, animation, render] : withRenderView.each())
 	{
-		applySpriteOptionsToRenderComponent(render, animation.frames[animation.index]); // TODO: Hit an assert here - no info in callstack - no info during variable inspection
-
 		++animation.elapsed;
 		const float numFramesTillNextIndex = TARGET_FPS / std::abs(animation.speed);
 		if (animation.elapsed >= numFramesTillNextIndex)
 		{
-			if (animation.speed > 0)
+			animation.index = math::wrap(animation.index + math::sign(animation.speed), 0, animation.frames.size() - 1);
+			if (!animation.loops && ((animation.index == animation.frames.size() - 1) || animation.index == 0))
 			{
-				animation.index = moveToNextFrame(animation);
-			}
-			else if (animation.speed < 0)
-			{
-				animation.index = moveToPreviousFrame(animation);
+				_toRemoveAnimation.emplace_back(entity);
 			}
 
-			indexRange.setMax(animation.frames.size() - 1);
-			if (!indexRange.isValueWithinInclusive(animation.index))
-			{
-				_toRemoveAnimation.push_back(entity);	
-			}
-
-			animation.elapsed = animation.elapsed - numFramesTillNextIndex;
+			animation.elapsed -= numFramesTillNextIndex;
 		}
+
+		applySpriteOptionsToRenderComponent(render, animation.frames[animation.index]);
 	}
 }
 
@@ -56,24 +45,4 @@ void drft::system::AnimationSystem::onFixedUpdateEnd()
 		_registry->remove<AnimationComponent>(entity);
 	}
 	_toRemoveAnimation.clear();
-}
-
-int drft::system::AnimationSystem::moveToNextFrame(const AnimationComponent& animation)
-{
-	int result = animation.index + 1;
-	if (animation.loops && result >= animation.frames.size())
-	{
-		result = 0;
-	}
-	return result;
-}
-
-int drft::system::AnimationSystem::moveToPreviousFrame(const AnimationComponent& animation)
-{
-	int result = animation.index - 1;
-	if (animation.loops && result < 0)
-	{
-		result = animation.frames.size() - 1;
-	}
-	return result;
 }

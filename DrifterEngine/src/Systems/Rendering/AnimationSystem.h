@@ -13,9 +13,6 @@ namespace drft::system
 		void fixedUpdate() override;
 		void onFixedUpdateEnd() override;
 
-		int moveToNextFrame(const AnimationComponent& animation);
-		int moveToPreviousFrame(const AnimationComponent& animation);
-
 	private:
 		std::vector<entt::entity> _toRemoveAnimation;
 	};

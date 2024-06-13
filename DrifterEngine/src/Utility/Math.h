@@ -7,6 +7,12 @@ namespace drft::math
 	double remap(double iMin, double iMax, double oMin, double oMax, double val);
 
 	int wrap(int val, int min, int max);
+	
+	template<typename T>
+	int sign(T val)
+	{
+		return (T(0) < val) - (val < T(0));
+	}
 
 	template<typename T>
 	concept IsArithmetic = std::is_arithmetic<T>::value;
