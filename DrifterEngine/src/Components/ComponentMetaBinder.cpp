@@ -15,6 +15,7 @@
 #include "GlobalLightSourceComponent.h"
 #include "HealingComponent.h"
 #include "HealthComponent.h"
+#include "HotbarComponent.h"
 #include "InheritanceComponent.h"
 #include "InLiquidComponent.h"
 #include "ItemComponent.h"
@@ -56,6 +57,7 @@ void ComponentMetaBinder::bindComponents()
 	GlobalLightSourceComponent::bind();
 	HealingComponent::bind();
 	HealthComponent::bind();
+	HotbarComponent::bind();
 	InheritanceComponent::bind();
 	InLiquidComponent::bind();
 	ItemComponent::bind();
