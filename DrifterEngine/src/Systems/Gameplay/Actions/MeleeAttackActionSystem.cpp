@@ -65,16 +65,16 @@ void drft::system::MeleeAttackActionSystem::onDoMeleeAttackAction(entt::registry
 
 		std::vector<SpriteOptions> frames = // crushing
 		{
-			SpriteOptions{.uvCoords = sf::Vector2i{8, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
-			SpriteOptions{.uvCoords = sf::Vector2i{9, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{8, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{9, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
 		};
 		if (doAttackAction.damageTypes.contains("slashing")
 			|| doAttackAction.damageTypes.contains("piercing"))
 		{
 			frames = // slashing
 			{
-				SpriteOptions{.uvCoords = sf::Vector2i{6, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
-				SpriteOptions{.uvCoords = sf::Vector2i{7, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = effectColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{6, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{7, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
 			};
 		}
 		const sf::Vector2i targetPosition = positionComponent->position + doAttackAction.direction;
