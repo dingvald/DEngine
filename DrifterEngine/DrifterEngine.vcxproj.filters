@@ -444,28 +444,7 @@
     <ClCompile Include="src\Random\NoiseLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\NoiseLayerSpawn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\OrganicSpawn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\FastFill.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\FillSpawn.cpp">
+    <ClCompile Include="src\ProcGen\SpawningPredicates\SpawningPredicateRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Biomes\Biome.cpp">
@@ -492,7 +471,7 @@
     <ClCompile Include="src\Structures\StructureDecoratorFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp">
+    <ClCompile Include="src\ProcGen\PlaceEntities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Structures\StructureBaseShape.cpp">
@@ -538,6 +517,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Rendering\SyncedAnimationSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\SpawningPredicates\ISpawningPredicate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1214,7 +1196,7 @@
     <ClInclude Include="src\Random\RandomNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\GenerationParameters.h">
+    <ClInclude Include="src\ProcGen\GenerationParameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\States\WorldMapState.h">
@@ -1526,31 +1508,10 @@
     <ClInclude Include="src\Random\NoiseLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\GenerationContext.h">
+    <ClInclude Include="src\ProcGen\GenerationContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\FillSpawn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\NoiseLayerSpawn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\OrganicSpawn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\FastFill.h">
+    <ClInclude Include="src\ProcGen\SpawningPredicates\SpawningPredicateRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Biomes\Biome.h">
@@ -1580,7 +1541,7 @@
     <ClInclude Include="src\Structures\StructureDecoratorFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h">
+    <ClInclude Include="src\ProcGen\PlaceEntities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\WeightedSelection.h">
@@ -2072,6 +2033,9 @@
     <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ProcGen\SpawningPredicates\ISpawningPredicate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -2092,7 +2056,7 @@
     <None Include="src\Spatial\AutoGrid.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="data\static\world_settings.json" />
+    <None Include="data\static\world_generation.json" />
     <None Include="deps\SFML-2.5.1\doc\html\AlResource_8hpp_source.html" />
     <None Include="deps\SFML-2.5.1\doc\html\annotated.html" />
     <None Include="deps\SFML-2.5.1\doc\html\Audio_2Export_8hpp_source.html" />

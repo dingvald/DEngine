@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "StructureInstance.h"
-#include "ProcGen/SpawningAlgorithms/PlaceEntities.h"
-#include "ProcGen/SpawningAlgorithms/GenerationContext.h"
+#include "ProcGen/PlaceEntities.h"
+#include "ProcGen/GenerationContext.h"
 #include "ProcGen/GridBitFlags.h"
 
 drft::StructureInstance::StructureInstance(std::unique_ptr<StructureShapeInstance> shape)
 	: _shape(std::move(shape))
 {}
 
-void drft::StructureInstance::stamp(sf::Vector2i tileOrigin, gen::GenerationContext& context, entt::registry& registry) const
+void drft::StructureInstance::stamp(sf::Vector2i tileOrigin, gen::GenerationContext& context) const
 {
 	for (auto&& pos : _shape->getPositionsFor(StructureBit::Reserved))
 	{
@@ -17,6 +17,6 @@ void drft::StructureInstance::stamp(sf::Vector2i tileOrigin, gen::GenerationCont
 
 	for (auto&& [entity, positionList] : _shape->getEntityPositions())
 	{
-		gen::placeMany(entity, tileOrigin, positionList, registry);
+		gen::placeMany(entity, tileOrigin, positionList, context.registry);
 	}
 }

@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ProcGen\SpawningPredicates\ISpawningPredicate.cpp" />
     <ClCompile Include="src\Systems\Rendering\SpriteControllerSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\CollisionSystem.cpp" />
     <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
@@ -187,19 +188,12 @@
     <ClCompile Include="src\Systems\Gameplay\ConsumableSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenableSystem.cpp" />
     <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.cpp" />
+    <ClCompile Include="src\ProcGen\PlaceEntities.cpp" />
     <ClCompile Include="src\Structures\Shapes\RectangleShape.cpp" />
     <ClCompile Include="src\Biomes\BiomeRegistry.cpp" />
     <ClCompile Include="src\Biomes\Biome.cpp" />
     <ClCompile Include="src\JSON\JSONHelpers.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\FastFill.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\FillSpawn.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\OrganicSpawn.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\NoiseLayerSpawn.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.cpp" />
+    <ClCompile Include="src\ProcGen\SpawningPredicates\SpawningPredicateRegistry.cpp" />
     <ClCompile Include="src\Random\NoiseLayer.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
     <ClCompile Include="src\Systems\Rendering\EffectRenderer.cpp" />
@@ -491,6 +485,7 @@
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
     <ClInclude Include="src\Components\SpriteChangeRequestComponent.h" />
     <ClInclude Include="src\Components\SyncedAnimationComponent.h" />
+    <ClInclude Include="src\ProcGen\SpawningPredicates\ISpawningPredicate.h" />
     <ClInclude Include="src\Systems\Rendering\SpriteControllerSystem.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
     <ClInclude Include="src\Components\Actions\MoveAction.h" />
@@ -542,22 +537,15 @@
     <ClInclude Include="src\Systems\Gameplay\ConsumableSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\OpenableSystem.h" />
     <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\PlaceEntities.h" />
+    <ClInclude Include="src\ProcGen\PlaceEntities.h" />
     <ClInclude Include="src\Random\WeightedSelection.h" />
     <ClInclude Include="src\Structures\Shapes\RectangleShape.h" />
     <ClInclude Include="src\Biomes\BiomeZone.h" />
     <ClInclude Include="src\Biomes\BiomeRegistry.h" />
     <ClInclude Include="src\Biomes\Biome.h" />
     <ClInclude Include="src\JSON\JSONHelpers.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\FastFill.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\RandomSpawn.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\PerlinSpawn.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\OrganicSpawn.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\NoiseLayerSpawn.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\FillSpawn.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\ISpawningAlgorithm.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\SpawningAlgorithmRegistry.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\GenerationContext.h" />
+    <ClInclude Include="src\ProcGen\SpawningPredicates\SpawningPredicateRegistry.h" />
+    <ClInclude Include="src\ProcGen\GenerationContext.h" />
     <ClInclude Include="src\Random\NoiseLayer.h" />
     <ClInclude Include="src\Algorithms\FloodFill.h" />
     <ClInclude Include="src\Spatial\AutoGrid.h" />
@@ -641,7 +629,7 @@
     <ClInclude Include="src\Engine\States\CraftingState.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.h" />
-    <ClInclude Include="src\ProcGen\SpawningAlgorithms\GenerationParameters.h" />
+    <ClInclude Include="src\ProcGen\GenerationParameters.h" />
     <ClInclude Include="src\Random\PerlinNoise.h" />
     <ClInclude Include="src\Random\RandomNoise.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenEquipmentSystem.h" />
@@ -902,7 +890,7 @@
     <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\static\world_settings.json" />
+    <None Include="data\static\world_generation.json" />
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\bases.json" />
     <None Include="data\static\entities\materials.json" />

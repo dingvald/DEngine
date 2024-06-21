@@ -14,7 +14,7 @@ namespace drft
 	{
 	public:
 		StructureInstance(std::unique_ptr<StructureShapeInstance> shape);
-		void stamp(sf::Vector2i tileOrigin, gen::GenerationContext& context, entt::registry& registry) const;
+		void stamp(sf::Vector2i tileOrigin, gen::GenerationContext& context) const;
 
 	private:
 		sf::Vector2i _dimensions;

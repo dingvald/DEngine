@@ -1,6 +1,6 @@
 #pragma once
 #include "Utility/Math.h"
-#include "ProcGen/SpawningAlgorithms/GenerationParameters.h"
+#include "ProcGen/GenerationParameters.h"
 #include "Components/RenderComponent.h"
 
 

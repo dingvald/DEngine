@@ -19,7 +19,7 @@
             "Parameters": {
               "Minimum": 3,
               "Maximum": 7
-            }
+          }
           }
         },
         "Vegetation": {
@@ -45,12 +45,10 @@
             }
           },
           "Tree": {
-            "Algorithm": "Organic",
+            "Algorithm": "Layers",
             "Parameters": {
-              "Generations": 3,
-              "StartingSeeds": 5,
-              "SeedsPerGeneration": 4,
-              "Radius": 8
+              "Humidity": [ 0, 0.5 ],
+              "Foliage": [ 0.5, 1.0 ]
             }
           }
         },
@@ -261,7 +259,7 @@
         "Altitude": [ 100, 1500 ]
       }
     },
-    "Cloud Forest": {
+    "Misty Mountains": {
       "Icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],

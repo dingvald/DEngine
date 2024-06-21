@@ -6,7 +6,7 @@
 #include "Structures/StructureFactory.h"
 #include "Biomes/BiomeRegistry.h"
 #include "Biomes/BiomeZone.h"
-#include "ProcGen/SpawningAlgorithms/SpawningAlgorithmRegistry.h"
+#include "ProcGen/SpawningPredicates/SpawningPredicateRegistry.h"
 
 namespace drft::gen
 {
@@ -42,9 +42,10 @@ namespace drft::gen
 		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		const Biome* determineBiome(sf::Vector2i coordinate) const;
-		void placeStructures(GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
-		void placeLiquids(GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
-		void placeEntities(GenerationContext& context, const Biome* biomeType, entt::registry& registry) const;
+		void placeStructures(GenerationContext& context, const Biome* biomeType) const;
+		void populateSubChunk(sf::Vector2i subChunkCoordinate, GenerationContext& context, const Biome* biomeType) const;
+		void placeLiquids(GenerationContext& context) const;
+		void placeEntities(GenerationContext& context, const Biome* biomeType) const;
 		void updateCompletedChunks(sf::Vector2i coordinate) const;
 		sf::IntRect determinePlacementArea(sf::Vector2i coordinate) const;
 		void initializeGlobalRanges();
@@ -59,7 +60,7 @@ namespace drft::gen
 		spatial::Grid<const Biome*> _biomeMap;
 		StructureFactory _structureFactory;
 		BiomeRegistry _biomeRegistry;
-		SpawningAlgorithmRegistry _spawningAlgorithms;
+		SpawningPredicateRegistry _spawningPredicates;
 		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
 		mutable BitGridPtr _bitGrid;
 		std::unordered_map<unsigned int, BiomeZone> _zones;
