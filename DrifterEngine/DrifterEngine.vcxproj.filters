@@ -444,9 +444,6 @@
     <ClCompile Include="src\Random\NoiseLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningPredicates\SpawningPredicateRegistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Biomes\Biome.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -519,7 +516,16 @@
     <ClCompile Include="src\Systems\Rendering\SyncedAnimationSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\SpawningPredicates\ISpawningPredicate.cpp">
+    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\ProbabilityMultiplier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Factory\Factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1196,9 +1202,6 @@
     <ClInclude Include="src\Random\RandomNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationParameters.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\States\WorldMapState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1338,9 +1341,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\GridBitFlags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\HelperClasses\BodyParts.h">
@@ -1509,9 +1509,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\GenerationContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningPredicates\SpawningPredicateRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Biomes\Biome.h">
@@ -2033,7 +2030,16 @@
     <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\SpawningPredicates\ISpawningPredicate.h">
+    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\ProbabilityMultiplier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Factory\Factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

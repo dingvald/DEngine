@@ -12,7 +12,7 @@ void drft::rng::NoiseLayer::createFromJSON(const rapidjson::Value& json)
 {
     if (json.HasMember("Resolution"))
     {
-        _resolution = json["Resolution"].GetInt();
+        _resolution = json["Resolution"].GetFloat();
     }
     if (json.HasMember("Octaves"))
     {

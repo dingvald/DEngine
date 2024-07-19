@@ -180,7 +180,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ProcGen\SpawningPredicates\ISpawningPredicate.cpp" />
+    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.cpp" />
+    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.cpp" />
+    <ClCompile Include="src\Factory\Factory.cpp" />
+    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\ProbabilityMultiplier.cpp" />
     <ClCompile Include="src\Systems\Rendering\SpriteControllerSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\CollisionSystem.cpp" />
     <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
@@ -193,7 +196,6 @@
     <ClCompile Include="src\Biomes\BiomeRegistry.cpp" />
     <ClCompile Include="src\Biomes\Biome.cpp" />
     <ClCompile Include="src\JSON\JSONHelpers.cpp" />
-    <ClCompile Include="src\ProcGen\SpawningPredicates\SpawningPredicateRegistry.cpp" />
     <ClCompile Include="src\Random\NoiseLayer.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
     <ClCompile Include="src\Systems\Rendering\EffectRenderer.cpp" />
@@ -483,9 +485,12 @@
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
+    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.h" />
+    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.h" />
+    <ClInclude Include="src\Factory\Factory.h" />
+    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\ProbabilityMultiplier.h" />
     <ClInclude Include="src\Components\SpriteChangeRequestComponent.h" />
     <ClInclude Include="src\Components\SyncedAnimationComponent.h" />
-    <ClInclude Include="src\ProcGen\SpawningPredicates\ISpawningPredicate.h" />
     <ClInclude Include="src\Systems\Rendering\SpriteControllerSystem.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
     <ClInclude Include="src\Components\Actions\MoveAction.h" />
@@ -544,7 +549,6 @@
     <ClInclude Include="src\Biomes\BiomeRegistry.h" />
     <ClInclude Include="src\Biomes\Biome.h" />
     <ClInclude Include="src\JSON\JSONHelpers.h" />
-    <ClInclude Include="src\ProcGen\SpawningPredicates\SpawningPredicateRegistry.h" />
     <ClInclude Include="src\ProcGen\GenerationContext.h" />
     <ClInclude Include="src\Random\NoiseLayer.h" />
     <ClInclude Include="src\Algorithms\FloodFill.h" />
@@ -586,7 +590,6 @@
     <ClInclude Include="src\GOAP\Sensors\Utility\IsHostile.h" />
     <ClInclude Include="src\GOAP\SensorTypes.h" />
     <ClInclude Include="src\GOAP\WorldStateTypes.h" />
-    <ClInclude Include="src\ProcGen\GridBitFlags.h" />
     <ClInclude Include="src\Random\PercentChance.h" />
     <ClInclude Include="src\Random\NoiseMap.h" />
     <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />
@@ -629,7 +632,6 @@
     <ClInclude Include="src\Engine\States\CraftingState.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.h" />
-    <ClInclude Include="src\ProcGen\GenerationParameters.h" />
     <ClInclude Include="src\Random\PerlinNoise.h" />
     <ClInclude Include="src\Random\RandomNoise.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenEquipmentSystem.h" />

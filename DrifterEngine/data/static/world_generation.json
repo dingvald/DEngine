@@ -1,10 +1,10 @@
 {
   "WorldSettings": {
     "Seed": "random",
-    "Dimensions": [160, 90],
+    "Dimensions": [80, 50],
     "NoiseLayers": {
       "Altitude": {
-        "Resolution": 6,
+        "Resolution": 4,
         "Octaves": 16,
         "Lacunarity": 2.5,
         "Gain": 0.5
@@ -22,9 +22,15 @@
         "Gain": 0.5
       },
       "Volcanism": {
-        "Resolution": 8,
+        "Resolution": 4,
         "Octaves": 16,
         "Lacunarity": 3.0,
+        "Gain": 0.5
+      },
+      "Foliage": {
+        "Resolution": 4,
+        "Octaves": 4,
+        "Lacunarity": 2.5,
         "Gain": 0.5
       }
     }

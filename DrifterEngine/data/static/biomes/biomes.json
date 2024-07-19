@@ -1,189 +1,239 @@
 {
   "Biomes": {
     "Forest": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [5, 0],
         "color": [ 65, 97, 63 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 0.0, 15.0 ],
         "Humidity": [ 30.0, 60.0 ],
         "Altitude": [ 50, 1200 ]
       },
-      "Entities": {
-        "Geological": {
-          "Stone": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 3,
-              "Maximum": 7
-          }
-          }
+      "entity_slots": {
+        "tree": {
+          "probability": 0.05,
+          "probability_multipliers": [
+            {
+              "type": "noise_layer",
+              "params": {
+                "noise_name": "Foliage",
+                "threshold": [ ">", 0.5 ],
+                "multiplier": 10.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "tree",
+                "max": 4,
+                "multiplier": 1.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 2,
+                "multiplier": 0.5
+              }
+            }
+          ]
         },
-        "Vegetation": {
-          "Grass": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 200,
-              "Maximum": 300
-            }
-          },
-          "Herb": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 2,
-              "Maximum": 6
-            }
-          },
-          "Tall Grass": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 100,
-              "Maximum": 250
-            }
-          },
-          "Tree": {
-            "Algorithm": "Layers",
-            "Parameters": {
-              "Humidity": [ 0, 0.5 ],
-              "Foliage": [ 0.5, 1.0 ]
-            }
-          }
+        "grass": {
+          "probability": 0.1
         },
-        "Wildlife": {
-          "Mosquito": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 1,
-              "Maximum": 8
-            }
-          }
+        "rock": {
+          "probability": 0.01
+        },
+        "flower": {
+          "probability": 0.01
         }
       },
-      "Structures": {
+      "entity_packs": {
+        "tree": [
+          [ "Tree", 1 ]
+        ],
+        "grass": [
+          [ "Grass", 2 ],
+          [ "Tall Grass", 1 ]
+        ],
+        "rock": [
+          [ "Stone", 1 ]
+        ],
+        "flower": [
+          [ "Herb", 1 ]
+        ]
+      },
+      "features": {
+
+      },
+      "structures": {
         "Wooden House": 0.1
+      },
+      "encounters": {
+
       }
     },
     "Nordic Foothills": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
-        "uv_coords": [ 6,7 ],
+        "uv_coords": [ 6, 7 ],
         "color": [ 0, 74, 54 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ -1.0, 10.0 ],
         "Humidity": [ 10.0, 50.0 ],
         "Altitude": [ 1000, 2000 ]
       },
-      "Entities": {
-        "Geological": {
-          "Stone": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 20,
-              "Maximum": 50
+      "entity_slots": {
+        "tree": {
+          "probability": 0.1,
+          "probability_multipliers": [
+            {
+              "type": "noise_layer",
+              "params": {
+                "noise_name": "Foliage",
+                "threshold": [ ">", 0.5 ],
+                "multiplier": 10.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "tree",
+                "max": 4,
+                "multiplier": 3.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 2,
+                "multiplier": 0.5
+              }
             }
-          },
-          "Boulder": {
-            "Algorithm": "Organic",
-            "Parameters": {
-              "Generations": 2,
-              "StartingSeeds": 5,
-              "SeedsPerGeneration": 2,
-              "Radius": 10
-            }
-          }
+          ]
         },
-        "Vegetation": {
-          "Grass": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 10,
-              "Maximum": 20
-            }
-          },
-          "Pine Tree": {
-            "Algorithm": "Organic",
-            "Parameters": {
-              "Generations": 3,
-              "StartingSeeds": 5,
-              "SeedsPerGeneration": 3,
-              "Radius": 8
-            }
-          }
+        "grass": {
+          "probability": 0.1
+        },
+        "rock": {
+          "probability": 0.1
         }
+      },
+      "entity_packs": {
+        "tree": [
+          [ "Pine Tree", 1 ]
+        ],
+        "grass": [
+          [ "Grass", 2 ],
+          [ "Tall Grass", 1 ]
+        ],
+        "rock": [
+          [ "Stone", 1 ],
+          ["Boulder", 3]
+        ]
       }
     },
     "Mountain": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 7, 2 ],
         "color": [ 120, 120, 120 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 0.0, 15.0 ],
         "Humidity": [ 20.0, 80.0 ],
         "Altitude": [ 2000, 2500 ]
       },
-      "Entities": {
-        "Geological": {
-          "Stone": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 20,
-              "Maximum": 50
+      "entity_slots": {
+        "tree": {
+          "probability": 0.03,
+          "probability_multipliers": [
+            {
+              "type": "noise_layer",
+              "params": {
+                "noise_name": "Foliage",
+                "threshold": [ ">", 0.5 ],
+                "multiplier": 4.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 2,
+                "multiplier": 0.5
+              }
             }
-          },
-          "Boulder": {
-            "Algorithm": "Perlin",
-            "Parameters": {
-              "Threshold": 0.52
-            }
-          }
+          ]
         },
-        "Vegetation": {
-          "Grass": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 100,
-              "Maximum": 200
+        "grass": {
+          "probability": 0.01
+        },
+        "rock": {
+          "probability": 0.1,
+          "probability_multipliers": [
+            {
+              "type": "noise_layer",
+              "params": {
+                "noise_name": "Altitude",
+                "threshold": [ ">", 0.8 ],
+                "multiplier": 4.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 4,
+                "multiplier": 0.5
+              }
             }
-          },
-          "Pine Tree": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 25,
-              "Maximum": 25
-            }
-          }
+          ]
         }
+      },
+      "entity_packs": {
+        "tree": [
+          [ "Pine Tree", 1 ]
+        ],
+        "grass": [
+          [ "Grass", 2 ],
+          [ "Tall Grass", 1 ]
+        ],
+        "rock": [
+          [ "Stone", 1 ],
+          [ "Boulder", 3 ]
+        ]
       }
     },
     "Snowy Peak": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 7, 2 ],
         "color": [ 255, 255, 255 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ -20.0, 5.0 ],
         "Humidity": [ 0.0, 50.0 ],
         "Altitude": [ 2000, 3000 ]
       }
     },
     "Volcano": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 7, 2 ],
         "color": [ 247, 52, 43 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 20.0, 30.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 2000, 3000 ],
@@ -191,13 +241,13 @@
       }
     },
     "Lava Front": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 5, 2 ],
         "color": [ 247, 52, 43 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 20.0, 30.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 1500, 2500 ],
@@ -205,178 +255,173 @@
       }
     },
     "Swamp": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 5, 2 ],
         "color": [ 60, 92, 83 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 5.0, 25.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 10, 500 ]
-      },
-      "Entities": {
-        "Liquid": {
-          "Water": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 600,
-              "Maximum": 800
-            }
-          }
-        },
-        "Vegetation": {
-          "Tall Grass": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 100,
-              "Maximum": 250
-            }
-          }
-        },
-        "Wildlife": {
-          "Alligator": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 0,
-              "Maximum": 3
-            }
-          }
-        }
       }
     },
     "Jungle": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 8, 2 ],
         "color": [ 31, 51, 36 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 15.0, 30.0 ],
         "Humidity": [ 50.0, 100.0 ],
         "Altitude": [ 100, 1500 ]
       }
     },
     "Misty Mountains": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 8, 2 ],
         "color": [ 150, 160, 191 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 18.0, 32.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 1500, 3000 ]
       }
     },
     "Desert Mesa": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 8, 7 ],
         "color": [ 168, 98, 44 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 20.0, 35.0 ],
         "Humidity": [ 0.0, 30.0 ],
         "Altitude": [ 1000, 2000 ]
       }
     },
     "Desert": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 4, 2 ],
         "color": [ 194, 178, 128 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 20.0, 35.0 ],
         "Humidity": [ 0.0, 40.0 ],
         "Altitude": [ 50, 1000 ]
       }
     },
     "Prairie": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 6, 0 ],
         "color": [ 72, 111, 56 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 0.0, 20.0 ],
         "Humidity": [ 20.0, 70.0 ],
         "Altitude": [ 50, 1500 ]
       },
-      "Entities": {
-        "Vegetation": {
-          "Grass": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 200,
-              "Maximum": 400
+      "entity_slots": {
+        "tree": {
+          "probability": 0.01,
+          "probability_multipliers": [
+            {
+              "type": "noise_layer",
+              "params": {
+                "noise_name": "Foliage",
+                "threshold": [ ">", 0.5 ],
+                "multiplier": 10.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "tree",
+                "max": 4,
+                "multiplier": 3.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 2,
+                "multiplier": 0.5
+              }
             }
-          },
-          "Herb": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 3,
-              "Maximum": 9
-            }
-          },
-          "Tall Grass": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 400,
-              "Maximum": 700
-            }
-          },
-          "Tree": {
-            "Algorithm": "Random",
-            "Parameters": {
-              "Minimum": 20,
-              "Maximum": 30
-            }
-          }
+          ]
+        },
+        "grass": {
+          "probability": 0.1
+        },
+        "rock": {
+          "probability": 0.01
+        },
+        "flower": {
+          "probability": 0.01
         }
+      },
+      "entity_packs": {
+        "tree": [
+          [ "Tree", 1 ]
+        ],
+        "grass": [
+          [ "Grass", 1 ],
+          [ "Tall Grass", 1 ]
+        ],
+        "rock": [
+          [ "Stone", 1 ]
+        ],
+        "flower": [
+          [ "Herb", 3 ],
+          ["Mountain Flower", 1]
+        ]
       }
     },
     "Savanna": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 6, 0 ],
         "color": [ 194, 178, 128 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ 20.0, 30.0 ],
         "Humidity": [ 0.0, 60.0 ],
         "Altitude": [ 50, 1500 ]
       }
     },
     "Tundra": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 6, 0 ],
         "color": [ 140, 140, 180 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ -9.0, 1.0 ],
         "Humidity": [ 0.0, 30.0 ],
         "Altitude": [ 50, 1000 ]
       }
     },
     "Ocean": {
-      "Icon": {
+      "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 5, 2 ],
         "color": [ 27, 149, 224 ]
       },
-      "Climate": {
+      "climate": {
         "Temperature": [ "Any" ],
         "Humidity": [ "Any" ],
         "Altitude": [ -2700, -200 ]
@@ -384,3 +429,4 @@
     }
   }
 }
+
