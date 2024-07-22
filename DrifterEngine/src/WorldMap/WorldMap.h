@@ -8,7 +8,7 @@ namespace drft
 	{
 	public:
 		// Takes the abstract proc gen layers created so far and creates a concrete chunk
-		void finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const;
+		 bool generateChunk(sf::Vector2i coordinate, entt::registry& registry) const;
 
 		void create();
 

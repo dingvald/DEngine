@@ -129,8 +129,6 @@ void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
 void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, ProcessType type)
 {
 	if (chunkQueue.empty()) return;
-	
-	std::vector<std::pair<int, int>> toDelete;
 
 	auto coord = chunkQueue.front();
 	auto status = spatial::ioStatus::Busy;
@@ -147,8 +145,10 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 		status = _chunks.at(coord).asyncLoad(*_registry, CHUNK_SAVE_PATH.data());
 		break;
 	}
+
 	if (status == spatial::ioStatus::Busy)
 	{
+		// Send to the back of the queue
 		auto temp = chunkQueue.front();
 		chunkQueue.push(temp);
 	}

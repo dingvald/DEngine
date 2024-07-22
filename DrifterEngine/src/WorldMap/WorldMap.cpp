@@ -40,7 +40,12 @@ sf::Vector2i drft::WorldMap::getStartingPosition(const std::string& biomeType) c
 	return _worldGenerator.getStartingPosition(biomeType);
 }
 
-void drft::WorldMap::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
+bool drft::WorldMap::generateChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
-	_worldGenerator.finalizeChunk(coordinate, registry);
+	const auto status = _worldGenerator.generateChunk(coordinate, registry);
+	if (status == drft::gen::GenerationStatus::Done)
+	{
+		return true;
+	}
+	return false;
 }

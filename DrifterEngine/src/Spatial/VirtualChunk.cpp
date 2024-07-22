@@ -32,11 +32,14 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	}
 
 	auto& worldMap = reg.ctx().get<WorldMap&>();
-	worldMap.finalizeChunk(_coordinate, reg);
+	if (worldMap.generateChunk(_coordinate, reg))
+	{
+		setState(ChunkState::Built);
+		return ioStatus::Done;
+	}
 
-	setState(ChunkState::Built);
-
-	return ioStatus::Done;
+	setState(ChunkState::Building);
+	return ioStatus::Busy;
 }
 
 ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const char* filepath)
@@ -104,7 +107,7 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const char*
 	if (getState() == ChunkState::ToSave)
 	{
 		const auto& grid = reg.ctx().get<spatial::WorldGrid&>();
-		const auto entities = grid.getAllEntities(this->_coordinate);
+		const auto entities = grid.getAllEntities(_coordinate);
 
 		if (entities.empty())
 		{

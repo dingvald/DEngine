@@ -26,6 +26,8 @@ static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
 static const std::filesystem::path BIOME_FOLDER_PATH = STATIC_DATA_PATH.string() + "biomes";
 static const std::filesystem::path STRUCTURE_FOLDER_PATH = STATIC_DATA_PATH.string() + "structures";
 
+constexpr int GENERATION_PASSES = 3;
+
 using namespace entt::literals;
 
 drft::gen::WorldGenerator::WorldGenerator()
@@ -107,6 +109,42 @@ void drft::gen::WorldGenerator::generate()
 	// generate modifications
 	// generate structures
 
+}
+
+drft::gen::GenerationStatus drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate, entt::registry& registry) const
+{
+	if (!_currentChunkGenerations.contains(coordinate))
+	{
+		_currentChunkGenerations.emplace(coordinate, GenerationProgress{});
+	}
+
+	const sf::IntRect placementArea = determinePlacementArea(coordinate);
+	auto& entityPositions = _currentChunkGenerations.at(coordinate).entities;
+	const int pass = _currentChunkGenerations.at(coordinate).pass;
+
+	GenerationContext context = {
+		.area = placementArea,
+		.entityPositions = entityPositions,
+		.grid = *_tagGrid,
+		.noiseLayers = _noiseLayers,
+		.seed = _seed
+	};
+
+	for (int subchunk_y = placementArea.top; subchunk_y < placementArea.top + placementArea.height; subchunk_y += SUB_CHUNK_SIZE.y)
+	{
+		for (int subchunk_x = placementArea.left; subchunk_x < placementArea.left + placementArea.width; subchunk_x += SUB_CHUNK_SIZE.x)
+		{
+			generateSubChunk({ subchunk_x, subchunk_y }, context, pass);
+		}
+	}
+
+	if (++_currentChunkGenerations.at(coordinate).pass >= GENERATION_PASSES)
+	{
+		finalizeChunk(coordinate, registry);
+		return GenerationStatus::Done;
+	}
+
+	return GenerationStatus::Continue;
 }
 
 void drft::gen::WorldGenerator::generateTerrain()
@@ -244,27 +282,8 @@ double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Ve
 
 void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
 {
-	if (!_biomeMap.contains(coordinate.x, coordinate.y)) return;
-
-	const sf::IntRect placementArea = determinePlacementArea(coordinate);
-	GenerationContext context = { 
-		.area = placementArea, 
-		.entityPositions = EntityPositionMap{},
-		.grid = *_tagGrid, 
-		.noiseLayers = _noiseLayers, 
-		.seed = _seed 
-	};
-
-	for (int subchunk_y = placementArea.top; subchunk_y < placementArea.top + placementArea.height; subchunk_y += SUB_CHUNK_SIZE.y)
-	{
-		for (int subchunk_x = placementArea.left; subchunk_x < placementArea.left + placementArea.width; subchunk_x += SUB_CHUNK_SIZE.x)
-		{
-			generateSubChunk({ subchunk_x, subchunk_y }, context, true);
-		}
-	}
-
-	placeEntities(context, registry);
-
+	const auto& entities = _currentChunkGenerations.at(coordinate).entities;
+	placeEntities(entities, registry);
 	updateCompletedChunks(coordinate);
 }
 
@@ -362,7 +381,6 @@ const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i tilePosition
 	_biomeRegistry.forEachBiome(
 		[&](const auto, const Biome& biome)
 		{
-			int satisfies = 0;
 			float total = 0.0f;
 			for (auto& [rangeName, value] : values)
 			{
@@ -407,13 +425,11 @@ void drft::gen::WorldGenerator::placeStructures(GenerationContext& context, cons
 	}
 }
 
-void drft::gen::WorldGenerator::generateSubChunk(sf::Vector2i subChunkCoordinate, GenerationContext& context, bool isFirstPass) const
+void drft::gen::WorldGenerator::generateSubChunk(sf::Vector2i subChunkCoordinate, GenerationContext& context, int passNum) const
 {
 	const Biome* biome = determineBiome(subChunkCoordinate);
 	const auto& entitySlots = biome->getEntitySlots();
 	const auto& entityPacks = biome->getEntityPacks();
-
-	if (entitySlots.empty() || entityPacks.empty()) return;
 
 	for (int y = subChunkCoordinate.y; y < subChunkCoordinate.y + SUB_CHUNK_SIZE.y; y++)
 	{
@@ -421,22 +437,24 @@ void drft::gen::WorldGenerator::generateSubChunk(sf::Vector2i subChunkCoordinate
 		{
 			const auto position = sf::Vector2i{ x, y };
 
-			if (isFirstPass)
+			if (passNum == 0)
 			{
 				placeTile(position, context);
 				placeLiquid(position, context);
 			}
 			
+			if (context.grid.at(position.x, position.y).contains("liquid"_hs)) continue;
+
 			for (auto&& [slotName, slot] : entitySlots)
 			{
 				if (!entityPacks.contains(slotName)) continue;
 
 				auto choice = rng::weightedSelection(entityPacks.at(slotName));
 				if (choice < 0) continue;
-				const auto& entityName = entityPacks.at(slotName)[choice].first;
+				const auto& [entityName, _] = entityPacks.at(slotName)[choice];
 
 				float probability = slot.probability;
-				if (!isFirstPass)
+				if (passNum > 0)
 				{
 					// Only apply multipliers after base probabilty has been set
 					for (auto&& multiplier : slot.multipliers)
@@ -445,7 +463,7 @@ void drft::gen::WorldGenerator::generateSubChunk(sf::Vector2i subChunkCoordinate
 					}
 				}
 
-				if (rng::percentChance(probability * 100))
+				if (rng::percentChance(probability * 100.0))
 				{
 					context.entityPositions[entityName].emplace(position);
 					context.grid.at(position.x, position.y).insert(entt::hashed_string{ slotName.c_str()});
@@ -475,10 +493,10 @@ void drft::gen::WorldGenerator::placeLiquid(sf::Vector2i position, GenerationCon
 	context.entityPositions["Water"].emplace(position);
 }
 
-void drft::gen::WorldGenerator::placeEntities(GenerationContext& context, entt::registry& registry) const
+void drft::gen::WorldGenerator::placeEntities(const EntityPositionMap& entities, entt::registry& registry) const
 {
 	const auto& factory = registry.ctx().get<EntityFactory&>();
-	for (auto&& [name, positions] : context.entityPositions)
+	for (auto&& [name, positions] : entities)
 	{
 		for (auto&& position : positions)
 		{
@@ -489,6 +507,8 @@ void drft::gen::WorldGenerator::placeEntities(GenerationContext& context, entt::
 
 void drft::gen::WorldGenerator::updateCompletedChunks(sf::Vector2i coordinate) const
 {
+	_currentChunkGenerations.erase(coordinate);
+
 	auto neighbours = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
 	for (auto&& neighbour : neighbours)
 	{

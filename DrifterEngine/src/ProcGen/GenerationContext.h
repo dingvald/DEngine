@@ -17,7 +17,7 @@ namespace drft::gen
 	struct GenerationContext
 	{
 		const sf::IntRect area;
-		EntityPositionMap entityPositions;
+		EntityPositionMap& entityPositions;
 		spatial::AutoGrid<entt::dense_set<entt::id_type>>& grid;
 		const std::unordered_map<std::string, rng::NoiseLayer>& noiseLayers;
 		const unsigned int seed;
