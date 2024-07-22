@@ -10,7 +10,7 @@ public:
 		static_assert(std::is_base_of<T, U>::value, "Type must be derived from type T");
 		static_assert(std::is_default_constructible<U>::value, "Type must be default contructable");
 
-		_factoryMethods.emplace(name, []() {return std::make_unique<U>(); });
+		_factoryMethods.emplace(std::move(name), []() {return std::make_unique<U>(); });
 	}
 
 	static std::unique_ptr<T> build(std::string name);
