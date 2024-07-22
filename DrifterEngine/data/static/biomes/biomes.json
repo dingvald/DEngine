@@ -4,13 +4,112 @@
       "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
-        "uv_coords": [5, 0],
+        "uv_coords": [ 5, 0 ],
         "color": [ 65, 97, 63 ]
       },
       "climate": {
         "Temperature": [ 0.0, 15.0 ],
         "Humidity": [ 30.0, 60.0 ],
-        "Altitude": [ 50, 1200 ]
+        "Altitude": [ 50, 1200 ],
+        "Foliage": [ 0.0, 0.5 ]
+      },
+      "entity_slots": {
+        "tree": {
+          "probability": 0.05,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "tree",
+                "max": 4,
+                "multiplier": 4.0
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 1,
+                "multiplier": 0.1
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "grass",
+                "max": 1,
+                "multiplier": 0.1
+              }
+            }
+          ]
+        },
+        "grass": {
+          "probability": 0.05,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "grass",
+                "max": 4,
+                "multiplier": 1.0
+              }
+            }
+          ]
+        },
+        "rock": {
+          "probability": 0.01,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 4,
+                "multiplier": 3.0
+              }
+            }
+          ]
+        },
+        "flower": {
+          "probability": 0.01
+        }
+      },
+      "entity_packs": {
+        "tree": [
+          [ "Tree", 1 ]
+        ],
+        "grass": [
+          [ "Grass", 2 ],
+          [ "Tall Grass", 1 ]
+        ],
+        "rock": [
+          [ "Stone", 1 ]
+        ],
+        "flower": [
+          [ "Herb", 1 ]
+        ]
+      },
+      "features": {
+
+      },
+      "structures": {
+        "Wooden House": 0.1
+      },
+      "encounters": {
+
+      }
+    },
+    "Dense Forest": {
+      "icon": {
+        "texture": "simple_tileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 4, 8 ],
+        "color": [ 65, 97, 63 ]
+      },
+      "climate": {
+        "Temperature": [ 0.0, 15.0 ],
+        "Humidity": [ 30.0, 60.0 ],
+        "Altitude": [ 50, 1200 ],
+        "Foliage": [0.5, 1.0]
       },
       "entity_slots": {
         "tree": {
@@ -21,7 +120,7 @@
               "params": {
                 "noise_name": "Foliage",
                 "threshold": [ ">", 0.5 ],
-                "multiplier": 10.0
+                "multiplier": 1.7
               }
             },
             {
@@ -29,24 +128,52 @@
               "params": {
                 "tag": "tree",
                 "max": 4,
-                "multiplier": 1.0
+                "multiplier": 4.0
               }
             },
             {
               "type": "neighbor",
               "params": {
                 "tag": "rock",
-                "max": 2,
-                "multiplier": 0.5
+                "max": 1,
+                "multiplier": 0.1
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "grass",
+                "max": 1,
+                "multiplier": 0.1
               }
             }
           ]
         },
         "grass": {
-          "probability": 0.1
+          "probability": 0.08,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "grass",
+                "max": 4,
+                "multiplier": 1.0
+              }
+            }
+          ]
         },
         "rock": {
-          "probability": 0.01
+          "probability": 0.01,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 4,
+                "multiplier": 3.0
+              }
+            }
+          ]
         },
         "flower": {
           "probability": 0.01
@@ -91,14 +218,14 @@
       },
       "entity_slots": {
         "tree": {
-          "probability": 0.1,
+          "probability": 0.05,
           "probability_multipliers": [
             {
               "type": "noise_layer",
               "params": {
                 "noise_name": "Foliage",
                 "threshold": [ ">", 0.5 ],
-                "multiplier": 10.0
+                "multiplier": 3.0
               }
             },
             {
@@ -136,7 +263,7 @@
         ],
         "rock": [
           [ "Stone", 1 ],
-          ["Boulder", 3]
+          [ "Boulder", 3 ]
         ]
       }
     },
@@ -237,7 +364,7 @@
         "Temperature": [ 20.0, 30.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 2000, 3000 ],
-        "Volcanism": [0.0, 1.0]
+        "Volcanism": [ 0.0, 1.0 ]
       }
     },
     "Lava Front": {
@@ -251,7 +378,7 @@
         "Temperature": [ 20.0, 30.0 ],
         "Humidity": [ 60.0, 100.0 ],
         "Altitude": [ 1500, 2500 ],
-        "Volcanism": [0.0, 1.0]
+        "Volcanism": [ 0.0, 1.0 ]
       }
     },
     "Swamp": {
@@ -336,14 +463,6 @@
           "probability": 0.01,
           "probability_multipliers": [
             {
-              "type": "noise_layer",
-              "params": {
-                "noise_name": "Foliage",
-                "threshold": [ ">", 0.5 ],
-                "multiplier": 10.0
-              }
-            },
-            {
               "type": "neighbor",
               "params": {
                 "tag": "tree",
@@ -362,13 +481,33 @@
           ]
         },
         "grass": {
-          "probability": 0.1
+          "probability": 0.05,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "grass",
+                "max": 4,
+                "multiplier": 3.0
+              }
+            }
+          ]
         },
         "rock": {
           "probability": 0.01
         },
         "flower": {
-          "probability": 0.01
+          "probability": 0.01,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "flower",
+                "max": 4,
+                "multiplier": 2.0
+              }
+            }
+          ]
         }
       },
       "entity_packs": {
@@ -376,15 +515,15 @@
           [ "Tree", 1 ]
         ],
         "grass": [
-          [ "Grass", 1 ],
+          [ "Grass", 4 ],
           [ "Tall Grass", 1 ]
         ],
         "rock": [
           [ "Stone", 1 ]
         ],
         "flower": [
-          [ "Herb", 3 ],
-          ["Mountain Flower", 1]
+          [ "Herb", 1 ],
+          [ "Mountain Flower", 1 ]
         ]
       }
     },
