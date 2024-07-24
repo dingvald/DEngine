@@ -5,6 +5,9 @@ namespace drft::system
 {
 	class EquipItemSystem : public System
 	{
+	public:
+		using System::System;
+
 	private:
 		void init() override;
 		void onUpdateEnd() override;

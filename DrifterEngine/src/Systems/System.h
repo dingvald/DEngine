@@ -16,28 +16,32 @@ namespace drft::system
 	class System
 	{
 	public:
-		System() {};
+		System(entt::registry& registry, entt::dispatcher& dispatcher);
 		virtual ~System() = default;
 
-		void setRegistry(entt::registry& registry);
-
-		virtual void init() = 0;
+		virtual void init();
 		virtual void onStart(bool isNewGame);
 
 		virtual void save(cereal::JSONOutputArchive& oarchive);
 		virtual void load(cereal::JSONInputArchive& iarchive);
 
-		virtual void update(const float dt);
-		virtual void fixedUpdate();
-		virtual void render(sf::RenderTarget& target);
+		virtual void onUpdateBegin();
+		virtual void onUpdate(const float dt);
+		virtual void onUpdateLate(const float dt);
 		virtual void onUpdateEnd();
+
+		virtual void onFixedUpdateBegin();
+		virtual void onFixedUpdate();
+		virtual void onFixedUpdateLate();
 		virtual void onFixedUpdateEnd();
 
+		virtual void render(sf::RenderTarget& target);
+		
 		virtual void shutdown();
 
 	protected:
-		entt::registry* _registry = nullptr;
-		entt::dispatcher* _dispatcher = nullptr;
+		entt::registry& _registry;
+		entt::dispatcher& _dispatcher;
 	};
 
 } // namespace drft::system

@@ -16,32 +16,32 @@
 
 void drft::system::ProjectileSystem::init()
 {
-	_registry->on_construct<DoMeleeAttackAction>().connect<&ProjectileSystem::onDoMeleeAttackAction>(this);
-	_registry->on_construct<ProjectileComponent>().connect<&ProjectileSystem::onProjectileAdded>(this);
-	_registry->on_destroy<ProjectileComponent>().connect<&ProjectileSystem::onProjectileRemoved>(this);
+	_registry.on_construct<MeleeAttackAction>().connect<&ProjectileSystem::onMeleeAttackActionAdded>(this);
+	_registry.on_construct<ProjectileComponent>().connect<&ProjectileSystem::onProjectileAdded>(this);
+	_registry.on_destroy<ProjectileComponent>().connect<&ProjectileSystem::onProjectileRemoved>(this);
 }
 
-void drft::system::ProjectileSystem::update(float dt)
+void drft::system::ProjectileSystem::onUpdate(float dt)
 {
-	auto view = _registry->view<PositionComponent, ProjectileComponent, component::tag::CurrentActor>();
+	auto view = _registry.view<PositionComponent, ProjectileComponent, component::tag::CurrentActor>();
 	for (auto [entity, pos, proj] : view.each())
 	{
 		if (proj.progress >= proj.line.size())
 		{
-			_registry->remove<ProjectileComponent>(entity);
+			_registry.remove<ProjectileComponent>(entity);
 			continue;
 		}
 
 		auto delta = proj.line.at(proj.progress++) - pos.position;
-		_registry->emplace_or_replace<PerformMoveAction>(entity, delta);
+		_registry.emplace_or_replace<MoveAction>(entity, delta);
 
-		if (auto render = _registry->try_get<RenderComponent>(entity))
+		if (auto render = _registry.try_get<RenderComponent>(entity))
 		{
 			SpriteOptions effectSprite;
 			createSpriteOptionsFromRenderComponent(effectSprite, *render);
 			effectSprite.layer = static_cast<unsigned int>(RenderLayer::EffectsFront);
 
-			spawnEffect(*_registry,
+			spawnEffect(_registry,
 				{
 					.frames = { effectSprite },
 					.position = pos.position,
@@ -76,7 +76,7 @@ void drft::system::ProjectileSystem::onProjectileRemoved(entt::registry& registr
 	}
 }
 
-void drft::system::ProjectileSystem::onDoMeleeAttackAction(entt::registry& registry, entt::entity entity)
+void drft::system::ProjectileSystem::onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity)
 {
 	registry.remove<ProjectileComponent>(entity);
 }

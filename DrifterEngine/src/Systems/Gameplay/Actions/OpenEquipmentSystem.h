@@ -5,6 +5,9 @@ namespace drft::system
 {
 	class OpenEquipmentSystem : public System
 	{
+	public:
+		using System::System;
+
 	private:
 		void init() override;
 		

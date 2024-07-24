@@ -10,9 +10,12 @@ namespace drft::system
 {
 	class InteractionSystem : public System
 	{
+	public:
+		using System::System;
+
 	private:
 		void init() override;
-		void update(const float dt) override;
+		void onUpdate(const float dt) override;
 		void onUpdateEnd() override;
 
 		std::vector<entt::entity> getInteractableSurroundings(sf::Vector2i position, const spatial::WorldGrid& grid);

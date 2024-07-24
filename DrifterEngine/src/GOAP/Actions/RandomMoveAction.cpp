@@ -38,7 +38,7 @@ drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agen
 		++safetyCount;
 	}
 
-	agent.emplace_or_replace<PerformMoveAction>(sf::Vector2i(randx, randy));
+	agent.emplace_or_replace<MoveAction>(sf::Vector2i(randx, randy));
     return ActionResult::Complete;
 }
 

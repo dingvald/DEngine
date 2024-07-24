@@ -11,11 +11,11 @@
 
 void drft::system::WorldGridResolver::init()
 {
-	_grid = &_registry->ctx().get<spatial::WorldGrid&>();
+	_grid = &_registry.ctx().get<spatial::WorldGrid&>();
 
-	_registry->on_construct<PositionComponent>().connect<&WorldGridResolver::onPositionAdd>(this);
-	_registry->on_update<PositionComponent>().connect<&WorldGridResolver::onPositionUpdate>(this);
-	_registry->on_destroy<PositionComponent>().connect<&WorldGridResolver::onPositionRemove>(this);
+	_registry.on_construct<PositionComponent>().connect<&WorldGridResolver::onPositionAdd>(this);
+	_registry.on_update<PositionComponent>().connect<&WorldGridResolver::onPositionUpdate>(this);
+	_registry.on_destroy<PositionComponent>().connect<&WorldGridResolver::onPositionRemove>(this);
 }
 
 void drft::system::WorldGridResolver::onPositionAdd(entt::registry& registry, entt::entity entity)
@@ -24,7 +24,7 @@ void drft::system::WorldGridResolver::onPositionAdd(entt::registry& registry, en
 
 	auto& pos = registry.get<PositionComponent>(entity);
 	_grid->placeEntity(entity, pos.position);
-	_dispatcher->trigger(events::EnterTileEvent(entity, pos.position));
+	_dispatcher.trigger(events::EnterTileEvent(entity, pos.position));
 }
 
 void drft::system::WorldGridResolver::onPositionUpdate(entt::registry& registry, entt::entity entity)
@@ -34,8 +34,8 @@ void drft::system::WorldGridResolver::onPositionUpdate(entt::registry& registry,
 	auto& pos = registry.get<PositionComponent>(entity);
 	const auto prevPos = _grid->getPosition(entity);
 	_grid->moveEntity(entity, pos.position);
-	_dispatcher->trigger(events::LeaveTileEvent(entity, prevPos));
-	_dispatcher->trigger(events::EnterTileEvent(entity, pos.position));
+	_dispatcher.trigger(events::LeaveTileEvent(entity, prevPos));
+	_dispatcher.trigger(events::EnterTileEvent(entity, pos.position));
 }
 
 void drft::system::WorldGridResolver::onPositionRemove(entt::registry& registry, entt::entity entity)

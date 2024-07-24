@@ -23,17 +23,16 @@ static const sf::Color DAY_COLOR = { 225,225,225 };
 
 void drft::system::DayNightCycleSystem::init()
 {
-	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
-	dispatcher.sink<events::GameTickEvent>().connect<&DayNightCycleSystem::onGameTickEvent>(this);
+	_dispatcher.sink<events::GameTickEvent>().connect<&DayNightCycleSystem::onGameTickEvent>(this);
 }
 
-void drft::system::DayNightCycleSystem::fixedUpdate()
+void drft::system::DayNightCycleSystem::onFixedUpdate()
 {
 	const auto color = determineSunColor();
-	auto cameraView = _registry->view<CameraComponent>();
+	auto cameraView = _registry.view<CameraComponent>();
 	for (auto entity : cameraView)
 	{
-		_registry->emplace_or_replace<GlobalLightSourceComponent>(entity, color);
+		_registry.emplace_or_replace<GlobalLightSourceComponent>(entity, color);
 	}
 
 	auto time = std::format("Day {} - {}:{:02} {}", _days, _hours > 12 ? _hours - 12 : _hours, _minutes, _hours >= 12 ? "pm" : "am");
@@ -77,9 +76,9 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 
 	if (_hours == NIGHT_START_HOUR && _minutes == 0 && _seconds == 0)
 	{
-		auto camera = getCurrentCamera(*_registry);
-		_dispatcher->trigger(events::NightStartEvent());
-		_dispatcher->trigger(events::SendFloatingMessageEvent{
+		auto camera = getCurrentCamera(_registry);
+		_dispatcher.trigger(events::NightStartEvent());
+		_dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dusk has fallen...",
 			.color = sf::Color(125,0,255),
 			.position = camera.position,
@@ -90,9 +89,9 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 	}
 	else if (_hours == DAY_START_HOUR && _minutes == 0 && _seconds == 0)
 	{
-		auto camera = getCurrentCamera(*_registry);
-		_dispatcher->trigger(events::DayStartEvent());
-		_dispatcher->trigger(events::SendFloatingMessageEvent{
+		auto camera = getCurrentCamera(_registry);
+		_dispatcher.trigger(events::DayStartEvent());
+		_dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dawn has broken...",
 			.color = sf::Color::Yellow,
 			.position = camera.position,

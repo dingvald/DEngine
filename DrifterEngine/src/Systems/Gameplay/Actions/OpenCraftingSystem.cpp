@@ -6,7 +6,7 @@
 
 void drft::system::OpenCraftingSystem::init()
 {
-	_registry->on_construct<component::action::OpenCrafting>().connect<&OpenCraftingSystem::onOpenCraftingAction>(this);
+	_registry.on_construct<component::action::OpenCrafting>().connect<&OpenCraftingSystem::onOpenCraftingAction>(this);
 }
 
 void drft::system::OpenCraftingSystem::onOpenCraftingAction(entt::registry& registry, entt::entity entity) const
@@ -17,5 +17,5 @@ void drft::system::OpenCraftingSystem::onOpenCraftingAction(entt::registry& regi
 		return;
 	}
 
-	_dispatcher->trigger(events::RequestStateStackPush{ States::Crafting });
+	_dispatcher.trigger(events::RequestStateStackPush{ States::Crafting });
 }

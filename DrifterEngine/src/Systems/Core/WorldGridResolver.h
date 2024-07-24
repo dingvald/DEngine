@@ -12,6 +12,8 @@ namespace drft::system
 	class WorldGridResolver : public System
 	{
 	public:
+		using System::System;
+
 		virtual void init() override;
 
 	private:

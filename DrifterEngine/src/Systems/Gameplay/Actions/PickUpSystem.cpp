@@ -14,12 +14,12 @@
 
 void drft::system::PickUpSystem::init()
 {
-	_registry->on_construct<component::action::PickUp>().connect<&PickUpSystem::onPickupAction>(this);
+	_registry.on_construct<component::action::PickUp>().connect<&PickUpSystem::onPickupAction>(this);
 }
 
 void drft::system::PickUpSystem::onUpdateEnd()
 {
-	_registry->clear<component::action::PickUp>();
+	_registry.clear<component::action::PickUp>();
 }
 
 void drft::system::PickUpSystem::onPickupAction(entt::registry& registry, entt::entity entity) const
@@ -34,18 +34,18 @@ void drft::system::PickUpSystem::onPickupAction(entt::registry& registry, entt::
 	const auto myTilePosition = position->position;
 	auto checkForItem = [this](entt::entity entity) -> bool
 	{
-		return _registry->all_of<ItemComponent>(entity);
+		return _registry.all_of<ItemComponent>(entity);
 	};
 	const auto items = grid.entitiesAt(myTilePosition, checkForItem);
 
 	if (items.empty()) return;
 
-	_registry->remove<PositionComponent>(items.front());
+	_registry.remove<PositionComponent>(items.front());
 
-	auto& item = _registry->get<ItemComponent>(items.front());
+	auto& item = _registry.get<ItemComponent>(items.front());
 
 	bool putDirectlyInHand = false;
-	if (auto body = _registry->try_get<BodyComponent>(entity))
+	if (auto body = _registry.try_get<BodyComponent>(entity))
 	{
 		const auto handParts = body->parts.search(PartType::Hand);
 		for (auto hand : handParts)
@@ -61,12 +61,12 @@ void drft::system::PickUpSystem::onPickupAction(entt::registry& registry, entt::
 	// otherwise put into inventory
 	if (!putDirectlyInHand)
 	{
-		_registry->patch<ContainerComponent>(entity,
+		_registry.patch<ContainerComponent>(entity,
 			[item](ContainerComponent& cont)
 			{
 				cont.contents.push_back(item.id);
 			});
 	}
 
-	spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *_registry, entity });
+	spendActionPoints(BASE_ACTION_COST, ActionType::Act, { _registry, entity });
 }

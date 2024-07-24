@@ -6,6 +6,8 @@ namespace drft::system
 	class DetermineCraftableItemsSystem : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
 
 	private:

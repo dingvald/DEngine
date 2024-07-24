@@ -412,7 +412,7 @@ void drft::gen::WorldGenerator::placeStructures(GenerationContext& context, cons
 {
 	for (auto&& [name, probability] : biome->getStructureProbabilities())
 	{
-		if (!rng::percentChance(probability * 100)) continue;
+		if (!rng::percentChance(probability * 100.0)) continue;
 
 		if (auto structure = _structureFactory.build(name))
 		{
@@ -444,6 +444,7 @@ void drft::gen::WorldGenerator::generateSubChunk(sf::Vector2i subChunkCoordinate
 			}
 			
 			if (context.grid.at(position.x, position.y).contains("liquid"_hs)) continue;
+			if (context.grid.at(position.x, position.y).contains("structure"_hs)) continue;
 
 			for (auto&& [slotName, slot] : entitySlots)
 			{
@@ -466,12 +467,12 @@ void drft::gen::WorldGenerator::generateSubChunk(sf::Vector2i subChunkCoordinate
 				if (rng::percentChance(probability * 100.0))
 				{
 					context.entityPositions[entityName].emplace(position);
-					context.grid.at(position.x, position.y).insert(entt::hashed_string{ slotName.c_str()});
+					context.grid.at(position.x, position.y).insert(slotName);
 				}
 				else
 				{
 					context.entityPositions[entityName].erase(position);
-					context.grid.at(position.x, position.y).erase(entt::hashed_string{ slotName.c_str() });
+					context.grid.at(position.x, position.y).erase(slotName);
 				}
 			}
 		}

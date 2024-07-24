@@ -11,6 +11,8 @@ namespace drft::system
 	class HealingSystem : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
 
 	private:

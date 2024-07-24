@@ -23,8 +23,10 @@ namespace drft::system
 	class ArtificialInput : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
-		void update(const float dt) override;
+		void onUpdate(const float dt) override;
 
 	private:
 		using GoalName = std::string;

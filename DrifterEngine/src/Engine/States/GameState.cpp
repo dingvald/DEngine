@@ -253,61 +253,61 @@ void drft::GameState::importSystems()
 
 	using namespace system;
 
-	_systems->add<RealityBubble>(					Phase::OnPreUpdate); // This should go first - determines which actors are "active"
-	_systems->add<TurnManager>(						Phase::OnPreUpdate + 5);
+	_systems->add<RealityBubble>();
+	_systems->add<TurnManager>();
 
-	_systems->add<PlayerInput>(						Phase::OnProcessInput);
-	_systems->add<ArtificialInput>(					Phase::OnProcessInput);
+	_systems->add<PlayerInput>();
+	_systems->add<ArtificialInput>();
 
-	_systems->add<ProjectileSystem>(				Phase::OnUpdate);
-	_systems->add<InteractionSystem>(				Phase::OnUpdate);
-	_systems->add<WaitingSystem>(					Phase::OnUpdate);
-	_systems->add<DropItemSystem>(					Phase::OnUpdate);
-	_systems->add<EquipItemSystem>(					Phase::OnUpdate);
-	_systems->add<CraftItemSystem>(					Phase::OnUpdate);
-	_systems->add<BodyPartSystem>(					Phase::OnUpdate);
-	_systems->add<HotbarSystem>(					Phase::OnUpdate);
-	_systems->add<HealthSystem>(					Phase::OnUpdate + 10);
-	_systems->add<DeathSystem>(						Phase::OnUpdate + 15);
-	_systems->add<LevelingSystem>(					Phase::OnUpdate + 20);
-	_systems->add<Camera>(							Phase::OnPostUpdate);
-	_systems->add<ChunkManager>(					Phase::OnPostUpdate);
+	_systems->add<ProjectileSystem>();
+	_systems->add<InteractionSystem>();
+	_systems->add<WaitingSystem>();
+	_systems->add<DropItemSystem>();
+	_systems->add<EquipItemSystem>();
+	_systems->add<CraftItemSystem>();
+	_systems->add<BodyPartSystem>();
+	_systems->add<HotbarSystem>();
+	_systems->add<HealthSystem>();
+	_systems->add<DeathSystem>();
+	_systems->add<LevelingSystem>();
+	_systems->add<Camera>();
+	_systems->add<ChunkManager>();
 	
-	_systems->add<DayNightCycleSystem>(				Phase::OnFixedUpdate);
-	_systems->add<SprintingSystem>(					Phase::OnFixedUpdate);
-	_systems->add<CullingSystem>(					Phase::OnFixedUpdate);
-	_systems->add<LiquidSystem>(					Phase::OnFixedUpdate);
-	_systems->add<PlayerFOVSystem>(					Phase::OnFixedUpdate);
-	_systems->add<LightSourceSystem>(				Phase::OnFixedUpdate);
-	_systems->add<LightingSystem>(					Phase::OnFixedUpdate);
-	_systems->add<VisualEffectSystem>(				Phase::OnFixedUpdate);
-	_systems->add<SpriteControllerSystem>(			Phase::OnFixedUpdate);
-	_systems->add<AnimationSystem>(					Phase::OnFixedUpdate);
-	_systems->add<SyncedAnimationSystem>(			Phase::OnFixedUpdate);
+	_systems->add<DayNightCycleSystem>();
+	_systems->add<SprintingSystem>();
+	_systems->add<CullingSystem>();
+	_systems->add<LiquidSystem>();
+	_systems->add<PlayerFOVSystem>();
+	_systems->add<LightSourceSystem>();
+	_systems->add<LightingSystem>();
+	_systems->add<VisualEffectSystem>();
+	_systems->add<SpriteControllerSystem>();
+	_systems->add<AnimationSystem>();
+	_systems->add<SyncedAnimationSystem>();
 
-	_systems->add<EntityRenderer>(					Phase::OnRender);
-	_systems->add<EffectRenderer>(					Phase::OnRender);
-	_systems->add<HUD>(								Phase::OnRender + 5);
-	_systems->add<FloatingTextSystem>(				Phase::OnRender + 5);
+	_systems->add<EntityRenderer>();
+	_systems->add<EffectRenderer>();
+	_systems->add<HUD>();
+	_systems->add<FloatingTextSystem>();
 
-	_systems->add<WorldGridResolver>(				Phase::Reactive);
-	_systems->add<FactionSystem>(					Phase::Reactive);
-	_systems->add<ItemUniqueIDGenerator>(			Phase::Reactive);
-	_systems->add<DetermineCraftableItemsSystem>(	Phase::Reactive);
-	_systems->add<TickingLifetimeSystem>(			Phase::Reactive);
-	_systems->add<TargetSelectSystem>(				Phase::Reactive);
-	_systems->add<SelectDirectionSystem>(			Phase::Reactive);
-	_systems->add<OpenableSystem>(					Phase::Reactive);
-	_systems->add<ConsumableSystem>(				Phase::Reactive);
-	_systems->add<HealingSystem>(					Phase::Reactive);
-	_systems->add<OpenCraftingSystem>(				Phase::Reactive);
-	_systems->add<OpenEquipmentSystem>(				Phase::Reactive);
-	_systems->add<OpenWorldMapSystem>(				Phase::Reactive);
-	_systems->add<PickUpSystem>(					Phase::Reactive);
-	_systems->add<MoveActionSystem>(				Phase::Reactive);
-	_systems->add<MeleeAttackActionSystem>(			Phase::Reactive);
-	_systems->add<CollisionSystem>(					Phase::Reactive);
-	_systems->add<StaminaSystem>(					Phase::Reactive);
+	_systems->add<WorldGridResolver>();
+	_systems->add<FactionSystem>();
+	_systems->add<ItemUniqueIDGenerator>();
+	_systems->add<DetermineCraftableItemsSystem>();
+	_systems->add<TickingLifetimeSystem>();
+	_systems->add<TargetSelectSystem>();
+	_systems->add<SelectDirectionSystem>();
+	_systems->add<OpenableSystem>();
+	_systems->add<ConsumableSystem>();
+	_systems->add<HealingSystem>();
+	_systems->add<OpenCraftingSystem>();
+	_systems->add<OpenEquipmentSystem>();
+	_systems->add<OpenWorldMapSystem>();
+	_systems->add<PickUpSystem>();
+	_systems->add<MoveActionSystem>();
+	_systems->add<MeleeAttackActionSystem>();
+	_systems->add<CollisionSystem>();
+	_systems->add<StaminaSystem>();
 
 
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))

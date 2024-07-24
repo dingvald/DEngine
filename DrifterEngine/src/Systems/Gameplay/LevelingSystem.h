@@ -6,6 +6,8 @@ namespace drft::system
 	class LevelingSystem : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
 		void onUpdateEnd() override;
 

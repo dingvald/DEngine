@@ -6,8 +6,10 @@ namespace drft::system
 	class SprintingSystem : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
-		void fixedUpdate() override;
+		void onFixedUpdate() override;
 		void shutdown() override;
 
 	private:

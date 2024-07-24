@@ -5,25 +5,22 @@
 #include "Components/RenderComponent.h"
 #include "Components/Tags.h"
 
-void drft::system::SyncedAnimationSystem::init()
-{
-}
 
-void drft::system::SyncedAnimationSystem::fixedUpdate()
+void drft::system::SyncedAnimationSystem::onFixedUpdate()
 {
 	updateSyncPoints();
 
-	auto withRenderView = _registry->view<SyncedAnimationComponent, component::tag::InPlayerFOV>();
+	auto withRenderView = _registry.view<SyncedAnimationComponent, component::tag::InPlayerFOV>();
 	for (auto&& [entity, animation] : withRenderView.each())
 	{
 		int index = _syncPoints[convertFloatToIntDec(animation.speed)].index % animation.frames.size();
-		if (auto render = _registry->try_get<RenderComponent>(entity))
+		if (auto render = _registry.try_get<RenderComponent>(entity))
 		{
 			applySpriteOptionsToRenderComponent(*render, animation.frames[index]);
 		}
 		else
 		{
-			auto& newRender = _registry->emplace<RenderComponent>(entity, DebugRenderComponent);
+			auto& newRender = _registry.emplace<RenderComponent>(entity, DebugRenderComponent);
 			applySpriteOptionsToRenderComponent(newRender, animation.frames[index]);
 		}
 	}
@@ -33,7 +30,7 @@ void drft::system::SyncedAnimationSystem::onFixedUpdateEnd()
 {
 	for (auto entity : _toRemoveAnimation)
 	{
-		_registry->remove<SyncedAnimationComponent>(entity);
+		_registry.remove<SyncedAnimationComponent>(entity);
 	}
 	_toRemoveAnimation.clear();
 }

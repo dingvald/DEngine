@@ -6,7 +6,7 @@ std::unordered_map<unsigned long, entt::entity> drft::system::ItemUniqueIDGenera
 
 void drft::system::ItemUniqueIDGenerator::init()
 {
-	_registry->on_construct<ItemComponent>().connect<&ItemUniqueIDGenerator::onItemAdd>(this);
+	_registry.on_construct<ItemComponent>().connect<&ItemUniqueIDGenerator::onItemAdd>(this);
 }
 
 void drft::system::ItemUniqueIDGenerator::save(cereal::JSONOutputArchive& oarchive)

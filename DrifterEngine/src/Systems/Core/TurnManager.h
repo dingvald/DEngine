@@ -26,9 +26,11 @@ namespace drft::system
 	class TurnManager : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
 		void onStart(bool isNewGame) override;
-		void update(const float dt) override;
+		void onUpdate(const float dt) override;
 		void onUpdateEnd() override;
 		void shutdown() override;
 

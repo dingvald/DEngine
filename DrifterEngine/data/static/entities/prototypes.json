@@ -119,8 +119,49 @@
         "Liquid": {
           "volume": 1000.0
         }
+      }
+    },
+    "Murky Water": {
+      "Inherits": [
+        ""
+      ],
+      "Components": {
+        "Description": {
+          "name": "Murky Water",
+          "description": "Just simple, dirty water."
+        },
+        "SpriteController": {
+          "states": {
+            "default": {
+              "frames": [
+                {
+                  "texture": "liquid",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 0, 0 ],
+                  "layer": 2,
+                  "color": [ 60, 92, 83 ]
+                },
+                {
+                  "texture": "liquid",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 1, 0 ],
+                  "layer": 2,
+                  "color": [ 60, 92, 83 ]
+                }
+              ],
+              "speed": 1.0,
+              "synced": true
+            }
+          }
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Liquid": {
+          "volume": 500.0
         }
-      },
+      }
+    },
     "Mountain Flower": {
       "Inherits": [
         "BaseMaterial"

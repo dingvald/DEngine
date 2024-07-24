@@ -13,40 +13,36 @@
 #include "Systems/Helpers/SpendActionPoints.h"
 #include "Utility/EntityHelpers.h"
 
+
 void drft::system::MoveActionSystem::init()
 {
-	_registry->on_construct<PerformMoveAction>().connect<&MoveActionSystem::onPerformMoveAction>(this);
-	_registry->on_construct<TryMoveAction>().connect<&MoveActionSystem::onTryMoveAction>(this);
-	_registry->on_construct<DoMoveAction>().connect<&MoveActionSystem::onDoMoveAction>(this);
+	_registry.on_construct<MoveAction>().connect<&MoveActionSystem::onMoveActionAdded>(this);
+}
+
+void drft::system::MoveActionSystem::onUpdateLate(const float dt)
+{
+	auto view = _registry.view<PositionComponent, MoveAction>();
+	for (auto&& [entity, position, move] : view.each())
+	{
+		processMoveAction(entity, move);
+	}
 }
 
 void drft::system::MoveActionSystem::onUpdateEnd()
 {
-	_registry->clear<PerformMoveAction>();
-	_registry->clear<TryMoveAction>();
-	_registry->clear<DoMoveAction>();
+	_registry.clear<MoveAction>();
 }
 
-void drft::system::MoveActionSystem::onPerformMoveAction(entt::registry& registry, entt::entity entity) const
+void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry, entt::entity entity) const
 {
-	const auto& performMove = registry.get<PerformMoveAction>(entity);
-	const auto& tryMoveAction = registry.emplace_or_replace<TryMoveAction>(entity, performMove.direction);
-	if (!tryMoveAction.cancel)
-	{
-		_registry->emplace_or_replace<DoMoveAction>(entity);
-	}
-}
-
-void drft::system::MoveActionSystem::onTryMoveAction(entt::registry& registry, entt::entity entity) const
-{
-	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
+	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 	const auto& positionComponent = registry.get<PositionComponent>(entity);
-	auto& tryMove = registry.get<TryMoveAction>(entity);
+	auto& moveAction = registry.get<MoveAction>(entity);
 
-	sf::Vector2i targetPosition = positionComponent.position + tryMove.direction;
+	sf::Vector2i targetPosition = positionComponent.position + moveAction.direction;
 	auto checkForBlockers = [this](entt::entity entity) -> bool
 		{
-			if (auto material = _registry->try_get<MaterialComponent>(entity))
+			if (auto material = _registry.try_get<MaterialComponent>(entity))
 			{
 				return material->blocks;
 			}
@@ -56,20 +52,16 @@ void drft::system::MoveActionSystem::onTryMoveAction(entt::registry& registry, e
 
 	if (!blockers.empty())
 	{
-		_registry->emplace_or_replace<CollisionComponent>(entity, tryMove.direction, std::move(blockers));
-		tryMove.cancel = true;
+		_registry.emplace_or_replace<CollisionComponent>(entity, moveAction.direction, std::move(blockers));
 	}
 }
 
-void drft::system::MoveActionSystem::onDoMoveAction(entt::registry& registry, entt::entity entity) const
+void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, MoveAction& action) const
 {
-	if (!registry.all_of<PositionComponent>(entity)) return;
-
-	const auto& doMoveAction = registry.get<TryMoveAction>(entity);
-	registry.patch<PositionComponent>(entity,
-		[doMoveAction](PositionComponent& positionComponent)
+	_registry.patch<PositionComponent>(entity,
+		[&action](PositionComponent& positionComponent)
 		{
-			positionComponent.position += doMoveAction.direction;
+			positionComponent.position += action.direction;
 		});
-	spendActionPoints(BASE_ACTION_COST, ActionType::Move, { registry, entity });
+	spendActionPoints(BASE_ACTION_COST, ActionType::Move, { _registry, entity });
 }

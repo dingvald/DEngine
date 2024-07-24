@@ -8,9 +8,11 @@ namespace drft::system
 {
 	class AnimationSystem : public System
 	{
+	public:
+		using System::System;
+
 	private:
-		void init() override;
-		void fixedUpdate() override;
+		void onFixedUpdate() override;
 		void onFixedUpdateEnd() override;
 
 	private:

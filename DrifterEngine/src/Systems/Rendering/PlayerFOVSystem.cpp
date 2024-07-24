@@ -13,7 +13,7 @@
 
 void drft::system::PlayerFOVSystem::init()
 {
-	auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
+	auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 
 	auto blocksLight = [this](sf::Vector2i position) -> bool
 	{
@@ -32,29 +32,29 @@ void drft::system::PlayerFOVSystem::init()
 	_fov = std::make_unique<Visibility>(blocksLight, setVisible, getDistance);
 }
 
-void drft::system::PlayerFOVSystem::fixedUpdate()
+void drft::system::PlayerFOVSystem::onFixedUpdate()
 {
-	auto positions = _registry->view<const PositionComponent, component::tag::InViewport>();
+	auto positions = _registry.view<const PositionComponent, component::tag::InViewport>();
 	_lightBlockingPositions.reserve(positions.size_hint() / 4);
 	for (auto [entity, pos] : positions.each())
 	{
-		if (_registry->any_of<LightBlockingComponent>(entity))
+		if (_registry.any_of<LightBlockingComponent>(entity))
 		{
 			_lightBlockingPositions.emplace(pos.position);
 		}
 	}
 
-	auto playerView = _registry->view<PlayerComponent, PositionComponent>();
+	auto playerView = _registry.view<PlayerComponent, PositionComponent>();
 	for (auto [_, player, pos] : playerView.each())
 	{
 		_fov->compute(pos.position, player.sightRange);
 		for (auto entityToLight : _toLight)
 		{
-			_registry->emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);
-			if (!_registry->all_of<ActorComponent>(entityToLight) 
-				&& _registry->all_of<component::tag::InViewport>(entityToLight))
+			_registry.emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);
+			if (!_registry.all_of<ActorComponent>(entityToLight) 
+				&& _registry.all_of<component::tag::InViewport>(entityToLight))
 			{
-				_registry->emplace_or_replace<component::tag::PlayerHasSeen>(entityToLight);
+				_registry.emplace_or_replace<component::tag::PlayerHasSeen>(entityToLight);
 			}
 		}
 		_toLight.clear();
@@ -64,5 +64,5 @@ void drft::system::PlayerFOVSystem::fixedUpdate()
 
 void drft::system::PlayerFOVSystem::onFixedUpdateEnd()
 {
-	_registry->clear<component::tag::InPlayerFOV>();
+	_registry.clear<component::tag::InPlayerFOV>();
 }

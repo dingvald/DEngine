@@ -67,7 +67,7 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 				}
 			}
 
-			_entitySlots.emplace(slotName, std::move(newSlot));
+			_entitySlots.emplace(entt::hashed_string{ slotName }, std::move(newSlot));
 		}
 	}
 	if (json.HasMember("entity_packs"))
@@ -83,7 +83,7 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 				int weight = val.GetArray()[1].GetInt();
 				newPack.emplace_back(std::make_pair(entityName, weight));
 			}
-			_entityPacks.emplace(packName, newPack);
+			_entityPacks.emplace(entt::hashed_string{ packName }, newPack);
 		}
 	}
 	if (json.HasMember("structures"))
@@ -129,12 +129,12 @@ const std::string& Biome::getName() const
 	return _name;
 }
 
-const std::unordered_map<std::string, Biome::EntitySlot>& Biome::getEntitySlots() const
+const std::unordered_map<entt::id_type, Biome::EntitySlot>& Biome::getEntitySlots() const
 {
 	return _entitySlots;
 }
 
-const std::unordered_map<std::string, std::vector<Biome::EntityWeight>>& Biome::getEntityPacks() const
+const std::unordered_map<entt::id_type, std::vector<Biome::EntityWeight>>& Biome::getEntityPacks() const
 {
 	return _entityPacks;
 }

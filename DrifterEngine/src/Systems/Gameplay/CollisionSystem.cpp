@@ -13,12 +13,12 @@
 
 void drft::system::CollisionSystem::init()
 {
-	_registry->on_construct<CollisionComponent>().connect<&CollisionSystem::onCollisionAdded>(this);
+	_registry.on_construct<CollisionComponent>().connect<&CollisionSystem::onCollisionAdded>(this);
 }
 
 void drft::system::CollisionSystem::onUpdateEnd()
 {
-	_registry->clear<CollisionComponent>();
+	_registry.clear<CollisionComponent>();
 }
 
 void drft::system::CollisionSystem::onCollisionAdded(entt::registry& registry, entt::entity entity) const
@@ -29,12 +29,12 @@ void drft::system::CollisionSystem::onCollisionAdded(entt::registry& registry, e
 	{
 	case drft::system::Relationship::Friendly:
 		// TODO: Implement swap
-		_registry->emplace_or_replace<component::action::Wait>(entity);
+		_registry.emplace_or_replace<component::action::Wait>(entity);
 		break;
 	case drft::system::Relationship::Neutral:
 	case drft::system::Relationship::Hostile:
 	{
-		_registry->emplace_or_replace<PerformMeleeAttackAction>(entity, collisionComponent.direction, collisionComponent.blockers);
+		_registry.emplace_or_replace<MeleeAttackAction>(entity, collisionComponent.direction, collisionComponent.blockers);
 	}
 		break;
 	default:
@@ -47,15 +47,11 @@ drft::system::Relationship drft::system::CollisionSystem::determineTargetRelatio
 	Relationship targetRelationship = Relationship::Neutral;
 	for (auto&& blocker : entities)
 	{
-		auto relationship = FactionSystem::resolveRelationship(sourceEntity, { *sourceEntity.registry(), blocker});
-		if (relationship == Relationship::Hostile)
+		targetRelationship = FactionSystem::resolveRelationship(sourceEntity, { *sourceEntity.registry(), blocker});
+		// if there are any hostiles, then all targets at that cell are considered hostile
+		if (targetRelationship == Relationship::Hostile)
 		{
-			targetRelationship = Relationship::Hostile;
-			break;
-		}
-		else if (relationship == Relationship::Friendly)
-		{
-			targetRelationship = Relationship::Friendly;
+			return targetRelationship;
 		}
 	}
 	return targetRelationship;

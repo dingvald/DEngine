@@ -11,30 +11,26 @@
 
 static const float CAMERA_SPEED = 7.0f;
 
-void drft::system::Camera::init()
-{
-	
-}
 
 void drft::system::Camera::onStart(bool)
 {
-	_camera = _registry->create();
-	const float viewportWidth = _registry->ctx().get<const sf::RenderWindow&>().getView().getSize().x;
-	const float viewportHeight = _registry->ctx().get<const sf::RenderWindow&>().getView().getSize().y;
+	_camera = _registry.create();
+	const float viewportWidth = _registry.ctx().get<const sf::RenderWindow&>().getView().getSize().x;
+	const float viewportHeight = _registry.ctx().get<const sf::RenderWindow&>().getView().getSize().y;
 	// component order matters for camera because it determines order of component destruction.
-	_registry->emplace<CameraComponent>(_camera, sf::FloatRect(-viewportWidth / 2, -viewportHeight / 2, viewportWidth, viewportHeight), sf::Vector2f{}, entt::null);
-	_registry->emplace<PositionComponent>(_camera, sf::Vector2i(0, 0));
+	_registry.emplace<CameraComponent>(_camera, sf::FloatRect(-viewportWidth / 2, -viewportHeight / 2, viewportWidth, viewportHeight), sf::Vector2f{}, entt::null);
+	_registry.emplace<PositionComponent>(_camera, sf::Vector2i(0, 0));
 }
 
-void drft::system::Camera::update(const float dt)
+void drft::system::Camera::onUpdate(const float dt)
 {
-	auto cameraView = _registry->view<CameraComponent, PositionComponent>();
+	auto cameraView = _registry.view<CameraComponent, PositionComponent>();
 
 	for (auto [entity, camera, pos] : cameraView.each())
 	{
 		if (camera.target == entt::null)
 		{
-			auto playerView = _registry->view<PlayerComponent, PositionComponent>();
+			auto playerView = _registry.view<PlayerComponent, PositionComponent>();
 			for (auto [entity, _, playerPos] : playerView.each())
 			{
 				camera.target = entity;
@@ -45,7 +41,7 @@ void drft::system::Camera::update(const float dt)
 
 	for (auto [entity, camera, pos] : cameraView.each())
 	{
-		const auto& target = _registry->try_get<const PositionComponent>(camera.target);
+		const auto& target = _registry.try_get<const PositionComponent>(camera.target);
 		if (!target) continue;
 
 		pos.position = target->position;
@@ -56,5 +52,5 @@ void drft::system::Camera::update(const float dt)
 
 void drft::system::Camera::shutdown()
 {
-	_registry->destroy(_camera);
+	_registry.destroy(_camera);
 }

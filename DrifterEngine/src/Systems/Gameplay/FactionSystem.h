@@ -14,6 +14,8 @@ namespace drft::system
 	class FactionSystem : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
 
 		[[nodiscard]] static Relationship resolveRelationship(entt::const_handle entity1, entt::const_handle entity2);

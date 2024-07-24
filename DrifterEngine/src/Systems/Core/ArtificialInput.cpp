@@ -30,13 +30,13 @@ void drft::system::ArtificialInput::init()
 	_sensorySystem.registerSensor(std::make_unique<goap::HostileSensor>());
 	_sensorySystem.registerChecker(hasLineOfSight, goap::SensorType::Visual);
 
-	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
+	auto& dispatcher = _registry.ctx().get<entt::dispatcher&>();
 	dispatcher.sink<events::TurnEndEvent>().connect<&ArtificialInput::onTurnEndEvent>(this);
 }
 
-void drft::system::ArtificialInput::update(const float dt)
+void drft::system::ArtificialInput::onUpdate(const float dt)
 {
-	auto view = _registry->view<AIComponent, const PositionComponent, component::tag::CurrentActor>();
+	auto view = _registry.view<AIComponent, const PositionComponent, component::tag::CurrentActor>();
 	for (auto [entity, ai, myPos] : view.each())
 	{
 		senseWorldState(ai);
@@ -46,7 +46,7 @@ void drft::system::ArtificialInput::update(const float dt)
 
 bool drft::system::ArtificialInput::inSightRange(sf::Vector2i position, const AIComponent& ai) const
 {
-	auto myPosition = _registry->get<PositionComponent>(entt::to_entity(*_registry, ai)).position;
+	auto myPosition = _registry.get<PositionComponent>(entt::to_entity(_registry, ai)).position;
 	if (spatial::distance(myPosition, position) < ai.sightRange) return true;
 	return false;
 }
@@ -67,7 +67,7 @@ void drft::system::ArtificialInput::moveToTarget(entt::handle entity, sf::Vector
 	int xMove = delta.x == 0 ? 0 : -(delta.x / abs(delta.x));
 	int yMove = delta.y == 0 ? 0 : -(delta.y / abs(delta.y));
 
-	entity.emplace_or_replace<PerformMoveAction>(sf::Vector2i{ xMove, yMove });
+	entity.emplace_or_replace<MoveAction>(sf::Vector2i{ xMove, yMove });
 }
 
 void drft::system::ArtificialInput::pathToTarget(entt::handle entity, sf::Vector2i targetPosition) const
@@ -75,13 +75,13 @@ void drft::system::ArtificialInput::pathToTarget(entt::handle entity, sf::Vector
 	auto& position = entity.get<PositionComponent>().position;
 	if (!_cachedPaths.contains(entity.entity()) || _cachedPaths.at(entity.entity()).empty())
 	{
-		const auto& grid = _registry->ctx().get<const spatial::WorldGrid&>();
+		const auto& grid = _registry.ctx().get<const spatial::WorldGrid&>();
 		_cachedPaths[entity.entity()] = grid.getPath(position, targetPosition,
 			[this](const std::vector<entt::entity>& entities) -> int
 			{
 				for (auto entity : entities)
 				{
-					if (auto material = _registry->try_get<MaterialComponent>(entity))
+					if (auto material = _registry.try_get<MaterialComponent>(entity))
 					{
 						if (material->blocks) return 1000;
 					}
@@ -108,14 +108,14 @@ void drft::system::ArtificialInput::clearPathCache(entt::entity entity) const
 
 entt::handle drft::system::ArtificialInput::getHandle(const AIComponent& ai) const
 {
-	entt::entity entity = entt::to_entity(*_registry, ai);
-	entt::handle aiHandle = { *_registry, entity };
+	entt::entity entity = entt::to_entity(_registry, ai);
+	entt::handle aiHandle = { _registry, entity };
 	return aiHandle;
 }
 
 void drft::system::ArtificialInput::onTurnEndEvent(const events::TurnEndEvent& ev)
 {
-	if (auto ai = _registry->try_get<AIComponent>(ev.entity))
+	if (auto ai = _registry.try_get<AIComponent>(ev.entity))
 	{
 		if (_sensorySystem.decayMemory(ai->surroundings))
 		{
@@ -208,7 +208,7 @@ std::deque<drft::system::ArtificialInput::GoalName> drft::system::ArtificialInpu
 std::unordered_set<drft::goap::AiAction> drft::system::ArtificialInput::getAiActions(const AIComponent& ai) const
 {
 	std::unordered_set<goap::AiAction> result;
-	entt::const_handle entity = { *_registry, entt::to_entity(*_registry, ai) };
+	entt::const_handle entity = { _registry, entt::to_entity(_registry, ai) };
 	result.insert(goap::AiAction::RandomMove);
 
 	if (entity.all_of<FactionComponent>())

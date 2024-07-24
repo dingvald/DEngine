@@ -27,8 +27,9 @@ namespace drft
 		TextureAtlas _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
 		StateStack _stateStack{ StateContext{_window, _registry, _textures, _fonts} };
-		util::Statistics _fpsStats{ 100000 };
-		util::Statistics _dtStats{ 100000 };
+
+		float _dtSinceLastRender = 0.0f;
+		float _dtSinceLastFixedUpdate = 0.0f;
 
 		bool _showDebug;
 	};

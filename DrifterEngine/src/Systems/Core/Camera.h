@@ -6,9 +6,10 @@ namespace drft::system
 	class Camera : public System
 	{
 	public:
-		void init() override;
+		using System::System;
+
 		void onStart(bool isNewGame) override;
-		void update(const float dt) override;
+		void onUpdate(const float dt) override;
 		void shutdown() override;
 
 	private:

@@ -5,6 +5,10 @@ namespace drft::system
 {
 	class TargetSelectSystem : public System
 	{
+	public:
+		using System::System;
+
+	private:
 		void init() override;
 		void onTargetSelect(entt::registry& registry, entt::entity entity);
 	};

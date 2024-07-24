@@ -10,8 +10,8 @@
 
 void drft::system::DetermineCraftableItemsSystem::init()
 {
-	_registry->on_construct<ContainerComponent>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
-	_registry->on_update<ContainerComponent>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
+	_registry.on_construct<ContainerComponent>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
+	_registry.on_update<ContainerComponent>().connect<&DetermineCraftableItemsSystem::onContainerUpdated>(this);
 }
 
 void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::registry& registry, entt::entity entity)

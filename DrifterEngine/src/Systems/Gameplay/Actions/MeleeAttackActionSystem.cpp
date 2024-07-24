@@ -19,47 +19,40 @@ using namespace entt::literals;
 
 void drft::system::MeleeAttackActionSystem::init()
 {
-	_registry->on_construct<PerformMeleeAttackAction>().connect<&MeleeAttackActionSystem::onPerformMeleeAttackAction>(this);
-	_registry->on_construct<TryMeleeAttackAction>().connect<&MeleeAttackActionSystem::onTryMeleeAttackAction>(this);
-	_registry->on_construct<DoMeleeAttackAction>().connect<&MeleeAttackActionSystem::onDoMeleeAttackAction>(this);
+	_registry.on_construct<MeleeAttackAction>().connect<&MeleeAttackActionSystem::onMeleeAttackActionAdded>(this);
+}
+
+void drft::system::MeleeAttackActionSystem::onUpdateLate(const float dt)
+{
+	auto view = _registry.view<MeleeAttackAction>();
+	for (auto&& [entity, meleeAttackAction] : view.each())
+	{
+		processMeleeAttackAction(entity, meleeAttackAction);
+	}
 }
 
 void drft::system::MeleeAttackActionSystem::onUpdateEnd()
 {
-	_registry->clear<PerformMeleeAttackAction>();
-	_registry->clear<TryMeleeAttackAction>();
-	_registry->clear<DoMeleeAttackAction>();
+	_registry.clear<MeleeAttackAction>();
 }
 
-void drft::system::MeleeAttackActionSystem::onPerformMeleeAttackAction(entt::registry& registry, entt::entity entity) const
+void drft::system::MeleeAttackActionSystem::onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity) const
 {
-	const auto& performMeleeAttack = registry.get<PerformMeleeAttackAction>(entity);
-	const auto& tryMeleeAttack = registry.emplace_or_replace<TryMeleeAttackAction>(entity, performMeleeAttack.direction, performMeleeAttack.targets);
-	if (!tryMeleeAttack.cancel)
-	{
-		registry.emplace_or_replace<DoMeleeAttackAction>(entity, tryMeleeAttack.direction, tryMeleeAttack.targets, tryMeleeAttack.damageTypes);
-	}
-}
-
-void drft::system::MeleeAttackActionSystem::onTryMeleeAttackAction(entt::registry& registry, entt::entity entity) const
-{
-	auto& tryMeleeAttack = registry.get<TryMeleeAttackAction>(entity);
+	auto& meleeAttack = registry.get<MeleeAttackAction>(entity);
 	if (auto attackerComponent = registry.try_get<AttackerComponent>(entity))
 	{
-		
-		tryMeleeAttack.damageTypes["crushing"] += attackerComponent->baseDamage;
+		meleeAttack.damageTypes["crushing"] += attackerComponent->baseDamage;
 	}
 }
 
-void drft::system::MeleeAttackActionSystem::onDoMeleeAttackAction(entt::registry& registry, entt::entity entity) const
+void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entity entity, MeleeAttackAction& action)
 {
-	auto& doAttackAction = registry.get<DoMeleeAttackAction>(entity);
-	for (auto target : doAttackAction.targets)
+	for (auto target : action.targets)
 	{
-		_registry->emplace_or_replace<component::action::IncomingDamage>(target, doAttackAction.damageTypes, entity);
+		_registry.emplace_or_replace<component::action::IncomingDamage>(target, action.damageTypes, entity);
 	}
 
-	if (auto positionComponent = registry.try_get<PositionComponent>(entity))
+	if (auto positionComponent = _registry.try_get<PositionComponent>(entity))
 	{
 		sf::Color effectColor = sf::Color::White;
 
@@ -68,8 +61,8 @@ void drft::system::MeleeAttackActionSystem::onDoMeleeAttackAction(entt::registry
 			SpriteOptions{.uvCoords = sf::Vector2i{8, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
 			SpriteOptions{.uvCoords = sf::Vector2i{9, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
 		};
-		if (doAttackAction.damageTypes.contains("slashing")
-			|| doAttackAction.damageTypes.contains("piercing"))
+
+		if (action.damageTypes.contains("slashing") || action.damageTypes.contains("piercing"))
 		{
 			frames = // slashing
 			{
@@ -77,13 +70,13 @@ void drft::system::MeleeAttackActionSystem::onDoMeleeAttackAction(entt::registry
 				SpriteOptions{.uvCoords = sf::Vector2i{7, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
 			};
 		}
-		const sf::Vector2i targetPosition = positionComponent->position + doAttackAction.direction;
-		spawnEffect(*_registry, {
+		const sf::Vector2i targetPosition = positionComponent->position + action.direction;
+		spawnEffect(_registry, {
 			.frames = frames,
 			.position = targetPosition,
 			.animationSpeed = 20.0f
 			});
 	}
-	
-	spendActionPoints(BASE_ACTION_COST, ActionType::Act, { *_registry, entity });
+
+	spendActionPoints(BASE_ACTION_COST, ActionType::Act, { _registry, entity });
 }

@@ -6,8 +6,9 @@ namespace drft::system
 	class DeathSystem : public System
 	{
 	public:
-		void init() override;
-		void update(const float dt) override;
+		using System::System;
+
+		void onUpdate(const float dt) override;
 	};
 }
 

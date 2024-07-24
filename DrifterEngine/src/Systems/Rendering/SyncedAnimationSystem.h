@@ -6,6 +6,9 @@ namespace drft::system
 {
 	class SyncedAnimationSystem : public System
 	{
+	public:
+		using System::System;
+
 	private:
 		using IntDec = std::pair<int, int>;
 		struct SyncPointData
@@ -14,11 +17,9 @@ namespace drft::system
 			unsigned int index = 0;
 		};
 	private:
-		void init() override;
-		void fixedUpdate() override;
+		void onFixedUpdate() override;
 		void onFixedUpdateEnd() override;
 
-		
 		void updateSyncPoints();
 		IntDec convertFloatToIntDec(float fl) const;
 		float convertIntDecToFloat(IntDec intDec) const;

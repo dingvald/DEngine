@@ -12,13 +12,13 @@
 
 void drft::system::CraftItemSystem::init()
 {
-	_registry->on_construct<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
-	_registry->on_update<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
+	_registry.on_construct<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
+	_registry.on_update<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
 }
 
 void drft::system::CraftItemSystem::onUpdateEnd()
 {
-	_registry->clear<component::action::Craft>();
+	_registry.clear<component::action::Craft>();
 }
 
 void drft::system::CraftItemSystem::onCraftItem(entt::registry& registry, entt::entity entity)

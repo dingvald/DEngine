@@ -120,7 +120,7 @@
               "params": {
                 "noise_name": "Foliage",
                 "threshold": [ ">", 0.5 ],
-                "multiplier": 1.7
+                "multiplier": 2.3
               }
             },
             {
@@ -184,8 +184,8 @@
           [ "Tree", 1 ]
         ],
         "grass": [
-          [ "Grass", 2 ],
-          [ "Tall Grass", 1 ]
+          [ "Grass", 1 ],
+          [ "Tall Grass", 3 ]
         ],
         "rock": [
           [ "Stone", 1 ]
@@ -324,6 +324,27 @@
               }
             }
           ]
+        },
+        "ore": {
+          "probability": 0.005,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "rock",
+                "max": 8,
+                "multiplier": 0.25
+              }
+            },
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "ore",
+                "max": 4,
+                "multiplier": 5.0
+              }
+            }
+          ]
         }
       },
       "entity_packs": {
@@ -337,6 +358,9 @@
         "rock": [
           [ "Stone", 1 ],
           [ "Boulder", 3 ]
+        ],
+        "ore": [
+          ["Iron Deposit", 1]
         ]
       }
     },
@@ -390,8 +414,44 @@
       },
       "climate": {
         "Temperature": [ 5.0, 25.0 ],
-        "Humidity": [ 60.0, 100.0 ],
-        "Altitude": [ 10, 500 ]
+        "Humidity": [ 50.0, 100.0 ],
+        "Altitude": [ 50, 800 ]
+      },
+      "entity_slots": {
+        "water": {
+          "probability": 0.2,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "water",
+                "max": 8,
+                "multiplier": 0.5
+              }
+            }
+          ]
+        },
+        "grass": {
+          "probability": 0.1,
+          "probability_multipliers": [
+            {
+              "type": "neighbor",
+              "params": {
+                "tag": "water",
+                "max": 4,
+                "multiplier": 1.0
+              }
+            }
+          ]
+        }
+      },
+      "entity_packs": {
+        "grass": [
+          [ "Tall Grass", 1 ]
+        ],
+        "water": [
+          [ "Murky Water", 1 ]
+        ]
       }
     },
     "Jungle": {
@@ -430,7 +490,7 @@
       "climate": {
         "Temperature": [ 20.0, 35.0 ],
         "Humidity": [ 0.0, 30.0 ],
-        "Altitude": [ 1000, 2000 ]
+        "Altitude": [ 1500, 2500 ]
       }
     },
     "Desert": {
@@ -443,7 +503,7 @@
       "climate": {
         "Temperature": [ 20.0, 35.0 ],
         "Humidity": [ 0.0, 40.0 ],
-        "Altitude": [ 50, 1000 ]
+        "Altitude": [ 50, 1200 ]
       }
     },
     "Prairie": {
@@ -497,7 +557,7 @@
           "probability": 0.01
         },
         "flower": {
-          "probability": 0.01,
+          "probability": 0.001,
           "probability_multipliers": [
             {
               "type": "neighbor",

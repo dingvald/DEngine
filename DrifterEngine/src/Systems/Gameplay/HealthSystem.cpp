@@ -19,15 +19,15 @@ using namespace entt::literals;
 
 void drft::system::HealthSystem::init()
 {
-	_dispatcher->sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
-	_registry->on_update<component::action::LevelUp>().connect<&HealthSystem::onLevelUp>(this);
-	_registry->on_construct<HealthComponent>().connect<&HealthSystem::onHealthComponentAdded>(this);
+	_dispatcher.sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
+	_registry.on_update<component::action::LevelUp>().connect<&HealthSystem::onLevelUp>(this);
+	_registry.on_construct<HealthComponent>().connect<&HealthSystem::onHealthComponentAdded>(this);
 }
 
-void drft::system::HealthSystem::update(const float dt)
+void drft::system::HealthSystem::onUpdate(const float dt)
 {
 	// This sepration of incoming / taking damage allows for event handlers to react to the events separately
-	auto incomingDamageView = _registry->view<component::action::IncomingDamage>();
+	auto incomingDamageView = _registry.view<component::action::IncomingDamage>();
 	for (auto [entity, incoming] : incomingDamageView.each())
 	{
 		int total = 0;
@@ -35,13 +35,13 @@ void drft::system::HealthSystem::update(const float dt)
 		{
 			total += damage;
 		}
-		_registry->emplace<component::action::TakeDamage>(entity, total, incoming.source);
+		_registry.emplace<component::action::TakeDamage>(entity, total, incoming.source);
 	}
 
-	auto damageView = _registry->view<component::action::TakeDamage, HealthComponent>();
+	auto damageView = _registry.view<component::action::TakeDamage, HealthComponent>();
 	for (auto [entity, damage, health] : damageView.each())
 	{
-		auto handle = entt::handle{ *_registry, entity };
+		auto handle = entt::handle{ _registry, entity };
 		// send floating message
 		if (auto posComp = handle.try_get<PositionComponent>())
 		{
@@ -85,14 +85,14 @@ void drft::system::HealthSystem::update(const float dt)
 					SpriteOptions{.uvCoords = sf::Vector2i{2, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
 				};
 				// Spawn Hit particles
-				spawnEffect(*_registry, {
+				spawnEffect(_registry, {
 					.frames = std::move(hitParticles),
 					.position = posComp->position,
 					.animationSpeed = 8.0f
 					});
 			}
 
-			_dispatcher->trigger(events::SendFloatingMessageEvent{
+			_dispatcher.trigger(events::SendFloatingMessageEvent{
 				.message = message + std::to_string(std::abs(damage.amount)),
 				.color = messageColor,
 				.position = posComp->position,
@@ -103,7 +103,7 @@ void drft::system::HealthSystem::update(const float dt)
 				});
 
 			// Spawn HurtEffect
-			spawnEffect(*_registry, {
+			spawnEffect(_registry, {
 				.frames = { damageEffectSprite },
 				.position = posComp->position,
 				.animationSpeed = 10.0f,
@@ -116,20 +116,20 @@ void drft::system::HealthSystem::update(const float dt)
 		if (health.current == 0)
 		{
 			handle.emplace<component::action::Die>();
-			_registry->emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(handle));
+			_registry.emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(handle));
 		}
 	}
 }
 
 void drft::system::HealthSystem::onUpdateEnd()
 {
-	_registry->clear<component::action::IncomingDamage>();
-	_registry->clear<component::action::TakeDamage>();
+	_registry.clear<component::action::IncomingDamage>();
+	_registry.clear<component::action::TakeDamage>();
 }
 
 void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)
 {
-	if (auto health = _registry->try_get<HealthComponent>(ev.entity))
+	if (auto health = _registry.try_get<HealthComponent>(ev.entity))
 	{
 		health->current = std::clamp(health->current + health->recovery, 1.f, health->max);
 	}

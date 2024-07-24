@@ -5,6 +5,9 @@ namespace drft::system
 {
 	class ConsumableSystem : public System
 	{
+	public:
+		using System::System;
+
 	private:
 		void init() override;
 		void consumeInteraction(entt::entity actor, entt::entity subject) const;

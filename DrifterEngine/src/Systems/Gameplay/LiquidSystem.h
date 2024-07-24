@@ -12,10 +12,14 @@ namespace drft::system
 {
 	class LiquidSystem : public System
 	{
-	private:
+	public:
+		using System::System;
+
 		void init() override;
-		void fixedUpdate() override;
+		void onFixedUpdate() override;
 		void onFixedUpdateEnd() override;
+
+	private:
 		void addInLiquidEffect(sf::Vector2i position, sf::Color color);
 
 		void onTurnEndEvent(events::TurnEndEvent& ev) const;

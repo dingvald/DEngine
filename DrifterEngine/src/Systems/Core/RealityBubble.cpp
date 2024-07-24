@@ -11,26 +11,23 @@
 
 static const float REALITY_RADIUS = 96.0f; // in tiles
 
-void drft::system::RealityBubble::init()
-{
-}
 
-void drft::system::RealityBubble::update(const float)
+void drft::system::RealityBubble::onUpdateBegin()
 {
-	const auto camera = getCurrentCamera(*_registry);
+	const auto camera = getCurrentCamera(_registry);
 
-	auto actorView = _registry->view<const ActorComponent, const PositionComponent>();
+	auto actorView = _registry.view<const ActorComponent, const PositionComponent>();
 	for (auto&& [entity, actor, pos] : actorView.each())
 	{
 		const auto distance = spatial::distance(camera.position, pos.position);
 		if (distance < REALITY_RADIUS)
 		{
-			_registry->emplace<component::tag::Active>(entity);
+			_registry.emplace<component::tag::Active>(entity);
 		}
 	}
 }
 
 void drft::system::RealityBubble::onUpdateEnd()
 {
-	_registry->clear<component::tag::Active>();
+	_registry.clear<component::tag::Active>();
 }

@@ -11,13 +11,13 @@ using namespace entt::literals;
 
 void drft::system::SpriteControllerSystem::init()
 {
-	_registry->on_construct<SpriteControllerComponent>().connect<&SpriteControllerSystem::onSpriteControllerAdded>(this);
-	_registry->on_construct<SpriteChangeRequestComponent>().connect<&SpriteControllerSystem::onSpriteChangeRequest>(this);
+	_registry.on_construct<SpriteControllerComponent>().connect<&SpriteControllerSystem::onSpriteControllerAdded>(this);
+	_registry.on_construct<SpriteChangeRequestComponent>().connect<&SpriteControllerSystem::onSpriteChangeRequest>(this);
 }
 
 void drft::system::SpriteControllerSystem::onUpdateEnd()
 {
-	_registry->clear<SpriteChangeRequestComponent>();
+	_registry.clear<SpriteChangeRequestComponent>();
 }
 
 void drft::system::SpriteControllerSystem::onSpriteControllerAdded(entt::registry& registry, entt::entity entity) const

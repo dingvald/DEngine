@@ -18,28 +18,28 @@ void drft::system::PlayerInput::init()
 	using Key = sf::Keyboard;
 
 	_actionMap.addAction(Key::Numpad1, [](entt::handle entity) {
-		entity.emplace<PerformMoveAction>(sf::Vector2i(-1, 1)); 
+		entity.emplace<MoveAction>(sf::Vector2i(-1, 1)); 
 		});
 	_actionMap.addAction(Key::Numpad2, [](entt::handle entity) {
-		entity.emplace<PerformMoveAction>(sf::Vector2i(0, 1)); 
+		entity.emplace<MoveAction>(sf::Vector2i(0, 1)); 
 		});
 	_actionMap.addAction(Key::Numpad3, [](entt::handle entity) {
-		entity.emplace<PerformMoveAction>(sf::Vector2i(1, 1)); 
+		entity.emplace<MoveAction>(sf::Vector2i(1, 1)); 
 		});
 	_actionMap.addAction(Key::Numpad4, [](entt::handle entity) {
-		entity.emplace<PerformMoveAction>(sf::Vector2i(-1, 0)); 
+		entity.emplace<MoveAction>(sf::Vector2i(-1, 0)); 
 		});
 	_actionMap.addAction(Key::Numpad6, [](entt::handle entity) {
-		entity.emplace<PerformMoveAction>(sf::Vector2i(1, 0)); 
+		entity.emplace<MoveAction>(sf::Vector2i(1, 0)); 
 		});
 	_actionMap.addAction(Key::Numpad7, [](entt::handle entity) {
-		entity.emplace<PerformMoveAction>(sf::Vector2i(-1, -1)); 
+		entity.emplace<MoveAction>(sf::Vector2i(-1, -1)); 
 		});
 	_actionMap.addAction(Key::Numpad8, [](entt::handle entity) {
-		entity.emplace<PerformMoveAction>(sf::Vector2i(0, -1)); 
+		entity.emplace<MoveAction>(sf::Vector2i(0, -1)); 
 		});
 	_actionMap.addAction(Key::Numpad9, [](entt::handle entity) {
-		entity.emplace<PerformMoveAction>(sf::Vector2i(1, -1)); 
+		entity.emplace<MoveAction>(sf::Vector2i(1, -1)); 
 		});
 	_actionMap.addAction(Key::Numpad5, [](entt::handle entity) {
 		entity.emplace<component::action::Wait>(); 
@@ -80,9 +80,9 @@ void drft::system::PlayerInput::init()
 	}
 }
 
-void drft::system::PlayerInput::update(const float dt)
+void drft::system::PlayerInput::onUpdate(const float dt)
 {
-	auto& inputBuffer = _registry->ctx().get<InputBuffer&>();
+	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
 	if (!inputBuffer.isEmpty())
 	{
 		const auto key = inputBuffer.popKey();
@@ -126,11 +126,11 @@ void drft::system::PlayerInput::update(const float dt)
 		}
 	}
 
-	auto turnView = _registry->view<PlayerComponent, component::tag::CurrentActor>();
+	auto turnView = _registry.view<PlayerComponent, component::tag::CurrentActor>();
 	for (auto entity : turnView)
 	{
 		if (_bufferedActions.empty()) continue;
-		_bufferedActions.front()({ *_registry, entity });
+		_bufferedActions.front()(entt::handle{ _registry, entity });
 		_bufferedActions.pop();
 	}
 }

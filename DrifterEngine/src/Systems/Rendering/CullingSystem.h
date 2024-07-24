@@ -7,9 +7,13 @@ namespace drft::system
 	class CullingSystem : public System
 	{
 	public:
-		void init() override;
-		void fixedUpdate() override;
+		using System::System;
+
+		void onFixedUpdate() override;
 		void onFixedUpdateEnd() override;
+
+	private:
+		sf::FloatRect addBufferToViewport(const sf::FloatRect& viewport) const;
 	};
 }
 

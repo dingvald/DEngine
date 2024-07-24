@@ -1,17 +1,22 @@
 #pragma once
 #include "Systems/System.h"
 
+struct MeleeAttackAction;
+
 namespace drft::system
 {
 	class MeleeAttackActionSystem : public System
 	{
+	public:
+		using System::System;
+
 	private:
 		void init() override;
+		void onUpdateLate(const float dt) override;
 		void onUpdateEnd() override;
 
-		void onPerformMeleeAttackAction(entt::registry& registry, entt::entity entity) const;
-		void onTryMeleeAttackAction(entt::registry& registry, entt::entity entity) const;
-		void onDoMeleeAttackAction(entt::registry& registry, entt::entity entity) const;
+		void onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity) const;
+		void processMeleeAttackAction(entt::entity entity, MeleeAttackAction& action);
 	};
 }
 

@@ -99,22 +99,19 @@ void drft::Engine::update(const float dt)
 {
 	_stateStack.update(dt);
 	
-	static float dtSinceFixedUpdate = 0.0f;
-	dtSinceFixedUpdate += dt;
-	if (dtSinceFixedUpdate > TARGET_DT)
+	_dtSinceLastFixedUpdate += dt;
+	if (_dtSinceLastFixedUpdate > TARGET_DT)
 	{
 		_stateStack.fixedUpdate();
-		dtSinceFixedUpdate -= TARGET_DT;
+		_dtSinceLastFixedUpdate = 0.f;
 	}
 
 }
 
 void drft::Engine::render(const float dt)
 {
-	static float dtSinceRender = 0.0f;
-
-	dtSinceRender += dt;
-	if (dtSinceRender > TARGET_DT)
+	_dtSinceLastRender += dt;
+	if (_dtSinceLastRender > TARGET_DT)
 	{
 		_window.clear();
 		_stateStack.render(_window);
@@ -125,7 +122,7 @@ void drft::Engine::render(const float dt)
 		}
 			
 		_window.display();
-		dtSinceRender -= TARGET_DT;
+		_dtSinceLastRender = 0.f;
 	}
 }
 

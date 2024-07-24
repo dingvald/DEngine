@@ -18,7 +18,7 @@ static const sf::Color seenTileColor = sf::Color(12, 12, 12);
 void drft::system::EntityRenderer::init()
 {
 	using namespace entt::literals;
-	_textureAtlas = &_registry->ctx().get<const TextureAtlas&>();
+	_textureAtlas = &_registry.ctx().get<const TextureAtlas&>();
 	for (int l = 0; l < static_cast<int>(RenderLayer::Total); ++l)
 	{
 		_spriteLayers[l].setTexture(_textureAtlas->getTexture());
@@ -27,9 +27,9 @@ void drft::system::EntityRenderer::init()
 
 void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
-	auto camera = getCurrentCamera(*_registry);
+	auto camera = getCurrentCamera(_registry);
 	// Apply lighting to entities in the player's FOV
-	const auto view = _registry->view< const PositionComponent, const RenderComponent, const LitComponent, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
+	const auto view = _registry.view< const PositionComponent, const RenderComponent, const LitComponent, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
 	for (auto const & [entity, pos, ren, lit] : view.each())
 	{
 		auto finalColor = LightingSystem::blendLight(ren.color, lit.color);
@@ -41,7 +41,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 	}
 
 	// Apply darkened light to entities outside the player's FOV
-	const auto seenView = _registry->view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
+	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren] : seenView.each())
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);

@@ -77,7 +77,7 @@ void StateStack::applyPendingChanges()
 {
 	if (_pendingList.empty()) return;
 
-	for (auto [action, stateID] : _pendingList)
+	for (auto&& [action, stateID] : _pendingList)
 	{
 		switch (action)
 		{

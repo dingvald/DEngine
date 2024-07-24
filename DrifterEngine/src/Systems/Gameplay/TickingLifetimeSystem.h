@@ -7,6 +7,8 @@ namespace drft::system
 	class TickingLifetimeSystem : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
 
 	private:

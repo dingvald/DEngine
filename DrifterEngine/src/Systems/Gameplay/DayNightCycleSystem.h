@@ -7,8 +7,10 @@ namespace drft::system
 	class DayNightCycleSystem : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
-		void fixedUpdate() override;
+		void onFixedUpdate() override;
 		void save(cereal::JSONOutputArchive& oarchive) override;
 		void load(cereal::JSONInputArchive& iarchive) override;
 

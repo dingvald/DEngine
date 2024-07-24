@@ -3,10 +3,14 @@
 #include "SystemScheduler.h"
 
 
-void drft::system::System::setRegistry(entt::registry& registry)
+drft::system::System::System(entt::registry& registry, entt::dispatcher& dispatcher)
+	: _registry(registry)
+	, _dispatcher(dispatcher)
 {
-	this->_registry = &registry;
-	this->_dispatcher = &registry.ctx().get<entt::dispatcher>();
+}
+
+void drft::system::System::init()
+{
 }
 
 void drft::system::System::onStart(bool)
@@ -21,11 +25,27 @@ void drft::system::System::load(cereal::JSONInputArchive& iarchive)
 {
 }
 
-void drft::system::System::update(const float dt)
+void drft::system::System::onUpdateBegin()
 {
 }
 
-void drft::system::System::fixedUpdate()
+void drft::system::System::onUpdate(const float dt)
+{
+}
+
+void drft::system::System::onUpdateLate(const float dt)
+{
+}
+
+void drft::system::System::onFixedUpdateBegin()
+{
+}
+
+void drft::system::System::onFixedUpdate()
+{
+}
+
+void drft::system::System::onFixedUpdateLate()
 {
 }
 

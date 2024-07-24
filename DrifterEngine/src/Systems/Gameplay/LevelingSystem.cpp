@@ -10,14 +10,14 @@
 
 void drft::system::LevelingSystem::init()
 {
-	_registry->on_construct<component::action::GainExperience>().connect<&LevelingSystem::onXPGained>(this);
-	_registry->on_construct<component::action::LevelUp>().connect<&LevelingSystem::onLevelUp>(this);
+	_registry.on_construct<component::action::GainExperience>().connect<&LevelingSystem::onXPGained>(this);
+	_registry.on_construct<component::action::LevelUp>().connect<&LevelingSystem::onLevelUp>(this);
 }
 
 void drft::system::LevelingSystem::onUpdateEnd()
 {
-	_registry->clear<component::action::GainExperience>();
-	_registry->clear<component::action::LevelUp>();
+	_registry.clear<component::action::GainExperience>();
+	_registry.clear<component::action::LevelUp>();
 }
 
 void drft::system::LevelingSystem::onXPGained(entt::registry& registry, entt::entity entity)
@@ -39,7 +39,7 @@ void drft::system::LevelingSystem::onXPGained(entt::registry& registry, entt::en
 
 void drft::system::LevelingSystem::onLevelUp(entt::registry& registry, entt::entity entity)
 {
-	_dispatcher->trigger(events::SendFloatingMessageEvent{
+	_dispatcher.trigger(events::SendFloatingMessageEvent{
 		.message = "LEVEL UP",
 		.color = sf::Color::Magenta,
 		.tracksEntity = entity,

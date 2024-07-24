@@ -20,11 +20,10 @@ static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 15;
 
 void drft::system::BodyPartSystem::init()
 {
-	_registry->on_construct<component::action::IncomingDamage>().connect<&BodyPartSystem::onIncomingDamage>(this);
-	_registry->on_construct<TryMeleeAttackAction>().connect<&BodyPartSystem::onTryMeleeAttack>(this);
+	_registry.on_construct<component::action::IncomingDamage>().connect<&BodyPartSystem::onIncomingDamage>(this);
+	_registry.on_construct<MeleeAttackAction>().connect<&BodyPartSystem::onMeleeAttackActionAdded>(this);
 
-	auto& dispatcher = _registry->ctx().get<entt::dispatcher&>();
-	dispatcher.sink<events::ItemBreakEvent>().connect<&BodyPartSystem::onItemBreakEvent>(this);
+	_dispatcher.sink<events::ItemBreakEvent>().connect<&BodyPartSystem::onItemBreakEvent>(this);
 }
 
 void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, entt::entity entity)
@@ -44,11 +43,11 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 	}
 }
 
-void drft::system::BodyPartSystem::onTryMeleeAttack(entt::registry& registry, entt::entity entity)
+void drft::system::BodyPartSystem::onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity)
 {
 	if (auto body = registry.try_get<BodyComponent>(entity))
 	{
-		auto& attack = registry.get<TryMeleeAttackAction>(entity);
+		auto& attack = registry.get<MeleeAttackAction>(entity);
 		auto weaponDamageTypes = calculateDamageTypesFromHeld(entity);
 		for (auto& [typeName, damage] : weaponDamageTypes)
 		{
@@ -59,14 +58,14 @@ void drft::system::BodyPartSystem::onTryMeleeAttack(entt::registry& registry, en
 
 void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
-	auto& body = _registry->get<BodyComponent>(ev.owner);
+	auto& body = _registry.get<BodyComponent>(ev.owner);
 	body.parts.unequipItem(ev.itemID);
 }
 
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDamageTypesFromHeld(entt::entity attacker)
 {
 	std::unordered_map<std::string, int> result;
-	if (auto body = _registry->try_get<BodyComponent>(attacker))
+	if (auto body = _registry.try_get<BodyComponent>(attacker))
 	{
 		if (const auto rightHand = body->parts.search("Right Hand")) // TODO: Use preferred hand - don't hard code right hand
 		{
@@ -74,11 +73,11 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(ItemComponent::NONE));
 			if (itemEntity != entt::null)
 			{
-				if (auto material = _registry->try_get<MaterialComponent>(itemEntity))
+				if (auto material = _registry.try_get<MaterialComponent>(itemEntity))
 				{
 					result["crushing"] += material->weight;
 				}
-				if (auto sharp = _registry->try_get<SharpComponent>(itemEntity))
+				if (auto sharp = _registry.try_get<SharpComponent>(itemEntity))
 				{
 					result["slashing"] += sharp->sharpness;
 				}
@@ -87,7 +86,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 			if (rng::percentChance(CHANCE_TO_DAMAGE_EQUIPPED_WEAPON))
 			{
 				component::action::TakeDamage damage{ .amount = 1, .source = entt::null };
-				_registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
+				_registry.emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
 			}
 		}
 	}
@@ -104,7 +103,7 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 		if (itemEntity != entt::null)
 		{
-			if (auto wearable = _registry->try_get<WearableComponent>(itemEntity))
+			if (auto wearable = _registry.try_get<WearableComponent>(itemEntity))
 			{
 				int sum = 0;
 				for (auto& [damageType, amount] : result)
@@ -116,10 +115,10 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMiti
 					}
 				}
 
-				if (_registry->all_of<HealthComponent>(itemEntity))
+				if (_registry.all_of<HealthComponent>(itemEntity))
 				{
 					component::action::TakeDamage damage{ .amount = sum, .source = entt::null };
-					_registry->emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
+					_registry.emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
 				}
 			}
 		}

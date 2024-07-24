@@ -12,6 +12,7 @@ FactionSystem::FactionTable FactionSystem::_factionTable;
 
 void drft::system::FactionSystem::init()
 {
+	// TODO: load from file
 	_factionTable["player"]["carrion"] = -1000;
 	_factionTable["player"]["parasite"] = -1000;
 	_factionTable["player"]["rodent"] = -1000;

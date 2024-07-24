@@ -9,8 +9,10 @@ namespace drft::system
 	class HUD : public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
-		void fixedUpdate() override;
+		void onFixedUpdate() override;
 		void render(sf::RenderTarget& target) override;
 
 	private:

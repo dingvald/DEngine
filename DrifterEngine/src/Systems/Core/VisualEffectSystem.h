@@ -6,11 +6,9 @@ namespace drft::system
 	class VisualEffectSystem : public System
 	{
 	public:
-		void init() override;
-		void fixedUpdate() override;
+		using System::System;
 
-	private:
-		std::vector<entt::entity> _toDestroy;
+		void onFixedUpdate() override;
 	};
 }
 

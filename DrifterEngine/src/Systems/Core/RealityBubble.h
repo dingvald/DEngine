@@ -5,8 +5,10 @@ namespace drft::system
 {
 	class RealityBubble : public System
 	{
-		void init() override;
-		void update(const float) override;
+	public:
+		using System::System;
+
+		void onUpdateBegin() override;
 		void onUpdateEnd() override;
 	};
 }

@@ -6,19 +6,16 @@
 
 #include "Utility/Math.h"
 
-void drft::system::AnimationSystem::init()
-{
-}
 
-void drft::system::AnimationSystem::fixedUpdate()
+void drft::system::AnimationSystem::onFixedUpdate()
 {
-	auto noRenderView = _registry->view<AnimationComponent>(entt::exclude<RenderComponent>);
+	auto noRenderView = _registry.view<AnimationComponent>(entt::exclude<RenderComponent>);
 	for (auto [entity, animation] : noRenderView.each())
 	{
-		_registry->emplace<RenderComponent>(entity, DebugRenderComponent);
+		_registry.emplace<RenderComponent>(entity, DebugRenderComponent);
 	}
 
-	auto withRenderView = _registry->view<AnimationComponent, RenderComponent>();
+	auto withRenderView = _registry.view<AnimationComponent, RenderComponent>();
 	for (auto [entity, animation, render] : withRenderView.each())
 	{
 		++animation.elapsed;
@@ -42,7 +39,7 @@ void drft::system::AnimationSystem::onFixedUpdateEnd()
 {
 	for (auto entity : _toRemoveAnimation)
 	{
-		_registry->remove<AnimationComponent>(entity);
+		_registry.remove<AnimationComponent>(entity);
 	}
 	_toRemoveAnimation.clear();
 }

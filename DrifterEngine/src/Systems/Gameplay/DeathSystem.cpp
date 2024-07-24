@@ -18,14 +18,11 @@
 #include "Events/ItemBreakEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
 
-void drft::system::DeathSystem::init()
-{
-}
 
-void drft::system::DeathSystem::update(const float dt)
+void drft::system::DeathSystem::onUpdate(const float dt)
 {
-	const auto& factory = _registry->ctx().get<EntityFactory&>();
-	auto view = _registry->view<component::action::Die, MaterialComponent, PositionComponent>();
+	const auto& factory = _registry.ctx().get<EntityFactory&>();
+	auto view = _registry.view<component::action::Die, MaterialComponent, PositionComponent>();
 	for (auto [entity, material, pos] : view.each())
 	{
 		int chance = 80;
@@ -33,14 +30,14 @@ void drft::system::DeathSystem::update(const float dt)
 		{
 			if (rng::percentChance(chance))
 			{
-				auto dropped = factory.build(matName, *_registry);
+				auto dropped = factory.build(matName, _registry);
 				dropped.patch<PositionComponent>([&pos](auto& position)
 					{
 						position.position = pos.position;
 					});
 				if (matName.compare("Corpse") == 0)
 				{
-					auto entityName = util::getEntityName({ *_registry, entity });
+					auto entityName = util::getEntityName({ _registry, entity });
 					dropped.patch<MaterialComponent>([&material](MaterialComponent& mat)
 						{
 							mat.weight = material.weight;
@@ -53,29 +50,29 @@ void drft::system::DeathSystem::update(const float dt)
 			}
 			chance *= 0.5;
 		}
-		if (_registry->any_of<PlayerComponent>(entity))
+		if (_registry.any_of<PlayerComponent>(entity))
 		{
 			std::filesystem::remove_all(".\\data\\savegame\\");
-			_dispatcher->trigger(events::RequestStateStackPush(States::GameOver));
+			_dispatcher.trigger(events::RequestStateStackPush(States::GameOver));
 		}
-		_registry->destroy(entity);
+		_registry.destroy(entity);
 	}
 
 	// Equipped item breaking
-	auto itemView = _registry->view<component::action::Die, ItemComponent>(entt::exclude<PositionComponent>);
+	auto itemView = _registry.view<component::action::Die, ItemComponent>(entt::exclude<PositionComponent>);
 	for (auto [entity, item] : itemView.each())
 	{
-		auto owner = findItemOwner(*_registry, item.id, WhereToLook::Bodies);
-		_dispatcher->trigger(events::ItemBreakEvent(item.id, owner));
-		_dispatcher->trigger(events::SendFloatingMessageEvent{
-			.message = util::getEntityName({*_registry, entity}) + " broke!",
+		auto owner = findItemOwner(_registry, item.id, WhereToLook::Bodies);
+		_dispatcher.trigger(events::ItemBreakEvent(item.id, owner));
+		_dispatcher.trigger(events::SendFloatingMessageEvent{
+			.message = util::getEntityName({_registry, entity}) + " broke!",
 			.color = sf::Color::Yellow,
 			.tracksEntity = owner,
-			.position = _registry->get<PositionComponent>(owner).position,
+			.position = _registry.get<PositionComponent>(owner).position,
 			.velocity = {0,-0.25},
 			.isScreenSpace = false,
 			.ttl = 100
 			});
-		_registry->destroy(entity);
+		_registry.destroy(entity);
 	}
 }

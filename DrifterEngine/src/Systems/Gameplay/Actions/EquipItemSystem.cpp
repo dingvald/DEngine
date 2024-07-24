@@ -9,17 +9,17 @@
 
 void drft::system::EquipItemSystem::init()
 {
-	_registry->on_construct<component::action::Equip>().connect<&EquipItemSystem::onItemEquipped>(this);
-	_registry->on_update<component::action::Equip>().connect<&EquipItemSystem::onItemEquipped>(this);
+	_registry.on_construct<component::action::Equip>().connect<&EquipItemSystem::onItemEquipped>(this);
+	_registry.on_update<component::action::Equip>().connect<&EquipItemSystem::onItemEquipped>(this);
 
-	_registry->on_construct<component::action::Unequip>().connect<&EquipItemSystem::onItemUnequipped>(this);
-	_registry->on_update<component::action::Unequip>().connect<&EquipItemSystem::onItemUnequipped>(this);
+	_registry.on_construct<component::action::Unequip>().connect<&EquipItemSystem::onItemUnequipped>(this);
+	_registry.on_update<component::action::Unequip>().connect<&EquipItemSystem::onItemUnequipped>(this);
 }
 
 void drft::system::EquipItemSystem::onUpdateEnd()
 {
-	_registry->clear<component::action::Equip>();
-	_registry->clear<component::action::Unequip>();
+	_registry.clear<component::action::Equip>();
+	_registry.clear<component::action::Unequip>();
 }
 
 void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, entt::entity entity)

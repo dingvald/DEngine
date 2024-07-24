@@ -46,7 +46,7 @@ drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle a
 	{
 		const auto& pos = agent.get<PositionComponent>();
 		sf::Vector2i targetDirection = targetPos->position - pos.position;
-		agent.emplace_or_replace<PerformMeleeAttackAction>(targetDirection, std::vector<entt::entity>{ai.target});
+		agent.emplace_or_replace<MeleeAttackAction>(targetDirection, std::vector<entt::entity>{ai.target});
 		return ActionResult::Continue;
 	}
 	return ActionResult::Failed;

@@ -8,12 +8,14 @@ namespace drft::system
 	class LightingSystem : public System
 	{
 	public:
+		using System::System;
+
 		static sf::Color blendColor(const sf::Color& color1, const sf::Color& color2);
 		static sf::Color blendLight(const sf::Color& color1, const sf::Color& color2);
 
 	private:
 		void init() override;
-		void fixedUpdate() override;
+		void onFixedUpdate() override;
 		void onFixedUpdateEnd() override;
 
 	private:

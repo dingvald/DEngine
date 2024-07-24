@@ -29,8 +29,10 @@ namespace drft::system
 	class PlayerInput : public System
 	{
 	public:
+		using System::System;
+
 		virtual void init() override;
-		virtual void update(const float dt) override;
+		virtual void onUpdate(const float dt) override;
 
 	private:
 		std::unordered_map<sf::Keyboard::Key, KeyState> _keyState;

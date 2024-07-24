@@ -18,8 +18,9 @@ namespace drft::system
 	class ChunkManager : public System
 	{
 	public:
-		virtual void init() override;
-		virtual void update(const float dt) override;
+		using System::System;
+
+		virtual void onUpdate(const float dt) override;
 		virtual void save(cereal::JSONOutputArchive& oarchive);
 
 	private:

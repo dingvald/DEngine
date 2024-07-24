@@ -5,9 +5,12 @@ namespace drft::system
 {
 	class HotbarSystem : public System
 	{
+	public:
+		using System::System;
+
 		virtual void init() override;
 		virtual void onStart(bool isNewGame) override;
-		virtual void update(float dt) override;
+		virtual void onUpdate(float dt) override;
 		virtual void onUpdateEnd() override;
 	};
 }

@@ -7,6 +7,8 @@ namespace drft::system
 	class ItemUniqueIDGenerator :public System
 	{
 	public:
+		using System::System;
+
 		void init() override;
 
 		void save(cereal::JSONOutputArchive& oarchive) override;

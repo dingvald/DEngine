@@ -13,24 +13,24 @@
 
 void drft::system::InteractionSystem::init()
 {
-	_registry->on_construct<component::action::DoInteract>().connect<&InteractionSystem::onContructDoInteract>(this);
+	_registry.on_construct<component::action::DoInteract>().connect<&InteractionSystem::onContructDoInteract>(this);
 }
 
-void drft::system::InteractionSystem::update(const float dt)
+void drft::system::InteractionSystem::onUpdate(const float dt)
 {
-	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
-	auto interactView = _registry->view<const PositionComponent, component::action::TryInteract>();
+	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
+	auto interactView = _registry.view<const PositionComponent, component::action::TryInteract>();
 	for (auto [entity, pos] : interactView.each())
 	{
 		auto usableEntities = getInteractableSurroundings(pos.position, grid);
 		if (usableEntities.size() == 1)
 		{
-			_registry->emplace<component::action::DoInteract>(entity, std::move(usableEntities));
+			_registry.emplace<component::action::DoInteract>(entity, std::move(usableEntities));
 		}
 		else if (usableEntities.size() > 1)
 		{
 			auto tilePosition = pos.position;
-			_registry->emplace<component::action::SelectDirection>(entity,
+			_registry.emplace<component::action::SelectDirection>(entity,
 				[this, tilePosition, entity](sf::Vector2i direction) -> bool
 				{
 					sf::Vector2i targetPosition = tilePosition + direction;
@@ -42,8 +42,8 @@ void drft::system::InteractionSystem::update(const float dt)
 
 void drft::system::InteractionSystem::onUpdateEnd()
 {
-	_registry->clear<component::action::TryInteract>();
-	_registry->clear<component::action::DoInteract>();
+	_registry.clear<component::action::TryInteract>();
+	_registry.clear<component::action::DoInteract>();
 }
 
 std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurroundings(sf::Vector2i position, const spatial::WorldGrid& grid)
@@ -55,7 +55,7 @@ std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurrou
 		auto entities = grid.entitiesAt(tile,
 			[this](entt::entity entity) -> bool 
 			{
-				return _registry->any_of<InteractableComponent>(entity);
+				return _registry.any_of<InteractableComponent>(entity);
 			});
 		result.insert(result.end(), entities.begin(), entities.end());
 	}
@@ -64,15 +64,15 @@ std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurrou
 
 bool drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::Vector2i target)
 {
-	const auto& grid = _registry->ctx().get<spatial::WorldGrid&>();
+	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 	auto entities = grid.entitiesAt(target, [this](entt::entity entity) -> bool 
 		{
-			return _registry->any_of<InteractableComponent>(entity);
+			return _registry.any_of<InteractableComponent>(entity);
 		});
 
 	if (entities.empty()) return false;
 
-	_registry->emplace<component::action::DoInteract>(actor, std::move(entities));
+	_registry.emplace<component::action::DoInteract>(actor, std::move(entities));
 
 	return true;
 }

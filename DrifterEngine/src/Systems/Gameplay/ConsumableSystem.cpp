@@ -6,19 +6,19 @@
 
 void drft::system::ConsumableSystem::init()
 {
-	_registry->on_construct<ConsumableComponent>().connect<&ConsumableSystem::onConstructConsumable>(this);
-	_registry->on_destroy<ConsumableComponent>().connect<&ConsumableSystem::onDestroyConsumable>(this);
+	_registry.on_construct<ConsumableComponent>().connect<&ConsumableSystem::onConstructConsumable>(this);
+	_registry.on_destroy<ConsumableComponent>().connect<&ConsumableSystem::onDestroyConsumable>(this);
 }
 
 void drft::system::ConsumableSystem::consumeInteraction(entt::entity actor, entt::entity subject) const
 {
-	if (auto consumable = _registry->try_get<ConsumableComponent>(subject))
+	if (auto consumable = _registry.try_get<ConsumableComponent>(subject))
 	{
-		_registry->emplace<component::action::ConsumeEntity>(actor, subject);
-		_registry->erase<component::action::ConsumeEntity>(actor);
+		_registry.emplace<component::action::ConsumeEntity>(actor, subject);
+		_registry.erase<component::action::ConsumeEntity>(actor);
 		if (consumable->destroy)
 		{
-			_registry->destroy(subject);
+			_registry.destroy(subject);
 		}
 	}
 }

@@ -40,16 +40,16 @@ public:
 
 	BiomeIcon getIcon() const;
 	const std::string& getName() const;
-	const std::unordered_map<std::string, EntitySlot>& getEntitySlots() const;
-	const std::unordered_map<std::string, std::vector<EntityWeight>>& getEntityPacks() const;
+	const std::unordered_map<entt::id_type, EntitySlot>& getEntitySlots() const;
+	const std::unordered_map<entt::id_type, std::vector<EntityWeight>>& getEntityPacks() const;
 	const std::vector<StructureProbabilityPair>& getStructureProbabilities() const;
 
 private:
 	std::string _name;
 	BiomeIcon _icon;
 	std::unordered_map<std::string, drft::math::Range<float>> _ranges;
-	std::unordered_map<std::string, EntitySlot> _entitySlots;
-	std::unordered_map<std::string, std::vector<EntityWeight>> _entityPacks;
+	std::unordered_map<entt::id_type, EntitySlot> _entitySlots;
+	std::unordered_map<entt::id_type, std::vector<EntityWeight>> _entityPacks;
 	std::vector<StructureProbabilityPair> _structures;
 };
 

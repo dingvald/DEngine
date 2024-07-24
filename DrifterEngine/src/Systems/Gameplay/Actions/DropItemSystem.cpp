@@ -8,27 +8,27 @@
 
 void drft::system::DropItemSystem::init()
 {
-	_registry->on_construct<component::action::Drop>().connect<&DropItemSystem::onItemDropped>(this);
-	_registry->on_update<component::action::Drop>().connect<&DropItemSystem::onItemDropped>(this);
+	_registry.on_construct<component::action::Drop>().connect<&DropItemSystem::onItemDropped>(this);
+	_registry.on_update<component::action::Drop>().connect<&DropItemSystem::onItemDropped>(this);
 }
 
-void drft::system::DropItemSystem::update(const float dt)
+void drft::system::DropItemSystem::onUpdate(const float dt)
 {
-	auto view = _registry->view<component::action::Drop, PositionComponent>();
+	auto view = _registry.view<component::action::Drop, PositionComponent>();
 
 	for (auto [entity, dropAction, pos] : view.each())
 	{
 		for (auto item : dropAction.toDrop)
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-			_registry->emplace<PositionComponent>(itemEntity, pos.position);
+			_registry.emplace<PositionComponent>(itemEntity, pos.position);
 		}
 	}
 }
 
 void drft::system::DropItemSystem::onUpdateEnd()
 {
-	_registry->clear<component::action::Drop>();
+	_registry.clear<component::action::Drop>();
 }
 
 void drft::system::DropItemSystem::onItemDropped(entt::registry& registry, entt::entity entity)

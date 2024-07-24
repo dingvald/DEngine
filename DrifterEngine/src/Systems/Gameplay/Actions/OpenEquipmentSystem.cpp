@@ -6,7 +6,7 @@
 
 void drft::system::OpenEquipmentSystem::init()
 {
-	_registry->on_construct<component::action::OpenEquipment>().connect<&OpenEquipmentSystem::onOpenEquipmentAction>(this);
+	_registry.on_construct<component::action::OpenEquipment>().connect<&OpenEquipmentSystem::onOpenEquipmentAction>(this);
 }
 
 void drft::system::OpenEquipmentSystem::onOpenEquipmentAction(entt::registry& registry, entt::entity entity) const
@@ -17,6 +17,6 @@ void drft::system::OpenEquipmentSystem::onOpenEquipmentAction(entt::registry& re
 		return;
 	}
 
-	_dispatcher->trigger(events::RequestStateStackPush{ States::Inventory });
+	_dispatcher.trigger(events::RequestStateStackPush{ States::Inventory });
 }
 

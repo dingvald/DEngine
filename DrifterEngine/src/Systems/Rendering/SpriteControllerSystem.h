@@ -8,9 +8,13 @@ namespace drft::system
 {
 	class SpriteControllerSystem : public System
 	{
+	public:
+		using System::System;
+
 		void init() override;
 		void onUpdateEnd() override;
 
+	private:
 		void onSpriteControllerAdded(entt::registry& registry, entt::entity entity) const;
 		void onSpriteChangeRequest(entt::registry& registry, entt::entity entity) const;
 		void handleNewSpriteState(entt::handle handle, SpriteControllerComponent& controller, entt::id_type stateId) const;

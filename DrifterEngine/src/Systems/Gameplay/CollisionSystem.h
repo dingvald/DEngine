@@ -7,6 +7,10 @@ namespace drft::system
 
     class CollisionSystem : public System
     {
+    public:
+        using System::System;
+
+    private:
         void init() override;
         void onUpdateEnd() override;
 

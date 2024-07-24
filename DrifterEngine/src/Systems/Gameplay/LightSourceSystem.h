@@ -6,8 +6,9 @@ namespace drft::system
 	class LightSourceSystem : public System
 	{
 	public:
-		void init() override;
-		void fixedUpdate() override;
+		using System::System;
+
+		void onFixedUpdate() override;
 		void onFixedUpdateEnd() override;
 	};
 }

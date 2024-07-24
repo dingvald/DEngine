@@ -6,14 +6,9 @@
 #include "Utility/Math.h"
 
 
-
-void drft::system::VisualEffectSystem::init()
+void drft::system::VisualEffectSystem::onFixedUpdate()
 {
-}
-
-void drft::system::VisualEffectSystem::fixedUpdate()
-{
-	auto view = _registry->view<PositionComponent, VisualEffectComponent, RenderComponent>();
+	auto view = _registry.view<PositionComponent, VisualEffectComponent, RenderComponent>();
 	for (auto [entity, pos, effect, render] : view.each())
 	{
 		// Effects with their ttl set to negative need to be destroyed manually
@@ -26,7 +21,7 @@ void drft::system::VisualEffectSystem::fixedUpdate()
 		}
 		if (effect.ttl <= 0)
 		{
-			_registry->destroy(entity);
+			_registry.destroy(entity);
 		}
 	}
 }

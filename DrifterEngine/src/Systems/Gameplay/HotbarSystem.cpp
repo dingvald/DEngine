@@ -20,10 +20,10 @@ void drft::system::HotbarSystem::onStart(bool isNewGame)
 {
 	if (isNewGame)
 	{
-		auto playerView = _registry->view<PlayerComponent>();
+		auto playerView = _registry.view<PlayerComponent>();
 		for (auto entity : playerView)
 		{
-			auto& hotbar = _registry->emplace<HotbarComponent>(entity);
+			auto& hotbar = _registry.emplace<HotbarComponent>(entity);
 			// For testing purposes:
 			hotbar.abilities[toHotbarIndex(1)] = AbilityType::Sprint;
 			hotbar.abilities[toHotbarIndex(2)] = AbilityType::Throw;
@@ -31,12 +31,12 @@ void drft::system::HotbarSystem::onStart(bool isNewGame)
 	}
 }
 
-void drft::system::HotbarSystem::update(float dt)
+void drft::system::HotbarSystem::onUpdate(float dt)
 {
-	auto view = _registry->view<HotbarComponent, component::action::HotbarPressed, component::tag::CurrentActor>();
+	auto view = _registry.view<HotbarComponent, component::action::HotbarPressed, component::tag::CurrentActor>();
 	for (auto&& [entity, hotbar, hotbarSlot] : view.each())
 	{
-		entt::handle handle = { *_registry, entity };
+		entt::handle handle = { _registry, entity };
 		AbilityType abilityType = hotbar.abilities[hotbarSlot.slot];
 		const auto& ability = AbilityRegistry::get(abilityType);
 		if (ability.isValid(handle))
@@ -84,5 +84,5 @@ void drft::system::HotbarSystem::update(float dt)
 
 void drft::system::HotbarSystem::onUpdateEnd()
 {
-	_registry->clear<component::action::HotbarPressed>();
+	_registry.clear<component::action::HotbarPressed>();
 }
