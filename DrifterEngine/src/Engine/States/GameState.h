@@ -47,7 +47,7 @@ namespace drft
 		void onRequestStatePush(const drft::events::RequestStateStackPush& ev);
 
 	private:
-		system::InputBuffer _inputBuffer{ 2 };
+		system::InputBuffer _inputBuffer{ 3 };
 		std::unique_ptr<system::SystemScheduler> _systems;
 		std::unique_ptr<spatial::WorldGrid> _world;
 		std::unique_ptr<WorldMap> _worldMap;

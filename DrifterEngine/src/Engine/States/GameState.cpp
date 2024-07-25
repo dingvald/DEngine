@@ -184,18 +184,19 @@ void drft::GameState::loadRegistry()
 }
 
 bool drft::GameState::handleEvent(const sf::Event& ev)
-{
+{	
 	switch (ev.type)
 	{
 		case sf::Event::KeyPressed:
-		{
 			if (ev.key.code == sf::Keyboard::Escape)
 			{
 				requestStackPush(States::Pause);
 				return false;
 			}
-			_inputBuffer.pushKey(ev.key.code);
-		}
+			_inputBuffer.press(ev.key.code);
+		break;
+		case sf::Event::KeyReleased:
+			_inputBuffer.release(ev.key.code);
 		break;
 	}
 
@@ -204,6 +205,7 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 
 bool drft::GameState::update(const float dt)
 {
+	_inputBuffer.update(dt);
 	_systems->update(dt);
 	_systems->updateEnd();
 	return true;

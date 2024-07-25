@@ -37,7 +37,6 @@ namespace drft::system
 	private:
 		std::unordered_map<sf::Keyboard::Key, KeyState> _keyState;
 		ActionMap _actionMap;
-		std::queue<ActionMap::emplaceFunc> _bufferedActions;
 	};
 
 }

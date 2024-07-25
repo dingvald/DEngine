@@ -30,101 +30,110 @@ void drft::system::HealthSystem::onUpdate(const float dt)
 	auto incomingDamageView = _registry.view<component::action::IncomingDamage>();
 	for (auto [entity, incoming] : incomingDamageView.each())
 	{
-		int total = 0;
-		for (auto& [_, damage] : incoming.damageTypes)
-		{
-			total += damage;
-		}
-		_registry.emplace<component::action::TakeDamage>(entity, total, incoming.source);
+		processIncomingDamage(entity, incoming);
 	}
+	_registry.erase<component::action::IncomingDamage>(incomingDamageView.begin(), incomingDamageView.end());
 
-	auto damageView = _registry.view<component::action::TakeDamage, HealthComponent>();
-	for (auto [entity, damage, health] : damageView.each())
+	auto damageView = _registry.view<component::action::TakeDamage>();
+	for (auto [entity, damage] : damageView.each())
 	{
-		auto handle = entt::handle{ _registry, entity };
-		// send floating message
-		if (auto posComp = handle.try_get<PositionComponent>())
-		{
-			sf::Color materialColor = sf::Color::White;
-			auto optionalMaterial = getPrimaryMaterial(handle);
-			if (optionalMaterial.has_value())
-			{
-				const RenderComponent& materialRender = optionalMaterial.value().get<RenderComponent>();
-				materialColor = materialRender.color;
-			}
-
-			std::string message;
-			const auto& renderComponent = handle.get<RenderComponent>();
-			sf::Color messageColor = sf::Color::White;
-			
-			SpriteOptions damageEffectSprite;
-			createSpriteOptionsFromRenderComponent(damageEffectSprite, renderComponent);
-			damageEffectSprite.layer = static_cast<int>(RenderLayer::EffectsBack);
-
-			int effect_ttl = 10;
-
-			if (damage.amount == 0)
-			{
-				messageColor = sf::Color::Blue;
-				damageEffectSprite.color = sf::Color(255, 255, 255);
-				damageEffectSprite.texture = "simple_tileset"_hs;
-				damageEffectSprite.uvCoords = { 0, 5 };
-				effect_ttl = 30;
-			}
-			else if (damage.amount < 0)
-			{
-				message += "+";
-				messageColor = sf::Color::Green;
-				damageEffectSprite.color = sf::Color::Green;
-			}
-			else if (damage.amount > 0)
-			{
-				std::vector<SpriteOptions> hitParticles =
-				{
-					SpriteOptions{.uvCoords = sf::Vector2i{1, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
-					SpriteOptions{.uvCoords = sf::Vector2i{2, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
-				};
-				// Spawn Hit particles
-				spawnEffect(_registry, {
-					.frames = std::move(hitParticles),
-					.position = posComp->position,
-					.animationSpeed = 8.0f
-					});
-			}
-
-			_dispatcher.trigger(events::SendFloatingMessageEvent{
-				.message = message + std::to_string(std::abs(damage.amount)),
-				.color = messageColor,
-				.position = posComp->position,
-				.velocity = {0,-1},
-				.fades = true,
-				.isScreenSpace = false,
-				.ttl = 80
-				});
-
-			// Spawn HurtEffect
-			spawnEffect(_registry, {
-				.frames = { damageEffectSprite },
-				.position = posComp->position,
-				.animationSpeed = 10.0f,
-				.ttl = effect_ttl,
-				.fades = false,
-			});
-		}
-		
-		health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
-		if (health.current == 0)
-		{
-			handle.emplace<component::action::Die>();
-			_registry.emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(handle));
-		}
+		processTakeDamage(entity, damage);
 	}
+	_registry.erase<component::action::TakeDamage>(damageView.begin(), damageView.end());
 }
 
-void drft::system::HealthSystem::onUpdateEnd()
+void drft::system::HealthSystem::processIncomingDamage(entt::entity entity, component::action::IncomingDamage& damage) const
 {
-	_registry.clear<component::action::IncomingDamage>();
-	_registry.clear<component::action::TakeDamage>();
+	int total = 0;
+	for (auto& [_, damage] : damage.damageTypes)
+	{
+		total += damage;
+	}
+	_registry.emplace<component::action::TakeDamage>(entity, total, damage.source);
+}
+
+void drft::system::HealthSystem::processTakeDamage(entt::entity entity, component::action::TakeDamage& damage) const
+{
+	auto handle = entt::handle{ _registry, entity };
+	if (!handle.all_of<HealthComponent>()) return;
+
+	auto& health = handle.get<HealthComponent>();
+	// send floating message
+	if (auto posComp = handle.try_get<PositionComponent>())
+	{
+		sf::Color materialColor = sf::Color::White;
+		auto optionalMaterial = getPrimaryMaterial(handle);
+		if (optionalMaterial.has_value())
+		{
+			const RenderComponent& materialRender = optionalMaterial.value().get<RenderComponent>();
+			materialColor = materialRender.color;
+		}
+
+		std::string message;
+		const auto& renderComponent = handle.get<RenderComponent>();
+		sf::Color messageColor = sf::Color::White;
+
+		SpriteOptions damageEffectSprite;
+		createSpriteOptionsFromRenderComponent(damageEffectSprite, renderComponent);
+		damageEffectSprite.layer = static_cast<int>(RenderLayer::EffectsBack);
+
+		int effect_ttl = 10;
+
+		if (damage.amount == 0)
+		{
+			messageColor = sf::Color::Blue;
+			damageEffectSprite.color = sf::Color(255, 255, 255);
+			damageEffectSprite.texture = "simple_tileset"_hs;
+			damageEffectSprite.uvCoords = { 0, 5 };
+			effect_ttl = 30;
+		}
+		else if (damage.amount < 0)
+		{
+			message += "+";
+			messageColor = sf::Color::Green;
+			damageEffectSprite.color = sf::Color::Green;
+		}
+		else if (damage.amount > 0)
+		{
+			std::vector<SpriteOptions> hitParticles =
+			{
+				SpriteOptions{.uvCoords = sf::Vector2i{1, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{2, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+			};
+			// Spawn Hit particles
+			spawnEffect(_registry, {
+				.frames = std::move(hitParticles),
+				.position = posComp->position,
+				.animationSpeed = 8.0f
+				});
+		}
+
+		_dispatcher.trigger(events::SendFloatingMessageEvent{
+			.message = message + std::to_string(std::abs(damage.amount)),
+			.color = messageColor,
+			.position = posComp->position,
+			.velocity = {0,-1},
+			.fades = true,
+			.isScreenSpace = false,
+			.ttl = 80
+			});
+
+		// Spawn HurtEffect
+		spawnEffect(_registry, {
+			.frames = { damageEffectSprite },
+			.position = posComp->position,
+			.animationSpeed = 10.0f,
+			.ttl = effect_ttl,
+			.fades = false,
+			});
+	}
+
+	health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
+	if (health.current == 0)
+	{
+		handle.emplace<component::action::Die>();
+		_registry.emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(handle));
+	}
 }
 
 void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)

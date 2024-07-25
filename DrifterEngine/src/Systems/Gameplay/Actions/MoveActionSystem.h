@@ -18,8 +18,5 @@ namespace drft::system
 
 		void onMoveActionAdded(entt::registry& registry, entt::entity entity) const;
 		void processMoveAction(entt::entity entity, MoveAction& action) const;
-
-	private:
-		entt::observer _moveActionObserver;
 	};
 }

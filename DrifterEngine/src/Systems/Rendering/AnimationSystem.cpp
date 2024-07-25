@@ -6,19 +6,20 @@
 
 #include "Utility/Math.h"
 
+#pragma optimize("", off)
 
 void drft::system::AnimationSystem::onFixedUpdate()
 {
 	auto noRenderView = _registry.view<AnimationComponent>(entt::exclude<RenderComponent>);
-	for (auto [entity, animation] : noRenderView.each())
+	for (auto&& [entity, animation] : noRenderView.each())
 	{
 		_registry.emplace<RenderComponent>(entity, DebugRenderComponent);
 	}
 
 	auto withRenderView = _registry.view<AnimationComponent, RenderComponent>();
-	for (auto [entity, animation, render] : withRenderView.each())
+	for (auto&& [entity, animation, render] : withRenderView.each())
 	{
-		++animation.elapsed;
+		++animation.elapsed; // TODO: Nasty bug here where animation throws "read access violation"
 		const float numFramesTillNextIndex = TARGET_FPS / std::abs(animation.speed);
 		if (animation.elapsed >= numFramesTillNextIndex)
 		{

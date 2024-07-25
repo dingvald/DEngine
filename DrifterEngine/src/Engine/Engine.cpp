@@ -22,8 +22,14 @@ static const std::string FONTS_PATH = RESOURCE_PATH + "Fonts/";
 
 static const float TARGET_DT = (1.0f / TARGET_FPS);
 
+static const unsigned int WINDOW_WIDTH = 1280;
+static const unsigned int WINDOW_HEIGHT = 720;
+
+static const float DEBUG_X_POSITION = WINDOW_WIDTH - 256;
+static const float DEBUG_Y_POSITION = 16;
+
 drft::Engine::Engine()
-	: _window(sf::VideoMode(1280, 720), "Drifter Engine")
+	: _window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Drifter Engine")
 	, _showDebug(false)
 {
 	initialize();
@@ -49,7 +55,7 @@ void drft::Engine::initialize()
 {
 	loadResources();
 	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
-	service::DebugInfo::instance().setPosition({ 16,8 });
+	service::DebugInfo::instance().setPosition({ DEBUG_X_POSITION, DEBUG_Y_POSITION });
 	registerStates();
 	_stateStack.pushState(States::Title);
 }

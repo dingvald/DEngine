@@ -9,7 +9,7 @@ namespace drft::system
 		using System::System;
 
 		void onStart(bool isNewGame) override;
-		void onUpdate(const float dt) override;
+		void onUpdateEnd() override;
 		void shutdown() override;
 
 	private:

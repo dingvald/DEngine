@@ -9,9 +9,6 @@
 #include "Systems/HelperClasses/InputBuffer.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
 
-static constexpr unsigned int INPUT_BUFFER_MAX_SIZE = 2;
-static constexpr float REFRACTORY_PERIOD = 0.2f; // sec
-static constexpr float HOLD_TIME = 0.5f; // sec
 
 void drft::system::PlayerInput::init()
 {
@@ -83,55 +80,13 @@ void drft::system::PlayerInput::init()
 void drft::system::PlayerInput::onUpdate(const float dt)
 {
 	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
-	if (!inputBuffer.isEmpty())
-	{
-		const auto key = inputBuffer.popKey();
-		if (_actionMap.contains(key))
-		{
-			_keyState[key].active = false;
-			if (_keyState[key].timeHeld <= std::numeric_limits<float>::epsilon())
-			{
-				// Just pressed
-				_keyState[key].active = true;
-				_keyState[key].timeHeld = 0.0f;
-			}
-			else if (_keyState[key].timeHeld >= HOLD_TIME)
-			{
-				// Held key long enough
-				_keyState[key].active = true;
-				_keyState[key].timeHeld -= REFRACTORY_PERIOD;
-			}
-
-			_keyState[key].timeHeld = std::min(_keyState[key].timeHeld + dt, HOLD_TIME);
-
-			if (_keyState[key].active && _bufferedActions.size() < INPUT_BUFFER_MAX_SIZE)
-			{
-				_bufferedActions.push(_actionMap[key]);
-			}
-
-			for (auto& [otherKey, keyState] : _keyState)
-			{
-				if (otherKey == key) continue;
-				keyState.timeHeld = 0.0f;
-				keyState.active = false;
-			}
-		}
-	}
-	else
-	{
-		for (auto& [otherKey, keyState] : _keyState)
-		{
-			keyState.timeHeld = 0.0f;
-			keyState.active = false;
-		}
-	}
-
 	auto turnView = _registry.view<PlayerComponent, component::tag::CurrentActor>();
 	for (auto entity : turnView)
 	{
-		if (_bufferedActions.empty()) continue;
-		_bufferedActions.front()(entt::handle{ _registry, entity });
-		_bufferedActions.pop();
+		const auto key = inputBuffer.pop();
+		if (!_actionMap.contains(key)) continue;
+
+		_actionMap[key](entt::handle{ _registry, entity });
 	}
 }
 

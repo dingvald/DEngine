@@ -22,7 +22,7 @@ void drft::system::Camera::onStart(bool)
 	_registry.emplace<PositionComponent>(_camera, sf::Vector2i(0, 0));
 }
 
-void drft::system::Camera::onUpdate(const float dt)
+void drft::system::Camera::onUpdateEnd()
 {
 	auto cameraView = _registry.view<CameraComponent, PositionComponent>();
 
