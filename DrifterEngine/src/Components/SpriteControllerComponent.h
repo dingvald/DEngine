@@ -23,7 +23,7 @@ private:
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(frames, speed);
+			archive(frames, speed, synced);
 		}
 	};
 public:
