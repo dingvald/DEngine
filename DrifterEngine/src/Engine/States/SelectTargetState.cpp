@@ -5,6 +5,8 @@
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
 
+#include "Events/SendFloatingMessageEvent.h"
+
 #include "Spatial/Helpers.h"
 #include "Spatial/Grid.h"
 #include "Systems/Helpers/SpawnEffect.h"
@@ -87,6 +89,20 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 		}
 		if (ev.key.code == sf::Keyboard::Space)
 		{
+			if (!isInRange())
+			{
+				auto& dispatcher = getContext().registry.ctx().get<entt::dispatcher&>();
+				dispatcher.trigger(events::SendFloatingMessageEvent{
+					.message = "Out of range",
+					.color = sf::Color::Red,
+					.position = _startPosition,
+					.velocity = {0,-0.1},
+					.isScreenSpace = false,
+					.ttl = 80
+				});
+				return false;
+			}
+
 			auto selectTargetView = getContext().registry.view<component::action::SelectTarget>();
 			if (auto selectTarget = getContext().registry.try_get<component::action::SelectTarget>(selectTargetView.front()))
 			{
@@ -183,6 +199,11 @@ void drft::SelectTargetState::onPop()
 	{
 		getContext().registry.destroy(aoeEffect);
 	}
+}
+
+bool drft::SelectTargetState::isInRange() const
+{
+	return spatial::distance(_cursorPosition, _startPosition) <= _targetSelect->range.getMax();
 }
 
 void drft::SelectTargetState::moveCursor(sf::Vector2i direction)

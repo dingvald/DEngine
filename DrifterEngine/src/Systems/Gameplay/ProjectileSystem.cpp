@@ -40,6 +40,7 @@ void drft::system::ProjectileSystem::onUpdate(float dt)
 			SpriteOptions effectSprite;
 			createSpriteOptionsFromRenderComponent(effectSprite, *render);
 			effectSprite.layer = static_cast<unsigned int>(RenderLayer::EffectsFront);
+			effectSprite.color = sf::Color::White;
 
 			spawnEffect(_registry,
 				{

@@ -21,6 +21,7 @@ namespace drft
 		void onPop() override;
 
 	private:
+		bool isInRange() const;
 		void moveCursor(sf::Vector2i direction);
 		void renderTargetRadius(sf::RenderTarget& target);
 		void renderTargetAoE(sf::RenderTarget& target);
