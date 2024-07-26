@@ -4,8 +4,8 @@ namespace drft::spatial
 {
 	// Spatial conversion functions //
 
-	constexpr int CHUNK_WIDTH = 64;
-	constexpr int CHUNK_HEIGHT = 64;
+	constexpr int CHUNK_WIDTH = 8;
+	constexpr int CHUNK_HEIGHT = 8;
 	constexpr int TILE_WIDTH = 16;
 	constexpr int TILE_HEIGHT = 16;
 
@@ -28,4 +28,3 @@ namespace drft::spatial
 	// Upper-left corner of chunk is (0,0)
 	sf::Vector2i toLocalChunkSpace(sf::Vector2i tilePosition);
 }
-

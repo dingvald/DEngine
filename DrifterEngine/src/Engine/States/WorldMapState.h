@@ -4,6 +4,7 @@
 #include "Utility/SpriteBatch.h"
 #include "Utility/SpriteIndexer.h"
 #include "Utility/stdHashing.h"
+#include "Spatial/WorldMapPosition.h"
 
 
 
@@ -29,7 +30,7 @@ namespace drft
 
 	struct MapNotes
 	{
-		std::unordered_map<sf::Vector2i, MapNote> notes;
+		std::unordered_map<drft::WorldMapPosition, MapNote> notes;
 		SpriteBatch noteSprites;
 
 		template<class Archive>
@@ -52,7 +53,7 @@ namespace drft
 
 	private:
 		void refreshMapSprites();
-		void addMapNote(sf::Vector2i position, size_t iconIndex, sf::Color color);
+		void addMapNote(drft::WorldMapPosition position, size_t iconIndex, sf::Color color);
 		void moveCursor(sf::Vector2i direction);
 		void openOnSelectMenu();
 		void openIconSelection();
@@ -67,8 +68,8 @@ namespace drft
 
 	private:
 		std::vector<sf::Vector2i> _surroundings;
-		sf::Vector2i _currentPosition;
-		sf::Vector2i _cursorPosition;
+		WorldMapPosition _currentPosition;
+		WorldMapPosition _cursorPosition;
 		gui::Panel _mapBackground;
 		gui::Stack _guiStack;
 		sf::RectangleShape _currentPositionTile;
@@ -77,6 +78,7 @@ namespace drft
 		MapNotes _mapNotes;
 		float _scalingFactor = 0.5f;
 		bool _drawNotes = true;
+		bool _mapNotesDirty = false;
 	};
 }
 

@@ -5,7 +5,7 @@
     "NoiseLayers": {
       "Altitude": {
         "Resolution": 4,
-        "Octaves": 16,
+        "Octaves": 4,
         "Lacunarity": 2.5,
         "Gain": 0.5
       },

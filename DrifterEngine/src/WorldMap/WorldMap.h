@@ -1,30 +1,26 @@
 #pragma once
-#include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include "Utility/stdHashing.h"
+#include "Spatial/WorldMapPosition.h"
 
+
+class Biome;
 namespace drft
 {
+	namespace gen
+	{
+		class WorldGenerator;
+	}
+
 	class WorldMap
 	{
 	public:
-		// Takes the abstract proc gen layers created so far and creates a concrete chunk
-		 bool generateChunk(sf::Vector2i coordinate, entt::registry& registry) const;
-
-		void create();
-
-		void load(cereal::JSONInputArchive& iarchive);
-		void save(cereal::JSONOutputArchive& oarchive) const;
-
-		void fixedUpdate(const entt::registry& registry);
+		WorldMap(const gen::WorldGenerator& generator);
 
 		sf::Vector2i getDimensions() const;
-		BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
-		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
+		const Biome* getBiome(WorldMapPosition position) const;
 
 	private:
-		sf::Vector2i _dimensions;
-		std::unordered_map<sf::Vector2i, std::string> _coordinates;
-		gen::WorldGenerator _worldGenerator;
+		const gen::WorldGenerator& _generator;
 	};
 }
 

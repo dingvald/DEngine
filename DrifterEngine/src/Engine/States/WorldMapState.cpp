@@ -161,17 +161,16 @@ void drft::WorldMapState::onPush()
 	loadMapNotes();
 
 	auto cameraInfo = system::getCurrentCamera(getContext().registry);
-	_currentPosition = spatial::toChunkCoordinate(cameraInfo.position);
-
+	_currentPosition.fromTileSpace(cameraInfo.position);
 
 	refreshMapSprites();
 
 	_currentPositionTile.setSize({ spatial::TILE_WIDTH, spatial::TILE_HEIGHT });
-	_currentPositionTile.setPosition(spatial::toFloatSpace(_currentPosition));
+	_currentPositionTile.setPosition(spatial::toFloatSpace(sf::Vector2i{ _currentPosition.x, _currentPosition.y }));
 	_currentPositionTile.setFillColor(sf::Color::White);
 
 	_cursor.setSize({ spatial::TILE_WIDTH, spatial::TILE_HEIGHT });
-	_cursor.setPosition(spatial::toFloatSpace(_currentPosition));
+	_cursor.setPosition(spatial::toFloatSpace(sf::Vector2i{ _currentPosition.x, _currentPosition.y }));
 	_cursor.setOutlineThickness(1.0f);
 	_cursor.setOutlineColor(sf::Color::Yellow);
 	_cursor.setFillColor(sf::Color(0, 0, 0, 0));
@@ -180,8 +179,10 @@ void drft::WorldMapState::onPush()
 
 void drft::WorldMapState::onPop()
 {
-	saveMapNotes();
-
+	if (_mapNotesDirty)
+	{
+		saveMapNotes();
+	}
 	getContext().registry.clear<component::action::OpenWorldMap>();
 }
 
@@ -194,13 +195,20 @@ void drft::WorldMapState::refreshMapSprites()
 	const auto& textureAtlas = getContext().textures;
 	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
 
-	sf::IntRect squareUV = textureAtlas.getUV("simple_tileset"_hs, { 16, 16 }, { 4, 0 });
-	for (int y = 0; y < worldMap.getDimensions().y; ++y)
+	const sf::IntRect squareUV = textureAtlas.getUV("simple_tileset"_hs, { 16, 16 }, { 4, 0 });
+
+	const auto dimensions = worldMap.getDimensions();
+
+	for (int y = 0; y < dimensions.y; ++y)
 	{
-		for (int x = 0; x < worldMap.getDimensions().x; ++x)
+		for (int x = 0; x < dimensions.x; ++x)
 		{
-			const auto& icon = worldMap.getBiomeIcon({ x, y });
-			sf::Vector2f screenPosition = spatial::toFloatSpace(sf::Vector2i(x,y));
+			const auto worldMapPosition = WorldMapPosition{ x, y };
+			const Biome* biome = worldMap.getBiome(worldMapPosition);
+			if (!biome) continue;
+
+			const auto& icon = biome->getIcon();
+			sf::Vector2f screenPosition = spatial::toFloatSpace({x, y});
 
 			_map.addSprite(squareUV, sf::Color::Black, screenPosition);
 			const auto uv = getContext().textures.getUV(icon.texture, icon.uvSize, icon.uvCoords);
@@ -216,22 +224,23 @@ void drft::WorldMapState::refreshMapSprites()
 	}
 }
 
-void drft::WorldMapState::addMapNote(sf::Vector2i position, size_t iconIndex, sf::Color color)
+void drft::WorldMapState::addMapNote(drft::WorldMapPosition position, size_t iconIndex, sf::Color color)
 {
 	const auto& textureAtlas = getContext().textures;
 	_mapNotes.notes[position] = { iconIndex, color };
 
 	const auto& VIEW = getContext().window.getView();
-	sf::Vector2f screenPosition = spatial::toFloatSpace(_cursorPosition);
+	sf::Vector2f screenPosition = _currentPosition.toFloatSpace();
 	sf::IntRect uv = textureAtlas.getUV("simple_tileset"_hs, { 16, 16 }, IconUVs.at(iconIndex));
 	_mapNotes.noteSprites.addSprite(uv, color, screenPosition);
+	_mapNotesDirty = true;
 }
 
 void drft::WorldMapState::moveCursor(sf::Vector2i direction)
 {
 	const auto& worldMap = getContext().registry.ctx().get<const WorldMap&>();
 	const auto& VIEW = getContext().window.getView();
-	sf::Vector2i intended = _cursorPosition + direction;
+	sf::Vector2i intended = sf::Vector2i{ _cursorPosition.x, _cursorPosition.y } + direction;
 	if (intended.x < 0 || intended.y < 0 || intended.x >= worldMap.getDimensions().x || intended.y >= worldMap.getDimensions().y)
 	{
 		return;
@@ -451,7 +460,6 @@ void drft::WorldMapState::pulseCursor(float dt)
 		_cursor.setOutlineThickness(-1.f * _cursor.getOutlineThickness());
 		elapsed = 0.0;
 	}
-
 }
 
 void drft::WorldMapState::pulseMapNotes(float dt)

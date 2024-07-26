@@ -15,8 +15,8 @@ using namespace drft::system;
 // TODO: Move save directory to state context
 static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\chunks\\";
 
-static constexpr int ACTIVE_CHUNK_RADIUS = 2;
-static constexpr int TO_SAVE_CHUNK_RADIUS = ACTIVE_CHUNK_RADIUS + 1;
+static constexpr int ACTIVE_CHUNK_RADIUS = 8;
+static constexpr int TO_SAVE_CHUNK_RADIUS = ACTIVE_CHUNK_RADIUS + 2;
 
 
 void drft::system::ChunkManager::onUpdate(const float dt)

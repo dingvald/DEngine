@@ -7,6 +7,11 @@ namespace drft
 	class EntityFactory;
 	class WorldMap;
 
+	namespace gen
+	{
+		class WorldGenerator;
+	}
+	
 	namespace events
 	{
 		struct RequestStateStackPush;
@@ -38,7 +43,7 @@ namespace drft
 	private:
 		void init();
 		void connectEventHandlers();
-		void loadOrCreateWorldMap();
+		void loadOrCreateWorldGenerator();
 		bool loadOrCreatePlayer();
 		void loadEntityPrototypes();
 		void setupRegistryContext();
@@ -50,6 +55,7 @@ namespace drft
 		system::InputBuffer _inputBuffer{ 3 };
 		std::unique_ptr<system::SystemScheduler> _systems;
 		std::unique_ptr<spatial::WorldGrid> _world;
+		std::unique_ptr<gen::WorldGenerator> _worldGenerator;
 		std::unique_ptr<WorldMap> _worldMap;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;

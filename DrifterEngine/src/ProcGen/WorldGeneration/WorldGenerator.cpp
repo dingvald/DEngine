@@ -18,9 +18,9 @@
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/stdHashing.h"
 #include "Utility/Math.h"
+#include "Spatial/WorldMapPosition.h"
 
-static const sf::Vector2i FULL_CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
-static const sf::Vector2i SUB_CHUNK_SIZE = { FULL_CHUNK_SIZE.x / 8, FULL_CHUNK_SIZE.y / 8 };
+static const sf::Vector2i CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 
 static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
 static const std::filesystem::path BIOME_FOLDER_PATH = STATIC_DATA_PATH.string() + "biomes";
@@ -32,7 +32,7 @@ using namespace entt::literals;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
-	_tagGrid = std::make_unique<TagGrid>(FULL_CHUNK_SIZE.x, FULL_CHUNK_SIZE.y);
+	_tagGrid = std::make_unique<TagGrid>(CHUNK_SIZE.x, CHUNK_SIZE.y);
 }
 
 void drft::gen::WorldGenerator::init()
@@ -46,11 +46,11 @@ void drft::gen::WorldGenerator::init()
 	initializeGlobalRanges();
 }
 
-void drft::gen::WorldGenerator::createWorldMapSettingsFromJSON(const std::string& JSONfilename)
+void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
 {
 	std::filesystem::path worldSettingsFilePath;
 	worldSettingsFilePath /= STATIC_DATA_PATH;
-	worldSettingsFilePath /= "world_generation.json";
+	worldSettingsFilePath /= JSONfilename;
 	auto optionalWorldSettingsDocument = drft::json::extractDOM(worldSettingsFilePath, "WorldSettings");
 
 	if (!optionalWorldSettingsDocument.has_value())
@@ -80,8 +80,11 @@ void drft::gen::WorldGenerator::createWorldMapSettingsFromJSON(const std::string
 		}
 		if (worldSettings.HasMember("Dimensions"))
 		{
-			_dimensions.x = worldSettings["Dimensions"].GetArray()[0].GetInt();
-			_dimensions.y = worldSettings["Dimensions"].GetArray()[1].GetInt();
+			const int raw_x = worldSettings["Dimensions"].GetArray()[0].GetInt();
+			const int raw_y = worldSettings["Dimensions"].GetArray()[1].GetInt();
+			const auto worldMapPosition = WorldMapPosition{ raw_x, raw_y };
+			
+			_dimensions = worldMapPosition.toChunkSpace();
 		}
 		if (worldSettings.HasMember("NoiseLayers"))
 		{
@@ -130,11 +133,19 @@ drft::gen::GenerationStatus drft::gen::WorldGenerator::generateChunk(sf::Vector2
 		.seed = _seed
 	};
 
-	for (int subchunk_y = placementArea.top; subchunk_y < placementArea.top + placementArea.height; subchunk_y += SUB_CHUNK_SIZE.y)
+	const Biome* biome = determineBiome(spatial::toTileSpace(coordinate));
+
+	for (int y = placementArea.top; y < placementArea.top + placementArea.height; y++)
 	{
-		for (int subchunk_x = placementArea.left; subchunk_x < placementArea.left + placementArea.width; subchunk_x += SUB_CHUNK_SIZE.x)
+		for (int x = placementArea.left; x < placementArea.left + placementArea.width; x++)
 		{
-			generateSubChunk({ subchunk_x, subchunk_y }, context, pass);
+			const sf::Vector2i position = { x, y };
+			if (pass == 0)
+			{
+				placeTile(position, context);
+				placeLiquid(position, context);
+			}
+			generateEntities(position, pass, context, biome);
 		}
 	}
 
@@ -145,6 +156,12 @@ drft::gen::GenerationStatus drft::gen::WorldGenerator::generateChunk(sf::Vector2
 	}
 
 	return GenerationStatus::Continue;
+}
+
+const Biome* drft::gen::WorldGenerator::getBiome(sf::Vector2i coordinate) const
+{
+	if (!_biomeMap.contains(coordinate.x, coordinate.y)) return nullptr;
+	return _biomeMap.at(coordinate.x, coordinate.y);
 }
 
 void drft::gen::WorldGenerator::generateTerrain()
@@ -262,7 +279,7 @@ void drft::gen::WorldGenerator::fillBiomeMap()
 	{
 		for (int x = 0; x < _dimensions.x; ++x)
 		{
-			if (const Biome* biome = determineBiome({ x*FULL_CHUNK_SIZE.x, y*FULL_CHUNK_SIZE.y }))
+			if (const Biome* biome = determineBiome({ x*CHUNK_SIZE.x, y*CHUNK_SIZE.y }))
 			{
 				_biomeMap.at(x, y) = biome;
 			}
@@ -320,15 +337,6 @@ sf::Vector2i drft::gen::WorldGenerator::getStartingPosition(const std::string& b
 	return spatial::toTileSpace(coordinate);
 }
 
-BiomeIcon drft::gen::WorldGenerator::getBiomeIcon(sf::Vector2i coordinate) const
-{
-	if (const auto* biome = _biomeMap.at(coordinate.x, coordinate.y))
-	{
-		return biome->getIcon();
-	}
-	return BiomeIcon{};
-}
-
 sf::Vector2i drft::gen::WorldGenerator::getDimensions() const
 {
 	return _dimensions;
@@ -363,9 +371,9 @@ float drft::gen::WorldGenerator::getRangeFromPerlin(const std::string& mapName, 
 
 const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i tilePosition) const
 {
-	if (_subchunkBiomeCache.contains(tilePosition))
+	if (_biomeCache.contains(tilePosition))
 	{
-		return _subchunkBiomeCache.at(tilePosition);
+		return _biomeCache.at(tilePosition);
 	}
 
 	std::unordered_map<const Biome*, float> biomeScore;
@@ -404,7 +412,7 @@ const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i tilePosition
 		}
 	}
 
-	_subchunkBiomeCache.emplace(tilePosition, result);
+	_biomeCache.emplace(tilePosition, result);
 	return result;
 }
 
@@ -425,60 +433,6 @@ void drft::gen::WorldGenerator::placeStructures(GenerationContext& context, cons
 	}
 }
 
-void drft::gen::WorldGenerator::generateSubChunk(sf::Vector2i subChunkCoordinate, GenerationContext& context, int passNum) const
-{
-	const Biome* biome = determineBiome(subChunkCoordinate);
-	const auto& entitySlots = biome->getEntitySlots();
-	const auto& entityPacks = biome->getEntityPacks();
-
-	for (int y = subChunkCoordinate.y; y < subChunkCoordinate.y + SUB_CHUNK_SIZE.y; y++)
-	{
-		for (int x = subChunkCoordinate.x; x < subChunkCoordinate.x + SUB_CHUNK_SIZE.x; x++)
-		{
-			const auto position = sf::Vector2i{ x, y };
-
-			if (passNum == 0)
-			{
-				placeTile(position, context);
-				placeLiquid(position, context);
-			}
-			
-			if (context.grid.at(position.x, position.y).contains("liquid"_hs)) continue;
-			if (context.grid.at(position.x, position.y).contains("structure"_hs)) continue;
-
-			for (auto&& [slotName, slot] : entitySlots)
-			{
-				if (!entityPacks.contains(slotName)) continue;
-
-				auto choice = rng::weightedSelection(entityPacks.at(slotName));
-				if (choice < 0) continue;
-				const auto& [entityName, _] = entityPacks.at(slotName)[choice];
-
-				float probability = slot.probability;
-				if (passNum > 0)
-				{
-					// Only apply multipliers after base probabilty has been set
-					for (auto&& multiplier : slot.multipliers)
-					{
-						probability *= multiplier->apply(position, context);
-					}
-				}
-
-				if (rng::percentChance(probability * 100.0))
-				{
-					context.entityPositions[entityName].emplace(position);
-					context.grid.at(position.x, position.y).insert(slotName);
-				}
-				else
-				{
-					context.entityPositions[entityName].erase(position);
-					context.grid.at(position.x, position.y).erase(slotName);
-				}
-			}
-		}
-	}
-}
-
 void drft::gen::WorldGenerator::placeTile(sf::Vector2i position, GenerationContext& context) const
 {
 	context.entityPositions["Tile"].emplace(position);
@@ -492,6 +446,45 @@ void drft::gen::WorldGenerator::placeLiquid(sf::Vector2i position, GenerationCon
 
 	context.grid.at(position.x, position.y).insert("liquid"_hs);
 	context.entityPositions["Water"].emplace(position);
+}
+
+void drft::gen::WorldGenerator::generateEntities(sf::Vector2i position, int pass, GenerationContext& context, const Biome* biome) const
+{
+	if (context.grid.at(position.x, position.y).contains("liquid"_hs)) return;
+	if (context.grid.at(position.x, position.y).contains("structure"_hs)) return;
+
+	const auto& entitySlots = biome->getEntitySlots();
+	const auto& entityPacks = biome->getEntityPacks();
+
+	for (auto&& [slotName, slot] : entitySlots)
+	{
+		if (!entityPacks.contains(slotName)) continue;
+
+		auto choice = rng::weightedSelection(entityPacks.at(slotName));
+		if (choice < 0) continue;
+		const auto& [entityName, _] = entityPacks.at(slotName)[choice];
+
+		float probability = slot.probability;
+		if (pass > 0)
+		{
+			// Only apply multipliers after base probabilty has been set
+			for (auto&& multiplier : slot.multipliers)
+			{
+				probability *= multiplier->apply(position, context);
+			}
+		}
+
+		if (rng::percentChance(probability * 100.0))
+		{
+			context.entityPositions[entityName].emplace(position);
+			context.grid.at(position.x, position.y).insert(slotName);
+		}
+		else
+		{
+			context.entityPositions[entityName].erase(position);
+			context.grid.at(position.x, position.y).erase(slotName);
+		}
+	}
 }
 
 void drft::gen::WorldGenerator::placeEntities(const EntityPositionMap& entities, entt::registry& registry) const
@@ -519,7 +512,7 @@ void drft::gen::WorldGenerator::updateCompletedChunks(sf::Vector2i coordinate) c
 			// prevents the accumulation of unnecessary tag grids
 			_tagGrid->discard(neighbour);
 			// prevents accumulation of unnecessary subchunk biome ptrs
-			clearSubchunkCache(coordinate);
+			eraseFromBiomeCache(coordinate);
 		}
 	}
 }
@@ -527,7 +520,7 @@ void drft::gen::WorldGenerator::updateCompletedChunks(sf::Vector2i coordinate) c
 sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coordinate) const
 {
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
-	sf::IntRect result = { tileOrigin.x, tileOrigin.y, FULL_CHUNK_SIZE.x, FULL_CHUNK_SIZE.y };
+	sf::IntRect result = { tileOrigin.x, tileOrigin.y, CHUNK_SIZE.x, CHUNK_SIZE.y };
 	return result;
 }
 
@@ -552,15 +545,8 @@ void drft::gen::WorldGenerator::initializeGlobalRanges()
 		});
 }
 
-void drft::gen::WorldGenerator::clearSubchunkCache(sf::Vector2i chunkCoordinate) const
+void drft::gen::WorldGenerator::eraseFromBiomeCache(sf::Vector2i coordinate) const
 {
-	const auto tileCoordinate = spatial::toTileSpace(chunkCoordinate);
-	for (int subchunk_y = tileCoordinate.y; subchunk_y < tileCoordinate.y + FULL_CHUNK_SIZE.y; subchunk_y += SUB_CHUNK_SIZE.y)
-	{
-		for (int subchunk_x = tileCoordinate.x; subchunk_x < tileCoordinate.x + FULL_CHUNK_SIZE.x; subchunk_x += SUB_CHUNK_SIZE.x)
-		{
-			_subchunkBiomeCache.erase({ subchunk_x, subchunk_y });
-		}
-	}
+	_biomeCache.erase(spatial::toTileSpace(coordinate));
 }
 

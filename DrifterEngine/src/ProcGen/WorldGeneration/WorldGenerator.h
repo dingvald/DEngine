@@ -28,16 +28,15 @@ namespace drft::gen
 	public:
 		WorldGenerator();
 		void init();
-		void createWorldMapSettingsFromJSON(const std::string& JSONfilename);
+		void createFromJson(const std::string& JSONfilename);
 		// Generates the entire world other than chunks.
 		void generate();
 
 		GenerationStatus generateChunk(sf::Vector2i coordinate, entt::registry& registry) const;
 
-		// Places the generated entities for this chunk into the registry.
+		const Biome* getBiome(sf::Vector2i coordinate) const;
 
 		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
-		BiomeIcon getBiomeIcon(sf::Vector2i coordinate) const;
 		sf::Vector2i getDimensions() const;
 
 		void fixedUpdate(const entt::registry& registry);
@@ -63,15 +62,15 @@ namespace drft::gen
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		const Biome* determineBiome(sf::Vector2i tilePosition) const;
 		void placeStructures(GenerationContext& context, const Biome* biomeType) const;
-		void generateSubChunk(sf::Vector2i subChunkCoordinate, GenerationContext& context, int passNum) const;
 		void finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const;
 		void placeTile(sf::Vector2i position, GenerationContext& context) const;
 		void placeLiquid(sf::Vector2i position, GenerationContext& context) const;
+		void generateEntities(sf::Vector2i position, int pass, GenerationContext& context, const Biome* biome) const;
 		void placeEntities(const EntityPositionMap& entities, entt::registry& registry) const;
 		void updateCompletedChunks(sf::Vector2i coordinate) const;
 		sf::IntRect determinePlacementArea(sf::Vector2i coordinate) const;
 		void initializeGlobalRanges();
-		void clearSubchunkCache(sf::Vector2i chunkCoordinate) const;
+		void eraseFromBiomeCache(sf::Vector2i coordinate) const;
 
 	private:
 		using NoiseMap = spatial::Grid<double>;
@@ -90,7 +89,7 @@ namespace drft::gen
 
 		mutable std::unordered_map<sf::Vector2i, int> _completedChunks;
 		mutable std::unordered_map<sf::Vector2i, GenerationProgress> _currentChunkGenerations;
-		mutable std::unordered_map<sf::Vector2i, const Biome*> _subchunkBiomeCache;
+		mutable std::unordered_map<sf::Vector2i, const Biome*> _biomeCache;
 		mutable TagGridPtr _tagGrid;
 	};
 

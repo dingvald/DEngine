@@ -6,12 +6,11 @@
 #include "Utility/LoadRegistry.h"
 #include "Conversions.h"
 #include "WorldGrid.h"
-#include "WorldMap/WorldMap.h"
 
 using namespace drft::spatial;
 using namespace std::chrono_literals;
 
-static constexpr auto WAIT_TIME = 3ms; // How long to wait for async operations
+static constexpr auto WAIT_TIME = 1ms; // How long to wait for async operations
 
 void drft::spatial::VirtualChunk::setState(ChunkState state)
 {
@@ -31,8 +30,8 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 		setState(ChunkState::Building);
 	}
 
-	auto& worldMap = reg.ctx().get<WorldMap&>();
-	if (worldMap.generateChunk(_coordinate, reg))
+	auto& worldGenerator = reg.ctx().get<gen::WorldGenerator&>();
+	if (worldGenerator.generateChunk(_coordinate, reg) == gen::GenerationStatus::Done)
 	{
 		setState(ChunkState::Built);
 		return ioStatus::Done;
@@ -94,8 +93,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const char*
 	util::copyEntities(reg, _asyncRegistry);
 
 	reg.compact();
-	_asyncRegistry.clear();
-	_asyncRegistry.compact();
+	_asyncRegistry = {};
 	
 	setState(ChunkState::Loaded);
 
@@ -135,7 +133,7 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const char*
 		return ioStatus::Busy;
 	}
 	
-	_asyncRegistry.clear();
+	_asyncRegistry = {};
 
 	setState(ChunkState::Saved);
 

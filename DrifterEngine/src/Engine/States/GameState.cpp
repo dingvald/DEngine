@@ -6,6 +6,7 @@
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Events/RequestStateChange.h"
+#include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include "WorldMap/WorldMap.h"
 
 #pragma region System Includes
@@ -94,14 +95,15 @@ void drft::GameState::init()
 
 	_systems = std::make_unique<system::SystemScheduler>(getContext().registry);
 	_world = std::make_unique<spatial::WorldGrid>();
-	_worldMap = std::make_unique<WorldMap>();
+	_worldGenerator = std::make_unique<gen::WorldGenerator>();
+	_worldMap = std::make_unique<WorldMap>(*_worldGenerator);
 	_factory = std::make_unique<EntityFactory>();
 	_dispatcher = std::make_unique<entt::dispatcher>();
 	
 	connectEventHandlers();
 	setupRegistryContext();
 	importSystems();
-	loadOrCreateWorldMap();
+	loadOrCreateWorldGenerator();
 	loadEntityPrototypes();
 	loadRegistry();
 
@@ -116,19 +118,21 @@ void drft::GameState::connectEventHandlers()
 	_dispatcher->sink<events::RequestStateStackPush>().connect<&GameState::onRequestStatePush>(this);
 }
 
-void drft::GameState::loadOrCreateWorldMap()
+void drft::GameState::loadOrCreateWorldGenerator()
 {
 	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
 	{
 		std::ifstream ifs(GAME_STATE_SAVE_FILENAME.data());
 		{
 			cereal::JSONInputArchive iarchive(ifs);
-			_worldMap->load(iarchive);
+			_worldGenerator->load(iarchive);
 		}
 	}
 	else
 	{
-		_worldMap->create();
+		_worldGenerator->createFromJson("world_generation.json");
+		_worldGenerator->init();
+		_worldGenerator->generate();
 	}
 }
 
@@ -146,7 +150,7 @@ bool drft::GameState::loadOrCreatePlayer()
 	{
 		assert(_factory->has("Player"), "No player prototype found - is JSON loaded?");
 		_player = _factory->build("Player", getContext().registry);
-		auto startingPosition = getContext().registry.ctx().get<WorldMap&>().getStartingPosition("Forest");
+		auto startingPosition = _worldGenerator->getStartingPosition("Forest");
 		_player.patch<PositionComponent>([startingPosition](PositionComponent& pos)
 			{
 				pos.position = startingPosition;
@@ -167,7 +171,8 @@ void drft::GameState::setupRegistryContext()
 
 	getContext().registry.ctx().emplace<system::InputBuffer&>(_inputBuffer);
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(*_world);
-	getContext().registry.ctx().emplace<WorldMap&>(*_worldMap);
+	getContext().registry.ctx().emplace<gen::WorldGenerator&>(*_worldGenerator);
+	getContext().registry.ctx().emplace<WorldMap>(*_worldMap);
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace<TextureAtlas&>(getContext().textures);
 	getContext().registry.ctx().emplace_as<sf::Font&>("terminus"_hs, getContext().fonts.get("Terminus"));
@@ -214,7 +219,7 @@ bool drft::GameState::update(const float dt)
 bool drft::GameState::fixedUpdate()
 {
 	_systems->fixedUpdate();
-	_worldMap->fixedUpdate(getContext().registry);
+	_worldGenerator->fixedUpdate(getContext().registry);
 	return true;
 }
 
@@ -237,7 +242,7 @@ void drft::GameState::onPop()
 		{
 			cereal::JSONOutputArchive oarchive(ofs);
 
-			_worldMap->save(oarchive);
+			_worldGenerator->save(oarchive);
 			_systems->saveAll(oarchive);
 		}
 	}

@@ -184,6 +184,7 @@
     <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.cpp" />
     <ClCompile Include="src\Factory\Factory.cpp" />
     <ClCompile Include="src\ProcGen\ProbabilityMultipliers\ProbabilityMultiplier.cpp" />
+    <ClCompile Include="src\Spatial\WorldMapPosition.cpp" />
     <ClCompile Include="src\Systems\Rendering\SpriteControllerSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\CollisionSystem.cpp" />
     <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
@@ -491,6 +492,7 @@
     <ClInclude Include="src\ProcGen\ProbabilityMultipliers\ProbabilityMultiplier.h" />
     <ClInclude Include="src\Components\SpriteChangeRequestComponent.h" />
     <ClInclude Include="src\Components\SyncedAnimationComponent.h" />
+    <ClInclude Include="src\Spatial\WorldMapPosition.h" />
     <ClInclude Include="src\Systems\Rendering\SpriteControllerSystem.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
     <ClInclude Include="src\Components\Actions\MoveAction.h" />
