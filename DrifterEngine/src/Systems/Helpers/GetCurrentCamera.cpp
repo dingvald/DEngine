@@ -13,7 +13,12 @@ drft::system::CameraInfo drft::system::getCurrentCamera(const entt::registry& re
 		result.position = pos.position;
 		result.viewport = camera.viewport;
 		result.lag = camera.lag;
+		if (camera.target != entt::null)
+		{
+			result.isInitialized = true;
+		}
 	}
+
 	return result;
 }
 

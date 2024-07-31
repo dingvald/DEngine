@@ -15,13 +15,15 @@ using namespace drft::system;
 // TODO: Move save directory to state context
 static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\chunks\\";
 
-static constexpr int ACTIVE_CHUNK_RADIUS = 8;
-static constexpr int TO_SAVE_CHUNK_RADIUS = ACTIVE_CHUNK_RADIUS + 2;
+static constexpr int ACTIVE_CHUNK_RADIUS = 10;
+static constexpr int TO_SAVE_CHUNK_RADIUS = ACTIVE_CHUNK_RADIUS + 10;
 
 
 void drft::system::ChunkManager::onUpdate(const float dt)
 {
 	auto camera = getCurrentCamera(_registry);
+	if (!camera.isInitialized) return;
+
 	sf::Vector2i cameraChunkPosition = spatial::toChunkCoordinate(camera.position);
 
 	updateChunkStates(cameraChunkPosition);
@@ -31,6 +33,8 @@ void drft::system::ChunkManager::onUpdate(const float dt)
 	process(_toSave, SAVE);
 
 	cleanUpChunks(cameraChunkPosition);
+
+	service::DebugInfo::instance().putInfo("Active chunks", std::to_string(_chunks.size()));
 }
 
 void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
@@ -91,11 +95,10 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 			continue;
 		}
 		float distance = spatial::distance(coord, newPosition);
-		if (distance > TO_SAVE_CHUNK_RADIUS)
-		{
-			_toSave.push(coord);
-			chunk.setState(spatial::ChunkState::ToSave);
-		}
+		if (distance < TO_SAVE_CHUNK_RADIUS) [[likely]] continue;
+
+		_toSave.push(coord);
+		chunk.setState(spatial::ChunkState::ToSave);
 	}
 }
 
@@ -104,16 +107,14 @@ void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
 	std::vector<sf::Vector2i> toDelete;
 	for (auto& [coord, chunk] : _chunks)
 	{
-		if (chunk.getState() != spatial::ChunkState::Saved)
-		{
-			continue;
-		}
-		float distance = spatial::distance(coord, newPosition);
-		if (distance > TO_SAVE_CHUNK_RADIUS)
-		{
-			toDelete.push_back(coord);
-		}
+		if (chunk.getState() != spatial::ChunkState::Saved) continue;
+
+		const float distance = spatial::distance(coord, newPosition);
+		if (distance < TO_SAVE_CHUNK_RADIUS) [[likely]] continue;
+
+		toDelete.push_back(coord);
 	}
+
 	auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 	for (auto&& coord : toDelete)
 	{
@@ -127,7 +128,7 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 {
 	if (chunkQueue.empty()) return;
 
-	auto coord = chunkQueue.front();
+	sf::Vector2i coord = chunkQueue.front();
 	auto status = spatial::ioStatus::Busy;
 
 	switch (type)
@@ -146,7 +147,7 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 	if (status == spatial::ioStatus::Busy)
 	{
 		// Send to the back of the queue
-		auto temp = chunkQueue.front();
+		sf::Vector2i temp = chunkQueue.front();
 		chunkQueue.push(temp);
 	}
 	chunkQueue.pop();

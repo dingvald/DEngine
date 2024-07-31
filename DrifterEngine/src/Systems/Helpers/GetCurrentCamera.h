@@ -7,6 +7,7 @@ namespace drft::system
 		sf::Vector2i position;
 		sf::Vector2f lag;
 		sf::FloatRect viewport;
+		bool isInitialized = false;
 	};
 
 	// Assumes only one entity has the camera component
