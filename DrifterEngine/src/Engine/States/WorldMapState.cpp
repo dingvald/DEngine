@@ -230,7 +230,7 @@ void drft::WorldMapState::addMapNote(drft::WorldMapPosition position, size_t ico
 	_mapNotes.notes[position] = { iconIndex, color };
 
 	const auto& VIEW = getContext().window.getView();
-	sf::Vector2f screenPosition = _currentPosition.toFloatSpace();
+	sf::Vector2f screenPosition = spatial::toFloatSpace({ position.x, position.y });
 	sf::IntRect uv = textureAtlas.getUV("simple_tileset"_hs, { 16, 16 }, IconUVs.at(iconIndex));
 	_mapNotes.noteSprites.addSprite(uv, color, screenPosition);
 	_mapNotesDirty = true;
