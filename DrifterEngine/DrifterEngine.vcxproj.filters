@@ -465,9 +465,6 @@
     <ClCompile Include="src\Structures\Shapes\RectangleShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\StructureDecoratorFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ProcGen\PlaceEntities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -477,13 +474,7 @@
     <ClCompile Include="src\Structures\StructureShapeFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\Decorators\WallDecorator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\OpenableSystem.cpp">
@@ -529,6 +520,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Spatial\WorldMapPosition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\StructureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1538,9 +1532,6 @@
     <ClInclude Include="src\Structures\Shapes\RectangleShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\StructureDecoratorFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ProcGen\PlaceEntities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1553,13 +1544,7 @@
     <ClInclude Include="src\Structures\StructureShapeFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\Decorators\WallDecorator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Structures\StructureShapeInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Structures\Decorators\DoorDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\OpenableSystem.h">
@@ -2046,6 +2031,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\WorldMapPosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\StructureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

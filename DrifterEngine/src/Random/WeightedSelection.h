@@ -6,9 +6,9 @@
 namespace drft::rng
 {
 	template<typename T>
-	size_t weightedSelection(const std::vector<std::pair<T, int>>& weightedElements)
+	std::optional<size_t> weightedSelection(const std::vector<std::pair<T, int>>& weightedElements)
 	{
-		if (weightedElements.size() == 0) return -1;
+		if (weightedElements.size() == 0) return std::nullopt;
 		if (weightedElements.size() == 1) return 0;
 
 		int totalWeight = 0;
@@ -28,6 +28,6 @@ namespace drft::rng
 			}
 			index++;
 		}
-		return -1;
+		return std::nullopt;
 	}
 }

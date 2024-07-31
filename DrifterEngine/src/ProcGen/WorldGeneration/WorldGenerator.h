@@ -3,7 +3,7 @@
 #include "Spatial/Grid.h"
 #include "Spatial/AutoGrid.h"
 #include "Utility/stdHashing.h"
-#include "Structures/StructureFactory.h"
+#include "Structures/StructureManager.h"
 #include "Biomes/BiomeRegistry.h"
 #include "Biomes/BiomeZone.h"
 
@@ -32,9 +32,11 @@ namespace drft::gen
 		// Generates the entire world other than chunks.
 		void generate();
 
-		GenerationStatus generateChunk(sf::Vector2i coordinate, entt::registry& registry) const;
+		GenerationStatus generateChunk(sf::Vector2i coordinate, entt::registry& registry);
 
 		const Biome* getBiome(sf::Vector2i coordinate) const;
+
+		void tagArea(sf::IntRect tileArea, entt::id_type tag) const;
 
 		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
 		sf::Vector2i getDimensions() const;
@@ -61,7 +63,6 @@ namespace drft::gen
 		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		const Biome* determineBiome(sf::Vector2i tilePosition) const;
-		void placeStructures(GenerationContext& context, const Biome* biomeType) const;
 		void finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const;
 		void placeTile(sf::Vector2i position, GenerationContext& context) const;
 		void placeLiquid(sf::Vector2i position, GenerationContext& context) const;
@@ -80,9 +81,9 @@ namespace drft::gen
 		unsigned int _seed = 0;
 		sf::Vector2i _dimensions;
 		spatial::Grid<const Biome*> _biomeMap;
-		StructureFactory _structureFactory;
+		StructureManager _structureManager{*this};
 		BiomeRegistry _biomeRegistry;
-		std::unordered_map<sf::Vector2i, sf::IntRect> _globalStructures;
+
 		std::unordered_map<unsigned int, BiomeZone> _zones;
 		std::unordered_map<std::string, rng::NoiseLayer> _noiseLayers;
 		std::unordered_map<std::string, drft::math::Range<float>> _globalRanges;

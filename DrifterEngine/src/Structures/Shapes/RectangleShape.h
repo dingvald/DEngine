@@ -15,7 +15,8 @@ namespace drft
 	private:
 		math::Range<int> _width;
 		math::Range<int> _height;
-		
+		std::unordered_set<entt::id_type> _outlineTags;
+		std::unordered_set<entt::id_type> _fillTags;
 	};
 }
 

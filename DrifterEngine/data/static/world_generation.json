@@ -1,17 +1,17 @@
 {
   "WorldSettings": {
     "Seed": "random",
-    "Dimensions": [80, 50],
+    "Dimensions": [40, 30],
     "NoiseLayers": {
       "Altitude": {
         "Resolution": 4,
-        "Octaves": 4,
+        "Octaves": 6,
         "Lacunarity": 2.5,
         "Gain": 0.5
       },
       "Temperature": {
         "Resolution": 4,
-        "Octaves": 16,
+        "Octaves": 3,
         "Lacunarity": 2.0,
         "Gain": 0.7
       },

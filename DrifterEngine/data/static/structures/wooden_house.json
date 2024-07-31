@@ -3,26 +3,22 @@
     "Wooden House": {
       "BaseShape": {
         "Rectangle": {
-          "Width": [ 5, 9 ],
-          "Height": [ 5, 9 ]
+          "width": [ 5, 9 ],
+          "height": [ 5, 9 ],
+          "outline": [ "wall" ],
+          "fill": [ "floor", "room" ]
         }
       },
       "Decorators": [
         {
-          "Wall": {
-            "Integrity": 1.0,
-            "Entities": [
-              [ "Barricade", 1 ]
-            ]
-          }
+          "tag": "wall",
+          "entity": "Barricade",
+          "probability": 1.0
         },
         {
-          "Door": {
-            "Number": [ 1, 2 ],
-            "Entities": [
-              ["Wood Door", 1]
-            ]
-          }
+          "tag": "wall",
+          "entity": "Wood Door",
+          "number": [1, 2]
         }
       ]
     }

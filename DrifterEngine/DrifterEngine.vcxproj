@@ -191,7 +191,6 @@
     <ClCompile Include="src\Systems\Gameplay\HealingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ConsumableSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenableSystem.cpp" />
-    <ClCompile Include="src\Structures\Decorators\DoorDecorator.cpp" />
     <ClCompile Include="src\ProcGen\PlaceEntities.cpp" />
     <ClCompile Include="src\Structures\Shapes\RectangleShape.cpp" />
     <ClCompile Include="src\Biomes\BiomeRegistry.cpp" />
@@ -378,13 +377,12 @@
     <ClCompile Include="src\Structures\StructureBlueprint.cpp" />
     <ClCompile Include="src\Structures\StructureInstance.cpp" />
     <ClCompile Include="src\Structures\StructureDecorator.cpp" />
-    <ClCompile Include="src\Structures\StructureDecoratorFactory.cpp" />
     <ClCompile Include="src\Structures\StructureBaseShape.cpp" />
     <ClCompile Include="src\Structures\StructureShapeFactory.cpp" />
-    <ClCompile Include="src\Structures\Decorators\WallDecorator.cpp" />
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
     <ClCompile Include="src\Utility\TextureAtlas.cpp" />
     <ClCompile Include="src\Systems\Rendering\SyncedAnimationSystem.cpp" />
+    <ClCompile Include="src\Structures\StructureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Audio.hpp" />
@@ -543,7 +541,6 @@
     <ClInclude Include="src\Systems\Gameplay\HealingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\ConsumableSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\OpenableSystem.h" />
-    <ClInclude Include="src\Structures\Decorators\DoorDecorator.h" />
     <ClInclude Include="src\ProcGen\PlaceEntities.h" />
     <ClInclude Include="src\Random\WeightedSelection.h" />
     <ClInclude Include="src\Structures\Shapes\RectangleShape.h" />
@@ -885,13 +882,12 @@
     <ClInclude Include="src\Structures\StructureBlueprint.h" />
     <ClInclude Include="src\Structures\StructureInstance.h" />
     <ClInclude Include="src\Structures\StructureDecorator.h" />
-    <ClInclude Include="src\Structures\StructureDecoratorFactory.h" />
     <ClInclude Include="src\Structures\StructureBaseShape.h" />
     <ClInclude Include="src\Structures\StructureShapeFactory.h" />
-    <ClInclude Include="src\Structures\Decorators\WallDecorator.h" />
     <ClInclude Include="src\Structures\StructureShapeInstance.h" />
     <ClInclude Include="src\Utility\TextureAtlas.h" />
     <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h" />
+    <ClInclude Include="src\Structures\StructureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\world_generation.json" />

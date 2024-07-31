@@ -5,43 +5,59 @@
 #include "Spatial/Helpers.h"
 #include "Structures/StructureShapeInstance.h"
 
+using namespace entt::literals;
+
 void drft::RectangleShape::createFromJSON(const rapidjson::Value& json)
 {
-	if (json.HasMember("Width"))
+	if (json.HasMember("width"))
 	{
 		int min = 1;
 		int max = 1;
-		if (json["Width"].IsArray())
+		if (json["width"].IsArray())
 		{
-			min = json["Width"].GetArray()[0].GetInt();
-			max = json["Width"].GetArray()[1].GetInt();
+			min = json["width"].GetArray()[0].GetInt();
+			max = json["width"].GetArray()[1].GetInt();
 			
 		}
-		else if (json["Width"].IsInt())
+		else if (json["width"].IsInt())
 		{
-			min = json["Width"].GetInt();
+			min = json["width"].GetInt();
 			max = min;
 		}
 		_width.setMin(min);
 		_width.setMax(max);
 	}
-	if (json.HasMember("Height"))
+	if (json.HasMember("height"))
 	{
 		int min = 1;
 		int max = 1;
-		if (json["Height"].IsArray())
+		if (json["height"].IsArray())
 		{
-			min = json["Height"].GetArray()[0].GetInt();
-			max = json["Height"].GetArray()[1].GetInt();
+			min = json["height"].GetArray()[0].GetInt();
+			max = json["height"].GetArray()[1].GetInt();
 
 		}
-		else if (json["Height"].IsInt())
+		else if (json["height"].IsInt())
 		{
-			min = json["Height"].GetInt();
+			min = json["height"].GetInt();
 			max = min;
 		}
 		_height.setMin(min);
 		_height.setMax(max);
+	}
+	if (json.HasMember("outline"))
+	{
+		for (auto&& tag : json["outline"].GetArray())
+		{
+			_outlineTags.insert(entt::hashed_string{ tag.GetString() });
+		}
+	}
+	if (json.HasMember("fill"))
+	{
+		for (auto&& tag : json["fill"].GetArray())
+		{
+			_fillTags.insert(entt::hashed_string{ tag.GetString() });
+		}
 	}
 }
 
@@ -53,16 +69,20 @@ void drft::RectangleShape::doGenerate(StructureShapeInstance& shape)
 	{
 		for (int x = 0; x < width; ++x)
 		{
-			shape.setBit({ x, y }, StructureBit::Reserved);
-			if (y == 0 || x == 0
-				|| y == height - 1 || x == width - 1)
+			shape.setTag("reserved"_hs, {x, y});
+			if (y == 0 || x == 0 || y == height - 1 || x == width - 1)
 			{
-				shape.setBit({ x, y }, StructureBit::Wall);
+				for (auto&& tag : _outlineTags)
+				{
+					shape.setTag(tag, { x, y });
+				}
 			}
 			else
 			{
-				shape.setBit({ x, y }, StructureBit::Floor);
-				shape.setBit({ x, y }, StructureBit::Room);
+				for (auto&& tag : _fillTags)
+				{
+					shape.setTag(tag, { x, y });
+				}
 			}
 		}
 	}

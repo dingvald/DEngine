@@ -16,8 +16,10 @@ namespace drft
 		StructureInstance(std::unique_ptr<StructureShapeInstance> shape);
 		void stamp(sf::Vector2i tileOrigin, gen::GenerationContext& context) const;
 
+		sf::IntRect getArea() const;
+
 	private:
-		sf::Vector2i _dimensions;
+		sf::IntRect _area;
 		std::unique_ptr<StructureShapeInstance> _shape;
 	};
 }

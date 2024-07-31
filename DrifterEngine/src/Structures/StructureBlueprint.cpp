@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "StructureBlueprint.h"
 #include "StructureInstance.h"
-#include "StructureDecoratorFactory.h"
 #include "StructureShapeFactory.h"
 
 drft::StructureBlueprint::StructureBlueprint(std::string name)
@@ -37,13 +36,9 @@ void drft::StructureBlueprint::createFromJSON(const rapidjson::Value & json)
 		}
 		for (auto&& decorator : json["Decorators"].GetArray())
 		{
-			auto decoratorObj = decorator.GetObject().MemberBegin();
-			auto decoratorName = decoratorObj->name.GetString();
-			auto decoratorInstance = StructureDecoratorFactory::build(decoratorName);
-			if (!decoratorInstance) continue;
-
-			decoratorInstance->createFromJSON(decoratorObj->value);
-			_decorators.emplace_back(std::move(decoratorInstance));
+			StructureDecorator newDecorator;
+			newDecorator.createFromJSON(decorator);
+			_decorators.emplace_back(std::move(newDecorator));
 		}
 	}
 }
@@ -53,7 +48,7 @@ drft::StructureInstancePtr drft::StructureBlueprint::build() const
 	auto shapeInstance = _baseShape->generate();
 	for (auto&& decorator : _decorators)
 	{
-		decorator->apply(*shapeInstance);
+		decorator.apply(*shapeInstance);
 	}
 	return std::make_unique<StructureInstance>(std::move(shapeInstance));
 }

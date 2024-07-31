@@ -6,10 +6,29 @@ void drft::StructureShapeInstance::addEntity(const std::string& name, sf::Vector
 	_entityPositions[name].push_back(position);
 }
 
+void drft::StructureShapeInstance::removeEntities(sf::Vector2i position)
+{
+	for (auto&& [_, positions] : _entityPositions)
+	{
+		auto it = positions.begin();
+		while (it != positions.end())
+		{
+			if (*it == position)
+			{
+				it = positions.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
+}
+
 void drft::StructureShapeInstance::clearPosition(sf::Vector2i position)
 {
-	_bitGrid.at(position.x, position.y).reset();
-	for (auto&& [bit, positions] : _bitPositions)
+	_tagGrid.at(position.x, position.y).clear();
+	for (auto&& [bit, positions] : _tagPositions)
 	{
 		positions.erase(position);
 	}
@@ -35,37 +54,37 @@ const std::unordered_map<std::string, std::vector<sf::Vector2i>>& drft::Structur
 	return _entityPositions;
 }
 
-bool drft::StructureShapeInstance::anyBits(sf::Vector2i position) const
+bool drft::StructureShapeInstance::hasAnyTag(sf::Vector2i position) const
 {
-	return _bitGrid.at(position.x, position.y).any();
+	return !_tagGrid.at(position.x, position.y).empty();
 }
 
-bool drft::StructureShapeInstance::checkBit(sf::Vector2i position, StructureBit bit) const
+bool drft::StructureShapeInstance::hasTag(entt::id_type tag, sf::Vector2i position) const
 {
-	return _bitGrid.at(position.x, position.y).test((size_t)bit);
+	return _tagGrid.at(position.x, position.y).contains(tag);
 }
 
-void drft::StructureShapeInstance::setBit(sf::Vector2i position, StructureBit bit)
+void drft::StructureShapeInstance::setTag(entt::id_type tag, sf::Vector2i position)
 {
-	_bitGrid.at(position.x, position.y).set((size_t)bit);
-	_bitPositions[bit].insert(position);
+	_tagGrid.at(position.x, position.y).insert(tag);
+	_tagPositions[tag].insert(position);
 }
 
-void drft::StructureShapeInstance::clearBit(sf::Vector2i position, StructureBit bit)
+void drft::StructureShapeInstance::clearTag(entt::id_type tag, sf::Vector2i position)
 {
-	_bitGrid.at(position.x, position.y).set((size_t)bit, false);
-	if (hasBit(bit))
+	_tagGrid.at(position.x, position.y).erase(tag);
+	if (hasTag(tag))
 	{
-		_bitPositions.at(bit).erase(position);
+		_tagPositions.at(tag).erase(position);
 	}
 }
 
-bool drft::StructureShapeInstance::hasBit(StructureBit bit) const
+bool drft::StructureShapeInstance::hasTag(entt::id_type type) const
 {
-	return _bitPositions.contains(bit);
+	return _tagPositions.contains(type);
 }
 
-const std::unordered_set<sf::Vector2i>& drft::StructureShapeInstance::getPositionsFor(StructureBit bit) const
+const std::unordered_set<sf::Vector2i>& drft::StructureShapeInstance::getPositionsFor(entt::id_type type) const
 {
-	return _bitPositions.at(bit);
+	return _tagPositions.at(type);
 }

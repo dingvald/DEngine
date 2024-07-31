@@ -41,7 +41,6 @@ void drft::gen::WorldGenerator::init()
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
 
 	_biomeRegistry.createBiomesFromJSON(BIOME_FOLDER_PATH);
-	_structureFactory.createStructureBlueprintsFromJSON(STRUCTURE_FOLDER_PATH);
 
 	initializeGlobalRanges();
 }
@@ -114,12 +113,14 @@ void drft::gen::WorldGenerator::generate()
 
 }
 
-drft::gen::GenerationStatus drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate, entt::registry& registry) const
+drft::gen::GenerationStatus drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate, entt::registry& registry)
 {
 	if (!_currentChunkGenerations.contains(coordinate))
 	{
 		_currentChunkGenerations.emplace(coordinate, GenerationProgress{});
 	}
+
+	_structureManager.scanForStuctures(coordinate);
 
 	const sf::IntRect placementArea = determinePlacementArea(coordinate);
 	auto& entityPositions = _currentChunkGenerations.at(coordinate).entities;
@@ -132,6 +133,11 @@ drft::gen::GenerationStatus drft::gen::WorldGenerator::generateChunk(sf::Vector2
 		.noiseLayers = _noiseLayers,
 		.seed = _seed
 	};
+
+	if (auto structure = _structureManager.getStructureAt(coordinate))
+	{
+		structure->stamp(spatial::toTileSpace(coordinate), context);
+	}
 
 	const Biome* biome = determineBiome(spatial::toTileSpace(coordinate));
 
@@ -162,6 +168,17 @@ const Biome* drft::gen::WorldGenerator::getBiome(sf::Vector2i coordinate) const
 {
 	if (!_biomeMap.contains(coordinate.x, coordinate.y)) return nullptr;
 	return _biomeMap.at(coordinate.x, coordinate.y);
+}
+
+void drft::gen::WorldGenerator::tagArea(sf::IntRect tileArea, entt::id_type tag) const
+{
+	for (int y = tileArea.top; y <= tileArea.top + tileArea.height; ++y)
+	{
+		for (int x = tileArea.left; x <= tileArea.left + tileArea.width; ++x)
+		{
+			_tagGrid->at(x, y).insert(tag);
+		}
+	}
 }
 
 void drft::gen::WorldGenerator::generateTerrain()
@@ -276,10 +293,12 @@ void drft::gen::WorldGenerator::generateZones()
 void drft::gen::WorldGenerator::fillBiomeMap()
 {
 	for (int y = 0; y < _dimensions.y; ++y)
+
 	{
 		for (int x = 0; x < _dimensions.x; ++x)
 		{
-			if (const Biome* biome = determineBiome({ x*CHUNK_SIZE.x, y*CHUNK_SIZE.y }))
+			const sf::Vector2i tilePosition = { x * CHUNK_SIZE.x, y * CHUNK_SIZE.y };
+			if (const Biome* biome = determineBiome(tilePosition))
 			{
 				_biomeMap.at(x, y) = biome;
 			}
@@ -416,23 +435,6 @@ const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i tilePosition
 	return result;
 }
 
-void drft::gen::WorldGenerator::placeStructures(GenerationContext& context, const Biome* biome) const
-{
-	for (auto&& [name, probability] : biome->getStructureProbabilities())
-	{
-		if (!rng::percentChance(probability * 100.0)) continue;
-
-		if (auto structure = _structureFactory.build(name))
-		{
-			// TODO: Find spot that fits structure... (anywhere with no liquid?) - Random for now
-			const int randx = rng::RandomNumberGenerator::intInRange(context.area.left, context.area.left + context.area.width);
-			const int randy = rng::RandomNumberGenerator::intInRange(context.area.top, context.area.top + context.area.height);
-
-			structure->stamp({ randx, randy }, context);
-		}
-	}
-}
-
 void drft::gen::WorldGenerator::placeTile(sf::Vector2i position, GenerationContext& context) const
 {
 	context.entityPositions["Tile"].emplace(position);
@@ -461,8 +463,8 @@ void drft::gen::WorldGenerator::generateEntities(sf::Vector2i position, int pass
 		if (!entityPacks.contains(slotName)) continue;
 
 		auto choice = rng::weightedSelection(entityPacks.at(slotName));
-		if (choice < 0) continue;
-		const auto& [entityName, _] = entityPacks.at(slotName)[choice];
+		if (!choice.has_value()) continue;
+		const auto& [entityName, _] = entityPacks.at(slotName)[choice.value()];
 
 		float probability = slot.probability;
 		if (pass > 0)

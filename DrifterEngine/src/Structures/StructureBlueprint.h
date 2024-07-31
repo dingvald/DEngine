@@ -18,10 +18,9 @@ namespace drft
 		StructureInstancePtr build() const;
 
 	private:
-		using DecorationPtr = std::unique_ptr<StructureDecorator>;
 		std::string _name;
 		BaseShapePtr _baseShape;
-		std::vector<DecorationPtr> _decorators;
+		std::vector<StructureDecorator> _decorators;
 	};
 }
 
