@@ -41,11 +41,11 @@ namespace drft::spatial
 		ChunkState getState() const;
 
 		ioStatus build(entt::registry& reg);
-		ioStatus save(entt::registry& reg, const char* filepath);
-		ioStatus load(entt::registry& reg, const char* filepath);
+		ioStatus save(entt::registry& reg, const std::filesystem::path& filename) const;
+		ioStatus load(entt::registry& reg, const std::filesystem::path& filename) const;
 
-		ioStatus asyncLoad(entt::registry& reg, const char* filepath);
-		ioStatus asyncSave(entt::registry& reg, const char* filepath);
+		ioStatus asyncLoad(entt::registry& reg, const std::filesystem::path& filename);
+		ioStatus asyncSave(entt::registry& reg, const std::filesystem::path& filename);
 
 		std::string toString() const;
 
@@ -53,8 +53,8 @@ namespace drft::spatial
 		void setFuture(std::shared_future<bool> future);
 		const std::shared_future<bool>& getFuture() const;
 
-		bool saveChunkToFile(const char* filepath) const;
-		bool loadChunkFromFile(const char* filepath);
+		bool saveChunkToFile(const std::filesystem::path& filename) const;
+		bool loadChunkFromFile(const std::filesystem::path& filename);
 
 	private:
 		sf::Vector2i _coordinate;

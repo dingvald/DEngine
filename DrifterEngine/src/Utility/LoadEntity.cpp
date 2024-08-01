@@ -3,10 +3,10 @@
 #include "LoadRegistry.h"
 #include "CopyEntity.h"
 
-entt::handle drft::util::loadEntityFromFile(entt::handle entity, std::string dirPath, std::string filename, SerializeOption option)
+void drft::util::loadEntityFromFile(entt::handle entity, const std::filesystem::path& path)
 {
 	entt::registry temp;
-	util::loadRegistryFromFile(temp, dirPath, filename, option);
+	util::loadRegistryFromFile(temp, path);
 	if (temp.size() != 1)
 	{
 		throw std::exception("The registry should have exactly one entity. Use loadRegistryFromFile() instead.");
@@ -16,6 +16,4 @@ entt::handle drft::util::loadEntityFromFile(entt::handle entity, std::string dir
 		{
 			util::copyEntity(entity.entity(), ent, *(entity.registry()), temp);
 		});
-	
-	return entity;
 }

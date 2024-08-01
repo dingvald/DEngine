@@ -76,12 +76,15 @@
 
 
 // TODO: Move save directory to state context
-static constexpr std::string_view SAVE_DIRECTORY = ".\\data\\savegame\\";
-static constexpr std::string_view PLAYER_FILE_NAME = "playerSaveData";
-static constexpr std::string_view GAME_STATE_SAVE_FILENAME = ".\\data\\savegame\\gamestate.json"; // file extension added because it will always be json
+static const std::filesystem::path WORKING_DIRECTORY = ".";
+static const std::filesystem::path SAVE_DIRECTORY = WORKING_DIRECTORY / "data" / "savegame";
+static const std::filesystem::path STATIC_DATA_DIRECTORY = WORKING_DIRECTORY / "data" / "static";
 
-static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
-static const std::filesystem::path ENTITIES_FOLDER_PATH = STATIC_DATA_PATH.string() + "entities";
+static const std::filesystem::path PLAYER_SAVE_FILE_PATH = SAVE_DIRECTORY / "playerSaveData.json";
+static const std::filesystem::path GAMESTATE_SAVE_FILE_PATH = SAVE_DIRECTORY / "gamestate.json";
+static const std::filesystem::path MAIN_REGISTRY_FILE_PATH = SAVE_DIRECTORY / "registry.json";
+
+static const std::filesystem::path ENTITIES_DIRECTORY = STATIC_DATA_DIRECTORY / "entities";
 
 drft::GameState::GameState(StateStack& stack, StateContext& context) 
 	: State(stack, context)
@@ -120,9 +123,9 @@ void drft::GameState::connectEventHandlers()
 
 void drft::GameState::loadOrCreateWorldGenerator()
 {
-	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
+	if (std::filesystem::exists(GAMESTATE_SAVE_FILE_PATH))
 	{
-		std::ifstream ifs(GAME_STATE_SAVE_FILENAME.data());
+		std::ifstream ifs(GAMESTATE_SAVE_FILE_PATH);
 		{
 			cereal::JSONInputArchive iarchive(ifs);
 			_worldGenerator->load(iarchive);
@@ -131,19 +134,18 @@ void drft::GameState::loadOrCreateWorldGenerator()
 	else
 	{
 		_worldGenerator->createFromJson("world_generation.json");
-		_worldGenerator->init();
-		_worldGenerator->generate();
 	}
+
+	_worldGenerator->init();
+	_worldGenerator->generate();
 }
 
 bool drft::GameState::loadOrCreatePlayer()
 {
-	std::string playerDataPath = std::string(SAVE_DIRECTORY.data()) + PLAYER_FILE_NAME.data() + ".json";
-
-	if (std::filesystem::exists(playerDataPath))
+	if (std::filesystem::exists(PLAYER_SAVE_FILE_PATH))
 	{
 		_player = { getContext().registry, getContext().registry.create()};
-		_player = util::loadEntityFromFile(_player, SAVE_DIRECTORY.data(), PLAYER_FILE_NAME.data(), util::SerializeOption::JSON);
+		util::loadEntityFromFile(_player, PLAYER_SAVE_FILE_PATH);
 		return false;
 	}
 	else
@@ -162,7 +164,7 @@ bool drft::GameState::loadOrCreatePlayer()
 
 void drft::GameState::loadEntityPrototypes()
 {
-	_factory->loadPrototypes(ENTITIES_FOLDER_PATH);
+	_factory->loadPrototypes(ENTITIES_DIRECTORY);
 }
 
 void drft::GameState::setupRegistryContext()
@@ -182,9 +184,9 @@ void drft::GameState::setupRegistryContext()
 
 void drft::GameState::loadRegistry()
 {
-	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
+	if (std::filesystem::exists(GAMESTATE_SAVE_FILE_PATH))
 	{
-		util::loadRegistryFromFile(getContext().registry, SAVE_DIRECTORY.data(), "registry", util::SerializeOption::JSON);
+		util::loadRegistryFromFile(getContext().registry, MAIN_REGISTRY_FILE_PATH);
 	}
 }
 
@@ -236,9 +238,9 @@ void drft::GameState::onPop()
 	// Save game state
 	if (isPlayerAlive)
 	{
-		util::saveEntityToFile(_player, SAVE_DIRECTORY.data(), PLAYER_FILE_NAME.data(), util::SerializeOption::JSON);
+		util::saveEntityToFile(_player, PLAYER_SAVE_FILE_PATH);
 
-		std::ofstream ofs{ GAME_STATE_SAVE_FILENAME.data() };
+		std::ofstream ofs{ GAMESTATE_SAVE_FILE_PATH };
 		{
 			cereal::JSONOutputArchive oarchive(ofs);
 
@@ -248,7 +250,7 @@ void drft::GameState::onPop()
 	}
 	if (isPlayerAlive)
 	{
-		util::saveRegistryToFile(getContext().registry, SAVE_DIRECTORY.data(), "registry", util::SerializeOption::JSON);
+		util::saveRegistryToFile(getContext().registry, MAIN_REGISTRY_FILE_PATH);
 	}
 	
 	getContext().registry = entt::registry{}; // There was a bug when calling registry::clear
@@ -317,9 +319,9 @@ void drft::GameState::importSystems()
 	_systems->add<StaminaSystem>();
 
 
-	if (std::filesystem::exists(GAME_STATE_SAVE_FILENAME.data()))
+	if (std::filesystem::exists(GAMESTATE_SAVE_FILE_PATH))
 	{
-		std::ifstream ifs(GAME_STATE_SAVE_FILENAME.data());
+		std::ifstream ifs(GAMESTATE_SAVE_FILE_PATH);
 		{
 			cereal::JSONInputArchive iarchive(ifs);
 			_systems->loadAll(iarchive);

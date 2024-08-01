@@ -27,6 +27,7 @@ namespace drft::system
 		void updateChunkStates(sf::Vector2i aroundNewPosition);
 		void cleanUpChunks(sf::Vector2i newPosition);
 		void process(std::queue<sf::Vector2i>& chunkQueue, ProcessType type);
+		std::filesystem::path buildChunkFilename(const spatial::VirtualChunk& chunk) const;
 
 	private:
 		std::unordered_map<sf::Vector2i, spatial::VirtualChunk> _chunks;

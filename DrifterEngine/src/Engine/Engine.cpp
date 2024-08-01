@@ -28,6 +28,7 @@ static const unsigned int WINDOW_HEIGHT = 720;
 static const float DEBUG_X_POSITION = WINDOW_WIDTH - 256;
 static const float DEBUG_Y_POSITION = 16;
 
+
 drft::Engine::Engine()
 	: _window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Drifter Engine")
 	, _showDebug(false)

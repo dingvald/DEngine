@@ -1154,9 +1154,6 @@
     <ClInclude Include="src\Utility\LoadEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\SerializationOptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>

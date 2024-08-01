@@ -7,6 +7,8 @@
 #include "Conversions.h"
 #include "WorldGrid.h"
 
+#pragma optimize("", off)
+
 using namespace drft::spatial;
 using namespace std::chrono_literals;
 
@@ -41,10 +43,9 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	return ioStatus::Busy;
 }
 
-ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const char* filepath)
+ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const std::filesystem::path& filename) const
 {
 	entt::registry temp;
-	std::string filename = this->toString();
 
 	const auto& grid = reg.ctx().get<spatial::WorldGrid&>();
 	const auto entities = grid.getAllEntities(this->_coordinate);
@@ -58,28 +59,26 @@ ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const char* file
 
 	if (!temp.empty())
 	{
-		util::saveRegistryToFile(temp, filepath, filename);
+		util::saveRegistryToFile(temp, filename);
 	}
 	
 	return ioStatus::Done;
 }
 
-ioStatus drft::spatial::VirtualChunk::load(entt::registry& reg, const char* filepath)
+ioStatus drft::spatial::VirtualChunk::load(entt::registry& reg, const std::filesystem::path& filename) const
 {
 	entt::registry temp;
-	std::string filename = this->toString();
-	util::loadRegistryFromFile(temp, filepath, filename);
-
+	util::loadRegistryFromFile(temp, filename);
 	util::copyEntities(reg, temp);
 
 	return ioStatus::Done;
 }
 
-ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const char* filepath)
+ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::filesystem::path& filename)
 {
 	if (getState() == ChunkState::ToLoad)
 	{
-		setFuture(std::async(std::launch::async, &VirtualChunk::loadChunkFromFile, this, filepath));
+		setFuture(std::async(std::launch::async, &VirtualChunk::loadChunkFromFile, this, filename));
 		std::cout << "Loading " << toString() << std::endl;
 		setState(ChunkState::Loading);
 	}
@@ -100,7 +99,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const char*
 	return ioStatus::Done;
 }
 
-ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const char* filepath)
+ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::filesystem::path& filename)
 {
 	if (getState() == ChunkState::ToSave)
 	{
@@ -122,7 +121,7 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const char*
 		}
 		reg.compact();
 		
-		setFuture(std::async(std::launch::async, &VirtualChunk::saveChunkToFile, this, filepath));
+		setFuture(std::async(std::launch::async, &VirtualChunk::saveChunkToFile, this, filename));
 		std::cout << "Saving " << toString() << std::endl;
 		setState(ChunkState::Saving);
 	}
@@ -150,19 +149,15 @@ const std::shared_future<bool>& VirtualChunk::getFuture() const
 	return this->_future;
 }
 
-bool drft::spatial::VirtualChunk::saveChunkToFile(const char* filepath) const
+bool drft::spatial::VirtualChunk::saveChunkToFile(const std::filesystem::path& filename) const
 {
-	std::string filename = this->toString();
-	util::saveRegistryToFile(_asyncRegistry, filepath, filename);
-
+	util::saveRegistryToFile(_asyncRegistry, filename);
 	return true;
 }
 
-bool drft::spatial::VirtualChunk::loadChunkFromFile(const char* filepath)
+bool drft::spatial::VirtualChunk::loadChunkFromFile(const std::filesystem::path& filename)
 {
-	std::string filename = this->toString();
-	util::loadRegistryFromFile(_asyncRegistry, filepath, filename);
-
+	util::loadRegistryFromFile(_asyncRegistry, filename);
 	return true;
 }
 

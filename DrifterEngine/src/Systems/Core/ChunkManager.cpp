@@ -12,8 +12,9 @@
 
 using namespace drft::system;
 
-// TODO: Move save directory to state context
-static constexpr std::string_view CHUNK_SAVE_PATH = ".\\data\\savegame\\chunks\\";
+static const std::filesystem::path WORKING_DIRECTORY = ".";
+static const std::filesystem::path SAVE_DIRECTORY = WORKING_DIRECTORY / "data" / "savegame";
+static const std::filesystem::path CHUNK_DIRECTORY = SAVE_DIRECTORY / "chunks";
 
 static constexpr int ACTIVE_CHUNK_RADIUS = 10;
 static constexpr int TO_SAVE_CHUNK_RADIUS = ACTIVE_CHUNK_RADIUS + 10;
@@ -41,7 +42,7 @@ void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
 {
 	for (auto& [_, chunk] : _chunks)
 	{
-		chunk.save(_registry, CHUNK_SAVE_PATH.data());
+		chunk.save(_registry, buildChunkFilename(chunk));
 	}
 }
 
@@ -61,7 +62,7 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 		switch (chunk.getState())
 		{
 		case spatial::ChunkState::None:
-			if (std::filesystem::exists(CHUNK_SAVE_PATH.data() + chunk.toString() + ".dat"))
+			if (std::filesystem::exists(buildChunkFilename(chunk)))
 			{
 				chunk.setState(spatial::ChunkState::ToLoad);
 				_toLoad.push(coord);
@@ -130,17 +131,18 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 
 	sf::Vector2i coord = chunkQueue.front();
 	auto status = spatial::ioStatus::Busy;
+	spatial::VirtualChunk& chunk = _chunks.at(coord);
 
 	switch (type)
 	{
 	case BUILD:
-		status = _chunks.at(coord).build(_registry);
+		status = chunk.build(_registry);
 		break;
 	case SAVE:
-		status = _chunks.at(coord).asyncSave(_registry, CHUNK_SAVE_PATH.data());
+		status = chunk.asyncSave(_registry, buildChunkFilename(chunk));
 		break;
 	case LOAD:
-		status = _chunks.at(coord).asyncLoad(_registry, CHUNK_SAVE_PATH.data());
+		status = chunk.asyncLoad(_registry, buildChunkFilename(chunk));
 		break;
 	}
 
@@ -151,4 +153,10 @@ void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, P
 		chunkQueue.push(temp);
 	}
 	chunkQueue.pop();
+}
+
+std::filesystem::path drft::system::ChunkManager::buildChunkFilename(const spatial::VirtualChunk& chunk) const
+{
+	std::filesystem::path chunkFileName = CHUNK_DIRECTORY / chunk.toString();
+	return chunkFileName += ".dat";
 }
