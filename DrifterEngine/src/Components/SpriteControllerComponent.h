@@ -11,7 +11,7 @@
 
 struct SpriteControllerComponent
 {
-private:
+public:
 	struct StateNode
 	{
 		std::vector<SpriteOptions> frames;
@@ -27,7 +27,7 @@ private:
 		}
 	};
 public:
-	std::unordered_map<entt::id_type, StateNode> states;
+	std::unordered_map<entt::id_type, std::variant<entt::id_type, StateNode>> states;
 
 private:
 	friend class ComponentMetaBinder;
@@ -39,55 +39,61 @@ private:
 
 		for (auto&& [name, value] : json["states"].GetObject())
 		{
-			StateNode node;
-			if (value.HasMember("frames"))
+			if (value.IsString())
 			{
-				
-				for (auto&& val : value["frames"].GetArray())
+				spriteController.states.emplace(entt::hashed_string(name.GetString()), entt::hashed_string(value.GetString()));
+			}
+			else if (value.IsObject())
+			{
+				StateNode node;
+				if (value.HasMember("frames"))
 				{
-					SpriteOptions frame;
-					auto obj = val.GetObject();
-					if (obj.HasMember("uv_coords"))
+					for (auto&& val : value["frames"].GetArray())
 					{
-						frame.uvCoords = sf::Vector2i{};
-						frame.uvCoords.value().x = obj["uv_coords"].GetArray()[0].GetInt();
-						frame.uvCoords.value().y = obj["uv_coords"].GetArray()[1].GetInt();
-					}
-					if (obj.HasMember("texture"))
-					{
-						frame.texture = entt::hashed_string(obj["texture"].GetString());
-					}
-					if (obj.HasMember("uv_size"))
-					{
-						frame.uvSize = { 0,0 };
-						frame.uvSize.value().x = obj["uv_size"].GetArray()[0].GetInt();
-						frame.uvSize.value().y = obj["uv_size"].GetArray()[1].GetInt();
-					}
-					if (obj.HasMember("layer"))
-					{
-						frame.layer = obj["layer"].GetInt();
-					}
-					if (obj.HasMember("color"))
-					{
-						frame.color = sf::Color{};
-						frame.color.value().r = obj["color"].GetArray()[0].GetInt();
-						frame.color.value().g = obj["color"].GetArray()[1].GetInt();
-						frame.color.value().b = obj["color"].GetArray()[2].GetInt();
-					}
+						SpriteOptions frame;
+						auto obj = val.GetObject();
+						if (obj.HasMember("uv_coords"))
+						{
+							frame.uvCoords = sf::Vector2i{};
+							frame.uvCoords.value().x = obj["uv_coords"].GetArray()[0].GetInt();
+							frame.uvCoords.value().y = obj["uv_coords"].GetArray()[1].GetInt();
+						}
+						if (obj.HasMember("texture"))
+						{
+							frame.texture = entt::hashed_string(obj["texture"].GetString());
+						}
+						if (obj.HasMember("uv_size"))
+						{
+							frame.uvSize = { 0,0 };
+							frame.uvSize.value().x = obj["uv_size"].GetArray()[0].GetInt();
+							frame.uvSize.value().y = obj["uv_size"].GetArray()[1].GetInt();
+						}
+						if (obj.HasMember("layer"))
+						{
+							frame.layer = obj["layer"].GetInt();
+						}
+						if (obj.HasMember("color"))
+						{
+							frame.color = sf::Color{};
+							frame.color.value().r = obj["color"].GetArray()[0].GetInt();
+							frame.color.value().g = obj["color"].GetArray()[1].GetInt();
+							frame.color.value().b = obj["color"].GetArray()[2].GetInt();
+						}
 
-					node.frames.emplace_back(std::move(frame));
+						node.frames.emplace_back(std::move(frame));
+					}
 				}
+				if (value.HasMember("speed"))
+				{
+					node.speed = value["speed"].GetFloat();
+				}
+				if (value.HasMember("synced"))
+				{
+					node.synced = value["synced"].GetBool();
+				}
+				spriteController.states.emplace(entt::hashed_string(name.GetString()), std::move(node));
 			}
-			if (value.HasMember("speed"))
-			{
-				node.speed = value["speed"].GetFloat();
-			}
-			if (value.HasMember("synced"))
-			{
-				node.synced = value["synced"].GetBool();
-			}
-
-			spriteController.states.emplace(entt::hashed_string(name.GetString()), std::move(node));
+			
 		}
 	}
 

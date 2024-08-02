@@ -37,7 +37,6 @@ void drft::system::SpriteControllerSystem::onSpriteChangeRequest(entt::registry&
 	{
 		auto& request = registry.get<SpriteChangeRequestComponent>(entity);
 		if (!controller->states.contains(request.stateId)) return;
-		if (controller->states.at(request.stateId).frames.empty()) return;
 
 		handleNewSpriteState({ registry, entity }, *controller, request.stateId);
 	}
@@ -45,33 +44,46 @@ void drft::system::SpriteControllerSystem::onSpriteChangeRequest(entt::registry&
 
 void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle handle, SpriteControllerComponent& controller, entt::id_type stateId) const
 {
-	const auto& node = controller.states.at(stateId);
-	if (node.frames.size() == 1)
+	const auto& nodeVariant = controller.states.at(stateId);
+	if (auto otherNode = std::get_if<entt::id_type>(&nodeVariant))
 	{
-		auto& frame = node.frames.front();
-		joinWithRenderComponent(handle, frame);
+		// TODO: Maybe don't fail silently here..?
+		if (!controller.states.contains(*otherNode)) return;
+		if (std::get_if<entt::id_type>(&controller.states.at(*otherNode)) != nullptr) return;
+
+		handleNewSpriteState(handle, controller, *otherNode);
 	}
-	else if (!node.synced)
+	else if (auto node = std::get_if<SpriteControllerComponent::StateNode>(&nodeVariant))
 	{
-		AnimationComponent animation;
-		for (auto&& frame : node.frames)
+		if (node->frames.empty()) return;
+
+		if (node->frames.size() == 1)
 		{
-			animation.frames.emplace_back(frame);
+			auto& frame = node->frames.front();
+			joinWithRenderComponent(handle, frame);
 		}
-		animation.speed = node.speed.value_or(1.0f);
-		animation.loops = true;
-		handle.emplace_or_replace<AnimationComponent>(std::move(animation));
-	}
-	else if (node.synced)
-	{
-		SyncedAnimationComponent animation;
-		for (auto&& frame : node.frames)
+		else if (!node->synced)
 		{
-			animation.frames.emplace_back(frame);
+			AnimationComponent animation;
+			for (auto&& frame : node->frames)
+			{
+				animation.frames.emplace_back(frame);
+			}
+			animation.speed = node->speed.value_or(1.0f);
+			animation.loops = true;
+			handle.emplace_or_replace<AnimationComponent>(std::move(animation));
 		}
-		animation.speed = node.speed.value_or(1.0f);
-		animation.loops = true;
-		handle.emplace_or_replace<SyncedAnimationComponent>(std::move(animation));
+		else if (node->synced)
+		{
+			SyncedAnimationComponent animation;
+			for (auto&& frame : node->frames)
+			{
+				animation.frames.emplace_back(frame);
+			}
+			animation.speed = node->speed.value_or(1.0f);
+			animation.loops = true;
+			handle.emplace_or_replace<SyncedAnimationComponent>(std::move(animation));
+		}
 	}
 }
 

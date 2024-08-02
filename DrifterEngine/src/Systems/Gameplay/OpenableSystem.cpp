@@ -8,9 +8,12 @@
 #include "Components/MaterialComponent.h"
 #include "Components/LightBlockingComponent.h"
 #include "Components/InteractableComponent.h"
+#include "Components/SpriteChangeRequestComponent.h"
 
 #include "Systems/Helpers/ContainerHasItem.h"
 #include "Events/SendFloatingMessageEvent.h"
+
+using namespace entt::literals;
 
 void drft::system::OpenableSystem::init()
 {
@@ -31,14 +34,10 @@ void drft::system::OpenableSystem::openInteraction(entt::entity actor, entt::ent
 
 		if (canOpen)
 		{
-			// chest if container - door otherwise
-			bool isContainer = _registry.any_of<ContainerComponent>(subject);
-			auto& render = _registry.get<RenderComponent>(subject);
-			render.uvCoords += {1, 0};
-			render.layer = 1;
+			_registry.emplace_or_replace<SpriteChangeRequestComponent>(subject, "open"_hs);
 			auto& material = _registry.get<MaterialComponent>(subject);
 			material.blocks = false;
-			if (!isContainer)
+			if (!_registry.any_of<ContainerComponent>(subject))
 			{
 				_registry.remove<LightBlockingComponent>(subject);
 			}
@@ -63,9 +62,7 @@ void drft::system::OpenableSystem::closeInteraction(entt::entity actor, entt::en
 {
 	if (auto openable = _registry.try_get<OpenableComponent>(subject))
 	{
-		auto& render = _registry.get<RenderComponent>(subject);
-		render.uvCoords -= {1, 0};
-		render.layer = 2;
+		_registry.emplace_or_replace<SpriteChangeRequestComponent>(subject, "closed"_hs);
 
 		auto& material = _registry.get<MaterialComponent>(subject);
 		material.blocks = true;

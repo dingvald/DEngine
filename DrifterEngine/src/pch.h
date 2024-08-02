@@ -59,5 +59,6 @@
 #include <cereal/types/array.hpp>
 #include <cereal/types/optional.hpp>
 #include <cereal/types/deque.hpp>
+#include <cereal/types/variant.hpp>
 
 #pragma warning(pop)

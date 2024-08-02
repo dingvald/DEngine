@@ -1422,12 +1422,34 @@
           "name": "Wood Door",
           "description": "A wooden structure used to allow selective passage."
         },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 7, 6 ],
-          "layer": 2,
-          "color": [ 121, 92, 50 ]
+        "SpriteController": {
+          "states": {
+            "default": "closed",
+            "open": {
+              "frames": [
+                {
+                  "texture": "simple_tileset",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 8, 6 ],
+                  "layer": 1,
+                  "color": [ 121, 92, 50 ]
+                }
+              ],
+              "speed": 1.0
+            },
+            "closed": {
+              "frames": [
+                {
+                  "texture": "simple_tileset",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 7, 6 ],
+                  "layer": 2,
+                  "color": [ 121, 92, 50 ]
+                }
+              ],
+              "speed": 1.0
+            }
+          }
         },
         "Material": {
           "blocks": true,
@@ -1467,6 +1489,35 @@
           "uv_coords": [ 0, 7 ],
           "layer": 2,
           "color": [ 121, 92, 50 ]
+        },
+        "SpriteController": {
+          "states": {
+            "default": "closed",
+            "open": {
+              "frames": [
+                {
+                  "texture": "simple_tileset",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 0, 7 ],
+                  "layer": 1,
+                  "color": [ 121, 92, 50 ]
+                }
+              ],
+              "speed": 1.0
+            },
+            "closed": {
+              "frames": [
+                {
+                  "texture": "simple_tileset",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 0, 7 ],
+                  "layer": 2,
+                  "color": [ 121, 92, 50 ]
+                }
+              ],
+              "speed": 1.0
+            }
+          }
         },
         "Material": {
           "blocks": true,
