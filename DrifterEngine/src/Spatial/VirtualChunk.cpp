@@ -33,14 +33,14 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	}
 
 	auto& worldGenerator = reg.ctx().get<gen::WorldGenerator&>();
-	if (worldGenerator.generateChunk(_coordinate, reg) == gen::GenerationStatus::Done)
+	if (worldGenerator.generateChunk(_coordinate, reg) != gen::GenerationStatus::Done)
 	{
-		setState(ChunkState::Built);
-		return ioStatus::Done;
+		setState(ChunkState::Building);
+		return ioStatus::Busy;
 	}
 
-	setState(ChunkState::Building);
-	return ioStatus::Busy;
+	setState(ChunkState::Built);
+	return ioStatus::Done;
 }
 
 ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const std::filesystem::path& filename) const
