@@ -792,8 +792,7 @@
         },
         "Craftable": {
           "recipe": {
-            "Iron": 4,
-            "Flint": 1
+            "Iron": 4
           }
         }
       }
