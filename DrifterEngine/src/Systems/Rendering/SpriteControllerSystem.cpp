@@ -5,7 +5,6 @@
 #include "Components/RenderComponent.h"
 #include "Components/AnimationComponent.h"
 #include "Components/SyncedAnimationComponent.h"
-#include "Components/SprintingComponent.h"
 
 using namespace entt::literals;
 
@@ -61,7 +60,7 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 		}
 		animation.speed = node.speed.value_or(1.0f);
 		animation.loops = true;
-		handle.emplace_or_replace<AnimationComponent>(animation);
+		handle.emplace_or_replace<AnimationComponent>(std::move(animation));
 	}
 	else if (node.synced)
 	{
@@ -72,7 +71,7 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 		}
 		animation.speed = node.speed.value_or(1.0f);
 		animation.loops = true;
-		handle.emplace_or_replace<SyncedAnimationComponent>(animation);
+		handle.emplace_or_replace<SyncedAnimationComponent>(std::move(animation));
 	}
 }
 
@@ -86,7 +85,7 @@ void drft::system::SpriteControllerSystem::joinWithRenderComponent(entt::handle 
 	{
 		RenderComponent newRender;
 		applySpriteOptionsToRenderComponent(newRender, options);
-		entity.emplace<RenderComponent>(newRender);
+		entity.emplace<RenderComponent>(std::move(newRender));
 	}
 }
 

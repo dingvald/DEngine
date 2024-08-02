@@ -16,9 +16,9 @@
 
 using namespace drft;
 
-static const std::string RESOURCE_PATH = "./resources/";
-static const std::string TEXTURE_PATH = RESOURCE_PATH + "Textures/";
-static const std::string FONTS_PATH = RESOURCE_PATH + "Fonts/";
+static const std::filesystem::path RESOURCE_PATH = "./resources";
+static const std::filesystem::path TEXTURE_PATH = RESOURCE_PATH / "Textures";
+static const std::filesystem::path FONTS_PATH = RESOURCE_PATH / "Fonts";
 
 static const float TARGET_DT = (1.0f / TARGET_FPS);
 
@@ -58,13 +58,14 @@ void drft::Engine::initialize()
 	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
 	service::DebugInfo::instance().setPosition({ DEBUG_X_POSITION, DEBUG_Y_POSITION });
 	registerStates();
+
 	_stateStack.pushState(States::Title);
 }
 
 void drft::Engine::loadResources()
 {
 	_textures.load(TEXTURE_PATH);
-	_fonts.load("Terminus", FONTS_PATH + "terminus.ttf");
+	_fonts.load("Terminus", FONTS_PATH / "terminus.ttf");
 }
 
 void drft::Engine::registerStates()
@@ -72,13 +73,13 @@ void drft::Engine::registerStates()
 	_stateStack.registerState<TitleScreenState>(States::Title);
 	_stateStack.registerState<MainMenuState>(States::MainMenu);
 	_stateStack.registerState<GameState>(States::Game);
-	_stateStack.registerState<InventoryState>(States::Inventory);
-	_stateStack.registerState<CraftingState>(States::Crafting);
-	_stateStack.registerState<WorldMapState>(States::Map);
+	_stateStack.registerState<InventoryState>(States::Inventory); // TODO: Move to substate of game
+	_stateStack.registerState<CraftingState>(States::Crafting); // TODO: Move to substate of game
+	_stateStack.registerState<WorldMapState>(States::Map); // TODO: Move to substate of game
 	_stateStack.registerState<PauseState>(States::Pause);
 	_stateStack.registerState<GameOverState>(States::GameOver);
-	_stateStack.registerState<SelectDirectionState>(States::SelectDirection);
-	_stateStack.registerState<SelectTargetState>(States::SelectTarget);
+	_stateStack.registerState<SelectDirectionState>(States::SelectDirection); // TODO: Move to substate of game
+	_stateStack.registerState<SelectTargetState>(States::SelectTarget); // TODO: Move to substate of game
 }
 
 void drft::Engine::handleEvents()

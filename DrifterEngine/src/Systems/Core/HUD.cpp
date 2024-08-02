@@ -404,10 +404,11 @@ void drft::system::HUD::onHotbarPressed(entt::registry& registry, entt::entity e
 
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)
 {
-	auto& damage = registry.get<component::action::TakeDamage>(entity);
-	if (auto health = registry.try_get<HealthComponent>(entity);
-		registry.all_of<PlayerComponent>(entity))
+	if (!registry.all_of<PlayerComponent>(entity)) return;
+
+	if (auto health = registry.try_get<HealthComponent>(entity))
 	{
+		auto& damage = registry.get<component::action::TakeDamage>(entity);
 		if (damage.amount != 0)
 		{
 			sf::Vector2f size = { (health->current / health->max)
@@ -420,9 +421,10 @@ void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity enti
 void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity entity)
 {
 	if (!registry.all_of<PlayerComponent>(entity)) return;
+
 	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
-		auto consume = registry.get<component::action::ConsumeStamina>(entity);
+		auto& consume = registry.get<component::action::ConsumeStamina>(entity);
 		if (stamina->baseConsumption + consume.amount > 0.f)
 		{
 			sf::Vector2f size = { (static_cast<float>(stamina->current) / static_cast<float>(stamina->max))

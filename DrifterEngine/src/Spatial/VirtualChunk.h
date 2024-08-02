@@ -1,7 +1,5 @@
 #pragma once
 
-// TODO: Requires a refactor at some point...
-
 namespace drft::gen
 {
 	class WorldGenerator;
