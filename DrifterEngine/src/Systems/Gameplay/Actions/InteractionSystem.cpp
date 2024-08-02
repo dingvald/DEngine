@@ -4,6 +4,7 @@
 #include "Components/Components.h"
 #include "Components/PositionComponent.h"
 #include "Components/InteractableComponent.h"
+#include "Components/Actions/InteractionAction.h"
 
 #include "Events/RequestStateChange.h"
 #include "Spatial/WorldGrid.h"
@@ -13,43 +14,18 @@
 
 void drft::system::InteractionSystem::init()
 {
-	_registry.on_construct<component::action::DoInteract>().connect<&InteractionSystem::onContructDoInteract>(this);
-}
-
-void drft::system::InteractionSystem::onUpdate(const float dt)
-{
-	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
-	auto interactView = _registry.view<const PositionComponent, component::action::TryInteract>();
-	for (auto [entity, pos] : interactView.each())
-	{
-		auto usableEntities = getInteractableSurroundings(pos.position, grid);
-		if (usableEntities.size() == 1)
-		{
-			_registry.emplace<component::action::DoInteract>(entity, std::move(usableEntities));
-		}
-		else if (usableEntities.size() > 1)
-		{
-			auto tilePosition = pos.position;
-			_registry.emplace<component::action::SelectDirection>(entity,
-				[this, tilePosition, entity](sf::Vector2i direction) -> bool
-				{
-					sf::Vector2i targetPosition = tilePosition + direction;
-					return onTargetSelected(entity, targetPosition);
-				});
-		}
-	}
+	_registry.on_construct<InteractionAction>().connect<&InteractionSystem::onConstructInteractionAction>(this);
 }
 
 void drft::system::InteractionSystem::onUpdateEnd()
 {
-	_registry.clear<component::action::TryInteract>();
-	_registry.clear<component::action::DoInteract>();
+	_registry.clear<InteractionAction>();
 }
 
 std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurroundings(sf::Vector2i position, const spatial::WorldGrid& grid)
 {
 	std::vector<entt::entity> result;
-	auto surroundings = spatial::getIntRectAroundOrigin(position, 3, 3);
+	auto surroundings = spatial::getAdjacentPoints(position);
 	for (auto&& tile : surroundings)
 	{
 		auto entities = grid.entitiesAt(tile,
@@ -62,6 +38,26 @@ std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurrou
 	return result;
 }
 
+void drft::system::InteractionSystem::doInteract(entt::entity actor, const std::vector<entt::entity>& interactables) const
+{
+	for (auto&& interactable : interactables)
+	{
+		if (auto interactableComponent = _registry.try_get<InteractableComponent>(interactable))
+		{
+			if (interactableComponent->interactions.size() == 1)
+			{
+				auto&& [name, interactionFunction] = *interactableComponent->interactions.begin();
+				interactionFunction(actor, interactable);
+			}
+			else
+			{
+				// TODO: handle if one object can be interacted with in multiple ways
+			}
+		}
+	}
+	
+}
+
 bool drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::Vector2i target)
 {
 	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
@@ -72,30 +68,30 @@ bool drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::V
 
 	if (entities.empty()) return false;
 
-	_registry.emplace<component::action::DoInteract>(actor, std::move(entities));
+	doInteract(actor, entities);
 
 	return true;
 }
 
-void drft::system::InteractionSystem::onContructDoInteract(entt::registry& registry, entt::entity entity)
+void drft::system::InteractionSystem::onConstructInteractionAction(entt::registry& registry, entt::entity entity)
 {
-	auto& interactionAction = registry.get<component::action::DoInteract>(entity);
-	const auto& actorName = util::getEntityName({ registry, entity });
-	for (auto&& subject : interactionAction.subjects)
+	if (auto positionComponent = registry.try_get<PositionComponent>(entity))
 	{
-		const auto& subjectName = util::getEntityName({ registry, subject });
-		if (auto interactable = registry.try_get<InteractableComponent>(subject))
+		const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
+		auto usableEntities = getInteractableSurroundings(positionComponent->position, grid);
+		if (usableEntities.size() == 1)
 		{
-			if (interactable->interactions.size() == 1)
-			{
-				auto&& [name, interactionFunction] = *interactable->interactions.begin();
-				std::cout << actorName << " " << name << "s " << subjectName << "." << std::endl;
-				interactionFunction(entity, subject);
-			}
-			else
-			{
-				// TODO: handle if one object can be interacted with in multiple ways
-			}
+			doInteract(entity, usableEntities);
+		}
+		else if (usableEntities.size() > 1)
+		{
+			auto tilePosition = positionComponent->position;
+			_registry.emplace<component::action::SelectDirection>(entity,
+				[this, tilePosition, entity](sf::Vector2i direction) -> bool
+				{
+					sf::Vector2i targetPosition = tilePosition + direction;
+					return onTargetSelected(entity, targetPosition);
+				});
 		}
 	}
 }

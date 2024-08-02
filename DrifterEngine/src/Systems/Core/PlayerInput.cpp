@@ -2,6 +2,7 @@
 #include "PlayerInput.h"
 #include "Components/Components.h"
 #include "Components/Actions/MoveAction.h"
+#include "Components/Actions/InteractionAction.h"
 #include "Components/SprintingComponent.h"
 #include "Components/PlayerComponent.h"
 
@@ -64,7 +65,7 @@ void drft::system::PlayerInput::init()
 			}
 		});
 	_actionMap.addAction(Key::Space, [](entt::handle entity) {
-		entity.emplace<component::action::TryInteract>();
+		entity.emplace<InteractionAction>();
 		});
 
 	// Hotbar //

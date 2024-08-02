@@ -13,14 +13,14 @@ namespace drft::system
 	public:
 		using System::System;
 
-	private:
 		void init() override;
-		void onUpdate(const float dt) override;
 		void onUpdateEnd() override;
 
+	private:
 		std::vector<entt::entity> getInteractableSurroundings(sf::Vector2i position, const spatial::WorldGrid& grid);
+		void doInteract(entt::entity actor, const std::vector<entt::entity>& interactables) const;
 		bool onTargetSelected(entt::entity actor, sf::Vector2i target);
-		void onContructDoInteract(entt::registry& registry, entt::entity entity);
+		void onConstructInteractionAction(entt::registry& registry, entt::entity entity);
 	};
 }
 

@@ -14,13 +14,6 @@ namespace component::action
 
 	struct Wait {};
 
-	struct TryInteract {};
-
-	struct DoInteract 
-	{
-		std::vector<entt::entity> subjects;
-	};
-
 	struct SelectDirection
 	{
 		std::function<bool(sf::Vector2i)> onDirectionSelect;

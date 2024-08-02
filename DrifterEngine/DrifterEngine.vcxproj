@@ -484,6 +484,7 @@
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
+    <ClInclude Include="src\Components\Actions\InteractionAction.h" />
     <ClInclude Include="src\JSON\ICreateFromJson.h" />
     <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.h" />
     <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.h" />
