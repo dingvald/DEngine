@@ -84,7 +84,7 @@ bool drft::StructureShapeInstance::hasTag(entt::id_type type) const
 	return _tagPositions.contains(type);
 }
 
-const std::unordered_set<sf::Vector2i>& drft::StructureShapeInstance::getPositionsFor(entt::id_type type) const
+const entt::dense_set<sf::Vector2i>& drft::StructureShapeInstance::getPositionsFor(entt::id_type type) const
 {
 	return _tagPositions.at(type);
 }

@@ -170,14 +170,11 @@ const Biome* drft::gen::WorldGenerator::getBiome(sf::Vector2i coordinate) const
 	return _biomeMap.at(coordinate.x, coordinate.y);
 }
 
-void drft::gen::WorldGenerator::tagArea(sf::IntRect tileArea, entt::id_type tag) const
+void drft::gen::WorldGenerator::tagArea(sf::Vector2i tileOrigin, const entt::dense_set<sf::Vector2i>& area, entt::id_type tag) const
 {
-	for (int y = tileArea.top; y <= tileArea.top + tileArea.height; ++y)
+	for (auto&& pos : area)
 	{
-		for (int x = tileArea.left; x <= tileArea.left + tileArea.width; ++x)
-		{
-			_tagGrid->at(x, y).insert(tag);
-		}
+		_tagGrid->at(tileOrigin.x + pos.x, tileOrigin.y + pos.y).insert(tag);
 	}
 }
 

@@ -12,7 +12,7 @@
 using namespace drft::spatial;
 using namespace std::chrono_literals;
 
-static constexpr auto WAIT_TIME = 1ms; // How long to wait for async operations
+static constexpr auto WAIT_TIME = 0.0ms; // How long to wait for async operations
 
 void drft::spatial::VirtualChunk::setState(ChunkState state)
 {

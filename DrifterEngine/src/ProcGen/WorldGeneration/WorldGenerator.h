@@ -36,7 +36,7 @@ namespace drft::gen
 
 		const Biome* getBiome(sf::Vector2i coordinate) const;
 
-		void tagArea(sf::IntRect tileArea, entt::id_type tag) const;
+		void tagArea(sf::Vector2i tileOrigin, const entt::dense_set<sf::Vector2i>& area, entt::id_type tag) const;
 
 		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
 		sf::Vector2i getDimensions() const;

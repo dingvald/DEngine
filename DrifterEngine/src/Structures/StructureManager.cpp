@@ -36,13 +36,8 @@ void drft::StructureManager::scanForStuctures(sf::Vector2i origin)
 			
 			if (auto structure = _structureFactory.build(name))
 			{
-				auto area = structure->getArea();
-				area.left += spatial::toTileSpace(chunk).x;
-				area.top += spatial::toTileSpace(chunk).y;
-
-				_generator.tagArea(area, "structure"_hs);
+				_generator.tagArea(spatial::toTileSpace(chunk), structure->getArea(), "structure"_hs);
 				_structures.emplace(chunk, std::move(structure));
-
 				break;
 			}
 		}

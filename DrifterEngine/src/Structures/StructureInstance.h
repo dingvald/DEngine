@@ -16,7 +16,7 @@ namespace drft
 		StructureInstance(std::unique_ptr<StructureShapeInstance> shape);
 		void stamp(sf::Vector2i tileOrigin, gen::GenerationContext& context) const;
 
-		sf::IntRect getArea() const;
+		const entt::dense_set<sf::Vector2i>& getArea() const;
 
 	private:
 		sf::IntRect _area;
