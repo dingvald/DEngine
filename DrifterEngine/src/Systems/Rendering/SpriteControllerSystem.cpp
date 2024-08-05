@@ -49,7 +49,7 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 	{
 		// TODO: Maybe don't fail silently here..?
 		if (!controller.states.contains(*otherNode)) return;
-		if (std::get_if<entt::id_type>(&controller.states.at(*otherNode)) != nullptr) return;
+		if (std::get_if<entt::id_type>(&controller.states.at(*otherNode)) != nullptr) return; // Prevents infinite recursion TODO: figure out a better way
 
 		handleNewSpriteState(handle, controller, *otherNode);
 	}
@@ -60,23 +60,16 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 			throw std::exception("Expected at least one frame in sprite controller state");
 		}
 
-		const size_t numFrames = node->frames.size();
-
-		if (numFrames > 1 && !node->synced)
+		if (node->frames.size() > 1)
 		{
-			AnimationComponent animation;
-			animation.frames = node->frames;
-			animation.speed = node->speed.value_or(1.0f);
-			animation.loops = true;
-			auto& newAnimationComp = handle.emplace_or_replace<AnimationComponent>(std::move(animation));
-		}
-		else if (numFrames > 1 && node->synced)
-		{
-			SyncedAnimationComponent animation;
-			animation.frames = node->frames;
-			animation.speed = node->speed.value_or(1.0f);
-			animation.loops = true;
-			auto& newAnimationComp = handle.emplace_or_replace<SyncedAnimationComponent>(std::move(animation));
+			if (node->synced)
+			{
+				handle.emplace_or_replace<SyncedAnimationComponent>(node->frames, node->speed.value_or(1.0f), true);
+			}
+			else
+			{
+				handle.emplace_or_replace<AnimationComponent>(node->frames, node->speed.value_or(1.0f), true);
+			}
 		}
 
 		joinWithRenderComponent(handle, node->frames[0]);

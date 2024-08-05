@@ -9,11 +9,12 @@
 struct AnimationComponent
 {
 	std::vector<SpriteOptions> frames;
-	int index = 0;
 	float speed = 1.0f; // animation frames / second
-	float elapsed = 0.0f; // number of game frames elapsed
 	bool loops = false;
 
+	int index = 0;
+	float elapsed = 0.0f; // number of game frames elapsed
+	
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "Animation";
@@ -31,11 +32,11 @@ namespace cereal
 	void serialize(Archive& archive, AnimationComponent& animation)
 	{
 		archive(
-			animation.frames, 
+			animation.frames,
+			animation.speed,
+			animation.loops,
 			animation.index, 
-			animation.speed, 
-			animation.elapsed, 
-			animation.loops
+			animation.elapsed
 		);
 
 	}

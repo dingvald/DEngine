@@ -11,7 +11,6 @@ void drft::system::AnimationSystem::onFixedUpdate()
 	auto noRenderView = _registry.view<AnimationComponent>(entt::exclude<RenderComponent>);
 	for (auto&& [entity, animation] : noRenderView.each())
 	{
-
 		_registry.emplace<RenderComponent>(entity, DebugRenderComponent);
 	}
 
