@@ -21,6 +21,8 @@
 #include "GOAP/WorldStateTypes.h"
 #include "GOAP/Sensors/HostileSensor.h"
 
+#pragma optimize("", off)
+
 
 void drft::system::ArtificialInput::init()
 {
@@ -30,8 +32,7 @@ void drft::system::ArtificialInput::init()
 	_sensorySystem.registerSensor(std::make_unique<goap::HostileSensor>());
 	_sensorySystem.registerChecker(hasLineOfSight, goap::SensorType::Visual);
 
-	auto& dispatcher = _registry.ctx().get<entt::dispatcher&>();
-	dispatcher.sink<events::TurnEndEvent>().connect<&ArtificialInput::onTurnEndEvent>(this);
+	_dispatcher.sink<events::TurnEndEvent>().connect<&ArtificialInput::onTurnEndEvent>(this);
 }
 
 void drft::system::ArtificialInput::onUpdate(const float dt)
@@ -39,6 +40,7 @@ void drft::system::ArtificialInput::onUpdate(const float dt)
 	auto view = _registry.view<AIComponent, const PositionComponent, component::tag::CurrentActor>();
 	for (auto [entity, ai, myPos] : view.each())
 	{
+		cleanUpMemory(ai);
 		senseWorldState(ai);
 		executeStateNow(ai, ai.state);
 	}
@@ -128,6 +130,29 @@ void drft::system::ArtificialInput::onTurnEndEvent(const events::TurnEndEvent& e
 void drft::system::ArtificialInput::senseWorldState(AIComponent& ai)
 {
 	_sensorySystem.runSensors(getHandle(ai));
+}
+
+void drft::system::ArtificialInput::cleanUpMemory(AIComponent& ai)
+{
+	if (!_registry.valid(ai.target) || !_registry.all_of<component::tag::Active>(ai.target))
+	{
+		ai.target = entt::null;
+	}
+	// Remove all invalid or inactive entities
+	for (auto&& [_, memory] : ai.surroundings)
+	{
+		for (auto it = memory.begin(); it != memory.end();)
+		{
+			if (!_registry.valid(it->first) || !_registry.all_of<component::tag::Active>(it->first))
+			{
+				it = memory.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
 }
 
 std::deque<drft::goap::AiAction> drft::system::ArtificialInput::generatePlan(AIComponent& ai, std::deque<GoalName>& goals) const
@@ -292,6 +317,7 @@ void drft::system::ArtificialInput::aiMoveTo(AIComponent& ai) const
 		else
 		{
 			// replan required
+			ai.blackboard.clear();
 			clearPathCache(handle.entity());
 			setNextState(ai, AIState::Think);
 		}

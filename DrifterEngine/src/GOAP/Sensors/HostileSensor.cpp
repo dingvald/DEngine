@@ -29,7 +29,7 @@ drft::goap::WorldState drft::goap::HostileSensor::checkAndFillSurroundings(entt:
 	for (const auto& [entity, pos, faction] : view.each())
 	{
 		if (!filter::isHostile(agent, { *agent.registry(), entity })) continue;
-		if ((spatial::distance(myPos.position, pos.position) <= (ai.sightRange + 1)) && checker(agent, pos.position))
+		if ((spatial::distance(myPos.position, pos.position) <= (ai.sightRange)) && checker(agent, pos.position))
 		{
 			magnitude = std::max(magnitude, 1);
 			// Refresh memory
