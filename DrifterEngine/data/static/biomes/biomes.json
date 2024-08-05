@@ -71,6 +71,9 @@
         },
         "flower": {
           "probability": 0.01
+        },
+        "hostile": {
+          "probability": 0.001
         }
       },
       "entity_packs": {
@@ -86,6 +89,10 @@
         ],
         "flower": [
           [ "Herb", 1 ]
+        ],
+        "hostile": [
+          [ "Rat", 1 ],
+          [ "Mosquito" , 3]
         ]
       },
       "features": {

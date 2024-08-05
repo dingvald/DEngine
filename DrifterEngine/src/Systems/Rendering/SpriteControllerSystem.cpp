@@ -55,35 +55,31 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 	}
 	else if (auto node = std::get_if<SpriteControllerComponent::StateNode>(&nodeVariant))
 	{
-		if (node->frames.empty()) return;
-
-		if (node->frames.size() == 1)
+		if (node->frames.empty())
 		{
-			auto& frame = node->frames.front();
-			joinWithRenderComponent(handle, frame);
+			throw std::exception("Expected at least one frame in sprite controller state");
 		}
-		else if (!node->synced)
+
+		const size_t numFrames = node->frames.size();
+
+		if (numFrames > 1 && !node->synced)
 		{
 			AnimationComponent animation;
-			for (auto&& frame : node->frames)
-			{
-				animation.frames.emplace_back(frame);
-			}
+			animation.frames = node->frames;
 			animation.speed = node->speed.value_or(1.0f);
 			animation.loops = true;
-			handle.emplace_or_replace<AnimationComponent>(std::move(animation));
+			auto& newAnimationComp = handle.emplace_or_replace<AnimationComponent>(std::move(animation));
 		}
-		else if (node->synced)
+		else if (numFrames > 1 && node->synced)
 		{
 			SyncedAnimationComponent animation;
-			for (auto&& frame : node->frames)
-			{
-				animation.frames.emplace_back(frame);
-			}
+			animation.frames = node->frames;
 			animation.speed = node->speed.value_or(1.0f);
 			animation.loops = true;
-			handle.emplace_or_replace<SyncedAnimationComponent>(std::move(animation));
+			auto& newAnimationComp = handle.emplace_or_replace<SyncedAnimationComponent>(std::move(animation));
 		}
+
+		joinWithRenderComponent(handle, node->frames[0]);
 	}
 }
 
