@@ -20,6 +20,8 @@
 #include "Utility/Math.h"
 #include "Spatial/WorldMapPosition.h"
 
+#include <ProcGen/GenerationLayer/Layers/EntityLayer.h>
+
 static const sf::Vector2i CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 
 static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
@@ -43,6 +45,8 @@ void drft::gen::WorldGenerator::init()
 	_biomeRegistry.createBiomesFromJSON(BIOME_FOLDER_PATH);
 
 	initializeGlobalRanges();
+
+	_layerManager.add<EntityLayer>();
 }
 
 void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
@@ -113,55 +117,11 @@ void drft::gen::WorldGenerator::generate()
 
 }
 
-drft::gen::GenerationStatus drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate, entt::registry& registry)
+GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate, entt::registry& registry)
 {
-	if (!_currentChunkGenerations.contains(coordinate))
-	{
-		_currentChunkGenerations.emplace(coordinate, GenerationProgress{});
-	}
+	sf::IntRect area = { spatial::toTileSpace(coordinate), CHUNK_SIZE };
 
-	_structureManager.scanForStuctures(coordinate);
-
-	const sf::IntRect placementArea = determinePlacementArea(coordinate);
-	auto& entityPositions = _currentChunkGenerations.at(coordinate).entities;
-	const int pass = _currentChunkGenerations.at(coordinate).pass;
-
-	GenerationContext context = {
-		.area = placementArea,
-		.entityPositions = entityPositions,
-		.grid = *_tagGrid,
-		.noiseLayers = _noiseLayers,
-		.seed = _seed
-	};
-
-	if (auto structure = _structureManager.getStructureAt(coordinate))
-	{
-		structure->stamp(spatial::toTileSpace(coordinate), context);
-	}
-
-	const Biome* biome = determineBiome(spatial::toTileSpace(coordinate));
-
-	for (int y = placementArea.top; y < placementArea.top + placementArea.height; y++)
-	{
-		for (int x = placementArea.left; x < placementArea.left + placementArea.width; x++)
-		{
-			const sf::Vector2i position = { x, y };
-			if (pass == 0)
-			{
-				placeTile(position, context);
-				placeLiquid(position, context);
-			}
-			generateEntities(position, pass, context, biome);
-		}
-	}
-
-	if (++_currentChunkGenerations.at(coordinate).pass >= GENERATION_PASSES)
-	{
-		finalizeChunk(coordinate, registry);
-		return GenerationStatus::Done;
-	}
-
-	return GenerationStatus::Continue;
+	return _layerManager.generate<EntityLayer>(area);
 }
 
 const Biome* drft::gen::WorldGenerator::getBiome(sf::Vector2i coordinate) const

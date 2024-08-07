@@ -7,6 +7,8 @@
 #include "Biomes/BiomeRegistry.h"
 #include "Biomes/BiomeZone.h"
 
+#include <ProcGen/GenerationLayer/GenerationLayerManager.h>
+
 namespace drft
 {
 	class EntityFactory;
@@ -15,13 +17,6 @@ namespace drft
 namespace drft::gen
 {
 	struct GenerationContext;
-
-	enum class GenerationStatus
-	{
-		Start,
-		Continue,
-		Done
-	};
 
 	class WorldGenerator
 	{
@@ -32,7 +27,7 @@ namespace drft::gen
 		// Generates the entire world other than chunks.
 		void generate();
 
-		GenerationStatus generateChunk(sf::Vector2i coordinate, entt::registry& registry);
+		GenerationState generateChunk(sf::Vector2i coordinate, entt::registry& registry);
 
 		const Biome* getBiome(sf::Vector2i coordinate) const;
 
@@ -80,6 +75,9 @@ namespace drft::gen
 
 		unsigned int _seed = 0;
 		sf::Vector2i _dimensions;
+
+		GenerationLayerManager _layerManager;
+
 		spatial::Grid<const Biome*> _biomeMap;
 		StructureManager _structureManager{*this};
 		BiomeRegistry _biomeRegistry;
