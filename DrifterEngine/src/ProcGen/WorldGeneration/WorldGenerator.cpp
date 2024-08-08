@@ -34,14 +34,12 @@ using namespace entt::literals;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
-	_tagGrid = std::make_unique<TagGrid>(CHUNK_SIZE.x, CHUNK_SIZE.y);
+	
 }
 
 void drft::gen::WorldGenerator::init()
 {
-
 	_biomeMap.resize(_dimensions.x, _dimensions.y);
-
 	_biomeRegistry.createBiomesFromJSON(BIOME_FOLDER_PATH);
 
 	initializeGlobalRanges();
@@ -105,15 +103,7 @@ void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
 
 void drft::gen::WorldGenerator::generate()
 {
-	std::cout << "Generating terrain data..." << std::endl;
-	generateTerrain();
-	std::cout << "Terrain complete." << std::endl;
-	std::cout << "Generating zones..." << std::endl;
-	generateZones();
-	std::cout << "Zones complete." << std::endl;
-	// generate dungeons
-	// generate modifications
-	// generate structures
+	// Generate any global layers
 
 }
 
@@ -121,21 +111,16 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 {
 	sf::IntRect area = { spatial::toTileSpace(coordinate), CHUNK_SIZE };
 
-	return _layerManager.generate<EntityLayer>(area);
+	GenerationState state =  _layerManager.generate<EntityLayer>(area);
+
+
+	return state;
 }
 
 const Biome* drft::gen::WorldGenerator::getBiome(sf::Vector2i coordinate) const
 {
 	if (!_biomeMap.contains(coordinate.x, coordinate.y)) return nullptr;
 	return _biomeMap.at(coordinate.x, coordinate.y);
-}
-
-void drft::gen::WorldGenerator::tagArea(sf::Vector2i tileOrigin, const entt::dense_set<sf::Vector2i>& area, entt::id_type tag) const
-{
-	for (auto&& pos : area)
-	{
-		_tagGrid->at(tileOrigin.x + pos.x, tileOrigin.y + pos.y).insert(tag);
-	}
 }
 
 void drft::gen::WorldGenerator::generateTerrain()
@@ -273,13 +258,6 @@ double drft::gen::WorldGenerator::getPerlinAt(const std::string& mapType, sf::Ve
 	return _noiseLayers.at(mapType).getValueAt(tilePosition);
 }
 
-void drft::gen::WorldGenerator::finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const
-{
-	const auto& entities = _currentChunkGenerations.at(coordinate).entities;
-	placeEntities(entities, registry);
-	updateCompletedChunks(coordinate);
-}
-
 sf::Vector2i drft::gen::WorldGenerator::getStartingPosition(const std::string& biomeType) const
 {
 	unsigned int largestForestID = 0;
@@ -347,11 +325,6 @@ float drft::gen::WorldGenerator::getRangeFromPerlin(const std::string& mapName, 
 
 const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i tilePosition) const
 {
-	if (_biomeCache.contains(tilePosition))
-	{
-		return _biomeCache.at(tilePosition);
-	}
-
 	std::unordered_map<const Biome*, float> biomeScore;
 	std::unordered_map<std::string, float> values;
 
@@ -388,7 +361,6 @@ const Biome* drft::gen::WorldGenerator::determineBiome(sf::Vector2i tilePosition
 		}
 	}
 
-	_biomeCache.emplace(tilePosition, result);
 	return result;
 }
 
@@ -458,24 +430,6 @@ void drft::gen::WorldGenerator::placeEntities(const EntityPositionMap& entities,
 	}
 }
 
-void drft::gen::WorldGenerator::updateCompletedChunks(sf::Vector2i coordinate) const
-{
-	_currentChunkGenerations.erase(coordinate);
-
-	auto neighbours = spatial::getIntRectAroundOrigin(coordinate, 3, 3);
-	for (auto&& neighbour : neighbours)
-	{
-		_completedChunks[neighbour]++;
-		if (_completedChunks.at(neighbour) >= 9) // Chunk is surrounded (includes self)
-		{
-			// prevents the accumulation of unnecessary tag grids
-			_tagGrid->discard(neighbour);
-			// prevents accumulation of unnecessary subchunk biome ptrs
-			eraseFromBiomeCache(coordinate);
-		}
-	}
-}
-
 sf::IntRect drft::gen::WorldGenerator::determinePlacementArea(sf::Vector2i coordinate) const
 {
 	sf::Vector2i tileOrigin = spatial::toTileSpace(coordinate);
@@ -502,10 +456,5 @@ void drft::gen::WorldGenerator::initializeGlobalRanges()
 				globalRange.setMax(max);
 			}
 		});
-}
-
-void drft::gen::WorldGenerator::eraseFromBiomeCache(sf::Vector2i coordinate) const
-{
-	_biomeCache.erase(spatial::toTileSpace(coordinate));
 }
 

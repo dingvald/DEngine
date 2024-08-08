@@ -21,7 +21,6 @@ inline GenerationState GenerationLayer<Layer, Chunk>::generate(GenerationContext
 	return GenerationState::Complete;
 }
 
-
 template<typename Layer, typename Chunk>
 inline void GenerationLayer<Layer, Chunk>::addDependency(GenerationLayerDependency dependency)
 {
@@ -43,8 +42,8 @@ template<typename Layer, typename Chunk>
 inline sf::Vector2i GenerationLayer<Layer, Chunk>::toChunkPosition(sf::Vector2i tilePosition)
 {
 	sf::Vector2i result;
-	result.x = tilePosition / dimensions().x;
-	result.y = tilePosition / dimensions().y;
+	result.x = tilePosition.x / dimensions().x;
+	result.y = tilePosition.y / dimensions().y;
 	return result;
 }
 
@@ -52,8 +51,8 @@ template<typename Layer, typename Chunk>
 inline sf::Vector2i GenerationLayer<Layer, Chunk>::toChunkLocalPosition(sf::Vector2i tilePosition)
 {
 	sf::Vector2i result;
-	result.x = tilePosition % dimensions().x;
-	result.y = tilePosition % dimensions().y;
+	result.x = tilePosition.x % dimensions().x;
+	result.y = tilePosition.y % dimensions().y;
 	return result;
 }
 
@@ -61,11 +60,13 @@ template<typename Layer, typename Chunk>
 inline std::vector<sf::Vector2i> GenerationLayer<Layer, Chunk>::getChunkPointsInsideArea(sf::IntRect area)
 {
 	std::vector<sf::Vector2i> result;
-	for (int y = area.top; y < area.top + area.height; y += dimensions().y)
+	sf::Vector2i top_left_point = toChunkPosition({ area.left, area.top});
+	sf::Vector2i bottom_right_point = toChunkPosition({ area.left + area.width, area.top + area.height });
+	for (int y = top_left_point.y; y <= bottom_right_point.y; ++y)
 	{
-		for (int x = area.left; x < area.left + area.width; x += dimensions().x)
+		for (int x = top_left_point.x; x <= bottom_right_point.x; ++x)
 		{
-			result.emplace_back(toChunkPosition({ x, y }));
+			result.push_back({ x, y });
 		}
 	}
 	return result;

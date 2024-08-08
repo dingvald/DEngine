@@ -31,8 +31,6 @@ namespace drft::gen
 
 		const Biome* getBiome(sf::Vector2i coordinate) const;
 
-		void tagArea(sf::Vector2i tileOrigin, const entt::dense_set<sf::Vector2i>& area, entt::id_type tag) const;
-
 		sf::Vector2i getStartingPosition(const std::string& biomeType) const;
 		sf::Vector2i getDimensions() const;
 
@@ -44,13 +42,6 @@ namespace drft::gen
 		void save(Archive& oarchive) const;
 
 	private:
-		struct GenerationProgress
-		{
-			int pass = 0;
-			EntityPositionMap entities;
-		};
-
-
 		void generateTerrain();
 		void removeIsolatedBiomes();
 		void generateZones();
@@ -58,15 +49,13 @@ namespace drft::gen
 		double getPerlinAt(const std::string& mapType, sf::Vector2i coordinate) const;
 		float getRangeFromPerlin(const std::string& mapName, double perlinValue) const;
 		const Biome* determineBiome(sf::Vector2i tilePosition) const;
-		void finalizeChunk(sf::Vector2i coordinate, entt::registry& registry) const;
+
 		void placeTile(sf::Vector2i position, GenerationContext& context) const;
 		void placeLiquid(sf::Vector2i position, GenerationContext& context) const;
 		void generateEntities(sf::Vector2i position, int pass, GenerationContext& context, const Biome* biome) const;
 		void placeEntities(const EntityPositionMap& entities, entt::registry& registry) const;
-		void updateCompletedChunks(sf::Vector2i coordinate) const;
 		sf::IntRect determinePlacementArea(sf::Vector2i coordinate) const;
 		void initializeGlobalRanges();
-		void eraseFromBiomeCache(sf::Vector2i coordinate) const;
 
 	private:
 		using NoiseMap = spatial::Grid<double>;
@@ -85,11 +74,6 @@ namespace drft::gen
 		std::unordered_map<unsigned int, BiomeZone> _zones;
 		std::unordered_map<std::string, rng::NoiseLayer> _noiseLayers;
 		std::unordered_map<std::string, drft::math::Range<float>> _globalRanges;
-
-		mutable std::unordered_map<sf::Vector2i, int> _completedChunks;
-		mutable std::unordered_map<sf::Vector2i, GenerationProgress> _currentChunkGenerations;
-		mutable std::unordered_map<sf::Vector2i, const Biome*> _biomeCache;
-		mutable TagGridPtr _tagGrid;
 	};
 
 	template<class Archive>

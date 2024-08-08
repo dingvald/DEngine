@@ -33,7 +33,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	}
 
 	auto& worldGenerator = reg.ctx().get<gen::WorldGenerator&>();
-	if (worldGenerator.generateChunk(_coordinate, reg) != gen::GenerationStatus::Done)
+	if (worldGenerator.generateChunk(_coordinate, reg) != GenerationState::Complete)
 	{
 		setState(ChunkState::Building);
 		return ioStatus::Busy;
