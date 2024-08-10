@@ -180,10 +180,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ProcGen\GenerationLayer\Layers\EntityLayer.cpp" />
-    <ClCompile Include="src\ProcGen\GenerationLayer\GenerationLayerManager.cpp" />
-    <ClCompile Include="src\ProcGen\GenerationLayer\GenerationChunk.inl" />
-    <ClCompile Include="src\ProcGen\GenerationLayer\GenerationLayer.inl" />
+    <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp" />
     <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.cpp" />
     <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.cpp" />
     <ClCompile Include="src\Factory\Factory.cpp" />
@@ -386,7 +385,6 @@
     <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
     <ClCompile Include="src\Utility\TextureAtlas.cpp" />
     <ClCompile Include="src\Systems\Rendering\SyncedAnimationSystem.cpp" />
-    <ClCompile Include="src\Structures\StructureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Audio.hpp" />
@@ -488,17 +486,12 @@
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationContext.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\Layers\EntityLayer.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationLayerManager.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationChunk.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationLayer.h" />
+    <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h" />
+    <ClInclude Include="src\ProcGen\Layers\BiomeLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\EntityLayer.h" />
     <ClInclude Include="src\Components\Actions\InteractionAction.h" />
     <ClInclude Include="src\JSON\ICreateFromJson.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\AbstractChunk.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\AbstractLayer.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationLayerDependency.h" />
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationState.h" />
+    <ClInclude Include="src\ProcGen\Layers\StructureLayer.h" />
     <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.h" />
     <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.h" />
     <ClInclude Include="src\Factory\Factory.h" />
@@ -901,7 +894,6 @@
     <ClInclude Include="src\Structures\StructureShapeInstance.h" />
     <ClInclude Include="src\Utility\TextureAtlas.h" />
     <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h" />
-    <ClInclude Include="src\Structures\StructureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\world_generation.json" />

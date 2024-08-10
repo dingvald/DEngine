@@ -203,6 +203,7 @@ void drft::WorldMapState::refreshMapSprites()
 	{
 		for (int x = 0; x < dimensions.x; ++x)
 		{
+			/*
 			const auto worldMapPosition = WorldMapPosition{ x, y };
 			const Biome* biome = worldMap.getBiome(worldMapPosition);
 			if (!biome) continue;
@@ -220,6 +221,7 @@ void drft::WorldMapState::refreshMapSprites()
 				sf::IntRect iconUV = textureAtlas.getUV("simple_tileset"_hs, { 16, 16 }, localUV);
 				_mapNotes.noteSprites.addSprite(iconUV, _mapNotes.notes.at({x,y}).color, screenPosition);
 			}
+			*/
 		}
 	}
 }

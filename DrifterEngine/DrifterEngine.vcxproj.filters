@@ -522,19 +522,13 @@
     <ClCompile Include="src\Spatial\WorldMapPosition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\StructureManager.cpp">
+    <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\GenerationLayer\GenerationLayer.inl">
+    <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\GenerationLayer\GenerationChunk.inl">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\GenerationLayer\GenerationLayerManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\GenerationLayer\Layers\EntityLayer.cpp">
+    <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2042,40 +2036,22 @@
     <ClInclude Include="src\Spatial\WorldMapPosition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\StructureManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\JSON\ICreateFromJson.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\Actions\InteractionAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\AbstractLayer.h">
+    <ClInclude Include="src\ProcGen\Layers\EntityLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\AbstractChunk.h">
+    <ClInclude Include="src\ProcGen\Layers\BiomeLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationLayer.h">
+    <ClInclude Include="src\ProcGen\Layers\StructureLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationLayerDependency.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationChunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationLayerManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\Layers\EntityLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationLayer\GenerationContext.h">
+    <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

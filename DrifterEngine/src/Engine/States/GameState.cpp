@@ -152,10 +152,9 @@ bool drft::GameState::loadOrCreatePlayer()
 	{
 		assert(_factory->has("Player"), "No player prototype found - is JSON loaded?");
 		_player = _factory->build("Player", getContext().registry);
-		auto startingPosition = _worldGenerator->getStartingPosition("Forest");
-		_player.patch<PositionComponent>([startingPosition](PositionComponent& pos)
+		_player.patch<PositionComponent>([](PositionComponent& pos)
 			{
-				pos.position = startingPosition;
+				pos.position = {1024, 1024};
 			});
 		return true;
 	}
@@ -221,7 +220,6 @@ bool drft::GameState::update(const float dt)
 bool drft::GameState::fixedUpdate()
 {
 	_systems->fixedUpdate();
-	_worldGenerator->fixedUpdate(getContext().registry);
 	return true;
 }
 
