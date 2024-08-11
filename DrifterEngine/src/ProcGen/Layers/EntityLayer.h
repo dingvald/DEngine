@@ -24,8 +24,5 @@ class EntityLayer : public GenerationLayer<EntityLayer, details::EntityLayerChun
 public:
 	EntityLayer();
 	EntityMap getEntitiesInBounds(sf::IntRect area);
-
-private:
-
 };
 

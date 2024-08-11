@@ -9,10 +9,10 @@
 inline sf::IntRect addPaddingToArea(sf::IntRect area, sf::Vector2i padding)
 {
 	sf::IntRect result = area;
-	result.left -= padding.x / 2;
-	result.top -= padding.y / 2;
-	result.width += padding.x / 2;
-	result.height += padding.x / 2;
+	result.left -= padding.x;
+	result.top -= padding.y;
+	result.width += padding.x;
+	result.height += padding.y;
 	return result;
 }
 
@@ -135,15 +135,11 @@ protected:
 		else
 		{
 			const entt::id_type typeId = entt::type_index<T>::value();
-			const std::vector<GenerationLayerDependency>& layerDeps = _layer.getDependencies();
-			for (auto&& [id, padding] : layerDeps)
+			const auto& layerDeps = _layer.getDependencies();
+			if (layerDeps.contains(typeId))
 			{
-				if (id != typeId) continue;
-				auto& layer = _layerManager.get(id);
-				if (layer.isLoadedInArea(addPaddingToArea(_bounds, padding)))
-				{
-					return &static_cast<T&>(layer);
-				}
+				auto& layer = _layerManager.get(typeId);
+				return &static_cast<T&>(layer);
 			}
 		}
 		return nullptr;
@@ -184,7 +180,7 @@ public:
 		const auto pointsInArea = getChunkPointsInsideArea(area);
 		return checkIfChunksLoaded(pointsInArea);
 	}
-	const std::vector<GenerationLayerDependency>& getDependencies()
+	const entt::dense_map<entt::id_type, sf::Vector2i>& getDependencies()
 	{
 		return _dependencies;
 	}
@@ -193,10 +189,8 @@ protected:
 	template<typename T>
 	void addDependency(sf::Vector2i padding)
 	{
-		GenerationLayerDependency dependency;
-		dependency.layerID = entt::type_index<T>::value();
-		dependency.padding = padding;
-		_dependencies.emplace_back(std::move(dependency));
+		const auto id = entt::type_index<T>::value();
+		_dependencies.emplace(id, padding);
 	}
 	void setChunkDimensions(sf::Vector2i dimensions)
 	{
@@ -233,9 +227,9 @@ protected:
 		std::vector<sf::Vector2i> result;
 		sf::Vector2i top_left_point = toChunkPosition({ area.left, area.top });
 		sf::Vector2i bottom_right_point = toChunkPosition({ area.left + area.width, area.top + area.height });
-		for (int y = top_left_point.y; y <= bottom_right_point.y; ++y)
+		for (int y = top_left_point.y; y < bottom_right_point.y; ++y)
 		{
-			for (int x = top_left_point.x; x <= bottom_right_point.x; ++x)
+			for (int x = top_left_point.x; x < bottom_right_point.x; ++x)
 			{
 				result.push_back({ x, y });
 			}
@@ -330,6 +324,6 @@ private:
 
 private:
 	entt::dense_map<sf::Vector2i, ChunkType> _chunks;
-	std::vector<GenerationLayerDependency> _dependencies;
+	entt::dense_map<entt::id_type, sf::Vector2i> _dependencies;
 	sf::Vector2i _chunkDimensions;
 };

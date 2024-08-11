@@ -8,11 +8,6 @@ namespace details
 {
 	GenerationState EntityLayerChunk::generate()
 	{
-		auto* biomeLayer = tryGetDependency<BiomeLayer>();
-		auto* structureLayer = tryGetDependency<StructureLayer>();
-
-
-		std::cout << biomeLayer->getMessagesInArea(bounds());
 
 		return GenerationState::Complete;
 	}
@@ -27,9 +22,8 @@ namespace details
 EntityLayer::EntityLayer()
 {
 	setChunkDimensions({ 8, 8 });
-
-	addDependency<BiomeLayer>({ 8, 8 });
-	addDependency<StructureLayer>({ 8,8 });
+	addDependency<BiomeLayer>({ 2, 2 });
+	addDependency<StructureLayer>({ 2,2 });
 }
 
 EntityMap EntityLayer::getEntitiesInBounds(sf::IntRect area)
