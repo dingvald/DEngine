@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "GameState.h"
 
-#include "Random/RandomNumberGenerator.h"
-
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Events/RequestStateChange.h"
@@ -105,8 +103,8 @@ void drft::GameState::init()
 	
 	connectEventHandlers();
 	setupRegistryContext();
-	importSystems();
 	loadOrCreateWorldGenerator();
+	importSystems();
 	loadEntityPrototypes();
 	loadRegistry();
 

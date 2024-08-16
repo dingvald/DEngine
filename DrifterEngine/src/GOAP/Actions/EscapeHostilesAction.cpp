@@ -9,7 +9,7 @@
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Helpers.h"
-#include "Random/RandomNumberGenerator.h"
+#include "Random/Random.h"
 #include "GOAP/Sensors/Utility/IsHostile.h"
 #include "GOAP/Sensors/Utility/IsEntityInSurroundings.h"
 
@@ -57,8 +57,10 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 	}
 	else
 	{
-		int randx = rng::RandomNumberGenerator::intInRange(-1, 1);
-		int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
+		static rng::Random random{ rng::GlobalSeed };
+
+		int randx = random.intInRange(-1, 1);
+		int randy = random.intInRange(-1, 1);
 		const auto& grid = agent.registry()->ctx().get<const spatial::WorldGrid&>();
 		const auto& tilepos = agent.get<PositionComponent>().position;
 
@@ -76,8 +78,8 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 		int safetyCount = 0; // in case entity is surrounded
 		while (safetyCount < 8 && !blockers.empty())
 		{
-			randx = rng::RandomNumberGenerator::intInRange(-1, 1);
-			randy = rng::RandomNumberGenerator::intInRange(-1, 1);
+			randx = random.intInRange(-1, 1);
+			randy = random.intInRange(-1, 1);
 			blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
 			++safetyCount;
 		}

@@ -3,22 +3,18 @@
 
 class StructureLayer;
 
-namespace details
+class StructureLayerChunk : public GenerationChunk<StructureLayer, StructureLayerChunk>
 {
-	class StructureLayerChunk : public GenerationChunk<StructureLayer, StructureLayerChunk>
-	{
-	public:
-		using GenerationChunk::GenerationChunk;
+public:
+	using GenerationChunk::GenerationChunk;
 
-		virtual GenerationState generate() override;
-		virtual void destroy() override;
-	};
-}
+	virtual GenerationState generate() override;
+};
 
 
-class StructureLayer : public GenerationLayer<StructureLayer, details::StructureLayerChunk>
+
+class StructureLayer : public GenerationLayer<StructureLayer, StructureLayerChunk>
 {
 public:
 	StructureLayer();
-	
 };

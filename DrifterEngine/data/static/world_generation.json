@@ -2,37 +2,37 @@
   "WorldSettings": {
     "Seed": "random",
     "Dimensions": [40, 40],
-    "NoiseLayers": {
-      "Altitude": {
-        "Resolution": 4,
-        "Octaves": 6,
-        "Lacunarity": 2.5,
-        "Gain": 0.5
+    "Layers": [
+      {
+        "id": "height",
+        "type": "perlin",
+        "params": {
+          "resolution": 4.0,
+          "octaves": 4,
+          "lacunarity": 2.0,
+          "gain": 2.0
+        }
       },
-      "Temperature": {
-        "Resolution": 1,
-        "Octaves": 3,
-        "Lacunarity": 2.0,
-        "Gain": 0.7
+      {
+        "id": "temperature",
+        "type": "perlin",
+        "params": {
+          "resolution": 4.0,
+          "octaves": 4,
+          "lacunarity": 2.0,
+          "gain": 2.0
+        }
       },
-      "Humidity": {
-        "Resolution": 4,
-        "Octaves": 8,
-        "Lacunarity": 1.5,
-        "Gain": 0.5
-      },
-      "Volcanism": {
-        "Resolution": 4,
-        "Octaves": 16,
-        "Lacunarity": 3.0,
-        "Gain": 0.5
-      },
-      "Foliage": {
-        "Resolution": 4,
-        "Octaves": 4,
-        "Lacunarity": 2.5,
-        "Gain": 0.5
+      {
+        "id": "humidity",
+        "type": "perlin",
+        "params": {
+          "resolution": 4.0,
+          "octaves": 4,
+          "lacunarity": 2.0,
+          "gain": 2.0
+        }
       }
-    }
+    ]
   }
 }

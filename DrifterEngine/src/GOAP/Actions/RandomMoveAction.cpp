@@ -4,7 +4,7 @@
 #include "Components/Actions/MoveAction.h"
 #include "Components/PositionComponent.h"
 #include "Components/MaterialComponent.h"
-#include "Random/RandomNumberGenerator.h"
+#include "Random/Random.h"
 
 drft::goap::RandomMoveAction::RandomMoveAction()
 {
@@ -13,8 +13,10 @@ drft::goap::RandomMoveAction::RandomMoveAction()
 
 drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agent) const
 {
-	int randx = rng::RandomNumberGenerator::intInRange(-1, 1);
-	int randy = rng::RandomNumberGenerator::intInRange(-1, 1);
+	static rng::Random random{ rng::GlobalSeed };
+
+	int randx = random.intInRange(-1, 1);
+	int randy = random.intInRange(-1, 1);
 	const auto& grid = agent.registry()->ctx().get<const spatial::WorldGrid&>();
 	const auto& tilepos = agent.get<PositionComponent>().position;
 
@@ -32,8 +34,8 @@ drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agen
 	int safetyCount = 0; // in case entity is surrounded
 	while (safetyCount < 8 && !blockers.empty())
 	{
-		randx = rng::RandomNumberGenerator::intInRange(-1, 1);
-		randy = rng::RandomNumberGenerator::intInRange(-1, 1);
+		randx = random.intInRange(-1, 1);
+		randy = random.intInRange(-1, 1);
 		blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
 		++safetyCount;
 	}

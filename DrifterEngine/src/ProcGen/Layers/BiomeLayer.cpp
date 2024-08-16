@@ -1,30 +1,38 @@
 #include "pch.h"
 #include "BiomeLayer.h"
+#include "GenericLayers/PerlinNoiseLayer.h"
 
-GenerationState details::BiomeLayerChunk::generate()
+using namespace entt::literals;
+
+static const std::filesystem::path BIOME_FOLDER_PATH = "./data/static/biomes";
+
+GenerationState BiomeLayerChunk::generate()
 {
-    message = std::string{ "BiomeLayerChunk generated at (" } + std::to_string(bounds().left) + ", " + std::to_string(bounds().top) + ")";
+    
+
+
+
+
     return GenerationState::Complete;
 }
 
-void details::BiomeLayerChunk::destroy()
-{
-
-}
 
 BiomeLayer::BiomeLayer()
+    : GenerationLayer({8, 8})
 {
-    setChunkDimensions({ 64, 64 });
-}
-
-std::string BiomeLayer::getMessagesInArea(sf::IntRect area)
-{
-    std::string message;
-    forEachLoadedChunkInArea(area, [&message](details::BiomeLayerChunk& chunk)
+    _biomes.createBiomesFromJSON(BIOME_FOLDER_PATH);
+    _biomes.forEachBiome([this](const std::string& name, const Biome& biome)
         {
-            message += std::string{ "\n" + chunk.message };
+            for (auto&& [name, _] : biome.getClimateRanges())
+            {
+                _biomeClimateTypes.insert(name);
+            }
         });
-
-    return message;
 }
+
+const std::unordered_set<std::string>& BiomeLayer::getClimateTypes() const
+{
+    return _biomeClimateTypes;
+}
+
 

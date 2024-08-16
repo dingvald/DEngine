@@ -12,7 +12,7 @@
 #include "Components/Tags.h"
 
 #include "Systems/Helpers/ItemDatabase.h"
-#include "Random/RandomNumberGenerator.h"
+#include "Random/Random.h"
 #include "Random/PercentChance.h"
 #include "Utility/EntityHelpers.h"
 
@@ -138,7 +138,8 @@ const BodyPart& drft::system::BodyPartSystem::determinePartHit(entt::handle enti
 		{
 			sum += part->size;
 		}
-		const int choice = rng::RandomNumberGenerator::intInRange(0, sum);
+		static rng::Random random{ rng::GlobalSeed };
+		const int choice = random.intInRange(0, sum);
 		auto rd = std::random_device{};
 		auto rng = std::default_random_engine{rd()};
 		std::shuffle(begin(partsVector), end(partsVector), rng);

@@ -126,7 +126,7 @@
     <ClCompile Include="src\Systems\Gameplay\FactionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Random\RandomNumberGenerator.cpp">
+    <ClCompile Include="src\Random\Random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Core\HUD.cpp">
@@ -441,9 +441,6 @@
     <ClCompile Include="src\Algorithms\FloodFill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Random\NoiseLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Biomes\Biome.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -507,16 +504,7 @@
     <ClCompile Include="src\Systems\Rendering\SyncedAnimationSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\ProbabilityMultiplier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Factory\Factory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Spatial\WorldMapPosition.cpp">
@@ -529,6 +517,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\GenericLayers\PerlinNoiseLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\JitteredGridLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\VoronoiLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random\XORshift.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1127,7 +1127,7 @@
     <ClInclude Include="src\Systems\Gameplay\FactionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Random\RandomNumberGenerator.h">
+    <ClInclude Include="src\Random\Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Core\HUD.h">
@@ -1505,12 +1505,6 @@
     <ClInclude Include="src\Algorithms\FloodFill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Random\NoiseLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Biomes\Biome.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1536,9 +1530,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\PlaceEntities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Random\WeightedSelection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Structures\StructureBaseShape.h">
@@ -2021,16 +2012,7 @@
     <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\ProbabilityMultiplier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Factory\Factory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NeighborMultiplier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\ProbabilityMultipliers\NoiseLayerMultiplier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\WorldMapPosition.h">
@@ -2052,6 +2034,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\GenericLayers\PerlinNoiseLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\JitteredGridLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\VoronoiLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\jc_voronoi\jc_voronoi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random\XORshift.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

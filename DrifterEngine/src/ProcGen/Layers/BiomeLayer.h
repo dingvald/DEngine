@@ -1,25 +1,30 @@
 #pragma once
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
+#include <Biomes/BiomeRegistry.h>
+#include <Spatial/Grid.h>
 
 class BiomeLayer;
 
-namespace details
+class BiomeLayerChunk : public GenerationChunk<BiomeLayer, BiomeLayerChunk>
 {
-	class BiomeLayerChunk : public GenerationChunk<BiomeLayer, BiomeLayerChunk>
-	{
-	public:
-		using GenerationChunk::GenerationChunk;
+public:
+	using GenerationChunk::GenerationChunk;
+	virtual GenerationState generate() override;
 
-		virtual GenerationState generate() override;
-		virtual void destroy() override;
-		std::string message = "EMPTY";
-	};
-}
+private:
+	drft::spatial::Grid<Biome*> _biomeMap;
+};
 
 
-class BiomeLayer : public GenerationLayer<BiomeLayer, details::BiomeLayerChunk>
+
+class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>
 {
 public:
 	BiomeLayer();
-	std::string getMessagesInArea(sf::IntRect area);
+
+	const std::unordered_set<std::string>& getClimateTypes() const;
+
+private:
+	BiomeRegistry _biomes;
+	std::unordered_set<std::string> _biomeClimateTypes;
 };

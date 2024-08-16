@@ -1,6 +1,5 @@
 #pragma once
 #include "Biome.h"
-#include <ProcGen/ProbabilityMultipliers/ProbabilityMultiplier.h>
 
 class BiomeRegistry
 {

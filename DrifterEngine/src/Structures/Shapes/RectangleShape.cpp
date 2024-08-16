@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "RectangleShape.h"
-#include "Random/RandomNumberGenerator.h"
+#include "Random/Random.h"
 #include "Random/PercentChance.h"
 #include "Spatial/Helpers.h"
 #include "Structures/StructureShapeInstance.h"
@@ -63,8 +63,10 @@ void drft::RectangleShape::createFromJSON(const rapidjson::Value& json)
 
 void drft::RectangleShape::doGenerate(StructureShapeInstance& shape)
 {
-	const int width = rng::RandomNumberGenerator::intInRange(_width.getMin(), _width.getMax());
-	const int height = rng::RandomNumberGenerator::intInRange(_height.getMin(), _height.getMax());
+	rng::Random random{rng::GlobalSeed};
+	const int width = random.intInRange(_width.getMin(), _width.getMax());
+	const int height = random.intInRange(_height.getMin(), _height.getMax());
+
 	for (int y = 0; y < height; ++y)
 	{
 		for (int x = 0; x < width; ++x)

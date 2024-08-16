@@ -1,16 +1,12 @@
 #include "pch.h"
 #include "StructureLayer.h"
 
-GenerationState details::StructureLayerChunk::generate()
+GenerationState StructureLayerChunk::generate()
 {
     return GenerationState::Complete;
 }
 
-void details::StructureLayerChunk::destroy()
-{
-}
-
 StructureLayer::StructureLayer()
+    : GenerationLayer({64, 64})
 {
-    setChunkDimensions({ 64, 64 });
 }

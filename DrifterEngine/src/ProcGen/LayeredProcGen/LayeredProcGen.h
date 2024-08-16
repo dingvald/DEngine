@@ -6,15 +6,6 @@
 #include <memory>
 #include <Utility/stdHashing.h>
 
-inline sf::IntRect addPaddingToArea(sf::IntRect area, sf::Vector2i padding)
-{
-	sf::IntRect result = area;
-	result.left -= padding.x;
-	result.top -= padding.y;
-	result.width += padding.x;
-	result.height += padding.y;
-	return result;
-}
 
 enum class GenerationState
 {
@@ -23,179 +14,197 @@ enum class GenerationState
 	Failed
 };
 
+inline GenerationState combinedState(std::vector<GenerationState> states)
+{
+	for (auto&& state : states)
+	{
+		if (state == GenerationState::Failed || state == GenerationState::Generating)
+		{
+			return state;
+		}
+	}
+	return GenerationState::Complete;
+}
+
 class GenerationLayerManager;
 
-struct GenerationContext
+namespace details
 {
-	sf::IntRect area;
-	GenerationLayerManager& layers;
-};
+	struct GenerationContext
+	{
+		sf::IntRect area;
+		GenerationLayerManager& layers;
+		unsigned int seed;
+	};
 
-struct GenerationLayerDependency
-{
-	entt::id_type layerID;
-	sf::Vector2i padding;
-};
+	class AbstractLayer
+	{
+	public:
+		virtual GenerationState generate(GenerationContext&& context) = 0;
+	};
 
-class AbstractLayer
-{
-public:
-	virtual GenerationState generate(GenerationContext&& context) = 0;
-	virtual bool isLoadedInArea(sf::IntRect area) const = 0;
-};
+	class AbstractChunk
+	{
+	public:
+		virtual GenerationState doGenerate() = 0;
+	};
 
-class AbstractChunk
+	class AbstractGenericLayer : public AbstractLayer
+	{
+		virtual GenerationState generate(GenerationContext&& context) override final { return GenerationState::Complete; }
+	};
+}
+
+template<typename T>
+struct FutureLayer
 {
-public:
-	virtual GenerationState generate() = 0;
-	virtual void destroy() = 0;
-	virtual bool isGenerated() const = 0;
-	virtual void setIsGenerated(bool value) = 0;
+	GenerationState state;
+	T* instance;
 };
 
 class GenerationLayerManager
 {
 public:
+	GenerationLayerManager(unsigned int seed)
+		: _globalSeed(seed)
+	{}
+
 	template<typename T>
-	GenerationState generate(sf::IntRect area)
+	FutureLayer<T> generate(sf::IntRect area)
 	{
-		static_assert(std::is_convertible<T*, AbstractLayer*>::value, "Type must inherit from AbstractLayer");
-		entt::id_type id = entt::type_index<T>::value();
-		return _layers.at(id)->generate({ .area = area, .layers = *this });
-	}
-	GenerationState generate(entt::id_type id, sf::IntRect area)
-	{
-		if (_layers.contains(id))
+		static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
+		entt::id_type type = entt::type_index<T>::value();
+		FutureLayer<T> result;
+		result.instance = nullptr;
+		result.state = _typedLayers.at(type)->generate({ .area = area, .layers = *this, .seed = _globalSeed });
+		if (result.state == GenerationState::Complete)
 		{
-			return _layers.at(id)->generate({ .area = area, .layers = *this });
+			result.instance = static_cast<T*>(_typedLayers.at(type).get());
 		}
-		return GenerationState::Failed;
+		return result;
+	}
+	template<typename T>
+	FutureLayer<T> generate(entt::id_type id, sf::IntRect area)
+	{
+		static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
+		FutureLayer<T> result;
+		result.instance = nullptr;
+		result.state = _namedLayers.at(id)->generate({ .area = area, .layers = *this });
+		if (result.state == GenerationState::Complete)
+		{
+			result.instance = static_cast<T*>(_namedLayers.at(id).get());
+		}
+		return result;
 	}
 
 	template<typename T>
-	void add()
+	void add(std::unique_ptr<T> layer)
 	{
-		static_assert(std::is_convertible<T*, AbstractLayer*>::value, "Type must inherit from AbstractLayer");
-		entt::id_type id = entt::type_index<T>::value();
-		_layers.emplace(id, std::make_unique<T>());
+		static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
+		entt::id_type type = entt::type_index<T>::value();
+		_typedLayers.emplace(type, std::move(layer));
 	}
 
 	template<typename T>
-	T& get()
+	void add(std::unique_ptr<T> layer, entt::id_type id)
 	{
-		static_assert(std::is_convertible<T*, AbstractLayer*>::value, "Type must inherit from AbstractLayer");
-		entt::id_type id = entt::type_index<T>::value();
-		return *static_cast<T*>(_layers.at(id).get());
-	}
-	AbstractLayer& get(entt::id_type id)
-	{
-		return *(_layers.at(id).get());
-	}
-
-	template<typename T>
-	bool has()
-	{
-		static_assert(std::is_convertible<T*, AbstractLayer*>::value, "Type must inherit from AbstractLayer");
-		entt::id_type id = entt::type_index<T>::value();
-		return _layers.contains(id);
-	}
-	bool has(entt::id_type id)
-	{
-		return _layers.contains(id);
+		static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
+		_namedLayers.emplace(id, std::move(layer));
 	}
 
 private:
-	using AbstractLayerPtr = std::unique_ptr<AbstractLayer>;
-	std::unordered_map<entt::id_type, AbstractLayerPtr> _layers;
+	using AbstractLayerPtr = std::unique_ptr<details::AbstractLayer>;
+	using LayerIdMap = std::unordered_map<entt::id_type, AbstractLayerPtr>;
+	LayerIdMap _typedLayers;
+	LayerIdMap _namedLayers;
+	unsigned int _globalSeed;
 };
 
 template<typename LayerType, typename ChunkType>
-class GenerationChunk : public AbstractChunk
+class GenerationChunk : public details::AbstractChunk
 {
 public:
-	GenerationChunk(sf::IntRect bounds, LayerType& layer, GenerationLayerManager& layers)
-		: _layer(layer)
-		, _bounds(bounds)
+	GenerationChunk(sf::IntRect bounds, LayerType& layer, GenerationLayerManager& layers, unsigned int globalSeed)
+		: _bounds(bounds)
+		, _layer(layer)
 		, _layerManager(layers)
-	{}
+	{
+		_localSeed = globalSeed + std::hash<sf::Vector2i>{}(sf::Vector2i{ _bounds.left, _bounds.top });
+	}
 
-	virtual GenerationState generate() override { return GenerationState::Complete; };
-	virtual void destroy() override {};
-	virtual bool isGenerated() const override final { return _isGenerated; }
-	void setIsGenerated(bool value) override final { _isGenerated = value; }
+	virtual GenerationState doGenerate() override final 
+	{ 
+		if (_isGenerated) return GenerationState::Complete;
+
+		const GenerationState state = this->generate();
+		if (state == GenerationState::Complete)
+		{
+			_isGenerated = true;
+		}
+		return state; 
+	};
 
 protected:
+	virtual GenerationState generate() { return GenerationState::Complete; }
 	template<typename T>
-	T* tryGetDependency()
+	FutureLayer<T> generateDependency(entt::id_type id, sf::IntRect area)
 	{
-		if constexpr (!std::is_convertible<T*, AbstractLayer*>::value)
-		{
-			static_assert(false, "Type must be derived from AbstractLayer");
-		}
-		else
-		{
-			const entt::id_type typeId = entt::type_index<T>::value();
-			const auto& layerDeps = _layer.getDependencies();
-			if (layerDeps.contains(typeId))
-			{
-				auto& layer = _layerManager.get(typeId);
-				return &static_cast<T&>(layer);
-			}
-		}
-		return nullptr;
+		return _layerManager.generate<T>(id, area);
+	}
+	template<typename T>
+	FutureLayer<T> generateDependency(sf::IntRect area)
+	{
+		return _layerManager.generate<T>(area);
 	}
 	sf::IntRect bounds() const
 	{
 		return _bounds;
 	}
+	sf::IntRect addPaddingToBounds(sf::Vector2i padding)
+	{
+		sf::IntRect result = _bounds;
+		result.left -= padding.x;
+		result.top -= padding.y;
+		result.width += padding.x;
+		result.height += padding.y;
+		return result;
+	}
+	void forEachPointInBounds(std::function<void(sf::Vector2i)> func)
+	{
+		for (int y = _bounds.top; y < _bounds.top + _bounds.height; y++)
+		{
+			for (int x = _bounds.left; x < _bounds.left + _bounds.width; x++)
+			{
+				func(sf::Vector2i{ x, y });
+			}
+		}
+	}
+	LayerType& myLayer()
+	{
+		return _layer;
+	}
+	unsigned int getLocalSeed() const
+	{
+		return _localSeed;
+	}
 
 private:
+	sf::IntRect _bounds;
 	LayerType& _layer;
 	GenerationLayerManager& _layerManager;
-	sf::IntRect _bounds;
+
+	unsigned int _localSeed;
 	bool _isGenerated = false;
 };
 
 template<typename LayerType, typename ChunkType>
-class GenerationLayer : public AbstractLayer
+class GenerationLayer : public details::AbstractLayer
 {
 public:
-	GenerationState generate(GenerationContext&& context) override final
-	{
-		const auto chunks = getChunkPointsInsideArea(context.area);
-
-		const bool chunksLoaded = checkIfChunksLoaded(chunks);
-		if (chunksLoaded) return GenerationState::Complete;
-
-		const bool dependenciesReady = generateDependencies(context);
-		if (!dependenciesReady) return GenerationState::Generating;
-
-		const bool chunksReady = generateChunks(chunks, context);
-		if (!chunksReady) return GenerationState::Generating;
-
-		return GenerationState::Complete;
-	}
-	bool isLoadedInArea(sf::IntRect area) const override final
-	{
-		const auto pointsInArea = getChunkPointsInsideArea(area);
-		return checkIfChunksLoaded(pointsInArea);
-	}
-	const entt::dense_map<entt::id_type, sf::Vector2i>& getDependencies()
-	{
-		return _dependencies;
-	}
-
+	GenerationLayer(sf::Vector2i chunkDimensions)
+		: _chunkDimensions(chunkDimensions)
+	{}
 protected:
-	template<typename T>
-	void addDependency(sf::Vector2i padding)
-	{
-		const auto id = entt::type_index<T>::value();
-		_dependencies.emplace(id, padding);
-	}
-	void setChunkDimensions(sf::Vector2i dimensions)
-	{
-		_chunkDimensions = dimensions;
-	}
 	sf::Vector2i getChunkDimensions() const
 	{
 		return _chunkDimensions;
@@ -227,9 +236,9 @@ protected:
 		std::vector<sf::Vector2i> result;
 		sf::Vector2i top_left_point = toChunkPosition({ area.left, area.top });
 		sf::Vector2i bottom_right_point = toChunkPosition({ area.left + area.width, area.top + area.height });
-		for (int y = top_left_point.y; y < bottom_right_point.y; ++y)
+		for (int y = top_left_point.y; y <= bottom_right_point.y; ++y)
 		{
-			for (int x = top_left_point.x; x < bottom_right_point.x; ++x)
+			for (int x = top_left_point.x; x <= bottom_right_point.x; ++x)
 			{
 				result.push_back({ x, y });
 			}
@@ -265,58 +274,36 @@ protected:
 	}
 
 private:
-	bool checkIfChunksLoaded(const std::vector<sf::Vector2i>& chunks) const
+	GenerationState generate(details::GenerationContext&& context) override final
 	{
-		for (auto&& point : chunks)
-		{
-			if (!_chunks.contains(point))
-			{
-				return false;
-			}
+		const auto chunks = getChunkPointsInsideArea(context.area);
+		const bool chunksReady = generateChunks(chunks, context);
+		if (!chunksReady) return GenerationState::Generating;
 
-			const AbstractChunk* chunk = static_cast<const AbstractChunk*>(&_chunks.at(point));
-			if (!chunk->isGenerated())
-			{
-				return false;
-			}
-		}
-		return true;
+		return GenerationState::Complete;
 	}
-	bool generateDependencies(GenerationContext& context)
-	{
-		bool result = true;
-		for (auto&& [id, padding] : _dependencies)
-		{
-			auto& layer = context.layers.get(id);
-			const auto paddedArea = addPaddingToArea(context.area, padding);
-			GenerationState state = layer.generate({ .area = paddedArea, .layers = context.layers});
-			if (state == GenerationState::Generating)
-			{
-				result = false;
-			}
-		}
-		return result;
-	}
-	bool generateChunks(const std::vector<sf::Vector2i>& chunks, GenerationContext& context)
+	bool generateChunks(const std::vector<sf::Vector2i>& chunks, details::GenerationContext& context)
 	{
 		bool result = true;
 		for (auto&& point : chunks)
 		{
 			if (!_chunks.contains(point))
 			{
-				ChunkType chunk = ChunkType{ sf::IntRect{toTilePosition(point), _chunkDimensions}, *static_cast<LayerType*>(this), context.layers };
+				ChunkType chunk = ChunkType{ 
+					sf::IntRect{toTilePosition(point), 
+					_chunkDimensions}, 
+					*static_cast<LayerType*>(this), 
+					context.layers, 
+					context.seed 
+				};
 				_chunks.emplace(point, std::move(chunk));
 			}
 
-			AbstractChunk* chunk = static_cast<AbstractChunk*>(&_chunks.at(point));
-			GenerationState state = chunk->generate();
+			details::AbstractChunk* chunk = static_cast<details::AbstractChunk*>(&_chunks.at(point));
+			GenerationState state = chunk->doGenerate();
 			if (state == GenerationState::Generating)
 			{
 				result = false;
-			}
-			else if (state == GenerationState::Complete)
-			{
-				chunk->setIsGenerated(true);
 			}
 		}
 		return result;
@@ -324,6 +311,11 @@ private:
 
 private:
 	entt::dense_map<sf::Vector2i, ChunkType> _chunks;
-	entt::dense_map<entt::id_type, sf::Vector2i> _dependencies;
 	sf::Vector2i _chunkDimensions;
+};
+
+class GenericLayer : public details::AbstractGenericLayer
+{
+public:
+	virtual double getValueAt(sf::Vector2i tilePosition) = 0;
 };

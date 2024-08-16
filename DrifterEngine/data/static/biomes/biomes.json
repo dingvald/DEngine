@@ -8,10 +8,9 @@
         "color": [ 65, 97, 63 ]
       },
       "climate": {
-        "Temperature": [ 0.0, 15.0 ],
-        "Humidity": [ 30.0, 60.0 ],
-        "Altitude": [ 50, 1200 ],
-        "Foliage": [ 0.0, 0.5 ]
+        "Temperature": [ 0.0, 0.2 ],
+        "Humidity": [ 0.3, 0.6 ],
+        "Altitude": [ 0.1, 0.8 ]
       },
       "entity_slots": {
         "tree": {

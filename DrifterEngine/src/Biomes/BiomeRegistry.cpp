@@ -2,13 +2,9 @@
 #include "BiomeRegistry.h"
 #include "JSON/JSONHelpers.h"
 
-#include <ProcGen/ProbabilityMultipliers/NeighborMultiplier.h>
-#include <ProcGen/ProbabilityMultipliers/NoiseLayerMultiplier.h>
 
 BiomeRegistry::BiomeRegistry()
 {
-	MuliplierFactory::registerType<drft::gen::NeighborMultiplier>("neighbor");
-	MuliplierFactory::registerType<drft::gen::NoiseLayerMultiplier>("noise_layer");
 }
 
 void BiomeRegistry::createBiomesFromJSON(const std::filesystem::path& directoryPath)

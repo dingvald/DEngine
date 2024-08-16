@@ -9,7 +9,7 @@
 #include "Components/Tags.h"
 
 #include "Events/TurnEndEvent.h"
-#include "Random/RandomNumberGenerator.h"
+#include "Random/Random.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/Conversions.h"

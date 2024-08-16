@@ -2,7 +2,7 @@
 #include "StructureDecorator.h"
 #include "StructureShapeInstance.h"
 #include "Random/PercentChance.h"
-#include "Random/RandomNumberGenerator.h"
+#include "Random/Random.h"
 
 void drft::StructureDecorator::createFromJSON(const rapidjson::Value& json)
 {
@@ -41,7 +41,8 @@ void drft::StructureDecorator::apply(StructureShapeInstance& shape) const
 
 	std::shuffle(randomPositions.begin(), randomPositions.end(), std::default_random_engine(0));
 
-	const int numberToSet = rng::RandomNumberGenerator::intInRange(_number.getMin(), _number.getMax());
+	static rng::Random random{ rng::GlobalSeed };
+	const int numberToSet = random.intInRange(_number.getMin(), _number.getMax());
 
 	int numberSet = 0;
 	for (auto&& position : randomPositions)

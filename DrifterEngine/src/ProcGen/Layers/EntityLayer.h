@@ -5,24 +5,22 @@ class EntityLayer;
 
 using EntityMap = entt::dense_map<sf::Vector2i, std::vector<std::string>>;
 
-namespace details
+
+class EntityLayerChunk : public GenerationChunk<EntityLayer, EntityLayerChunk>
 {
-	class EntityLayerChunk : public GenerationChunk<EntityLayer, EntityLayerChunk>
-	{
-	public:
-		using GenerationChunk::GenerationChunk;
+public:
+	using GenerationChunk::GenerationChunk;
 
-		virtual GenerationState generate() override;
-		virtual void destroy() override;
+	virtual GenerationState generate() override;
 
-		EntityMap entities;
-	};
-}
+	EntityMap entities;
+};
 
-class EntityLayer : public GenerationLayer<EntityLayer, details::EntityLayerChunk>
+class EntityLayer : public GenerationLayer<EntityLayer, EntityLayerChunk>
 {
 public:
 	EntityLayer();
+
 	EntityMap getEntitiesInBounds(sf::IntRect area);
 };
 

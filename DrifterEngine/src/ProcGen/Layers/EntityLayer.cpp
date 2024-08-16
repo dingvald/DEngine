@@ -4,32 +4,28 @@
 #include <ProcGen/Layers/StructureLayer.h>
 
 
-namespace details
+GenerationState EntityLayerChunk::generate()
 {
-	GenerationState EntityLayerChunk::generate()
-	{
+	auto biomeLayer = generateDependency<BiomeLayer>(bounds());
+	auto structureLayer = generateDependency<StructureLayer>(bounds());
 
-		return GenerationState::Complete;
-	}
+	const GenerationState state = combinedState({ biomeLayer.state, structureLayer.state });
+	if (state != GenerationState::Complete) return state;
 
-	void EntityLayerChunk::destroy()
-	{
-
-	}
+	
+	
+	return GenerationState::Complete;
 }
 
 
 EntityLayer::EntityLayer()
-{
-	setChunkDimensions({ 8, 8 });
-	addDependency<BiomeLayer>({ 2, 2 });
-	addDependency<StructureLayer>({ 2,2 });
-}
+	: GenerationLayer({8, 8})
+{}
 
 EntityMap EntityLayer::getEntitiesInBounds(sf::IntRect area)
 {
 	EntityMap result;
-	forEachLoadedChunkInArea(area, [area, &result](details::EntityLayerChunk& chunk)
+	forEachLoadedChunkInArea(area, [area, &result](EntityLayerChunk& chunk)
 		{
 			for (auto&& [position, entities] : chunk.entities)
 			{

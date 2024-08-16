@@ -43,80 +43,22 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 			}
 		}
 	}
-	if (json.HasMember("entity_slots"))
+}
+
+float Biome::distanceFromClimate(const std::unordered_map<std::string, float>& values) const
+{
+	float sum = 0.0;
+	for (auto&& [name, val] : values)
 	{
-		for (auto& slot : json["entity_slots"].GetObject())
-		{
-			EntitySlot newSlot;
-			auto slotName = slot.name.GetString();
-			
-			if (slot.value.HasMember("probability"))
-			{
-				newSlot.probability = slot.value["probability"].GetFloat();
-			}
-			if (slot.value.HasMember("probability_multipliers"))
-			{
-				for (auto&& multVal : slot.value["probability_multipliers"].GetArray())
-				{
-					auto multObj = multVal.GetObject();
-					const auto type = multObj["type"].GetString();
-					auto multiplier = MuliplierFactory::build(type);
-					multiplier->createFromJSON(multObj["params"]);
-
-					newSlot.multipliers.emplace_back(std::move(multiplier));
-				}
-			}
-
-			_entitySlots.emplace(entt::hashed_string{ slotName }, std::move(newSlot));
-		}
+		if (!_ranges.contains(name)) continue;
+		sum += _ranges.at(name).distance(val);
 	}
-	if (json.HasMember("entity_packs"))
-	{
-		for (auto& pack : json["entity_packs"].GetObject())
-		{
-			auto packName = pack.name.GetString();
-			std::vector<EntityWeight> newPack;
-			auto packArray = pack.value.GetArray();
-			for (auto&& val : packArray)
-			{
-				std::string entityName = val.GetArray()[0].GetString();
-				int weight = val.GetArray()[1].GetInt();
-				newPack.emplace_back(std::make_pair(entityName, weight));
-			}
-			_entityPacks.emplace(entt::hashed_string{ packName }, newPack);
-		}
-	}
-	if (json.HasMember("structures"))
-	{
-		for (auto& structure : json["structures"].GetObject())
-		{
-			_structures.emplace_back(structure.name.GetString(), structure.value.GetFloat());
-		}
-	}
+	return sum;
 }
 
-bool Biome::containsClimateRange(const std::string& name) const
+const std::unordered_map<std::string, drft::math::Range<float>>& Biome::getClimateRanges() const
 {
-	return _ranges.contains(name);
-}
-
-drft::math::Range<float> Biome::getClimateRange(const std::string& name) const
-{
-	return _ranges.at(name);
-}
-
-bool Biome::satisfiesClimate(const std::string& climateName, float value) const
-{
-	if (!_ranges.contains(climateName)) return false;
-	const auto& range = _ranges.at(climateName);
-	return (range.isInfinite() || range.isValueWithin(value));
-}
-
-float Biome::getDeviationFromClimate(const std::string& climateName, float value) const
-{
-	if (!_ranges.contains(climateName)) return 0.0f;
-	const auto& range = _ranges.at(climateName);
-	return range.distance(value);
+	return _ranges;
 }
 
 BiomeIcon Biome::getIcon() const
@@ -127,19 +69,4 @@ BiomeIcon Biome::getIcon() const
 const std::string& Biome::getName() const
 {
 	return _name;
-}
-
-const std::unordered_map<entt::id_type, Biome::EntitySlot>& Biome::getEntitySlots() const
-{
-	return _entitySlots;
-}
-
-const std::unordered_map<entt::id_type, std::vector<Biome::EntityWeight>>& Biome::getEntityPacks() const
-{
-	return _entityPacks;
-}
-
-const std::vector<Biome::StructureProbabilityPair>& Biome::getStructureProbabilities() const
-{
-	return _structures;
 }

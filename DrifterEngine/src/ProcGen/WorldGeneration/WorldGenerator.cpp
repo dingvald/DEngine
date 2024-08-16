@@ -7,12 +7,9 @@
 #include "Spatial/Grid.h"
 #include "Structures/StructureInstance.h"
 #include "JSON/JSONHelpers.h"
-#include "Random/RandomNumberGenerator.h"
+#include "Random/Random.h"
 #include "Random/RandomNoise.h"
-#include "Random/NoiseLayer.h"
 #include "Random/PercentChance.h"
-#include "Random/WeightedSelection.h"
-#include "ProcGen/GenerationContext.h"
 #include "ProcGen/PlaceEntities.h"
 #include "Services/DebugInfo.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
@@ -20,9 +17,12 @@
 #include "Utility/Math.h"
 #include "Spatial/WorldMapPosition.h"
 
+#include <ProcGen/Layers/GenericLayers/PerlinNoiseLayer.h>
 #include <ProcGen/Layers/EntityLayer.h>
 #include <ProcGen/Layers/BiomeLayer.h>
 #include <ProcGen/Layers/StructureLayer.h>
+#include <ProcGen/Layers/JitteredGridLayer.h>
+#include <ProcGen/Layers/VoronoiLayer.h>
 
 static const sf::Vector2i CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 
@@ -30,21 +30,21 @@ static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
 static const std::filesystem::path BIOME_FOLDER_PATH = STATIC_DATA_PATH.string() + "biomes";
 static const std::filesystem::path STRUCTURE_FOLDER_PATH = STATIC_DATA_PATH.string() + "structures";
 
-constexpr int GENERATION_PASSES = 3;
-
 using namespace entt::literals;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
 	
+
 }
 
 void drft::gen::WorldGenerator::init()
 {
-	_layerManager = std::make_unique<GenerationLayerManager>();
-	_layerManager->add<EntityLayer>();
-	_layerManager->add<BiomeLayer>();
-	_layerManager->add<StructureLayer>();
+	_layerManager->add(std::make_unique<EntityLayer>());
+	_layerManager->add(std::make_unique<StructureLayer>());
+	_layerManager->add(std::make_unique<BiomeLayer>());
+	_layerManager->add(std::make_unique<JitteredGridLayer>());
+	_layerManager->add(std::make_unique<VoronoiLayer>());
 }
 
 void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
@@ -77,7 +77,7 @@ void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
 			{
 				_seed = seed.GetUint();
 			}
-			rng::RandomNumberGenerator::setSeed(_seed);
+			rng::GlobalSeed = _seed;
 		}
 		if (worldSettings.HasMember("Dimensions"))
 		{
@@ -87,9 +87,23 @@ void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
 			
 			_dimensions = worldMapPosition.toChunkSpace();
 		}
-		if (worldSettings.HasMember("NoiseLayers"))
+		if (worldSettings.HasMember("Layers"))
 		{
+			_layerManager = std::make_unique<GenerationLayerManager>(_seed);
 
+			for (auto&& layer : worldSettings["Layers"].GetArray())
+			{
+				auto layerObj = layer.GetObject();
+				const std::string type = layerObj["type"].GetString();
+				auto& params = layerObj["params"];
+				if (type == "perlin")
+				{
+					entt::id_type id = entt::hashed_string{ layerObj["id"].GetString() };
+					auto layerPtr = std::make_unique<PerlinNoiseLayer>();
+					layerPtr->createFromJson(params);
+					_layerManager->add(std::move(layerPtr), id);
+				}
+			}
 		}
 	}
 }
@@ -104,22 +118,25 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 {
 	sf::IntRect area = { spatial::toTileSpace(coordinate), CHUNK_SIZE };
 
-	GenerationState state =  _layerManager->generate<EntityLayer>(area);
-	if (state == GenerationState::Complete)
+	auto layer = _layerManager->generate<VoronoiLayer>(area);
+	if (layer.state != GenerationState::Complete) return layer.state;
+
+	if (layer.instance)
 	{
-		auto& layer = _layerManager->get<EntityLayer>();
-		auto entityPositions = layer.getEntitiesInBounds(area);
-		auto& factory = registry.ctx().get<EntityFactory&>();
-		for (auto&& [position, entities] : entityPositions)
+		auto centroids = layer.instance->getCentroidsInBounds(area);
+		std::cout << "# of centroids in area: " << centroids.size() << std::endl;
+		const auto& factory = registry.ctx().get<EntityFactory&>();
+		auto edges = layer.instance->getEdgesInBounds(area);
+		for (auto&& edge : edges)
 		{
-			for (auto&& entity : entities)
+			auto line = spatial::getIntPointsAlongLine(edge.first, edge.second);
+			for (auto&& point : line)
 			{
-				placeSingle(entity, position, registry, factory);
+				placeSingle("Tile", point, registry, factory);
 			}
 		}
 	}
-
-	return state;
+	return layer.state;
 }
 
 sf::Vector2i drft::gen::WorldGenerator::getDimensions() const
