@@ -20,7 +20,7 @@ namespace
 
 GenerationState VoronoiLayerChunk::generate()
 {
-    const auto paddedBounds = addPaddingToBounds({ 64, 64 });
+    const auto paddedBounds = addPaddingToBounds({bounds().width, bounds().height});
     auto jitterLayer = generateDependency<JitteredGridLayer>(paddedBounds);
     if (jitterLayer.state != GenerationState::Complete) return jitterLayer.state;
 
@@ -30,7 +30,6 @@ GenerationState VoronoiLayerChunk::generate()
     for (auto&& point : points)
     {
         jcv_points.push_back(vector2i2jcvPoint(point));
-
         if (bounds().contains(point))
         {
             centroids.push_back(point);
@@ -40,21 +39,20 @@ GenerationState VoronoiLayerChunk::generate()
     jcv_diagram diagram;
     memset(&diagram, 0, sizeof(jcv_diagram));
     jcv_diagram_generate(jcv_points.size(), jcv_points.data(), nullptr, nullptr, &diagram);
-    auto sites = jcv_diagram_get_sites(&diagram);
-    for (int i = 0; i < diagram.numsites; ++i)
+   
+    // edges
+    const jcv_edge* edge = jcv_diagram_get_edges(&diagram);
+    while (edge)
     {
-        const jcv_site* site = &sites[i];
-        auto edgeGraph = site->edges;
-        while (edgeGraph)
+        auto point1 = jcvPoint2Vector2i(edge->pos[0]);
+        auto point2 = jcvPoint2Vector2i(edge->pos[1]);
+        if (bounds().contains(point1))
         {
-            auto line = std::make_pair(jcvPoint2Vector2i(edgeGraph->pos[0]), jcvPoint2Vector2i(edgeGraph->pos[1]));
-            if (bounds().contains(line.first))
-            {
-                edges.emplace_back(std::move(line));
-            }
-            edgeGraph = edgeGraph->next;
+            edges.emplace_back(std::make_pair(point1, point2));
         }
+        edge = jcv_diagram_get_next_edge(edge);
     }
+
     jcv_diagram_free(&diagram);
 
     return GenerationState::Complete;

@@ -165,8 +165,8 @@ protected:
 		sf::IntRect result = _bounds;
 		result.left -= padding.x;
 		result.top -= padding.y;
-		result.width += padding.x;
-		result.height += padding.y;
+		result.width += 2*padding.x;
+		result.height += 2*padding.y;
 		return result;
 	}
 	void forEachPointInBounds(std::function<void(sf::Vector2i)> func)
@@ -290,8 +290,7 @@ private:
 			if (!_chunks.contains(point))
 			{
 				ChunkType chunk = ChunkType{ 
-					sf::IntRect{toTilePosition(point), 
-					_chunkDimensions}, 
+					sf::IntRect{toTilePosition(point), _chunkDimensions}, 
 					*static_cast<LayerType*>(this), 
 					context.layers, 
 					context.seed 

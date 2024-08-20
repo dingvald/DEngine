@@ -17,7 +17,7 @@ GenerationState JitteredGridLayerChunk::generate()
 }
 
 JitteredGridLayer::JitteredGridLayer()
-	: GenerationLayer({16, 16})
+	: GenerationLayer({64, 64})
 {}
 
 std::vector<sf::Vector2i> JitteredGridLayer::getPointsInBounds(sf::IntRect area)
@@ -25,8 +25,10 @@ std::vector<sf::Vector2i> JitteredGridLayer::getPointsInBounds(sf::IntRect area)
 	std::vector<sf::Vector2i> result;
 	forEachLoadedChunkInArea(area, [&area, &result](JitteredGridLayerChunk& chunk)
 		{
-			if (!area.contains(chunk.jitteredPoint)) return;
-			result.push_back(chunk.jitteredPoint);
+			if (area.contains(chunk.jitteredPoint))
+			{
+				result.emplace_back(chunk.jitteredPoint);
+			}
 		});
 	return result;
 }

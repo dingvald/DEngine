@@ -123,8 +123,6 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 
 	if (layer.instance)
 	{
-		auto centroids = layer.instance->getCentroidsInBounds(area);
-		std::cout << "# of centroids in area: " << centroids.size() << std::endl;
 		const auto& factory = registry.ctx().get<EntityFactory&>();
 		auto edges = layer.instance->getEdgesInBounds(area);
 		for (auto&& edge : edges)
