@@ -184,6 +184,7 @@
     <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\GenericLayers\PerlinNoiseLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\JitteredGridLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\LandLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\VoronoiLayer.cpp" />
     <ClCompile Include="src\Factory\Factory.cpp" />
@@ -494,6 +495,7 @@
     <ClInclude Include="src\JSON\ICreateFromJson.h" />
     <ClInclude Include="src\ProcGen\Layers\GenericLayers\PerlinNoiseLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\JitteredGridLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\LandLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\StructureLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\VoronoiLayer.h" />
     <ClInclude Include="src\Factory\Factory.h" />

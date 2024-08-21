@@ -531,6 +531,9 @@
     <ClCompile Include="src\Random\XORshift.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\LandLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -2049,6 +2052,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\XORshift.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\LandLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

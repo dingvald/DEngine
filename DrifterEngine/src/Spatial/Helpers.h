@@ -15,6 +15,8 @@ namespace drft::spatial
 	// Returns the distance bewteen two points.
 	float distance(sf::Vector2f pt1, sf::Vector2f pt2);
 
+	std::optional<sf::Vector2i> findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points);
+
 	enum class AdjacentType
 	{
 		Ordinal,
@@ -26,6 +28,8 @@ namespace drft::spatial
 	// Ordinal: NE, NW, SE, SW
 	std::vector<sf::Vector2i> getAdjacentPoints(sf::Vector2i point, AdjacentType type = AdjacentType::OrdinalCardinal);
 	std::vector<sf::Vector2i> getPointDeltas(sf::Vector2i point, const std::vector<sf::Vector2i>& points);
+
+	void forEachPointInRect(sf::IntRect rect, std::function<void(sf::Vector2i point)> func);
 }
 
 

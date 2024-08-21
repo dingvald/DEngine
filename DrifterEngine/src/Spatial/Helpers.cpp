@@ -131,6 +131,24 @@ float drft::spatial::distance(sf::Vector2f pt1, sf::Vector2f pt2)
 	return std::hypotf(delta.x, delta.y);
 }
 
+std::optional<sf::Vector2i> drft::spatial::findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points)
+{
+	if (points.empty()) return std::nullopt;
+
+	float minDistance = std::numeric_limits<float>::max();
+	sf::Vector2i result = target;
+
+	for (auto&& point : points)
+	{
+		if (distance(target, point) < minDistance)
+		{
+			result = point;
+		}
+	}
+
+	return result;
+}
+
 std::vector<sf::Vector2i> drft::spatial::getAdjacentPoints(sf::Vector2i point, AdjacentType type)
 {
 	constexpr auto ordinals = [](sf::Vector2i point) -> std::vector<sf::Vector2i>
@@ -199,3 +217,16 @@ std::vector<sf::Vector2i> drft::spatial::getPointDeltas(sf::Vector2i point, cons
 	}
 	return result;
 }
+
+void drft::spatial::forEachPointInRect(sf::IntRect rect, std::function<void(sf::Vector2i)> func)
+{
+	for (int y = rect.top; y < rect.top + rect.height; ++y)
+	{
+		for (int x = rect.left; x < rect.left + rect.width; ++x)
+		{
+			func(sf::Vector2i{ x, y });
+		}
+	}
+}
+
+

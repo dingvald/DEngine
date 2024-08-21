@@ -23,6 +23,7 @@
 #include <ProcGen/Layers/StructureLayer.h>
 #include <ProcGen/Layers/JitteredGridLayer.h>
 #include <ProcGen/Layers/VoronoiLayer.h>
+#include <ProcGen/Layers/LandLayer.h>
 
 static const sf::Vector2i CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 
@@ -45,6 +46,7 @@ void drft::gen::WorldGenerator::init()
 	_layerManager->add(std::make_unique<BiomeLayer>());
 	_layerManager->add(std::make_unique<JitteredGridLayer>());
 	_layerManager->add(std::make_unique<VoronoiLayer>());
+	_layerManager->add(std::make_unique<LandLayer>());
 }
 
 void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
@@ -78,6 +80,7 @@ void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
 				_seed = seed.GetUint();
 			}
 			rng::GlobalSeed = _seed;
+			_layerManager = std::make_unique<GenerationLayerManager>(_seed);
 		}
 		if (worldSettings.HasMember("Dimensions"))
 		{
@@ -89,8 +92,6 @@ void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
 		}
 		if (worldSettings.HasMember("Layers"))
 		{
-			_layerManager = std::make_unique<GenerationLayerManager>(_seed);
-
 			for (auto&& layer : worldSettings["Layers"].GetArray())
 			{
 				auto layerObj = layer.GetObject();
@@ -118,21 +119,48 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 {
 	sf::IntRect area = { spatial::toTileSpace(coordinate), CHUNK_SIZE };
 
-	auto layer = _layerManager->generate<VoronoiLayer>(area);
+	auto layer = _layerManager->generate<LandLayer>(area);
 	if (layer.state != GenerationState::Complete) return layer.state;
 
 	if (layer.instance)
 	{
 		const auto& factory = registry.ctx().get<EntityFactory&>();
-		auto edges = layer.instance->getEdgesInBounds(area);
-		for (auto&& edge : edges)
-		{
-			auto line = spatial::getIntPointsAlongLine(edge.first, edge.second);
-			for (auto&& point : line)
+		auto land = layer.instance->getLandPointsInBounds(area);
+		auto ocean = layer.instance->getOceanPointsInBounds(area);
+
+
+		auto determineLandOrOcean = [&land, &ocean, &factory, &registry](sf::Vector2i point)
 			{
-				placeSingle("Tile", point, registry, factory);
-			}
-		}
+				auto closestLandPoint = spatial::findClosestPoint(point, land);
+				auto closestOceanPoint = spatial::findClosestPoint(point, ocean);
+
+				if (!closestLandPoint.has_value() && !closestOceanPoint.has_value()) return;
+
+				if (!closestLandPoint.has_value())
+				{
+					placeSingle("Water", point, registry, factory);
+				}
+				else if (!closestOceanPoint.has_value())
+				{
+					placeSingle("Tile", point, registry, factory);
+				}
+				else
+				{
+					auto oceanDistance = spatial::distance(point, closestOceanPoint.value());
+					auto landDistance = spatial::distance(point, closestLandPoint.value());
+					if (oceanDistance < landDistance)
+					{
+						placeSingle("Water", point, registry, factory);
+					}
+					else
+					{
+						placeSingle("Tile", point, registry, factory);
+					}
+				}
+			};
+
+		spatial::forEachPointInRect(area, determineLandOrOcean);
+		
 	}
 	return layer.state;
 }
