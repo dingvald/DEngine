@@ -65,6 +65,7 @@
 
 #pragma endregion
 
+#include <JSON/JSONHelpers.h>
 #include "Utility/SaveEntity.h"
 #include "Utility/LoadEntity.h"
 #include "Utility/SaveRegistry.h"
@@ -82,6 +83,7 @@ static const std::filesystem::path GAMESTATE_SAVE_FILE_PATH = SAVE_DIRECTORY / "
 static const std::filesystem::path MAIN_REGISTRY_FILE_PATH = SAVE_DIRECTORY / "registry.json";
 
 static const std::filesystem::path ENTITIES_DIRECTORY = STATIC_DATA_DIRECTORY / "entities";
+static const std::filesystem::path WORLD_GENERATION_FILE_PATH = STATIC_DATA_DIRECTORY / "world_generation.json";
 
 drft::GameState::GameState(StateStack& stack, StateContext& context) 
 	: State(stack, context)
@@ -130,7 +132,15 @@ void drft::GameState::loadOrCreateWorldGenerator()
 	}
 	else
 	{
-		_worldGenerator->createFromJson("world_generation.json");
+		json::JsonRootExtractor jsonRootExtractor{ WORLD_GENERATION_FILE_PATH, "world_generation" };
+		if (!jsonRootExtractor.isValid())
+		{
+			std::cout << "Failed: " << WORLD_GENERATION_FILE_PATH << " could not be parsed." << std::endl;
+		}
+		else
+		{
+			_worldGenerator->createFromJson(jsonRootExtractor.getRoot());
+		}
 	}
 
 	_worldGenerator->init();
