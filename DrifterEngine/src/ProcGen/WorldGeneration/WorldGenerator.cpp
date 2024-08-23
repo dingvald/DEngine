@@ -2,12 +2,11 @@
 #include "WorldGenerator.h"
 #include "Algorithms/FloodFill.h"
 #include "Factory/EntityFactory.h"
+#include <Factory/Factory.h>
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/Grid.h"
 #include "Structures/StructureInstance.h"
-#include "JSON/JSONHelpers.h"
-#include "Random/Random.h"
 #include "Random/RandomNoise.h"
 #include "Random/PercentChance.h"
 #include "ProcGen/PlaceEntities.h"
@@ -27,83 +26,77 @@
 
 static const sf::Vector2i CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 
-static const std::filesystem::path STATIC_DATA_PATH = ".\\data\\static\\";
-static const std::filesystem::path BIOME_FOLDER_PATH = STATIC_DATA_PATH.string() + "biomes";
-static const std::filesystem::path STRUCTURE_FOLDER_PATH = STATIC_DATA_PATH.string() + "structures";
-
 using namespace entt::literals;
 
 drft::gen::WorldGenerator::WorldGenerator()
 {
-	
 
 }
 
 void drft::gen::WorldGenerator::init()
 {
-	_layerManager->add(std::make_unique<EntityLayer>());
-	_layerManager->add(std::make_unique<StructureLayer>());
-	_layerManager->add(std::make_unique<BiomeLayer>());
-	_layerManager->add(std::make_unique<JitteredGridLayer>());
-	_layerManager->add(std::make_unique<VoronoiLayer>());
-	_layerManager->add(std::make_unique<LandLayer>());
+
 }
 
-void drft::gen::WorldGenerator::createFromJson(const std::string& JSONfilename)
+void drft::gen::WorldGenerator::createFromJson(const rapidjson::Value& json)
 {
-	std::filesystem::path worldSettingsFilePath;
-	worldSettingsFilePath /= STATIC_DATA_PATH;
-	worldSettingsFilePath /= JSONfilename;
-	auto optionalWorldSettingsDocument = drft::json::extractDOM(worldSettingsFilePath, "WorldSettings");
-
-	if (!optionalWorldSettingsDocument.has_value())
+	if (json.HasMember("seed"))
 	{
-		std::cout << "Failed: " << worldSettingsFilePath << " could not be parsed." << std::endl;
+		auto& seed = json["seed"];
+		if (seed.IsString())
+		{
+			if (std::strcmp(seed.GetString(), "random") != 0)
+			{
+				throw std::exception("Invalid string.");
+			}
+			_seed = rng::generateSeed();
+		}
+		else if (seed.IsUint())
+		{
+			_seed = seed.GetUint();
+		}
+		rng::GlobalSeed = _seed;
+		_layerManager = std::make_unique<GenerationLayerManager>(_seed);
 	}
-	else
+	if (json.HasMember("dimensions"))
 	{
-		auto& worldSettingsDocument = optionalWorldSettingsDocument.value();
-		auto& worldSettings = worldSettingsDocument["WorldSettings"];
-		if (worldSettings.HasMember("Seed"))
+		const int raw_x = json["dimensions"].GetArray()[0].GetInt();
+		const int raw_y = json["dimensions"].GetArray()[1].GetInt();
+		const auto worldMapPosition = WorldMapPosition{ raw_x, raw_y };
+
+		_dimensions = worldMapPosition.toChunkSpace();
+	}
+	if (json.HasMember("layers"))
+	{
+		for (auto&& layer : json["layers"].GetArray())
 		{
-			auto& seed = worldSettings["Seed"];
-			if (seed.IsString())
+			auto layerObj = layer.GetObject();
+			const entt::id_type type = entt::hashed_string{ layerObj["type"].GetString() };
+
+			if (type == "perlin"_hs)
 			{
-				if (std::strcmp(seed.GetString(), "random") != 0)
-				{
-					throw std::exception("Invalid string.");
-				}
-				_seed = rng::generateSeed();
-			}
-			else if (seed.IsUint())
-			{
-				_seed = seed.GetUint();
-			}
-			rng::GlobalSeed = _seed;
-			_layerManager = std::make_unique<GenerationLayerManager>(_seed);
-		}
-		if (worldSettings.HasMember("Dimensions"))
-		{
-			const int raw_x = worldSettings["Dimensions"].GetArray()[0].GetInt();
-			const int raw_y = worldSettings["Dimensions"].GetArray()[1].GetInt();
-			const auto worldMapPosition = WorldMapPosition{ raw_x, raw_y };
-			
-			_dimensions = worldMapPosition.toChunkSpace();
-		}
-		if (worldSettings.HasMember("Layers"))
-		{
-			for (auto&& layer : worldSettings["Layers"].GetArray())
-			{
-				auto layerObj = layer.GetObject();
-				const std::string type = layerObj["type"].GetString();
+				entt::id_type id = entt::hashed_string{ layerObj["id"].GetString() };
+				auto layerPtr = std::make_unique<PerlinNoiseLayer>(spatial::toTileSpace(_dimensions), _seed);
 				auto& params = layerObj["params"];
-				if (type == "perlin")
-				{
-					entt::id_type id = entt::hashed_string{ layerObj["id"].GetString() };
-					auto layerPtr = std::make_unique<PerlinNoiseLayer>();
-					layerPtr->createFromJson(params);
-					_layerManager->add(std::move(layerPtr), id);
-				}
+				layerPtr->createFromJson(params);
+				_layerManager->add(std::move(layerPtr), id);
+			}
+			else if (type == "land_layer"_hs)
+			{
+				auto layerPtr = std::make_unique<LandLayer>();
+				auto& params = layerObj["params"];
+				layerPtr->createFromJson(params);
+				_layerManager->add(std::move(layerPtr));
+			}
+			else if (type == "voronoi"_hs)
+			{
+				auto layerPtr = std::make_unique<VoronoiLayer>();
+				_layerManager->add(std::move(layerPtr));
+			}
+			else if (type == "jittered_grid"_hs)
+			{
+				auto layerPtr = std::make_unique<JitteredGridLayer>();
+				_layerManager->add(std::move(layerPtr));
 			}
 		}
 	}
@@ -125,42 +118,17 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 	if (layer.instance)
 	{
 		const auto& factory = registry.ctx().get<EntityFactory&>();
-		auto land = layer.instance->getLandPointsInBounds(area);
-		auto ocean = layer.instance->getOceanPointsInBounds(area);
-
-
-		auto determineLandOrOcean = [&land, &ocean, &factory, &registry](sf::Vector2i point)
+		spatial::forEachPointInRect(area, [&factory, &layer, &registry](sf::Vector2i point)
 			{
-				auto closestLandPoint = spatial::findClosestPoint(point, land);
-				auto closestOceanPoint = spatial::findClosestPoint(point, ocean);
-
-				if (!closestLandPoint.has_value() && !closestOceanPoint.has_value()) return;
-
-				if (!closestLandPoint.has_value())
+				if (layer.instance->isLand(point))
 				{
-					placeSingle("Water", point, registry, factory);
-				}
-				else if (!closestOceanPoint.has_value())
-				{
-					placeSingle("Tile", point, registry, factory);
+					placeSingle("Sand", point, registry, factory);
 				}
 				else
 				{
-					auto oceanDistance = spatial::distance(point, closestOceanPoint.value());
-					auto landDistance = spatial::distance(point, closestLandPoint.value());
-					if (oceanDistance < landDistance)
-					{
-						placeSingle("Water", point, registry, factory);
-					}
-					else
-					{
-						placeSingle("Tile", point, registry, factory);
-					}
+					placeSingle("Water", point, registry, factory);
 				}
-			};
-
-		spatial::forEachPointInRect(area, determineLandOrOcean);
-		
+			});
 	}
 	return layer.state;
 }
@@ -169,4 +137,6 @@ sf::Vector2i drft::gen::WorldGenerator::getDimensions() const
 {
 	return _dimensions;
 }
+
+
 

@@ -1,5 +1,7 @@
 #pragma once
+#include <JSON/ICreateFromJson.h>
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
+#include <Random/Random.h>
 
 namespace drft
 {
@@ -12,12 +14,12 @@ namespace drft::gen
 {
 	struct GenerationContext;
 
-	class WorldGenerator
+	class WorldGenerator : public ICreateFromJson
 	{
 	public:
 		WorldGenerator();
 		void init();
-		void createFromJson(const std::string& JSONfilename);
+		void createFromJson(const rapidjson::Value& json) override;
 
 		void generate();
 
@@ -42,6 +44,7 @@ namespace drft::gen
 		archive(cereal::make_nvp("Seed", _seed));
 		archive(cereal::make_nvp("Width", _dimensions.x));
 		archive(cereal::make_nvp("Height", _dimensions.y));
+		rng::GlobalSeed = _seed;
 	}
 	template<class Archive>
 	inline void WorldGenerator::save(Archive& archive) const

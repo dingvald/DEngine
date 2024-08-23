@@ -1,7 +1,24 @@
 #include "pch.h"
 #include "JSONHelpers.h"
 
-std::optional<rapidjson::Document>  drft::json::extractDOM(const std::filesystem::path& filepath, const char* rootObjectName)
+
+drft::json::JsonRootExtractor::JsonRootExtractor(const std::filesystem::path& filepath, const char* rootObjectName)
+	: _rootName(rootObjectName)
+{
+	_optionalDoc = extractDOM(filepath, rootObjectName);
+}
+
+bool drft::json::JsonRootExtractor::isValid() const
+{
+	return _optionalDoc.has_value();
+}
+
+rapidjson::Value& drft::json::JsonRootExtractor::getRoot()
+{
+	return _optionalDoc.value()[_rootName];
+}
+
+std::optional<rapidjson::Document> drft::json::JsonRootExtractor::extractDOM(const std::filesystem::path& filepath, const char* rootObjectName)
 {
 	using namespace rapidjson;
 

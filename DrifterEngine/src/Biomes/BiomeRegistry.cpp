@@ -11,14 +11,14 @@ void BiomeRegistry::createBiomesFromJSON(const std::filesystem::path& directoryP
 {
 	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
 	{
-		auto biomeObj = drft::json::extractDOM(filename.path(), "Biomes");
-		if (!biomeObj.has_value())
+		drft::json::JsonRootExtractor jsonRootExtractor{ filename.path(), "Biomes" };
+		if (!jsonRootExtractor.isValid())
 		{
 			std::cout << "Failure: " << directoryPath << " could not be parsed." << std::endl;
 		}
 		else
 		{
-			for (auto&& val : biomeObj.value()["Biomes"].GetObject())
+			for (auto&& val : jsonRootExtractor.getRoot().GetObject())
 			{
 				std::string name = val.name.GetString();
 				Biome biome{name};

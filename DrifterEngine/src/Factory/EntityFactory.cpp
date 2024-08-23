@@ -20,14 +20,14 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 {
 	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
 	{
-		auto optionalPrototypesDocument = drft::json::extractDOM(filename.path(), "Prototypes");
-		if (!optionalPrototypesDocument.has_value())
+		json::JsonRootExtractor jsonRootExtractor{ filename.path(), "Prototypes" };
+		if (!jsonRootExtractor.isValid())
 		{
 			std::cout << "Failure: " << filename << " could not be parsed." << std::endl;
 		}
 		else
 		{
-			for (auto&& node : optionalPrototypesDocument.value()["Prototypes"].GetObject())
+			for (auto&& node : jsonRootExtractor.getRoot().GetObject())
 			{
 				entt::entity entity = _protoRegistry.create();
 				const std::string entityName = node.name.GetString();
