@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "LandLayer.h"
 #include <ProcGen/Layers/VoronoiLayer.h>
+#include <Spatial/Helpers.h>
 
 using namespace entt::literals;
 
@@ -8,7 +9,7 @@ GenerationState LandLayerChunk::generate()
 {
     auto paddedBounds = addPaddingToBounds({ bounds().width, bounds().height });
     auto voronoiLayer = generateDependency<VoronoiLayer>(paddedBounds);
-    auto inputLayer = generateDependency<GenericLayer>("height"_hs, bounds());
+    auto inputLayer = generateDependency<GenericLayer>(myLayer().getInputLayerID(), bounds());
 
     auto state = combinedState({ voronoiLayer.state, inputLayer.state });
     if (state != GenerationState::Complete) return state;
@@ -16,13 +17,13 @@ GenerationState LandLayerChunk::generate()
     for (auto&& point : voronoiLayer.instance->getCentroidsInBounds(paddedBounds))
     {
         double val = inputLayer.instance->getValueAt(point);
-        if (val >= 0)
+        if (val >= myLayer().getLandThreshold())
         {
-            landPoints.insert(point);
+            landPoints.push_back(point);
         }
         else
         {
-            oceanPoints.insert(point);
+            oceanPoints.push_back(point);
         }
     }
 
@@ -34,43 +35,47 @@ LandLayer::LandLayer()
 {
 }
 
-std::vector<sf::Vector2i> LandLayer::getLandPointsInBounds(sf::IntRect area)
+void LandLayer::createFromJson(const rapidjson::Value& json)
 {
-    entt::dense_set<sf::Vector2i> visitedPoints;
-    std::vector<sf::Vector2i> result;
-
-    forEachLoadedChunkInArea(area, [&visitedPoints, &result](LandLayerChunk& chunk)
-        {
-            for (auto&& point : chunk.landPoints)
-            {
-                if (visitedPoints.contains(point)) continue;
-                visitedPoints.insert(point);
-                result.push_back(point);
-            }
-        });
-
-    return result;
-}
-
-std::vector<sf::Vector2i> LandLayer::getOceanPointsInBounds(sf::IntRect area)
-{
-    entt::dense_set<sf::Vector2i> visitedPoints;
-    std::vector<sf::Vector2i> result;
-
-    forEachLoadedChunkInArea(area, [&visitedPoints, &result](LandLayerChunk& chunk)
-        {
-            for (auto&& point : chunk.oceanPoints)
-            {
-                if (visitedPoints.contains(point)) continue;
-                visitedPoints.insert(point);
-                result.push_back(point);
-            }
-        });
-
-    return result;
+    if (json.HasMember("input_layer"))
+    {
+        _inputLayerID = entt::hashed_string{ json["input_layer"].GetString() };
+    }
+    if (json.HasMember("threshold"))
+    {
+        _landThreshold = json["threshold"].GetFloat();
+    }
 }
 
 entt::id_type LandLayer::getInputLayerID() const
 {
     return _inputLayerID;
+}
+
+float LandLayer::getLandThreshold() const
+{
+    return _landThreshold;
+}
+
+bool LandLayer::isLand(sf::Vector2i point)
+{
+    if (auto chunk = tryGetChunk(point))
+    {
+        auto closestLandPoint = drft::spatial::findClosestPoint(point, chunk->landPoints);
+        auto closestOceanPoint = drft::spatial::findClosestPoint(point, chunk->oceanPoints);
+
+        if (!closestLandPoint.has_value() && !closestOceanPoint.has_value()) return false;
+
+        if (!closestOceanPoint.has_value())
+        {
+            return true;
+        }
+        else if (closestLandPoint.has_value())
+        {
+            const float oceanDistance = drft::spatial::distance(point, closestOceanPoint.value());
+            const float landDistance = drft::spatial::distance(point, closestLandPoint.value());
+            return (oceanDistance > landDistance);
+        }
+    }
+    return false;
 }
