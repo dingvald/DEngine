@@ -49,6 +49,21 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		_spriteLayers[ren.layer].addSprite(uv, seenTileColor, renderPosition);
 	}
 
+	// Render visual effects
+	const auto effectsView = _registry.view< const PositionComponent, const RenderComponent, const VisualEffectComponent, component::tag::InViewport>();
+	for (auto const& [entity, pos, ren, effect] : effectsView.each())
+	{
+		if (effect.requiresInFOV && !_registry.all_of<component::tag::InPlayerFOV>(entity))
+		{
+			continue;
+		}
+
+		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
+		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
+		_spriteLayers[ren.layer].addSprite(uv, ren.color, renderPosition);
+	}
+
+
 	// Draw batches
 	for (auto& [layer, batch] : _spriteLayers)
 	{

@@ -14,7 +14,6 @@
 #include "Systems/Rendering/SyncedAnimationSystem.h"
 #include "Systems/Rendering/PlayerFOVSystem.h"
 #include "Systems/Rendering/EntityRenderer.h"
-#include "Systems/Rendering/EffectRenderer.h"
 #include "Systems/Rendering/LightingSystem.h"
 #include "Systems/Rendering/SpriteControllerSystem.h"
 #include "Systems/Core/HUD.h"
@@ -291,7 +290,6 @@ void drft::GameState::importSystems()
 	_systems->add<SyncedAnimationSystem>();
 
 	_systems->add<EntityRenderer>();
-	_systems->add<EffectRenderer>();
 	_systems->add<HUD>();
 	_systems->add<FloatingTextSystem>();
 
