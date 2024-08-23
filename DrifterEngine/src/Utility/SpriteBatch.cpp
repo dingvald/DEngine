@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "SpriteBatch.h"
-#include "SpriteIndexer.h"
 
 drft::SpriteBatch::SpriteBatch()
 	: _texture(nullptr)
