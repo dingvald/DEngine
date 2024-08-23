@@ -17,7 +17,6 @@ static const sf::Color seenTileColor = sf::Color(12, 12, 12);
 
 void drft::system::EntityRenderer::init()
 {
-	using namespace entt::literals;
 	_textureAtlas = &_registry.ctx().get<const TextureAtlas&>();
 	for (int l = 0; l < static_cast<int>(RenderLayer::Total); ++l)
 	{
@@ -27,10 +26,23 @@ void drft::system::EntityRenderer::init()
 
 void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
-	auto camera = getCurrentCamera(_registry);
-	// Apply lighting to entities in the player's FOV
+	const CameraInfo camera = getCurrentCamera(_registry);
+
+	batchLitEntities(camera);
+	batchHadSeenEntities(camera);
+	batchEffectEntities(camera);
+
+	for (auto& [layer, batch] : _spriteLayers)
+	{
+		target.draw(batch);
+		batch.clear();
+	}
+}
+
+void drft::system::EntityRenderer::batchLitEntities(const CameraInfo& camera)
+{
 	const auto view = _registry.view< const PositionComponent, const RenderComponent, const LitComponent, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
-	for (auto const & [entity, pos, ren, lit] : view.each())
+	for (auto const& [entity, pos, ren, lit] : view.each())
 	{
 		auto finalColor = LightingSystem::blendLight(ren.color, lit.color);
 		finalColor.a = ren.color.a;
@@ -39,8 +51,10 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
 		_spriteLayers[ren.layer].addSprite(uv, finalColor, renderPosition);
 	}
+}
 
-	// Apply darkened light to entities outside the player's FOV
+void drft::system::EntityRenderer::batchHadSeenEntities(const CameraInfo& camera)
+{
 	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren] : seenView.each())
 	{
@@ -48,8 +62,10 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
 		_spriteLayers[ren.layer].addSprite(uv, seenTileColor, renderPosition);
 	}
+}
 
-	// Render visual effects
+void drft::system::EntityRenderer::batchEffectEntities(const CameraInfo& camera)
+{
 	const auto effectsView = _registry.view< const PositionComponent, const RenderComponent, const VisualEffectComponent, component::tag::InViewport>();
 	for (auto const& [entity, pos, ren, effect] : effectsView.each())
 	{
@@ -61,13 +77,5 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
 		_spriteLayers[ren.layer].addSprite(uv, ren.color, renderPosition);
-	}
-
-
-	// Draw batches
-	for (auto& [layer, batch] : _spriteLayers)
-	{
-		target.draw(batch);
-		batch.clear();
 	}
 }

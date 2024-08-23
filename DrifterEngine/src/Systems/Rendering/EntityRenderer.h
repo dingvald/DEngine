@@ -7,6 +7,8 @@ class TextureAtlas;
 
 namespace drft::system
 {
+    struct CameraInfo;
+
     class EntityRenderer : public System
     {
     public:
@@ -14,6 +16,11 @@ namespace drft::system
 
         virtual void init() override;
         virtual void render(sf::RenderTarget& target) override;
+
+    private:
+        void batchLitEntities(const CameraInfo& camera);
+        void batchHadSeenEntities(const CameraInfo& camera);
+        void batchEffectEntities(const CameraInfo& camera);
 
     private:
         const TextureAtlas* _textureAtlas = nullptr;
