@@ -16,7 +16,7 @@ namespace drft::system
 
 	private:
 		void onGameTickEvent(const events::GameTickEvent& ev);
-		sf::Color determineSunColor() const;
+		sf::Color determineGlobalIllumination() const;
 
 	private:
 		int _seconds = 0;
