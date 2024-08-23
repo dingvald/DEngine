@@ -5,6 +5,11 @@
 static const double EXPERIMENTALLY_DETERMINED_MIN = 0.25;
 static const double EXPERIMENTALLY_DETERMINED_MAX = 0.75;
 
+PerlinNoiseLayer::PerlinNoiseLayer(sf::Vector2i dimensions, unsigned int seed)
+    : _dimensions(dimensions)
+    , _seed(seed)
+{}
+
 double PerlinNoiseLayer::getValueAt(sf::Vector2i tilePosition)
 {
     double val = _getValueAt(tilePosition);
@@ -17,6 +22,11 @@ void PerlinNoiseLayer::createFromJson(const rapidjson::Value& json)
     if (json.HasMember("resolution"))
     {
         _resolution = json["resolution"].GetFloat();
+    }
+    if (json.HasMember("dimensions"))
+    {
+        _dimensions.x = json["dimensions"].GetArray()[0].GetInt();
+        _dimensions.y = json["dimensions"].GetArray()[1].GetInt();
     }
     if (json.HasMember("octaves"))
     {
@@ -31,7 +41,7 @@ void PerlinNoiseLayer::createFromJson(const rapidjson::Value& json)
         _gain = json["gain"].GetFloat();
     }
 
-    _noise = drft::rng::PerlinNoise{ 0, _octaves, _lacunarity, _gain};
+    _noise = drft::rng::PerlinNoise{ _seed, _octaves, _lacunarity, _gain};
 }
 
 double PerlinNoiseLayer::_getValueAt(sf::Vector2i tilePosition) const
