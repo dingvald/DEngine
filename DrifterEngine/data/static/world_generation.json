@@ -1,11 +1,11 @@
 {
-  "WorldSettings": {
-    "Seed": "random",
-    "Dimensions": [40, 40],
-    "Layers": [
+  "world_generation": {
+    "seed": "random",
+    "dimensions": [40, 40],
+    "layers": [
       {
+        "type": "perlin",
         "id": "height",
-        "type": "perlin",
         "params": {
           "resolution": 4.0,
           "octaves": 4,
@@ -14,8 +14,8 @@
         }
       },
       {
+        "type": "perlin",
         "id": "temperature",
-        "type": "perlin",
         "params": {
           "resolution": 4.0,
           "octaves": 4,
@@ -24,14 +24,27 @@
         }
       },
       {
-        "id": "humidity",
         "type": "perlin",
+        "id": "humidity",
         "params": {
           "resolution": 4.0,
           "octaves": 4,
           "lacunarity": 2.0,
           "gain": 2.0
         }
+      },
+      {
+        "type": "land_layer",
+        "params": {
+          "input_layer": "height",
+          "threshold": 0.0
+        }
+      },
+      {
+        "type": "voronoi"
+      },
+      {
+        "type": "jittered_grid"
       }
     ]
   }

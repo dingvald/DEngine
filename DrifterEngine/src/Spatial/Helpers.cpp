@@ -140,9 +140,11 @@ std::optional<sf::Vector2i> drft::spatial::findClosestPoint(sf::Vector2i target,
 
 	for (auto&& point : points)
 	{
-		if (distance(target, point) < minDistance)
+		float distance = spatial::distance(target, point);
+		if (distance < minDistance)
 		{
 			result = point;
+			minDistance = distance;
 		}
 	}
 

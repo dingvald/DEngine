@@ -429,9 +429,6 @@
     <ClCompile Include="src\Ability\Abilities\ThrowAbility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Rendering\EffectRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\ProjectileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1491,9 +1488,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Ability\Abilities\ThrowAbility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Rendering\EffectRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\ProjectileSystem.h">

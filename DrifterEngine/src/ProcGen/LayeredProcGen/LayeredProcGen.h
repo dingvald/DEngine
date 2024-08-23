@@ -47,6 +47,7 @@ namespace details
 	{
 	public:
 		virtual GenerationState doGenerate() = 0;
+		virtual bool isGenerated() = 0;
 	};
 
 	class AbstractGenericLayer : public AbstractLayer
@@ -120,6 +121,8 @@ private:
 	unsigned int _globalSeed;
 };
 
+
+
 template<typename LayerType, typename ChunkType>
 class GenerationChunk : public details::AbstractChunk
 {
@@ -143,6 +146,7 @@ public:
 		}
 		return state; 
 	};
+	virtual bool isGenerated() override final { return _isGenerated; }
 
 protected:
 	virtual GenerationState generate() { return GenerationState::Complete; }
@@ -249,9 +253,9 @@ protected:
 	ChunkType* tryGetChunk(sf::Vector2i tilePosition)
 	{
 		const auto chunkPosition = toChunkPosition(tilePosition);
-		if (_chunks.contains(chunkPosition))
+		if (_chunks.contains(chunkPosition) && _chunks.at(chunkPosition).isGenerated())
 		{
-			return &_chunks[chunkPosition];
+			return &_chunks.at(chunkPosition);
 		}
 		return nullptr;
 	}

@@ -33,9 +33,9 @@ BiomeLayer::BiomeLayer()
         });
 }
 
-Biome& BiomeLayer::getBiomeAt(sf::Vector2i tilePosition)
+const Biome& BiomeLayer::getBiomeAt(sf::Vector2i tilePosition)
 {
-
+    return _biomes.get("Forest");
 }
 
 const std::unordered_set<std::string>& BiomeLayer::getClimateTypes() const

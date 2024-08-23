@@ -42,6 +42,15 @@ void drft::gen::placeMany(const std::string& name, sf::IntRect area, entt::regis
 	}
 }
 
+void drft::gen::placeMany(const std::string& name, const std::vector<sf::Vector2i>& positions, entt::registry& reg)
+{
+	const auto& factory = reg.ctx().get<const EntityFactory&>();
+	for (auto&& pos : positions)
+	{
+		placeSingle(name, pos, reg, factory);
+	}
+}
+
 void drft::gen::placeMany(const std::string& name, sf::Vector2i origin, const std::vector<sf::Vector2i>& positions, entt::registry& reg)
 {
 	const auto& factory = reg.ctx().get<const EntityFactory&>();

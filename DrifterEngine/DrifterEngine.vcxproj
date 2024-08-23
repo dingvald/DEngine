@@ -201,7 +201,6 @@
     <ClCompile Include="src\Biomes\Biome.cpp" />
     <ClCompile Include="src\JSON\JSONHelpers.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
-    <ClCompile Include="src\Systems\Rendering\EffectRenderer.cpp" />
     <ClCompile Include="src\Engine\States\SelectTargetState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\TargetSelectSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetPrimaryMaterial.cpp" />
@@ -560,7 +559,6 @@
     <ClInclude Include="src\JSON\JSONHelpers.h" />
     <ClInclude Include="src\Algorithms\FloodFill.h" />
     <ClInclude Include="src\Spatial\AutoGrid.h" />
-    <ClInclude Include="src\Systems\Rendering\EffectRenderer.h" />
     <ClInclude Include="src\Engine\EngineConstants.h" />
     <ClInclude Include="src\Engine\States\SelectTargetState.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\TargetSelectSystem.h" />

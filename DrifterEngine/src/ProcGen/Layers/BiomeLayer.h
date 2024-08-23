@@ -22,7 +22,7 @@ class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>
 public:
 	BiomeLayer();
 
-	Biome& getBiomeAt(sf::Vector2i tilePosition);
+	const Biome& getBiomeAt(sf::Vector2i tilePosition);
 
 	const std::unordered_set<std::string>& getClimateTypes() const;
 

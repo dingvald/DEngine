@@ -13,7 +13,7 @@
 #include "RenderLayers.h"
 #include "LightingSystem.h"
 
-static const sf::Color seenTileColor = sf::Color(12, 12, 12);
+static const sf::Color SeenTileColor = sf::Color(12, 12, 12);
 
 void drft::system::EntityRenderer::init()
 {
@@ -60,7 +60,7 @@ void drft::system::EntityRenderer::batchHadSeenEntities(const CameraInfo& camera
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
-		_spriteLayers[ren.layer].addSprite(uv, seenTileColor, renderPosition);
+		_spriteLayers[ren.layer].addSprite(uv, SeenTileColor, renderPosition);
 	}
 }
 

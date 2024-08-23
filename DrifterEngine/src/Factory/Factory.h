@@ -33,5 +33,6 @@ inline std::unique_ptr<T> Factory<T>::build(std::string name)
 		std::cout << "Factory does not contain " << name << std::endl;
 		return nullptr;
 	}
+
 	return std::move(_factoryMethods.at(name)());
 }
