@@ -17,8 +17,6 @@ using namespace entt::literals;
 
 static constexpr float PI = 3.141592f;
 
-// TODO: Refactor sprintig animations into the visual effect system
-
 void drft::system::SprintingSystem::init()
 {
 	_registry.on_construct<SprintingComponent>().connect<&SprintingSystem::onSprintingAdded>(this);
@@ -40,15 +38,11 @@ void drft::system::SprintingSystem::onFixedUpdate()
 			SpriteOptions effectSprite;
 			createSpriteOptionsFromRenderComponent(effectSprite, *render);
 			effectSprite.layer = 1;
-			effectSprite.color = { 100, 100, 100, 200 };
+			effectSprite.color.value().a = 100;
 
-			spawnEffect(_registry,
-				{
-					.frames = { effectSprite },
-					.position = pos.position,
-					.ttl = 30,
-					.fades = true
-				});
+			EffectStruct sprintEffect = { .frames = { effectSprite }, .position = pos.position, .ttl = 45, .fades = true };
+
+			spawnEffect(_registry, std::move(sprintEffect));
 		}
 	}
 }
