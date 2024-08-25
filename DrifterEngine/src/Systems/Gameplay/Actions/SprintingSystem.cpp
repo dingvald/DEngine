@@ -33,16 +33,10 @@ void drft::system::SprintingSystem::onFixedUpdate()
 			_registry.remove<SprintingComponent>(entity);
 			continue;
 		}
+
 		if (auto render = _registry.try_get<RenderComponent>(entity))
 		{
-			SpriteOptions effectSprite;
-			createSpriteOptionsFromRenderComponent(effectSprite, *render);
-			effectSprite.layer = 1;
-			effectSprite.color.value().a = 100;
-
-			EffectStruct sprintEffect = { .frames = { effectSprite }, .position = pos.position, .ttl = 45, .fades = true };
-
-			spawnEffect(_registry, std::move(sprintEffect));
+			spawnSprintEffect(*render, pos);
 		}
 	}
 }
@@ -81,6 +75,18 @@ void drft::system::SprintingSystem::removeSprintBuff(entt::registry& registry, e
 	{
 		stamina->baseConsumption -= 1.f;
 	}
+}
+
+void drft::system::SprintingSystem::spawnSprintEffect(const RenderComponent& renderComponent, const PositionComponent& positionComponent) const
+{
+	SpriteOptions effectSprite;
+	createSpriteOptionsFromRenderComponent(effectSprite, renderComponent);
+	effectSprite.layer = 1;
+	effectSprite.color.value().a = 100;
+
+	EffectStruct sprintEffect = { .frames = { effectSprite }, .position = positionComponent.position, .ttl = 45, .fades = true };
+
+	spawnEffect(_registry, std::move(sprintEffect));
 }
 
 

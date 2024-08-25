@@ -1,6 +1,9 @@
 #pragma once
 #include "Systems/System.h"
 
+struct RenderComponent;
+struct PositionComponent;
+
 namespace drft::system
 {
 	class SprintingSystem : public System
@@ -16,6 +19,8 @@ namespace drft::system
 		void onSprintingRemoved(entt::registry& registry, entt::entity);
 		void applySprintBuff(entt::registry& registry, entt::entity entity);
 		void removeSprintBuff(entt::registry& registry, entt::entity entity);
+
+		void spawnSprintEffect(const RenderComponent& renderComponent, const PositionComponent& positionComponent) const;
 	};
 }
 
