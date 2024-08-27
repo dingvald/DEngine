@@ -2,6 +2,7 @@
 #include "WorldChunk.h"
 #include "WorldGrid.h"
 #include "Spatial/Conversions.h"
+#include "Spatial/Helpers.h"
 #include "Utility/stdHashing.h"
 
 using namespace drft::spatial;
@@ -99,6 +100,36 @@ EntityList drft::spatial::WorldGrid::getAllEntities(const sf::Vector2i coordinat
 		return EntityList{};
 	}
 	return _chunks.at({ coordinate.x, coordinate.y })->getAllEntities();
+}
+
+std::vector<entt::entity> drft::spatial::WorldGrid::castRay(sf::Vector2i origin, sf::Vector2i destination) const
+{
+	std::vector<entt::entity> result;
+	auto points = spatial::getIntPointsAlongLine(origin, destination);
+	result.reserve(points.size());
+	for (sf::Vector2i point : points)
+	{
+		auto entities = entitiesAt(point);
+		result.insert(result.end(), entities.begin(), entities.end());
+	}
+	return result;
+}
+
+std::vector<entt::entity> drft::spatial::WorldGrid::castRay(sf::Vector2i origin, sf::Vector2i destination, std::function<bool(entt::entity)> filterFunc) const
+{
+	std::vector<entt::entity> result;
+	auto points = spatial::getIntPointsAlongLine(origin, destination);
+	result.reserve(points.size());
+	for (sf::Vector2i point : points)
+	{
+		auto entities = entitiesAt(point);
+		for (auto entity : entities)
+		{
+			if (!filterFunc(entity)) continue;
+			result.push_back(entity);
+		}
+	}
+	return result;
 }
 
 std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf::Vector2i pt2, heuristic costFunc) const
