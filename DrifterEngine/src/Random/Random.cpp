@@ -13,14 +13,14 @@ drft::rng::Random::Random(unsigned int seed)
 double Random::realInRange(double min, double max)
 {
 	using Dist = std::uniform_real_distribution<double>;
-	static Dist dist{};
+	Dist dist{};
 	return dist(_gen, Dist::param_type(min, max));
 }
 
 int drft::rng::Random::intInRange(int min, int max)
 {
 	using Dist = std::uniform_int_distribution<int>;
-	static Dist dist{};
+	Dist dist{};
 	return dist(_gen, Dist::param_type(min, max));
 }
 
