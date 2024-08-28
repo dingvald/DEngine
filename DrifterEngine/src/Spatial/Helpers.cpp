@@ -131,10 +131,8 @@ float drft::spatial::distance(sf::Vector2f pt1, sf::Vector2f pt2)
 	return std::hypotf(delta.x, delta.y);
 }
 
-std::optional<sf::Vector2i> drft::spatial::findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points)
+sf::Vector2i drft::spatial::findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points)
 {
-	if (points.empty()) return std::nullopt;
-
 	float minDistance = std::numeric_limits<float>::max();
 	sf::Vector2i result = target;
 
@@ -147,7 +145,6 @@ std::optional<sf::Vector2i> drft::spatial::findClosestPoint(sf::Vector2i target,
 			minDistance = distance;
 		}
 	}
-
 	return result;
 }
 

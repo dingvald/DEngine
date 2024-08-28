@@ -15,7 +15,7 @@ namespace drft::spatial
 	// Returns the distance bewteen two points.
 	float distance(sf::Vector2f pt1, sf::Vector2f pt2);
 
-	std::optional<sf::Vector2i> findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points);
+	sf::Vector2i findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points);
 
 	enum class AdjacentType
 	{
