@@ -18,11 +18,11 @@ void BiomeRegistry::createBiomesFromJSON(const std::filesystem::path& directoryP
 		}
 		else
 		{
-			for (auto&& val : jsonRootExtractor.getRoot().GetObject())
+			for (auto&& biomeObj : jsonRootExtractor.getRoot().GetObject())
 			{
-				std::string name = val.name.GetString();
+				std::string name = biomeObj.name.GetString();
 				Biome biome{name};
-				biome.createFromJSON(val.value);
+				biome.createFromJSON(biomeObj.value);
 				_biomes.emplace(std::move(name), std::move(biome));
 			}
 		}

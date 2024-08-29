@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "JSONHelpers.h"
+#include <Utility/StandardErrorLogger.h>
 
 
 drft::json::JsonRootExtractor::JsonRootExtractor(const std::filesystem::path& filepath, const char* rootObjectName)
@@ -28,7 +29,7 @@ std::optional<rapidjson::Document> drft::json::JsonRootExtractor::extractDOM(con
 
 	if (!ifs.is_open())
 	{
-		std::cerr << "Could not open file " << filepath << std::endl;
+		error_logger << "Could not open file " << filepath << std::endl;
 		return std::nullopt;
 	}
 
@@ -38,13 +39,13 @@ std::optional<rapidjson::Document> drft::json::JsonRootExtractor::extractDOM(con
 
 	if (doc.HasParseError())
 	{
-		std::cerr << filepath << " could not be parsed. Check file for format errors." << std::endl;
+		error_logger << filepath << " could not be parsed. Check file for format errors." << std::endl;
 		return std::nullopt;
 	}
 
 	if (!doc.HasMember(rootObjectName))
 	{
-		std::cerr << filepath << " does not have the expected root object." << std::endl;
+		error_logger << filepath << " does not have the expected root object " << "\"" << rootObjectName << "\"" << std::endl;
 		return std::nullopt;
 	}
 

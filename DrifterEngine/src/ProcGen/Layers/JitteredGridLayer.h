@@ -8,7 +8,7 @@ class JitteredGridLayerChunk : public GenerationChunk<JitteredGridLayer, Jittere
 {
 public:
 	using GenerationChunk::GenerationChunk;
-	virtual GenerationState generate() override;
+	virtual GenerationState generate(int level) override;
 	sf::Vector2i jitteredPoint;
 };
 

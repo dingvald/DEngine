@@ -4,14 +4,8 @@
 #include <ProcGen/Layers/StructureLayer.h>
 
 
-GenerationState EntityLayerChunk::generate()
+GenerationState EntityLayerChunk::generate(int level)
 {
-	auto biomeLayer = generateDependency<BiomeLayer>(bounds());
-	auto structureLayer = generateDependency<StructureLayer>(bounds());
-
-	const GenerationState state = combinedState({ biomeLayer.state, structureLayer.state });
-	if (state != GenerationState::Complete) return state;
-
 	
 	
 	return GenerationState::Complete;

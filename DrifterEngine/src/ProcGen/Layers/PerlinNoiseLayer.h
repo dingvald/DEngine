@@ -3,7 +3,7 @@
 #include <JSON/ICreateFromJson.h>
 #include <Random/PerlinNoise.h>
 
-class PerlinNoiseLayer : public GenericLayer, ICreateFromJson
+class PerlinNoiseLayer : public OnDemandLayer, ICreateFromJson
 {
 public:
 	PerlinNoiseLayer(sf::Vector2i dimensions, unsigned int seed);

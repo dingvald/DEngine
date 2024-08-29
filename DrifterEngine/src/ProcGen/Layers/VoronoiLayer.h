@@ -9,7 +9,7 @@ class VoronoiLayerChunk : public GenerationChunk<VoronoiLayer, VoronoiLayerChunk
 {
 public:
 	using GenerationChunk::GenerationChunk;
-	virtual GenerationState generate() override;
+	virtual GenerationState generate(int level) override;
 
 	std::vector<sf::Vector2i> centroids;
 	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> edges;

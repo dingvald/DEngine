@@ -2,6 +2,23 @@
 #include "Helpers.h"
 #include "Utility/stdHashing.h"
 
+namespace 
+{
+	std::vector<sf::Vector2i> getEightWaySymmetry(int x, int y)
+	{
+		return {
+				{x, y},
+				{y, x},
+				{-x, y},
+				{-x, -y},
+				{x, -y},
+				{-y, x},
+				{-y, -x},
+				{y, -x}
+		};
+	}
+}
+
 std::vector<sf::Vector2i> drft::spatial::getIntRect(sf::Vector2i origin, int width, int height)
 {
 	std::vector<sf::Vector2i> result;
@@ -37,33 +54,26 @@ std::vector<sf::Vector2i> drft::spatial::getOutlineIntRect(sf::Vector2i origin, 
 	return result;
 }
 
-std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(const sf::Vector2i centerPosition, const int radius)
+std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(sf::Vector2i centerPosition, int radius)
 {
 	std::vector<sf::Vector2i> result;
-	float approxSquares = std::ceil(3.13159 * radius * radius);
-	result.reserve(static_cast<size_t>(approxSquares));
+	std::unordered_set<sf::Vector2i> visited;
+	size_t approxSquares = static_cast<size_t>(std::ceil(3.5 * radius * radius));
+	result.reserve(approxSquares);
+	visited.reserve(approxSquares);
 
-	for (int y = centerPosition.y - radius; y < centerPosition.y; ++y)
+	for (int i = 0; i <= radius; i++)
 	{
-		for (int x = centerPosition.x - radius; x < centerPosition.x; ++x)
+		for (int j = 0; j <= i; j++)
 		{
-			if ((x - centerPosition.x) * (x - centerPosition.x) + (y - centerPosition.y) * (y - centerPosition.y) <= radius * radius)
+			if (!isWithinRadius({ i, j }, radius)) continue;
+			for (auto&& p : getEightWaySymmetry(i, j))
 			{
-				int xMirror = centerPosition.x - (x - centerPosition.x);
-				int yMirror = centerPosition.y - (y - centerPosition.y);
-
-				result.insert(result.end(), { {x, y}, {x, yMirror}, {xMirror, y}, {xMirror, yMirror} });
+				if (visited.contains(p)) continue;
+				result.push_back(centerPosition + p);
+				visited.insert(p);
 			}
 		}
-	}
-	// To prevent duplicates along the center points..
-	for (int i = -radius; i <= radius; ++i)
-	{
-		if (i != 0)
-		{
-			result.push_back({ centerPosition.x + i, centerPosition.y });
-		}
-		result.push_back({ centerPosition.x, centerPosition.y + i });
 	}
 
 	return result;
@@ -129,6 +139,30 @@ float drft::spatial::distance(sf::Vector2f pt1, sf::Vector2f pt2)
 {
 	const auto delta = pt1 - pt2;
 	return std::hypotf(delta.x, delta.y);
+}
+
+bool drft::spatial::isWithinRadius(sf::Vector2i origin, sf::Vector2i point, int radius)
+{
+	int normalized_x = point.x - origin.x;
+	int normalized_y = point.y - origin.y;
+	return (normalized_x*normalized_x) + (normalized_y*normalized_y) <= (radius*radius);
+}
+
+bool drft::spatial::isWithinRadius(sf::Vector2f origin, sf::Vector2f point, float radius)
+{
+	float normalized_x = point.x - origin.x;
+	float normalized_y = point.y - origin.y;
+	return (normalized_x * normalized_x) + (normalized_y * normalized_y) <= (radius * radius);
+}
+
+bool drft::spatial::isWithinRadius(sf::Vector2i point, int radius)
+{
+	return isWithinRadius({ 0,0 }, point, radius);
+}
+
+bool drft::spatial::isWithinRadius(sf::Vector2f point, float radius)
+{
+	return isWithinRadius({ 0.f, 0.f }, point, radius);
 }
 
 sf::Vector2i drft::spatial::findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points)

@@ -12,17 +12,19 @@
 #include "ProcGen/PlaceEntities.h"
 #include "Services/DebugInfo.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
+#include "Utility/ContainerHelpers.h"
 #include "Utility/stdHashing.h"
 #include "Utility/Math.h"
 #include "Spatial/WorldMapPosition.h"
 
-#include <ProcGen/Layers/GenericLayers/PerlinNoiseLayer.h>
+#include <ProcGen/Layers/PerlinNoiseLayer.h>
 #include <ProcGen/Layers/EntityLayer.h>
 #include <ProcGen/Layers/BiomeLayer.h>
 #include <ProcGen/Layers/StructureLayer.h>
 #include <ProcGen/Layers/JitteredGridLayer.h>
+#include <ProcGen/Layers/PoissonDiskLayer.h>
 #include <ProcGen/Layers/VoronoiLayer.h>
-#include <ProcGen/Layers/LandLayer.h>
+#include <ProcGen/Layers/FillLayer.h>
 
 static const sf::Vector2i CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
 
@@ -35,7 +37,11 @@ drft::gen::WorldGenerator::WorldGenerator()
 
 void drft::gen::WorldGenerator::init()
 {
-
+	// Manually add layers that aren't included in the json
+	_layerManager->add(std::make_unique<VoronoiLayer>());
+	_layerManager->add(std::make_unique<JitteredGridLayer>());
+	_layerManager->add(std::make_unique<FillLayer>());
+	_layerManager->add(std::make_unique<BiomeLayer>());
 }
 
 void drft::gen::WorldGenerator::createFromJson(const rapidjson::Value& json)
@@ -68,35 +74,25 @@ void drft::gen::WorldGenerator::createFromJson(const rapidjson::Value& json)
 	}
 	if (json.HasMember("layers"))
 	{
-		for (auto&& layer : json["layers"].GetArray())
+		for (auto&& [name, layer] : json["layers"].GetObject())
 		{
 			auto layerObj = layer.GetObject();
 			const entt::id_type type = entt::hashed_string{ layerObj["type"].GetString() };
+			entt::id_type id = entt::hashed_string{ name.GetString() };
 
 			if (type == "perlin"_hs)
 			{
-				entt::id_type id = entt::hashed_string{ layerObj["id"].GetString() };
 				auto layerPtr = std::make_unique<PerlinNoiseLayer>(spatial::toTileSpace(_dimensions), _seed);
 				auto& params = layerObj["params"];
 				layerPtr->createFromJson(params);
 				_layerManager->add(std::move(layerPtr), id);
 			}
-			else if (type == "land_layer"_hs)
+			else if (type == "poisson_disk"_hs)
 			{
-				auto layerPtr = std::make_unique<LandLayer>();
+				auto layerPtr = std::make_unique<PoissonDiskLayer>();
 				auto& params = layerObj["params"];
 				layerPtr->createFromJson(params);
-				_layerManager->add(std::move(layerPtr));
-			}
-			else if (type == "voronoi"_hs)
-			{
-				auto layerPtr = std::make_unique<VoronoiLayer>();
-				_layerManager->add(std::move(layerPtr));
-			}
-			else if (type == "jittered_grid"_hs)
-			{
-				auto layerPtr = std::make_unique<JitteredGridLayer>();
-				_layerManager->add(std::move(layerPtr));
+				_layerManager->add(std::move(layerPtr), id);
 			}
 		}
 	}
@@ -112,25 +108,24 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 {
 	sf::IntRect area = { spatial::toTileSpace(coordinate), CHUNK_SIZE };
 
-	auto layer = _layerManager->generate<LandLayer>(area);
-	if (layer.state != GenerationState::Complete) return layer.state;
+	auto layer = _layerManager->generate<BiomeLayer>(area);
+	if (!layer.isReady()) return layer.getState();
 
-	if (layer.instance)
+	rng::Random random{ _seed + std::hash<sf::Vector2i>()(coordinate) };
+	const auto& factory = registry.ctx().get<const EntityFactory&>();
+
+	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInBounds(area);
+	for (auto&& [biome, slot, point] : bsps)
 	{
-		const auto& factory = registry.ctx().get<EntityFactory&>();
-		spatial::forEachPointInRect(area, [&factory, &layer, &registry](sf::Vector2i point)
-			{
-				if (layer.instance->isLand(point))
-				{
-					placeSingle("Sand", point, registry, factory);
-				}
-				else
-				{
-					placeSingle("Water", point, registry, factory);
-				}
-			});
+		const auto& entityPack = biome->getEntityPack(slot);
+		auto optionalSelection = random.weightedSelection(entityPack);
+		if (!optionalSelection.has_value()) continue;
+
+		auto&& [entity, _] = entityPack.at(optionalSelection.value());
+		placeSingle(entity, point, registry, factory);
 	}
-	return layer.state;
+
+	return GenerationState::Complete;
 }
 
 sf::Vector2i drft::gen::WorldGenerator::getDimensions() const

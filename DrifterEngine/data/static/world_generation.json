@@ -2,10 +2,9 @@
   "world_generation": {
     "seed": "random",
     "dimensions": [40, 40],
-    "layers": [
-      {
+    "layers": {
+      "height": {
         "type": "perlin",
-        "id": "height",
         "params": {
           "resolution": 4.0,
           "octaves": 4,
@@ -13,9 +12,8 @@
           "gain": 2.0
         }
       },
-      {
+      "temperature": {
         "type": "perlin",
-        "id": "temperature",
         "params": {
           "resolution": 4.0,
           "octaves": 4,
@@ -23,9 +21,8 @@
           "gain": 2.0
         }
       },
-      {
+      "humidity": {
         "type": "perlin",
-        "id": "humidity",
         "params": {
           "resolution": 4.0,
           "octaves": 4,
@@ -33,19 +30,12 @@
           "gain": 2.0
         }
       },
-      {
-        "type": "land_layer",
+      "trees": {
+        "type": "poisson_disk",
         "params": {
-          "input_layer": "height",
-          "threshold": 0.0
+          "density": 0.2
         }
-      },
-      {
-        "type": "voronoi"
-      },
-      {
-        "type": "jittered_grid"
       }
-    ]
+    }
   }
 }

@@ -18,19 +18,19 @@ namespace
     }
 }
 
-GenerationState VoronoiLayerChunk::generate()
+GenerationState VoronoiLayerChunk::generate(int level)
 {
-    const auto paddedBounds = addPaddingToBounds({bounds().width, bounds().height});
+    const auto paddedBounds = addPaddingToBounds({_bounds.width, _bounds.height});
     auto jitterLayer = generateDependency<JitteredGridLayer>(paddedBounds);
-    if (jitterLayer.state != GenerationState::Complete) return jitterLayer.state;
+    if (!jitterLayer.isReady()) return jitterLayer.getState();
 
-    auto points = jitterLayer.instance->getPointsInBounds(paddedBounds);
+    auto points = jitterLayer.unwrap().getPointsInBounds(paddedBounds);
     std::vector<jcv_point> jcv_points;
     jcv_points.reserve(points.size());
     for (auto&& point : points)
     {
         jcv_points.push_back(vector2i2jcvPoint(point));
-        if (bounds().contains(point))
+        if (_bounds.contains(point))
         {
             centroids.push_back(point);
         }  
@@ -46,7 +46,7 @@ GenerationState VoronoiLayerChunk::generate()
     {
         auto point1 = jcvPoint2Vector2i(edge->pos[0]);
         auto point2 = jcvPoint2Vector2i(edge->pos[1]);
-        if (bounds().contains(point1))
+        if (_bounds.contains(point1))
         {
             edges.emplace_back(std::make_pair(point1, point2));
         }

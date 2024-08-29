@@ -28,9 +28,9 @@ void drft::system::ChunkManager::onUpdate(const float dt)
 
 	updateChunkStates(cameraChunkPosition);
 
-	process(_toBuild, BUILD);
-	process(_toLoad, LOAD);
-	process(_toSave, SAVE);
+	processBuildQueue();
+	processLoadQueue();
+	processSaveQueue();
 
 	cleanUpChunks(cameraChunkPosition);
 
@@ -124,34 +124,53 @@ void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
 	}
 }
 
-void drft::system::ChunkManager::process(std::queue<sf::Vector2i>& chunkQueue, ProcessType type)
+void drft::system::ChunkManager::processBuildQueue()
 {
-	if (chunkQueue.empty()) return;
+	if (_toBuild.empty()) return;
 
-	sf::Vector2i coord = chunkQueue.front();
+	sf::Vector2i coord = _toBuild.front();
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
-
-	switch (type)
+	status = chunk.build(_registry);
+	// Always build in order
+	if (status == spatial::ioStatus::Done)
 	{
-	case BUILD:
-		status = chunk.build(_registry);
-		break;
-	case SAVE:
-		status = chunk.asyncSave(_registry, buildChunkFilename(chunk));
-		break;
-	case LOAD:
-		status = chunk.asyncLoad(_registry, buildChunkFilename(chunk));
-		break;
+		_toBuild.pop();
 	}
+}
 
+void drft::system::ChunkManager::processLoadQueue()
+{
+	if (_toLoad.empty()) return;
+
+	sf::Vector2i coord = _toLoad.front();
+	auto status = spatial::ioStatus::Busy;
+	spatial::VirtualChunk& chunk = _chunks.at(coord);
+	status = chunk.asyncLoad(_registry, buildChunkFilename(chunk));
+	// Always load in order
+	if (status == spatial::ioStatus::Done)
+	{
+		_toLoad.pop();
+	}
+}
+
+void drft::system::ChunkManager::processSaveQueue()
+{
+	if (_toSave.empty()) return;
+
+	sf::Vector2i coord = _toSave.front();
+	auto status = spatial::ioStatus::Busy;
+	spatial::VirtualChunk& chunk = _chunks.at(coord);
+	status = chunk.asyncSave(_registry, buildChunkFilename(chunk));
+
+	// Can save out of order
 	if (status == spatial::ioStatus::Busy)
 	{
 		// Send to the back of the queue
-		sf::Vector2i temp = chunkQueue.front();
-		chunkQueue.push(temp);
+		sf::Vector2i temp = _toSave.front();
+		_toSave.push(temp);
 	}
-	chunkQueue.pop();
+	_toSave.pop();
 }
 
 std::filesystem::path drft::system::ChunkManager::buildChunkFilename(const spatial::VirtualChunk& chunk) const

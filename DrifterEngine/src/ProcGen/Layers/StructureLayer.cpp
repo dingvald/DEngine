@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "StructureLayer.h"
 
-GenerationState StructureLayerChunk::generate()
+GenerationState StructureLayerChunk::generate(int level)
 {
     return GenerationState::Complete;
 }

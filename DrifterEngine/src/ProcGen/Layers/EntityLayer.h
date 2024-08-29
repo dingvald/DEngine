@@ -11,7 +11,7 @@ class EntityLayerChunk : public GenerationChunk<EntityLayer, EntityLayerChunk>
 public:
 	using GenerationChunk::GenerationChunk;
 
-	virtual GenerationState generate() override;
+	virtual GenerationState generate(int level) override;
 
 	EntityMap entities;
 };

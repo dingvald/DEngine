@@ -182,9 +182,10 @@
   <ItemGroup>
     <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\GenericLayers\PerlinNoiseLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\FillLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\PerlinNoiseLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\JitteredGridLayer.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\LandLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\PoissonDiskLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\VoronoiLayer.cpp" />
     <ClCompile Include="src\Factory\Factory.cpp" />
@@ -275,6 +276,7 @@
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
     <ClCompile Include="src\Utility\RectPacker.cpp" />
     <ClCompile Include="src\Utility\SpriteOptions.cpp" />
+    <ClCompile Include="src\Utility\StandardErrorLogger.cpp" />
     <ClCompile Include="src\Utility\StringManipulation.cpp" />
     <ClCompile Include="src\Utility\GetTextCenter.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
@@ -492,9 +494,10 @@
     <ClInclude Include="src\ProcGen\Layers\EntityLayer.h" />
     <ClInclude Include="src\Components\Actions\InteractionAction.h" />
     <ClInclude Include="src\JSON\ICreateFromJson.h" />
-    <ClInclude Include="src\ProcGen\Layers\GenericLayers\PerlinNoiseLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\FillLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\PerlinNoiseLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\JitteredGridLayer.h" />
-    <ClInclude Include="src\ProcGen\Layers\LandLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\PoissonDiskLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\StructureLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\VoronoiLayer.h" />
     <ClInclude Include="src\Factory\Factory.h" />
@@ -651,8 +654,10 @@
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
     <ClInclude Include="src\Systems\Rendering\RenderLayers.h" />
     <ClInclude Include="src\Utility\ColorSerialization.h" />
+    <ClInclude Include="src\Utility\ContainerHelpers.h" />
     <ClInclude Include="src\Utility\RectPacker.h" />
     <ClInclude Include="src\Utility\SpriteOptions.h" />
+    <ClInclude Include="src\Utility\StandardErrorLogger.h" />
     <ClInclude Include="src\Utility\StringManipulation.h" />
     <ClInclude Include="src\Utility\GetTextCenter.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />

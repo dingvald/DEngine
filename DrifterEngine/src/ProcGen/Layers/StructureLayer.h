@@ -8,7 +8,7 @@ class StructureLayerChunk : public GenerationChunk<StructureLayer, StructureLaye
 public:
 	using GenerationChunk::GenerationChunk;
 
-	virtual GenerationState generate() override;
+	virtual GenerationState generate(int level) override;
 };
 
 

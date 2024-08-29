@@ -4,13 +4,13 @@
 
 static const float JITTER_FACTOR = 0.25;
 
-GenerationState JitteredGridLayerChunk::generate()
+GenerationState JitteredGridLayerChunk::generate(int level)
 {
 	drft::rng::Random random{ getLocalSeed() };
-	const sf::Vector2i centerPoint = { bounds().left + bounds().width / 2, bounds().top + bounds().height / 2 };
+	const sf::Vector2i centerPoint = { _bounds.left + _bounds.width / 2, _bounds.top + _bounds.height / 2 };
 	sf::Vector2i jitter;
-	jitter.x = random.intInRange(bounds().width * -JITTER_FACTOR, bounds().width * JITTER_FACTOR);
-	jitter.y = random.intInRange(bounds().height * -JITTER_FACTOR, bounds().height * JITTER_FACTOR);;
+	jitter.x = random.intInRange(_bounds.width * -JITTER_FACTOR, _bounds.width * JITTER_FACTOR);
+	jitter.y = random.intInRange(_bounds.height * -JITTER_FACTOR, _bounds.height * JITTER_FACTOR);;
 	jitteredPoint = centerPoint + jitter;
 
 	return GenerationState::Complete;

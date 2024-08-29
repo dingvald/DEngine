@@ -516,7 +516,7 @@
     <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\GenericLayers\PerlinNoiseLayer.cpp">
+    <ClCompile Include="src\ProcGen\Layers\PerlinNoiseLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\JitteredGridLayer.cpp">
@@ -528,7 +528,13 @@
     <ClCompile Include="src\Random\XORshift.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\LandLayer.cpp">
+    <ClCompile Include="src\ProcGen\Layers\PoissonDiskLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\StandardErrorLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\FillLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2033,7 +2039,7 @@
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\GenericLayers\PerlinNoiseLayer.h">
+    <ClInclude Include="src\ProcGen\Layers\PerlinNoiseLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Layers\JitteredGridLayer.h">
@@ -2048,7 +2054,16 @@
     <ClInclude Include="src\Random\XORshift.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\LandLayer.h">
+    <ClInclude Include="src\Utility\ContainerHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\StandardErrorLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\PoissonDiskLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\FillLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

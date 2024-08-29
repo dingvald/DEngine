@@ -70,6 +70,7 @@
 #include "Utility/LoadEntity.h"
 #include "Utility/SaveRegistry.h"
 #include "Utility/LoadRegistry.h"
+#include "Utility/StandardErrorLogger.h"
 #include "Factory/EntityFactory.h"
 
 
@@ -135,7 +136,7 @@ void drft::GameState::loadOrCreateWorldGenerator()
 		json::JsonRootExtractor jsonRootExtractor{ WORLD_GENERATION_FILE_PATH, "world_generation" };
 		if (!jsonRootExtractor.isValid())
 		{
-			std::cout << "Failed: " << WORLD_GENERATION_FILE_PATH << " could not be parsed." << std::endl;
+			return;
 		}
 		else
 		{

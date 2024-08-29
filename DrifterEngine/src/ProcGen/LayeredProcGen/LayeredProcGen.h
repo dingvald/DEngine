@@ -4,7 +4,9 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include <Spatial/Helpers.h>
 #include <Utility/stdHashing.h>
+#include <Utility/StandardErrorLogger.h>
 
 
 enum class GenerationState
@@ -28,12 +30,19 @@ inline GenerationState combinedState(std::vector<GenerationState> states)
 
 class GenerationLayerManager;
 
+class IGetValueAt
+{
+public:
+	virtual double getValueAt(sf::Vector2i position) = 0;
+};
+
 namespace details
 {
 	struct GenerationContext
 	{
 		sf::IntRect area;
 		GenerationLayerManager& layers;
+		int desiredLevel;
 		unsigned int seed;
 	};
 
@@ -46,11 +55,11 @@ namespace details
 	class AbstractChunk
 	{
 	public:
-		virtual GenerationState doGenerate() = 0;
+		virtual GenerationState doGenerate(int level) = 0;
 		virtual bool isGenerated() = 0;
 	};
 
-	class AbstractGenericLayer : public AbstractLayer
+	class AbstractOnDemandLayer : public AbstractLayer
 	{
 		virtual GenerationState generate(GenerationContext&& context) override final { return GenerationState::Complete; }
 	};
@@ -59,8 +68,33 @@ namespace details
 template<typename T>
 struct FutureLayer
 {
-	GenerationState state;
-	T* instance;
+public:
+	bool isReady() const
+	{
+		return getState() == GenerationState::Complete;
+	}
+	GenerationState getState() const
+	{
+		if (_state == GenerationState::Complete)
+		{
+			if (!_instance)
+			{
+				error_logger << "Layer id cannot be converted to " << typeid(T).name() << std::endl;
+				return GenerationState::Failed;
+			}
+		}
+		return _state;
+	}
+	T& unwrap()
+	{
+		if (!_instance) throw std::exception("Trying to unwrap nullptr future layer");
+		return *_instance;
+	}
+
+private:
+	friend class GenerationLayerManager;
+	GenerationState _state;
+	T* _instance;
 };
 
 class GenerationLayerManager
@@ -71,29 +105,28 @@ public:
 	{}
 
 	template<typename T>
-	FutureLayer<T> generate(sf::IntRect area)
+	FutureLayer<T> generate(sf::IntRect area, int level = 0)
 	{
 		static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
 		entt::id_type type = entt::type_index<T>::value();
 		FutureLayer<T> result;
-		result.instance = nullptr;
-		result.state = _typedLayers.at(type)->generate({ .area = area, .layers = *this, .seed = _globalSeed });
-		if (result.state == GenerationState::Complete)
+		result._instance = nullptr;
+		result._state = _typedLayers.at(type)->generate({ .area = area, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
+		if (result._state == GenerationState::Complete)
 		{
-			result.instance = static_cast<T*>(_typedLayers.at(type).get());
+			result._instance = static_cast<T*>(_typedLayers.at(type).get());
 		}
 		return result;
 	}
 	template<typename T>
-	FutureLayer<T> generate(entt::id_type id, sf::IntRect area)
+	FutureLayer<T> generate(entt::id_type id, sf::IntRect area, int level = 0)
 	{
-		static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
 		FutureLayer<T> result;
-		result.instance = nullptr;
-		result.state = _namedLayers.at(id)->generate({ .area = area, .layers = *this });
-		if (result.state == GenerationState::Complete)
+		result._instance = nullptr;
+		result._state = _namedLayers.at(id)->generate({ .area = area, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
+		if (result._state == GenerationState::Complete)
 		{
-			result.instance = static_cast<T*>(_namedLayers.at(id).get());
+			result._instance = dynamic_cast<T*>(_namedLayers.at(id).get());
 		}
 		return result;
 	}
@@ -121,48 +154,52 @@ private:
 	unsigned int _globalSeed;
 };
 
-
-
 template<typename LayerType, typename ChunkType>
 class GenerationChunk : public details::AbstractChunk
 {
 public:
-	GenerationChunk(sf::IntRect bounds, LayerType& layer, GenerationLayerManager& layers, unsigned int globalSeed)
-		: _bounds(bounds)
+	GenerationChunk(sf::Vector2i index, sf::IntRect bounds, LayerType& layer, GenerationLayerManager& layers, unsigned int globalSeed)
+		: _index(index)
+		, _bounds(bounds)
 		, _layer(layer)
 		, _layerManager(layers)
 	{
 		_localSeed = globalSeed + std::hash<sf::Vector2i>{}(sf::Vector2i{ _bounds.left, _bounds.top });
+		_globalSeed = globalSeed;
 	}
 
-	virtual GenerationState doGenerate() override final 
+	virtual GenerationState doGenerate(int level) override final 
 	{ 
-		if (_isGenerated) return GenerationState::Complete;
+		level = std::min(level, numLevels());
+		level = level == 0 ? numLevels() : level; // default level "0" generates all layers
 
-		const GenerationState state = this->generate();
+		if (_currentLevel > level) return GenerationState::Complete;
+
+		GenerationState state = this->generate(_currentLevel);
 		if (state == GenerationState::Complete)
 		{
-			_isGenerated = true;
+			_currentLevel++;
+			if (_currentLevel <= level)
+			{
+				state = GenerationState::Generating;
+			}
 		}
 		return state; 
 	};
-	virtual bool isGenerated() override final { return _isGenerated; }
-
+	virtual bool isGenerated() override final { return _currentLevel > numLevels(); }
+	
 protected:
-	virtual GenerationState generate() { return GenerationState::Complete; }
+	virtual GenerationState generate(int level) { return GenerationState::Complete; }
+	virtual int numLevels() { return 1; }
 	template<typename T>
-	FutureLayer<T> generateDependency(entt::id_type id, sf::IntRect area)
+	FutureLayer<T> generateDependency(entt::id_type id, sf::IntRect area, int level = 0)
 	{
-		return _layerManager.generate<T>(id, area);
+		return _layerManager.generate<T>(id, area, level);
 	}
 	template<typename T>
-	FutureLayer<T> generateDependency(sf::IntRect area)
+	FutureLayer<T> generateDependency(sf::IntRect area, int level = 0)
 	{
-		return _layerManager.generate<T>(area);
-	}
-	sf::IntRect bounds() const
-	{
-		return _bounds;
+		return _layerManager.generate<T>(area, level);
 	}
 	sf::IntRect addPaddingToBounds(sf::Vector2i padding)
 	{
@@ -183,22 +220,25 @@ protected:
 			}
 		}
 	}
-	LayerType& myLayer()
-	{
-		return _layer;
-	}
 	unsigned int getLocalSeed() const
 	{
 		return _localSeed;
 	}
+	unsigned int getGlobalSeed() const
+	{
+		return _globalSeed;
+	}
 
-private:
+protected:
+	sf::Vector2i _index;
 	sf::IntRect _bounds;
 	LayerType& _layer;
 	GenerationLayerManager& _layerManager;
 
+private:
 	unsigned int _localSeed;
-	bool _isGenerated = false;
+	unsigned int _globalSeed;
+	int _currentLevel = 1;
 };
 
 template<typename LayerType, typename ChunkType>
@@ -208,6 +248,14 @@ public:
 	GenerationLayer(sf::Vector2i chunkDimensions)
 		: _chunkDimensions(chunkDimensions)
 	{}
+
+	GenerationState generateNeighborChunks(sf::Vector2i chunkCoordinate, details::GenerationContext&& context)
+	{
+		auto neighbors = drft::spatial::getAdjacentPoints(chunkCoordinate);
+		bool result = generateChunks(neighbors, context);
+		if (!result) return GenerationState::Generating;
+		return GenerationState::Complete;
+	}
 protected:
 	sf::Vector2i getChunkDimensions() const
 	{
@@ -293,7 +341,8 @@ private:
 		{
 			if (!_chunks.contains(point))
 			{
-				ChunkType chunk = ChunkType{ 
+				ChunkType chunk = ChunkType{
+					point,
 					sf::IntRect{toTilePosition(point), _chunkDimensions}, 
 					*static_cast<LayerType*>(this), 
 					context.layers, 
@@ -303,7 +352,7 @@ private:
 			}
 
 			details::AbstractChunk* chunk = static_cast<details::AbstractChunk*>(&_chunks.at(point));
-			GenerationState state = chunk->doGenerate();
+			GenerationState state = chunk->doGenerate(context.desiredLevel);
 			if (state == GenerationState::Generating)
 			{
 				result = false;
@@ -317,7 +366,7 @@ private:
 	sf::Vector2i _chunkDimensions;
 };
 
-class GenericLayer : public details::AbstractGenericLayer
+class OnDemandLayer : public details::AbstractOnDemandLayer, public IGetValueAt
 {
 public:
 	virtual double getValueAt(sf::Vector2i tilePosition) = 0;

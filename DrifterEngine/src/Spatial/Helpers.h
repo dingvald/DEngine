@@ -10,10 +10,19 @@ namespace drft::spatial
 	std::vector<sf::Vector2i> getIntRectAroundOrigin(sf::Vector2i origin, int width, int height);
 	// Returns a list of integer points located along a line.
 	std::vector<sf::Vector2i> getIntPointsAlongLine(sf::Vector2i pt1, sf::Vector2i pt2);
+
 	// Returns the distance bewteen two points.
-	float distance(sf::Vector2i pt1, sf::Vector2i pt2);
+	inline float distance(sf::Vector2i pt1, sf::Vector2i pt2);
 	// Returns the distance bewteen two points.
-	float distance(sf::Vector2f pt1, sf::Vector2f pt2);
+	inline float distance(sf::Vector2f pt1, sf::Vector2f pt2);
+	// Tests if a point is within some radius from the origin
+	inline bool isWithinRadius(sf::Vector2i origin, sf::Vector2i point, int radius);
+	// Tests if a point is within some radius from the origin
+	inline bool isWithinRadius(sf::Vector2f origin, sf::Vector2f point, float radius);
+	// Tests if a point is within some radius from (0,0)
+	inline bool isWithinRadius(sf::Vector2i point, int radius);
+	// Tests if a point is within some radius from (0,0)
+	inline bool isWithinRadius(sf::Vector2f point, float radius);
 
 	sf::Vector2i findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points);
 
