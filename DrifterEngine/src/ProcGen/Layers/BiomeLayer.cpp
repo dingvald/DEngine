@@ -6,6 +6,7 @@
 #include <Spatial/Helpers.h>
 #include <Utility/ContainerHelpers.h>
 #include <Utility/stdHashing.h>
+#include <JSON/StringExpressions.h>
 
 using namespace entt::literals;
 
@@ -89,12 +90,14 @@ GenerationState BiomeLayerChunk::stage2Generation(sf::IntRect area)
     std::unordered_map<entt::id_type, IGetValueAt*> dependencies;
     for (auto&& [point, biome] : biomePoints)
     {
-        for (auto&& [slotID, slotDependency] : biome->getSlotDependencies())
+        for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
         {
-            auto dep = generateDependency<IGetValueAt>(slotDependency.layerID, area);
-            if (!dep.isReady()) return dep.getState();
-
-            dependencies.emplace(slotDependency.layerID, &dep.unwrap());
+            for (auto&& [layerID, _] : slotDeterminer.dependencies)
+            {
+                auto dep = generateDependency<IGetValueAt>(layerID, area);
+                if (!dep.isReady()) return dep.getState();
+                dependencies.emplace(layerID, &dep.unwrap());
+            }
         }
     }
 
@@ -105,13 +108,19 @@ GenerationState BiomeLayerChunk::stage2Generation(sf::IntRect area)
             auto closestPoint = drft::spatial::findClosestPoint(point, biomeCentroids);
             const Biome* biome = biomePoints.at(closestPoint);
 
-            for (auto&& [slotID, slotDependency] : biome->getSlotDependencies())
+            for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
             {
-                auto layer = dependencies.at(slotDependency.layerID);
-                float val = layer->getValueAt(point);
-                if (!slotDependency.satisfiesValue(val, slotDependency.range)) continue;
-
-                biomeSlotPoints.emplace_back(BiomeSlotPoint{ biome, slotID, point });
+                TokenValues values;
+                for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
+                {
+                    auto layer = dependencies.at(layerID);
+                    float val = layer->getValueAt(point);
+                    values.emplace(layerID, slotDependency.satisfiesValue(val, slotDependency.range));
+                }
+                if (slotDeterminer.expression.evaluate(values))
+                {
+                    biomeSlotPoints.emplace_back(BiomeSlotPoint{ biome, slotID, point });
+                }
             }
         });
 

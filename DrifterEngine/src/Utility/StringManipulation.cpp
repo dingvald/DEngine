@@ -18,19 +18,43 @@ std::string drft::util::getStringAcronym(const std::string& string)
     return result;
 }
 
-std::vector<std::string> drft::util::stringSplit(const std::string& string, const std::string& delimiters)
+std::vector<std::string> drft::util::split(const std::string& str, const std::string& delimiters)
 {
     std::vector<std::string> res;
-    size_t pos_start = 0, pos_end, delim_len = delimiters.length();
+    size_t pos_start = 0;
+    size_t pos_end = 0;
     std::string token;
 
-    while ((pos_end = string.find(delimiters, pos_start)) != std::string::npos) {
-        token = string.substr(pos_start, pos_end - pos_start);
-        pos_start = pos_end + delim_len;
-        res.emplace_back(token);
+    while ((pos_end = str.find_first_of(delimiters, pos_start)) != std::string::npos) {
+        if (pos_end != pos_start)
+        {
+            res.emplace_back(str.substr(pos_start, pos_end - pos_start));
+        }
+        pos_start = pos_end + 1;
     }
 
-    res.emplace_back(string.substr(pos_start));
+    if (pos_start != str.length()) {
+        res.push_back(str.substr(pos_start));
+    }
     return res;
+}
+
+std::string drft::util::removeWhitespace(const std::string& str)
+{
+    std::string copy = str;
+    copy.erase(std::remove_if(copy.begin(), copy.end(), ::isspace), copy.end());
+    return std::move(copy);
+}
+
+std::vector<std::string> drft::util::removeWhitespace(const std::vector<std::string>& strings)
+{
+    std::vector<std::string> result;
+
+    for (auto&& str : strings)
+    {
+        result.emplace_back(removeWhitespace(str));
+    }
+
+    return result;
 }
 

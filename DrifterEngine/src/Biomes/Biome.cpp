@@ -27,6 +27,62 @@ namespace evaluation_functions
 	}
 }
 
+void SlotDependency::createFromJson(const rapidjson::Value& json)
+{
+	if (json.HasMember("threshold"))
+	{
+		auto thresholdExpression = json["threshold"].GetArray();
+		std::string conditional = thresholdExpression[0].GetString();
+
+		if (thresholdExpression.Size() == 2)
+		{
+			float rangeJson = thresholdExpression[1].GetFloat();
+			range.setMin(rangeJson);
+			range.setMax(rangeJson);
+			if (conditional == ">")
+			{
+				satisfiesValue = evaluation_functions::isGreater;
+			}
+			else if (conditional == "<")
+			{
+				satisfiesValue = evaluation_functions::isLess;
+			}
+		}
+		else if (thresholdExpression.Size() == 3)
+		{
+			float range_min = thresholdExpression[1].GetFloat();
+			float range_max = thresholdExpression[2].GetFloat();
+			range.setMin(range_min);
+			range.setMax(range_max);
+			if (conditional == ">")
+			{
+				satisfiesValue = evaluation_functions::isOutside;
+			}
+			else if (conditional == "<")
+			{
+				satisfiesValue = evaluation_functions::isInside;
+			}
+		}
+	}
+}
+
+void SlotDeterminer::createFromJson(const rapidjson::Value& json)
+{
+	if (json.HasMember("layers"))
+	{
+		for (auto&& [name, value] : json["layers"].GetObject())
+		{
+			SlotDependency newDependency;
+			newDependency.createFromJson(value);
+			dependencies.emplace(entt::hashed_string{ name.GetString() }, std::move(newDependency));
+		}
+	}
+	if (json.HasMember("expression"))
+	{
+		expression = drft::util::BooleanStringExpression{ json["expression"].GetString() };
+	}
+}
+
 Biome::Biome(std::string name)
 	:_name(name)
 {}
@@ -72,46 +128,9 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 	{
 		for (auto&& [name, value] : json["entity_slots"].GetObject())
 		{
-			SlotDependency newDependency;
-			newDependency.layerID = entt::hashed_string{ value["layer_id"].GetString() };
-			auto thresholdExpression = value["threshold"].GetArray();
-			std::string conditional = thresholdExpression[0].GetString();
-
-			if (thresholdExpression.Size() == 2)
-			{
-				float range = thresholdExpression[1].GetFloat();
-				newDependency.range.setMin(range);
-				newDependency.range.setMax(range);
-				if (conditional == ">")
-				{
-					newDependency.satisfiesValue = evaluation_functions::isGreater;
-				}
-				else if (conditional == "<")
-				{
-					newDependency.satisfiesValue = evaluation_functions::isLess;
-				}
-			}
-			else if (thresholdExpression.Size() == 3)
-			{
-				float range_min = thresholdExpression[1].GetFloat();
-				float range_max = thresholdExpression[2].GetFloat();
-				newDependency.range.setMin(range_min);
-				newDependency.range.setMax(range_max);
-				if (conditional == ">")
-				{
-					newDependency.satisfiesValue = evaluation_functions::isOutside;
-				}
-				else if (conditional == "<")
-				{
-					newDependency.satisfiesValue = evaluation_functions::isInside;
-				}
-			}
-			else
-			{
-				error_logger << "Invalid error expression with name " << name.GetString() << std::endl;
-			}
-
-			_entitySlotDependencies.emplace(entt::hashed_string{ name.GetString() }, std::move(newDependency));
+			SlotDeterminer newDeterminer;
+			newDeterminer.createFromJson(value);
+			_entitySlotDeterminers.emplace(entt::hashed_string{ name.GetString() }, std::move(newDeterminer));
 		}
 	}
 	if (json.HasMember("entity_packs"))
@@ -146,9 +165,9 @@ const std::unordered_map<std::string, drft::math::Range<float>>& Biome::getClima
 	return _ranges;
 }
 
-const std::unordered_map<entt::id_type, SlotDependency>& Biome::getSlotDependencies() const
+const std::unordered_map<entt::id_type, SlotDeterminer>& Biome::getSlotDeterminers() const
 {
-	return _entitySlotDependencies;
+	return _entitySlotDeterminers;
 }
 
 const EntityPack& Biome::getEntityPack(entt::id_type slotID) const
@@ -165,3 +184,5 @@ const std::string& Biome::getName() const
 {
 	return _name;
 }
+
+
