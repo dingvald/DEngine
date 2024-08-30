@@ -918,7 +918,7 @@ void drft::InventoryState::tryUnequipItem(unsigned long itemID)
 
 std::string drft::InventoryState::shortenPartName(const std::string& fullPartName) const
 {
-	auto splitString = util::stringSplit(fullPartName, " ");
+	auto splitString = util::split(fullPartName, " ");
 	std::string result;
 	if (splitString.size() > 1)
 	{

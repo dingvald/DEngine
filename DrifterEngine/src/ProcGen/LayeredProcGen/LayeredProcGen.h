@@ -61,7 +61,7 @@ namespace details
 
 	class AbstractOnDemandLayer : public AbstractLayer
 	{
-		virtual GenerationState generate(GenerationContext&& context) override final { return GenerationState::Complete; }
+		virtual GenerationState generate(GenerationContext&& context) = 0;
 	};
 }
 
@@ -370,4 +370,18 @@ class OnDemandLayer : public details::AbstractOnDemandLayer, public IGetValueAt
 {
 public:
 	virtual double getValueAt(sf::Vector2i tilePosition) = 0;
+	virtual GenerationState generate(details::GenerationContext&& context) override final
+	{
+		_globalSeed = context.seed;
+		return GenerationState::Complete;
+	}
+
+protected:
+	unsigned int getGlobalSeed() const
+	{
+		return _globalSeed;
+	}
+
+private:
+	unsigned int _globalSeed;
 };

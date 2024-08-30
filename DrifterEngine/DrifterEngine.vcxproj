@@ -180,12 +180,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\JSON\StringExpressions.cpp" />
     <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\FillLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\PerlinNoiseLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\JitteredGridLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\PoissonDiskLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\RandomLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\VoronoiLayer.cpp" />
     <ClCompile Include="src\Factory\Factory.cpp" />
@@ -489,6 +491,7 @@
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
+    <ClInclude Include="src\JSON\StringExpressions.h" />
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h" />
     <ClInclude Include="src\ProcGen\Layers\BiomeLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\EntityLayer.h" />
@@ -498,6 +501,7 @@
     <ClInclude Include="src\ProcGen\Layers\PerlinNoiseLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\JitteredGridLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\PoissonDiskLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\RandomLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\StructureLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\VoronoiLayer.h" />
     <ClInclude Include="src\Factory\Factory.h" />

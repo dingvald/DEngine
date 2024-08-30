@@ -17,7 +17,7 @@ GenerationState JitteredGridLayerChunk::generate(int level)
 }
 
 JitteredGridLayer::JitteredGridLayer()
-	: GenerationLayer({32, 32})
+	: GenerationLayer({16, 16})
 {}
 
 std::vector<sf::Vector2i> JitteredGridLayer::getPointsInBounds(sf::IntRect area)

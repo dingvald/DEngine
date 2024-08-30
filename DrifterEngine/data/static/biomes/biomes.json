@@ -12,13 +12,30 @@
       },
       "entity_slots": {
         "trees": {
-          "layer_id": "trees",
-          "threshold": [">", 0.5]
+          "layers": {
+            "random_scatter": {
+              "threshold": [ ">", 0.95 ]
+            }
+          }
+        },
+        "sand": {
+          "layers": {
+            "height": {
+              "threshold": [ "<", 0.1 ]
+            },
+            "random_scatter": {
+              "threshold": [ ">", 0.25 ]
+            }
+          },
+          "expression": "height & random_scatter"
         }
       },
       "entity_packs": {
         "trees": [
-          [ "Tree",  1 ]
+          [ "Tree", 1 ]
+        ],
+        "sand": [
+          [ "Sand", 1 ]
         ]
       },
       "features": {
@@ -43,12 +60,22 @@
       },
       "entity_slots": {
         "water": {
-          "layer_id": "height",
-          "threshold": [ "<", 0.0 ]
+          "layers": {
+            "height": {
+              "threshold": ["<", 0.0]
+            }
+          }
         },
         "sand": {
-          "layer_id": "height",
-          "threshold": [">", 0.0]
+          "layers": {
+            "height": {
+              "threshold": [ ">", 0.0 ]
+            },
+            "random_scatter": {
+              "threshold": [ ">", 0.25 ]
+            }
+          },
+          "expression": "height & random_scatter"
         }
       },
       "entity_packs": {

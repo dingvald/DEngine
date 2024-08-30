@@ -23,6 +23,7 @@
 #include <ProcGen/Layers/StructureLayer.h>
 #include <ProcGen/Layers/JitteredGridLayer.h>
 #include <ProcGen/Layers/PoissonDiskLayer.h>
+#include <ProcGen/Layers/RandomLayer.h>
 #include <ProcGen/Layers/VoronoiLayer.h>
 #include <ProcGen/Layers/FillLayer.h>
 
@@ -94,6 +95,13 @@ void drft::gen::WorldGenerator::createFromJson(const rapidjson::Value& json)
 				layerPtr->createFromJson(params);
 				_layerManager->add(std::move(layerPtr), id);
 			}
+			else if (type == "random"_hs)
+			{
+				auto layerPtr = std::make_unique<RandomLayer>();
+				auto& params = layerObj["params"];
+				layerPtr->createFromJson(params);
+				_layerManager->add(std::move(layerPtr), id);
+			}
 		}
 	}
 }
@@ -113,6 +121,8 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 
 	rng::Random random{ _seed + std::hash<sf::Vector2i>()(coordinate) };
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
+	
+	placeMany("Tile", area, registry);
 
 	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInBounds(area);
 	for (auto&& [biome, slot, point] : bsps)

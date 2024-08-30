@@ -17,6 +17,8 @@ void drft::system::VisualEffectSystem::onFixedUpdate()
 		--effect.ttl;
 		if (effect.fades)
 		{
+			auto current_a = render.color.a;
+			float delta = current_a / effect.ttl;
 			render.color.a =  math::remap(0, 120, 0, 255, effect.ttl);
 		}
 		if (effect.ttl <= 0)
