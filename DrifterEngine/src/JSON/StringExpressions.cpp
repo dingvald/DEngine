@@ -40,6 +40,11 @@ bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) c
         return values.begin()->second;
     }
     // Validate input
+    if (_parsedExpression.empty() && values.size() > 1)
+    {
+        error_logger << "Error while evaluating expression: expression empty" << std::endl;
+        return false;
+    }
     for (auto&& id : _parsedExpression)
     {
         if (HashedOperations.contains(id)) continue;
