@@ -45,13 +45,14 @@ void drft::system::LiquidSystem::onFixedUpdate()
 	for (auto [entity, material, pos] : liquidAffectedView.each())
 	{
 		if (!_liquidPositions.contains(pos.position)) continue;
-		_registry.emplace_or_replace<InLiquidComponent>(entity);
+		auto& liquid = _registry.get<LiquidComponent>(_liquidPositions.at(pos.position));
+		_registry.emplace_or_replace<InLiquidComponent>(entity, liquid.volume);
 	}
 
 	auto inLiquidView = _registry.view<InLiquidComponent, PositionComponent>();
 	for (auto [entity, inLiquid, pos] : inLiquidView.each())
 	{
-		if (_liquidPositions.contains(pos.position))
+		if (_liquidPositions.contains(pos.position) && inLiquid.volume > 200.0f)
 		{
 			if (auto render = _registry.try_get<RenderComponent>(_liquidPositions.at(pos.position)))
 			{
