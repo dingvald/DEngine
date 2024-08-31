@@ -6,9 +6,9 @@
       "height": {
         "type": "perlin",
         "params": {
-          "resolution": 4.0,
-          "octaves": 4,
-          "lacunarity": 2.0,
+          "resolution": 0.1,
+          "octaves": 8,
+          "lacunarity": 2.4,
           "gain": 2.0
         }
       },
