@@ -8,23 +8,16 @@
         "color": [ 65, 97, 63 ]
       },
       "climate": {
-        "height": [ 0.0, 1.0 ]
+        "height": [ 0.1, 1.0 ]
       },
       "entity_slots": {
         "trees": {
           "layers": {
-            "random_scatter": {
-              "threshold": [ ">", 0.95 ]
-            }
-          }
-        },
-        "sand": {
-          "layers": {
             "height": {
-              "threshold": [ "<", 0.1 ]
+              "threshold": [ ">", 0.1 ]
             },
             "random_scatter": {
-              "threshold": [ ">", 0.25 ]
+              "threshold": [ ">", 0.95 ]
             }
           },
           "expression": "height & random_scatter"
@@ -33,9 +26,6 @@
       "entity_packs": {
         "trees": [
           [ "Tree", 1 ]
-        ],
-        "sand": [
-          [ "Sand", 1 ]
         ]
       },
       "features": {
@@ -48,21 +38,28 @@
 
       }
     },
-    "Ocean": {
+    "Beach": {
       "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 5, 2 ],
-        "color": [ 27, 149, 224 ]
+        "color": [ 210, 170, 109 ]
       },
       "climate": {
-        "height": [ -1.0, 0 ]
+        "height": [ -0.1, 0.1 ]
       },
       "entity_slots": {
         "water": {
           "layers": {
             "height": {
-              "threshold": ["<", 0.0]
+              "threshold": [ "<", -0.05 ]
+            }
+          }
+        },
+        "shallow_water": {
+          "layers": {
+            "height": {
+              "threshold": [ "<", -0.05, 0.0 ]
             }
           }
         },
@@ -81,6 +78,59 @@
       "entity_packs": {
         "water": [
           [ "Water", 1 ]
+        ],
+        "shallow_water": [
+          [ "Shallow Water", 1 ]
+        ],
+        "sand": [
+          [ "Sand", 20 ],
+          [ "Stone", 1 ]
+        ]
+      }
+    },
+    "Ocean": {
+      "icon": {
+        "texture": "simple_tileset",
+        "uv_size": [ 16, 16 ],
+        "uv_coords": [ 5, 2 ],
+        "color": [ 27, 149, 224 ]
+      },
+      "climate": {
+        "height": [ -1.0, -0.1 ]
+      },
+      "entity_slots": {
+        "water": {
+          "layers": {
+            "height": {
+              "threshold": [ "<", -0.05 ]
+            }
+          }
+        },
+        "shallow_water": {
+          "layers": {
+            "height": {
+              "threshold": [ "<", -0.05, 0.0 ]
+            }
+          }
+        },
+        "sand": {
+          "layers": {
+            "height": {
+              "threshold": [ ">", 0.0 ]
+            },
+            "random_scatter": {
+              "threshold": [ ">", 0.25 ]
+            }
+          },
+          "expression": "height & random_scatter"
+        }
+      },
+      "entity_packs": {
+        "water": [
+          [ "Water", 1 ]
+        ],
+        "shallow_water": [
+          ["Shallow Water", 1]
         ],
         "sand": [
           ["Sand", 1]
