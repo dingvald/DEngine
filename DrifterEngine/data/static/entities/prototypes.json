@@ -121,6 +121,47 @@
         }
       }
     },
+    "Shallow Water": {
+      "Inherits": [
+        ""
+      ],
+      "Components": {
+        "Description": {
+          "name": "Shallow Water",
+          "description": "Just simple water."
+        },
+        "SpriteController": {
+          "states": {
+            "default": {
+              "frames": [
+                {
+                  "texture": "liquid",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 0, 0 ],
+                  "layer": 2,
+                  "color": [ 50, 200, 250 ]
+                },
+                {
+                  "texture": "liquid",
+                  "uv_size": [ 16, 16 ],
+                  "uv_coords": [ 1, 0 ],
+                  "layer": 2,
+                  "color": [ 50, 200, 250 ]
+                }
+              ],
+              "speed": 1.0,
+              "synced": true
+            }
+          }
+        },
+        "Position": {
+          "position": [ 0.0, 0.0 ]
+        },
+        "Liquid": {
+          "volume": 100.0
+        }
+      }
+    },
     "Murky Water": {
       "Inherits": [
         ""
