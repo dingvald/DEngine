@@ -73,9 +73,9 @@ bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) c
 
 std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(std::string expression)
 {
-    std::stack<char> stack;
+    std::stack<char> operator_stack;
     std::vector<entt::id_type> output;
-    bool errorFound = false;
+    bool error_found = false;
 
     for (size_t i = 0; i < expression.size(); i++)
     {
@@ -84,41 +84,36 @@ std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(
         {
             if (token == '(')
             {
-                stack.push(token);
+                operator_stack.push(token);
             }
             else if (token == ')')
             {
-                if (stack.empty())
+                while (!operator_stack.empty() && operator_stack.top() != '(')
                 {
-                    errorFound = true;
+                    output.emplace_back(HashedOperationsMap.at(operator_stack.top()));
+                    operator_stack.pop();
+                }
+                if (operator_stack.empty())
+                {
+                    error_found = true;
                     break;
                 }
-                while (stack.top() != '(')
+                if (operator_stack.top() != '(') error_found = true;
+                operator_stack.pop();
+                while (!operator_stack.empty())
                 {
-                    if (stack.empty()) 
-                    {
-                        errorFound = true; 
-                        break;
-                    }
-                    output.emplace_back(HashedOperationsMap.at(stack.top()));
-                    stack.pop();
-                }
-                if (stack.top() != '(') errorFound = true;
-                stack.pop();
-                while (!stack.empty())
-                {
-                    output.emplace_back(HashedOperationsMap.at(stack.top()));
-                    stack.pop();
+                    output.emplace_back(HashedOperationsMap.at(operator_stack.top()));
+                    operator_stack.pop();
                 }
             }
             else
             {
-                while (!stack.empty() && isOperation(stack.top()) && stack.top() != '(')
+                while (!operator_stack.empty() && isOperation(operator_stack.top()) && operator_stack.top() != '(')
                 {
-                    output.emplace_back(HashedOperationsMap.at(stack.top()));
-                    stack.pop();
+                    output.emplace_back(HashedOperationsMap.at(operator_stack.top()));
+                    operator_stack.pop();
                 }
-                stack.push(token);
+                operator_stack.push(token);
             }  
         }
         else
@@ -128,19 +123,20 @@ std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(
             i = indexOfFirstSpecialChar - 1;
         }
     }
-    while (!stack.empty())
+    while (!operator_stack.empty())
     {
-        if (stack.top() == '(' || stack.top() == ')') errorFound = true;
+        if (operator_stack.top() == '(' || operator_stack.top() == ')') error_found = true;
 
-        output.emplace_back(HashedOperationsMap.at(stack.top()));
-        stack.pop();
+        output.emplace_back(HashedOperationsMap.at(operator_stack.top()));
+        operator_stack.pop();
     }
 
-    if (errorFound)
+    if (error_found)
     {
         error_logger << "Error when parsing malformed expression: " << expression << std::endl;
         return {};
     }
+
     return output;
 }
 
