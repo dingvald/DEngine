@@ -127,12 +127,14 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInBounds(area);
 	for (auto&& [biome, slot, point] : bsps)
 	{
-		const auto& entityPack = biome->getEntityPack(slot);
-		auto optionalSelection = random.weightedSelection(entityPack);
-		if (!optionalSelection.has_value()) continue;
+		if (auto* entityPack = biome->getEntityPack(slot))
+		{
+			auto optionalSelection = random.weightedSelection(*entityPack);
+			if (!optionalSelection.has_value()) continue;
 
-		auto&& [entity, _] = entityPack.at(optionalSelection.value());
-		placeSingle(entity, point, registry, factory);
+			auto&& [entity, _] = entityPack->at(optionalSelection.value());
+			placeSingle(entity, point, registry, factory);
+		}
 	}
 
 	return GenerationState::Complete;
