@@ -21,11 +21,22 @@
             }
           },
           "expression": "height & random_scatter"
+        },
+        "grass": {
+          "layers": {
+            "random_scatter": {
+              "threshold": [ ">", 0.80 ]
+            }
+          }
         }
       },
       "entity_packs": {
         "trees": [
           [ "Tree", 1 ]
+        ],
+        "grass": [
+          [ "Grass", 4 ],
+          ["Tall Grass", 1]
         ]
       },
       "features": {
