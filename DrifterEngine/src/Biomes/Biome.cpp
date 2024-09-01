@@ -170,9 +170,14 @@ const std::unordered_map<entt::id_type, SlotDeterminer>& Biome::getSlotDetermine
 	return _entitySlotDeterminers;
 }
 
-const EntityPack& Biome::getEntityPack(entt::id_type slotID) const
+const EntityPack* Biome::getEntityPack(entt::id_type slotID) const
 {
-	return _entityPacks.at(slotID);
+	if (!_entityPacks.contains(slotID))
+	{
+		warning_logger << "Warning: Biome " << _name << " does not have a pack that corresponds to this slot id." << std::endl;
+		return nullptr;
+	}
+	return &_entityPacks.at(slotID);
 }
 
 BiomeIcon Biome::getIcon() const

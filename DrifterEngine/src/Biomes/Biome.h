@@ -34,7 +34,7 @@ public:
 	bool satisfiesClimate(const std::unordered_map<std::string, float>& values) const;
 	const std::unordered_map<std::string, drft::math::Range<float>>& getClimateRanges() const;
 	const std::unordered_map<entt::id_type, SlotDeterminer>& getSlotDeterminers() const;
-	const EntityPack& getEntityPack(entt::id_type slotID) const;
+	const EntityPack* getEntityPack(entt::id_type slotID) const;
 
 	BiomeIcon getIcon() const;
 	const std::string& getName() const;
