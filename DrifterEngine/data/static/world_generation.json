@@ -6,10 +6,10 @@
       "height": {
         "type": "perlin",
         "params": {
-          "resolution": 0.1,
-          "octaves": 8,
+          "resolution": 4,
+          "octaves": 6,
           "lacunarity": 2.4,
-          "gain": 2.0
+          "gain": 0.5
         }
       },
       "temperature": {
