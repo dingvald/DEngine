@@ -41,13 +41,14 @@ void drft::system::ProjectileSystem::onUpdate(float dt)
 			createSpriteOptionsFromRenderComponent(effectSprite, *render);
 			effectSprite.layer = static_cast<unsigned int>(RenderLayer::EffectsFront);
 			effectSprite.color = sf::Color::White;
+			effectSprite.color.value().a = 90;
 
 			spawnEffect(_registry,
 				{
 					.frames = { effectSprite },
 					.position = pos.position,
 					.ttl = 30,
-					.fades = true
+					.fadeRate = 3
 				});
 		}
 	}

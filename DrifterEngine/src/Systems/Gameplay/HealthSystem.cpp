@@ -123,8 +123,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 			.frames = { damageEffectSprite },
 			.position = posComp->position,
 			.animationSpeed = 10.0f,
-			.ttl = effect_ttl,
-			.fades = false,
+			.ttl = effect_ttl
 			});
 	}
 
