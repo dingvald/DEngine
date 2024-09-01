@@ -30,6 +30,6 @@ entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& 
 		effectHandle.emplace<AnimationComponent>(animation);
 	}
 
-	effectHandle.emplace<VisualEffectComponent>(ttl, effect.fades, effect.requiresInFOV);
+	effectHandle.emplace<VisualEffectComponent>(ttl, effect.fadeRate, effect.requiresInFOV);
 	return effectHandle.entity();
 }

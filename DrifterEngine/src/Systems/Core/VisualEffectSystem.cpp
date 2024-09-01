@@ -15,12 +15,7 @@ void drft::system::VisualEffectSystem::onFixedUpdate()
 		if (effect.ttl < 0) continue; 
 
 		--effect.ttl;
-		if (effect.fades)
-		{
-			auto current_a = render.color.a;
-			float delta = current_a / effect.ttl;
-			render.color.a =  math::remap(0, 120, 0, 255, effect.ttl);
-		}
+		render.color.a = std::clamp(render.color.a - effect.fadeRate, 0, 255);
 		if (effect.ttl <= 0)
 		{
 			_registry.destroy(entity);

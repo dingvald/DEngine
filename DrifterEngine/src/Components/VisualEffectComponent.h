@@ -8,7 +8,7 @@
 struct VisualEffectComponent
 {
 	int ttl = 0;
-	bool fades = false;
+	int fadeRate = 0;
 	bool requiresInFOV = true;
 
 private:
@@ -27,7 +27,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, VisualEffectComponent& visualEffect)
 	{
-		archive(visualEffect.ttl, visualEffect.fades, visualEffect.requiresInFOV);
+		archive(visualEffect.ttl, visualEffect.fadeRate, visualEffect.requiresInFOV);
 	}
 }
 

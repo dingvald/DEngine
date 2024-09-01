@@ -10,8 +10,8 @@ namespace drft::system
 
 		sf::Vector2i position = { 0,0 };
 		float animationSpeed = 0.f;
-		int ttl = 60; // one second
-		bool fades = false;
+		int ttl = 60; // how many ticks the effect is alive for (60 ticks / second)
+		int fadeRate = 0; // decrease in alpha per tick
 		bool loops = false;
 		bool requiresInFOV = true;
 	};
