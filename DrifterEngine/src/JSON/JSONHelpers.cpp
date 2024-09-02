@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "JSONHelpers.h"
-#include <Utility/StandardErrorLogger.h>
+#include <Utility/StandardLogger.h>
 
 
 drft::json::JsonRootExtractor::JsonRootExtractor(const std::filesystem::path& filepath, const char* rootObjectName)

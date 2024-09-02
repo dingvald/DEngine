@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Biome.h"
 #include "Factory/Factory.h"
-#include <Utility/StandardErrorLogger.h>
+#include <Utility/StandardLogger.h>
 
 
 namespace evaluation_functions

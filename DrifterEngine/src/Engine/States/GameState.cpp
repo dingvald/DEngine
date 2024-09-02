@@ -70,7 +70,7 @@
 #include "Utility/LoadEntity.h"
 #include "Utility/SaveRegistry.h"
 #include "Utility/LoadRegistry.h"
-#include "Utility/StandardErrorLogger.h"
+#include "Utility/StandardLogger.h"
 #include "Factory/EntityFactory.h"
 
 

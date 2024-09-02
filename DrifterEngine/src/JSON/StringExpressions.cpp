@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "StringExpressions.h"
 #include <Utility/StringManipulation.h>
-#include <Utility/StandardErrorLogger.h>
+#include <Utility/StandardLogger.h>
 
 using namespace entt::literals;
 

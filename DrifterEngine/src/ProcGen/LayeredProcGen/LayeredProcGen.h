@@ -5,8 +5,9 @@
 #include <functional>
 #include <memory>
 #include <Spatial/Helpers.h>
+
 #include <Utility/stdHashing.h>
-#include <Utility/StandardErrorLogger.h>
+#include <Utility/StandardLogger.h>
 
 
 enum class GenerationState
