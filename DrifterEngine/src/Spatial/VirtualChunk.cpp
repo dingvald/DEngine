@@ -28,7 +28,6 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 {
 	if (getState() == ChunkState::ToBuild)
 	{
-		std::cout << "Building " << toString() << std::endl;
 		setState(ChunkState::Building);
 	}
 
@@ -79,7 +78,6 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::
 	if (getState() == ChunkState::ToLoad)
 	{
 		setFuture(std::async(std::launch::async, &VirtualChunk::loadChunkFromFile, this, filename));
-		std::cout << "Loading " << toString() << std::endl;
 		setState(ChunkState::Loading);
 	}
 
@@ -108,7 +106,6 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 
 		if (entities.empty())
 		{
-			std::cout << "No need to save " << toString() << " chunk empty" << std::endl;
 			setState(ChunkState::Saved);
 			return ioStatus::Done;
 		}
@@ -122,7 +119,6 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 		reg.compact();
 		
 		setFuture(std::async(std::launch::async, &VirtualChunk::saveChunkToFile, this, filename));
-		std::cout << "Saving " << toString() << std::endl;
 		setState(ChunkState::Saving);
 	}
 

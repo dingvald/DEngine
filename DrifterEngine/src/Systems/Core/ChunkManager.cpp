@@ -90,12 +90,10 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 	// Then, scan for chunks to save
 	for (auto& [coord, chunk] : _chunks)
 	{
-		if (chunk.getState() != spatial::ChunkState::Active)
-		{
-			continue;
-		}
-		float distance = spatial::distance(coord, newPosition);
-		if (distance < TO_SAVE_CHUNK_RADIUS) [[likely]] continue;
+		if (chunk.getState() != spatial::ChunkState::Active) continue;
+
+		const float distance = spatial::distance(coord, newPosition);
+		if (distance < TO_SAVE_CHUNK_RADIUS) continue;
 
 		_toSave.push(coord);
 		chunk.setState(spatial::ChunkState::ToSave);
@@ -110,7 +108,7 @@ void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
 		if (chunk.getState() != spatial::ChunkState::Saved) continue;
 
 		const float distance = spatial::distance(coord, newPosition);
-		if (distance < TO_SAVE_CHUNK_RADIUS) [[likely]] continue;
+		if (distance < TO_SAVE_CHUNK_RADIUS) continue;
 
 		toDelete.push_back(coord);
 	}
@@ -120,7 +118,6 @@ void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
 	{
 		grid.removeChunk(coord);
 		_chunks.erase(coord);
-		std::cout << "Chunk " << coord.x << "_" << coord.y << " cleaned up." << std::endl;
 	}
 }
 
@@ -132,6 +129,7 @@ void drft::system::ChunkManager::processBuildQueue()
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
 	status = chunk.build(_registry);
+
 	// Always build in order
 	if (status == spatial::ioStatus::Done)
 	{
@@ -147,6 +145,7 @@ void drft::system::ChunkManager::processLoadQueue()
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
 	status = chunk.asyncLoad(_registry, buildChunkFilename(chunk));
+
 	// Always load in order
 	if (status == spatial::ioStatus::Done)
 	{

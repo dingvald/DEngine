@@ -278,7 +278,7 @@
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
     <ClCompile Include="src\Utility\RectPacker.cpp" />
     <ClCompile Include="src\Utility\SpriteOptions.cpp" />
-    <ClCompile Include="src\Utility\StandardErrorLogger.cpp" />
+    <ClCompile Include="src\Utility\StandardLogger.cpp" />
     <ClCompile Include="src\Utility\StringManipulation.cpp" />
     <ClCompile Include="src\Utility\GetTextCenter.cpp" />
     <ClCompile Include="src\Utility\LoadEntity.cpp" />
@@ -661,7 +661,7 @@
     <ClInclude Include="src\Utility\ContainerHelpers.h" />
     <ClInclude Include="src\Utility\RectPacker.h" />
     <ClInclude Include="src\Utility\SpriteOptions.h" />
-    <ClInclude Include="src\Utility\StandardErrorLogger.h" />
+    <ClInclude Include="src\Utility\StandardLogger.h" />
     <ClInclude Include="src\Utility\StringManipulation.h" />
     <ClInclude Include="src\Utility\GetTextCenter.h" />
     <ClInclude Include="src\Utility\LoadEntity.h" />

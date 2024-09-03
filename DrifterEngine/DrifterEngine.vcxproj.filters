@@ -531,7 +531,7 @@
     <ClCompile Include="src\ProcGen\Layers\PoissonDiskLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utility\StandardErrorLogger.cpp">
+    <ClCompile Include="src\Utility\StandardLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\FillLayer.cpp">
@@ -2063,7 +2063,7 @@
     <ClInclude Include="src\Utility\ContainerHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\StandardErrorLogger.h">
+    <ClInclude Include="src\Utility\StandardLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Layers\PoissonDiskLayer.h">
