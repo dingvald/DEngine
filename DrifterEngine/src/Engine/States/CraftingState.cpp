@@ -217,7 +217,7 @@ void drft::CraftingState::refreshCraftingList()
 					});
 
 
-			const auto& itemRender = prototypeReg.get<RenderComponent>(craftable);
+			const auto& itemRender = util::getRenderData({ prototypeReg, craftable });
 			sf::Sprite sprite = textureAtlas.getSprite(itemRender.texture, itemRender.uvSize, itemRender.uvCoords);
 			_craftingList[countStr.data()].insert("Item", gui::DualContainer())
 				.setStyle(gui::ElementState::Idle, {
