@@ -6,6 +6,9 @@
 #include "Components/AnimationComponent.h"
 #include "Components/SyncedAnimationComponent.h"
 
+#include <Utility/StandardLogger.h>
+#include <Utility/EntityHelpers.h>
+
 using namespace entt::literals;
 
 void drft::system::SpriteControllerSystem::init()
@@ -19,12 +22,38 @@ void drft::system::SpriteControllerSystem::onUpdateEnd()
 	_registry.clear<SpriteChangeRequestComponent>();
 }
 
+/*static*/RenderComponent drft::system::SpriteControllerSystem::getDefaultRenderComponent(entt::const_handle entity)
+{
+	RenderComponent result = DebugRenderComponent;
+	if (auto spriteController = entity.try_get<SpriteControllerComponent>())
+	{
+		auto defaultVariant = spriteController->states.at("default"_hs);
+		while (auto otherID = std::get_if<entt::id_type>(&defaultVariant))
+		{
+			defaultVariant = spriteController->states.at(*otherID);
+		}
+
+		if (auto node = std::get_if<SpriteControllerComponent::StateNode>(&defaultVariant))
+		{
+			applySpriteOptionsToRenderComponent(result, node->frames[0]);
+			return result;
+		}
+	}
+
+	if (auto render = entity.try_get<RenderComponent>())
+	{
+		result = *render;
+	}
+
+	return result;
+}
+
 void drft::system::SpriteControllerSystem::onSpriteControllerAdded(entt::registry& registry, entt::entity entity) const
 {
 	auto& controller = registry.get<SpriteControllerComponent>(entity);
 	if (!controller.states.contains("default"_hs))
 	{
-		throw std::exception("The SpriteController requires a default state");
+		error_logger << "Error: " << util::getEntityName({ registry, entity }) << "'s SpriteContollerComponent default state missing." << std::endl;
 		return;
 	}
 
@@ -47,9 +76,17 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 	const auto& nodeVariant = controller.states.at(stateId);
 	if (auto otherNode = std::get_if<entt::id_type>(&nodeVariant))
 	{
-		// TODO: Maybe don't fail silently here..?
-		if (!controller.states.contains(*otherNode)) return;
-		if (std::get_if<entt::id_type>(&controller.states.at(*otherNode)) != nullptr) return; // Prevents infinite recursion TODO: figure out a better way
+		if (!controller.states.contains(*otherNode))
+		{
+			error_logger << "Error: " << util::getEntityName(handle) << "'s SpriteControllerComponent is missing the referenced ID" << std::endl;
+			return;
+		}
+
+		if (auto id = std::get_if<entt::id_type>(&controller.states.at(*otherNode)); *id == stateId)
+		{
+			error_logger << "Error: " << util::getEntityName(handle) << "'s SpriteControllerComponent contains a circular reference in its states." << std::endl;
+			return;
+		}
 
 		handleNewSpriteState(handle, controller, *otherNode);
 	}
@@ -57,19 +94,17 @@ void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle han
 	{
 		if (node->frames.empty())
 		{
-			throw std::exception("Expected at least one frame in sprite controller state");
+			error_logger << "Error: " << util::getEntityName(handle) << "'s SpriteControllerComponent contains no states." << std::endl;
+			return;
 		}
 
-		if (node->frames.size() > 1)
+		if (node->synced)
 		{
-			if (node->synced)
-			{
-				handle.emplace_or_replace<SyncedAnimationComponent>(node->frames, node->speed.value_or(1.0f), true);
-			}
-			else
-			{
-				handle.emplace_or_replace<AnimationComponent>(node->frames, node->speed.value_or(1.0f), true);
-			}
+			handle.emplace_or_replace<SyncedAnimationComponent>(node->frames, node->speed.value_or(1.0f), true);
+		}
+		else
+		{
+			handle.emplace_or_replace<AnimationComponent>(node->frames, node->speed.value_or(1.0f), true);
 		}
 
 		joinWithRenderComponent(handle, node->frames[0]);

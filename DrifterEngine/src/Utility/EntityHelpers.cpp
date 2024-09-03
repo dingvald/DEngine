@@ -3,7 +3,17 @@
 #include "Factory/EntityFactory.h"
 #include "Components/PositionComponent.h"
 #include "Components/DescriptionComponent.h"
+#include <Components/SpriteControllerComponent.h>
 #include "Spatial/Helpers.h"
+
+#include <Systems/Rendering/SpriteControllerSystem.h>
+
+using namespace entt::literals;
+
+RenderComponent drft::util::getRenderData(entt::const_handle entity)
+{
+	return system::SpriteControllerSystem::getDefaultRenderComponent(entity);
+}
 
 std::string drft::util::getEntityName(const entt::const_handle entity)
 {

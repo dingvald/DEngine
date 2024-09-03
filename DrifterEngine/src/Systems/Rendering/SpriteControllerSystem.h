@@ -1,5 +1,6 @@
 #pragma once
 #include "Systems/System.h"
+#include "Components/RenderComponent.h"
 
 struct SpriteOptions;
 struct SpriteControllerComponent;
@@ -13,6 +14,8 @@ namespace drft::system
 
 		void init() override;
 		void onUpdateEnd() override;
+
+		static RenderComponent getDefaultRenderComponent(entt::const_handle entity);
 
 	private:
 		void onSpriteControllerAdded(entt::registry& registry, entt::entity entity) const;
