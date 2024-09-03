@@ -193,8 +193,8 @@ struct jcv_diagram_
 
 #endif // JC_VORONOI_H
 
-//#ifdef JC_VORONOI_IMPLEMENTATION
-//#undef JC_VORONOI_IMPLEMENTATION
+#ifdef JC_VORONOI_IMPLEMENTATION
+#undef JC_VORONOI_IMPLEMENTATION
 
 #include <memory.h>
 
@@ -1622,7 +1622,7 @@ void jcv_diagram_generate_useralloc(int num_points, const jcv_point* points, con
     jcv_fillgaps(d);
 }
 
-//#endif // JC_VORONOI_IMPLEMENTATION
+#endif // JC_VORONOI_IMPLEMENTATION
 
 /*
 

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "VoronoiLayer.h"
 #include <ProcGen/Layers/JitteredGridLayer.h>
-#include <jc_voronoi/jc_voronoi.h>
+#include <jc_voronoi/jc_voronoi_adaptor.h>
 
 namespace
 {
@@ -25,35 +25,20 @@ GenerationState VoronoiLayerChunk::generate(int level)
     if (!jitterLayer.isReady()) return jitterLayer.getState();
 
     auto points = jitterLayer.unwrap().getPointsInBounds(paddedBounds);
-    std::vector<jcv_point> jcv_points;
-    jcv_points.reserve(points.size());
-    for (auto&& point : points)
-    {
-        jcv_points.push_back(vector2i2jcvPoint(point));
-        if (_bounds.contains(point))
-        {
-            centroids.push_back(point);
-        }  
-    }
+    
+    VoronoiDiagram diagram = { points };
 
-    jcv_diagram diagram;
-    memset(&diagram, 0, sizeof(jcv_diagram));
-    jcv_diagram_generate(jcv_points.size(), jcv_points.data(), nullptr, nullptr, &diagram);
-   
-    // edges
-    const jcv_edge* edge = jcv_diagram_get_edges(&diagram);
-    while (edge)
-    {
-        auto point1 = jcvPoint2Vector2i(edge->pos[0]);
-        auto point2 = jcvPoint2Vector2i(edge->pos[1]);
-        if (_bounds.contains(point1))
+    diagram.forEachSite([this](VoronoiSite site)
         {
-            edges.emplace_back(std::make_pair(point1, point2));
-        }
-        edge = jcv_diagram_get_next_edge(edge);
-    }
-
-    jcv_diagram_free(&diagram);
+            if (!_bounds.contains(site.point)) return;
+            centroids.push_back(site.point);
+        });
+    
+    diagram.forEachEdge([this](Edge edge)
+        {
+            if (!_bounds.contains(edge.first)) return;
+            edges.emplace_back(std::move(edge));
+        });
 
     return GenerationState::Complete;
 }
