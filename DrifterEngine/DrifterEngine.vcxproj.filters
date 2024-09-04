@@ -528,7 +528,7 @@
     <ClCompile Include="src\Random\XORshift.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\PoissonDiskLayer.cpp">
+    <ClCompile Include="src\ProcGen\Layers\LloydRelaxedLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\StandardLogger.cpp">
@@ -2069,7 +2069,7 @@
     <ClInclude Include="src\Utility\StandardLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\PoissonDiskLayer.h">
+    <ClInclude Include="src\ProcGen\Layers\LloydRelaxedLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Layers\FillLayer.h">

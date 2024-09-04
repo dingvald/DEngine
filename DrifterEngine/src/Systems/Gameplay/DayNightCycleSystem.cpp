@@ -13,7 +13,7 @@
 static constexpr int DAY_START_HOUR = 5;
 static constexpr int NIGHT_START_HOUR = 23;
 
-static constexpr int SECONDS_PER_TICK = 60;
+static constexpr int SECONDS_PER_TICK = 10;
 static constexpr int SECONDS_PER_MINUTE = 60;
 static constexpr int MINUTES_PER_HOUR = 60;
 static constexpr int HOURS_PER_DAY = 24;

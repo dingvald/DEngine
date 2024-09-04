@@ -187,7 +187,7 @@
     <ClCompile Include="src\ProcGen\Layers\FillLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\PerlinNoiseLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\JitteredGridLayer.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\PoissonDiskLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\LloydRelaxedLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\RandomLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\VoronoiLayer.cpp" />
@@ -502,7 +502,7 @@
     <ClInclude Include="src\ProcGen\Layers\FillLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\PerlinNoiseLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\JitteredGridLayer.h" />
-    <ClInclude Include="src\ProcGen\Layers\PoissonDiskLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\LloydRelaxedLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\RandomLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\StructureLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\VoronoiLayer.h" />
