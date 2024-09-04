@@ -31,9 +31,10 @@
         }
       },
       "trees": {
-        "type": "poisson_disk",
+        "type": "relaxed",
         "params": {
-          "density": 0.2
+          "density": 0.15,
+          "passes": 2
         }
       },
       "random_scatter": {

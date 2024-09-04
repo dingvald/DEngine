@@ -70,6 +70,16 @@ void VoronoiDiagram::forEachEdge(std::function<void(Edge edge)> func) const
 	}
 }
 
+std::vector<Edge> VoronoiDiagram::getEdges() const
+{
+	std::vector<Edge> result;
+	forEachEdge([&result](Edge edge)
+		{
+			result.push_back(std::move(edge));
+		});
+	return result;
+}
+
 void VoronoiDiagram::forEachRelaxedPoint(std::function<void(sf::Vector2i)> func) const
 {
 	const jcv_site* sites = jcv_diagram_get_sites(&_diagram);
@@ -91,6 +101,17 @@ void VoronoiDiagram::forEachRelaxedPoint(std::function<void(sf::Vector2i)> func)
 		sf::Vector2i point = { static_cast<int>(sum.x) / count, static_cast<int>(sum.y) / count };
 		func(std::move(point));
 	}
+}
+
+std::vector<sf::Vector2i> VoronoiDiagram::getRelaxedPoints() const
+{
+	std::vector<sf::Vector2i> result;
+	result.reserve(_diagram.numsites);
+	forEachRelaxedPoint([&result](sf::Vector2i point)
+		{
+			result.push_back(std::move(point));
+		});
+	return result;
 }
 
 std::vector<jcv_point> VoronoiDiagram::_pointCopy(const std::vector<sf::Vector2i>& points) const

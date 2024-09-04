@@ -22,8 +22,11 @@ public:
 	~VoronoiDiagram();
 
 	void forEachSite(std::function<void(VoronoiSite)> func) const;
+
 	void forEachEdge(std::function<void(Edge)> func) const;
+	std::vector<Edge> getEdges() const;
 	void forEachRelaxedPoint(std::function<void(sf::Vector2i)> func) const;
+	std::vector<sf::Vector2i> getRelaxedPoints() const;
 
 private:
 	std::vector<jcv_point> _pointCopy(const std::vector<sf::Vector2i>& points) const;

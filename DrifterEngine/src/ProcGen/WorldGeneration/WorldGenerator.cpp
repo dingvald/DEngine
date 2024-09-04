@@ -22,7 +22,7 @@
 #include <ProcGen/Layers/BiomeLayer.h>
 #include <ProcGen/Layers/StructureLayer.h>
 #include <ProcGen/Layers/JitteredGridLayer.h>
-#include <ProcGen/Layers/PoissonDiskLayer.h>
+#include <ProcGen/Layers/LloydRelaxedLayer.h>
 #include <ProcGen/Layers/RandomLayer.h>
 #include <ProcGen/Layers/VoronoiLayer.h>
 #include <ProcGen/Layers/FillLayer.h>
@@ -88,9 +88,9 @@ void drft::gen::WorldGenerator::createFromJson(const rapidjson::Value& json)
 				layerPtr->createFromJson(params);
 				_layerManager->add(std::move(layerPtr), id);
 			}
-			else if (type == "poisson_disk"_hs)
+			else if (type == "relaxed"_hs)
 			{
-				auto layerPtr = std::make_unique<PoissonDiskLayer>();
+				auto layerPtr = std::make_unique<LloydRelaxedLayer>();
 				auto& params = layerObj["params"];
 				layerPtr->createFromJson(params);
 				_layerManager->add(std::move(layerPtr), id);
