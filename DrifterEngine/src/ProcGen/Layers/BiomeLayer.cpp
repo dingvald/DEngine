@@ -19,9 +19,9 @@ GenerationState BiomeLayerChunk::generate(int level)
     switch (level)
     {
     case 1:
-        return stage1Generation(paddedBounds);
+        return assignBiomesToVoronoiCells(paddedBounds);
     case 2:
-        return stage2Generation(paddedBounds);
+        return generateBiomeSlots(paddedBounds);
     default:
         break;
     }
@@ -62,7 +62,7 @@ std::unordered_map<std::string, float> BiomeLayerChunk::getClimateValuesAtPoint(
     return result;
 }
 
-GenerationState BiomeLayerChunk::stage1Generation(sf::IntRect area)
+GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(sf::IntRect area)
 {
     auto voronoiLayer = generateDependency<VoronoiLayer>(area);
     if (!voronoiLayer.isReady()) return voronoiLayer.getState();
@@ -85,7 +85,7 @@ GenerationState BiomeLayerChunk::stage1Generation(sf::IntRect area)
     return GenerationState::Complete;
 }
 
-GenerationState BiomeLayerChunk::stage2Generation(sf::IntRect area)
+GenerationState BiomeLayerChunk::generateBiomeSlots(sf::IntRect area)
 {
     std::unordered_map<entt::id_type, IGetValueAt*> dependencies;
     for (auto&& [point, biome] : biomePoints)

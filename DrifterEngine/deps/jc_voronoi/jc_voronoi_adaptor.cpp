@@ -7,8 +7,8 @@ namespace
 	sf::Vector2i jcvPoint2Vector2i(jcv_point point)
 	{
 		sf::Vector2i result;
-		result.x = point.x;
-		result.y = point.y;
+		result.x = static_cast<int>(point.x);
+		result.y = static_cast<int>(point.y);
 		return result;
 	}
 	jcv_point vector2i2jcvPoint(sf::Vector2i point)
@@ -18,7 +18,7 @@ namespace
 }
 
 VoronoiSite::VoronoiSite(jcv_site site)
-	: point(site.p.x, site.p.y)
+	: point(jcvPoint2Vector2i(site.p))
 	, index(site.index)
 	, _graphEdge(site.edges)
 {}

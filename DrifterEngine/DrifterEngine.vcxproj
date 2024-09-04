@@ -180,6 +180,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp" />
     <ClCompile Include="src\JSON\StringExpressions.cpp" />
     <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp" />
@@ -392,6 +393,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\jc_voronoi\jc_voronoi.h" />
+    <ClInclude Include="deps\jc_voronoi\jc_voronoi_adaptor.h" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Audio.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Audio\AlResource.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Audio\Export.hpp" />

@@ -25,7 +25,7 @@ GenerationState VoronoiLayerChunk::generate(int level)
     if (!jitterLayer.isReady()) return jitterLayer.getState();
 
     auto points = jitterLayer.unwrap().getPointsInBounds(paddedBounds);
-    
+
     VoronoiDiagram diagram = { points };
 
     diagram.forEachSite([this](VoronoiSite site)

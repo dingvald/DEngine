@@ -14,7 +14,9 @@ namespace drft::rng
 		double realInRange(double min, double max);
 		int intInRange(int min, int max);
 		sf::Vector2i positionInCircle(sf::Vector2i origin, int radius);
-		sf::Vector2i positionInRect(sf::Vector2i dimensions);
+		sf::Vector2i positionInRect(sf::IntRect rect);
+		std::vector<sf::Vector2i> shuffleRect(sf::IntRect rect);
+
 		template<typename T>
 		std::optional<size_t> weightedSelection(const std::vector<std::pair<T, int>>& weightedElements)
 		{

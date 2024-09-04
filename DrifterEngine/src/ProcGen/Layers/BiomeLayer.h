@@ -29,8 +29,8 @@ private:
 	ClimateValues getClimateValuesAtPoint(sf::Vector2i point, const std::unordered_map<std::string, IGetValueAt*>& generatedDependencies) const;
 	virtual int numLevels() override { return 2; }
 
-	GenerationState stage1Generation(sf::IntRect area);
-	GenerationState stage2Generation(sf::IntRect area);
+	GenerationState assignBiomesToVoronoiCells(sf::IntRect area);
+	GenerationState generateBiomeSlots(sf::IntRect area);
 
 public:
 	BiomeCentroids biomePoints;

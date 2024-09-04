@@ -12,12 +12,12 @@ public:
 	
 private:
 	virtual int numLevels() override { return 2; }
-	GenerationState stage1Generation(sf::IntRect area);
-	GenerationState stage2Generation(sf::IntRect area);
+	GenerationState generateRandomPoints(sf::IntRect area);
+	GenerationState relaxRandomPoints(sf::IntRect area);
 
 public:
 	std::vector<sf::Vector2i> randomPoints;
-	std::vector<sf::Vector2i> distributedPoints;
+	std::unordered_set<sf::Vector2i> distributedPoints;
 };
 
 class PoissonDiskLayer : public GenerationLayer<PoissonDiskLayer, PoissonDiskLayerChunk>, public IGetValueAt, public ICreateFromJson
@@ -27,6 +27,8 @@ public:
 
 	double getValueAt(sf::Vector2i position) override;
 	void createFromJson(const rapidjson::Value& json) override;
+
+	float getDistributionDensity() const;
 
 private:
 	float _density = 0.5;

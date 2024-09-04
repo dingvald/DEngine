@@ -38,12 +38,19 @@ sf::Vector2i drft::rng::Random::positionInCircle(sf::Vector2i origin, int radius
 	return { x,y };
 }
 
-sf::Vector2i drft::rng::Random::positionInRect(sf::Vector2i dimensions)
+sf::Vector2i drft::rng::Random::positionInRect(sf::IntRect rect)
 {
-	int x = intInRange(0, dimensions.x);
-	int y = intInRange(0, dimensions.y);
+	int x = intInRange(rect.left, rect.left + rect.width);
+	int y = intInRange(rect.top, rect.top + rect.height);
 
 	return { x,y };
+}
+
+std::vector<sf::Vector2i> drft::rng::Random::shuffleRect(sf::IntRect rect)
+{
+	auto positions = spatial::getIntRect({ rect.left, rect.top }, rect.width, rect.height);
+	std::shuffle(positions.begin(), positions.end(), _gen);
+	return positions;
 }
 
 unsigned int drft::rng::generateSeed()

@@ -16,11 +16,11 @@
             "height": {
               "threshold": [ ">", 0.1 ]
             },
-            "random_scatter": {
-              "threshold": [ ">", 0.95 ]
+            "trees": {
+              "threshold": [ ">", 0.5 ]
             }
           },
-          "expression": "height & random_scatter"
+          "expression": "height & trees"
         },
         "grass": {
           "layers": {

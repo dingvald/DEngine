@@ -543,6 +543,9 @@
     <ClCompile Include="src\JSON\StringExpressions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -2076,6 +2079,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\JSON\StringExpressions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deps\jc_voronoi\jc_voronoi_adaptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

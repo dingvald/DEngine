@@ -3,6 +3,7 @@
 #include <EnTT/core/fwd.hpp>
 #include <vector>
 #include <functional>
+#include <unordered_map>
 #include <memory>
 #include <Spatial/Helpers.h>
 
@@ -170,9 +171,11 @@ public:
 	}
 
 	virtual GenerationState doGenerate(int level) override final 
-	{ 
-		level = std::min(level, numLevels());
+	{	
+		if (_currentLevel > numLevels()) return GenerationState::Complete;
+
 		level = level == 0 ? numLevels() : level; // default level "0" generates all layers
+		level = std::min(level, numLevels());
 
 		if (_currentLevel > level) return GenerationState::Complete;
 
@@ -257,6 +260,16 @@ public:
 		if (!result) return GenerationState::Generating;
 		return GenerationState::Complete;
 	}
+	void forEachLoadedNeighborChunk(sf::Vector2i chunkCoordinate, std::function<void(const ChunkType&)> func) const
+	{
+		auto neighbors = drft::spatial::getAdjacentPoints(chunkCoordinate);
+		for (auto&& neighbor : neighbors)
+		{
+			if (!_chunks.contains(neighbor)) continue;
+			func(_chunks.at(neighbor));
+		}
+	}
+
 protected:
 	sf::Vector2i getChunkDimensions() const
 	{
@@ -351,9 +364,8 @@ private:
 				};
 				_chunks.emplace(point, std::move(chunk));
 			}
-
-			details::AbstractChunk* chunk = static_cast<details::AbstractChunk*>(&_chunks.at(point));
-			GenerationState state = chunk->doGenerate(context.desiredLevel);
+			
+			GenerationState state = _chunks.at(point).doGenerate(context.desiredLevel);
 			if (state == GenerationState::Generating)
 			{
 				result = false;
@@ -363,7 +375,7 @@ private:
 	}
 
 private:
-	entt::dense_map<sf::Vector2i, ChunkType> _chunks;
+	std::unordered_map<sf::Vector2i, ChunkType> _chunks;
 	sf::Vector2i _chunkDimensions;
 };
 
