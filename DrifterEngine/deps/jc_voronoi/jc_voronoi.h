@@ -1200,29 +1200,35 @@ static jcv_edge* jcv_create_gap_edge(jcv_context_internal* internal, jcv_site* s
 
 void jcv_boxshape_fillgaps(const jcv_clipper* clipper, jcv_context_internal* allocator, jcv_site* site)
 {
+    // Note from Del I.:
+    // Took this implementation from v0.7.0 - latest could loop infinitely
+    // I'm not sure the downsides to this implementation, but it appears to be good enough for my use cases
+    
+
     // They're sorted CCW, so if the current->pos[1] != next->pos[0], then we have a gap
     jcv_graphedge* current = site->edges;
-    if( !current )
+    if (!current)
     {
         // No edges, then it should be a single cell
-        assert( allocator->numsites == 1 );
+        assert(allocator->numsites == 1);
 
         jcv_graphedge* gap = jcv_alloc_graphedge(allocator);
-        gap->neighbor   = 0;
-        gap->pos[0]     = clipper->min;
-        gap->pos[1].x   = clipper->max.x;
-        gap->pos[1].y   = clipper->min.y;
-        gap->angle      = jcv_calc_sort_metric(site, gap);
-        gap->next       = 0;
-        gap->edge       = jcv_create_gap_edge(allocator, site, gap);
+        gap->neighbor = 0;
+        gap->pos[0] = clipper->min;
+        gap->pos[1].x = clipper->max.x;
+        gap->pos[1].y = clipper->min.y;
+        gap->angle = jcv_calc_sort_metric(site, gap);
+        gap->next = 0;
+        gap->edge = jcv_create_gap_edge(allocator, site, gap);
 
         current = gap;
         site->edges = gap;
     }
 
     jcv_graphedge* next = current->next;
-    if( !next )
+    if (!next)
     {
+        // Only one edge, then we assume it's a corner gap
         jcv_graphedge* gap = jcv_alloc_graphedge(allocator);
         jcv_create_corner_edge(allocator, site, current, gap);
         gap->edge = jcv_create_gap_edge(allocator, site, gap);
@@ -1233,68 +1239,44 @@ void jcv_boxshape_fillgaps(const jcv_clipper* clipper, jcv_context_internal* all
         next = site->edges;
     }
 
-    while( current && next )
+    while (current && next)
     {
-        int current_edge_flags = jcv_get_edge_flags(&current->pos[1], &clipper->min, &clipper->max);
-        if( current_edge_flags && !jcv_point_eq(&current->pos[1], &next->pos[0]))
+        if (jcv_point_on_box_edge(&current->pos[1], &clipper->min, &clipper->max) && !jcv_point_eq(&current->pos[1], &next->pos[0]))
         {
-            // Cases:
-            //  Current and Next on the same border
-            //  Current on one border, and Next on another border
-            //  Current on the corner, Next on the border
-            //  Current on the corner, Next on another border (another corner in between)
-
-            int next_edge_flags = jcv_get_edge_flags(&next->pos[0], &clipper->min, &clipper->max);
-            if (current_edge_flags & next_edge_flags)
+            // Border gap
+            if (current->pos[1].x == next->pos[0].x || current->pos[1].y == next->pos[0].y)
             {
-                // Current and Next on the same border
                 jcv_graphedge* gap = jcv_alloc_graphedge(allocator);
-                gap->neighbor   = 0;
-                gap->pos[0]     = current->pos[1];
-                gap->pos[1]     = next->pos[0];
-                gap->angle      = jcv_calc_sort_metric(site, gap);
-                gap->edge       = jcv_create_gap_edge(allocator, site, gap);
+                gap->neighbor = 0;
+                gap->pos[0] = current->pos[1];
+                gap->pos[1] = next->pos[0];
+                gap->angle = jcv_calc_sort_metric(site, gap);
+                gap->edge = jcv_create_gap_edge(allocator, site, gap);
 
                 gap->next = current->next;
                 current->next = gap;
             }
-            else {
-                // Current and Next on different borders
-                int corner_flag = jcv_edge_flags_to_corner(current_edge_flags);
-                if (corner_flag)
-                {
-                    // we are already at one corner, so we need to find the next one
-                    corner_flag = jcv_corner_rotate_90(corner_flag);
-                }
-                else
-                {
-                    // we are on the middle of a border
-                    // we need to find the adjacent corner, following the borders CCW
-                    if      (current_edge_flags == JCV_EDGE_TOP)    { corner_flag = JCV_CORNER_TOP_LEFT; }
-                    else if (current_edge_flags == JCV_EDGE_LEFT)   { corner_flag = JCV_CORNER_BOTTOM_LEFT; }
-                    else if (current_edge_flags == JCV_EDGE_BOTTOM) { corner_flag = JCV_CORNER_BOTTOM_RIGHT; }
-                    else if (current_edge_flags == JCV_EDGE_RIGHT)  { corner_flag = JCV_CORNER_TOP_RIGHT; }
-
-                }
-                jcv_point corner = jcv_corner_to_point(corner_flag, &clipper->min, &clipper->max);
-
+            else if (jcv_point_on_box_edge(&current->pos[1], &clipper->min, &clipper->max) &&
+                jcv_point_on_box_edge(&next->pos[0], &clipper->min, &clipper->max))
+            {
                 jcv_graphedge* gap = jcv_alloc_graphedge(allocator);
-                gap->neighbor   = 0;
-                gap->pos[0]     = current->pos[1];
-                gap->pos[1]     = corner;
-                gap->angle      = jcv_calc_sort_metric(site, gap);
-                gap->edge       = jcv_create_gap_edge(allocator, site, gap);
-
+                jcv_create_corner_edge(allocator, site, current, gap);
+                gap->edge = jcv_create_gap_edge(allocator, site, gap);
                 gap->next = current->next;
                 current->next = gap;
+            }
+            else
+            {
+                // something went wrong, abort instead of looping indefinitely
+                break;
             }
         }
 
         current = current->next;
-        if( current )
+        if (current)
         {
             next = current->next;
-            if( !next )
+            if (!next)
                 next = site->edges;
         }
     }
