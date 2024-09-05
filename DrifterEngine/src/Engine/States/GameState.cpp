@@ -112,8 +112,9 @@ void drft::GameState::init()
 
 	bool isNewGame = loadOrCreatePlayer();
 
-	std::cout << "Starting Gamestate" << std::endl;
+	std::cout << "Starting Gamestate..." << std::endl;
 	_systems->startAll(isNewGame);
+	std::cout << "<<< Game Started >>>" << std::endl;
 }
 
 void drft::GameState::connectEventHandlers()
