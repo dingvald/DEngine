@@ -17,7 +17,6 @@ namespace drft::gen
 	class WorldGenerator : public ICreateFromJson
 	{
 	public:
-		WorldGenerator();
 		void init();
 		void createFromJson(const rapidjson::Value& json) override;
 

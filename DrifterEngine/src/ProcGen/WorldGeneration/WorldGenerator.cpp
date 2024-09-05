@@ -31,11 +31,6 @@ static const sf::Vector2i CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spati
 
 using namespace entt::literals;
 
-drft::gen::WorldGenerator::WorldGenerator()
-{
-
-}
-
 void drft::gen::WorldGenerator::init()
 {
 	// Manually add layers that aren't included in the json
