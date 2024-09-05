@@ -51,11 +51,18 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i>
 			{
 				body->parts.unequipItem(optionalItem.value());
 				auto& throwerPos = actor.get<PositionComponent>();
-				auto line = spatial::getIntPointsAlongLine(throwerPos.position, targetPosition.value());
-				
 				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalItem.value());
-				actor.registry()->emplace<PositionComponent>(itemEntity, line.front());
-				actor.registry()->emplace<ProjectileComponent>(itemEntity, std::move(line), 1, throwSpeed);
+
+				if (targetPosition.value() == throwerPos.position)
+				{
+					actor.registry()->emplace<PositionComponent>(itemEntity, targetPosition.value());
+				}
+				else
+				{
+					auto line = spatial::getIntPointsAlongLine(throwerPos.position, targetPosition.value());
+					actor.registry()->emplace<PositionComponent>(itemEntity, line.front());
+					actor.registry()->emplace<ProjectileComponent>(itemEntity, std::move(line), 1, throwSpeed);
+				}
 			}
 		}
 	}
