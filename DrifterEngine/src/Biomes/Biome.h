@@ -31,8 +31,8 @@ public:
 	Biome(std::string name);
 	void createFromJSON(const rapidjson::Value& json);
 	
-	bool satisfiesClimate(const std::unordered_map<std::string, float>& values) const;
-	const std::unordered_map<std::string, drft::math::Range<float>>& getClimateRanges() const;
+	bool satisfiesClimate(const std::unordered_map<entt::id_type, float>& values) const;
+	const std::unordered_map<entt::id_type, drft::math::Range<float>>& getClimateRanges() const;
 	const std::unordered_map<entt::id_type, SlotDeterminer>& getSlotDeterminers() const;
 	const EntityPack* getEntityPack(entt::id_type slotID) const;
 
@@ -43,7 +43,7 @@ private:
 	std::string _name;
 	BiomeIcon _icon;
 
-	std::unordered_map<std::string, drft::math::Range<float>> _ranges;
+	std::unordered_map<entt::id_type, drft::math::Range<float>> _ranges;
 	std::unordered_map<entt::id_type, SlotDeterminer> _entitySlotDeterminers;
 	std::unordered_map<entt::id_type, EntityPack> _entityPacks;
 };

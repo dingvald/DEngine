@@ -51,9 +51,9 @@ void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector2i centroid, BiomeCentr
     }
 }
 
-std::unordered_map<std::string, float> BiomeLayerChunk::getClimateValuesAtPoint(sf::Vector2i point, const std::unordered_map<std::string, IGetValueAt*>& generatedDependencies) const
+std::unordered_map<entt::id_type, float> BiomeLayerChunk::getClimateValuesAtPoint(sf::Vector2i point, const std::unordered_map<entt::id_type, IGetValueAt*>& generatedDependencies) const
 {
-    std::unordered_map<std::string, float> result;
+    std::unordered_map<entt::id_type, float> result;
     for (auto&& [name, layerPtr] : generatedDependencies)
     {
         if (!layerPtr) continue; // TODO: Should maybe be an assert...?
@@ -67,13 +67,13 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(sf::IntRect area)
     auto voronoiLayer = generateDependency<VoronoiLayer>(area);
     if (!voronoiLayer.isReady()) return voronoiLayer.getState();
 
-    std::unordered_map<std::string, IGetValueAt*> climateDependencies;
-    for (auto&& depName : _layer.getClimateDependencies())
+    std::unordered_map<entt::id_type, IGetValueAt*> climateDependencies;
+    for (auto&& dependencyID : _layer.getClimateDependencies())
     {
-        auto depLayer = generateDependency<IGetValueAt>(entt::hashed_string{ depName.c_str() }, _bounds);
+        auto depLayer = generateDependency<IGetValueAt>(dependencyID, _bounds);
         if (!depLayer.isReady()) return depLayer.getState();
 
-        climateDependencies.emplace(depName, &depLayer.unwrap());
+        climateDependencies.emplace(dependencyID, &depLayer.unwrap());
     }
 
     for (sf::Vector2i point : voronoiLayer.unwrap().getCentroidsInBounds(area))
@@ -133,9 +133,9 @@ BiomeLayer::BiomeLayer()
     _biomes.createBiomesFromJSON(BIOME_FOLDER_PATH);
     _biomes.forEachBiome([this](const std::string& name, const Biome& biome)
         {
-            for (auto&& [name, _] : biome.getClimateRanges())
+            for (auto&& [id, _] : biome.getClimateRanges())
             {
-                _climateDependencies.insert(name);
+                _climateDependencies.insert(id);
             }
         });
 }
@@ -145,7 +145,7 @@ const BiomeRegistry& BiomeLayer::getBiomeRegistry() const
     return _biomes;
 }
 
-const std::unordered_set<std::string>& BiomeLayer::getClimateDependencies() const
+const std::unordered_set<entt::id_type>& BiomeLayer::getClimateDependencies() const
 {
     return _climateDependencies;
 }

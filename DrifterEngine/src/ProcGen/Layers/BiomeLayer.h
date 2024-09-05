@@ -9,7 +9,7 @@
 class BiomeLayer;
 
 using BiomeCentroids = std::unordered_map<sf::Vector2i, const Biome*>;
-using ClimateValues = std::unordered_map<std::string, float>;
+using ClimateValues = std::unordered_map<entt::id_type, float>;
 
 struct BiomeSlotPoint
 {
@@ -26,7 +26,7 @@ public:
 
 private:
 	void assignBiomeToVoronoiCell(sf::Vector2i centroid, BiomeCentroids& biomeCentroids, const ClimateValues& climateValues);
-	ClimateValues getClimateValuesAtPoint(sf::Vector2i point, const std::unordered_map<std::string, IGetValueAt*>& generatedDependencies) const;
+	ClimateValues getClimateValuesAtPoint(sf::Vector2i point, const std::unordered_map<entt::id_type, IGetValueAt*>& generatedDependencies) const;
 	virtual int numLevels() override { return 2; }
 
 	GenerationState assignBiomesToVoronoiCells(sf::IntRect area);
@@ -45,7 +45,7 @@ public:
 	BiomeLayer();
 
 	const BiomeRegistry& getBiomeRegistry() const;
-	const std::unordered_set<std::string>& getClimateDependencies() const;
+	const std::unordered_set<entt::id_type>& getClimateDependencies() const;
 	BiomeCentroids getBiomeCentroidsInBounds(sf::IntRect area);
 	std::vector<BiomeSlotPoint> getBiomeEntitySlotPointsInBounds(sf::IntRect area);
 	
@@ -54,5 +54,5 @@ private:
 
 private:
 	BiomeRegistry _biomes;
-	std::unordered_set<std::string> _climateDependencies;
+	std::unordered_set<entt::id_type> _climateDependencies;
 };

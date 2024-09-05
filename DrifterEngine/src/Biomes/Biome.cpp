@@ -110,7 +110,7 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 			{
 				if (std::string(range[0].GetString()).compare("Any") == 0)
 				{
-					_ranges[name].setInfinite();
+					_ranges[entt::hashed_string{ name }].setInfinite();
 				}
 				else
 				{
@@ -119,8 +119,8 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 			}
 			else
 			{
-				_ranges[name].setMin(range[0].GetFloat());
-				_ranges[name].setMax(range[1].GetFloat());
+				_ranges[entt::hashed_string{ name }].setMin(range[0].GetFloat());
+				_ranges[entt::hashed_string{ name }].setMax(range[1].GetFloat());
 			}
 		}
 	}
@@ -150,17 +150,17 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 	}
 }
 
-bool Biome::satisfiesClimate(const std::unordered_map<std::string, float>& values) const
+bool Biome::satisfiesClimate(const std::unordered_map<entt::id_type, float>& values) const
 {
-	for (auto&& [name, val] : values)
+	for (auto&& [id, val] : values)
 	{
-		if (!_ranges.contains(name)) continue;
-		if (!_ranges.at(name).isValueWithin(val)) return false;
+		if (!_ranges.contains(id)) continue;
+		if (!_ranges.at(id).isValueWithin(val)) return false;
 	}
 	return true;
 }
 
-const std::unordered_map<std::string, drft::math::Range<float>>& Biome::getClimateRanges() const
+const std::unordered_map<entt::id_type, drft::math::Range<float>>& Biome::getClimateRanges() const
 {
 	return _ranges;
 }
