@@ -9,6 +9,8 @@
 #include "Components/PrototypeComponent.h"
 #include "Components/BodyComponent.h"
 
+#include <Utility/StandardLogger.h>
+
 using namespace entt::literals;
 
 drft::EntityFactory::EntityFactory()
@@ -23,7 +25,7 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 		json::JsonRootExtractor jsonRootExtractor{ filename.path(), "Prototypes" };
 		if (!jsonRootExtractor.isValid())
 		{
-			std::cout << "Failure: " << filename << " could not be parsed." << std::endl;
+			error_logger << "Error: " << filename << " could not be parsed." << std::endl;
 		}
 		else
 		{
@@ -85,8 +87,8 @@ entt::handle drft::EntityFactory::build(const std::string& name, entt::registry&
 {
 	if (!_prototypes.contains(name))
 	{
-		std::string message = "Entity " + name + " does not exist";
-		throw std::invalid_argument(message);
+		error_logger << "Error: Trying to create entity " << name << " but it does not exist in the prototype registry." << std::endl;
+		return entt::handle{ registry, entt::null };
 	}
 	entt::entity newEntity = registry.create();
 	util::copyEntity(newEntity, _prototypes.at(name), registry, _protoRegistry);
@@ -175,11 +177,11 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 	}
 	else
 	{
-		std::cout << _inheritanceQueue.size() << " entities could not be resolved:" << std::endl;
+		error_logger << "Error: " << _inheritanceQueue.size() << " entities could not be resolved:" << std::endl;
 		while (!_inheritanceQueue.empty())
 		{
 			auto& relationship = _inheritanceQueue.front();
-			std::cout << relationship.entityName << std::endl;
+			error_logger << relationship.entityName << std::endl;
 			_inheritanceQueue.pop();
 		}
 	}
