@@ -91,7 +91,7 @@ LloydRelaxedLayer::LloydRelaxedLayer()
 
 double LloydRelaxedLayer::getValueAt(sf::Vector2i position)
 {
-    if (auto chunk = tryGetChunk(position))
+    if (const auto chunk = tryGetChunk(position))
     {
         if (chunk->distributedPoints.contains(position))
         {

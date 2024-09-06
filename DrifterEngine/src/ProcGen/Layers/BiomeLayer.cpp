@@ -177,6 +177,20 @@ std::vector<BiomeSlotPoint> BiomeLayer::getBiomeEntitySlotPointsInBounds(sf::Int
     return result;
 }
 
+const Biome* BiomeLayer::getBiomeAt(sf::Vector2i tilePosition) const
+{
+    if (const auto chunk = tryGetChunk(tilePosition))
+    {
+        const auto positions = util::extractKeys(chunk->biomePoints);
+        const auto closestBiomePosition = drft::spatial::findClosestPoint(tilePosition, positions);
+        if (chunk->biomePoints.contains(closestBiomePosition))
+        {
+            return chunk->biomePoints.at(closestBiomePosition);
+        }
+    }
+    return nullptr;
+}
+
 
 
 

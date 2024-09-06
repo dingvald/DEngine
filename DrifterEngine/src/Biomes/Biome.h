@@ -20,8 +20,6 @@ struct SlotDeterminer : public ICreateFromJson
 {
 	std::unordered_map<entt::id_type, SlotDependency> dependencies;
 	drft::util::BooleanStringExpression expression;
-
-	// Inherited via ICreateFromJson
 	void createFromJson(const rapidjson::Value& json) override;
 };
 
@@ -37,12 +35,17 @@ public:
 	const EntityPack* getEntityPack(entt::id_type slotID) const;
 
 	BiomeIcon getIcon() const;
+	sf::Color getBaseTileColor() const;
 	const std::string& getName() const;
+
+private:
+	void setBaseTileColor(sf::Color iconColor);
 
 private:
 	std::string _name;
 	BiomeIcon _icon;
 
+	sf::Color _baseTileColor = sf::Color::Black;
 	std::unordered_map<entt::id_type, drft::math::Range<float>> _ranges;
 	std::unordered_map<entt::id_type, SlotDeterminer> _entitySlotDeterminers;
 	std::unordered_map<entt::id_type, EntityPack> _entityPacks;

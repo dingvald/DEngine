@@ -116,8 +116,18 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 
 	rng::Random random{ _seed + std::hash<sf::Vector2i>()(coordinate) };
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
+
 	
-	placeMany("Tile", area, registry);
+	spatial::forEachPointInRect(area, [&registry, &factory, &layer](sf::Vector2i point)
+		{
+			sf::Color tileColor = { 10,10,10 };
+			if (auto biome = layer.unwrap().getBiomeAt(point))
+			{
+				tileColor = biome->getBaseTileColor();
+			}
+			auto tileHandle = placeSingle("Tile", point, registry, factory);
+			tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
+		});
 
 	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInBounds(area);
 	for (auto&& [biome, slot, point] : bsps)

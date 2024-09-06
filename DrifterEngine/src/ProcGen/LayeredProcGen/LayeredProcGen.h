@@ -58,7 +58,7 @@ namespace details
 	{
 	public:
 		virtual GenerationState doGenerate(int level) = 0;
-		virtual bool isGenerated() = 0;
+		virtual bool isGenerated() const = 0;
 	};
 
 	class AbstractOnDemandLayer : public AbstractLayer
@@ -190,11 +190,11 @@ public:
 		}
 		return state; 
 	};
-	virtual bool isGenerated() override final { return _currentLevel > numLevels(); }
+	virtual bool isGenerated() const override final { return _currentLevel > numLevels(); }
 	
 protected:
 	virtual GenerationState generate(int level) { return GenerationState::Complete; }
-	virtual int numLevels() { return 1; }
+	virtual int numLevels() const { return 1; }
 	template<typename T>
 	FutureLayer<T> generateDependency(entt::id_type id, sf::IntRect area, int level = 0)
 	{
@@ -312,7 +312,7 @@ protected:
 		return result;
 	}
 
-	ChunkType* tryGetChunk(sf::Vector2i tilePosition)
+	const ChunkType* tryGetChunk(sf::Vector2i tilePosition) const
 	{
 		const auto chunkPosition = toChunkPosition(tilePosition);
 		if (_chunks.contains(chunkPosition) && _chunks.at(chunkPosition).isGenerated())

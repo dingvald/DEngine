@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Biome.h"
 #include "Factory/Factory.h"
+
+#include <Utility/Math.h>
 #include <Utility/StandardLogger.h>
 
 
@@ -99,6 +101,7 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 		_icon.color.r = json["icon"]["color"].GetArray()[0].GetInt();
 		_icon.color.g = json["icon"]["color"].GetArray()[1].GetInt();
 		_icon.color.b = json["icon"]["color"].GetArray()[2].GetInt();
+		setBaseTileColor(_icon.color);
 	}
 	if (json.HasMember("climate"))
 	{
@@ -185,9 +188,27 @@ BiomeIcon Biome::getIcon() const
 	return _icon;
 }
 
+sf::Color Biome::getBaseTileColor() const
+{
+	return _baseTileColor;
+}
+
 const std::string& Biome::getName() const
 {
 	return _name;
+}
+
+void Biome::setBaseTileColor(sf::Color iconColor)
+{
+	auto max_val = std::max(iconColor.r, std::max(iconColor.g, iconColor.b));
+	sf::Color intermediate;
+	intermediate.r = static_cast<sf::Uint8>(drft::math::remap(0, max_val, 0, 255, iconColor.r));
+	intermediate.g = static_cast<sf::Uint8>(drft::math::remap(0, max_val, 0, 255, iconColor.g));
+	intermediate.b = static_cast<sf::Uint8>(drft::math::remap(0, max_val, 0, 255, iconColor.b));
+
+	_baseTileColor.r = static_cast<sf::Uint8>(drft::math::remap(0, 255, 0, 40, intermediate.r));
+	_baseTileColor.g = static_cast<sf::Uint8>(drft::math::remap(0, 255, 0, 40, intermediate.g));
+	_baseTileColor.b = static_cast<sf::Uint8>(drft::math::remap(0, 255, 0, 40, intermediate.b));
 }
 
 

@@ -11,7 +11,7 @@ public:
 	virtual GenerationState generate(int level) override;
 	
 private:
-	virtual int numLevels() override { return 3; }
+	virtual int numLevels() const override { return 3; }
 	GenerationState generateRandomPoints(sf::IntRect area);
 	GenerationState collectNeighborPoints(sf::IntRect area);
 	GenerationState applyRelaxationToPoints(sf::IntRect area);
