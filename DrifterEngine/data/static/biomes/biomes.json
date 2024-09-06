@@ -54,7 +54,7 @@
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
         "uv_coords": [ 5, 2 ],
-        "color": [ 210, 170, 109 ]
+        "color": [ 174, 155, 125 ]
       },
       "climate": {
         "height": [ -0.1, 0.1 ]
@@ -141,10 +141,10 @@
           [ "Water", 1 ]
         ],
         "shallow_water": [
-          ["Shallow Water", 1]
+          [ "Shallow Water", 1 ]
         ],
         "sand": [
-          ["Sand", 1]
+          [ "Sand", 1 ]
         ]
       }
     }
