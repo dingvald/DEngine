@@ -3,21 +3,6 @@
 #include <ProcGen/Layers/JitteredGridLayer.h>
 #include <jc_voronoi/jc_voronoi_adaptor.h>
 
-namespace
-{
-    sf::Vector2i jcvPoint2Vector2i(jcv_point point)
-    {
-        sf::Vector2i result;
-        result.x = point.x;
-        result.y = point.y;
-        return result;
-    }
-    jcv_point vector2i2jcvPoint(sf::Vector2i point)
-    {
-        return jcv_point{ .x = static_cast<float>(point.x), .y = static_cast<float>(point.y) };
-    }
-}
-
 GenerationState VoronoiLayerChunk::generate(int level)
 {
     const auto paddedBounds = addPaddingToBounds({_bounds.width, _bounds.height});

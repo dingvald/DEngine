@@ -60,7 +60,6 @@ std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(sf::Vector2i cente
 	std::unordered_set<sf::Vector2i> visited;
 	size_t approxSquares = static_cast<size_t>(std::ceil(3.5 * radius * radius));
 	result.reserve(approxSquares);
-	visited.reserve(approxSquares);
 
 	for (int i = 0; i <= radius; i++)
 	{

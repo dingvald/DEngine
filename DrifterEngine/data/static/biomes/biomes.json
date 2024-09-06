@@ -80,7 +80,7 @@
               "threshold": [ ">", 0.0 ]
             },
             "random_scatter": {
-              "threshold": [ ">", 0.25 ]
+              "threshold": [ ">", 0.50 ]
             }
           },
           "expression": "height & random_scatter"

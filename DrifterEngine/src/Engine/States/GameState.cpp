@@ -137,6 +137,7 @@ void drft::GameState::loadOrCreateWorldGenerator()
 		json::JsonRootExtractor jsonRootExtractor{ WORLD_GENERATION_FILE_PATH, "world_generation" };
 		if (!jsonRootExtractor.isValid())
 		{
+			error_logger << "Error: " << WORLD_GENERATION_FILE_PATH << " could not be parsed." << std::endl;
 			return;
 		}
 		else

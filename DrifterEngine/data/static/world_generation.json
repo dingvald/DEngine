@@ -1,6 +1,6 @@
 {
   "world_generation": {
-    "seed": 42,
+    "seed": 10001,
     "dimensions": [40, 40],
     "layers": {
       "height": {

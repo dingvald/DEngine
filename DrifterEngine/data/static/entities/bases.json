@@ -14,7 +14,7 @@
       ],
       "Components": {
         "Health": {
-          "max": 5
+          "max": 10
         }
       }
     }
