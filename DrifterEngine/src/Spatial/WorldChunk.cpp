@@ -2,9 +2,8 @@
 #include "WorldChunk.h"
 
 drft::spatial::WorldChunk::WorldChunk(sf::Vector3i dimensions)
-{
-	_grid.resize(dimensions);
-}
+	: _grid(dimensions)
+{}
 
 void drft::spatial::WorldChunk::placeEntity(entt::entity entity, sf::Vector3i position)
 {
@@ -32,11 +31,11 @@ bool drft::spatial::WorldChunk::moveEntity(entt::entity entity, sf::Vector3i fro
 
 const std::vector<entt::entity>& drft::spatial::WorldChunk::entitiesAt(sf::Vector3i position) const
 {
-	auto& cell = _grid.at(position);
+	const Cell& cell = _grid.at(position);
 	return cell.getEntities();
 }
 
-std::vector<entt::entity> drft::spatial::WorldChunk::getAllEntities()
+std::vector<entt::entity> drft::spatial::WorldChunk::getAllEntities() const
 {
 	return std::vector<entt::entity>(_entities.begin(), _entities.end());
 }

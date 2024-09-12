@@ -16,9 +16,9 @@ void drft::spatial::WorldGrid::placeEntity(entt::entity entity, TilePosition til
 
 	if (!_chunks.contains(chunkPosition))
 	{
-		_chunks.emplace(chunkPosition, std::make_unique<WorldChunk>(ChunkDimensions));
+		_chunks.emplace(chunkPosition, WorldChunk{ ChunkDimensions });
 	}
-	_chunks.at(chunkPosition)->placeEntity(entity, localPosition);
+	_chunks.at(chunkPosition).placeEntity(entity, localPosition);
 	_entityPositions[entity] = tilePosition;
 }
 
@@ -34,7 +34,7 @@ void drft::spatial::WorldGrid::removeEntity(entt::entity entity)
 
 	if (!_chunks.contains(chunkPosition)) return;
 
-	_chunks.at(chunkPosition)->removeEntity(entity, localPosition);
+	_chunks.at(chunkPosition).removeEntity(entity, localPosition);
 	_entityPositions.erase(entity);
 }
 
@@ -58,7 +58,7 @@ EntityList drft::spatial::WorldGrid::entitiesAt(TilePosition tilePosition) const
 		return EntityList{};
 	}
 
-	return _chunks.at(chunkPosition)->entitiesAt(localPosition);;
+	return _chunks.at(chunkPosition).entitiesAt(localPosition);;
 }
 
 EntityList drft::spatial::WorldGrid::entitiesAt(TilePosition tilePosition, std::function<bool(entt::entity)> filterFunc) const
@@ -71,7 +71,7 @@ EntityList drft::spatial::WorldGrid::entitiesAt(TilePosition tilePosition, std::
 	}
 
 	std::vector<entt::entity> result;
-	const auto& entities = _chunks.at(chunkPosition)->entitiesAt(localPosition);
+	const auto& entities = _chunks.at(chunkPosition).entitiesAt(localPosition);
 	result.reserve(result.size());
 
 	for (auto entity : entities)
@@ -99,7 +99,7 @@ EntityList drft::spatial::WorldGrid::getAllEntities(ChunkPosition coordinate) co
 	{
 		return EntityList{};
 	}
-	return _chunks.at(coordinate)->getAllEntities();
+	return _chunks.at(coordinate).getAllEntities();
 }
 
 std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin, TilePosition destination) const

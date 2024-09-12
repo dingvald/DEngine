@@ -19,7 +19,7 @@ namespace drft::spatial
 		// Moves entity from one chunk tile position to another and returns if successful.
 		bool moveEntity(entt::entity, sf::Vector3i fromPosition, sf::Vector3i toPosition);
 		const std::vector<entt::entity>& entitiesAt(sf::Vector3i chunkPosition) const;
-		std::vector<entt::entity> getAllEntities();
+		std::vector<entt::entity> getAllEntities() const;
 
 		// Checks if the chunk contains any entities
 		bool empty() const;

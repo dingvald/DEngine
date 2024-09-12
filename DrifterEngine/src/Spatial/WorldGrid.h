@@ -1,5 +1,5 @@
 #pragma once
-#include "WorldChunk.h"
+#include <Spatial/WorldChunk.h>
 #include <Spatial/ChunkPosition.h>
 #include <Spatial/TilePosition.h>
 
@@ -61,7 +61,7 @@ namespace drft::spatial
 		std::deque<sf::Vector3i> getPath(TilePosition pt1, TilePosition pt2, Heuristic h = [](const EntityList&){return 0;}) const;
 
 	private:
-		std::unordered_map<ChunkPosition, std::unique_ptr<WorldChunk>> _chunks;
+		std::unordered_map<ChunkPosition, WorldChunk> _chunks;
 		std::unordered_map<entt::entity, TilePosition> _entityPositions;
 	};
 
