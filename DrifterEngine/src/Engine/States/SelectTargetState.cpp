@@ -92,7 +92,7 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 		{
 			if (!isInRange())
 			{
-				const sf::Vector2f messagePosition = spatial::toXY(spatial::toFloatSpace(spatial::asTileSpace(_startPosition)));
+				const sf::Vector2f messagePosition = spatial::toXY(spatial::toFloatSpace(_startPosition));
 				auto& dispatcher = getContext().registry.ctx().get<entt::dispatcher&>();
 
 				dispatcher.trigger(events::SendFloatingMessageEvent{
@@ -126,8 +126,6 @@ bool drft::SelectTargetState::update(const float dt)
 
 void drft::SelectTargetState::render(sf::RenderTarget& target)
 {
-	renderTargetRadius(target);
-	renderTargetAoE(target);
 	_displayText.render(target);
 }
 
@@ -175,7 +173,7 @@ void drft::SelectTargetState::onPush()
 		auto effect = system::spawnEffect(getContext().registry,
 			{
 				.frames = { aoeEffect },
-				.position = spatial::asTileSpace(_startPosition + tile3d),
+				.position = _startPosition + spatial::asTileSpace(tile3d),
 				.ttl = -1,
 				.requiresInFOV = false
 			});
@@ -186,7 +184,7 @@ void drft::SelectTargetState::onPush()
 	_cursor = system::spawnEffect(getContext().registry,
 		{
 			.frames = {cursorEffect},
-			.position = spatial::asTileSpace(_startPosition),
+			.position = _startPosition,
 			.ttl = -1,
 			.requiresInFOV = false
 		});
@@ -240,14 +238,4 @@ void drft::SelectTargetState::moveCursor(sf::Vector2i direction)
 		});
 
 	_cursorPosition += dir;
-}
-
-void drft::SelectTargetState::renderTargetRadius(sf::RenderTarget& target)
-{
-
-}
-
-void drft::SelectTargetState::renderTargetAoE(sf::RenderTarget& target)
-{
-
 }
