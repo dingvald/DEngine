@@ -6,6 +6,8 @@ namespace drft::math
 	double inverseLerp(double a, double b, double v);
 	double remap(double iMin, double iMax, double oMin, double oMax, double val);
 
+	
+
 	int wrap(int val, int min, int max);
 	
 	template<typename T>
@@ -16,6 +18,12 @@ namespace drft::math
 
 	template<typename T>
 	concept IsArithmetic = std::is_arithmetic<T>::value;
+
+	template <IsArithmetic T>
+	bool isOverlapping(T min1, T max1, T min2, T max2)
+	{
+		return max1 >= min2 && max2 >= min1;
+	}
 
 	template<IsArithmetic T>
 	struct Range
