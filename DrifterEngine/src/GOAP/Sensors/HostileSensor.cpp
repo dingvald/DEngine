@@ -19,7 +19,7 @@ drft::goap::SensorType drft::goap::HostileSensor::getType() const
 	return SensorType::Visual;
 }
 
-drft::goap::WorldState drft::goap::HostileSensor::checkAndFillSurroundings(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
+drft::goap::WorldState drft::goap::HostileSensor::checkAndFillSurroundings(entt::handle agent, CheckerFxn checker) const
 {
 	auto& ai = getAI(agent);
 	auto& myPos = agent.get<PositionComponent>();
@@ -29,12 +29,12 @@ drft::goap::WorldState drft::goap::HostileSensor::checkAndFillSurroundings(entt:
 	for (const auto& [entity, pos, faction] : view.each())
 	{
 		if (!filter::isHostile(agent, { *agent.registry(), entity })) continue;
-		if ((spatial::distance(myPos.position, pos.position) <= (ai.sightRange)) && checker(agent, pos.position))
+		if (spatial::isWithinRadius3d(myPos.tile, pos.tile, ai.sightRange) && checker(agent, pos.tile))
 		{
 			magnitude = std::max(magnitude, 1);
 			// Refresh memory
 			ai.surroundings[getType()][entity] = std::max(ai.surroundings[getType()][entity], SensorMemory.at(getType()));
-			if (spatial::distance(myPos.position, pos.position) <= (ai.sightRange - 1))
+			if (spatial::isWithinRadius3d(myPos.tile, pos.tile, ai.sightRange - 1))
 			{
 				magnitude = std::max(magnitude, 2);
 			}

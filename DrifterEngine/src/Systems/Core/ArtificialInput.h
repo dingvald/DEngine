@@ -5,6 +5,8 @@
 #include "GOAP/IGoal.h"
 #include "GOAP/SensorRunner.h"
 
+#include <Spatial/TilePosition.h>
+
 
 namespace drft::goap
 {
@@ -30,9 +32,9 @@ namespace drft::system
 
 	private:
 		using GoalName = std::string;
-		bool inSightRange(sf::Vector2i position, const AIComponent&) const;
-		void moveToTarget(entt::handle entity, sf::Vector2i targetPosition) const;
-		void pathToTarget(entt::handle, sf::Vector2i targetPosition) const;
+		bool inSightRange(TilePosition position, const AIComponent&) const;
+		void moveToTarget(entt::handle entity, TilePosition targetPosition) const;
+		void pathToTarget(entt::handle, TilePosition targetPosition) const;
 		void clearPathCache(entt::entity entity) const;
 
 		entt::handle getHandle(const AIComponent& ai) const;
@@ -54,7 +56,7 @@ namespace drft::system
 
 	private:
 		goap::SensorRunner _sensorySystem;
-		using aStarPath = std::deque<sf::Vector2i>;
+		using aStarPath = std::deque<sf::Vector3i>;
 		mutable std::unordered_map<entt::entity, aStarPath> _cachedPaths;
 	};
 }

@@ -39,7 +39,7 @@ int drft::util::getDistanceBetween(entt::const_handle e1, entt::const_handle e2)
 	{
 		if (auto pos2 = e2.try_get<PositionComponent>())
 		{
-			return spatial::distance(pos1->position, pos2->position);
+			return spatial::distance3d(pos1->tile, pos2->tile);
 		}
 	}
 	return 0;

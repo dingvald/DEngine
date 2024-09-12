@@ -46,18 +46,17 @@ void drft::system::ArtificialInput::onUpdate(const float dt)
 	}
 }
 
-bool drft::system::ArtificialInput::inSightRange(sf::Vector2i position, const AIComponent& ai) const
+bool drft::system::ArtificialInput::inSightRange(TilePosition position, const AIComponent& ai) const
 {
-	auto myPosition = _registry.get<PositionComponent>(entt::to_entity(_registry, ai)).position;
-	if (spatial::distance(myPosition, position) < ai.sightRange) return true;
-	return false;
+	auto tilePosition = _registry.get<PositionComponent>(entt::to_entity(_registry, ai)).tile;
+	return spatial::isWithinRadius3d(position, tilePosition, ai.sightRange);
 }
 
-void drft::system::ArtificialInput::moveToTarget(entt::handle entity, sf::Vector2i targetPosition) const
+void drft::system::ArtificialInput::moveToTarget(entt::handle entity, TilePosition targetPosition) const
 {
-	auto& position = entity.get<PositionComponent>().position;
-	auto line = spatial::getIntPointsAlongLine(position, targetPosition);
-	sf::Vector2i delta;
+	TilePosition position = entity.get<PositionComponent>().tile;
+	auto line = spatial::getLine3d(position, targetPosition);
+	sf::Vector3i delta;
 	if (line.empty())
 	{
 		delta = position - targetPosition;
@@ -72,9 +71,9 @@ void drft::system::ArtificialInput::moveToTarget(entt::handle entity, sf::Vector
 	entity.emplace_or_replace<MoveAction>(sf::Vector2i{ xMove, yMove });
 }
 
-void drft::system::ArtificialInput::pathToTarget(entt::handle entity, sf::Vector2i targetPosition) const
+void drft::system::ArtificialInput::pathToTarget(entt::handle entity, TilePosition targetPosition) const
 {
-	auto& position = entity.get<PositionComponent>().position;
+	TilePosition position = entity.get<PositionComponent>().tile;
 	if (!_cachedPaths.contains(entity.entity()) || _cachedPaths.at(entity.entity()).empty())
 	{
 		const auto& grid = _registry.ctx().get<const spatial::WorldGrid&>();
@@ -97,7 +96,7 @@ void drft::system::ArtificialInput::pathToTarget(entt::handle entity, sf::Vector
 	}
 	else
 	{
-		moveToTarget(entity, _cachedPaths.at(entity.entity()).front());
+		moveToTarget(entity, TilePosition{ _cachedPaths.at(entity.entity()).front() });
 		_cachedPaths.at(entity.entity()).pop_front();
 	}
 }

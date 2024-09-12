@@ -1,5 +1,7 @@
 #pragma once
 #include "Systems/System.h"
+
+#include <Spatial/ChunkPosition.h>
 #include "Spatial/VirtualChunk.h"
 #include "Utility/stdHashing.h"
 
@@ -24,20 +26,22 @@ namespace drft::system
 		virtual void save(cereal::JSONOutputArchive& oarchive);
 
 	private:
-		void updateChunkStates(sf::Vector2i aroundNewPosition);
-		void cleanUpChunks(sf::Vector2i newPosition);
+		void updateChunkStates(ChunkPosition aroundNewPosition);
+		void cleanUpChunks();
 		void processBuildQueue();
 		void processLoadQueue();
 		void processSaveQueue();
 		std::filesystem::path buildChunkFilename(const spatial::VirtualChunk& chunk) const;
 
-	private:
-		std::unordered_map<sf::Vector2i, spatial::VirtualChunk> _chunks;
-		sf::Vector2i _currentPosition = { 0, 0 };
+		bool isWithinChunkSaveDisk(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const;
 
-		std::queue<sf::Vector2i> _toBuild;
-		std::queue<sf::Vector2i> _toLoad;
-		std::queue<sf::Vector2i> _toSave;
+	private:
+		std::unordered_map<ChunkPosition, spatial::VirtualChunk> _chunks;
+
+		std::queue<ChunkPosition> _toBuild;
+		std::queue<ChunkPosition> _toLoad;
+		std::queue<ChunkPosition> _toSave;
+		std::vector<ChunkPosition> _toDelete;
 	};
 }
 

@@ -21,7 +21,7 @@ void drft::system::DropItemSystem::onUpdate(const float dt)
 		for (auto item : dropAction.toDrop)
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-			_registry.emplace<PositionComponent>(itemEntity, pos.position);
+			_registry.emplace<PositionComponent>(itemEntity, pos.tile);
 		}
 	}
 }

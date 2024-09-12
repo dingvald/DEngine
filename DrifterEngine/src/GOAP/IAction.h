@@ -3,6 +3,8 @@
 #include "GOAP/WorldState.h"
 #include "GOAP/WorldStateTypes.h"
 
+#include <Spatial/TilePosition.h>
+
 struct AIComponent;
 
 namespace drft::goap
@@ -26,7 +28,7 @@ namespace drft::goap
 		// Called when the action first hits the top of the action queue.
 		virtual void onStart(entt::handle agent) const {};
 		// Sets the AI's target to move to. Returns true if a target location was found.
-		virtual std::optional<sf::Vector2i> trySetTarget(entt::handle agent) const;
+		virtual std::optional<TilePosition> trySetTarget(entt::handle agent) const;
 		// Perform the action. Returns true if the action was performed.
 		virtual ActionResult perform(entt::handle agent) const = 0;
 		// How expensive this action is to perform relative to other actions.

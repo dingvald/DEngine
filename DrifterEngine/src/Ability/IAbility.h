@@ -2,6 +2,8 @@
 #include "AbilityTargetingType.h"
 #include "Utility/Math.h"
 
+#include <Spatial/TilePosition.h>
+
 namespace drft
 {
 	class IAbility
@@ -12,7 +14,7 @@ namespace drft
 
 		virtual AbilityTargetingType getTargetingType() const = 0;
 		virtual bool isValid(entt::const_handle actor) const = 0;
-		virtual void perform(entt::handle actor, std::optional<sf::Vector2i> targetPosition = std::nullopt) const = 0;
+		virtual void perform(entt::handle actor, std::optional<TilePosition> targetPosition = std::nullopt) const = 0;
 
 		virtual int getCost() const;
 		virtual bool isToggledOn(entt::const_handle actor) const;

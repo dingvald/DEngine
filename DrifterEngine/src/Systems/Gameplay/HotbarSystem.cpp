@@ -11,6 +11,9 @@
 #include "Systems/Helpers/SpendActionPoints.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
 
+#include <Spatial/Conversions.h>
+#include <Spatial/Helpers.h>
+
 void drft::system::HotbarSystem::init()
 {
 	AbilityRegistry::bind();
@@ -51,11 +54,11 @@ void drft::system::HotbarSystem::onUpdate(float dt)
 				break;
 				case AbilityTargetingType::SelectDirection:
 				{
-					auto tilePosition = handle.get<PositionComponent>().position;
+					auto tilePosition = handle.get<PositionComponent>().tile;
 					handle.emplace<component::action::SelectDirection>(
 						[tilePosition, &ability, &handle](sf::Vector2i direction) -> bool
 						{
-							ability.perform(handle, tilePosition + direction);
+							ability.perform(handle, tilePosition + spatial::asTileSpace(direction));
 							spendActionPoints(ability.getCost(), ActionType::Act, handle);
 							return true;
 						});
@@ -66,9 +69,8 @@ void drft::system::HotbarSystem::onUpdate(float dt)
 					auto range = ability.getRange(handle);
 					auto targetingShape = ability.getTargetingShape(handle);
 					handle.emplace<component::action::SelectTarget>(range, targetingShape,
-						[&ability, handle](sf::Vector2i position) -> bool
-						{
-							ability.perform(handle, position);
+						[&ability, handle](sf::Vector3i position) -> bool {
+							ability.perform(handle, spatial::asTileSpace(position));
 							spendActionPoints(ability.getCost(), ActionType::Act, handle);
 							return true;
 						});

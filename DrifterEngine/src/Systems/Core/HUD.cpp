@@ -225,7 +225,7 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 
 	if (auto pos = player.try_get<PositionComponent>())
 	{
-		auto entities = grid.entitiesAt(pos->position,
+		auto entities = grid.entitiesAt(pos->tile,
 			[this](entt::entity entity) -> bool
 			{
 				if (_registry.all_of<DescriptionComponent>(entity)

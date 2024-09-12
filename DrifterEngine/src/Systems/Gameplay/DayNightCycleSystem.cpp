@@ -6,6 +6,7 @@
 #include "Events/NightStartEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "Spatial/Conversions.h"
+#include <Spatial/Helpers.h>
 #include "Utility/SmoothTransition.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Services/DebugInfo.h"
@@ -81,7 +82,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 		_dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dusk has fallen...",
 			.color = sf::Color(125,0,255),
-			.position = camera.position,
+			.position = spatial::toXY(spatial::toFloatSpace(spatial::asTileSpace(camera.position))),
 			.velocity = {0,0},
 			.isScreenSpace = true,
 			.ttl = 120
@@ -94,7 +95,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 		_dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dawn has broken...",
 			.color = sf::Color::Yellow,
-			.position = camera.position,
+			.position = spatial::toXY(spatial::toFloatSpace(spatial::asTileSpace(camera.position))),
 			.velocity = {0,0},
 			.isScreenSpace = true,
 			.ttl = 120

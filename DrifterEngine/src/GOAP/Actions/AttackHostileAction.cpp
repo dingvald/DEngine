@@ -20,10 +20,10 @@ drft::goap::AttackHostileAction::AttackHostileAction()
 	addEffect(kill_hostile, true);
 }
 
-std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::handle agent) const
+std::optional<drft::TilePosition> drft::goap::AttackHostileAction::trySetTarget(entt::handle agent) const
 {
 	auto& ai = getAI(agent);
-	std::optional<sf::Vector2i> result = {};
+	std::optional<TilePosition> result = {};
 	if (ai.target == entt::null || !agent.registry()->valid(ai.target))
 	{
 		auto closestEntityHandle = getClosestEntity(agent, { SensorType::Visual }, filter::isHostile);
@@ -31,7 +31,7 @@ std::optional<sf::Vector2i> drft::goap::AttackHostileAction::trySetTarget(entt::
 	}
 	if (ai.target != entt::null && agent.registry()->valid(ai.target))
 	{
-		result = agent.registry()->get<PositionComponent>(ai.target).position;
+		result = agent.registry()->get<PositionComponent>(ai.target).tile;
 	}
 
 	return result;
@@ -45,7 +45,7 @@ drft::goap::ActionResult drft::goap::AttackHostileAction::perform(entt::handle a
 	if (auto targetPos = agent.registry()->try_get<PositionComponent>(ai.target))
 	{
 		const auto& pos = agent.get<PositionComponent>();
-		sf::Vector2i targetDirection = targetPos->position - pos.position;
+		sf::Vector2i targetDirection = spatial::toXY(targetPos->tile - pos.tile);
 		agent.emplace_or_replace<MeleeAttackAction>(targetDirection, std::vector<entt::entity>{ai.target});
 		return ActionResult::Continue;
 	}
@@ -68,7 +68,7 @@ bool drft::goap::AttackHostileAction::isInRange(entt::handle agent) const
 	auto& pos = agent.get<PositionComponent>();
 	if (auto targetPos = agent.registry()->try_get<PositionComponent>(ai.target))
 	{
-		return ( spatial::distance(pos.position, targetPos->position) <= MELEE_RANGE );
+		return spatial::isWithinRadius3d(pos.tile, targetPos->tile, MELEE_RANGE);
 	}
 	
 	return false;

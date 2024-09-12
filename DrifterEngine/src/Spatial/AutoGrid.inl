@@ -85,11 +85,11 @@ inline int drft::spatial::AutoGrid<T>::toLocalY(int y) const
 }
 
 template<typename T>
-inline Grid<T>& drft::spatial::AutoGrid<T>::getOrCreateChunk(sf::Vector2i key) const
+inline Grid2d<T>& drft::spatial::AutoGrid<T>::getOrCreateChunk(sf::Vector2i key) const
 {
 	if (!_subchunks.contains(key))
 	{
-		_subchunks.emplace(key, std::make_unique<spatial::Grid<T>>(_subchunkWidth, _subchunkHeight));
+		_subchunks.emplace(key, std::make_unique<spatial::Grid2d<T>>(_subchunkWidth, _subchunkHeight));
 	}
 	return *_subchunks.at(key);
 }

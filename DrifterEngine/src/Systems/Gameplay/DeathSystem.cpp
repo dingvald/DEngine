@@ -12,6 +12,7 @@
 #include "Events/RequestStateChange.h"
 #include "Engine/States/StateIdentifiers.h"
 #include "Spatial/Conversions.h"
+#include <Spatial/Helpers.h>
 #include "Systems/Helpers/FindItemOwner.h"
 #include "Random/PercentChance.h"
 #include "Utility/EntityHelpers.h"
@@ -31,9 +32,9 @@ void drft::system::DeathSystem::onUpdate(const float dt)
 			if (rng::percentChance(chance))
 			{
 				auto dropped = factory.build(matName, _registry);
-				dropped.patch<PositionComponent>([&pos](auto& position)
+				dropped.patch<PositionComponent>([&pos](PositionComponent& position)
 					{
-						position.position = pos.position;
+						position.tile = pos.tile;
 					});
 				if (matName.compare("Corpse") == 0)
 				{
@@ -68,7 +69,7 @@ void drft::system::DeathSystem::onUpdate(const float dt)
 			.message = util::getEntityName({_registry, entity}) + " broke!",
 			.color = sf::Color::Yellow,
 			.tracksEntity = owner,
-			.position = _registry.get<PositionComponent>(owner).position,
+			.position = spatial::toXY(spatial::toFloatSpace(_registry.get<PositionComponent>(owner).tile)),
 			.velocity = {0,-0.25},
 			.isScreenSpace = false,
 			.ttl = 100

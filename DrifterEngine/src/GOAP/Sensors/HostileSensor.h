@@ -7,7 +7,7 @@ namespace drft::goap
 	{
 		// Inherited via ISensor
 		virtual SensorType getType() const override;
-		virtual WorldState checkAndFillSurroundings(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const override;
+		virtual WorldState checkAndFillSurroundings(entt::handle agent, CheckerFxn checker) const override;
 		virtual WorldState checkMemory(entt::const_handle agent) const override;
 	};
 }

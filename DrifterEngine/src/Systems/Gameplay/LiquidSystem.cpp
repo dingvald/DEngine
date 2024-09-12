@@ -38,25 +38,25 @@ void drft::system::LiquidSystem::onFixedUpdate()
 
 	for (const auto&& [entity, liquid, pos] : liquidView.each())
 	{
-		_liquidPositions.emplace(pos.position, entity);
+		_liquidPositions.emplace(pos.tile, entity);
 	}
 
 	auto liquidAffectedView = _registry.view<MaterialComponent, PositionComponent>(entt::exclude<LiquidComponent, FlyingComponent>);
 	for (auto [entity, material, pos] : liquidAffectedView.each())
 	{
-		if (!_liquidPositions.contains(pos.position)) continue;
-		auto& liquid = _registry.get<LiquidComponent>(_liquidPositions.at(pos.position));
+		if (!_liquidPositions.contains(pos.tile)) continue;
+		auto& liquid = _registry.get<LiquidComponent>(_liquidPositions.at(pos.tile));
 		_registry.emplace_or_replace<InLiquidComponent>(entity, liquid.volume);
 	}
 
 	auto inLiquidView = _registry.view<InLiquidComponent, PositionComponent>();
 	for (auto [entity, inLiquid, pos] : inLiquidView.each())
 	{
-		if (_liquidPositions.contains(pos.position) && inLiquid.volume > 200.0f)
+		if (_liquidPositions.contains(pos.tile) && inLiquid.volume > 200.0f)
 		{
-			if (auto render = _registry.try_get<RenderComponent>(_liquidPositions.at(pos.position)))
+			if (auto render = _registry.try_get<RenderComponent>(_liquidPositions.at(pos.tile)))
 			{
-				addInLiquidEffect(pos.position, render->color);
+				addInLiquidEffect(pos.tile, render->color);
 			}
 		}
 		else
@@ -75,7 +75,7 @@ void drft::system::LiquidSystem::onFixedUpdateEnd()
 	_inLiquidEffects.clear();
 }
 
-void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector2i position, sf::Color color)
+void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector3i position, sf::Color color)
 {
 	sf::Color translucentColor = { color.r, color.g, color.b, 200 };
 	auto effect = entt::handle{ _registry, _registry.create() };
@@ -88,7 +88,7 @@ void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector2i position, sf::Co
 		.color = translucentColor
 	};
 	effect.emplace<RenderComponent>(renderComponent);
-	effect.emplace<PositionComponent>(position);
+	effect.emplace<PositionComponent>(spatial::asTileSpace(position));
 	effect.emplace<component::tag::InViewport>();
 	_inLiquidEffects.push_back(effect.entity());
 }

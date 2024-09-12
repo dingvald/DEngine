@@ -11,8 +11,7 @@ drft::WorldMap::WorldMap(const gen::WorldGenerator& generator)
 
 sf::Vector2i drft::WorldMap::getDimensions() const
 {
-	WorldMapPosition worldMapSpace;
-	worldMapSpace.fromChunkSpace(_generator.getDimensions());
+	WorldMapPosition worldMapSpace = spatial::toWorldMapSpace(spatial::toTileSpace(_generator.getDimensions()));
 	return { worldMapSpace.x, worldMapSpace.y };
 }
 

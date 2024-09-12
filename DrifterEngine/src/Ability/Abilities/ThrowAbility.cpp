@@ -38,7 +38,7 @@ bool drft::ThrowAbility::isValid(entt::const_handle actor) const
 	return false;
 }
 
-void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i> targetPosition) const
+void drft::ThrowAbility::perform(entt::handle actor, std::optional<TilePosition> targetPosition) const
 {
 	const float throwSpeed = 6.0f;
 	if (!targetPosition.has_value()) throw std::exception("You need a target to throw at.");
@@ -53,14 +53,16 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<sf::Vector2i>
 				auto& throwerPos = actor.get<PositionComponent>();
 				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalItem.value());
 
-				if (targetPosition.value() == throwerPos.position)
+				if (targetPosition.value() == throwerPos.tile)
 				{
 					actor.registry()->emplace<PositionComponent>(itemEntity, targetPosition.value());
 				}
 				else
 				{
-					auto line = spatial::getIntPointsAlongLine(throwerPos.position, targetPosition.value());
-					actor.registry()->emplace<PositionComponent>(itemEntity, line.front());
+					auto line = spatial::getLine2d(spatial::toXY(throwerPos.tile), spatial::toXY(targetPosition.value()));
+
+					TilePosition projectilePosition = { line.front().x, line.front().y, throwerPos.tile.z };
+					actor.registry()->emplace<PositionComponent>(itemEntity, projectilePosition);
 					actor.registry()->emplace<ProjectileComponent>(itemEntity, std::move(line), 1, throwSpeed);
 				}
 			}

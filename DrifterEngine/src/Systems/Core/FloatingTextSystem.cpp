@@ -30,7 +30,7 @@ void drft::system::FloatingTextSystem::onSendFloatingMessageEvent(events::SendFl
 	queueFloatingMessage(ev.message, ev.color, ev.tracksEntity, ev.position, ev.velocity, ev.fades, ev.ttl, ev.isScreenSpace);
 }
 
-void drft::system::FloatingTextSystem::queueFloatingMessage(const std::string& message, sf::Color color, entt::entity trackedEntity, sf::Vector2i position, sf::Vector2f velocity, bool fades, int ttl, bool isScreenSpace)
+void drft::system::FloatingTextSystem::queueFloatingMessage(const std::string& message, sf::Color color, entt::entity trackedEntity, sf::Vector2f position, sf::Vector2f velocity, bool fades, int ttl, bool isScreenSpace)
 {
 	using namespace entt::literals;
 	const auto& font = _registry.ctx().get<sf::Font&>("terminus"_hs);
@@ -38,7 +38,7 @@ void drft::system::FloatingTextSystem::queueFloatingMessage(const std::string& m
 
 	if (isScreenSpace)
 	{
-		position = spatial::toTileSpace(toScreenSpace(position, camera));
+		position = toScreenSpace(position, camera);
 	}
 
 	_floatingMessages.emplace_back(sf::Text(std::string(message), font), position, velocity, trackedEntity, fades, ttl, isScreenSpace);
@@ -60,17 +60,18 @@ void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 		{
 			if (auto posComp = _registry.try_get<PositionComponent>(it->trackedEntity))
 			{
-				it->position = posComp->position;
+				it->position = spatial::toXY(spatial::toFloatSpace(posComp->tile));
 			}
 		}
 		if (it->isScreenSpace)
 		{
-			it->text.setPosition(spatial::toFloatSpace(it->position) + it->distanceTraveled + offset);
+			it->text.setPosition(it->position + it->distanceTraveled + offset);
 		}
 		else
 		{
 			it->text.setPosition(toScreenSpace(it->position, camera) + it->distanceTraveled + offset);
 		}
+
 		if (it->fades)
 		{
 			sf::Color color = it->text.getFillColor();

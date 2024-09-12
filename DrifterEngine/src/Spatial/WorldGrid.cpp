@@ -7,73 +7,73 @@
 
 using namespace drft::spatial;
 
-void drft::spatial::WorldGrid::placeEntity(const entt::entity entity, const sf::Vector2i worldPosition)
-{
+void drft::spatial::WorldGrid::placeEntity(entt::entity entity, TilePosition tilePosition)
+{	
 	if (entity == entt::null) return;
-	auto chunkCoordinate = toChunkCoordinate(worldPosition);
-	auto localPosition = toLocalChunkSpace(worldPosition);
-	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
 
-	if (!_chunks.contains(keyablePair))
+	auto chunkPosition = toChunkSpace(tilePosition);
+	auto localPosition = toChunkLocalSpace(tilePosition);
+
+	if (!_chunks.contains(chunkPosition))
 	{
-		_chunks[keyablePair] = std::make_unique<WorldChunk>(CHUNK_WIDTH, CHUNK_HEIGHT);
+		_chunks.emplace(chunkPosition, std::make_unique<WorldChunk>(ChunkDimensions));
 	}
-	_chunks[keyablePair]->placeEntity(entity, localPosition);
-	_entityPositions[entity] = worldPosition;
+	_chunks.at(chunkPosition)->placeEntity(entity, localPosition);
+	_entityPositions[entity] = tilePosition;
 }
 
-void drft::spatial::WorldGrid::removeEntity(const entt::entity entity)
+void drft::spatial::WorldGrid::removeEntity(entt::entity entity)
 {
 	if (entity == entt::null) return;
 	if (!_entityPositions.contains(entity)) return;
 
-	sf::Vector2i worldPosition = getPosition(entity);
+	TilePosition tilePosition = getPosition(entity);
 
-	auto chunkCoordinate = toChunkCoordinate(worldPosition);
-	auto localPosition = toLocalChunkSpace(worldPosition);
-	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
+	auto chunkPosition = toChunkSpace(tilePosition);
+	auto localPosition = toChunkLocalSpace(tilePosition);
 
-	if (!_chunks.contains(keyablePair)) return;
+	if (!_chunks.contains(chunkPosition)) return;
 
-	_chunks.at(keyablePair)->removeEntity(entity, localPosition);
+	_chunks.at(chunkPosition)->removeEntity(entity, localPosition);
 	_entityPositions.erase(entity);
 }
 
-void drft::spatial::WorldGrid::moveEntity(const entt::entity entity, const sf::Vector2i toWorldPosition)
+void drft::spatial::WorldGrid::moveEntity(entt::entity entity, TilePosition toTilePosition)
 {
 	this->removeEntity(entity);
-	this->placeEntity(entity, toWorldPosition);
+	this->placeEntity(entity, toTilePosition);
 }
 
-sf::Vector2i drft::spatial::WorldGrid::getPosition(const entt::entity entity) const
+drft::TilePosition drft::spatial::WorldGrid::getPosition(entt::entity entity) const
 {
 	return _entityPositions.at(entity);
 }
 
-EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition) const
+EntityList drft::spatial::WorldGrid::entitiesAt(TilePosition tilePosition) const
 {
-	auto chunkCoordinate = toChunkCoordinate(tilePosition);
-	auto localPosition = toLocalChunkSpace(tilePosition);
-	auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
+	auto chunkPosition = toChunkSpace(tilePosition);
+	auto localPosition = toChunkLocalSpace(tilePosition);
 
-	if (!_chunks.contains(keyablePair)) {
+	if (!_chunks.contains(chunkPosition)) {
 		return EntityList{};
 	}
 
-	return _chunks.at(keyablePair)->entitiesAt(localPosition);;
+	return _chunks.at(chunkPosition)->entitiesAt(localPosition);;
 }
 
-EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition, std::function<bool(entt::entity)> filterFunc) const
+EntityList drft::spatial::WorldGrid::entitiesAt(TilePosition tilePosition, std::function<bool(entt::entity)> filterFunc) const
 {
-	const auto chunkCoordinate = toChunkCoordinate(tilePosition);
-	const auto localPosition = toLocalChunkSpace(tilePosition);
-	const auto keyablePair = std::make_pair(chunkCoordinate.x, chunkCoordinate.y);
+	auto chunkPosition = toChunkSpace(tilePosition);
+	auto localPosition = toChunkLocalSpace(tilePosition);
 
-	if (!_chunks.contains(keyablePair)) {
+	if (!_chunks.contains(chunkPosition)) {
 		return EntityList{};
 	}
+
 	std::vector<entt::entity> result;
-	const auto entities = _chunks.at(keyablePair)->entitiesAt(localPosition);
+	const auto& entities = _chunks.at(chunkPosition)->entitiesAt(localPosition);
+	result.reserve(result.size());
+
 	for (auto entity : entities)
 	{
 		if (filterFunc(entity))
@@ -85,44 +85,46 @@ EntityList drft::spatial::WorldGrid::entitiesAt(const sf::Vector2i tilePosition,
 	return result;
 }
 
-void drft::spatial::WorldGrid::removeChunk(const sf::Vector2i coordinate)
+void drft::spatial::WorldGrid::removeChunk(ChunkPosition coordinate)
 {
-	if (_chunks.contains({ coordinate.x, coordinate.y }))
+	if (_chunks.contains(coordinate))
 	{
-		_chunks.erase( {coordinate.x, coordinate.y} );
+		_chunks.erase( coordinate );
 	}
 }
 
-EntityList drft::spatial::WorldGrid::getAllEntities(const sf::Vector2i coordinate) const
+EntityList drft::spatial::WorldGrid::getAllEntities(ChunkPosition coordinate) const
 {
-	if (!_chunks.contains({ coordinate.x, coordinate.y }))
+	if (!_chunks.contains(coordinate))
 	{
 		return EntityList{};
 	}
-	return _chunks.at({ coordinate.x, coordinate.y })->getAllEntities();
+	return _chunks.at(coordinate)->getAllEntities();
 }
 
-std::vector<entt::entity> drft::spatial::WorldGrid::castRay(sf::Vector2i origin, sf::Vector2i destination) const
+std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin, TilePosition destination) const
 {
 	std::vector<entt::entity> result;
-	auto points = spatial::getIntPointsAlongLine(origin, destination);
+
+	const auto points = spatial::getLine3d(origin, destination);
 	result.reserve(points.size());
-	for (sf::Vector2i point : points)
+	for (sf::Vector3i point : points)
 	{
-		auto entities = entitiesAt(point);
+		auto entities = entitiesAt(TilePosition{ point });
 		result.insert(result.end(), entities.begin(), entities.end());
 	}
 	return result;
 }
 
-std::vector<entt::entity> drft::spatial::WorldGrid::castRay(sf::Vector2i origin, sf::Vector2i destination, std::function<bool(entt::entity)> filterFunc) const
+std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin, TilePosition destination, std::function<bool(entt::entity)> filterFunc) const
 {
 	std::vector<entt::entity> result;
-	auto points = spatial::getIntPointsAlongLine(origin, destination);
+
+	const auto points = spatial::getLine3d(origin, destination);
 	result.reserve(points.size());
-	for (sf::Vector2i point : points)
+	for (sf::Vector3i point : points)
 	{
-		auto entities = entitiesAt(point);
+		auto entities = entitiesAt(TilePosition{point});
 		for (auto entity : entities)
 		{
 			if (!filterFunc(entity)) continue;
@@ -132,7 +134,7 @@ std::vector<entt::entity> drft::spatial::WorldGrid::castRay(sf::Vector2i origin,
 	return result;
 }
 
-std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf::Vector2i pt2, heuristic costFunc) const
+std::deque<sf::Vector3i> drft::spatial::WorldGrid::getPath(TilePosition pt1, TilePosition pt2, Heuristic costFunc) const
 {
 	// A* 
 
@@ -162,31 +164,35 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 		}
 	};
 
+	int z = pt1.z;
+	sf::Vector2i pt1_2d = { pt1.x, pt1.y };
+	sf::Vector2i pt2_2d = { pt2.x, pt2.y };
+
 	std::unordered_set<sf::Vector2i> closedSet;
 	std::set<Node> openSet;
 	std::unordered_map<sf::Vector2i, sf::Vector2i> cameFrom;
-	auto constructPath = [&cameFrom](sf::Vector2i endPosition) -> std::deque<sf::Vector2i>
+	auto constructPath = [z, &cameFrom](sf::Vector2i endPosition) -> std::deque<sf::Vector3i>
 	{
 		sf::Vector2i currentPosition = endPosition;
-		std::deque<sf::Vector2i> path;
+		std::deque<sf::Vector3i> path;
 		while (currentPosition != cameFrom[currentPosition])
 		{
-			path.push_front(currentPosition);
+			path.push_front({currentPosition.x, currentPosition.y, z});
 			currentPosition = cameFrom[currentPosition];
 		}
 
 		return path;
 	};
 	
-	openSet.emplace(Node(pt1,0,0));
-	cameFrom[pt1] = pt1;
+	openSet.emplace(Node(pt1_2d,0,0));
+	cameFrom[pt1_2d] = pt1_2d;
 
 	const int LIMIT = 50;
 	int passes = 0;
 	while (!openSet.empty() && passes < LIMIT)
 	{
-		auto currentNode = *(openSet.begin());
-		if (currentNode.value == pt2) return constructPath(currentNode.value);
+		Node currentNode = *(openSet.begin());
+		if (currentNode.value == pt2_2d) return constructPath(currentNode.value);
 		openSet.erase(openSet.begin());
 		closedSet.emplace(currentNode.value);
 
@@ -197,11 +203,11 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 			{
 				if (closedSet.contains({x,y})) continue;
 				cameFrom[{x, y}] = currentNode.value;
-				if (sf::Vector2i(x,y) == pt2) return constructPath(sf::Vector2i(x,y));
+				if (sf::Vector2i(x,y) == pt2_2d) return constructPath(sf::Vector2i(x,y));
 
 				int distanceSoFar = currentNode.distance + 1;
 				int distanceFromTarget = static_cast<int>(std::sqrtf(std::powf(pt2.x - x, 2.f) + std::powf(pt2.y - y, 2.f)));
-				const auto entities = entitiesAt({ x,y });
+				const auto entities = entitiesAt({ x,y,z });
 				int cost = distanceSoFar + distanceFromTarget + costFunc(entities);
 
 				Node neighbor = Node({ x,y }, distanceSoFar, cost);
@@ -230,5 +236,5 @@ std::deque<sf::Vector2i> drft::spatial::WorldGrid::getPath(sf::Vector2i pt1, sf:
 		return constructPath(openSet.begin()->value);
 	}
 
-	return std::deque<sf::Vector2i>();
+	return std::deque<sf::Vector3i>();
 }

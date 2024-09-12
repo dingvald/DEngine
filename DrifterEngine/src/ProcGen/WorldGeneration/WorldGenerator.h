@@ -2,6 +2,7 @@
 #include <JSON/ICreateFromJson.h>
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 #include <Random/Random.h>
+#include <Spatial/ChunkPosition.h>
 
 namespace drft
 {
@@ -22,8 +23,8 @@ namespace drft::gen
 
 		void generate();
 
-		GenerationState generateChunk(sf::Vector2i coordinate, entt::registry& registry);
-		sf::Vector2i getDimensions() const;
+		GenerationState generateChunk(ChunkPosition coordinate, entt::registry& registry);
+		ChunkPosition getDimensions() const;
 
 		template<class Archive>
 		void load(Archive& iarchive);
@@ -33,7 +34,7 @@ namespace drft::gen
 
 	private:
 		unsigned int _seed = 0;
-		sf::Vector2i _dimensions;
+		ChunkPosition _dimensions;
 		std::unique_ptr<GenerationLayerManager> _layerManager;
 	};
 

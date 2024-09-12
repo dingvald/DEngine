@@ -6,6 +6,7 @@
 #include "Components/CameraComponent.h"
 #include "Components/PositionComponent.h"
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
+
 #include "Services/DebugInfo.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 
@@ -15,16 +16,17 @@ static const std::filesystem::path WORKING_DIRECTORY = ".";
 static const std::filesystem::path SAVE_DIRECTORY = WORKING_DIRECTORY / "data" / "savegame";
 static const std::filesystem::path CHUNK_DIRECTORY = SAVE_DIRECTORY / "chunks";
 
-static constexpr int ACTIVE_CHUNK_RADIUS = 10;
-static constexpr int TO_SAVE_CHUNK_RADIUS = ACTIVE_CHUNK_RADIUS + 10;
+static constexpr int ACTIVE_CHUNK_RADIUS_XY = 10;
+static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 10;
 
 
 void drft::system::ChunkManager::onUpdate(const float dt)
 {
-	auto camera = getCurrentCamera(_registry);
+	const CameraInfo camera = getCurrentCamera(_registry);
 	if (!camera.isInitialized) return;
 
-	sf::Vector2i cameraChunkPosition = spatial::toChunkCoordinate(camera.position);
+	TilePosition cameraTilePosition{ camera.position.x, camera.position.y, camera.position.z };
+	ChunkPosition cameraChunkPosition = spatial::toChunkSpace(cameraTilePosition);
 
 	updateChunkStates(cameraChunkPosition);
 
@@ -32,7 +34,7 @@ void drft::system::ChunkManager::onUpdate(const float dt)
 	processLoadQueue();
 	processSaveQueue();
 
-	cleanUpChunks(cameraChunkPosition);
+	cleanUpChunks();
 
 	service::DebugInfo::instance().putInfo("Active chunks", std::to_string(_chunks.size()));
 }
@@ -45,18 +47,24 @@ void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
 	}
 }
 
-void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
+void drft::system::ChunkManager::updateChunkStates(ChunkPosition newPosition)
 {
-	auto activeCoords = spatial::getIntCircleInRadius(newPosition, ACTIVE_CHUNK_RADIUS);
+	auto upperActiveCoords	= spatial::getIntCircleInRadius(newPosition + sf::Vector3i{0,0,1}, ACTIVE_CHUNK_RADIUS_XY / 2);	//		--------
+	auto activeCoords		= spatial::getIntCircleInRadius(newPosition, ACTIVE_CHUNK_RADIUS_XY);							//	----------------
+	auto lowerActiveCoords	= spatial::getIntCircleInRadius(newPosition + sf::Vector3i{0,0,-1}, ACTIVE_CHUNK_RADIUS_XY / 2);//		--------
+
+	activeCoords.insert(activeCoords.end(), upperActiveCoords.begin(), upperActiveCoords.end());
+	activeCoords.insert(activeCoords.end(), lowerActiveCoords.begin(), lowerActiveCoords.end());
 
 	// Ensure active chunks are active or will be built
 	for (auto&& coord : activeCoords)
 	{
-		if (!_chunks.contains(coord))
+		const ChunkPosition chunkPosition = spatial::asChunkSpace(coord);
+		if (!_chunks.contains(chunkPosition))
 		{
-			_chunks.emplace(coord, spatial::VirtualChunk{ coord });
+			_chunks.emplace(chunkPosition, spatial::VirtualChunk{ chunkPosition });
 		}
-		auto& chunk = _chunks.at(coord);
+		spatial::VirtualChunk& chunk = _chunks.at(chunkPosition);
 
 		switch (chunk.getState())
 		{
@@ -64,12 +72,12 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 			if (std::filesystem::exists(buildChunkFilename(chunk)))
 			{
 				chunk.setState(spatial::ChunkState::ToLoad);
-				_toLoad.push(coord);
+				_toLoad.push(chunkPosition);
 			}
 			else
 			{
 				chunk.setState(spatial::ChunkState::ToBuild);
-				_toBuild.push(coord);
+				_toBuild.push(chunkPosition);
 			}
 			break;
 		case spatial::ChunkState::Built:
@@ -80,7 +88,7 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 			break;
 		case spatial::ChunkState::Saved:
 			chunk.setState(spatial::ChunkState::ToLoad);
-			_toLoad.push(coord);
+			_toLoad.push(chunkPosition);
 			break;
 		default:
 			break;
@@ -92,32 +100,20 @@ void drft::system::ChunkManager::updateChunkStates(sf::Vector2i newPosition)
 	{
 		if (chunk.getState() != spatial::ChunkState::Active) continue;
 
-		const float distance = spatial::distance(coord, newPosition);
-		if (distance < TO_SAVE_CHUNK_RADIUS) continue;
+		if (isWithinChunkSaveDisk(coord, newPosition)) continue;
 
 		_toSave.push(coord);
 		chunk.setState(spatial::ChunkState::ToSave);
 	}
 }
 
-void drft::system::ChunkManager::cleanUpChunks(sf::Vector2i newPosition)
+void drft::system::ChunkManager::cleanUpChunks()
 {
-	std::vector<sf::Vector2i> toDelete;
-	for (auto& [coord, chunk] : _chunks)
-	{
-		if (chunk.getState() != spatial::ChunkState::Saved) continue;
-
-		const float distance = spatial::distance(coord, newPosition);
-		if (distance < TO_SAVE_CHUNK_RADIUS) continue;
-
-		toDelete.push_back(coord);
-	}
-
 	auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
-	for (auto&& coord : toDelete)
+	for (auto&& chunkPosition : _toDelete)
 	{
-		grid.removeChunk(coord);
-		_chunks.erase(coord);
+		grid.removeChunk(chunkPosition);
+		_chunks.erase(chunkPosition);
 	}
 }
 
@@ -125,7 +121,7 @@ void drft::system::ChunkManager::processBuildQueue()
 {
 	if (_toBuild.empty()) return;
 
-	sf::Vector2i coord = _toBuild.front();
+	ChunkPosition coord = _toBuild.front();
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
 	status = chunk.build(_registry);
@@ -141,7 +137,7 @@ void drft::system::ChunkManager::processLoadQueue()
 {
 	if (_toLoad.empty()) return;
 
-	sf::Vector2i coord = _toLoad.front();
+	ChunkPosition coord = _toLoad.front();
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
 	status = chunk.asyncLoad(_registry, buildChunkFilename(chunk));
@@ -157,7 +153,7 @@ void drft::system::ChunkManager::processSaveQueue()
 {
 	if (_toSave.empty()) return;
 
-	sf::Vector2i coord = _toSave.front();
+	ChunkPosition coord = _toSave.front();
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
 	status = chunk.asyncSave(_registry, buildChunkFilename(chunk));
@@ -166,8 +162,12 @@ void drft::system::ChunkManager::processSaveQueue()
 	if (status == spatial::ioStatus::Busy)
 	{
 		// Send to the back of the queue
-		sf::Vector2i temp = _toSave.front();
+		ChunkPosition temp = _toSave.front();
 		_toSave.push(temp);
+	}
+	else
+	{
+		_toDelete.push_back(coord);
 	}
 	_toSave.pop();
 }
@@ -176,4 +176,18 @@ std::filesystem::path drft::system::ChunkManager::buildChunkFilename(const spati
 {
 	std::filesystem::path chunkFileName = CHUNK_DIRECTORY / chunk.toString();
 	return chunkFileName += ".dat";
+}
+
+bool drft::system::ChunkManager::isWithinChunkSaveDisk(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const
+{
+	const int dz_abs = std::abs(chunkPosition.z - centerPosition.z);
+	if (dz_abs > 1) return false;
+	if (dz_abs == 1)
+	{
+		return spatial::isWithinRadius2d({ centerPosition.x, centerPosition.y }, { chunkPosition.x, chunkPosition.y }, TO_SAVE_CHUNK_RADIUS_XY / 2);
+	}
+	else
+	{
+		return spatial::isWithinRadius2d({ centerPosition.x, centerPosition.y }, { chunkPosition.x, chunkPosition.y }, TO_SAVE_CHUNK_RADIUS_XY);
+	}
 }

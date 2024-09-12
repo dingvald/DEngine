@@ -8,7 +8,7 @@
 struct CameraComponent
 {
 	sf::FloatRect viewport;
-	sf::Vector2f lag;
+	sf::Vector3f lag;
 	entt::entity target = { entt::null };
 };
 

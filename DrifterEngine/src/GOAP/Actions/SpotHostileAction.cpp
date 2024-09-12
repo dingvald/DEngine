@@ -5,6 +5,7 @@
 #include "Components/AIComponent.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "Utility/EntityHelpers.h"
+#include <Spatial/Conversions.h>
 #include "Spatial/Helpers.h"
 #include "Systems/Gameplay/FactionSystem.h"
 
@@ -22,7 +23,7 @@ drft::goap::ActionResult drft::goap::SpotHostileAction::perform(entt::handle age
 		.message = "!",
 		.color = sf::Color::Yellow,
 		.tracksEntity = agent.entity(),
-		.position = agent.get<PositionComponent>().position,
+		.position = spatial::toXY(spatial::toFloatSpace(agent.get<PositionComponent>().tile)),
 		.velocity = {0,0},
 		.isScreenSpace = false,
 		.ttl = 80

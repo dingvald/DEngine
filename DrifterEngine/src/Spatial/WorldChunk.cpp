@@ -1,38 +1,38 @@
 #include "pch.h"
 #include "WorldChunk.h"
 
-drft::spatial::WorldChunk::WorldChunk(int width, int height)
+drft::spatial::WorldChunk::WorldChunk(sf::Vector3i dimensions)
 {
-	_grid.resize(width, height);
+	_grid.resize(dimensions);
 }
 
-void drft::spatial::WorldChunk::placeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition)
+void drft::spatial::WorldChunk::placeEntity(entt::entity entity, sf::Vector3i position)
 {
-	auto &cell = _grid.at(chunkPosition.x, chunkPosition.y);
+	auto &cell = _grid.at(position);
 	cell.placeEntity(entity);
 	_entities.insert(entity);
 }
 
-void drft::spatial::WorldChunk::removeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition)
+void drft::spatial::WorldChunk::removeEntity(entt::entity entity, sf::Vector3i position)
 {
-	auto& cell = _grid.at(chunkPosition.x, chunkPosition.y);
+	auto& cell = _grid.at(position);
 	cell.removeEntity(entity);
 	_entities.erase(entity);
 }
 
-bool drft::spatial::WorldChunk::moveEntity(const entt::entity entity, const sf::Vector2i fromChunkPosition, const sf::Vector2i toChunkPosition)
+bool drft::spatial::WorldChunk::moveEntity(entt::entity entity, sf::Vector3i fromPosition, sf::Vector3i toPosition)
 {
-	auto& fromCell = _grid.at(fromChunkPosition.x, fromChunkPosition.y);
+	auto& fromCell = _grid.at(fromPosition);
 	fromCell.removeEntity(entity);
-	auto& toCell = _grid.at(toChunkPosition.x, toChunkPosition.y);
+	auto& toCell = _grid.at(toPosition);
 	toCell.placeEntity(entity);
 
 	return true;
 }
 
-std::vector<entt::entity> drft::spatial::WorldChunk::entitiesAt(sf::Vector2i chunkPosition) const
+const std::vector<entt::entity>& drft::spatial::WorldChunk::entitiesAt(sf::Vector3i position) const
 {
-	auto& cell = _grid.at(chunkPosition.x, chunkPosition.y);
+	auto& cell = _grid.at(position);
 	return cell.getEntities();
 }
 

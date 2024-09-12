@@ -28,7 +28,7 @@ bool drft::ToggleSprintAbility::isValid(entt::const_handle actor) const
     return false;
 }
 
-void drft::ToggleSprintAbility::perform(entt::handle actor, std::optional<sf::Vector2i> targetPosition) const
+void drft::ToggleSprintAbility::perform(entt::handle actor, std::optional<TilePosition> targetPosition) const
 {
 	if (actor.all_of<SprintingComponent>())
 	{

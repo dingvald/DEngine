@@ -15,14 +15,14 @@ namespace drft::system
 
 	private:
 		void onSendFloatingMessageEvent(events::SendFloatingMessageEvent& ev);
-		void queueFloatingMessage(const std::string& message, sf::Color color, entt::entity trackedEntity, sf::Vector2i position, sf::Vector2f velocity, bool fades, int ttl, bool isScreenSpace);
+		void queueFloatingMessage(const std::string& message, sf::Color color, entt::entity trackedEntity, sf::Vector2f position, sf::Vector2f velocity, bool fades, int ttl, bool isScreenSpace);
 		void updateFloatingMessagesDisplay();
 
 	private:
 		struct FloatingMessage
 		{
 			sf::Text text;
-			sf::Vector2i position;
+			sf::Vector2f position;
 			sf::Vector2f velocity;
 			entt::entity trackedEntity;
 			bool fades = false;

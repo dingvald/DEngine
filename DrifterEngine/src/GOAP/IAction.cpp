@@ -6,7 +6,7 @@
 #include "Components/Tags.h"
 #include "Systems/Helpers/HasLineOfSight.h"
 
-std::optional<sf::Vector2i> drft::goap::IAction::trySetTarget(entt::handle agent) const
+std::optional<drft::TilePosition> drft::goap::IAction::trySetTarget(entt::handle agent) const
 {
 	if (isInRange(agent)) return std::nullopt;
 	throw std::exception("Need to override.");

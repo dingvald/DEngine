@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include <memory>
-#include "Grid.h"
+#include "Grid2d.h"
 #include "Utility/stdHashing.h"
 
 namespace drft::spatial
@@ -21,11 +21,11 @@ namespace drft::spatial
 		void discard(sf::Vector2i coordinate);
 
 	private:
-		using ChunkPtr = std::unique_ptr<spatial::Grid<T>>;
+		using ChunkPtr = std::unique_ptr<spatial::Grid2d<T>>;
 		sf::Vector2i toSubchunk(int x, int y) const;
 		int toLocalX(int x) const;
 		int toLocalY(int y) const;
-		Grid<T>& getOrCreateChunk(sf::Vector2i key) const;
+		Grid2d<T>& getOrCreateChunk(sf::Vector2i key) const;
 
 	private:
 		int _subchunkWidth;

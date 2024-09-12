@@ -29,6 +29,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	if (getState() == ChunkState::ToBuild)
 	{
 		setState(ChunkState::Building);
+		std::cout << "Building chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	}
 
 	auto& worldGenerator = reg.ctx().get<gen::WorldGenerator&>();
@@ -39,6 +40,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	}
 
 	setState(ChunkState::Built);
+	std::cout << "Finished building chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	return ioStatus::Done;
 }
 
@@ -79,6 +81,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::
 	{
 		setFuture(std::async(std::launch::async, &VirtualChunk::loadChunkFromFile, this, filename));
 		setState(ChunkState::Loading);
+		std::cout << "Loading chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	}
 
 	auto status = getFuture().wait_for(WAIT_TIME);
@@ -93,6 +96,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::
 	_asyncRegistry = {};
 	
 	setState(ChunkState::Loaded);
+	std::cout << "Finished loading chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 	return ioStatus::Done;
 }
@@ -103,10 +107,12 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 	{
 		const auto& grid = reg.ctx().get<spatial::WorldGrid&>();
 		const auto entities = grid.getAllEntities(_coordinate);
+		std::cout << "Saving chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 		if (entities.empty())
 		{
 			setState(ChunkState::Saved);
+			std::cout << ChunkPosition::toString(_coordinate) << " is empty - no need to save" << std::endl;
 			return ioStatus::Done;
 		}
 		
@@ -131,6 +137,7 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 	_asyncRegistry = {};
 
 	setState(ChunkState::Saved);
+	std::cout << "Saved chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 	return ioStatus::Done;
 }
@@ -159,5 +166,5 @@ bool drft::spatial::VirtualChunk::loadChunkFromFile(const std::filesystem::path&
 
 std::string drft::spatial::VirtualChunk::toString() const
 {
-	return std::string(std::to_string(_coordinate.x) + "_" + std::to_string(_coordinate.y));
+	return std::string(std::to_string(_coordinate.x) + "_" + std::to_string(_coordinate.y) + "_" + std::to_string(_coordinate.z));
 }

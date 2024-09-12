@@ -1,15 +1,16 @@
 #pragma once
 #include <vector>
+#include <functional>
 
 namespace drft::spatial
 {
 	template<typename T>
-	class Grid
+	class Grid2d
 	{
 	public:
-		Grid() = default;
-		Grid(int width, int height);
-		Grid(int width, int height, std::initializer_list<T> list);
+		Grid2d() = default;
+		Grid2d(int width, int height);
+		Grid2d(int width, int height, std::initializer_list<T> list);
 
 		void resize(int width, int height);
 		void fill(T val);
@@ -34,7 +35,7 @@ namespace drft::spatial
 
 } // namespace drft
 
-#include "Grid.inl"
+#include "Grid2d.inl"
 
 
 

@@ -303,9 +303,6 @@
     <ClCompile Include="src\WorldMap\WorldMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Random\NoiseMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utility\Math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -546,6 +543,12 @@
     <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spatial\TilePosition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spatial\ChunkPosition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -584,7 +587,7 @@
     <ClInclude Include="src\Components\Components.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Spatial\Grid.h">
+    <ClInclude Include="src\Spatial\Grid2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\WorldGrid.h">
@@ -1352,9 +1355,6 @@
     <ClInclude Include="src\WorldMap\WorldMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Random\NoiseMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -2084,12 +2084,21 @@
     <ClInclude Include="deps\jc_voronoi\jc_voronoi_adaptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spatial\TilePosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spatial\ChunkPosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spatial\Grid3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="src\Spatial\Grid.inl">
+    <None Include="src\Spatial\Grid2d.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="data\static\entities\prototypes.json" />
@@ -2541,6 +2550,9 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="deps\SFML-2.5.1\include\SFML\System\Vector3.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="src\Spatial\Grid3d.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

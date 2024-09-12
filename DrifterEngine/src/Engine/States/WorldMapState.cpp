@@ -161,7 +161,7 @@ void drft::WorldMapState::onPush()
 	loadMapNotes();
 
 	auto cameraInfo = system::getCurrentCamera(getContext().registry);
-	_currentPosition.fromTileSpace(cameraInfo.position);
+	_currentPosition = spatial::toWorldMapSpace(spatial::asTileSpace(cameraInfo.position));
 
 	refreshMapSprites();
 

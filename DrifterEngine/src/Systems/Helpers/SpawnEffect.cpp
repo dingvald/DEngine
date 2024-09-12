@@ -7,6 +7,7 @@
 #include "Components/VisualEffectComponent.h"
 
 #include "Engine/EngineConstants.h"
+#include <Spatial/Conversions.h>
 #include "Systems/Rendering/RenderLayers.h"
 
 entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& effect)

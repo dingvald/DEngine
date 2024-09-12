@@ -28,9 +28,9 @@ namespace drft
 
 	private:
 		component::action::SelectTarget* _targetSelect = nullptr;
-		sf::Vector2i _cursorPosition = { 0,0 };
-		sf::Vector2i _cursorDelta = { 0,0 };
-		sf::Vector2i _startPosition = { 0,0 };
+		sf::Vector3i _cursorPosition = { 0,0,0 };
+		sf::Vector3i _cursorDelta = { 0,0,0 };
+		sf::Vector3i _startPosition = { 0,0,0 };
 		gui::Label _displayText;
 		entt::entity _cursor = entt::null;
 		std::vector<entt::entity> _radiusEffects;

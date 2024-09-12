@@ -7,6 +7,8 @@
 
 #include "Utility/EntityHelpers.h"
 #include "Events/SendFloatingMessageEvent.h"
+#include <Spatial/Conversions.h>
+#include <Spatial/Helpers.h>
 
 void drft::system::LevelingSystem::init()
 {
@@ -43,7 +45,7 @@ void drft::system::LevelingSystem::onLevelUp(entt::registry& registry, entt::ent
 		.message = "LEVEL UP",
 		.color = sf::Color::Magenta,
 		.tracksEntity = entity,
-		.position = registry.get<PositionComponent>(entity).position,
+		.position = spatial::toXY(spatial::toFloatSpace(registry.get<PositionComponent>(entity).tile)),
 		.velocity = {0,-0.1},
 		.isScreenSpace = false,
 		.ttl = 100

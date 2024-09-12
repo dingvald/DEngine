@@ -1,13 +1,13 @@
 #pragma once
 
-#include "SFML/System/Vector2.hpp"
+#include <Spatial/TilePosition.h>
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
 
 struct PositionComponent
 {
-	sf::Vector2i position = { 0,0 };
+	drft::TilePosition tile = { 0,0,0 };
 
 private:
 	friend class ComponentMetaBinder;
@@ -17,7 +17,7 @@ private:
 		using namespace entt::literals;
 		snapshot::reflectComponent<PositionComponent, NAME>()
 			.prop("serialize"_hs)
-			.data<&PositionComponent::position>("position"_hs);
+			.data<&PositionComponent::tile>("position"_hs);
 	}
 };
 
@@ -26,6 +26,6 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, PositionComponent& position)
 	{
-		archive(position.position.x, position.position.y);
+		archive(position.tile.x, position.tile.y, position.tile.z);
 	}
 }

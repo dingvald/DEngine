@@ -85,7 +85,7 @@ void drft::system::SprintingSystem::spawnSprintEffect(const RenderComponent& ren
 	effectSprite.color = sf::Color::White;
 	effectSprite.color.value().a = 30;
 
-	EffectStruct sprintEffect = { .frames = { effectSprite }, .position = positionComponent.position, .ttl = 25, .fadeRate = 1 };
+	EffectStruct sprintEffect = { .frames = { effectSprite }, .position = positionComponent.tile, .ttl = 25, .fadeRate = 1 };
 
 	spawnEffect(_registry, std::move(sprintEffect));
 }

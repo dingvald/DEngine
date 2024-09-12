@@ -164,7 +164,7 @@ bool drft::GameState::loadOrCreatePlayer()
 		_player = _factory->build("Player", getContext().registry);
 		_player.patch<PositionComponent>([](PositionComponent& pos)
 			{
-				pos.position = {1024, 1024};
+				pos.tile = {1024, 1024, 0};
 			});
 		return true;
 	}

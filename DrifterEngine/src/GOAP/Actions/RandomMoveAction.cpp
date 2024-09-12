@@ -18,7 +18,7 @@ drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agen
 	int randx = random.intInRange(-1, 1);
 	int randy = random.intInRange(-1, 1);
 	const auto& grid = agent.registry()->ctx().get<const spatial::WorldGrid&>();
-	const auto& tilepos = agent.get<PositionComponent>().position;
+	const auto& tilepos = agent.get<PositionComponent>().tile;
 
 	auto blockerFilter = [&agent](entt::entity entity) -> bool
 	{
@@ -29,14 +29,14 @@ drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agen
 		return false;
 	};
 
-	auto blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
+	auto blockers = grid.entitiesAt(tilepos + TilePosition{ randx, randy, 0 }, blockerFilter);
 
 	int safetyCount = 0; // in case entity is surrounded
 	while (safetyCount < 8 && !blockers.empty())
 	{
 		randx = random.intInRange(-1, 1);
 		randy = random.intInRange(-1, 1);
-		blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
+		blockers = grid.entitiesAt(tilepos + TilePosition{ randx, randy, 0 }, blockerFilter);
 		++safetyCount;
 	}
 

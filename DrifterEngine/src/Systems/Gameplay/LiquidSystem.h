@@ -20,7 +20,7 @@ namespace drft::system
 		void onFixedUpdateEnd() override;
 
 	private:
-		void addInLiquidEffect(sf::Vector2i position, sf::Color color);
+		void addInLiquidEffect(sf::Vector3i position, sf::Color color);
 
 		void onTurnEndEvent(events::TurnEndEvent& ev) const;
 
@@ -29,7 +29,7 @@ namespace drft::system
 
 	private:
 		spatial::WorldGrid* _grid = nullptr;
-		entt::dense_map<sf::Vector2i, entt::entity> _liquidPositions;
+		std::unordered_map<sf::Vector3i, entt::entity> _liquidPositions;
 		std::vector<entt::entity> _inLiquidEffects;
 	};
 }

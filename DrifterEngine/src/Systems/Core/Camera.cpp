@@ -5,8 +5,8 @@
 #include "Components/PositionComponent.h"
 #include "Components/PlayerComponent.h"
 
-#include "Spatial/Conversions.h"
-#include "Spatial/Helpers.h"
+#include <Spatial/Conversions.h>
+#include <Spatial/Helpers.h>
 #include "Services/DebugInfo.h"
 
 static const float CAMERA_SPEED = 7.0f;
@@ -18,8 +18,8 @@ void drft::system::Camera::onStart(bool)
 	const float viewportWidth = _registry.ctx().get<const sf::RenderWindow&>().getView().getSize().x;
 	const float viewportHeight = _registry.ctx().get<const sf::RenderWindow&>().getView().getSize().y;
 	// component order matters for camera because it determines order of component destruction.
-	_registry.emplace<CameraComponent>(_camera, sf::FloatRect(-viewportWidth / 2, -viewportHeight / 2, viewportWidth, viewportHeight), sf::Vector2f{}, entt::null);
-	_registry.emplace<PositionComponent>(_camera, sf::Vector2i(0, 0));
+	_registry.emplace<CameraComponent>(_camera, sf::FloatRect(-viewportWidth / 2, -viewportHeight / 2, viewportWidth, viewportHeight), sf::Vector3f{}, entt::null);
+	_registry.emplace<PositionComponent>(_camera, TilePosition{0,0,0});
 }
 
 void drft::system::Camera::onUpdateEnd()
@@ -34,7 +34,7 @@ void drft::system::Camera::onUpdateEnd()
 			for (auto [entity, _, playerPos] : playerView.each())
 			{
 				camera.target = entity;
-				pos.position = playerPos.position;
+				pos.tile = playerPos.tile;
 			}
 		}
 	}
@@ -44,9 +44,9 @@ void drft::system::Camera::onUpdateEnd()
 		const auto& target = _registry.try_get<const PositionComponent>(camera.target);
 		if (!target) continue;
 
-		pos.position = target->position;
+		pos.tile = target->tile;
 
-		service::DebugInfo::instance().putInfo("Position", std::to_string(target->position.x) + ", " + std::to_string(target->position.y));
+		service::DebugInfo::instance().putInfo("Position", TilePosition::toString(pos.tile));
 	}
 }
 

@@ -24,8 +24,8 @@ entt::const_handle drft::goap::getClosestEntity(entt::const_handle agent, std::v
 				if (closestEntity != entt::null)
 				{
 					auto& currentTargetPos = agent.registry()->get<PositionComponent>(closestEntity);
-					const int currentTargetDistance = spatial::distance(myPos.position, currentTargetPos.position);
-					const int newTargetDistance = spatial::distance(myPos.position, otherPos.position);
+					const int currentTargetDistance = spatial::distance3d(myPos.tile, currentTargetPos.tile);
+					const int newTargetDistance = spatial::distance3d(myPos.tile, otherPos.tile);
 					if (newTargetDistance < currentTargetDistance)
 					{
 						closestEntity = entity;

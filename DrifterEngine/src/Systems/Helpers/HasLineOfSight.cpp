@@ -5,7 +5,7 @@
 #include "Components/PositionComponent.h"
 #include "Components/LightBlockingComponent.h"
 
-bool drft::system::hasLineOfSight(entt::const_handle entity, sf::Vector2i targetPosition)
+bool drft::system::hasLineOfSight(entt::const_handle entity, TilePosition targetPosition)
 {
 	if (auto posComp = entity.try_get<PositionComponent>())
 	{
@@ -14,7 +14,7 @@ bool drft::system::hasLineOfSight(entt::const_handle entity, sf::Vector2i target
 			{
 				return entity.registry()->all_of<LightBlockingComponent>(e);
 			};
-		auto entities = grid.castRay(posComp->position, targetPosition, filterForLightBlocking);
+		auto entities = grid.castRay(posComp->tile, targetPosition, filterForLightBlocking);
 		return entities.empty();
 	}
 	return false;

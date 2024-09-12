@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Helpers.h"
 #include "Utility/stdHashing.h"
+#include <Spatial/TilePosition.h>
 
 namespace 
 {
@@ -17,6 +18,21 @@ namespace
 				{y, -x}
 		};
 	}
+}
+
+sf::Vector3i drft::spatial::vec3FromPlanar(sf::Vector2i plane)
+{
+	return { plane.x, plane.y, 0 };
+}
+
+sf::Vector2i drft::spatial::toXY(sf::Vector3i vec3)
+{
+	return { vec3.x, vec3.y };
+}
+
+sf::Vector2f drft::spatial::toXY(sf::Vector3f vec3)
+{
+	return { vec3.x, vec3.y };
 }
 
 std::vector<sf::Vector2i> drft::spatial::getIntRect(sf::Vector2i origin, int width, int height)
@@ -54,22 +70,23 @@ std::vector<sf::Vector2i> drft::spatial::getOutlineIntRect(sf::Vector2i origin, 
 	return result;
 }
 
-std::vector<sf::Vector2i> drft::spatial::getIntCircleInRadius(sf::Vector2i centerPosition, int radius)
+std::vector<sf::Vector3i> drft::spatial::getIntCircleInRadius(sf::Vector3i centerPosition, int radius)
 {
-	std::vector<sf::Vector2i> result;
+	std::vector<sf::Vector3i> result;
 	std::unordered_set<sf::Vector2i> visited;
 	size_t approxSquares = static_cast<size_t>(std::ceil(3.5 * radius * radius));
 	result.reserve(approxSquares);
+	const int z = centerPosition.z;
 
 	for (int i = 0; i <= radius; i++)
 	{
 		for (int j = 0; j <= i; j++)
 		{
-			if (!isWithinRadius({ i, j }, radius)) continue;
+			if (!isWithinRadius2d({ i, j }, radius)) continue;
 			for (auto&& p : getEightWaySymmetry(i, j))
 			{
 				if (visited.contains(p)) continue;
-				result.push_back(centerPosition + p);
+				result.push_back(centerPosition + sf::Vector3i{p.x, p.y, 0});
 				visited.insert(p);
 			}
 		}
@@ -93,11 +110,11 @@ std::vector<sf::Vector2i> drft::spatial::getIntRectAroundOrigin(sf::Vector2i ori
 	return result;
 }
 
-std::vector<sf::Vector2i> drft::spatial::getIntPointsAlongLine(sf::Vector2i pt1, sf::Vector2i pt2)
+std::vector<sf::Vector2i> drft::spatial::getLine2d(sf::Vector2i pt1, sf::Vector2i pt2)
 {
 	// Bresenham's algorithm
 	std::vector<sf::Vector2i> result;
-	result.reserve(static_cast<size_t>(spatial::distance(pt1, pt2)));
+	result.reserve(static_cast<size_t>(spatial::distance2d(pt1, pt2)));
 
 	int dx = std::abs(pt2.x - pt1.x);
 	int dy = -std::abs(pt2.y - pt1.y);
@@ -128,50 +145,199 @@ std::vector<sf::Vector2i> drft::spatial::getIntPointsAlongLine(sf::Vector2i pt1,
 	return result;
 }
 
-float drft::spatial::distance(sf::Vector2i pt1, sf::Vector2i pt2)
+std::vector<sf::Vector3i> drft::spatial::getLine3d(sf::Vector3i pt1, sf::Vector3i pt2)
+{
+	std::vector<sf::Vector3i> result;
+
+	result.push_back(pt1);
+	const int dx = std::abs(pt2.x - pt1.x);
+	const int dy = std::abs(pt2.y - pt1.y);
+	const int dz = std::abs(pt2.z - pt1.z);
+	int xs;
+	int ys;
+	int zs;
+	if (pt2.x > pt1.x)
+		xs = 1;
+	else
+		xs = -1;
+	if (pt2.y > pt1.y)
+		ys = 1;
+	else
+		ys = -1;
+	if (pt2.z > pt1.z)
+		zs = 1;
+	else
+		zs = -1;
+
+	if (dx >= dy && dx >= dz) {
+		int p1 = 2 * dy - dx;
+		int p2 = 2 * dz - dx;
+		while (pt1.x != pt2.x) {
+			pt1.x += xs;
+			if (p1 >= 0) {
+				pt1.y += ys;
+				p1 -= 2 * dx;
+			}
+			if (p2 >= 0) {
+				pt1.z += zs;
+				p2 -= 2 * dx;
+			}
+			p1 += 2 * dy;
+			p2 += 2 * dz;
+			result.push_back(pt1);
+		}
+	}
+	else if (dy >= dx && dy >= dz) {
+		int p1 = 2 * dx - dy;
+		int p2 = 2 * dz - dy;
+		while (pt1.y != pt2.y) {
+			pt1.y += ys;
+			if (p1 >= 0) {
+				pt1.x += xs;
+				p1 -= 2 * dy;
+			}
+			if (p2 >= 0) {
+				pt1.z += zs;
+				p2 -= 2 * dy;
+			}
+			p1 += 2 * dx;
+			p2 += 2 * dz;
+			result.push_back(pt1);
+		}
+	}
+	else {
+		int p1 = 2 * dy - dz;
+		int p2 = 2 * dx - dz;
+		while (pt1.z != pt2.z) {
+			pt1.z += zs;
+			if (p1 >= 0) {
+				pt1.y += ys;
+				p1 -= 2 * dz;
+			}
+			if (p2 >= 0) {
+				pt1.x += xs;
+				p2 -= 2 * dz;
+			}
+			p1 += 2 * dy;
+			p2 += 2 * dx;
+			result.push_back(pt1);
+		}
+	}
+
+	return result;
+}
+
+float drft::spatial::distance2d(sf::Vector2i pt1, sf::Vector2i pt2)
 {
 	const auto delta = pt1 - pt2;
 	return std::hypotf(static_cast<float>(delta.x), static_cast<float>(delta.y));
 }
 
-float drft::spatial::distance(sf::Vector2f pt1, sf::Vector2f pt2)
+float drft::spatial::distance2d(sf::Vector2f pt1, sf::Vector2f pt2)
 {
 	const auto delta = pt1 - pt2;
 	return std::hypotf(delta.x, delta.y);
 }
 
-bool drft::spatial::isWithinRadius(sf::Vector2i origin, sf::Vector2i point, int radius)
+float drft::spatial::distance3d(sf::Vector3i pt1, sf::Vector3i pt2)
+{
+	const float dx = static_cast<float>(pt2.x - pt1.x);
+	const float dy = static_cast<float>(pt2.y - pt1.y);
+	const float dz = static_cast<float>(pt2.z - pt1.z);
+	return std::sqrtf(dx*dx + dy*dy + dz*dz);
+}
+
+float drft::spatial::distance3d(sf::Vector3f pt1, sf::Vector3f pt2)
+{
+	const float dx = pt2.x - pt1.x;
+	const float dy = pt2.y - pt1.y;
+	const float dz = pt2.z - pt1.z;
+	return std::sqrtf(dx * dx + dy * dy + dz * dz);
+}
+
+bool drft::spatial::isWithinRadius2d(sf::Vector2i origin, sf::Vector2i point, int radius)
 {
 	int normalized_x = point.x - origin.x;
 	int normalized_y = point.y - origin.y;
 	return (normalized_x*normalized_x) + (normalized_y*normalized_y) <= (radius*radius);
 }
 
-bool drft::spatial::isWithinRadius(sf::Vector2f origin, sf::Vector2f point, float radius)
+bool drft::spatial::isWithinRadius2d(sf::Vector2f origin, sf::Vector2f point, float radius)
 {
 	float normalized_x = point.x - origin.x;
 	float normalized_y = point.y - origin.y;
 	return (normalized_x * normalized_x) + (normalized_y * normalized_y) <= (radius * radius);
 }
 
-bool drft::spatial::isWithinRadius(sf::Vector2i point, int radius)
+bool drft::spatial::isWithinRadius2d(sf::Vector2i point, int radius)
 {
-	return isWithinRadius({ 0,0 }, point, radius);
+	return isWithinRadius2d({ 0,0 }, point, radius);
 }
 
-bool drft::spatial::isWithinRadius(sf::Vector2f point, float radius)
+bool drft::spatial::isWithinRadius2d(sf::Vector2f point, float radius)
 {
-	return isWithinRadius({ 0.f, 0.f }, point, radius);
+	return isWithinRadius2d({ 0.f, 0.f }, point, radius);
 }
 
-sf::Vector2i drft::spatial::findClosestPoint(sf::Vector2i target, const std::vector<sf::Vector2i>& points)
+bool drft::spatial::isWithinRadius3d(sf::Vector3i origin, sf::Vector3i point, int radius)
+{
+	const int dx = point.x - origin.x;
+	const int dy = point.y - origin.y;
+	const int dz = point.z - origin.z;
+	return dx*dx + dy*dy + dz*dz <= radius*radius;
+}
+
+bool drft::spatial::isWithinRadius3d(drft::TilePosition origin, drft::TilePosition point, int radius)
+{
+	const int dx = point.x - origin.x;
+	const int dy = point.y - origin.y;
+	const int dz = point.z - origin.z;
+	return dx * dx + dy * dy + dz * dz <= radius * radius;
+}
+
+bool drft::spatial::isWithinRadius3d(sf::Vector3f origin, sf::Vector3f point, float radius)
+{
+	const float dx = point.x - origin.x;
+	const float dy = point.y - origin.y;
+	const float dz = point.z - origin.z;
+	return dx * dx + dy * dy + dz * dz <= radius * radius;
+}
+
+bool drft::spatial::isWithinRadius3d(sf::Vector3i point, int radius)
+{
+	return isWithinRadius3d({ 0,0,0 }, point, radius);
+}
+
+bool drft::spatial::isWithinRadius3d(sf::Vector3f point, float radius)
+{
+	return isWithinRadius3d({ 0,0,0 }, point, radius);
+}
+
+sf::Vector2i drft::spatial::findClosestPoint2d(sf::Vector2i target, const std::vector<sf::Vector2i>& points)
 {
 	float minDistance = std::numeric_limits<float>::max();
 	sf::Vector2i result = target;
 
 	for (auto&& point : points)
 	{
-		float distance = spatial::distance(target, point);
+		float distance = spatial::distance2d(target, point);
+		if (distance < minDistance)
+		{
+			result = point;
+			minDistance = distance;
+		}
+	}
+	return result;
+}
+
+sf::Vector3i drft::spatial::findClosestPoint3d(sf::Vector3i target, const std::vector<sf::Vector3i>& points)
+{
+	float minDistance = std::numeric_limits<float>::max();
+	sf::Vector3i result = target;
+
+	for (auto&& point : points)
+	{
+		float distance = spatial::distance3d(target, point);
 		if (distance < minDistance)
 		{
 			result = point;

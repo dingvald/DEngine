@@ -5,6 +5,7 @@
 #include "Components/PositionComponent.h"
 #include "Components/AIComponent.h"
 #include "Systems/Gameplay/FactionSystem.h"
+#include <Spatial/Conversions.h>
 #include "Spatial/Helpers.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "GOAP/Sensors/Utility/GetClosestEntity.h"
@@ -31,14 +32,14 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 			auto closestEntityHandle = getClosestEntity(agent, { SensorType::Visual }, filter::isHostile);
 			if (!closestEntityHandle.valid()) return ActionResult::Failed;
 			auto& pos = closestEntityHandle.get<PositionComponent>();
-			ai.blackboard[target_x] = pos.position.x;
-			ai.blackboard[target_y] = pos.position.y;
+			ai.blackboard[target_x] = pos.tile.x;
+			ai.blackboard[target_y] = pos.tile.y;
 			auto& dispatcher = agent.registry()->ctx().get<entt::dispatcher&>();
 			dispatcher.trigger(events::SendFloatingMessageEvent{
 				.message = "?",
 				.color = sf::Color::Yellow,
 				.tracksEntity = agent.entity(),
-				.position = myPos.position,
+				.position = spatial::toXY(spatial::toFloatSpace(myPos.tile)),
 				.velocity = {0,0},
 				.isScreenSpace = false,
 				.ttl = 80
@@ -49,15 +50,15 @@ drft::goap::ActionResult drft::goap::InvestigateHostileAction::perform(entt::han
 		break;
 	case 1:
 		{
-			auto line = spatial::getIntPointsAlongLine(myPos.position, { targetX, targetY });
-			auto diff = line.front() - myPos.position;
+			auto line = spatial::getLine2d(spatial::toXY(myPos.tile), { targetX, targetY });
+			auto diff = line.front() - spatial::toXY(myPos.tile);
 			agent.emplace_or_replace<MoveAction>(diff);
 		}
 		break;
 	case 2:
 		{
-			auto line = spatial::getIntPointsAlongLine(myPos.position, { targetX, targetY });
-			auto diff = line.front() - myPos.position;
+			auto line = spatial::getLine2d(spatial::toXY(myPos.tile), { targetX, targetY });
+			auto diff = line.front() - spatial::toXY(myPos.tile);
 			agent.emplace_or_replace<MoveAction>(diff);
 		}
 		break;

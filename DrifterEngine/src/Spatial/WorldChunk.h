@@ -1,30 +1,32 @@
 #pragma once
 #include "Cell.h"
-#include "Grid.h"
+#include <Spatial/Grid3d.h>
 
 
 namespace drft::spatial
+
 {
 
 	class WorldChunk
 	{
 	public:
-		WorldChunk(int width, int height);
+		WorldChunk(sf::Vector3i dimensions);
 
 		// Places entity in chunk tile position.
-		void placeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition);
+		void placeEntity(entt::entity entity, sf::Vector3i position);
 		// Removes entity from given chunk tile position and returns that entity.
-		void removeEntity(const entt::entity& entity, const sf::Vector2i chunkPosition);
+		void removeEntity(entt::entity entity, sf::Vector3i position);
 		// Moves entity from one chunk tile position to another and returns if successful.
-		bool moveEntity(const entt::entity, const sf::Vector2i fromChunkPosition, const sf::Vector2i toChunkPosition);
-		std::vector<entt::entity> entitiesAt(sf::Vector2i chunkPosition) const;
+		bool moveEntity(entt::entity, sf::Vector3i fromPosition, sf::Vector3i toPosition);
+		const std::vector<entt::entity>& entitiesAt(sf::Vector3i chunkPosition) const;
 		std::vector<entt::entity> getAllEntities();
+
 		// Checks if the chunk contains any entities
 		bool empty() const;
 
 	private:
-		std::set<entt::entity> _entities;
-		Grid<Cell> _grid = { 64, 64 };
+		std::unordered_set<entt::entity> _entities;
+		Grid3d<Cell> _grid = { sf::Vector3i{8, 8, 8} };
 	};
 
 } // namespace drft::spatial

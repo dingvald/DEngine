@@ -11,6 +11,8 @@
 #include "Components/SpriteChangeRequestComponent.h"
 
 #include "Systems/Helpers/ContainerHasItem.h"
+#include <Spatial/Conversions.h>
+#include <Spatial/Helpers.h>
 #include "Events/SendFloatingMessageEvent.h"
 
 using namespace entt::literals;
@@ -49,7 +51,7 @@ void drft::system::OpenableSystem::openInteraction(entt::entity actor, entt::ent
 			_dispatcher.trigger(events::SendFloatingMessageEvent{
 				.message = "Key required.",
 				.color = sf::Color::Red,
-				.position = _registry.get<PositionComponent>(actor).position,
+				.position = spatial::toXY(spatial::toFloatSpace(_registry.get<PositionComponent>(actor).tile)),
 				.velocity = {0,0},
 				.isScreenSpace = false,
 				.ttl = 120

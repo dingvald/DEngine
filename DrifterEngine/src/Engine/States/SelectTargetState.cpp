@@ -7,8 +7,9 @@
 
 #include "Events/SendFloatingMessageEvent.h"
 
+#include <Spatial/Conversions.h>
 #include "Spatial/Helpers.h"
-#include "Spatial/Grid.h"
+#include "Spatial/Grid2d.h"
 #include "Systems/Helpers/SpawnEffect.h"
 
 #include "Utility/SpriteOptions.h"
@@ -91,15 +92,18 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 		{
 			if (!isInRange())
 			{
+				const sf::Vector2f messagePosition = spatial::toXY(spatial::toFloatSpace(spatial::asTileSpace(_startPosition)));
 				auto& dispatcher = getContext().registry.ctx().get<entt::dispatcher&>();
+
 				dispatcher.trigger(events::SendFloatingMessageEvent{
 					.message = "Out of range",
 					.color = sf::Color::Red,
-					.position = _startPosition,
-					.velocity = {0,-0.1},
+					.position = messagePosition,
+					.velocity = {0.f,-0.1f},
 					.isScreenSpace = false,
 					.ttl = 80
 				});
+
 				return false;
 			}
 
@@ -141,7 +145,7 @@ void drft::SelectTargetState::onPush()
 
 	if (auto startPos = getContext().registry.try_get<PositionComponent>(selectTargetView.front()))
 	{
-		_startPosition = startPos->position;
+		_startPosition = startPos->tile;
 		_cursorPosition = _startPosition;
 	}
 	else
@@ -158,7 +162,7 @@ void drft::SelectTargetState::onPush()
 		auto effect = system::spawnEffect(getContext().registry,
 			{
 				.frames = {radiusEffect},
-				.position = tile,
+				.position = spatial::asTileSpace(tile),
 				.ttl = -1
 			});
 		_radiusEffects.push_back(effect);
@@ -167,10 +171,11 @@ void drft::SelectTargetState::onPush()
 	SpriteOptions aoeEffect = { .uvCoords = sf::Vector2i{4, 0}, .texture = tileSetTexture, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_AOE_COLOR };
 	for (auto&& tile : _targetSelect->targetShape)
 	{
+		auto tile3d = spatial::vec3FromPlanar(tile);
 		auto effect = system::spawnEffect(getContext().registry,
 			{
 				.frames = { aoeEffect },
-				.position = tile + _startPosition,
+				.position = spatial::asTileSpace(_startPosition + tile3d),
 				.ttl = -1,
 				.requiresInFOV = false
 			});
@@ -181,7 +186,7 @@ void drft::SelectTargetState::onPush()
 	_cursor = system::spawnEffect(getContext().registry,
 		{
 			.frames = {cursorEffect},
-			.position = _startPosition,
+			.position = spatial::asTileSpace(_startPosition),
 			.ttl = -1,
 			.requiresInFOV = false
 		});
@@ -203,34 +208,38 @@ void drft::SelectTargetState::onPop()
 
 bool drft::SelectTargetState::isInRange() const
 {
-	return spatial::distance(_cursorPosition, _startPosition) <= _targetSelect->range.getMax();
+	return spatial::distance3d(_cursorPosition, _startPosition) <= _targetSelect->range.getMax();
 }
 
 void drft::SelectTargetState::moveCursor(sf::Vector2i direction)
 {
+	sf::Vector3i dir = { direction.x, direction.y, 0 };
 	for (auto effect : _aoeEffects)
 	{
 		const auto& pos = getContext().registry.patch<PositionComponent>(effect,
-			[direction](PositionComponent& pos)
+			[dir](PositionComponent& pos)
 			{
-				pos.position += direction;
+				pos.tile += dir;
 			});
+
 		auto& render = getContext().registry.get<RenderComponent>(effect);
-		if (spatial::distance(pos.position, _startPosition) > _targetSelect->range.getMax())
-		{
-			render.color = TARGET_AOE_OUT_OF_RANGE_COLOR;
-		}
-		else
+		if (spatial::distance3d(pos.tile, _startPosition) <= _targetSelect->range.getMax())
 		{
 			render.color = DEFAULT_TARGET_AOE_COLOR;
 		}
-	}
-	const auto& pos = getContext().registry.patch<PositionComponent>(_cursor,
-		[direction](PositionComponent& pos)
+		else
 		{
-			pos.position += direction;
+			render.color = TARGET_AOE_OUT_OF_RANGE_COLOR;
+		}
+	}
+
+	const auto& pos = getContext().registry.patch<PositionComponent>(_cursor,
+		[dir](PositionComponent& pos)
+		{
+			pos.tile += dir;
 		});
-	_cursorPosition += direction;
+
+	_cursorPosition += dir;
 }
 
 void drft::SelectTargetState::renderTargetRadius(sf::RenderTarget& target)

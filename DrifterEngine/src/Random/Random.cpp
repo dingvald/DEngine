@@ -29,7 +29,7 @@ sf::Vector2i drft::rng::Random::positionInCircle(sf::Vector2i origin, int radius
 	int x = intInRange(origin.x - radius, origin.x + radius);
 	int y = intInRange(origin.y - radius, origin.y + radius);
 
-	while (drft::spatial::distance(origin, { x,y }) >= radius)
+	while (drft::spatial::distance2d(origin, { x,y }) >= radius)
 	{
 		x = intInRange(origin.x - radius, origin.x + radius);
 		y = intInRange(origin.y - radius, origin.y + radius);

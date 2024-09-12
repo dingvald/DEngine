@@ -20,7 +20,7 @@ namespace drft::system
 
 	private:
 		std::unique_ptr<Visibility> _fov;
-		std::unordered_set<sf::Vector2i> _lightBlockingPositions;
+		std::unordered_set<sf::Vector3i> _lightBlockingPositions;
 		std::vector<entt::entity> _toLight;
 	};
 }

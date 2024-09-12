@@ -5,7 +5,6 @@
 #include <Factory/Factory.h>
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
-#include "Spatial/Grid.h"
 #include "Structures/StructureInstance.h"
 #include "Random/RandomNoise.h"
 #include "Random/PercentChance.h"
@@ -66,7 +65,7 @@ void drft::gen::WorldGenerator::createFromJson(const rapidjson::Value& json)
 		const int raw_y = json["dimensions"].GetArray()[1].GetInt();
 		const auto worldMapPosition = WorldMapPosition{ raw_x, raw_y };
 
-		_dimensions = worldMapPosition.toChunkSpace();
+		_dimensions = spatial::toChunkSpace(worldMapPosition);
 	}
 	if (json.HasMember("layers"))
 	{
@@ -78,7 +77,7 @@ void drft::gen::WorldGenerator::createFromJson(const rapidjson::Value& json)
 
 			if (type == "perlin"_hs)
 			{
-				auto layerPtr = std::make_unique<PerlinNoiseLayer>(spatial::toTileSpace(_dimensions), _seed);
+				auto layerPtr = std::make_unique<PerlinNoiseLayer>(spatial::toXY(spatial::toTileSpace(_dimensions)), _seed);
 				auto& params = layerObj["params"];
 				layerPtr->createFromJson(params);
 				_layerManager->add(std::move(layerPtr), id);
@@ -107,25 +106,27 @@ void drft::gen::WorldGenerator::generate()
 
 }
 
-GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate, entt::registry& registry)
+GenerationState drft::gen::WorldGenerator::generateChunk(ChunkPosition coordinate, entt::registry& registry)
 {
-	sf::IntRect area = { spatial::toTileSpace(coordinate), CHUNK_SIZE };
+	const int z = spatial::toTileSpace(coordinate).z;
+	const sf::Vector2i origin2d = spatial::toXY(spatial::toTileSpace(coordinate));
+	const sf::Vector2i dimensions2d = spatial::toXY(spatial::asTileSpace(ChunkDimensions));
+	sf::IntRect area = { origin2d, dimensions2d };
 
 	auto layer = _layerManager->generate<BiomeLayer>(area);
 	if (!layer.isReady()) return layer.getState();
 
-	rng::Random random{ _seed + std::hash<sf::Vector2i>()(coordinate) };
+	rng::Random random{ _seed + std::hash<ChunkPosition>()(coordinate) };
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
 
-	
-	spatial::forEachPointInRect(area, [&registry, &factory, &layer](sf::Vector2i point)
+	spatial::forEachPointInRect(area, [&registry, &factory, &layer, &z](sf::Vector2i point)
 		{
 			sf::Color tileColor = { 10,10,10 };
 			if (auto biome = layer.unwrap().getBiomeAt(point))
 			{
 				tileColor = biome->getBaseTileColor();
 			}
-			auto tileHandle = placeSingle("Tile", point, registry, factory);
+			auto tileHandle = placeSingle("Tile", TilePosition{ point.x, point.y, z }, registry, factory);
 			tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
 		});
 
@@ -138,14 +139,14 @@ GenerationState drft::gen::WorldGenerator::generateChunk(sf::Vector2i coordinate
 			if (!optionalSelection.has_value()) continue;
 
 			auto&& [entity, _] = entityPack->at(optionalSelection.value());
-			placeSingle(entity, point, registry, factory);
+			placeSingle(entity, TilePosition{ point.x, point.y, z }, registry, factory);
 		}
 	}
 
 	return GenerationState::Complete;
 }
 
-sf::Vector2i drft::gen::WorldGenerator::getDimensions() const
+drft::ChunkPosition drft::gen::WorldGenerator::getDimensions() const
 {
 	return _dimensions;
 }

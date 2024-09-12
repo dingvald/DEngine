@@ -2,7 +2,7 @@
 #include "ISensor.h"
 #include "Components/AIComponent.h"
 
-void drft::goap::ISensor::sense(entt::handle agent, std::function<bool(entt::const_handle, sf::Vector2i)> checker) const
+void drft::goap::ISensor::sense(entt::handle agent, CheckerFxn checker) const
 {
 	const auto stateFromSurroundings = checkAndFillSurroundings(agent, checker);
 	const auto stateFromMemory = checkMemory(agent);

@@ -105,7 +105,7 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(sf::IntRect area)
 
     drft::spatial::forEachPointInRect(_bounds, [this, &biomeCentroids, &dependencies](sf::Vector2i point)
         {
-            auto closestPoint = drft::spatial::findClosestPoint(point, biomeCentroids);
+            auto closestPoint = drft::spatial::findClosestPoint2d(point, biomeCentroids);
             const Biome* biome = biomePoints.at(closestPoint);
 
             for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
@@ -182,7 +182,7 @@ const Biome* BiomeLayer::getBiomeAt(sf::Vector2i tilePosition) const
     if (const auto chunk = tryGetChunk(tilePosition))
     {
         const auto positions = util::extractKeys(chunk->biomePoints);
-        const auto closestBiomePosition = drft::spatial::findClosestPoint(tilePosition, positions);
+        const auto closestBiomePosition = drft::spatial::findClosestPoint2d(tilePosition, positions);
         if (chunk->biomePoints.contains(closestBiomePosition))
         {
             return chunk->biomePoints.at(closestBiomePosition);

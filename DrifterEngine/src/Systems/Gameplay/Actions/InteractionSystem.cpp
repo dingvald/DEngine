@@ -22,12 +22,13 @@ void drft::system::InteractionSystem::onUpdateEnd()
 	_registry.clear<InteractionAction>();
 }
 
-std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurroundings(sf::Vector2i position, const spatial::WorldGrid& grid)
+std::vector<entt::entity> drft::system::InteractionSystem::getInteractableSurroundings(sf::Vector3i position, const spatial::WorldGrid& grid)
 {
 	std::vector<entt::entity> result;
-	auto surroundings = spatial::getAdjacentPoints(position);
-	for (auto&& tile : surroundings)
+	auto surroundings = spatial::getAdjacentPoints(spatial::toXY(position));
+	for (auto&& surrounding : surroundings)
 	{
+		TilePosition tile = { surrounding.x, surrounding.y, position.z };
 		auto entities = grid.entitiesAt(tile,
 			[this](entt::entity entity) -> bool 
 			{
@@ -58,10 +59,11 @@ void drft::system::InteractionSystem::doInteract(entt::entity actor, const std::
 	
 }
 
-bool drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::Vector2i target)
+bool drft::system::InteractionSystem::onTargetSelected(entt::entity actor, sf::Vector3i target)
 {
 	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
-	auto entities = grid.entitiesAt(target, [this](entt::entity entity) -> bool 
+	TilePosition tilePosition = { target.x, target.y, target.z };
+	auto entities = grid.entitiesAt(tilePosition, [this](entt::entity entity) -> bool 
 		{
 			return _registry.any_of<InteractableComponent>(entity);
 		});
@@ -78,18 +80,18 @@ void drft::system::InteractionSystem::onConstructInteractionAction(entt::registr
 	if (auto positionComponent = registry.try_get<PositionComponent>(entity))
 	{
 		const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
-		auto usableEntities = getInteractableSurroundings(positionComponent->position, grid);
+		auto usableEntities = getInteractableSurroundings(positionComponent->tile, grid);
 		if (usableEntities.size() == 1)
 		{
 			doInteract(entity, usableEntities);
 		}
 		else if (usableEntities.size() > 1)
 		{
-			auto tilePosition = positionComponent->position;
+			auto tilePosition = positionComponent->tile;
 			_registry.emplace<component::action::SelectDirection>(entity,
 				[this, tilePosition, entity](sf::Vector2i direction) -> bool
 				{
-					sf::Vector2i targetPosition = tilePosition + direction;
+					sf::Vector3i targetPosition = tilePosition + spatial::vec3FromPlanar(direction);
 					return onTargetSelected(entity, targetPosition);
 				});
 		}

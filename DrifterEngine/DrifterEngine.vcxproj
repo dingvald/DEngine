@@ -192,6 +192,8 @@
     <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\VoronoiLayer.cpp" />
     <ClCompile Include="src\Factory\Factory.cpp" />
+    <ClCompile Include="src\Spatial\ChunkPosition.cpp" />
+    <ClCompile Include="src\Spatial\TilePosition.cpp" />
     <ClCompile Include="src\Spatial\WorldMapPosition.cpp" />
     <ClCompile Include="src\Systems\Rendering\SpriteControllerSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\CollisionSystem.cpp" />
@@ -235,7 +237,6 @@
     <ClCompile Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp" />
     <ClCompile Include="src\GOAP\Sensors\Utility\IsHostile.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
-    <ClCompile Include="src\Random\NoiseMap.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\BodyParts.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp" />
@@ -509,6 +510,8 @@
     <ClInclude Include="src\Factory\Factory.h" />
     <ClInclude Include="src\Components\SpriteChangeRequestComponent.h" />
     <ClInclude Include="src\Components\SyncedAnimationComponent.h" />
+    <ClInclude Include="src\Spatial\ChunkPosition.h" />
+    <ClInclude Include="src\Spatial\Grid3d.h" />
     <ClInclude Include="src\Spatial\WorldMapPosition.h" />
     <ClInclude Include="src\Systems\Rendering\SpriteControllerSystem.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
@@ -605,7 +608,6 @@
     <ClInclude Include="src\GOAP\SensorTypes.h" />
     <ClInclude Include="src\GOAP\WorldStateTypes.h" />
     <ClInclude Include="src\Random\PercentChance.h" />
-    <ClInclude Include="src\Random\NoiseMap.h" />
     <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h" />
     <ClInclude Include="src\Systems\HelperClasses\AIStates.h" />
@@ -854,7 +856,7 @@
     <ClInclude Include="src\Systems\Core\PlayerInput.h" />
     <ClInclude Include="src\Spatial\Cell.h" />
     <ClInclude Include="deps\EnTT\entt.h" />
-    <ClInclude Include="src\Spatial\Grid.h" />
+    <ClInclude Include="src\Spatial\Grid2d.h" />
     <ClInclude Include="src\Components\Components.h" />
     <ClInclude Include="src\Engine\Engine.h" />
     <ClInclude Include="src\Engine\States\GameState.h" />
@@ -904,6 +906,7 @@
     <ClInclude Include="src\Utility\TextureAtlas.h" />
     <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h" />
     <ClInclude Include="src\Random\XORshift.h" />
+    <ClInclude Include="src\Spatial\TilePosition.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\world_generation.json" />
@@ -1337,7 +1340,8 @@
     <None Include="deps\SFML-2.5.1\include\SFML\System\Vector3.inl" />
     <None Include="packages.config" />
     <None Include="src\Spatial\AutoGrid.inl" />
-    <None Include="src\Spatial\Grid.inl" />
+    <None Include="src\Spatial\Grid2d.inl" />
+    <None Include="src\Spatial\Grid3d.inl" />
     <None Include="src\Utility\ResourceHolder.inl" />
   </ItemGroup>
   <ItemGroup>

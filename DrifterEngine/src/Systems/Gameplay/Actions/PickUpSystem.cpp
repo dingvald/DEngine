@@ -31,7 +31,7 @@ void drft::system::PickUpSystem::onPickupAction(entt::registry& registry, entt::
 	if (container->contents.size() >= container->capacity) return;
 
 	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
-	const auto myTilePosition = position->position;
+	const auto myTilePosition = position->tile;
 	auto checkForItem = [this](entt::entity entity) -> bool
 	{
 		return _registry.all_of<ItemComponent>(entity);

@@ -2,6 +2,7 @@
 #include "MoveActionSystem.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
+#include <Spatial/Helpers.h>
 
 #include "Components/Components.h"
 #include "Components/CollisionComponent.h"
@@ -39,7 +40,7 @@ void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry,
 	const auto& positionComponent = registry.get<PositionComponent>(entity);
 	auto& moveAction = registry.get<MoveAction>(entity);
 
-	sf::Vector2i targetPosition = positionComponent.position + moveAction.direction;
+	sf::Vector3i targetPosition = positionComponent.tile + spatial::vec3FromPlanar(moveAction.direction);
 	auto checkForBlockers = [this](entt::entity entity) -> bool
 		{
 			if (auto material = _registry.try_get<MaterialComponent>(entity))
@@ -48,7 +49,7 @@ void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry,
 			}
 			return false;
 		};
-	auto blockers = grid.entitiesAt(targetPosition, checkForBlockers);
+	auto blockers = grid.entitiesAt(spatial::asTileSpace(targetPosition), checkForBlockers);
 
 	if (!blockers.empty())
 	{
@@ -64,7 +65,7 @@ void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, Move
 	_registry.patch<PositionComponent>(entity,
 		[&action](PositionComponent& positionComponent)
 		{
-			positionComponent.position += action.direction;
+			positionComponent.tile += spatial::vec3FromPlanar(action.direction);
 		});
 	spendActionPoints(BASE_ACTION_COST, ActionType::Move, { _registry, entity });
 }

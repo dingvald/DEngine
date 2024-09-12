@@ -11,7 +11,7 @@ void drft::spatial::Cell::removeEntity(entt::entity entity)
 	_entities.erase(std::remove(_entities.begin(), _entities.end(), entity), _entities.end());
 }
 
-std::vector<entt::entity> drft::spatial::Cell::getEntities() const
+const std::vector<entt::entity>& drft::spatial::Cell::getEntities() const
 {
 	return _entities;
 }

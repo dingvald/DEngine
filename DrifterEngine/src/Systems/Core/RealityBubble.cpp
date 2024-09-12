@@ -19,7 +19,7 @@ void drft::system::RealityBubble::onUpdateBegin()
 	auto actorView = _registry.view<const ActorComponent, const PositionComponent>();
 	for (auto&& [entity, actor, pos] : actorView.each())
 	{
-		const auto distance = spatial::distance(camera.position, pos.position);
+		const auto distance = spatial::distance3d(camera.position, pos.tile);
 		if (distance < REALITY_RADIUS)
 		{
 			_registry.emplace<component::tag::Active>(entity);

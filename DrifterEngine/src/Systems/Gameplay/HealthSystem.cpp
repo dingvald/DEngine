@@ -12,6 +12,8 @@
 #include "Events/SendFloatingMessageEvent.h"
 #include "Systems/Helpers/SpawnEffect.h"
 #include "Systems/Helpers/GetPrimaryMaterial.h"
+#include <Spatial/Conversions.h>
+#include <Spatial/Helpers.h>
 
 
 
@@ -103,7 +105,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 			// Spawn Hit particles
 			spawnEffect(_registry, {
 				.frames = std::move(hitParticles),
-				.position = posComp->position,
+				.position = posComp->tile,
 				.animationSpeed = 8.0f
 				});
 		}
@@ -111,7 +113,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 		_dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = message + std::to_string(std::abs(damage.amount)),
 			.color = messageColor,
-			.position = posComp->position,
+			.position = spatial::toXY(spatial::toFloatSpace(posComp->tile)),
 			.velocity = {0,-1},
 			.fades = true,
 			.isScreenSpace = false,
@@ -121,7 +123,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 		// Spawn HurtEffect
 		spawnEffect(_registry, {
 			.frames = { damageEffectSprite },
-			.position = posComp->position,
+			.position = posComp->tile,
 			.animationSpeed = 10.0f,
 			.ttl = effect_ttl
 			});

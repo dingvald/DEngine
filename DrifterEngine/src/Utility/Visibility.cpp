@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "Visibility.h"
 
-Visibility::Visibility(std::function<bool(sf::Vector2i)> blocksLight, std::function<void(sf::Vector2i)> setVisible, std::function<int(sf::Vector2i)> getDistance)
+Visibility::Visibility(std::function<bool(sf::Vector3i)> blocksLight, std::function<void(sf::Vector3i)> setVisible, std::function<int(sf::Vector3i)> getDistance)
 	: _blocksLight(blocksLight)
 	, _setVisible(setVisible)
 	, _getDistance(getDistance)
 {}
 
-void Visibility::compute(sf::Vector2i origin, int radius)
+void Visibility::compute(sf::Vector3i origin, int radius)
 {
 	_setVisible(origin);
 	for (unsigned int oct = 0; oct < 8; ++oct)
@@ -16,7 +16,7 @@ void Visibility::compute(sf::Vector2i origin, int radius)
 	}
 }
 
-void Visibility::compute(unsigned int octant, sf::Vector2i origin, int radius, unsigned int x, Slope top, Slope bottom) const
+void Visibility::compute(unsigned int octant, sf::Vector3i origin, int radius, unsigned int x, Slope top, Slope bottom) const
 {
 	for (; x < static_cast<unsigned int>(radius); ++x)
 	{
@@ -61,7 +61,7 @@ void Visibility::compute(unsigned int octant, sf::Vector2i origin, int radius, u
         int wasOpaque = -1;
         for (unsigned int y = topY; static_cast<int>(y) >= static_cast<int>(bottomY); --y)
         {
-            if (radius < 0 || _getDistance(sf::Vector2i(x,y)) <= radius) 
+            if (radius < 0 || _getDistance(sf::Vector3i{ static_cast<int>(x),static_cast<int>(y),origin.z }) <= radius)
             {
                 bool isOpaque = blocksLight(x, y, octant, origin);
 
@@ -114,10 +114,11 @@ void Visibility::compute(unsigned int octant, sf::Vector2i origin, int radius, u
     }
 }
 
-bool Visibility::blocksLight(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin) const
+bool Visibility::blocksLight(unsigned int x, unsigned int y, unsigned int octant, sf::Vector3i origin) const
 {
-	int nx = origin.x;
-	int ny = origin.y;
+	int nx  = origin.x;
+	int ny  = origin.y;
+    int z   = origin.z;
 
 	switch (octant)
 	{
@@ -131,13 +132,14 @@ bool Visibility::blocksLight(unsigned int x, unsigned int y, unsigned int octant
 		case 7: nx += x; ny += y; break;
 	}
 
-	return _blocksLight(sf::Vector2i(nx, ny));
+	return _blocksLight(sf::Vector3i{ nx, ny, z });
 }
 
-void Visibility::setVisible(unsigned int x, unsigned int y, unsigned int octant, sf::Vector2i origin) const
+void Visibility::setVisible(unsigned int x, unsigned int y, unsigned int octant, sf::Vector3i origin) const
 {
-	int nx = origin.x;
-	int ny = origin.y;
+	int nx  = origin.x;
+	int ny  = origin.y;
+    int z   = origin.z;
 
 	switch (octant)
 	{
@@ -151,5 +153,5 @@ void Visibility::setVisible(unsigned int x, unsigned int y, unsigned int octant,
 	case 7: nx += x; ny += y; break;
 	}
 
-	_setVisible(sf::Vector2i(nx, ny));
+	_setVisible(sf::Vector3i{ nx, ny, z });
 }

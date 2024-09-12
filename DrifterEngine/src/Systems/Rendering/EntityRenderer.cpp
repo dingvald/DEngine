@@ -10,6 +10,7 @@
 #include "Utility/SpriteBatch.h"
 #include "Utility/TextureAtlas.h"
 #include "Spatial/Conversions.h"
+#include <Spatial/Helpers.h>
 #include "RenderLayers.h"
 #include "LightingSystem.h"
 
@@ -47,9 +48,9 @@ void drft::system::EntityRenderer::batchLitEntities(const CameraInfo& camera)
 		auto finalColor = LightingSystem::blendLight(ren.color, lit.color);
 		finalColor.a = ren.color.a;
 
-		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
+		sf::Vector2f renderPosition = toScreenSpace(pos.tile, camera);
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
-		_spriteLayers[ren.layer].addSprite(uv, finalColor, renderPosition);
+		_spriteLayers.at(ren.layer).addSprite(uv, finalColor, renderPosition);
 	}
 }
 
@@ -58,9 +59,9 @@ void drft::system::EntityRenderer::batchHadSeenEntities(const CameraInfo& camera
 	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren] : seenView.each())
 	{
-		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
+		sf::Vector2f renderPosition = toScreenSpace(pos.tile, camera);
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
-		_spriteLayers[ren.layer].addSprite(uv, SeenTileColor, renderPosition);
+		_spriteLayers.at(ren.layer).addSprite(uv, SeenTileColor, renderPosition);
 	}
 }
 
@@ -74,8 +75,8 @@ void drft::system::EntityRenderer::batchEffectEntities(const CameraInfo& camera)
 			continue;
 		}
 
-		sf::Vector2f renderPosition = toScreenSpace(pos.position, camera);
+		sf::Vector2f renderPosition = toScreenSpace(pos.tile, camera);
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
-		_spriteLayers[ren.layer].addSprite(uv, ren.color, renderPosition);
+		_spriteLayers.at(ren.layer).addSprite(uv, ren.color, renderPosition);
 	}
 }

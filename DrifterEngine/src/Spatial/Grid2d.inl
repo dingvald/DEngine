@@ -1,18 +1,18 @@
 #pragma once
-#include "Grid.h"
+#include "Grid2d.h"
 #include <algorithm>
 
 namespace drft::spatial
 {
 	template<typename T>
-	Grid<T>::Grid(int width, int height)
+	Grid2d<T>::Grid2d(int width, int height)
 		: _width(width), _height(height)
 	{
 		_cells.resize(_width * _height);
 	}
 
 	template<typename T>
-	inline Grid<T>::Grid(int width, int height, std::initializer_list<T> list)
+	inline Grid2d<T>::Grid2d(int width, int height, std::initializer_list<T> list)
 		: _width(width)
 		, _height(height)
 	{
@@ -23,7 +23,7 @@ namespace drft::spatial
 	}
 
 	template<typename T>
-	inline void Grid<T>::resize(int width, int height)
+	inline void Grid2d<T>::resize(int width, int height)
 	{
 		_width = width;
 		_height = height;
@@ -31,13 +31,13 @@ namespace drft::spatial
 	}
 
 	template<typename T>
-	inline void Grid<T>::fill(T val)
+	inline void Grid2d<T>::fill(T val)
 	{
 		std::fill(_cells.begin(), _cells.end(), val);
 	}
 
 	template<typename T>
-	inline void Grid<T>::fill(std::function<T(int, int)> fillFunc)
+	inline void Grid2d<T>::fill(std::function<T(int, int)> fillFunc)
 	{
 		for (int y = 0; y < _height; ++y)
 		{
@@ -49,7 +49,7 @@ namespace drft::spatial
 	}
 
 	template<typename T>
-	inline void Grid<T>::fill(T val, int left, int top, int width, int height)
+	inline void Grid2d<T>::fill(T val, int left, int top, int width, int height)
 	{
 		if (!contains(left, top) || !contains(left + width, top + height))
 		{
@@ -65,37 +65,37 @@ namespace drft::spatial
 	}
 
 	template<typename T>
-	inline bool Grid<T>::contains(int x, int y) const
+	inline bool Grid2d<T>::contains(int x, int y) const
 	{
 		return !(x < 0 || y < 0 || x >= _width || y >= _height);
 	}
 
 	template<typename T>
-	inline T& Grid<T>::at(int x, int y)
+	inline T& Grid2d<T>::at(int x, int y)
 	{
 		return _cells.at(y * _width + x);
 	}
 
 	template<typename T>
-	inline const T& Grid<T>::at(int x, int y) const
+	inline const T& Grid2d<T>::at(int x, int y) const
 	{
 		return _cells.at(y * _width + x);
 	}
 
 	template<typename T>
-	inline int Grid<T>::width() const
+	inline int Grid2d<T>::width() const
 	{
 		return _width;
 	}
 
 	template<typename T>
-	inline int Grid<T>::height() const
+	inline int Grid2d<T>::height() const
 	{
 		return _height;
 	}
 
 	template<typename T>
-	inline void Grid<T>::clear()
+	inline void Grid2d<T>::clear()
 	{
 		_cells = std::vector<T>(_width * _height);
 	}

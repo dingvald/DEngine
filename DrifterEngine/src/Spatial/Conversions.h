@@ -1,4 +1,7 @@
 #pragma once
+#include <Spatial/TilePosition.h>
+#include <Spatial/ChunkPosition.h>
+#include <Spatial/WorldMapPosition.h>
 
 namespace drft::spatial
 {
@@ -27,4 +30,19 @@ namespace drft::spatial
 	// Converts a tile position into a chunk-relative position.
 	// Upper-left corner of chunk is (0,0)
 	sf::Vector2i toLocalChunkSpace(sf::Vector2i tilePosition);
+
+	WorldMapPosition toWorldMapSpace(TilePosition tilePosition);
+
+	TilePosition asTileSpace(sf::Vector2i position);
+	TilePosition asTileSpace(sf::Vector3i position);
+	ChunkPosition asChunkSpace(sf::Vector3i position);
+
+	ChunkPosition toChunkSpace(sf::Vector3f position);
+	ChunkPosition toChunkSpace(TilePosition tilePosition);
+	ChunkPosition toChunkSpace(WorldMapPosition worldMapPosition);
+	sf::Vector3i toChunkLocalSpace(TilePosition tilePosition);
+	TilePosition toTileSpace(ChunkPosition chunkPosition);
+	TilePosition toTileSpace(sf::Vector3f position);
+	sf::Vector3f toFloatSpace(TilePosition tilePosition);
+	sf::Vector3f toFloatSpace(ChunkPosition chunkPosition);
 }

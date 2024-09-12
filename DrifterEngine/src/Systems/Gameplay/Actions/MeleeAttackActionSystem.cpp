@@ -3,6 +3,7 @@
 #include "Systems/Helpers/SpendActionPoints.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
+#include <Spatial/Helpers.h>
 
 #include "Components/Components.h"
 #include "Components/Actions/MeleeAttackAction.h"
@@ -70,10 +71,10 @@ void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entit
 				SpriteOptions{.uvCoords = sf::Vector2i{7, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
 			};
 		}
-		const sf::Vector2i targetPosition = positionComponent->position + action.direction;
+		const sf::Vector3i targetPosition = positionComponent->tile + spatial::vec3FromPlanar(action.direction);
 		spawnEffect(_registry, {
 			.frames = frames,
-			.position = targetPosition,
+			.position = spatial::asTileSpace(targetPosition),
 			.animationSpeed = 20.0f
 			});
 	}

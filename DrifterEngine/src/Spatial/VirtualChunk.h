@@ -1,4 +1,5 @@
 #pragma once
+#include <Spatial/ChunkPosition.h>
 
 namespace drft::gen
 {
@@ -31,7 +32,7 @@ namespace drft::spatial
 	struct VirtualChunk
 	{
 	public:
-		VirtualChunk(sf::Vector2i coordinate)
+		VirtualChunk(ChunkPosition coordinate)
 			: _coordinate(coordinate)
 			, _state(ChunkState::None) {}
 
@@ -55,7 +56,7 @@ namespace drft::spatial
 		bool loadChunkFromFile(const std::filesystem::path& filename);
 
 	private:
-		sf::Vector2i _coordinate;
+		ChunkPosition _coordinate;
 		ChunkState _state = ChunkState::None;
 		std::shared_future<bool> _future;
 		entt::registry _asyncRegistry;

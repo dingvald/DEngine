@@ -20,12 +20,12 @@ drft::goap::EscapeHostilesAction::EscapeHostilesAction()
 	addEffect(escape_hostile, true);
 }
 
-std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt::handle agent) const
+std::optional<drft::TilePosition> drft::goap::EscapeHostilesAction::trySetTarget(entt::handle agent) const
 {
 	auto& ai = getAI(agent);
-	std::optional<sf::Vector2i> result = {};
-	std::optional<sf::Vector2i> closestHostile = {};
-	auto& myPos = agent.get<PositionComponent>().position;
+	std::optional<TilePosition> result = {};
+	std::optional<TilePosition> closestHostile = {};
+	auto& myPos = agent.get<PositionComponent>().tile;
 
 	for (auto&& [entity, _] : ai.surroundings.at(SensorType::Visual))
 	{
@@ -37,15 +37,15 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 		auto& otherPos = otherHandle.get<PositionComponent>();
 		if (!closestHostile.has_value())
 		{
-			closestHostile = otherPos.position;
+			closestHostile = otherPos.tile;
 		}
 		else
 		{
-			const int currentTargetDistance = spatial::distance(myPos, closestHostile.value());
-			const int newTargetDistance = spatial::distance(myPos, otherPos.position);
+			const int currentTargetDistance = spatial::distance3d(myPos, closestHostile.value());
+			const int newTargetDistance = spatial::distance3d(myPos, otherPos.tile);
 			if (newTargetDistance < currentTargetDistance)
 			{
-				closestHostile = otherPos.position;
+				closestHostile = otherPos.tile;
 			}
 		}
 	}
@@ -53,7 +53,7 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 	{
 		int dx = myPos.x - closestHostile.value().x;
 		int dy = myPos.y - closestHostile.value().y;
-		result = myPos + sf::Vector2i{dx, dy};
+		result = myPos + TilePosition{dx, dy, 0};
 	}
 	else
 	{
@@ -62,7 +62,8 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 		int randx = random.intInRange(-1, 1);
 		int randy = random.intInRange(-1, 1);
 		const auto& grid = agent.registry()->ctx().get<const spatial::WorldGrid&>();
-		const auto& tilepos = agent.get<PositionComponent>().position;
+		const auto& tilepos = agent.get<PositionComponent>().tile;
+		const TilePosition newRandomDirection = tilepos + TilePosition{ randx, randy, 0 };
 
 		auto blockerFilter = [&agent](entt::entity entity) -> bool
 		{
@@ -73,17 +74,17 @@ std::optional<sf::Vector2i> drft::goap::EscapeHostilesAction::trySetTarget(entt:
 			return false;
 		};
 
-		auto blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
+		auto blockers = grid.entitiesAt(newRandomDirection, blockerFilter);
 
 		int safetyCount = 0; // in case entity is surrounded
 		while (safetyCount < 8 && !blockers.empty())
 		{
 			randx = random.intInRange(-1, 1);
 			randy = random.intInRange(-1, 1);
-			blockers = grid.entitiesAt(tilepos + sf::Vector2i(randx, randy), blockerFilter);
+			blockers = grid.entitiesAt(tilepos + TilePosition{ randx, randy, 0 }, blockerFilter);
 			++safetyCount;
 		}
-		result = myPos + sf::Vector2i{ randx, randy };
+		result = myPos + TilePosition{ randx, randy, 0 };
 	}
 
 	return result;

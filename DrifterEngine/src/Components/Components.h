@@ -23,7 +23,7 @@ namespace component::action
 	{
 		drft::math::Range<int> range = { 0,1 };
 		std::vector<sf::Vector2i> targetShape = {};
-		std::function<bool(sf::Vector2i)> onTargetSelect;
+		std::function<bool(sf::Vector3i)> onTargetSelect;
 	};
 
 	struct ToggleDoor {};

@@ -5,6 +5,8 @@ namespace drft
 {
 	struct WorldMapPosition
 	{
+		static inline const sf::Vector2i TileDimensions = { 64, 64 };
+
 		WorldMapPosition() = default;
 		WorldMapPosition(int x, int y);
 
@@ -16,14 +18,6 @@ namespace drft
 		void operator+=(sf::Vector2i rhs);
 		void operator-=(sf::Vector2i rhs);
 		bool operator==(const WorldMapPosition& other) const;
-
-		sf::Vector2i toTileSpace() const;
-		sf::Vector2i toChunkSpace() const;
-		sf::Vector2f toFloatSpace() const;
-
-		void fromTileSpace(sf::Vector2i tilePosition);
-		void fromChunkSpace(sf::Vector2i chunkPosition);
-		void fromFloatSpace(sf::Vector2f floatPosition);
 	};
 }
 
@@ -35,7 +29,6 @@ namespace cereal
 		archive(pos.x, pos.y);
 	}
 }
-
 
 template<>
 struct std::hash<drft::WorldMapPosition>

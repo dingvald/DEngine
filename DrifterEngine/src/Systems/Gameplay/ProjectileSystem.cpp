@@ -11,6 +11,7 @@
 #include "Components/MaterialComponent.h"
 #include "Components/Tags.h"
 
+#include <Spatial/Helpers.h>
 #include "Systems/Helpers/SpawnEffect.h"
 #include "Utility/SpriteOptions.h"
 
@@ -32,7 +33,7 @@ void drft::system::ProjectileSystem::onUpdate(float dt)
 			continue;
 		}
 
-		auto delta = proj.line.at(proj.progress++) - pos.position;
+		auto delta = proj.line.at(proj.progress++) - spatial::toXY(pos.tile);
 		_registry.emplace_or_replace<MoveAction>(entity, delta);
 
 		if (auto render = _registry.try_get<RenderComponent>(entity))
@@ -46,7 +47,7 @@ void drft::system::ProjectileSystem::onUpdate(float dt)
 			spawnEffect(_registry,
 				{
 					.frames = { effectSprite },
-					.position = pos.position,
+					.position = pos.tile,
 					.ttl = 30,
 					.fadeRate = 3
 				});
