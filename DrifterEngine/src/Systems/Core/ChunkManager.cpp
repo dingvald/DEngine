@@ -64,21 +64,12 @@ void drft::system::ChunkManager::updateChunkStates(ChunkPosition newPosition)
 		{
 			_chunks.emplace(chunkPosition, spatial::VirtualChunk{ chunkPosition });
 		}
-		spatial::VirtualChunk& chunk = _chunks.at(chunkPosition);
 
+		spatial::VirtualChunk& chunk = _chunks.at(chunkPosition);
 		switch (chunk.getState())
 		{
 		case spatial::ChunkState::None:
-			if (std::filesystem::exists(buildChunkFilename(chunk)))
-			{
-				chunk.setState(spatial::ChunkState::ToLoad);
-				_toLoad.push(chunkPosition);
-			}
-			else
-			{
-				chunk.setState(spatial::ChunkState::ToBuild);
-				_toBuild.push(chunkPosition);
-			}
+			loadOrBuildChunk(chunkPosition, chunk);
 			break;
 		case spatial::ChunkState::Built:
 			chunk.setState(spatial::ChunkState::Active);
@@ -87,17 +78,7 @@ void drft::system::ChunkManager::updateChunkStates(ChunkPosition newPosition)
 			chunk.setState(spatial::ChunkState::Active);
 			break;
 		case spatial::ChunkState::Saved:
-			if (std::filesystem::exists(buildChunkFilename(chunk)))
-			{
-				chunk.setState(spatial::ChunkState::ToLoad);
-				_toLoad.push(chunkPosition);
-			}
-			else
-			{
-				// Was probably empty... probably
-				chunk.setState(spatial::ChunkState::ToBuild);
-				_toBuild.push(chunkPosition);
-			}
+			loadOrBuildChunk(chunkPosition, chunk);
 			break;
 		default:
 			break;
@@ -180,6 +161,21 @@ void drft::system::ChunkManager::processSaveQueue()
 		_toDelete.push_back(coord);
 	}
 	_toSave.pop();
+}
+
+void drft::system::ChunkManager::loadOrBuildChunk(ChunkPosition position, spatial::VirtualChunk& chunk)
+{
+	if (std::filesystem::exists(buildChunkFilename(chunk)))
+	{
+		chunk.setState(spatial::ChunkState::ToLoad);
+		_toLoad.push(std::move(position));
+	}
+	else
+	{
+		// Was probably empty... probably
+		chunk.setState(spatial::ChunkState::ToBuild);
+		_toBuild.push(std::move(position));
+	}
 }
 
 std::filesystem::path drft::system::ChunkManager::buildChunkFilename(const spatial::VirtualChunk& chunk) const

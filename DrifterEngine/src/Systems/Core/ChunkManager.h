@@ -31,6 +31,7 @@ namespace drft::system
 		void processBuildQueue();
 		void processLoadQueue();
 		void processSaveQueue();
+		void loadOrBuildChunk(ChunkPosition position, spatial::VirtualChunk& chunk);
 		std::filesystem::path buildChunkFilename(const spatial::VirtualChunk& chunk) const;
 
 		bool isWithinChunkSaveDisk(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const;
