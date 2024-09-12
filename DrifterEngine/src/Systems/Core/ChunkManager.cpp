@@ -87,8 +87,17 @@ void drft::system::ChunkManager::updateChunkStates(ChunkPosition newPosition)
 			chunk.setState(spatial::ChunkState::Active);
 			break;
 		case spatial::ChunkState::Saved:
-			chunk.setState(spatial::ChunkState::ToLoad);
-			_toLoad.push(chunkPosition);
+			if (std::filesystem::exists(buildChunkFilename(chunk)))
+			{
+				chunk.setState(spatial::ChunkState::ToLoad);
+				_toLoad.push(chunkPosition);
+			}
+			else
+			{
+				// Was probably empty... probably
+				chunk.setState(spatial::ChunkState::ToBuild);
+				_toBuild.push(chunkPosition);
+			}
 			break;
 		default:
 			break;
@@ -115,6 +124,7 @@ void drft::system::ChunkManager::cleanUpChunks()
 		grid.removeChunk(chunkPosition);
 		_chunks.erase(chunkPosition);
 	}
+	_toDelete.clear();
 }
 
 void drft::system::ChunkManager::processBuildQueue()

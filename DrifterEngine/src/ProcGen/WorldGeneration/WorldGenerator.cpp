@@ -109,6 +109,8 @@ void drft::gen::WorldGenerator::generate()
 GenerationState drft::gen::WorldGenerator::generateChunk(ChunkPosition coordinate, entt::registry& registry)
 {
 	const int z = spatial::toTileSpace(coordinate).z;
+	if (z != 0 ) return GenerationState::Complete;
+
 	const sf::Vector2i origin2d = spatial::toXY(spatial::toTileSpace(coordinate));
 	const sf::Vector2i dimensions2d = spatial::toXY(spatial::asTileSpace(ChunkDimensions));
 	sf::IntRect area = { origin2d, dimensions2d };
