@@ -6,54 +6,58 @@
 
 #include <JSON/ICreateFromJson.h>
 
-class BiomeLayer;
-
-using BiomeCentroids = std::unordered_map<sf::Vector2i, const Biome*>;
-using ClimateValues = std::unordered_map<entt::id_type, float>;
-
-struct BiomeSlotPoint
+namespace drft
 {
-	const Biome* biome;
-	entt::id_type slotID;
-	sf::Vector2i point;
-};
+	class BiomeLayer;
 
-class BiomeLayerChunk : public GenerationChunk<BiomeLayer, BiomeLayerChunk>
-{
-public:
-	using GenerationChunk::GenerationChunk;
-	virtual GenerationState generate(int level) override;
+	using BiomeCentroids = std::unordered_map<sf::Vector2i, const Biome*>;
+	using ClimateValues = std::unordered_map<entt::id_type, float>;
 
-private:
-	void assignBiomeToVoronoiCell(sf::Vector2i centroid, BiomeCentroids& biomeCentroids, const ClimateValues& climateValues);
-	ClimateValues getClimateValuesAtPoint(sf::Vector2i point, const std::unordered_map<entt::id_type, IGetValueAt*>& generatedDependencies) const;
-	virtual int numLevels() const override { return 2; }
+	struct BiomeSlotPoint
+	{
+		const Biome* biome;
+		entt::id_type slotID;
+		sf::Vector2i point;
+	};
 
-	GenerationState assignBiomesToVoronoiCells(sf::IntRect area);
-	GenerationState generateBiomeSlots(sf::IntRect area);
+	class BiomeLayerChunk : public GenerationChunk<BiomeLayer, BiomeLayerChunk>
+	{
+	public:
+		using GenerationChunk::GenerationChunk;
+		virtual GenerationState generate(int level) override;
 
-public:
-	BiomeCentroids biomePoints;
-	std::vector<BiomeSlotPoint> biomeSlotPoints;
-};
+	private:
+		void assignBiomeToVoronoiCell(sf::Vector3i centroid, BiomeCentroids& biomeCentroids, const ClimateValues& climateValues);
+		ClimateValues getClimateValuesAtPoint(sf::Vector3i point, const std::unordered_map<entt::id_type, IGetValueAt*>& generatedDependencies) const;
+		virtual int numLevels() const override { return 2; }
 
+		GenerationState assignBiomesToVoronoiCells(spatial::AABB<int> volume);
+		GenerationState generateBiomeSlots(spatial::AABB<int> volume);
 
-
-class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>
-{
-public:
-	BiomeLayer();
-
-	const BiomeRegistry& getBiomeRegistry() const;
-	const std::unordered_set<entt::id_type>& getClimateDependencies() const;
-	BiomeCentroids getBiomeCentroidsInBounds(sf::IntRect area);
-	std::vector<BiomeSlotPoint> getBiomeEntitySlotPointsInBounds(sf::IntRect area);
-	const Biome* getBiomeAt(sf::Vector2i tilePosition) const;
-	
-private:
+	public:
+		BiomeCentroids biomePoints;
+		std::vector<BiomeSlotPoint> biomeSlotPoints;
+	};
 
 
-private:
-	BiomeRegistry _biomes;
-	std::unordered_set<entt::id_type> _climateDependencies;
-};
+
+	class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>
+	{
+	public:
+		BiomeLayer();
+
+		const BiomeRegistry& getBiomeRegistry() const;
+		const std::unordered_set<entt::id_type>& getClimateDependencies() const;
+		BiomeCentroids getBiomeCentroidsInArea(sf::IntRect area, sf::Vector3i origin);
+		std::vector<BiomeSlotPoint> getBiomeEntitySlotPointsInArea(sf::IntRect area, sf::Vector3i origin);
+		const Biome* getBiomeAt(sf::Vector3i tilePosition) const;
+
+	private:
+
+
+	private:
+		BiomeRegistry _biomes;
+		std::unordered_set<entt::id_type> _climateDependencies;
+	};
+}
+

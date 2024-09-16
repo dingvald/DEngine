@@ -416,6 +416,71 @@ std::vector<sf::Vector2i> drft::spatial::getPointDeltas(sf::Vector2i point, cons
 	return result;
 }
 
+std::vector<sf::Vector3i> drft::spatial::getSurroundingPoints(sf::Vector3i point, PlaneType plane)
+{
+	switch (plane)
+	{
+	case drft::spatial::PlaneType::XY:
+		return
+		{
+			{point + sf::Vector3i{-1, 0, 0}},
+			{point + sf::Vector3i{ 0, 1, 0}},
+			{point + sf::Vector3i{ 1, 0, 0}},
+			{point + sf::Vector3i{ 0,-1, 0}},
+			{point + sf::Vector3i{-1,-1, 0}},
+			{point + sf::Vector3i{-1, 1, 0}},
+			{point + sf::Vector3i{ 1,-1, 0}},
+			{point + sf::Vector3i{ 1, 1, 0}}
+		};
+		break;
+	case drft::spatial::PlaneType::XZ:
+		return
+		{
+			{point + sf::Vector3i{-1, 0, 0}},
+			{point + sf::Vector3i{ 0, 0, 1}},
+			{point + sf::Vector3i{ 1, 0, 0}},
+			{point + sf::Vector3i{ 0,0, -1}},
+			{point + sf::Vector3i{-1,0, -1}},
+			{point + sf::Vector3i{-1, 0, 1}},
+			{point + sf::Vector3i{ 1,0, -1}},
+			{point + sf::Vector3i{ 1, 0, 1}}
+		};
+		break;
+	case drft::spatial::PlaneType::YZ:
+		return
+		{
+			{point + sf::Vector3i{0, -1, 0}},
+			{point + sf::Vector3i{ 0, 0, 1}},
+			{point + sf::Vector3i{ 0, 1, 0}},
+			{point + sf::Vector3i{ 0,0, -1}},
+			{point + sf::Vector3i{0,-1, -1}},
+			{point + sf::Vector3i{0, -1, 1}},
+			{point + sf::Vector3i{ 0,1, -1}},
+			{point + sf::Vector3i{ 0, 1, 1}}
+		};
+		break;
+	case drft::spatial::PlaneType::All:
+		return 
+		{
+		point + sf::Vector3i(1,  1,  1), point + sf::Vector3i(1,  1,  0), point + sf::Vector3i(1,  1, -1),
+		point + sf::Vector3i(1,  0,  1), point + sf::Vector3i(1,  0,  0), point + sf::Vector3i(1,  0, -1),
+		point + sf::Vector3i(1, -1,  1), point + sf::Vector3i(1, -1,  0), point + sf::Vector3i(1, -1, -1),
+
+		point + sf::Vector3i(0,  1,  1), point + sf::Vector3i(0,  1,  0), point + sf::Vector3i(0,  1, -1),
+		point + sf::Vector3i(0,  0,  1), point + sf::Vector3i(0,  0,  0), point + sf::Vector3i(0,  0, -1),
+		point + sf::Vector3i(0, -1,  1), point + sf::Vector3i(0, -1,  0), point + sf::Vector3i(0, -1, -1),
+
+		point + sf::Vector3i(-1,  1,  1), point + sf::Vector3i(-1,  1,  0), point + sf::Vector3i(-1,  1, -1),
+		point + sf::Vector3i(-1,  0,  1), point + sf::Vector3i(-1,  0,  0), point + sf::Vector3i(-1,  0, -1),
+		point + sf::Vector3i(-1, -1,  1), point + sf::Vector3i(-1, -1,  0), point + sf::Vector3i(-1, -1, -1)
+		};
+		break;
+	default:
+		break;
+	}
+	return {};
+}
+
 void drft::spatial::forEachPointInRect(sf::IntRect rect, std::function<void(sf::Vector2i)> func)
 {
 	for (int y = rect.top; y < rect.top + rect.height; ++y)
@@ -423,6 +488,20 @@ void drft::spatial::forEachPointInRect(sf::IntRect rect, std::function<void(sf::
 		for (int x = rect.left; x < rect.left + rect.width; ++x)
 		{
 			func(sf::Vector2i{ x, y });
+		}
+	}
+}
+
+void drft::spatial::forEachPointInVolume(drft::spatial::AABB<int> volume, std::function<void(sf::Vector3i)> func)
+{
+	for (int x = volume.min.x; x < volume.max.x; x++)
+	{
+		for (int y = volume.min.y; y < volume.max.y; y++)
+		{
+			for (int z = volume.min.z; z < volume.max.z; z++)
+			{
+				func(sf::Vector3i{ x,y,z });
+			}
 		}
 	}
 }

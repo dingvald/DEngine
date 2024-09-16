@@ -2,20 +2,24 @@
 
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 
-class JitteredGridLayer;
 
-class JitteredGridLayerChunk : public GenerationChunk<JitteredGridLayer, JitteredGridLayerChunk>
+namespace drft
 {
-public:
-	using GenerationChunk::GenerationChunk;
-	virtual GenerationState generate(int level) override;
-	sf::Vector2i jitteredPoint;
-};
+	class JitteredGridLayer;
 
-class JitteredGridLayer : public GenerationLayer<JitteredGridLayer, JitteredGridLayerChunk>
-{
-public:
-	JitteredGridLayer();
+	class JitteredGridLayerChunk : public GenerationChunk<JitteredGridLayer, JitteredGridLayerChunk>
+	{
+	public:
+		using GenerationChunk::GenerationChunk;
+		virtual GenerationState generate(int level) override;
+		sf::Vector2i jitteredPoint;
+	};
 
-	std::vector<sf::Vector2i> getPointsInBounds(sf::IntRect area);
-};
+	class JitteredGridLayer : public GenerationLayer<JitteredGridLayer, JitteredGridLayerChunk>
+	{
+	public:
+		JitteredGridLayer();
+
+		std::vector<sf::Vector2i> getPointsInArea(sf::IntRect area, sf::Vector3i origin);
+	};
+}

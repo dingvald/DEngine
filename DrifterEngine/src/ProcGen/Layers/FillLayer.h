@@ -1,8 +1,11 @@
 #pragma once
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 
-class FillLayer : public OnDemandLayer
+namespace drft
 {
-public:
-	double getValueAt(sf::Vector2i tilePosition) override;
-};
+	class FillLayer : public OnDemandLayer
+	{
+	public:
+		double getValueAt(sf::Vector3i tilePosition) override;
+	};
+}

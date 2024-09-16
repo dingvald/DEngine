@@ -4,31 +4,34 @@
 
 static const float JITTER_FACTOR = 0.25;
 
+using namespace drft;
+
 GenerationState JitteredGridLayerChunk::generate(int level)
 {
 	drft::rng::Random random{ getLocalSeed() };
-	const sf::Vector2i centerPoint = { _bounds.left + _bounds.width / 2, _bounds.top + _bounds.height / 2 };
+	const sf::Vector3i centerPoint = _volume.center();
+	const sf::Vector3i dimensions = _volume.dimensions();
+
 	sf::Vector2i jitter;
-	jitter.x = random.intInRange(_bounds.width * -JITTER_FACTOR, _bounds.width * JITTER_FACTOR);
-	jitter.y = random.intInRange(_bounds.height * -JITTER_FACTOR, _bounds.height * JITTER_FACTOR);;
-	jitteredPoint = centerPoint + jitter;
+	jitter.x = random.intInRange(dimensions.x * -JITTER_FACTOR, dimensions.x * JITTER_FACTOR);
+	jitter.y = random.intInRange(dimensions.y * -JITTER_FACTOR, dimensions.y * JITTER_FACTOR);
+	jitteredPoint = spatial::toXY(centerPoint) + jitter;
 
 	return GenerationState::Complete;
 }
 
 JitteredGridLayer::JitteredGridLayer()
-	: GenerationLayer({8, 8})
+	: GenerationLayer({8, 8, 8})
 {}
 
-std::vector<sf::Vector2i> JitteredGridLayer::getPointsInBounds(sf::IntRect area)
+std::vector<sf::Vector2i> JitteredGridLayer::getPointsInArea(sf::IntRect area, sf::Vector3i origin)
 {
 	std::vector<sf::Vector2i> result;
-	forEachLoadedChunkInArea(area, [&area, &result](JitteredGridLayerChunk& chunk)
+	forEachLoadedChunkInArea(area, origin, [&area, &result](JitteredGridLayerChunk& chunk)
 		{
-			if (area.contains(chunk.jitteredPoint))
-			{
-				result.emplace_back(chunk.jitteredPoint);
-			}
+			if (!area.contains(chunk.jitteredPoint)) return;
+
+			result.emplace_back(chunk.jitteredPoint);
 		});
 	return result;
 }

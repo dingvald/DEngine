@@ -5,6 +5,8 @@
 #include <Random/Random.h>
 #include <jc_voronoi/jc_voronoi_adaptor.h>
 
+using namespace drft;
+
 constexpr float MaxDensity = 0.8f;
 
 constexpr int Level1Gen = 1;
@@ -16,11 +18,11 @@ GenerationState LloydRelaxedLayerChunk::generate(int level)
     switch (level)
     {
     case Level1Gen:
-        return generateRandomPoints(_bounds);
+        return generateRandomPoints(_volume);
     case Level2Gen:
-        return collectNeighborPoints(_bounds);
+        return collectNeighborPoints(_volume);
     case Level3Gen:
-        return applyRelaxationToPoints(_bounds);
+        return applyRelaxationToPoints(_volume);
     default:
         break;
     }
@@ -28,12 +30,12 @@ GenerationState LloydRelaxedLayerChunk::generate(int level)
     return GenerationState::Complete;
 }
 
-GenerationState LloydRelaxedLayerChunk::generateRandomPoints(sf::IntRect area)
+GenerationState LloydRelaxedLayerChunk::generateRandomPoints(spatial::AABB<int> volume)
 {
     drft::rng::Random random{ getLocalSeed() };
 
-    int numPoints = area.width * area.height * MaxDensity * _layer.getDistributionDensity();
-    auto shuffledPositions = random.shuffleRect(area);
+    int numPoints = volume.dimensions().x * volume.dimensions().y * MaxDensity * _layer.getDistributionDensity();
+    auto shuffledPositions = random.shuffleRect(volume.flatten());
 
     int i = 0;
     for (auto&& position : shuffledPositions)
@@ -46,28 +48,28 @@ GenerationState LloydRelaxedLayerChunk::generateRandomPoints(sf::IntRect area)
     return GenerationState::Complete;
 }
 
-GenerationState LloydRelaxedLayerChunk::collectNeighborPoints(sf::IntRect area)
+GenerationState LloydRelaxedLayerChunk::collectNeighborPoints(spatial::AABB<int> volume)
 {
-    auto state = _layer.generateNeighborChunks(_index, { .layers = _layerManager, .desiredLevel = Level1Gen, .seed = getGlobalSeed() });
+    auto state = _layer.generateNeighborChunks2d(_index, { .layers = _layerManager, .desiredLevel = Level1Gen, .seed = getGlobalSeed() });
     if (state != GenerationState::Complete) return state;
 
     neighborPoints.insert(randomPoints.begin(), randomPoints.end() );
 
-    _layer.forEachLoadedNeighborChunk(_index, [this](const LloydRelaxedLayerChunk& chunk) {
+    _layer.forEachLoadedNeighborChunk2d(_index, [this](const LloydRelaxedLayerChunk& chunk) {
         neighborPoints.insert(chunk.randomPoints.begin(), chunk.randomPoints.end());
         });
 
     return GenerationState::Complete;
 }
 
-GenerationState LloydRelaxedLayerChunk::applyRelaxationToPoints(sf::IntRect area)
+GenerationState LloydRelaxedLayerChunk::applyRelaxationToPoints(spatial::AABB<int> volume)
 {
-    auto state = _layer.generateNeighborChunks(_index, { .layers = _layerManager, .desiredLevel = Level2Gen, .seed = getGlobalSeed() });
+    auto state = _layer.generateNeighborChunks2d(_index, { .layers = _layerManager, .desiredLevel = Level2Gen, .seed = getGlobalSeed() });
     if (state != GenerationState::Complete) return state;
 
     std::vector<sf::Vector2i> pointsToRelax{ neighborPoints.begin(), neighborPoints.end() };
 
-    _layer.forEachLoadedNeighborChunk(_index, [&pointsToRelax](const LloydRelaxedLayerChunk& chunk) {
+    _layer.forEachLoadedNeighborChunk2d(_index, [&pointsToRelax](const LloydRelaxedLayerChunk& chunk) {
         pointsToRelax.insert(pointsToRelax.end(), chunk.neighborPoints.begin(), chunk.neighborPoints.end() );
     });
 
@@ -79,21 +81,21 @@ GenerationState LloydRelaxedLayerChunk::applyRelaxationToPoints(sf::IntRect area
 
     VoronoiDiagram diagram{ pointsToRelax };
     diagram.forEachRelaxedPoint([this](sf::Vector2i point) {
-        if (!_bounds.contains(point)) return;
+        if (!_volume.contains2d(point)) return;
         distributedPoints.insert(point);
     });
 
     return GenerationState::Complete;
 }
 LloydRelaxedLayer::LloydRelaxedLayer()
-    : GenerationLayer({16, 16})
+    : GenerationLayer({16, 16, 16})
 {}
 
-double LloydRelaxedLayer::getValueAt(sf::Vector2i position)
+double LloydRelaxedLayer::getValueAt(sf::Vector3i position)
 {
     if (const auto chunk = tryGetChunk(position))
     {
-        if (chunk->distributedPoints.contains(position))
+        if (chunk->distributedPoints.contains(spatial::toXY(position)))
         {
             return 1.0;
         }

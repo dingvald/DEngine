@@ -2,24 +2,26 @@
 
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 
-
-class VoronoiLayer;
-
-class VoronoiLayerChunk : public GenerationChunk<VoronoiLayer, VoronoiLayerChunk>
+namespace drft
 {
-public:
-	using GenerationChunk::GenerationChunk;
-	virtual GenerationState generate(int level) override;
+	class VoronoiLayer;
 
-	std::vector<sf::Vector2i> centroids;
-	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> edges;
-};
+	class VoronoiLayerChunk : public GenerationChunk<VoronoiLayer, VoronoiLayerChunk>
+	{
+	public:
+		using GenerationChunk::GenerationChunk;
+		virtual GenerationState generate(int level) override;
 
-class VoronoiLayer : public GenerationLayer<VoronoiLayer, VoronoiLayerChunk>
-{
-public:
-	VoronoiLayer();
+		std::vector<sf::Vector2i> centroids;
+		std::vector<std::pair<sf::Vector2i, sf::Vector2i>> edges;
+	};
 
-	std::vector<sf::Vector2i> getCentroidsInBounds(sf::IntRect area);
-	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> getEdgesInBounds(sf::IntRect area);
-};
+	class VoronoiLayer : public GenerationLayer<VoronoiLayer, VoronoiLayerChunk>
+	{
+	public:
+		VoronoiLayer();
+
+		std::vector<sf::Vector3i> getCentroidsInArea(sf::IntRect area, sf::Vector3i origin);
+		std::vector<std::pair<sf::Vector3i, sf::Vector3i>> getEdgesInArea(sf::IntRect area, sf::Vector3i origin);
+	};
+}

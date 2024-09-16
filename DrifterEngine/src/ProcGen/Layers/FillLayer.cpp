@@ -2,7 +2,7 @@
 #include "FillLayer.h"
 
 
-double FillLayer::getValueAt(sf::Vector2i tilePosition)
+double drft::FillLayer::getValueAt(sf::Vector3i tilePosition)
 {
 	return 1.0;
 }

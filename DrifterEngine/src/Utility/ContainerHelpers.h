@@ -2,7 +2,7 @@
 #include <vector>
 #include <unordered_map>
 
-namespace util
+namespace drft::util
 {
 	template<typename T, typename U>
 	std::vector<T> extractKeys(const std::unordered_map<T, U>& map)

@@ -3,25 +3,27 @@
 #include <ProcGen/Layers/JitteredGridLayer.h>
 #include <jc_voronoi/jc_voronoi_adaptor.h>
 
+using namespace drft;
+
 GenerationState VoronoiLayerChunk::generate(int level)
 {
-    const auto paddedBounds = addPaddingToBounds({_bounds.width, _bounds.height});
-    auto jitterLayer = generateDependency<JitteredGridLayer>(paddedBounds);
+    const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x, _volume.dimensions().y, 0 });
+    auto jitterLayer = generateDependency<JitteredGridLayer>(paddedVolume);
     if (!jitterLayer.isReady()) return jitterLayer.getState();
 
-    auto points = jitterLayer.unwrap().getPointsInBounds(paddedBounds);
+    auto points = jitterLayer.unwrap().getPointsInArea(paddedVolume.flatten(), _volume.center());
 
     VoronoiDiagram diagram = { points };
 
     diagram.forEachSite([this](VoronoiSite site)
         {
-            if (!_bounds.contains(site.point)) return;
+            if (!_volume.contains2d(site.point)) return;
             centroids.push_back(site.point);
         });
     
     diagram.forEachEdge([this](Edge edge)
         {
-            if (!_bounds.contains(edge.first)) return;
+            if (!_volume.contains2d(edge.first)) return;
             edges.emplace_back(std::move(edge));
         });
 
@@ -29,33 +31,36 @@ GenerationState VoronoiLayerChunk::generate(int level)
 }
 
 VoronoiLayer::VoronoiLayer()
-    : GenerationLayer({256, 256})
+    : GenerationLayer({128, 128, 8})
 {
 }
 
-std::vector<sf::Vector2i> VoronoiLayer::getCentroidsInBounds(sf::IntRect area)
+std::vector<sf::Vector3i> VoronoiLayer::getCentroidsInArea(sf::IntRect area, sf::Vector3i origin)
 {
-    std::vector<sf::Vector2i> result;
-    forEachLoadedChunkInArea(area, [&area, &result](VoronoiLayerChunk& chunk)
+    std::vector<sf::Vector3i> result;
+
+    forEachLoadedChunkInArea(area, origin, [&origin, &area, &result](VoronoiLayerChunk& chunk)
         {
             for (auto&& centroid : chunk.centroids)
             {
                 if (!area.contains(centroid)) continue;
-                result.push_back(centroid);
+                result.emplace_back(centroid.x, centroid.y, origin.z);
             }
         });
     return result;
 }
 
-std::vector<std::pair<sf::Vector2i, sf::Vector2i>> VoronoiLayer::getEdgesInBounds(sf::IntRect area)
+std::vector<std::pair<sf::Vector3i, sf::Vector3i>> VoronoiLayer::getEdgesInArea(sf::IntRect area, sf::Vector3i origin)
 {
-    std::vector<std::pair<sf::Vector2i, sf::Vector2i>> result;
-    forEachLoadedChunkInArea(area, [&area, &result](VoronoiLayerChunk& chunk)
+    std::vector<std::pair<sf::Vector3i, sf::Vector3i>> result;
+    forEachLoadedChunkInArea(area, origin, [&origin, &area, &result](VoronoiLayerChunk& chunk)
         {
             for (auto&& edge : chunk.edges)
             {
                 if (!area.contains(edge.first)) continue;
-                result.push_back(edge);
+                sf::Vector3i pt1 = { edge.first.x, edge.first.y, origin.z };
+                sf::Vector3i pt2 = { edge.second.x, edge.second.y, origin.z };
+                result.emplace_back(pt1, pt2);
             }
         });
     return result;

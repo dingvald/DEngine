@@ -5,12 +5,16 @@
 static const double EXPERIMENTALLY_DETERMINED_MIN = 0.25;
 static const double EXPERIMENTALLY_DETERMINED_MAX = 0.75;
 
+static const int Z_NORMALIZATION_FACTOR = 1024;
+
+using namespace drft;
+
 PerlinNoiseLayer::PerlinNoiseLayer(sf::Vector2i dimensions, unsigned int seed)
     : _dimensions(dimensions)
     , _seed(seed)
 {}
 
-double PerlinNoiseLayer::getValueAt(sf::Vector2i tilePosition)
+double PerlinNoiseLayer::getValueAt(sf::Vector3i tilePosition)
 {
     double val = _getValueAt(tilePosition);
     val = drft::math::remap(EXPERIMENTALLY_DETERMINED_MIN, EXPERIMENTALLY_DETERMINED_MAX, -1.0, 1.0, val);
@@ -44,9 +48,11 @@ void PerlinNoiseLayer::createFromJson(const rapidjson::Value& json)
     _noise = drft::rng::PerlinNoise{ _seed, _octaves, _lacunarity, _gain};
 }
 
-double PerlinNoiseLayer::_getValueAt(sf::Vector2i tilePosition) const
+double PerlinNoiseLayer::_getValueAt(sf::Vector3i tilePosition) const
 {
     double x_normalized = static_cast<double>(tilePosition.x) / static_cast<double>(_dimensions.x) * _resolution;
     double y_normalized = static_cast<double>(tilePosition.y) / static_cast<double>(_dimensions.y) * _resolution;
-    return _noise.gen(x_normalized, y_normalized);
+    double z_normalized = static_cast<double>(tilePosition.z) / static_cast<double>(Z_NORMALIZATION_FACTOR) * _resolution;
+
+    return _noise.gen(x_normalized, y_normalized, z_normalized);
 }

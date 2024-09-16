@@ -504,13 +504,7 @@
     <ClCompile Include="src\Spatial\WorldMapPosition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\PerlinNoiseLayer.cpp">
@@ -2036,13 +2030,7 @@
     <ClInclude Include="src\Components\Actions\InteractionAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\EntityLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ProcGen\Layers\BiomeLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\StructureLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h">
@@ -2091,6 +2079,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\Grid3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spatial\AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

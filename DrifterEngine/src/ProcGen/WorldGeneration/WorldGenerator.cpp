@@ -17,9 +17,7 @@
 #include "Spatial/WorldMapPosition.h"
 
 #include <ProcGen/Layers/PerlinNoiseLayer.h>
-#include <ProcGen/Layers/EntityLayer.h>
 #include <ProcGen/Layers/BiomeLayer.h>
-#include <ProcGen/Layers/StructureLayer.h>
 #include <ProcGen/Layers/JitteredGridLayer.h>
 #include <ProcGen/Layers/LloydRelaxedLayer.h>
 #include <ProcGen/Layers/RandomLayer.h>
@@ -106,33 +104,31 @@ void drft::gen::WorldGenerator::generate()
 
 }
 
-GenerationState drft::gen::WorldGenerator::generateChunk(ChunkPosition coordinate, entt::registry& registry)
+drft::GenerationState drft::gen::WorldGenerator::generateChunk(ChunkPosition coordinate, entt::registry& registry)
 {
-	const int z = spatial::toTileSpace(coordinate).z;
-	if (z != 0 ) return GenerationState::Complete;
+	const sf::Vector3i origin = spatial::toTileSpace(coordinate);
+	const sf::Vector3i dimensions = spatial::asTileSpace(ChunkDimensions);
+	spatial::AABB<int> volume = { origin, dimensions };
 
-	const sf::Vector2i origin2d = spatial::toXY(spatial::toTileSpace(coordinate));
-	const sf::Vector2i dimensions2d = spatial::toXY(spatial::asTileSpace(ChunkDimensions));
-	sf::IntRect area = { origin2d, dimensions2d };
-
-	auto layer = _layerManager->generate<BiomeLayer>(area);
+	auto layer = _layerManager->generate<BiomeLayer>(volume);
 	if (!layer.isReady()) return layer.getState();
 
 	rng::Random random{ _seed + std::hash<ChunkPosition>()(coordinate) };
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
 
-	spatial::forEachPointInRect(area, [&registry, &factory, &layer, &z](sf::Vector2i point)
+	spatial::forEachPointInRect(volume.flatten(), [&registry, &factory, &layer, z = volume.min.z](sf::Vector2i point)
 		{
+			const sf::Vector3i point3d = { point.x, point.y, z };
 			sf::Color tileColor = { 10,10,10 };
-			if (auto biome = layer.unwrap().getBiomeAt(point))
+			if (auto biome = layer.unwrap().getBiomeAt(point3d))
 			{
 				tileColor = biome->getBaseTileColor();
 			}
-			auto tileHandle = placeSingle("Tile", TilePosition{ point.x, point.y, z }, registry, factory);
+			auto tileHandle = placeSingle("Tile", spatial::asTileSpace(point3d), registry, factory);
 			tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
 		});
 
-	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInBounds(area);
+	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInArea(volume.flatten(), volume.min);
 	for (auto&& [biome, slot, point] : bsps)
 	{
 		if (auto* entityPack = biome->getEntityPack(slot))
@@ -141,7 +137,7 @@ GenerationState drft::gen::WorldGenerator::generateChunk(ChunkPosition coordinat
 			if (!optionalSelection.has_value()) continue;
 
 			auto&& [entity, _] = entityPack->at(optionalSelection.value());
-			placeSingle(entity, TilePosition{ point.x, point.y, z }, registry, factory);
+			placeSingle(entity, spatial::asTileSpace(sf::Vector3i{point.x, point.y, volume.min.z}), registry, factory);
 		}
 	}
 

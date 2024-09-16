@@ -2,38 +2,42 @@
 #include <JSON/ICreateFromJson.h>
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 
-class LloydRelaxedLayer;
-
-class LloydRelaxedLayerChunk : public GenerationChunk<LloydRelaxedLayer, LloydRelaxedLayerChunk>
+namespace drft
 {
-public:
-	using GenerationChunk::GenerationChunk;
-	virtual GenerationState generate(int level) override;
-	
-private:
-	virtual int numLevels() const override { return 3; }
-	GenerationState generateRandomPoints(sf::IntRect area);
-	GenerationState collectNeighborPoints(sf::IntRect area);
-	GenerationState applyRelaxationToPoints(sf::IntRect area);
+	class LloydRelaxedLayer;
 
-public:
-	std::unordered_set<sf::Vector2i> randomPoints;
-	std::unordered_set<sf::Vector2i> neighborPoints;
-	std::unordered_set<sf::Vector2i> distributedPoints;
-};
+	class LloydRelaxedLayerChunk : public GenerationChunk<LloydRelaxedLayer, LloydRelaxedLayerChunk>
+	{
+	public:
+		using GenerationChunk::GenerationChunk;
+		virtual GenerationState generate(int level) override;
 
-class LloydRelaxedLayer : public GenerationLayer<LloydRelaxedLayer, LloydRelaxedLayerChunk>, public IGetValueAt, public ICreateFromJson
-{
-public:
-	LloydRelaxedLayer();
+	private:
+		virtual int numLevels() const override { return 3; }
+		GenerationState generateRandomPoints(spatial::AABB<int> volume);
+		GenerationState collectNeighborPoints(spatial::AABB<int> volume);
+		GenerationState applyRelaxationToPoints(spatial::AABB<int> volume);
 
-	double getValueAt(sf::Vector2i position) override;
-	void createFromJson(const rapidjson::Value& json) override;
+	public:
+		std::unordered_set<sf::Vector2i> randomPoints;
+		std::unordered_set<sf::Vector2i> neighborPoints;
+		std::unordered_set<sf::Vector2i> distributedPoints;
+	};
 
-	float getDistributionDensity() const;
-	int getNumberOfRelaxationPasses() const;
+	class LloydRelaxedLayer : public GenerationLayer<LloydRelaxedLayer, LloydRelaxedLayerChunk>, public IGetValueAt, public ICreateFromJson
+	{
+	public:
+		LloydRelaxedLayer();
 
-private:
-	float _density = 0.5;
-	float _passes = 1;
-};
+		double getValueAt(sf::Vector3i position) override;
+		void createFromJson(const rapidjson::Value& json) override;
+
+		float getDistributionDensity() const;
+		int getNumberOfRelaxationPasses() const;
+
+	private:
+		float _density = 0.5;
+		float _passes = 1;
+	};
+}
+

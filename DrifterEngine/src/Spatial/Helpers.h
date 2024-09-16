@@ -1,4 +1,5 @@
 #pragma once
+#include <Spatial/AABB.h>
 
 namespace drft
 {
@@ -7,6 +8,7 @@ namespace drft
 
 namespace drft::spatial
 {
+
 	// Returns a sf::Vector3i that copies the XY plane and assigns 0 to the Z dimension
 	sf::Vector3i vec3FromPlanar(sf::Vector2i plane);
 	sf::Vector2i toXY(sf::Vector3i vec3);
@@ -68,7 +70,17 @@ namespace drft::spatial
 	std::vector<sf::Vector2i> getAdjacentPoints(sf::Vector2i point, AdjacentType type = AdjacentType::OrdinalCardinal);
 	std::vector<sf::Vector2i> getPointDeltas(sf::Vector2i point, const std::vector<sf::Vector2i>& points);
 
-	void forEachPointInRect(sf::IntRect rect, std::function<void(sf::Vector2i point)> func);
+	enum class PlaneType
+	{
+		XY,
+		XZ,
+		YZ,
+		All
+	};
+	std::vector<sf::Vector3i> getSurroundingPoints(sf::Vector3i point, PlaneType plane = PlaneType::All);
+
+	void forEachPointInRect(sf::IntRect rect, std::function<void(sf::Vector2i)> func);
+	void forEachPointInVolume(spatial::AABB<int> volume, std::function<void(sf::Vector3i)> func);
 }
 
 

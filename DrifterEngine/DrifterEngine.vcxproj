@@ -183,13 +183,11 @@
     <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp" />
     <ClCompile Include="src\JSON\StringExpressions.cpp" />
     <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\FillLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\PerlinNoiseLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\JitteredGridLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\LloydRelaxedLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\RandomLayer.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\StructureLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\VoronoiLayer.cpp" />
     <ClCompile Include="src\Factory\Factory.cpp" />
     <ClCompile Include="src\Spatial\ChunkPosition.cpp" />
@@ -497,7 +495,6 @@
     <ClInclude Include="src\JSON\StringExpressions.h" />
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h" />
     <ClInclude Include="src\ProcGen\Layers\BiomeLayer.h" />
-    <ClInclude Include="src\ProcGen\Layers\EntityLayer.h" />
     <ClInclude Include="src\Components\Actions\InteractionAction.h" />
     <ClInclude Include="src\JSON\ICreateFromJson.h" />
     <ClInclude Include="src\ProcGen\Layers\FillLayer.h" />
@@ -505,11 +502,11 @@
     <ClInclude Include="src\ProcGen\Layers\JitteredGridLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\LloydRelaxedLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\RandomLayer.h" />
-    <ClInclude Include="src\ProcGen\Layers\StructureLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\VoronoiLayer.h" />
     <ClInclude Include="src\Factory\Factory.h" />
     <ClInclude Include="src\Components\SpriteChangeRequestComponent.h" />
     <ClInclude Include="src\Components\SyncedAnimationComponent.h" />
+    <ClInclude Include="src\Spatial\AABB.h" />
     <ClInclude Include="src\Spatial\ChunkPosition.h" />
     <ClInclude Include="src\Spatial\Grid3d.h" />
     <ClInclude Include="src\Spatial\WorldMapPosition.h" />

@@ -9,19 +9,20 @@
 #include <JSON/StringExpressions.h>
 
 using namespace entt::literals;
+using namespace drft;
 
 static const std::filesystem::path BIOME_FOLDER_PATH = "./data/static/biomes";
 
 GenerationState BiomeLayerChunk::generate(int level)
 {
-    const auto paddedBounds = addPaddingToBounds({ _bounds.width, _bounds.height });
+    const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x, _volume.dimensions().y, 0 });
 
     switch (level)
     {
     case 1:
-        return assignBiomesToVoronoiCells(paddedBounds);
+        return assignBiomesToVoronoiCells(paddedVolume);
     case 2:
-        return generateBiomeSlots(paddedBounds);
+        return generateBiomeSlots(paddedVolume);
     default:
         break;
     }
@@ -29,7 +30,7 @@ GenerationState BiomeLayerChunk::generate(int level)
     return GenerationState::Complete;
 }
 
-void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector2i centroid, BiomeCentroids& biomeCentroids, const ClimateValues& climateValues)
+void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, BiomeCentroids& biomeCentroids, const ClimateValues& climateValues)
 {
     auto& biomes = _layer.getBiomeRegistry();
     std::vector<const Biome*> potentialBiomes;
@@ -41,17 +42,17 @@ void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector2i centroid, BiomeCentr
 
     if (potentialBiomes.size() == 1)
     {
-        biomeCentroids.emplace(centroid, potentialBiomes.front());
+        biomeCentroids.emplace(spatial::toXY(centroid), potentialBiomes.front());
     }
     else if (potentialBiomes.size() > 1)
     {
-        drft::rng::Random random{ getGlobalSeed() + std::hash<sf::Vector2i>()(centroid)};
+        drft::rng::Random random{ getGlobalSeed() + std::hash<sf::Vector3i>()(centroid)};
         size_t index = random.intInRange(0, potentialBiomes.size());
-        biomeCentroids.emplace(centroid, potentialBiomes.at(index));
+        biomeCentroids.emplace(spatial::toXY(centroid), potentialBiomes.at(index));
     }
 }
 
-std::unordered_map<entt::id_type, float> BiomeLayerChunk::getClimateValuesAtPoint(sf::Vector2i point, const std::unordered_map<entt::id_type, IGetValueAt*>& generatedDependencies) const
+std::unordered_map<entt::id_type, float> BiomeLayerChunk::getClimateValuesAtPoint(sf::Vector3i point, const std::unordered_map<entt::id_type, IGetValueAt*>& generatedDependencies) const
 {
     std::unordered_map<entt::id_type, float> result;
     for (auto&& [name, layerPtr] : generatedDependencies)
@@ -62,21 +63,22 @@ std::unordered_map<entt::id_type, float> BiomeLayerChunk::getClimateValuesAtPoin
     return result;
 }
 
-GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(sf::IntRect area)
+GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> volume)
 {
-    auto voronoiLayer = generateDependency<VoronoiLayer>(area);
+    auto voronoiLayer = generateDependency<VoronoiLayer>(volume);
     if (!voronoiLayer.isReady()) return voronoiLayer.getState();
 
     std::unordered_map<entt::id_type, IGetValueAt*> climateDependencies;
     for (auto&& dependencyID : _layer.getClimateDependencies())
     {
-        auto depLayer = generateDependency<IGetValueAt>(dependencyID, _bounds);
+        auto depLayer = generateDependency<IGetValueAt>(dependencyID, volume);
         if (!depLayer.isReady()) return depLayer.getState();
 
         climateDependencies.emplace(dependencyID, &depLayer.unwrap());
     }
 
-    for (sf::Vector2i point : voronoiLayer.unwrap().getCentroidsInBounds(area))
+    const auto centroids = voronoiLayer.unwrap().getCentroidsInArea(volume.flatten(), volume.center());
+    for (auto&& point : centroids)
     {
         const auto values = getClimateValuesAtPoint(point, climateDependencies);
         assignBiomeToVoronoiCell(point, biomePoints, values);
@@ -85,16 +87,16 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(sf::IntRect area)
     return GenerationState::Complete;
 }
 
-GenerationState BiomeLayerChunk::generateBiomeSlots(sf::IntRect area)
+GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
 {
     std::unordered_map<entt::id_type, IGetValueAt*> dependencies;
-    for (auto&& [point, biome] : biomePoints)
+    for (auto&& [_, biome] : biomePoints)
     {
         for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
         {
             for (auto&& [layerID, _] : slotDeterminer.dependencies)
             {
-                auto dep = generateDependency<IGetValueAt>(layerID, area);
+                auto dep = generateDependency<IGetValueAt>(layerID, volume);
                 if (!dep.isReady()) return dep.getState();
                 dependencies.emplace(layerID, &dep.unwrap());
             }
@@ -103,7 +105,7 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(sf::IntRect area)
 
     auto biomeCentroids = util::extractKeys(biomePoints);
 
-    drft::spatial::forEachPointInRect(_bounds, [this, &biomeCentroids, &dependencies](sf::Vector2i point)
+    drft::spatial::forEachPointInRect(_volume.flatten(), [this, &biomeCentroids, &dependencies, z = _volume.min.z](sf::Vector2i point)
         {
             auto closestPoint = drft::spatial::findClosestPoint2d(point, biomeCentroids);
             const Biome* biome = biomePoints.at(closestPoint);
@@ -114,12 +116,12 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(sf::IntRect area)
                 for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
                 {
                     auto layer = dependencies.at(layerID);
-                    float val = layer->getValueAt(point);
+                    float val = layer->getValueAt({point.x, point.y, z});
                     values.emplace(layerID, slotDependency.satisfiesValue(val, slotDependency.range));
                 }
                 if (slotDeterminer.expression.evaluate(values))
                 {
-                    biomeSlotPoints.emplace_back(BiomeSlotPoint{ biome, slotID, point });
+                    biomeSlotPoints.emplace_back( biome, slotID, point );
                 }
             }
         });
@@ -128,7 +130,7 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(sf::IntRect area)
 }
 
 BiomeLayer::BiomeLayer()
-    : GenerationLayer({32, 32})
+    : GenerationLayer({32, 32, 8})
 {
     _biomes.createBiomesFromJSON(BIOME_FOLDER_PATH);
     _biomes.forEachBiome([this](const std::string& name, const Biome& biome)
@@ -150,10 +152,10 @@ const std::unordered_set<entt::id_type>& BiomeLayer::getClimateDependencies() co
     return _climateDependencies;
 }
 
-BiomeCentroids BiomeLayer::getBiomeCentroidsInBounds(sf::IntRect area)
+BiomeCentroids BiomeLayer::getBiomeCentroidsInArea(sf::IntRect area, sf::Vector3i origin)
 {
     BiomeCentroids result;
-    forEachLoadedChunkInArea(area, [&result](BiomeLayerChunk& chunk)
+    forEachLoadedChunkInArea(area, origin, [&result](BiomeLayerChunk& chunk)
         {
             for (auto&& point : chunk.biomePoints)
             {
@@ -163,10 +165,10 @@ BiomeCentroids BiomeLayer::getBiomeCentroidsInBounds(sf::IntRect area)
     return result;
 }
 
-std::vector<BiomeSlotPoint> BiomeLayer::getBiomeEntitySlotPointsInBounds(sf::IntRect area)
+std::vector<BiomeSlotPoint> BiomeLayer::getBiomeEntitySlotPointsInArea(sf::IntRect area, sf::Vector3i origin)
 {
     std::vector<BiomeSlotPoint> result;
-    forEachLoadedChunkInArea(area, [&area, &result](BiomeLayerChunk& chunk)
+    forEachLoadedChunkInArea(area, origin, [&area, &result](BiomeLayerChunk& chunk)
         {
             for (auto&& bsp : chunk.biomeSlotPoints)
             {
@@ -177,12 +179,12 @@ std::vector<BiomeSlotPoint> BiomeLayer::getBiomeEntitySlotPointsInBounds(sf::Int
     return result;
 }
 
-const Biome* BiomeLayer::getBiomeAt(sf::Vector2i tilePosition) const
+const Biome* BiomeLayer::getBiomeAt(sf::Vector3i tilePosition) const
 {
     if (const auto chunk = tryGetChunk(tilePosition))
     {
         const auto positions = util::extractKeys(chunk->biomePoints);
-        const auto closestBiomePosition = drft::spatial::findClosestPoint2d(tilePosition, positions);
+        const auto closestBiomePosition = drft::spatial::findClosestPoint2d(spatial::toXY(tilePosition), positions);
         if (chunk->biomePoints.contains(closestBiomePosition))
         {
             return chunk->biomePoints.at(closestBiomePosition);

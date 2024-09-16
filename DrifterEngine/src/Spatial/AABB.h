@@ -11,8 +11,12 @@ namespace drft::spatial
 		AABB(const sf::Vector3<T>& position, const sf::Vector3<T>& size);
 
 		bool contains(const sf::Vector3<T>& point) const;
+		bool contains2d(const sf::Vector2<T>& point) const;
 		bool intersects(const AABB<T>& aabb) const;
-		sf::Vector3i dimensions() const;
+		sf::Vector3<T> dimensions() const;
+		sf::Vector3<T> center() const;
+		// Flattens the AABB returning a rectangle without the Z dimension
+		sf::Rect<T> flatten() const;
 
 		sf::Vector3<T> min; // top-back-left corner
 		sf::Vector3<T> max; // bottom-front-right corner
@@ -33,12 +37,21 @@ namespace drft::spatial
 	template<typename T>
 	inline bool AABB<T>::contains(const sf::Vector3<T>& point) const
 	{
-		return min.x < point.x 
-			&& min.y < point.y 
-			&& min.z < point.z
+		return min.x <= point.x 
+			&& min.y <= point.y 
+			&& min.z <= point.z
 			&& max.x > point.x
 			&& max.y > point.y
 			&& max.z > point.z;
+	}
+
+	template<typename T>
+	inline bool AABB<T>::contains2d(const sf::Vector2<T>& point) const
+	{
+		return min.x <= point.x
+			&& min.y <= point.y
+			&& max.x > point.x
+			&& max.y > point.y;
 	}
 
 	template<typename T>
@@ -51,8 +64,22 @@ namespace drft::spatial
 	}
 
 	template<typename T>
-	inline sf::Vector3i AABB<T>::dimensions() const
+	inline sf::Vector3<T> AABB<T>::dimensions() const
 	{
 		return max - min;
+	}
+
+	template<typename T>
+	inline sf::Vector3<T> AABB<T>::center() const
+	{
+		T center_x = (min.x + max.x) / 2;
+		T center_y = (min.y + max.y) / 2;
+		T center_z = (min.z + max.z) / 2;
+		return {center_x, center_y, center_z};
+	}
+	template<typename T>
+	inline sf::Rect<T> AABB<T>::flatten() const
+	{
+		return sf::Rect<T>{min.x, min.y, dimensions().x, dimensions().y};
 	}
 }
