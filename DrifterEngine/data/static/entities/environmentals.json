@@ -41,7 +41,7 @@
         "Render": {
           "texture": "long_grass",
           "uv_size": [ 16, 24 ],
-          "layer": 1,
+          "layer": 4,
           "color": [ 72, 111, 56 ]
         },
         "LightBlocking": {
