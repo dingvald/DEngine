@@ -1343,14 +1343,17 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\basic_tile.png" />
+    <Image Include="resources\Textures\Effects\hit_particle.png" />
     <Image Include="resources\Textures\Human\human_male_idle.png" />
     <Image Include="resources\Textures\icons.png" />
-    <Image Include="resources\Textures\liquid.png" />
-    <Image Include="resources\Textures\long_grass.png" />
-    <Image Include="resources\Textures\sand.png" />
-    <Image Include="resources\Textures\short_grass.png" />
+    <Image Include="resources\Textures\Environmentals\liquid.png" />
+    <Image Include="resources\Textures\Environmentals\long_grass.png" />
+    <Image Include="resources\Textures\Effects\impact_effect.png" />
+    <Image Include="resources\Textures\Shapes\rectangle.png" />
+    <Image Include="resources\Textures\Environmentals\sand.png" />
+    <Image Include="resources\Textures\Environmentals\short_grass.png" />
     <Image Include="resources\Textures\simple_tileset.png" />
-    <Image Include="resources\Textures\tree.png" />
+    <Image Include="resources\Textures\Environmentals\tree.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />

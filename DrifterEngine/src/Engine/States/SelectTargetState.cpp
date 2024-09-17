@@ -151,10 +151,17 @@ void drft::SelectTargetState::onPush()
 		requestStackPop();
 	}
 
-	const entt::id_type tileSetTexture = entt::hashed_string("simple_tileset").value();
+	const entt::id_type tileSetTexture = entt::hashed_string("rectangle").value();
 
 	auto radius = spatial::getIntCircleInRadius(_startPosition, _targetSelect->range.getMax());
-	SpriteOptions radiusEffect = { .uvCoords = sf::Vector2i{4, 0}, .texture = tileSetTexture, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_RANGE_COLOR};
+
+	SpriteOptions radiusEffect = { 
+		.uvCoords = sf::Vector2i{0, 0}, 
+		.texture = tileSetTexture, 
+		.uvSize = DefaultTileTextureSize, 
+		.layer = static_cast<unsigned int>(system::RenderLayer::Tiles), 
+		.color = DEFAULT_TARGET_RANGE_COLOR
+	};
 	for (auto&& tile : radius)
 	{
 		auto effect = system::spawnEffect(getContext().registry,
@@ -166,7 +173,12 @@ void drft::SelectTargetState::onPush()
 		_radiusEffects.push_back(effect);
 	}
 
-	SpriteOptions aoeEffect = { .uvCoords = sf::Vector2i{4, 0}, .texture = tileSetTexture, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = DEFAULT_TARGET_AOE_COLOR };
+	SpriteOptions aoeEffect = {
+		.uvCoords = sf::Vector2i{0, 0}, 
+		.texture = tileSetTexture, 
+		.uvSize = DefaultTileTextureSize, 
+		.layer = static_cast<unsigned int>(system::RenderLayer::Tiles), 
+		.color = DEFAULT_TARGET_AOE_COLOR };
 	for (auto&& tile : _targetSelect->targetShape)
 	{
 		auto tile3d = spatial::vec3FromPlanar(tile);
@@ -180,7 +192,12 @@ void drft::SelectTargetState::onPush()
 		_aoeEffects.push_back(effect);
 	}
 
-	SpriteOptions cursorEffect = { .uvCoords = sf::Vector2i{4, 0}, .texture = tileSetTexture, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(system::RenderLayer::Tiles), .color = sf::Color{255, 255, 200, 150} };
+	SpriteOptions cursorEffect = { 
+		.uvCoords = sf::Vector2i{0, 0}, 
+		.texture = tileSetTexture, 
+		.uvSize = DefaultTileTextureSize,
+		.layer = static_cast<unsigned int>(system::RenderLayer::Tiles), 
+		.color = sf::Color{255, 255, 200, 150} };
 	_cursor = system::spawnEffect(getContext().registry,
 		{
 			.frames = {cursorEffect},

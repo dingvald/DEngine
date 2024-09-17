@@ -34,7 +34,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	if (getState() == ChunkState::ToBuild)
 	{
 		setState(ChunkState::Building);
-		std::cout << "Building chunk " << ChunkPosition::toString(_coordinate) << std::endl;
+		//std::cout << "Building chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	}
 
 	auto& worldGenerator = reg.ctx().get<gen::WorldGenerator&>();
@@ -45,7 +45,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	}
 
 	setState(ChunkState::Built);
-	std::cout << "Finished building chunk " << ChunkPosition::toString(_coordinate) << std::endl;
+	//std::cout << "Finished building chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	return ioStatus::Done;
 }
 
@@ -101,7 +101,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::
 	_asyncRegistry = {};
 	
 	setState(ChunkState::Loaded);
-	std::cout << "Finished loading chunk " << ChunkPosition::toString(_coordinate) << std::endl;
+	//std::cout << "Finished loading chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 	return ioStatus::Done;
 }
@@ -112,12 +112,12 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 	{
 		const auto& grid = reg.ctx().get<spatial::WorldGrid&>();
 		const auto entities = grid.getAllEntities(_coordinate);
-		std::cout << "Saving chunk " << ChunkPosition::toString(_coordinate) << std::endl;
+		//std::cout << "Saving chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 		if (entities.empty())
 		{
 			setState(ChunkState::Saved);
-			std::cout << ChunkPosition::toString(_coordinate) << " is empty - no need to save" << std::endl;
+			//std::cout << ChunkPosition::toString(_coordinate) << " is empty - no need to save" << std::endl;
 			return ioStatus::Done;
 		}
 		
@@ -142,7 +142,7 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 	_asyncRegistry = {};
 
 	setState(ChunkState::Saved);
-	std::cout << "Saved chunk " << ChunkPosition::toString(_coordinate) << std::endl;
+	//std::cout << "Saved chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 	return ioStatus::Done;
 }

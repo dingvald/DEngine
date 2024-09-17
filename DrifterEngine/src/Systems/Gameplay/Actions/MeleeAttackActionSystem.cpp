@@ -59,8 +59,8 @@ void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entit
 
 		std::vector<SpriteOptions> frames = // crushing
 		{
-			SpriteOptions{.uvCoords = sf::Vector2i{8, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
-			SpriteOptions{.uvCoords = sf::Vector2i{9, 0}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "impact_effect"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "impact_effect"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
 		};
 
 		if (action.damageTypes.contains("slashing") || action.damageTypes.contains("piercing"))

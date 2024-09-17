@@ -99,14 +99,15 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 		{
 			std::vector<SpriteOptions> hitParticles =
 			{
-				SpriteOptions{.uvCoords = sf::Vector2i{1, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
-				SpriteOptions{.uvCoords = sf::Vector2i{2, 8}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{2, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
 			};
 			// Spawn Hit particles
 			spawnEffect(_registry, {
 				.frames = std::move(hitParticles),
 				.position = posComp->tile,
-				.animationSpeed = 8.0f
+				.animationSpeed = 10.0f
 				});
 		}
 

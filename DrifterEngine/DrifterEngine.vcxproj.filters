@@ -2557,22 +2557,31 @@
     <Image Include="resources\Textures\Human\human_male_idle.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\liquid.png">
+    <Image Include="resources\Textures\Environmentals\liquid.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\basic_tile.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\short_grass.png">
+    <Image Include="resources\Textures\Environmentals\short_grass.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\long_grass.png">
+    <Image Include="resources\Textures\Environmentals\long_grass.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\sand.png">
+    <Image Include="resources\Textures\Environmentals\sand.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\tree.png">
+    <Image Include="resources\Textures\Environmentals\tree.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Shapes\rectangle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Effects\impact_effect.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Effects\hit_particle.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
