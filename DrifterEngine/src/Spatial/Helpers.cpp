@@ -95,15 +95,41 @@ std::vector<sf::Vector3i> drft::spatial::getIntCircleInRadius(sf::Vector3i cente
 	return result;
 }
 
-std::vector<sf::Vector2i> drft::spatial::getIntRectAroundOrigin(sf::Vector2i origin, int width, int height)
+std::vector<sf::Vector3i> drft::spatial::getIntRectAroundOrigin(sf::Vector3i centerPosition, int width, int height)
 {
-	std::vector<sf::Vector2i> result;
+	std::vector<sf::Vector3i> result;
+	std::unordered_set<sf::Vector2i> visited;
 	result.reserve(width * height);
-	for (int y = origin.y - height/2; y <= origin.y + height/2; ++y)
+	const int z = centerPosition.z;
+
+	for (int x = centerPosition.x; x <= centerPosition.x + width / 2; x++)
 	{
-		for (int x = origin.x - width/2; x <= origin.x + width/2; ++x)
+		for (int y = centerPosition.y; y <= centerPosition.y + height / 2; y++)
 		{
-			result.emplace_back(x, y);
+			sf::Vector2i p1 = {  x,  y };
+			sf::Vector2i p2 = { -x,  y };
+			sf::Vector2i p3 = {  x, -y };
+			sf::Vector2i p4 = { -x, -y };
+			if (!visited.contains(p1))
+			{
+				result.emplace_back(p1.x, p1.y, z);
+				visited.insert(p1);
+			}
+			if (!visited.contains(p2))
+			{
+				result.emplace_back(p2.x, p2.y, z);
+				visited.insert(p2);
+			}
+			if (!visited.contains(p3))
+			{
+				result.emplace_back(p3.x, p3.y, z);
+				visited.insert(p3);
+			}
+			if (!visited.contains(p4))
+			{
+				result.emplace_back(p4.x, p4.y, z);
+				visited.insert(p4);
+			}
 		}
 	}
 

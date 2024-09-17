@@ -35,6 +35,7 @@ namespace drft
 		GenerationState generateBiomeSlots(spatial::AABB<int> volume);
 
 	public:
+		std::vector<sf::Vector2i> biomePositions;
 		BiomeCentroids biomePoints;
 		std::vector<BiomeSlotPoint> biomeSlotPoints;
 	};
@@ -48,8 +49,11 @@ namespace drft
 
 		const BiomeRegistry& getBiomeRegistry() const;
 		const std::unordered_set<entt::id_type>& getClimateDependencies() const;
-		BiomeCentroids getBiomeCentroidsInArea(sf::IntRect area, sf::Vector3i origin);
+		// Gets the Biome Entity Slot Points within a given area and origin (z-level)
+		// Requires level 2 generation
 		std::vector<BiomeSlotPoint> getBiomeEntitySlotPointsInArea(sf::IntRect area, sf::Vector3i origin);
+		// Gets the Biome at a given tile positions
+		// Requires level 1 generation
 		const Biome* getBiomeAt(sf::Vector3i tilePosition) const;
 
 	private:

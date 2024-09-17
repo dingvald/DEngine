@@ -25,10 +25,7 @@ void drft::system::ChunkManager::onUpdate(const float dt)
 	const CameraInfo camera = getCurrentCamera(_registry);
 	if (!camera.isInitialized) return;
 
-	TilePosition cameraTilePosition{ camera.position.x, camera.position.y, camera.position.z };
-	ChunkPosition cameraChunkPosition = spatial::toChunkSpace(cameraTilePosition);
-
-	updateChunkStates(cameraChunkPosition);
+	updateChunkStates(camera);
 
 	processBuildQueue();
 	processLoadQueue();
@@ -47,11 +44,13 @@ void drft::system::ChunkManager::save(cereal::JSONOutputArchive& oarchive)
 	}
 }
 
-void drft::system::ChunkManager::updateChunkStates(ChunkPosition newPosition)
+void drft::system::ChunkManager::updateChunkStates(const CameraInfo& camera)
 {
-	auto upperActiveCoords	= spatial::getIntCircleInRadius(newPosition + sf::Vector3i{0,0,1}, ACTIVE_CHUNK_RADIUS_XY / 2);	//		--------
-	auto activeCoords		= spatial::getIntCircleInRadius(newPosition, ACTIVE_CHUNK_RADIUS_XY);							//	----------------
-	auto lowerActiveCoords	= spatial::getIntCircleInRadius(newPosition + sf::Vector3i{0,0,-1}, ACTIVE_CHUNK_RADIUS_XY / 2);//		--------
+	ChunkPosition cameraChunkPosition = spatial::toChunkSpace(spatial::asTileSpace(camera.position));
+
+	auto upperActiveCoords	= spatial::getIntCircleInRadius(cameraChunkPosition + sf::Vector3i{0,0,1}, ACTIVE_CHUNK_RADIUS_XY / 2);	//		--------
+	auto activeCoords		= spatial::getIntCircleInRadius(cameraChunkPosition, ACTIVE_CHUNK_RADIUS_XY);							//	----------------
+	auto lowerActiveCoords	= spatial::getIntCircleInRadius(cameraChunkPosition + sf::Vector3i{0,0,-1}, ACTIVE_CHUNK_RADIUS_XY / 2);//		--------
 
 	activeCoords.insert(activeCoords.end(), upperActiveCoords.begin(), upperActiveCoords.end());
 	activeCoords.insert(activeCoords.end(), lowerActiveCoords.begin(), lowerActiveCoords.end());
@@ -90,7 +89,7 @@ void drft::system::ChunkManager::updateChunkStates(ChunkPosition newPosition)
 	{
 		if (chunk.getState() != spatial::ChunkState::Active) continue;
 
-		if (isWithinChunkSaveDisk(coord, newPosition)) continue;
+		if (isWithinChunkSaveDisk(coord, cameraChunkPosition)) continue;
 
 		_toSave.push(coord);
 		chunk.setState(spatial::ChunkState::ToSave);

@@ -38,6 +38,7 @@ namespace drft::spatial
 
 		void setState(ChunkState state);
 		ChunkState getState() const;
+		ChunkPosition getPosition() const;
 
 		ioStatus build(entt::registry& reg);
 		ioStatus save(entt::registry& reg, const std::filesystem::path& filename) const;

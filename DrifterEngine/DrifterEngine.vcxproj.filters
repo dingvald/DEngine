@@ -2092,13 +2092,12 @@
     <None Include="src\Spatial\Grid2d.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="data\static\entities\prototypes.json" />
+    <None Include="data\static\entities\environmentals.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="data\static\entities\player.json" />
     <None Include="data\static\entities\materials.json" />
     <None Include="packages.config" />
     <None Include="data\static\biomes\biomes.json" />
-    <None Include="data\static\entities\wearables.json" />
     <None Include="data\static\entities\bases.json" />
     <None Include="data\static\structures\wooden_house.json" />
     <None Include="src\Spatial\AutoGrid.inl">
@@ -2546,6 +2545,7 @@
     <None Include="src\Spatial\Grid3d.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="data\static\entities\bodies.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">
@@ -2554,10 +2554,25 @@
     <Image Include="resources\Textures\icons.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\human_male.png">
+    <Image Include="resources\Textures\Human\human_male_idle.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\liquid.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\basic_tile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\short_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\long_grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\sand.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\tree.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

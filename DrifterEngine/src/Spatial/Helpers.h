@@ -19,7 +19,7 @@ namespace drft::spatial
 	// Returns a list of integer points located in a circle around the given center.
 	std::vector<sf::Vector3i> getIntCircleInRadius(sf::Vector3i centerPosition, int radius);
 	// Returns a list of integer points located in a rect around the given origin.
-	std::vector<sf::Vector2i> getIntRectAroundOrigin(sf::Vector2i origin, int width, int height);
+	std::vector<sf::Vector3i> getIntRectAroundOrigin(sf::Vector3i centerPosition, int width, int height);
 
 	// Returns a list of integer points located along a line.
 	std::vector<sf::Vector2i> getLine2d(sf::Vector2i pt1, sf::Vector2i pt2);

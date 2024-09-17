@@ -166,7 +166,7 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 			.textColor = sf::Color(200,200,200,200),
 			.textSize = 16
 			})
-		.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+		.setChildrenOrigin(gui::ElementPosition::BOTTOM_LEFT);
 }
 
 void drft::system::HUD::createHotbar()

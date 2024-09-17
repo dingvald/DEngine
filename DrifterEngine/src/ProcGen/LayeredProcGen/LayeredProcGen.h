@@ -360,7 +360,7 @@ namespace drft
 		const ChunkType* tryGetChunk(sf::Vector3i tilePosition) const
 		{
 			const sf::Vector3i chunkPosition = toChunkPosition(tilePosition);
-			if (_chunks.contains(chunkPosition) && _chunks.at(chunkPosition).isGenerated())
+			if (_chunks.contains(chunkPosition))
 			{
 				return &_chunks.at(chunkPosition);
 			}

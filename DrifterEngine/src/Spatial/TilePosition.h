@@ -5,7 +5,7 @@
 namespace drft
 {
 	// Dimensions in ints
-	static const sf::Vector3i TileDimensions = { 16, 16, 16 };
+	static const sf::Vector3i TileDimensions = { 16, 24, 16 };
 
 	struct TilePosition : public sf::Vector3i
 	{

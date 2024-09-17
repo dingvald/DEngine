@@ -20,12 +20,14 @@ drft::EntityFactory::EntityFactory()
 
 bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryPath)
 {
-	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
+	for (const auto& entry : std::filesystem::recursive_directory_iterator(directoryPath))
 	{
-		json::JsonRootExtractor jsonRootExtractor{ filename.path(), "Prototypes" };
+		if (entry.is_directory()) continue;
+
+		json::JsonRootExtractor jsonRootExtractor{ entry.path(), "Prototypes" };
 		if (!jsonRootExtractor.isValid())
 		{
-			error_logger << "Error: " << filename << " could not be parsed." << std::endl;
+			error_logger << "Error: " << entry << " could not be parsed." << std::endl;
 		}
 		else
 		{

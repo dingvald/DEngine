@@ -6,7 +6,8 @@ namespace
 	template <typename T>
 	inline void hash_combine(std::size_t& seed, T const& v)
 	{
-		seed ^= std::hash<T>()(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		std::hash<T> hasher;
+		seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 	}
 }
 
@@ -26,7 +27,8 @@ struct std::hash<sf::Vector3i>
 {
 	size_t operator() (const sf::Vector3i& pos) const noexcept
 	{
-		size_t seed = static_cast<size_t>(pos.x);
+		std::hash<int> hasher;
+		size_t seed = hasher(pos.x);
 		hash_combine(seed, pos.y);
 		hash_combine(seed, pos.z);
 		return seed;

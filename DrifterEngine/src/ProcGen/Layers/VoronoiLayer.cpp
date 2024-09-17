@@ -7,7 +7,7 @@ using namespace drft;
 
 GenerationState VoronoiLayerChunk::generate(int level)
 {
-    const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x, _volume.dimensions().y, 0 });
+    const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x / 2, _volume.dimensions().y / 2, 0 });
     auto jitterLayer = generateDependency<JitteredGridLayer>(paddedVolume);
     if (!jitterLayer.isReady()) return jitterLayer.getState();
 

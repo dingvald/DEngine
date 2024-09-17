@@ -11,11 +11,14 @@ void drft::system::CullingSystem::onFixedUpdate()
 {
 	const auto camera = getCurrentCamera(_registry);
 	const auto viewport = addBufferToViewport(camera.viewport);
-	
+	const auto cameraTilePosition = spatial::asTileSpace(camera.position);
+
 	const auto view = _registry.view<const PositionComponent>();
 	for (auto [entity, pos] : view.each())
 	{
-		sf::Vector2f xyTilePos = spatial::toXY(spatial::toFloatSpace(spatial::asTileSpace(pos.tile - camera.position)));
+		if (cameraTilePosition.z != pos.tile.z) continue;
+
+		sf::Vector2f xyTilePos = spatial::toXY(spatial::toFloatSpace(pos.tile - cameraTilePosition));
 		if (!viewport.contains(xyTilePos)) continue;
 
 		_registry.emplace<component::tag::InViewport>(entity);

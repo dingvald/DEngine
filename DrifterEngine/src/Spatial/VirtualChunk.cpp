@@ -24,6 +24,11 @@ ChunkState VirtualChunk::getState() const
 	return this->_state;
 }
 
+drft::ChunkPosition drft::spatial::VirtualChunk::getPosition() const
+{
+	return _coordinate;
+}
+
 ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 {
 	if (getState() == ChunkState::ToBuild)

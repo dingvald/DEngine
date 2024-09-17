@@ -24,7 +24,7 @@
 #include <ProcGen/Layers/VoronoiLayer.h>
 #include <ProcGen/Layers/FillLayer.h>
 
-static const sf::Vector2i CHUNK_SIZE = { drft::spatial::CHUNK_WIDTH, drft::spatial::CHUNK_HEIGHT };
+using namespace entt::literals;
 
 using namespace entt::literals;
 
@@ -116,6 +116,7 @@ drft::GenerationState drft::gen::WorldGenerator::generateChunk(ChunkPosition coo
 	rng::Random random{ _seed + std::hash<ChunkPosition>()(coordinate) };
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
 
+	// Place tiles
 	spatial::forEachPointInRect(volume.flatten(), [&registry, &factory, &layer, z = volume.min.z](sf::Vector2i point)
 		{
 			const sf::Vector3i point3d = { point.x, point.y, z };

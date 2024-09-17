@@ -1,10 +1,17 @@
 {
   "Prototypes": {
-    "BaseItem": {
+    "Object": {
       "Components": {
         "Position": {
-          "position": [ 0.0, 0.0 ]
-        },
+          "position": [0,0,0]
+        }
+      }
+    },
+    "BaseItem": {
+      "Inherits": [
+        "Object"
+      ],
+      "Components": {
         "Item": {}
       }
     },

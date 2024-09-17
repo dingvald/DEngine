@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TextureAtlas.h"
 #include <Utility/RectPacker.h>
+#include <Utility/StandardLogger.h>
 
 
 const std::unordered_set<std::string_view> SupportedImageTypes =
@@ -20,25 +21,27 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 	int currentId = 0;
 	const int maxSizeInPixels = static_cast<int>(sf::Texture::getMaximumSize());
 
-	// Collect all images from directory
-	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
+	// Collect all images from directory + subdirectories
+	for (const auto& entry : std::filesystem::recursive_directory_iterator(directoryPath))
 	{
-		const std::string& extension = filename.path().extension().string();
+		if (entry.is_directory()) continue;
+
+		const std::string& extension = entry.path().extension().string();
 		if (!SupportedImageTypes.contains(extension))
 		{
-			std::cout << "WARNING: " << filename.path().filename() << " could not be added to the texture atlas." << std::endl;
-			std::cout << "All files in " << directoryPath << " must be the following types:" << std::endl;
+			warning_logger << "WARNING: " << entry.path().filename() << " could not be added to the texture atlas." << std::endl;
+			warning_logger << "All files in " << directoryPath << " must be the following types:" << std::endl;
 			for (auto&& ext : SupportedImageTypes)
 			{
-				std::cout << ext << std::endl;
+				warning_logger << ext << std::endl;
 			}
 			continue;
 		}
 
 		sf::Image subImage;
-		if (subImage.loadFromFile(filename.path().string()))
+		if (subImage.loadFromFile(entry.path().string()))
 		{
-			const std::string& imageName = filename.path().filename().replace_extension().string();
+			const std::string& imageName = entry.path().filename().replace_extension().string();
 			std::cout << "Adding " << imageName << std::endl;
 			PackingRect rect = {};
 			rect.id = currentId;
@@ -46,8 +49,8 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 			rect.h = subImage.getSize().y;
 			rects.emplace_back(std::move(rect));
 
-			entt::hashed_string hString{ imageName.c_str()};
-			imageNames.emplace(currentId, std::move(hString));
+			entt::hashed_string hashedName{ imageName.c_str()};
+			imageNames.emplace(currentId, std::move(hashedName));
 			imageData.emplace(currentId++, std::move(subImage));
 		}
 	}
@@ -73,7 +76,7 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 	}
 	else
 	{
-		std::cout << "FAILED: Could not pack all textures into max texture size." << std::endl;
+		warning_logger << "Warning: Could not pack all textures into max texture size." << std::endl;
 		return false;
 	}
 

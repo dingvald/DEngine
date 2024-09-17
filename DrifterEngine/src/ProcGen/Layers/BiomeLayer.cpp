@@ -84,6 +84,8 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> v
         assignBiomeToVoronoiCell(point, biomePoints, values);
     }
 
+    biomePositions = util::extractKeys(biomePoints);
+
     return GenerationState::Complete;
 }
 
@@ -103,11 +105,9 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
         }
     }
 
-    auto biomeCentroids = util::extractKeys(biomePoints);
-
-    drft::spatial::forEachPointInRect(_volume.flatten(), [this, &biomeCentroids, &dependencies, z = _volume.min.z](sf::Vector2i point)
+    drft::spatial::forEachPointInRect(_volume.flatten(), [this, &dependencies, z = _volume.min.z](sf::Vector2i point)
         {
-            auto closestPoint = drft::spatial::findClosestPoint2d(point, biomeCentroids);
+            auto closestPoint = drft::spatial::findClosestPoint2d(point, biomePositions);
             const Biome* biome = biomePoints.at(closestPoint);
 
             for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
@@ -130,7 +130,7 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
 }
 
 BiomeLayer::BiomeLayer()
-    : GenerationLayer({32, 32, 8})
+    : GenerationLayer({8, 8, 8})
 {
     _biomes.createBiomesFromJSON(BIOME_FOLDER_PATH);
     _biomes.forEachBiome([this](const std::string& name, const Biome& biome)
@@ -152,19 +152,6 @@ const std::unordered_set<entt::id_type>& BiomeLayer::getClimateDependencies() co
     return _climateDependencies;
 }
 
-BiomeCentroids BiomeLayer::getBiomeCentroidsInArea(sf::IntRect area, sf::Vector3i origin)
-{
-    BiomeCentroids result;
-    forEachLoadedChunkInArea(area, origin, [&result](BiomeLayerChunk& chunk)
-        {
-            for (auto&& point : chunk.biomePoints)
-            {
-                result.emplace(point);
-            }
-        });
-    return result;
-}
-
 std::vector<BiomeSlotPoint> BiomeLayer::getBiomeEntitySlotPointsInArea(sf::IntRect area, sf::Vector3i origin)
 {
     std::vector<BiomeSlotPoint> result;
@@ -183,8 +170,7 @@ const Biome* BiomeLayer::getBiomeAt(sf::Vector3i tilePosition) const
 {
     if (const auto chunk = tryGetChunk(tilePosition))
     {
-        const auto positions = util::extractKeys(chunk->biomePoints);
-        const auto closestBiomePosition = drft::spatial::findClosestPoint2d(spatial::toXY(tilePosition), positions);
+        const auto closestBiomePosition = drft::spatial::findClosestPoint2d(spatial::toXY(tilePosition), chunk->biomePositions);
         if (chunk->biomePoints.contains(closestBiomePosition))
         {
             return chunk->biomePoints.at(closestBiomePosition);

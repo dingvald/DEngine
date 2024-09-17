@@ -906,13 +906,13 @@
     <ClInclude Include="src\Spatial\TilePosition.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\static\entities\bodies.json" />
     <None Include="data\static\world_generation.json" />
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\bases.json" />
     <None Include="data\static\entities\materials.json" />
     <None Include="data\static\entities\player.json" />
-    <None Include="data\static\entities\prototypes.json" />
-    <None Include="data\static\entities\wearables.json" />
+    <None Include="data\static\entities\environmentals.json" />
     <None Include="data\static\structures\wooden_house.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="deps\SFML-2.5.1\doc\html\AlResource_8hpp_source.html" />
@@ -1342,10 +1342,15 @@
     <None Include="src\Utility\ResourceHolder.inl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\Textures\human_male.png" />
+    <Image Include="resources\Textures\basic_tile.png" />
+    <Image Include="resources\Textures\Human\human_male_idle.png" />
     <Image Include="resources\Textures\icons.png" />
     <Image Include="resources\Textures\liquid.png" />
+    <Image Include="resources\Textures\long_grass.png" />
+    <Image Include="resources\Textures\sand.png" />
+    <Image Include="resources\Textures\short_grass.png" />
     <Image Include="resources\Textures\simple_tileset.png" />
+    <Image Include="resources\Textures\tree.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />

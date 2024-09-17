@@ -14,14 +14,18 @@
             "default": {
               "frames": [
                 {
-                  "texture": "human_male",
-                  "uv_size": [ 16, 16 ],
+                  "texture": "human_male_idle",
+                  "uv_size": [ 16, 24 ],
                   "uv_coords": [ 0, 0 ],
                   "layer": 2,
-                  "color": [ 130, 130, 130 ]
+                  "color": [ 200, 200, 200 ]
+                },
+                {
+                  "uv_coords": [ 1, 0 ]
                 }
               ],
-              "speed": 1.0
+              "speed": 1.0,
+              "synced": true
             },
             "sprinting": {
               "frames": [
@@ -32,9 +36,6 @@
               "speed": 1.0
             }
           }
-        },
-        "Position": {
-          "position": [ 0.0, 0.0 ]
         },
         "Material": {
           "blocks": true,
@@ -53,7 +54,7 @@
           "max": 25.0
         },
         "Player": {
-          "sightRange": 24
+          "sightRange": 50
         },
         "Attacker": {
           "baseDamage": 1

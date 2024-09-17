@@ -88,7 +88,7 @@ GenerationState LloydRelaxedLayerChunk::applyRelaxationToPoints(spatial::AABB<in
     return GenerationState::Complete;
 }
 LloydRelaxedLayer::LloydRelaxedLayer()
-    : GenerationLayer({16, 16, 16})
+    : GenerationLayer({8, 8, 8})
 {}
 
 double LloydRelaxedLayer::getValueAt(sf::Vector3i position)

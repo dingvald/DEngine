@@ -7,6 +7,7 @@
 
 namespace drft::system
 {
+	struct CameraInfo;
 	namespace
 	{
 		enum ProcessType
@@ -26,7 +27,7 @@ namespace drft::system
 		virtual void save(cereal::JSONOutputArchive& oarchive);
 
 	private:
-		void updateChunkStates(ChunkPosition aroundNewPosition);
+		void updateChunkStates(const CameraInfo& camera);
 		void cleanUpChunks();
 		void processBuildQueue();
 		void processLoadQueue();
