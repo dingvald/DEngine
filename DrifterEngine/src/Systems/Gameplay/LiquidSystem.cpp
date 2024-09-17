@@ -81,9 +81,9 @@ void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector3i position, sf::Co
 	auto effect = entt::handle{ _registry, _registry.create() };
 	RenderComponent renderComponent =
 	{
-		.texture = entt::hashed_string("simple_tileset"),
-		.uvSize = {16, 16},
-		.uvCoords = {8, 4},
+		.texture = entt::hashed_string("liquid"),
+		.uvSize = DefaultTileTextureSize,
+		.uvCoords = {2, 0},
 		.layer = 5u,
 		.color = translucentColor
 	};

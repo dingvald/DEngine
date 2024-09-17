@@ -6,10 +6,12 @@
 #include "Snapshot/Reflection.h"
 #include "Utility/Vector2Serialization.h"
 
+static inline const sf::Vector2i DefaultTileTextureSize = { 16, 24 };
+
 struct RenderComponent
 {
 	entt::id_type texture;
-	sf::Vector2i uvSize;
+	sf::Vector2i uvSize = DefaultTileTextureSize;
 	sf::Vector2i uvCoords;
 	unsigned int layer = 0u;
 	sf::Color color = sf::Color::Magenta;
