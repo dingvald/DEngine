@@ -79,14 +79,13 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 		createSpriteOptionsFromRenderComponent(damageEffectSprite, renderComponent);
 		damageEffectSprite.layer = static_cast<int>(RenderLayer::EffectsBack);
 
-		int effect_ttl = 10;
+		int effect_ttl = 2;
 
 		if (damage.amount == 0)
 		{
 			messageColor = sf::Color::Blue;
-			damageEffectSprite.color = sf::Color(255, 255, 255);
-			damageEffectSprite.texture = "simple_tileset"_hs;
-			damageEffectSprite.uvCoords = { 0, 5 };
+			damageEffectSprite.color = sf::Color::White;
+			damageEffectSprite.texture = "diamond"_hs;
 			effect_ttl = 30;
 		}
 		else if (damage.amount < 0)
@@ -94,9 +93,11 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 			message += "+";
 			messageColor = sf::Color::Green;
 			damageEffectSprite.color = sf::Color::Green;
+			effect_ttl = 10;
 		}
 		else if (damage.amount > 0)
 		{
+			damageEffectSprite.color = sf::Color::Red;
 			std::vector<SpriteOptions> hitParticles =
 			{
 				SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},

@@ -492,6 +492,7 @@
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="deps\SFML-2.5.1\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\JSON\StringExpressions.h" />
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h" />
     <ClInclude Include="src\ProcGen\Layers\BiomeLayer.h" />
@@ -1342,6 +1343,8 @@
     <None Include="src\Utility\ResourceHolder.inl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\Icon\drifter-project-icon.ico" />
+    <Image Include="resources\Icon\drifter-project-icon.png" />
     <Image Include="resources\Textures\basic_tile.png" />
     <Image Include="resources\Textures\Effects\hit_particle.png" />
     <Image Include="resources\Textures\Human\human_male_idle.png" />
@@ -1349,6 +1352,7 @@
     <Image Include="resources\Textures\Environmentals\liquid.png" />
     <Image Include="resources\Textures\Environmentals\long_grass.png" />
     <Image Include="resources\Textures\Effects\impact_effect.png" />
+    <Image Include="resources\Textures\Shapes\diamond.png" />
     <Image Include="resources\Textures\Shapes\rectangle.png" />
     <Image Include="resources\Textures\Environmentals\sand.png" />
     <Image Include="resources\Textures\Environmentals\short_grass.png" />
@@ -1357,6 +1361,9 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DrifterEngine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

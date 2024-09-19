@@ -13,12 +13,14 @@
 #include "States/SelectTargetState.h"
 #include "Services/DebugInfo.h"
 #include "Utility/TextureAtlas.h"
+#include <Utility/StandardLogger.h>
 
 using namespace drft;
 
-static const std::filesystem::path RESOURCE_PATH = "./resources";
+static const std::filesystem::path RESOURCE_PATH = std::filesystem::current_path() / "resources";
 static const std::filesystem::path TEXTURE_PATH = RESOURCE_PATH / "Textures";
 static const std::filesystem::path FONTS_PATH = RESOURCE_PATH / "Fonts";
+static const std::filesystem::path ICONS_PATH = RESOURCE_PATH / "Icon";
 
 static const float TARGET_DT = (1.0f / TARGET_FPS);
 
@@ -54,12 +56,28 @@ void drft::Engine::run()
 
 void drft::Engine::initialize()
 {
+	setWindowIcon();
 	loadResources();
 	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
 	service::DebugInfo::instance().setPosition({ DEBUG_X_POSITION, DEBUG_Y_POSITION });
 	registerStates();
 
 	_stateStack.pushState(States::Title);
+}
+
+void drft::Engine::setWindowIcon()
+{
+	sf::Image icon;
+	const std::filesystem::path iconPath = ICONS_PATH / "drifter-project-icon.png";
+	if (icon.loadFromFile(iconPath.string()))
+	{
+		_window.setIcon(32, 32, icon.getPixelsPtr());
+	}
+	else
+	{
+		warning_logger << "Warning: Could not set window icon:" << std::endl;
+		warning_logger << "File " << iconPath << " not found." << std::endl;
+	}
 }
 
 void drft::Engine::loadResources()

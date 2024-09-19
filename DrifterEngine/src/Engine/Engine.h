@@ -14,6 +14,7 @@ namespace drft
 
 	private:
 		void initialize();
+		void setWindowIcon();
 		void loadResources();
 		void registerStates();
 		void handleEvents();

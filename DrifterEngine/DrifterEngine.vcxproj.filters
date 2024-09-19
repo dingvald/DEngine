@@ -2084,6 +2084,9 @@
     <ClInclude Include="src\Spatial\AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -2584,8 +2587,22 @@
     <Image Include="resources\Textures\Effects\hit_particle.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="resources\Icon\drifter-project-icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Icon\drifter-project-icon.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Shapes\diamond.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DrifterEngine.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
