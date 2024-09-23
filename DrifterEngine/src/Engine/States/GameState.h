@@ -30,7 +30,7 @@ namespace drft
 	class GameState : public State
 	{
 	public:
-		GameState(StateStack& stack, StateContext& context);
+		GameState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

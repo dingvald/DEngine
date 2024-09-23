@@ -3,6 +3,7 @@
 
 #include "Components/Components.h"
 #include "Components/ContainerComponent.h"
+#include <Components/CraftableComponent.h>
 #include "Components/ItemComponent.h"
 #include "Components/PositionComponent.h"
 
@@ -10,58 +11,64 @@
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/EntityHelpers.h"
 
-void drft::system::CraftItemSystem::init()
-{
-	_registry.on_construct<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
-	_registry.on_update<component::action::Craft>().connect<&CraftItemSystem::onCraftItem>(this);
-}
 
-void drft::system::CraftItemSystem::onUpdateEnd()
+bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, const std::string& itemName)
 {
-	_registry.clear<component::action::Craft>();
-}
+	auto& container = crafter.get<ContainerComponent>();
+	auto& factory = crafter.registry()->ctx().get<const EntityFactory&>();
+	auto itemPrototype = factory.get(itemName);
 
-void drft::system::CraftItemSystem::onCraftItem(entt::registry& registry, entt::entity entity)
-{
-	auto& container = registry.get<ContainerComponent>(entity);
-	auto& craftAction = registry.get<component::action::Craft>(entity);
-
-	std::vector<ItemComponent::ID> toRemove;
-	for (auto&& [matName, amount] : craftAction.recipe)
+	if (auto craftable = itemPrototype.try_get<CraftableComponent>())
 	{
-		int count = 0;
-		for (auto item : container.contents)
+		std::vector<ItemComponent::ID> itemIdsToRemove;
+		std::vector<entt::entity> itemEntitiesToDestroy;
+		bool canCraft = true;
+		for (auto&& [matName, amount] : craftable->recipe)
 		{
-			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-			if (matName.compare(util::getEntityName({ registry, itemEntity })) == 0)
+			int count = 0;
+			for (auto item : container.contents)
 			{
-				toRemove.push_back(item);
-				registry.destroy(itemEntity);
-				++count;
-			}
+				auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+				if (matName.compare(util::getEntityName({ *crafter.registry(), itemEntity})) == 0)
+				{
+					itemIdsToRemove.push_back(item);
+					itemEntitiesToDestroy.push_back(itemEntity);
+					++count;
+				}
 
-			if (count == amount) break;
+				if (count == amount) break;
+			}
+			canCraft = (count >= amount);
 		}
+
+		if (!canCraft) return false;
+
+		crafter.patch<ContainerComponent>(
+			[&itemIdsToRemove](ContainerComponent& cont)
+			{
+				for (auto item : itemIdsToRemove)
+				{
+					cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), item), cont.contents.end());
+				}
+			});
+
+		auto newItem = factory.build(itemName, *crafter.registry());
+		newItem.remove<PositionComponent>();
+		auto& itemComp = newItem.get<ItemComponent>();
+
+		crafter.patch<ContainerComponent>(
+			[&itemComp](ContainerComponent& cont)
+			{
+				cont.contents.push_back(itemComp.id);
+			});
+
+		for (auto e : itemEntitiesToDestroy)
+		{
+			crafter.registry()->destroy(e);
+		}
+
+		return true;
 	}
 
-	registry.patch<ContainerComponent>(entity,
-		[&toRemove](ContainerComponent& cont)
-		{
-			for (auto item : toRemove)
-			{
-				cont.contents.erase(std::remove(cont.contents.begin(), cont.contents.end(), item), cont.contents.end());
-			}
-		});
-
-	const auto& factory = registry.ctx().get<const EntityFactory&>();
-
-	auto newItem = factory.build(craftAction.itemName, registry);
-	newItem.remove<PositionComponent>();
-	auto& itemComp = newItem.get<ItemComponent>();
-
-	registry.patch<ContainerComponent>(entity,
-		[&itemComp](ContainerComponent& cont)
-		{
-			cont.contents.push_back(itemComp.id);
-		});
+	return false;
 }

@@ -43,7 +43,7 @@ namespace drft
 	class WorldMapState : public State
 	{
 	public:
-		WorldMapState(StateStack& stack, StateContext& context);
+		WorldMapState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

@@ -61,7 +61,7 @@ void Visibility::compute(unsigned int octant, sf::Vector3i origin, int radius, u
         int wasOpaque = -1;
         for (unsigned int y = topY; static_cast<int>(y) >= static_cast<int>(bottomY); --y)
         {
-            if (radius < 0 || _getDistance(sf::Vector3i{ static_cast<int>(x),static_cast<int>(y),origin.z }) <= radius)
+            if (radius < 0 || _getDistance(sf::Vector3i{ static_cast<int>(x), static_cast<int>(y), origin.z }) <= radius)
             {
                 bool isOpaque = blocksLight(x, y, octant, origin);
 

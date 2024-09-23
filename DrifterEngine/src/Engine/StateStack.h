@@ -15,13 +15,13 @@ namespace drft
 		};
 
 	public:
-		explicit StateStack(StateContext context);
+		explicit StateStack(StateContext context, tgui::Gui& gui);
 		template<typename T>
 		void registerState(States stateID)
 		{
-			_factories[stateID] = [this]()
+			_factories[stateID] = [this](tgui::Group::Ptr gui)
 			{
-				return State::Ptr(new T(*this, _context));
+				return State::StatePtr(new T(*this, _context, gui));
 			};
 		}
 
@@ -37,8 +37,11 @@ namespace drft
 		bool isEmpty() const;
 
 	private:
-		State::Ptr createState(States stateID);
+		State::StatePtr createState(States stateID);
 		void applyPendingChanges();
+
+		tgui::Group::Ptr createGuiGroup(States stateID);
+		void disableGuiGroup(States stateID);
 
 	private:
 		struct PendingChange
@@ -46,12 +49,18 @@ namespace drft
 			Action action;
 			States stateID;
 		};
+		struct StatePtrPair
+		{
+			States id;
+			State::StatePtr ptr;
+		};
 
 	private:
-		std::vector<State::Ptr> _stack;
+		std::vector<StatePtrPair> _stack;
 		std::vector<PendingChange> _pendingList;
 		StateContext _context;
-		std::map<States, std::function<State::Ptr()>> _factories;
+		tgui::Gui& _gui;
+		std::unordered_map<States, std::function<State::StatePtr(tgui::Group::Ptr)>> _factories;
 	};
 
 

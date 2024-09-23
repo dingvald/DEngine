@@ -2,7 +2,7 @@
 
 namespace drft
 {
-	enum class States
+	enum class States : unsigned int
 	{
 		None,
 		Title,

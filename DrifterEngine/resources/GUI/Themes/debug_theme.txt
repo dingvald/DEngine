@@ -1,0 +1,14 @@
+TextColor						= Black;
+TextColorHover					= Black;
+SelectedTextColor				= Red;
+BorderColor						= Black;
+BackgroundColor					= White;
+BackgroundColorHover			= Yellow;
+SelectedBackgroundColor			= White;
+SelectedBackgroundColorHover	= White;
+ScrollbarWidth					= 4;
+
+Button {
+	TextColorFocused			= Black;
+	BackgroundColorFocused		= Red;
+}

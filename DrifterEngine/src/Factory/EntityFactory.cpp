@@ -48,13 +48,13 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 	return true;
 }
 
-entt::entity drft::EntityFactory::get(const std::string& name) const
+entt::const_handle drft::EntityFactory::get(const std::string& name) const
 {
 	if (!_prototypes.contains(name))
 	{
-		return entt::null;
+		return entt::const_handle{ _protoRegistry, entt::null };
 	}
-	return _prototypes.at(name);
+	return entt::const_handle{ _protoRegistry, _prototypes.at(name) };
 }
 
 const std::string& drft::EntityFactory::getName(entt::entity prototype) const
@@ -72,7 +72,7 @@ const std::unordered_set<std::string> drft::EntityFactory::getFlattenedInheritan
 		for (auto&& base : inheritance->bases)
 		{
 			auto baseEntity = get(base);
-			auto theirInheritance = getFlattenedInheritance({ _protoRegistry, baseEntity });
+			auto theirInheritance = getFlattenedInheritance(baseEntity);
 			result.merge(theirInheritance);
 		}
 	}
@@ -114,7 +114,6 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 	int currentQueueSize = numEntitiesToResolve;
 	int oldQueueSize = currentQueueSize;
 	int iterations = 0;
-	bool resolutionSuccessful = true;
 
 	while (!_inheritanceQueue.empty())
 	{
@@ -144,11 +143,11 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 		if (canResolve)
 		{
 			auto entity = get(relationship.entityName);
-			auto& inheritanceComp = _protoRegistry.emplace<InheritanceComponent>(entity);
+			auto& inheritanceComp = _protoRegistry.emplace<InheritanceComponent>(entity.entity());
 			for (auto&& base : relationship.bases)
 			{
 				auto baseEntity = get(base);
-				util::copyEntity(entity, baseEntity, _protoRegistry, false);
+				util::copyEntity(entity.entity(), baseEntity.entity(), _protoRegistry, false);
 				inheritanceComp.bases.insert(base);
 			}
 			_resolvedInheritance.insert(relationship.entityName);
@@ -166,14 +165,13 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 			if (iterations > currentQueueSize)
 			{
 				// we have a problem
-				resolutionSuccessful = false;
 				break;
 			}
 		}
 		oldQueueSize = currentQueueSize;
 	}
 
-	if (resolutionSuccessful)
+	if (_inheritanceQueue.empty())
 	{
 		std::cout << "All entities resolved." << std::endl;
 	}
@@ -187,7 +185,6 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 			_inheritanceQueue.pop();
 		}
 	}
-	
 }
 
 void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, const std::string& entityName, const rapidjson::Value& json)

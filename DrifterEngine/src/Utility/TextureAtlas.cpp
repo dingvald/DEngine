@@ -89,6 +89,11 @@ const sf::Texture& TextureAtlas::getTexture() const
 	return _texture;
 }
 
+bool TextureAtlas::hasTexture(const std::string& name) const
+{
+	return (_subTextures.contains(entt::hashed_string{ name.c_str() }));
+}
+
 sf::IntRect TextureAtlas::getUV(entt::id_type textureId, sf::Vector2i uvSize, sf::Vector2i localUV) const
 {
 	sf::IntRect rect = _subTextures.at(textureId);
@@ -98,7 +103,7 @@ sf::IntRect TextureAtlas::getUV(entt::id_type textureId, sf::Vector2i uvSize, sf
 
 sf::Sprite TextureAtlas::getSprite(entt::id_type textureId, sf::Vector2i uvSize, sf::Vector2i localUV) const
 {
-	sf::IntRect globalUV = getUV(textureId, uvSize, localUV);
+	auto globalUV = getUV(textureId, uvSize, localUV);
 	return sf::Sprite(_texture, globalUV);
 }
 

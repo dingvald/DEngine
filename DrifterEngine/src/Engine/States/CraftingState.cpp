@@ -1,3 +1,5 @@
+#pragma optimize("", off)
+
 #include "pch.h"
 #include "CraftingState.h"
 
@@ -7,26 +9,54 @@
 #include "Components/RenderComponent.h"
 #include "Components/ContainerComponent.h"
 
+#include <Systems/Gameplay/Actions/CraftItemSystem.h>
+
 #include "Factory/EntityFactory.h"
 #include "Utility/EntityHelpers.h"
 #include "Utility/TextureAtlas.h"
+#include <Utility/TGUIHelpers.h>
 #include "Systems/Helpers/ItemDatabase.h"
 
+using namespace entt::literals;
 
 static constexpr float CRAFTING_WINDOW_WIDTH = 352.f;
 static constexpr float CRAFTING_WINDOW_HEIGHT = 256.f;
 static constexpr float DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS = 180.f;
 
-drft::CraftingState::CraftingState(StateStack& stack, StateContext& context)
-    : State(stack, context)
+static const char* CraftablesListWidget = "list_box";
+static const char* ListEntryWidget = "list_entry";
+static const char* ItemNameWidget = "item_name";
+static const char* ItemIconWidget = "icon";
+static const char* RecipeGridWidget = "recipe";
+
+drft::CraftingState::CraftingState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
+    : State(stack, context, gui)
 {
+	_factory = &getContext().registry.ctx().get<const EntityFactory&>();
+	determineSessionEntities();
+
+	auto list = tgui::PanelListBox::create();
+	list->setOrigin(0.5f, 0.5f);
+	list->setPosition("50%, 50%");
+	list->setSize("50%, 50%");
+
+	// create template ////////////////////////////////////
+	auto templatePanel = list->getPanelTemplate();
+	setupCraftableEntryTemplate(templatePanel);
+	////////////////////////////////////////////////////////
+	
+	list->setItemsHeight(48.f);
+
+	_gui->add(list, CraftablesListWidget);
+
+	_gui->setNavigationDown(list);
+	_gui->setNavigationUp(list);
+
+	refreshCraftingList(list);
 }
 
 bool drft::CraftingState::handleEvent(const sf::Event& ev)
 {
-	if (!_popupStack.handleEvent(ev)) return false;
-	if (!_craftingList.handleEvent(ev)) return false;
-
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
@@ -41,326 +71,149 @@ bool drft::CraftingState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::CraftingState::update(const float dt)
+void drft::CraftingState::setupCraftableEntryTemplate(tgui::Panel::Ptr templatePanel)
 {
-	if (_requiresRefresh)
-	{
-		refreshCraftingList();
-	}
+	auto layout = tgui::HorizontalLayout::create();
+	layout->setSize("100%, 100%");
 
-	if (!_popupStack.update(dt)) return false;
-	if (!_craftingBackground.update(dt)) return false;
-	if (!_craftingWindow.update(dt)) return false;
-	if (!_craftingList.update(dt)) return false;
+	auto name_grid = tgui::Grid::create();
 
-    return false;
-}
+	auto text = tgui::Label::create();
+	text->setVerticalAlignment(tgui::VerticalAlignment::Center);
+	text->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
+	text->setTextSize(16);
 
-void drft::CraftingState::render(sf::RenderTarget& target)
-{
-	_craftingBackground.render(target);
-	_craftingWindow.render(target);
-	_craftingList.render(target);
-	_popupStack.render(target);
-}
+	auto icon = tgui::Picture::create();
+	icon->setSize(32, 48);
 
-void drft::CraftingState::onPush()
-{
-	determineSessionEntities();
+	name_grid->add(icon, ItemIconWidget);
+	name_grid->setWidgetCell(icon, 0, 0);
+	name_grid->add(text, ItemNameWidget);
+	name_grid->setWidgetCell(text, 0, 1);
 
-	const auto& VIEW = getContext().window.getView();
+	auto recipe_grid = tgui::Grid::create();
 
-	_craftingBackground.setSize(VIEW.getSize());
-	_craftingBackground.setPosition(VIEW.getCenter());
-	_craftingBackground.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,100)
-		});
+	layout->add(name_grid, 1);
+	layout->addSpace(2);
+	layout->add(recipe_grid, 2, RecipeGridWidget);
 
-	_craftingWindow.setSize({ CRAFTING_WINDOW_WIDTH, CRAFTING_WINDOW_HEIGHT });
-	_craftingWindow.setPosition(VIEW.getCenter());
-	_craftingWindow.setStyle(gui::ElementState::Idle, {
-		.fillColor = sf::Color(0,0,0,150),
-		.outlineColor = sf::Color(150,150,150,100),
-		.outlineThickness = 1.f,
-		.innerPadding = {24.f, 24.f},
-		.childPadding = {8.f, 8.f},
-		.font = &getContext().fonts.get("Terminus"),
-		.textColor = sf::Color::White
-		});
-	_craftingWindow.setTextString("Crafting");
-	_craftingWindow.setTextPosition(gui::ElementPosition::TOP_CENTER);
-	_craftingWindow.setTextOrigin(gui::ElementPosition::BOTTOM_CENTER);
-
-	setupCraftingList();
-}
-
-void drft::CraftingState::onPop()
-{
-	shutdownSessionEntities();
+	templatePanel->add(layout);
 }
 
 void drft::CraftingState::determineSessionEntities()
 {
 	auto craftingView = getContext().registry.view<component::action::OpenCrafting>();
-	_sessionEntity = craftingView.front();
+	_sessionEntity = { getContext().registry, craftingView.front() };
 }
 
 void drft::CraftingState::shutdownSessionEntities()
 {
-	getContext().registry.remove<component::action::OpenCrafting>(_sessionEntity);
+	_sessionEntity.remove<component::action::OpenCrafting>();
 }
 
-void drft::CraftingState::setupCraftingList()
+void drft::CraftingState::refreshCraftingList(tgui::PanelListBox::Ptr list)
 {
-	const auto& VIEW = getContext().window.getView();
-	_craftingList.setPosition(VIEW.getCenter());
-	_craftingList.setSize({ CRAFTING_WINDOW_WIDTH, CRAFTING_WINDOW_HEIGHT});
-	_craftingList.setStyle(gui::ElementState::Idle, {
-		.innerPadding = {16.f, 16.f},
-		.childPadding = {0.f, 24.f},
-		.font = &getContext().fonts.get("Terminus"),
-		.textColor = sf::Color(150,150,150)
-		});
-	_craftingList.setStyle(gui::ElementState::Focused, {
-		.innerPadding = {16.f, 16.f},
-		.childPadding = {0.f, 24.f},
-		.font = &getContext().fonts.get("Terminus"),
-		.textColor = sf::Color::White
-		});
-	_craftingList.setState(gui::ElementState::Focused);
-	_craftingList.setChildrenOrigin(gui::ElementPosition::TOP_LEFT);
+	refreshSessionEntityIngredients();
+	list->removeAllItems();
+	const auto& prototypeReg = _factory->prototypes();
 
-	refreshCraftingList();
-}
-
-void drft::CraftingState::refreshCraftingList()
-{
-	_craftingList.clear();
-
-	const auto craftableItems = getContext().registry.try_get<MyCraftableItemsComponent>(_sessionEntity);
-	const auto& factory = getContext().registry.ctx().get<const EntityFactory&>();
-	const auto& prototypeReg = factory.prototypes();
-
-	if (craftableItems && (!craftableItems->craftables.empty() || !craftableItems->partialCraftables.empty()))
+	if (auto craftables = _sessionEntity.try_get<MyCraftableItemsComponent>())
 	{
-		// Determine which materials the session entity has
-		std::unordered_map<std::string, int> materialCount;
-		const auto& container = getContext().registry.get<ContainerComponent>(_sessionEntity);
-		for (auto itemID : container.contents)
+		for (auto&& craftable : craftables->craftables)
+		{
+			auto panel = list->addItem();
+			addItemToCraftingList({ prototypeReg, craftable }, panel);
+		}
+		for (auto&& partial : craftables->partialCraftables)
+		{
+			auto panel = list->addItem();
+			addItemToCraftingList({ prototypeReg, partial }, panel);
+		}
+	}
+}
+
+void drft::CraftingState::refreshSessionEntityIngredients()
+{
+	_ingredients.clear();
+	if (auto container = _sessionEntity.try_get<ContainerComponent>())
+	{
+		for (auto&& itemID : container->contents)
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
-			++materialCount[util::getEntityName({ getContext().registry, itemEntity })];
-		}
+			entt::const_handle handle = { getContext().registry, itemEntity };
+			auto itemName = util::getEntityName(handle);
 
-		const TextureAtlas& textureAtlas = getContext().textures;
-		int count = 0;
-		int matCount = 0;
-		const int numCraftables = craftableItems->craftables.size();
-
-		auto craftables = std::vector<entt::entity>(craftableItems->craftables);
-		craftables.insert(craftables.end(), craftableItems->partialCraftables.begin(), craftableItems->partialCraftables.end());
-
-		const sf::Color craftableIdle = sf::Color::White;
-		const sf::Color craftableFocused = sf::Color::Yellow;
-		const sf::Color uncraftableIdle = sf::Color(80, 80, 80);
-		const sf::Color uncraftableFocused = sf::Color(120, 120, 120);
-
-		// Insert craftable items into list
-		for (auto craftable : craftables)
-		{
-			const auto craftableName = util::getEntityName({ prototypeReg, craftable });
-			const auto& recipe = prototypeReg.get<CraftableComponent>(factory.get(craftableName)).recipe;
-
-			std::string countStr = std::to_string(count);
-			_craftingList.insert(countStr.data(), gui::DualContainer())
-				.setStyle(gui::ElementState::Idle, {
-						.childPadding = {DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS, 0}
-					})
-				.setStyle(gui::ElementState::Focused, {
-						.childPadding = {DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS, 0}
-					})
-				.setStyle(gui::ElementState::Unselectable, {
-						.childPadding = {DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS, 0}
-					})
-				.setStyle(gui::ElementState::FocusedUnselectable, {
-						.childPadding = {DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS, 0}
-					})
-				.registerCallback(gui::ElementCallbackType::OnIsSelectable,
-					[count, numCraftables]() {
-						return count < numCraftables;
-					})
-				.registerCallback(gui::ElementCallbackType::OnSelect,
-					[this, craftableName, &recipe]() -> bool
-					{
-						component::action::Craft toCraft;
-						toCraft.itemName = craftableName;
-						for (auto&& [matName, amount] : recipe)
-						{
-							toCraft.recipe[matName] = amount;
-						}
-						getContext().registry.emplace_or_replace<component::action::Craft>(_sessionEntity, toCraft);
-						_requiresRefresh = true;
-						_popupStack.insert("Message", gui::PopupMessage())
-							.setPosition(getContext().window.getView().getCenter())
-							.setStyle(gui::ElementState::Focused, {
-								.fillColor = sf::Color(0,0,0,255),
-								.outlineColor = sf::Color(255,255,255,150),
-								.outlineThickness = 1.f,
-								.innerPadding = {2.f, 2.f},
-								.font = &getContext().fonts.get("Terminus"),
-								.textColor = sf::Color::White
-								})
-							.setTextString(util::getEntityName({ getContext().registry, _sessionEntity }) + " crafted the "
-								+ craftableName + ".");
-
-						return true;
-					});
-
-
-			const auto& itemRender = util::getRenderData({ prototypeReg, craftable });
-			sf::Sprite sprite = textureAtlas.getSprite(itemRender.texture, itemRender.uvSize, itemRender.uvCoords);
-			_craftingList[countStr.data()].insert("Item", gui::DualContainer())
-				.setStyle(gui::ElementState::Idle, {
-						.childPadding = {16.f, 0.f}
-					})
-				.setStyle(gui::ElementState::Focused, {
-						.childPadding = {16.f, 0.f}
-					})
-				.setStyle(gui::ElementState::Unselectable, {
-						.childPadding = {16.f, 0.f}
-					})
-				.setStyle(gui::ElementState::FocusedUnselectable, {
-						.childPadding = {16.f, 0.f}
-					});
-
-			_craftingList[countStr.data()].insert("Requires", gui::MultiContainer())
-				.setStyle(gui::ElementState::Idle, {
-						.childPadding = {48, 0}
-					})
-				.setStyle(gui::ElementState::Focused, {
-						.childPadding = {48, 0}
-					})
-				.setStyle(gui::ElementState::Unselectable, {
-						.childPadding = {48, 0}
-					})
-				.setStyle(gui::ElementState::FocusedUnselectable, {
-						.childPadding = {48, 0}
-					});
-
-			_craftingList[countStr.data()]["Item"].insert("Icon", gui::Icon(sprite))
-				.setSize({ 16, 16 })
-				.setStyle(gui::ElementState::Idle, {
-					.fillColor = itemRender.color
-					})
-				.setStyle(gui::ElementState::Focused, {
-					.fillColor = itemRender.color
-					})
-				.setStyle(gui::ElementState::Unselectable, {
-					.fillColor = itemRender.color
-					})
-				.setStyle(gui::ElementState::FocusedUnselectable, {
-					.fillColor = itemRender.color
-					});
-
-			_craftingList[countStr.data()]["Item"].insert("Label", gui::Label())
-				.setStyle(gui::ElementState::Idle, {
-					.font = &getContext().fonts.get("Terminus"),
-					.textColor = craftableIdle,
-					.textSize = 16
-					})
-				.setStyle(gui::ElementState::Focused, {
-					.font = &getContext().fonts.get("Terminus"),
-					.textColor = craftableFocused,
-					.textSize = 16
-					})
-				.setStyle(gui::ElementState::Unselectable, {
-					.font = &getContext().fonts.get("Terminus"),
-					.textColor = uncraftableIdle,
-					.textSize = 16
-					})
-				.setStyle(gui::ElementState::FocusedUnselectable, {
-					.font = &getContext().fonts.get("Terminus"),
-					.textColor = uncraftableFocused,
-					.textSize = 16
-					})
-				.setTextString(craftableName.data())
-				.setTextOrigin(gui::ElementPosition::CENTER_LEFT);
-				
-
-			for (auto& [matName, amount] : recipe)
-			{
-				const auto& matRender = prototypeReg.get<RenderComponent>(factory.get(matName));
-				sf::Sprite matSprite = textureAtlas.getSprite(matRender.texture, matRender.uvSize, matRender.uvCoords);
-				std::string matstr = std::to_string(matCount);
-				sf::Color numberColor = sf::Color::White;
-				if (materialCount[matName] < static_cast<int>(amount))
-				{
-					numberColor = sf::Color(80, 80, 80);
-				}
-				_craftingList[countStr.data()]["Requires"].insert(matstr.data(), gui::Icon(matSprite))
-					.setSize({ 16, 16 })
-					.setStyle(gui::ElementState::Idle, {
-						.fillColor = matRender.color,
-						.font = &getContext().fonts.get("Terminus"),
-						.textColor = numberColor,
-						.textSize = 16
-						})
-					.setStyle(gui::ElementState::Focused, {
-						.fillColor = matRender.color,
-						.font = &getContext().fonts.get("Terminus"),
-						.textColor = numberColor,
-						.textSize = 16
-						})
-					.setStyle(gui::ElementState::Unselectable, {
-						.fillColor = matRender.color,
-						.font = &getContext().fonts.get("Terminus"),
-						.textColor = numberColor,
-						.textSize = 16
-						})
-					.setStyle(gui::ElementState::FocusedUnselectable, {
-						.fillColor = matRender.color,
-						.font = &getContext().fonts.get("Terminus"),
-						.textColor = numberColor,
-						.textSize = 16
-						})
-					.setTextString(std::format("{}/{}", materialCount[matName], amount))
-					.setTextOrigin(gui::ElementPosition::CENTER_LEFT)
-					.setTextPosition(gui::ElementPosition::CENTER_RIGHT)
-					.setState(gui::ElementState::Idle);
-
-				++matCount;
-			}
-
-			++count;
+			_ingredients[itemName]++;
 		}
 	}
-	else
+}
+
+void drft::CraftingState::addItemToCraftingList(entt::const_handle item, tgui::Panel::Ptr panel)
+{
+	auto name = util::getEntityName(item);
+	addItemIconAndNameWidgets(name, item, panel);
+	addItemRecipeWidgets(item, panel);
+
+	panel->onClick([this, name] { onCraft(name); });
+}
+
+void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, entt::const_handle item, tgui::Panel::Ptr panel)
+{
+	auto render = util::getRenderData(item);
+	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
+	tgui::Texture texture{ name, toUIntRect(rect) };
+	texture.setColor(render.color);
+
+	auto icon = panel->get<tgui::Picture>(ItemIconWidget);
+	icon->getRenderer()->setTexture(texture);
+
+	auto text = panel->get<tgui::Label>(ItemNameWidget);
+
+	text->setText(name);
+}
+
+void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Panel::Ptr panel)
+{
+	auto grid = panel->get<tgui::Grid>(RecipeGridWidget);
+	auto& craftable = item.get<CraftableComponent>();
+	int index = 0;
+	for (auto&& [ingredient, amount] : craftable.recipe)
 	{
-		_craftingList.insert("Nothing", gui::Label())
-			.setStyle(gui::ElementState::Idle, {
-				.font = &getContext().fonts.get("Terminus"),
-				.textColor = sf::Color(80,80,80),
-				.textSize = 16
-				})
-			.setStyle(gui::ElementState::Focused, {
-				.font = &getContext().fonts.get("Terminus"),
-				.textColor = sf::Color(80,80,80),
-				.textSize = 16
-				})
-			.setStyle(gui::ElementState::Unselectable, {
-				.font = &getContext().fonts.get("Terminus"),
-				.textColor = sf::Color(80,80,80),
-				.textSize = 16
-				})
-			.setStyle(gui::ElementState::FocusedUnselectable, {
-				.font = &getContext().fonts.get("Terminus"),
-				.textColor = sf::Color(80,80,80),
-				.textSize = 16
-				})
-			.setTextString("No Materials.")
-			.setTextOrigin(gui::ElementPosition::CENTER_LEFT);
+		auto prototype = _factory->get(ingredient);
+		addIngredientWidget(prototype, amount, grid, index);
+		index++;
 	}
+}
 
-	_requiresRefresh = false;
+void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned int amount, tgui::Grid::Ptr grid, int index)
+{
+	auto sub_grid = tgui::Grid::create();
+	auto ingredientName = util::getEntityName(item);
+
+	auto render = util::getRenderData(item);
+	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
+	tgui::Texture texture{ ingredientName, toUIntRect(rect)};
+	texture.setColor(render.color);
+
+	auto icon = tgui::Picture::create(texture);
+	icon->setSize(32, 48);
+	sub_grid->addWidget(icon, 0, 0);
+
+	int sessionEntityAmount = _ingredients.contains(ingredientName) ? _ingredients.at(ingredientName) : 0;
+
+	auto label = tgui::Label::create();
+	label->setText(std::format("{}/{}", sessionEntityAmount, amount));
+	label->setTextSize(16);
+	sub_grid->addWidget(label, 0, 1);
+
+	grid->addWidget(sub_grid, 0, index);
+}
+
+void drft::CraftingState::onCraft(const std::string& name)
+{
+	if (system::CraftItemSystem::craftItem(_sessionEntity, name))
+	{
+		refreshCraftingList(_gui->get<tgui::PanelListBox>(CraftablesListWidget));
+	}
 }
 

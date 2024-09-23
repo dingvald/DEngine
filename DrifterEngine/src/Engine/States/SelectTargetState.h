@@ -13,7 +13,7 @@ namespace drft
 	class SelectTargetState : public State
 	{
 	public:
-		SelectTargetState(StateStack& stack, StateContext& context);
+		SelectTargetState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;
 		void render(sf::RenderTarget& target) override;

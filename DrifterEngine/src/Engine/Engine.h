@@ -22,17 +22,38 @@ namespace drft
 		void render(const float dt);
 		void shutDown();
 
+		void handleMouseEvents(sf::Event event);
+		void handleKeyboardEvents(sf::Event event);
+		void passEventToGui(sf::Event event);
+		void passEventToState(sf::Event event);
+
+		void swapToMouse();
+		void swapToKeyboard();
+
+		void toggleFullscreen();
+		void toggleDebug();
+
 	private:
 		sf::RenderWindow _window;
+		tgui::Gui _gui;
 		entt::registry _registry;
 		TextureAtlas _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
-		StateStack _stateStack{ StateContext{_window, _registry, _textures, _fonts} };
+		StateStack _stateStack{ StateContext{_window, _registry, _textures, _fonts}, _gui };
+
+		enum class NavigationType
+		{
+			Keyboard,
+			Mouse
+		};
+
+		NavigationType _navigationType = NavigationType::Keyboard;
 
 		float _dtSinceLastRender = 0.0f;
 		float _dtSinceLastFixedUpdate = 0.0f;
 
 		bool _showDebug;
+		bool _isFullScreen = false;
 	};
 
 } // namespace drft

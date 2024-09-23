@@ -15,7 +15,7 @@ namespace drft
 		bool loadPrototypes(const std::filesystem::path& directoryPath);
 
 		// Returns the entity prototype with the given name. Returns entt::null if not found.
-		entt::entity get(const std::string& name) const;
+		entt::const_handle get(const std::string& name) const;
 
 		const std::string& getName(entt::entity prototype) const;
 

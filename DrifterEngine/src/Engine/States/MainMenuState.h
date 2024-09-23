@@ -14,17 +14,18 @@ namespace drft
 		};
 
 	public:
-		MainMenuState(StateStack& stack, StateContext& context);
+		MainMenuState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
 
 		bool handleEvent(const sf::Event& ev) override;
-		bool update(const float dt) override;
-		void render(sf::RenderTarget& target) override;
 
 	private:
+		void onNewGame();
+		void onContinue();
+		void onSettings();
+		void onExit();
+		void onPressDown();
+		void onPressUp();
 		bool hasSaveFile() const;
-
-	private:
-		gui::List _mainMenuWindow{ true };
 	};
 }
 

@@ -10,7 +10,7 @@ namespace drft
 	class SelectDirectionState : public State
 	{
 	public:
-		SelectDirectionState(StateStack& stack, StateContext& context);
+		SelectDirectionState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

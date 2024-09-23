@@ -1,0 +1,17 @@
+TextColor						= White;
+TextColorHover					= Yellow;
+SelectedTextColor				= White;
+BorderColor						= White;
+BackgroundColor					= Black;
+BackgroundColorHover			= Black;
+SelectedBackgroundColor			= Black;
+SelectedBackgroundColorHover	= Black;
+ScrollbarWidth					= 2;
+
+Button {
+	TextColorFocused			= Yellow;
+	Borders						= 0;
+}
+
+SplitContainer {
+}

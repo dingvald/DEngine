@@ -43,6 +43,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
+// TGUI
+#include <TGUI/TGUI.hpp>
+#include <TGUI/Backend/SFML-Graphics.hpp>
+
 // EnTT
 #include <EnTT/entt.h>
 

@@ -1,113 +1,68 @@
 #include "pch.h"
 #include "MainMenuState.h"
 #include "WorldMap/WorldMap.h"
+#include <Engine/StateStack.h>
 
-drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
-	: State(stack, context)
+
+const std::filesystem::path SAVE_GAME_FILE_PATH = std::filesystem::current_path() / "data" / "savegame";
+
+static const char* LayoutName = "Layout";
+
+drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
+	: State(stack, context, gui)
 {
-	// TODO: Allow the world generator seed to be set from the main menu
+	auto layout = tgui::VerticalLayout::create();
+	layout->setOrigin(0.5f, 0.5f);
+	layout->setSize("30%, 75%");
+	layout->setPosition("50%, 50%");
+	gui->add(layout, LayoutName);
 
-	const auto& VIEW = getContext().window.getView();
-	_mainMenuWindow.setSize(VIEW.getSize())
-		.setPosition(VIEW.getCenter())
-		.setStyle(gui::ElementState::Focused, {
-			.fillColor = sf::Color::Black,
-			.innerPadding = {0,0.f},
-			.childPadding = {0, 64.f}
-			});	
-	_mainMenuWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER, {0, 32});
+	auto button_continue = tgui::Button::create();
+	button_continue->setTextSize(32);
+	button_continue->setText("Continue");
+	button_continue->onPress([this]() { onContinue(); });
 
-	auto& cont = _mainMenuWindow.insert("Continue", gui::Button())
-		.setStyle(gui::ElementState::Idle, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 32
-		})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow,
-			.textSize = 32
-		})
-		.setStyle(gui::ElementState::Unselectable, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color(50,50,50),
-			.textSize = 32
-		}) 
-		.setStyle(gui::ElementState::FocusedUnselectable, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color(100,100,100),
-			.textSize = 32
-			})
-		.setTextString("Continue")
-		.registerCallback(gui::ElementCallbackType::OnIsSelectable, [this]()
-		{
-			return this->hasSaveFile();
-		})
-		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
-			{
-				this->requestStackClear();
-				this->requestStackPush(States::Game);
-				return true;
-			});
+	auto button_new_game = tgui::Button::create();
+	button_new_game->setTextSize(32);
+	button_new_game->setText("New Game");
+	button_new_game->onPress([this]() { onNewGame(); });
 
-	_mainMenuWindow.insert("New Game", gui::Button())
-		.setStyle(gui::ElementState::Idle, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 32
-			})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow,
-			.textSize = 32
-			})
-		.setTextString("New Game")
-		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
-			{
-				std::filesystem::remove_all(".\\data\\savegame\\");
-				std::filesystem::create_directory(".\\data\\savegame\\");
-				this->requestStackClear();
-				this->requestStackPush(States::Game);
-				return true;
-			});
+	auto button_settings = tgui::Button::create();
+	button_settings->setTextSize(32);
+	button_settings->setText("Settings");
+	button_settings->onPress([this]() { onSettings(); });
 
-	_mainMenuWindow.insert("Settings", gui::Button())
-		.setStyle(gui::ElementState::Idle, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 32
-			})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow,
-			.textSize = 32
-			})
-		.setTextString("Settings");
+	auto button_exit = tgui::Button::create();
+	button_exit->setTextSize(32);
+	button_exit->setText("Exit");
+	button_exit->onPress([this]() { onExit(); });
 
-	_mainMenuWindow.insert("Exit", gui::Button())
-		.setStyle(gui::ElementState::Idle, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 32
-			})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow,
-			.textSize = 32
-			})
-		.setTextString("Exit")
-		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
-			{
-				this->requestStackClear();
-				return true;
-			});
-	
-	_mainMenuWindow.setState(gui::ElementState::Focused);
+	layout->add(button_continue);
+	layout->addSpace(0.2f);
+	layout->add(button_new_game);
+	layout->addSpace(0.2f);
+	layout->add(button_settings);
+	layout->addSpace(0.2f);
+	layout->add(button_exit);
+
+	button_continue->setNavigationUp(button_exit);
+	button_continue->setNavigationDown(button_new_game);
+
+	button_new_game->setNavigationUp(button_continue);
+	button_new_game->setNavigationDown(button_settings);
+
+	button_settings->setNavigationUp(button_new_game);
+	button_settings->setNavigationDown(button_exit);
+
+	button_exit->setNavigationUp(button_settings);
+	button_exit->setNavigationDown(button_continue);
+
+	_gui->setNavigationDown(button_continue);
+	_gui->setNavigationUp(button_continue);
 }
 
 bool drft::MainMenuState::handleEvent(const sf::Event& ev)
 {
-	_mainMenuWindow.handleEvent(ev);
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
@@ -116,22 +71,78 @@ bool drft::MainMenuState::handleEvent(const sf::Event& ev)
 			requestStackClear();
 			return false;
 		}
+		/*
+		if (ev.key.code == sf::Keyboard::Up || ev.key.code == sf::Keyboard::Numpad8)
+		{
+			onPressUp();
+		}
+		if (ev.key.code == sf::Keyboard::Down || ev.key.code == sf::Keyboard::Numpad2)
+		{
+			onPressDown();
+		}
+		*/
 		break;
 	}
 
 	return false;
 }
 
-bool drft::MainMenuState::update(const float dt)
+void drft::MainMenuState::onNewGame()
 {
-	_mainMenuWindow.update(dt);
-
-	return false;
+	std::filesystem::remove_all(SAVE_GAME_FILE_PATH);
+	std::filesystem::create_directory(SAVE_GAME_FILE_PATH);
+	requestStackClear();
+	requestStackPush(States::Game);
 }
 
-void drft::MainMenuState::render(sf::RenderTarget& target)
+void drft::MainMenuState::onContinue()
 {
-	_mainMenuWindow.render(target);
+	requestStackClear();
+	requestStackPush(States::Game);
+}
+
+void drft::MainMenuState::onSettings()
+{
+	// TODO: implement
+}
+
+void drft::MainMenuState::onExit()
+{
+	requestStackClear();
+}
+
+void drft::MainMenuState::onPressDown()
+{
+ 	auto layout = _gui->get<tgui::VerticalLayout>(LayoutName);
+	auto focused = layout->getFocusedChild();
+	if (!focused)
+	{
+		const auto& children = layout->getWidgets();
+		focused = children[0];
+		focused->setFocused(true);
+	}
+	else
+	{
+		auto next = focused->getNavigationDown();
+		next->setFocused(true);
+	}
+}
+
+void drft::MainMenuState::onPressUp()
+{
+	auto layout = _gui->get<tgui::VerticalLayout>(LayoutName);
+	auto focused = layout->getFocusedChild();
+	if (!focused)
+	{
+		const auto& children = layout->getWidgets();
+		focused = children[0];
+		focused->setFocused(true);
+	}
+	else
+	{
+		auto next = focused->getNavigationUp();
+		next->setFocused(true);
+	}
 }
 
 bool drft::MainMenuState::hasSaveFile() const

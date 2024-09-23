@@ -6,8 +6,8 @@
 #include "Components/Components.h"
 #include "Utility/GetTextCenter.h"
 
-drft::SelectDirectionState::SelectDirectionState(StateStack& stack, StateContext& context)
-    : State(stack, context)
+drft::SelectDirectionState::SelectDirectionState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
+    : State(stack, context, gui)
 {
 	_displayText.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,100),

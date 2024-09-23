@@ -1,82 +1,59 @@
 #include "pch.h"
 #include "PauseState.h"
 
-drft::PauseState::PauseState(StateStack& stack, StateContext& context)
-    :State(stack, context)
+static const char* LayoutName = "Layout";
+
+drft::PauseState::PauseState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
+    :State(stack, context, gui)
 {
-	const auto& VIEW = getContext().window.getView();
-	_pauseBackground.setSize(VIEW.getSize())
-		.setPosition(VIEW.getCenter())
-		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,100),
-			.innerPadding = {0, 192.f},
-			.childPadding = {0, 64.f}
-			});
+	auto background = tgui::Panel::create();
+	background->setSize("100%, 100%");
+	background->getRenderer()->setBackgroundColor(tgui::Color{ 0, 0, 0, 100 });
 
-	_pauseWindow.setSize(VIEW.getSize())
-		.setPosition(VIEW.getCenter())
-		.setStyle(gui::ElementState::Focused, {
-			.innerPadding = {0, 192.f},
-			.childPadding = {0, 64.f}
-			});
-	_pauseWindow.insert("Continue", gui::Button())
-		.setStyle(gui::ElementState::Idle, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 32
-			})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow,
-			.textSize = 32
-			})
-		.setTextString("Continue")
-		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
-			{
-				this->requestStackPop();
-				return true;
-			});
+	auto layout = tgui::VerticalLayout::create();
+	layout->setOrigin(0.5f, 0.5f);
+	layout->setSize("30%, 75%");
+	layout->setPosition("50%, 50%");
 
-	_pauseWindow.insert("Settings", gui::Button())
-		.setStyle(gui::ElementState::Idle, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 32
-			})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow,
-			.textSize = 32
-			})
-		.setTextString("Settings");
+	gui->add(background);
+	gui->add(layout, LayoutName);
 
-	_pauseWindow.insert("Exit", gui::Button())
-		.setStyle(gui::ElementState::Idle, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 32
-			})
-		.setStyle(gui::ElementState::Focused, {
-			.font = &getContext().fonts.get("Terminus"),
-			.textColor = sf::Color::Yellow,
-			.textSize = 32
-			})
-		.setTextString("Exit")
-		.registerCallback(gui::ElementCallbackType::OnSelect, [this]()
-			{
-				this->requestStackClear();
-				this->requestStackPush(States::MainMenu);
-				return true;
-			});
+	auto button_continue = tgui::Button::create();
+	button_continue->setTextSize(32);
+	button_continue->setText("Continue");
+	button_continue->onPress([this]() { onContinue(); });
 
-	_pauseWindow.setChildrenOrigin(gui::ElementPosition::TOP_CENTER, { 0,32 });
-	_pauseWindow.setState(gui::ElementState::Focused);
+	auto button_settings = tgui::Button::create();
+	button_settings->setTextSize(32);
+	button_settings->setText("Settings");
+	button_settings->onPress([this]() { onSettings(); });
+
+	auto button_exit = tgui::Button::create();
+	button_exit->setTextSize(32);
+	button_exit->setText("Exit");
+	button_exit->onPress([this]() { onExit(); });
+
+	layout->add(button_continue);
+	layout->addSpace(0.2f);
+	layout->add(button_settings);
+	layout->addSpace(0.2f);
+	layout->add(button_exit);
+
+	button_continue->setNavigationUp(button_exit);
+	button_continue->setNavigationDown(button_settings);
+
+	button_settings->setNavigationUp(button_continue);
+	button_settings->setNavigationDown(button_exit);
+
+	button_exit->setNavigationUp(button_settings);
+	button_exit->setNavigationDown(button_continue);
+
+	_gui->setNavigationUp(button_continue);
+	_gui->setNavigationDown(button_continue);
 }
 
 bool drft::PauseState::handleEvent(const sf::Event& ev)
 {
-	_pauseBackground.handleEvent(ev);
-	_pauseWindow.handleEvent(ev);
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
@@ -85,24 +62,23 @@ bool drft::PauseState::handleEvent(const sf::Event& ev)
 			requestStackPop();
 			return false;
 		}
-		break;
 	}
 
 	return false;
 }
 
-bool drft::PauseState::update(const float dt)
+void drft::PauseState::onContinue()
 {
-	_pauseBackground.update(dt);
-	_pauseWindow.update(dt);
-
-	return false;
+	requestStackPop();
 }
 
-void drft::PauseState::render(sf::RenderTarget& target)
+void drft::PauseState::onSettings()
 {
-	_pauseBackground.render(target);
-	_pauseWindow.render(target);
+	// TODO: implement
 }
 
-
+void drft::PauseState::onExit()
+{
+	requestStackClear();
+	requestStackPush(States::MainMenu);
+}

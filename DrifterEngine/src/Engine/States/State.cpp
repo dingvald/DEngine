@@ -4,22 +4,29 @@
 
 using namespace drft;
 
-State::State(StateStack& stack, StateContext& context)
-	: _stack(&stack)
+State::State(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
+	: _gui(gui)
+	, _stack(&stack)
 	, _context(context)
 {}
 
 State::~State()
 {}
 
+
 bool State::handleEvent(const sf::Event& ev)
 {
-	return false;
+	return true;
+}
+
+bool drft::State::update(const float dt)
+{
+	return true;
 }
 
 bool drft::State::fixedUpdate()
 {
-	return true;;
+	return true;
 }
 
 void drft::State::onPush()

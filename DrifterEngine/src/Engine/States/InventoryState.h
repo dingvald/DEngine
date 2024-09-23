@@ -16,7 +16,7 @@ namespace drft
 	private:
 
 	public:
-		InventoryState(StateStack& stack, StateContext& context);
+		InventoryState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

@@ -86,8 +86,8 @@ static const std::filesystem::path MAIN_REGISTRY_FILE_PATH = SAVE_DIRECTORY / "r
 static const std::filesystem::path ENTITIES_DIRECTORY = STATIC_DATA_DIRECTORY / "entities";
 static const std::filesystem::path WORLD_GENERATION_FILE_PATH = STATIC_DATA_DIRECTORY / "world_generation.json";
 
-drft::GameState::GameState(StateStack& stack, StateContext& context) 
-	: State(stack, context)
+drft::GameState::GameState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
+	: State(stack, context, gui)
 {
 	init();
 }
@@ -160,7 +160,7 @@ bool drft::GameState::loadOrCreatePlayer()
 	}
 	else
 	{
-		assert(_factory->has("Player"), "No player prototype found - is JSON loaded?");
+		assert(_factory->has("Player"));
 		_player = _factory->build("Player", getContext().registry);
 		_player.patch<PositionComponent>([](PositionComponent& pos)
 			{

@@ -8,10 +8,7 @@ namespace drft::system
 	public:
 		using System::System;
 
-	private:
-		void init() override;
-		void onUpdateEnd() override;
-		void onCraftItem(entt::registry& registry, entt::entity entity);
+		static bool craftItem(entt::handle crafter, const std::string& itemName);
 	};
 
 }

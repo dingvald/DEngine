@@ -14,15 +14,14 @@ namespace drft
 		};
 
 	public:
-		PauseState(StateStack& stack, StateContext& context);
+		PauseState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
 
 		bool handleEvent(const sf::Event& ev);
-		bool update(const float dt);
-		void render(sf::RenderTarget& target);
 
 	private:
-		gui::Panel _pauseBackground;
-		gui::List _pauseWindow{ true };
+		void onContinue();
+		void onSettings();
+		void onExit();
 	};
 }
 

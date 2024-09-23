@@ -165,6 +165,33 @@
           "materials": [ "Leather" ]
         }
       }
+    },
+    "Sharpened Stone": {
+      "Inherits": [
+        "BaseMaterial"
+      ],
+      "Components": {
+        "Description": {
+          "name": "Sharpened Stone",
+          "description": "A stone, but its edges have been sharpened."
+        },
+        "Render": {
+          "texture": "sharp_stone",
+          "uv_size": [ 16, 24 ],
+          "layer": 1,
+          "color": [ 128, 132, 135 ]
+        },
+        "Material": {
+          "blocks": false,
+          "weight": 1.0,
+          "materials": [ "Stone" ]
+        },
+        "Craftable": {
+          "recipe": {
+            "Stone": 2
+          }
+        }
+      }
     }
   }
 }

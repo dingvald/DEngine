@@ -42,8 +42,8 @@ static constexpr int INVENTORY_PANEL_WIDTH_OFFSET = 0;
 static constexpr int INVENTORY_PANEL_HEIGHT_OFFSET = PANEL_HEIGHT_OFFSET;
 
 
-drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
-    : State(stack, context)
+drft::InventoryState::InventoryState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
+    : State(stack, context, gui)
 {}
 
 bool drft::InventoryState::handleEvent(const sf::Event& ev)
