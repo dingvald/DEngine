@@ -73,8 +73,6 @@ State::StatePtr StateStack::createState(States stateID)
 	assert(_factories.contains(stateID));
 
 	auto guiGroup = createGuiGroup(stateID);
-	guiGroup->setVisible(true);
-	guiGroup->setFocused(true);
 
 	return _factories.at(stateID)(guiGroup);
 }
@@ -89,6 +87,10 @@ void StateStack::applyPendingChanges()
 		{
 			case Push:
 			{
+				if (!_stack.empty())
+				{
+					disableGuiGroup(_stack.back().id);
+				}
 				State::StatePtr newState = createState(stateID);
 				newState->onPush();
 				_stack.emplace_back(stateID, std::move(newState));
@@ -127,6 +129,9 @@ tgui::Group::Ptr drft::StateStack::createGuiGroup(States stateID)
 
 	auto group = tgui::Group::create();
 	_gui.add(group, groupID);
+	group->setVisible(true);
+	group->setEnabled(true);
+	group->setFocused(true);
 
 	return group;
 }
@@ -137,5 +142,7 @@ void drft::StateStack::disableGuiGroup(States stateID)
 	if (auto group = _gui.get<tgui::Group>(groupID))
 	{
 		group->setVisible(false);
+		group->setEnabled(false);
+		group->setFocused(false);
 	}
 }

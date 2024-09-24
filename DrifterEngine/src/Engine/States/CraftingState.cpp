@@ -19,15 +19,16 @@
 
 using namespace entt::literals;
 
-static constexpr float CRAFTING_WINDOW_WIDTH = 352.f;
-static constexpr float CRAFTING_WINDOW_HEIGHT = 256.f;
+static constexpr float CRAFTING_WINDOW_WIDTH = 512.f;
+static constexpr float CRAFTING_WINDOW_HEIGHT = 480.f;
 static constexpr float DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS = 180.f;
 
 static const char* CraftablesListWidget = "list_box";
 static const char* ListEntryWidget = "list_entry";
 static const char* ItemNameWidget = "item_name";
 static const char* ItemIconWidget = "icon";
-static const char* RecipeGridWidget = "recipe";
+static const char* NameGridWidget = "name_grid";
+static const char* RecipeGridWidget = "recipe_grid";
 
 drft::CraftingState::CraftingState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
     : State(stack, context, gui)
@@ -36,19 +37,15 @@ drft::CraftingState::CraftingState(StateStack& stack, StateContext& context, tgu
 	determineSessionEntities();
 
 	auto list = tgui::PanelListBox::create();
+	_gui->add(list, CraftablesListWidget);
 	list->setOrigin(0.5f, 0.5f);
 	list->setPosition("50%, 50%");
-	list->setSize("50%, 50%");
-
-	// create template ////////////////////////////////////
-	auto templatePanel = list->getPanelTemplate();
-	setupCraftableEntryTemplate(templatePanel);
-	////////////////////////////////////////////////////////
-	
+	list->setSize(tgui::bindWidth(_gui) * 0.5f, tgui::bindHeight(_gui) * 0.5f);
 	list->setItemsHeight(48.f);
 
-	_gui->add(list, CraftablesListWidget);
-
+	auto templatePanel = list->getPanelTemplate();
+	setupCraftableEntryTemplate(templatePanel);
+	
 	_gui->setNavigationDown(list);
 	_gui->setNavigationUp(list);
 
@@ -73,31 +70,23 @@ bool drft::CraftingState::handleEvent(const sf::Event& ev)
 
 void drft::CraftingState::setupCraftableEntryTemplate(tgui::Panel::Ptr templatePanel)
 {
-	auto layout = tgui::HorizontalLayout::create();
-	layout->setSize("100%, 100%");
-
-	auto name_grid = tgui::Grid::create();
+	auto icon = tgui::Picture::create();
+	templatePanel->add(icon, ItemIconWidget);
+	icon->setSize(32, 48);
+	icon->setOrigin(0.f, 0.5f);
+	icon->setPosition(4, "50%");
 
 	auto text = tgui::Label::create();
+	templatePanel->add(text, ItemNameWidget);
 	text->setVerticalAlignment(tgui::VerticalAlignment::Center);
-	text->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
 	text->setTextSize(16);
-
-	auto icon = tgui::Picture::create();
-	icon->setSize(32, 48);
-
-	name_grid->add(icon, ItemIconWidget);
-	name_grid->setWidgetCell(icon, 0, 0);
-	name_grid->add(text, ItemNameWidget);
-	name_grid->setWidgetCell(text, 0, 1);
+	text->setOrigin(0.f, 0.5f);
+	text->setPosition(icon->getSize().x + 4, "50%");
 
 	auto recipe_grid = tgui::Grid::create();
-
-	layout->add(name_grid, 1);
-	layout->addSpace(2);
-	layout->add(recipe_grid, 2, RecipeGridWidget);
-
-	templatePanel->add(layout);
+	templatePanel->add(recipe_grid, RecipeGridWidget);
+	recipe_grid->setOrigin(0.f, 0.5f);
+	recipe_grid->setPosition("50%, 50%");
 }
 
 void drft::CraftingState::determineSessionEntities()
@@ -116,6 +105,8 @@ void drft::CraftingState::refreshCraftingList(tgui::PanelListBox::Ptr list)
 	refreshSessionEntityIngredients();
 	list->removeAllItems();
 	const auto& prototypeReg = _factory->prototypes();
+	tgui::Panel::Ptr previousPanel = nullptr;
+	bool isFirst = true;
 
 	if (auto craftables = _sessionEntity.try_get<MyCraftableItemsComponent>())
 	{
@@ -123,11 +114,35 @@ void drft::CraftingState::refreshCraftingList(tgui::PanelListBox::Ptr list)
 		{
 			auto panel = list->addItem();
 			addItemToCraftingList({ prototypeReg, craftable }, panel);
+			if (isFirst)
+			{
+				list->setNavigationDown(panel);
+				list->setNavigationUp(panel);
+				isFirst = false;
+			}
+			if (previousPanel)
+			{
+				previousPanel->setNavigationDown(panel);
+			}
+			panel->setNavigationUp(previousPanel);
+			previousPanel = panel;
 		}
 		for (auto&& partial : craftables->partialCraftables)
 		{
 			auto panel = list->addItem();
 			addItemToCraftingList({ prototypeReg, partial }, panel);
+			if (isFirst)
+			{
+				list->setNavigationDown(panel);
+				list->setNavigationUp(panel);
+				isFirst = false;
+			}
+			if (previousPanel)
+			{
+				previousPanel->setNavigationDown(panel);
+			}
+			panel->setNavigationUp(previousPanel);
+			previousPanel = panel;
 		}
 	}
 }
@@ -168,14 +183,13 @@ void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, ent
 	icon->getRenderer()->setTexture(texture);
 
 	auto text = panel->get<tgui::Label>(ItemNameWidget);
-
 	text->setText(name);
 }
 
 void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Panel::Ptr panel)
 {
-	auto grid = panel->get<tgui::Grid>(RecipeGridWidget);
 	auto& craftable = item.get<CraftableComponent>();
+	auto grid = panel->get<tgui::Grid>(RecipeGridWidget);
 	int index = 0;
 	for (auto&& [ingredient, amount] : craftable.recipe)
 	{
@@ -206,7 +220,8 @@ void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned 
 	label->setTextSize(16);
 	sub_grid->addWidget(label, 0, 1);
 
-	grid->addWidget(sub_grid, 0, index);
+	grid->add(sub_grid, ingredientName);
+	grid->setWidgetCell(sub_grid, 0, index);
 }
 
 void drft::CraftingState::onCraft(const std::string& name)
