@@ -190,6 +190,9 @@
           "recipe": {
             "Stone": 2
           }
+        },
+        "Sharp": {
+          "sharpness": 3
         }
       }
     }

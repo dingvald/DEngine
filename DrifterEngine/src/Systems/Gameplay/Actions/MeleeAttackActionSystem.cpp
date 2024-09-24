@@ -67,8 +67,8 @@ void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entit
 		{
 			frames = // slashing
 			{
-				SpriteOptions{.uvCoords = sf::Vector2i{6, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
-				SpriteOptions{.uvCoords = sf::Vector2i{7, 1}, .texture = "simple_tileset"_hs, .uvSize = sf::Vector2i{16, 16}, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "slash_effect"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "slash_effect"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
 			};
 		}
 		const sf::Vector3i targetPosition = positionComponent->tile + spatial::vec3FromPlanar(action.direction);
