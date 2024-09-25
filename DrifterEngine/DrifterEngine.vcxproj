@@ -856,8 +856,8 @@
     <Text Include="resources\GUI\Themes\drifter_theme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\..\dev\libs\TGUI-1.5\build\src\tgui.vcxproj">
-      <Project>{7d3248d2-888d-39d6-b119-a4147cb4a2aa}</Project>
+    <ProjectReference Include="..\..\TGUI\build\src\tgui.vcxproj">
+      <Project>{d893271d-5920-3aa8-95e6-a525546bcd88}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
