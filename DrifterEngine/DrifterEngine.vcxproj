@@ -94,7 +94,7 @@
       <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\include;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;C:\dev\libs\SFML-2.6.1\include;C:\dev\libs\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
@@ -104,7 +104,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\dev\libs\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window-s-d.lib;sfml-graphics-s-d.lib;sfml-system-s-d.lib;%(AdditionalDependencies);opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;tgui-s-d.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
@@ -118,7 +118,7 @@
       <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\include;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;C:\dev\libs\SFML-2.6.1\include;C:\dev\libs\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -130,8 +130,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-window-s.lib;sfml-graphics-s.lib;sfml-system-s.lib;%(AdditionalDependencies);opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;tgui-s.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\dev\libs\SFML-2.6.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-window-s.lib;sfml-graphics-s.lib;sfml-system-s.lib;%(AdditionalDependencies);opengl32.lib;freetype.lib;winmm.lib;gdi32.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -854,6 +854,11 @@
   <ItemGroup>
     <Text Include="resources\GUI\Themes\debug_theme.txt" />
     <Text Include="resources\GUI\Themes\drifter_theme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\..\dev\libs\TGUI-1.5\build\src\tgui.vcxproj">
+      <Project>{7d3248d2-888d-39d6-b119-a4147cb4a2aa}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

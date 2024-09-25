@@ -230,7 +230,7 @@ void drft::Engine::handleKeyboardEvents(sf::Event event)
 
 void drft::Engine::passEventToGui(sf::Event event)
 {
-	// Convert numpad directions to keyboard arrow directions
+	// Convert numpad directions to keyboard arrow directions so it can be handled by the GUI
 	if (event.type == sf::Event::KeyPressed)
 	{
 		using Key = sf::Keyboard;
@@ -307,8 +307,3 @@ void drft::Engine::toggleDebug()
 {
 	_showDebug = !_showDebug;
 }
-
-
-
-
-
