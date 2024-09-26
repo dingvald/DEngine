@@ -78,6 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
@@ -94,19 +95,22 @@
       <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;C:\dev\libs\SFML-2.6.1\include;C:\dev\libs\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\include;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\dev\libs\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-window-s-d.lib;sfml-graphics-s-d.lib;sfml-system-s-d.lib;%(AdditionalDependencies);opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;tgui-s-d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-window-s-d.lib;sfml-graphics-s-d.lib;sfml-system-s-d.lib;tgui-s-d.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -118,20 +122,21 @@
       <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;C:\dev\libs\SFML-2.6.1\include;C:\dev\libs\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\include;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <Optimization>MaxSpeed</Optimization>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\dev\libs\SFML-2.6.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-window-s.lib;sfml-graphics-s.lib;sfml-system-s.lib;%(AdditionalDependencies);opengl32.lib;freetype.lib;winmm.lib;gdi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;sfml-system-s.lib;sfml-window-s.lib;sfml-graphics-s.lib;tgui-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -396,7 +401,338 @@
   <ItemGroup>
     <ClInclude Include="deps\jc_voronoi\jc_voronoi.h" />
     <ClInclude Include="deps\jc_voronoi\jc_voronoi_adaptor.h" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\AlResource.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\Export.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\InputSoundFile.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\Listener.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\Music.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\OutputSoundFile.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\Sound.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\SoundBuffer.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\SoundBufferRecorder.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\SoundFileFactory.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\SoundFileReader.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\SoundFileWriter.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\SoundRecorder.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\SoundSource.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio\SoundStream.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Config.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\GpuPreference.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\BlendMode.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\CircleShape.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Color.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\ConvexShape.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Drawable.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Export.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Font.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Glsl.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Glyph.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Image.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\PrimitiveType.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Rect.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\RectangleShape.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\RenderStates.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\RenderTarget.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\RenderTexture.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\RenderWindow.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Shader.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Shape.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Sprite.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Text.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Texture.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Transform.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Transformable.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\Vertex.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\VertexArray.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\VertexBuffer.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Graphics\View.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Main.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\Export.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\Ftp.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\Http.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\IpAddress.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\Packet.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\Socket.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\SocketHandle.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\SocketSelector.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\TcpListener.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\TcpSocket.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Network\UdpSocket.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\OpenGL.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Clock.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Err.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Export.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\FileInputStream.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\InputStream.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Lock.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\MemoryInputStream.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Mutex.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\NativeActivity.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\NonCopyable.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Sleep.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\String.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Thread.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\ThreadLocal.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\ThreadLocalPtr.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Time.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Utf.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Vector2.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\System\Vector3.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Clipboard.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Context.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\ContextSettings.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Cursor.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Event.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Export.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\GlResource.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Joystick.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Keyboard.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Mouse.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Sensor.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Touch.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\VideoMode.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Vulkan.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\Window.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\WindowBase.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\WindowHandle.hpp" />
+    <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="deps\stb\stb_rect_pack.h" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\AbsoluteOrRelativeValue.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\AllWidgets.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Animation.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Any.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Font\BackendFont.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Font\BackendFontFactory.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Font\FreeType\BackendFontFreeType.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Font\Raylib\BackendFontRaylib.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Font\SDL_ttf\BackendFontSDLttf.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Font\SFML-Graphics\BackendFontSFML.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\GLFW-GLES2.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\GLFW-OpenGL3.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\raylib.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\BackendRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\BackendRenderTarget.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\BackendText.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\BackendTexture.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\GLES2\BackendRendererGLES2.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\GLES2\BackendRenderTargetGLES2.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\GLES2\BackendTextureGLES2.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\GLES2\CanvasGLES2.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\OpenGL.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\OpenGL3\BackendRendererOpenGL3.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\OpenGL3\BackendRenderTargetOpenGL3.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\OpenGL3\BackendTextureOpenGL3.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\OpenGL3\CanvasOpenGL3.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\Raylib\BackendRendererRaylib.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\Raylib\BackendRenderTargetRaylib.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\Raylib\BackendTextureRaylib.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\Raylib\CanvasRaylib.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\SDL_Renderer\BackendRendererSDL.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\SDL_Renderer\BackendRenderTargetSDL.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\SDL_Renderer\BackendTextureSDL.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\SDL_Renderer\CanvasSDL.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\SFML-Graphics\BackendRendererSFML.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\SFML-Graphics\BackendRenderTargetSFML.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\SFML-Graphics\BackendTextureSFML.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Renderer\SFML-Graphics\CanvasSFML.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\SDL-GLES2.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\SDL-OpenGL3.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\SDL-Renderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\SDL-TTF-GLES2.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\SDL-TTF-OpenGL3.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\SFML-Graphics.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\SFML-OpenGL3.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\Backend.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\BackendGui.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\GLFW\BackendGLFW.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\GLFW\BackendGuiGLFW.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\Raylib\BackendGuiRaylib.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\Raylib\BackendRaylib.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\SDL\BackendGuiSDL.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\SDL\BackendSDL.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\SFML\BackendGuiSFML.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Backend\Window\SFML\BackendSFML.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Base64.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Color.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Components.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Config.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Container.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\CopiedSharedPtr.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Core.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Cursor.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\CustomWidgetForBindings.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\DefaultBackendWindow.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\DefaultFont.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Duration.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Event.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Exception.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Config.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Dispatch.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Dispatch\DispatchTraits.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Dispatch\DoubleDispatcher.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Dispatch\SingleDispatcher.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Meta.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Meta\Preprocessor.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Meta\Templates.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Meta\Tuple.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Meta\Variadic.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\SmartPtr.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\SmartPtr\ClonersAndDeleters.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\SmartPtr\CopiedPtr.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\SmartPtr\Detail\Factories.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\SmartPtr\Detail\PtrOwner.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\SmartPtr\MakeUnique.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\Algorithms.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\Any.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\Downcast.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\Exceptions.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\ForEach.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\Hash.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\NamedTuple.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\NonCopyable.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\Optional.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\PImpl.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\SafeBool.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\Swap.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Tools\Typeid.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\glad\gl.h" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\IncludeNanoSVG.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\IncludeSDL.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\IncludeStbImage.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\IncludeStbImageWrite.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\IncludeWindows.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\nanosvg\nanosvg.h" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\nanosvg\nanosvgrast.h" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\stb\stb_image.h" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\extlibs\stb\stb_image_write.h" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\FileDialogIconLoader.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Filesystem.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Font.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Global.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Keyboard.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Layout.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Loading\DataIO.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Loading\Deserializer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Loading\ImageLoader.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Loading\Serializer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Loading\Theme.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Loading\ThemeLoader.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Loading\WidgetFactory.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\ObjectConverter.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Optional.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Outline.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Rect.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\RelFloatRect.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\RendererDefines.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\BoxLayoutRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ButtonRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ChatBoxRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\CheckBoxRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ChildWindowRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ColorPickerRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ComboBoxRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\EditBoxRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\FileDialogRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\GroupRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\KnobRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\LabelRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ListBoxRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ListViewRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\MenuBarRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\MessageBoxRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\PanelListBoxRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\PanelRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\PictureRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ProgressBarRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\RadioButtonRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\RangeSliderRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ScrollablePanelRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\ScrollbarRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\SeparatorLineRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\SliderRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\SpinButtonRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\SplitContainerRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\TabsRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\TextAreaRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\TextBoxRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\TreeViewRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Renderers\WidgetRenderer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\RenderStates.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Signal.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\SignalManager.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Sprite.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\String.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\StringView.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\SubwidgetContainer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\SvgImage.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Text.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\TextStyle.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Texture.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\TextureData.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\TextureManager.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\TGUI.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Timer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\ToolTip.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Transform.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\TwoFingerScrollDetect.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Utf.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Variant.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Vector2.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Vertex.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widget.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\BitmapButton.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\BoxLayout.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\BoxLayoutRatios.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Button.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ButtonBase.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\CanvasBase.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ChatBox.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\CheckBox.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ChildWindow.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ClickableWidget.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ColorPicker.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ComboBox.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\EditBox.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\EditBoxSlider.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\FileDialog.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Grid.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Group.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\HorizontalLayout.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\HorizontalWrap.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Knob.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Label.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ListBox.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ListView.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\MenuBar.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\MessageBox.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Panel.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\PanelListBox.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Picture.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ProgressBar.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\RadioButton.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\RadioButtonGroup.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\RangeSlider.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\RichTextLabel.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ScrollablePanel.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Scrollbar.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\SeparatorLine.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Slider.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\SpinButton.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\SpinControl.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\SplitContainer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\TabContainer.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\Tabs.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\TextArea.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\ToggleButton.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\TreeView.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\VerticalLayout.hpp" />
+    <ClInclude Include="deps\TGUI-1.5\include\TGUI\WindowsIMM.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\JSON\StringExpressions.h" />
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h" />
@@ -822,6 +1158,26 @@
     <None Include="data\static\entities\environmentals.json" />
     <None Include="data\static\structures\wooden_house.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
+    <None Include="deps\SFML-2.6.1\include\SFML\Audio\SoundFileFactory.inl" />
+    <None Include="deps\SFML-2.6.1\include\SFML\Graphics\Glsl.inl" />
+    <None Include="deps\SFML-2.6.1\include\SFML\Graphics\Rect.inl" />
+    <None Include="deps\SFML-2.6.1\include\SFML\System\String.inl" />
+    <None Include="deps\SFML-2.6.1\include\SFML\System\Thread.inl" />
+    <None Include="deps\SFML-2.6.1\include\SFML\System\ThreadLocalPtr.inl" />
+    <None Include="deps\SFML-2.6.1\include\SFML\System\Utf.inl" />
+    <None Include="deps\SFML-2.6.1\include\SFML\System\Vector2.inl" />
+    <None Include="deps\SFML-2.6.1\include\SFML\System\Vector3.inl" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-audio-s-d.pdb" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-audio-s.pdb" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-graphics-s-d.pdb" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-graphics-s.pdb" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-main-s.pdb" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-system-s-d.pdb" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-system-s.pdb" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-window-s-d.pdb" />
+    <None Include="deps\SFML-2.6.1\lib\Debug\sfml-window-s.pdb" />
+    <None Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Dispatch\Detail\DoubleDispatcher.inl" />
+    <None Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Dispatch\Detail\SingleDispatcher.inl" />
     <None Include="packages.config" />
     <None Include="src\Spatial\AutoGrid.inl" />
     <None Include="src\Spatial\Grid2d.inl" />
@@ -854,11 +1210,6 @@
   <ItemGroup>
     <Text Include="resources\GUI\Themes\debug_theme.txt" />
     <Text Include="resources\GUI\Themes\drifter_theme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\TGUI\build\src\tgui.vcxproj">
-      <Project>{d893271d-5920-3aa8-95e6-a525546bcd88}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
