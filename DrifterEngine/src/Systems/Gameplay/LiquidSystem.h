@@ -8,6 +8,11 @@ namespace drft::spatial
 	class WorldGrid;
 }
 
+namespace drft
+{
+	struct TilePosition;
+}
+
 namespace drft::system
 {
 	class LiquidSystem : public System
@@ -21,6 +26,7 @@ namespace drft::system
 
 	private:
 		void addInLiquidEffect(sf::Vector3i position, sf::Color color);
+		entt::entity getLiquidAt(TilePosition tilePosition) const;
 
 		void onTurnEndEvent(events::TurnEndEvent& ev) const;
 
@@ -29,7 +35,6 @@ namespace drft::system
 
 	private:
 		spatial::WorldGrid* _grid = nullptr;
-		std::unordered_map<sf::Vector3i, entt::entity> _liquidPositions;
 		std::vector<entt::entity> _inLiquidEffects;
 	};
 }

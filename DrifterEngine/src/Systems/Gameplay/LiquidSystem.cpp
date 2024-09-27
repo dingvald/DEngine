@@ -32,29 +32,23 @@ void drft::system::LiquidSystem::init()
 
 void drft::system::LiquidSystem::onFixedUpdate()
 {
-	_liquidPositions.clear();
-	auto liquidView = _registry.view<LiquidComponent, PositionComponent>();
-	_liquidPositions.reserve(liquidView.size_hint());
-
-	for (const auto&& [entity, liquid, pos] : liquidView.each())
-	{
-		_liquidPositions.emplace(pos.tile, entity);
-	}
-
 	auto liquidAffectedView = _registry.view<MaterialComponent, PositionComponent>(entt::exclude<LiquidComponent, FlyingComponent>);
 	for (auto [entity, material, pos] : liquidAffectedView.each())
 	{
-		if (!_liquidPositions.contains(pos.tile)) continue;
-		auto& liquid = _registry.get<LiquidComponent>(_liquidPositions.at(pos.tile));
-		_registry.emplace_or_replace<InLiquidComponent>(entity, liquid.volume);
+		auto liquidEntity = getLiquidAt(pos.tile);
+		if (auto liquid = _registry.try_get<LiquidComponent>(liquidEntity))
+		{
+			_registry.emplace_or_replace<InLiquidComponent>(entity, liquid->volume);
+		}
 	}
 
 	auto inLiquidView = _registry.view<InLiquidComponent, PositionComponent>();
 	for (auto [entity, inLiquid, pos] : inLiquidView.each())
 	{
-		if (_liquidPositions.contains(pos.tile) && inLiquid.volume > 200.0f)
+		auto liquidEntity = getLiquidAt(pos.tile);
+		if (liquidEntity != entt::null && inLiquid.volume > 200.0f)
 		{
-			if (auto render = _registry.try_get<RenderComponent>(_liquidPositions.at(pos.tile)))
+			if (auto render = _registry.try_get<RenderComponent>(liquidEntity))
 			{
 				addInLiquidEffect(pos.tile, render->color);
 			}
@@ -91,6 +85,15 @@ void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector3i position, sf::Co
 	effect.emplace<PositionComponent>(spatial::asTileSpace(position));
 	effect.emplace<component::tag::InViewport>();
 	_inLiquidEffects.push_back(effect.entity());
+}
+
+entt::entity drft::system::LiquidSystem::getLiquidAt(TilePosition tilePosition) const
+{
+	auto liquids = _grid->entitiesAt(tilePosition, 
+		[this](entt::entity entity) -> bool {
+			return _registry.all_of<LiquidComponent>(entity);
+		});
+	return liquids.empty() ? entt::null : liquids.front();
 }
 
 void drft::system::LiquidSystem::onTurnEndEvent(events::TurnEndEvent& ev) const
