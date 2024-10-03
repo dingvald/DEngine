@@ -86,7 +86,6 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::
 	{
 		setFuture(std::async(std::launch::async, &VirtualChunk::loadChunkFromFile, this, filename));
 		setState(ChunkState::Loading);
-		//std::cout << "Loading chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	}
 
 	auto status = getFuture().wait_for(WAIT_TIME);
@@ -101,7 +100,6 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::
 	_asyncRegistry = {};
 	
 	setState(ChunkState::Loaded);
-	//std::cout << "Finished loading chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 	return ioStatus::Done;
 }
@@ -112,7 +110,6 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 	{
 		const auto& grid = reg.ctx().get<spatial::WorldGrid&>();
 		const auto entities = grid.getAllEntities(_coordinate);
-		//std::cout << "Saving chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 		if (entities.empty())
 		{
@@ -139,7 +136,6 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 	_asyncRegistry = {};
 
 	setState(ChunkState::Saved);
-	//std::cout << "Saved chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 
 	return ioStatus::Done;
 }

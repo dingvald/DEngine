@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ChunkManager.h"
+#include <Engine/CommonEngineDirectories.h>
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
@@ -10,15 +11,9 @@
 #include "Services/DebugInfo.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 
-using namespace drft::system;
-
-static const std::filesystem::path WORKING_DIRECTORY = ".";
-static const std::filesystem::path SAVE_DIRECTORY = WORKING_DIRECTORY / "data" / "savegame";
-static const std::filesystem::path CHUNK_DIRECTORY = SAVE_DIRECTORY / "chunks";
 
 static constexpr int ACTIVE_CHUNK_RADIUS_XY = 10;
 static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 10;
-
 
 void drft::system::ChunkManager::onUpdate(const float dt)
 {
@@ -48,12 +43,7 @@ void drft::system::ChunkManager::updateChunkStates(const CameraInfo& camera)
 {
 	ChunkPosition cameraChunkPosition = spatial::toChunkSpace(spatial::asTileSpace(camera.position));
 
-	auto upperActiveCoords	= spatial::getIntCircleInRadius(cameraChunkPosition + sf::Vector3i{0,0,1}, ACTIVE_CHUNK_RADIUS_XY / 2);	//		--------
-	auto activeCoords		= spatial::getIntCircleInRadius(cameraChunkPosition, ACTIVE_CHUNK_RADIUS_XY);							//	----------------
-	auto lowerActiveCoords	= spatial::getIntCircleInRadius(cameraChunkPosition + sf::Vector3i{0,0,-1}, ACTIVE_CHUNK_RADIUS_XY / 2);//		--------
-
-	activeCoords.insert(activeCoords.end(), upperActiveCoords.begin(), upperActiveCoords.end());
-	activeCoords.insert(activeCoords.end(), lowerActiveCoords.begin(), lowerActiveCoords.end());
+	auto activeCoords = spatial::getIntCircleInRadius(cameraChunkPosition, ACTIVE_CHUNK_RADIUS_XY);
 
 	// Ensure active chunks are active or will be built
 	for (auto&& coord : activeCoords)
@@ -171,7 +161,6 @@ void drft::system::ChunkManager::loadOrBuildChunk(ChunkPosition position, spatia
 	}
 	else
 	{
-		// Was probably empty... probably
 		chunk.setState(spatial::ChunkState::ToBuild);
 		_toBuild.push(std::move(position));
 	}
@@ -186,13 +175,9 @@ std::filesystem::path drft::system::ChunkManager::buildChunkFilename(const spati
 bool drft::system::ChunkManager::isWithinChunkSaveDisk(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const
 {
 	const int dz_abs = std::abs(chunkPosition.z - centerPosition.z);
-	if (dz_abs > 1) return false;
-	if (dz_abs == 1)
-	{
-		return spatial::isWithinRadius2d({ centerPosition.x, centerPosition.y }, { chunkPosition.x, chunkPosition.y }, TO_SAVE_CHUNK_RADIUS_XY / 2);
-	}
-	else
+	if (dz_abs == 0)
 	{
 		return spatial::isWithinRadius2d({ centerPosition.x, centerPosition.y }, { chunkPosition.x, chunkPosition.y }, TO_SAVE_CHUNK_RADIUS_XY);
 	}
+	return false;
 }
