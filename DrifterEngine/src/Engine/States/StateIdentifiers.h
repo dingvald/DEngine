@@ -15,7 +15,7 @@ namespace drft
 		Crafting,
 		SelectDirection,
 		SelectTarget,
-		Total
+		Simulation,
 	};
 }
 

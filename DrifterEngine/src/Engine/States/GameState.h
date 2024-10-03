@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 #include "Systems/HelperClasses/InputBuffer.h"
+#include <Engine/StateStack.h>
 
 namespace drft
 {
@@ -30,7 +31,7 @@ namespace drft
 	class GameState : public State
 	{
 	public:
-		GameState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
+		GameState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;
@@ -39,25 +40,21 @@ namespace drft
 		void onPop() override;
 
 	private:
-		void init();
+		void registerGameStates();
 		void connectEventHandlers();
 		void loadOrCreateWorldGenerator();
-		bool loadOrCreatePlayer();
 		void loadEntityPrototypes();
 		void setupRegistryContext();
-		void loadRegistry();
-		void importSystems();
 		void onRequestStatePush(const drft::events::RequestStateStackPush& ev);
 
 	private:
+		StateStack _gameStateStack;
 		system::InputBuffer _inputBuffer{ 3 };
-		std::unique_ptr<system::SystemScheduler> _systems;
-		std::unique_ptr<spatial::WorldGrid> _world;
+		
 		std::unique_ptr<gen::WorldGenerator> _worldGenerator;
 		std::unique_ptr<WorldMap> _worldMap;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
-		entt::handle _player{};
 	};
 
 } // namespace drft

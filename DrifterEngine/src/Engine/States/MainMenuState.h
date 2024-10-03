@@ -1,5 +1,5 @@
 #pragma once
-#include "State.h"
+#include <Engine/States/State.h>
 #include "GUI/GUIElement.h"
 
 namespace drft
@@ -14,17 +14,16 @@ namespace drft
 		};
 
 	public:
-		MainMenuState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
+		MainMenuState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
 
 	private:
-		void onNewGame();
-		void onContinue();
-		void onSettings();
-		void onExit();
-		void onPressDown();
-		void onPressUp();
+		void onNewGameButton();
+		void onContinueButton();
+		void onSettingsButton();
+		void onExitButton();
+
 		bool hasSaveFile() const;
 	};
 }

@@ -1,30 +1,38 @@
 #include "pch.h"
 #include "ItemUniqueIDGenerator.h"
 #include "Components/ItemComponent.h"
-
-std::unordered_map<unsigned long, entt::entity> drft::system::ItemUniqueIDGenerator::_itemToEntityCache;
+#include <Components/ItemIDTrackerComponent.h>
 
 void drft::system::ItemUniqueIDGenerator::init()
 {
 	_registry.on_construct<ItemComponent>().connect<&ItemUniqueIDGenerator::onItemAdd>(this);
+	_registry.on_construct<ItemIDTrackerComponent>().connect<&ItemUniqueIDGenerator::onItemIDTrackerAdded>(this);
 }
 
-void drft::system::ItemUniqueIDGenerator::save(cereal::JSONOutputArchive& oarchive)
+void drft::system::ItemUniqueIDGenerator::onStart()
 {
-	oarchive(cereal::make_nvp("NextAvailableItemID", _nextAvailableID));
-}
-
-void drft::system::ItemUniqueIDGenerator::load(cereal::JSONInputArchive& iarchive)
-{
-	iarchive(cereal::make_nvp("NextAvailableItemID", _nextAvailableID));
+	if (_idTracker == entt::null)
+	{
+		_idTracker = _registry.create();
+		_registry.emplace<ItemIDTrackerComponent>(_idTracker);
+	}
 }
 
 void drft::system::ItemUniqueIDGenerator::onItemAdd(entt::registry& registry, entt::entity entity)
 {
-	auto& item = registry.get<ItemComponent>(entity);
-	if (item.id == ItemComponent::NONE)
+	auto& itemComponent = registry.get<ItemComponent>(entity);
+	if (itemComponent.id == ItemComponent::NONE)
 	{
-		item.id = _nextAvailableID++;
+		auto& maxItemIDComponent = _registry.get<ItemIDTrackerComponent>(_idTracker);
+		itemComponent.id = maxItemIDComponent.maxID;
+		maxItemIDComponent.maxID++;
 	}
-	ItemUniqueIDGenerator::_itemToEntityCache[item.id] = entity;
+	
+	_itemToEntityCache[itemComponent.id] = entity;
 }
+
+void drft::system::ItemUniqueIDGenerator::onItemIDTrackerAdded(entt::registry& registry, entt::entity entity)
+{
+	_idTracker = entity;
+}
+

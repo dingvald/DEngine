@@ -38,3 +38,13 @@ sf::Vector2f drft::system::toScreenSpace(sf::Vector2f worldPosition, CameraInfo 
 
 	return relativeToCameraPosition - sf::Vector2f(camera.viewport.left, camera.viewport.top);
 }
+
+drft::TilePosition drft::system::fromScreenSpace(sf::Vector2i screenPosition, CameraInfo camera)
+{
+	const sf::Vector3f cameraPosition = spatial::toFloatSpace(spatial::asTileSpace(camera.position)) - camera.lag;
+	auto topleft = spatial::toXY(cameraPosition) - sf::Vector2f(camera.viewport.width / 2, camera.viewport.height / 2);
+	auto totalPosition = topleft + sf::Vector2f{ static_cast<float>(screenPosition.x), static_cast<float>(screenPosition.y) };
+
+	return spatial::toTileSpace(sf::Vector3f{ totalPosition.x, totalPosition.y, static_cast<float>(camera.position.z) });
+}
+

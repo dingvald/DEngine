@@ -20,8 +20,8 @@ const std::vector<sf::Vector2i> IconUVs =
 
 using namespace entt::literals;
 
-drft::WorldMapState::WorldMapState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
-	: State(stack, context, gui)
+drft::WorldMapState::WorldMapState(StateStack& stack, StateContext& context)
+	: State(stack, context)
 {
 	const auto& VIEW = getContext().window.getView();
 

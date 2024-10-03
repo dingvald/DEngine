@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/States/State.h"
+#include <Engine/States/State.h>
 #include "GUI/GUIElement.h"
 #include <Spatial/TilePosition.h>
 
@@ -13,7 +13,7 @@ namespace drft
 	class SelectTargetState : public State
 	{
 	public:
-		SelectTargetState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
+		SelectTargetState(StateStack& stack, StateContext& context);
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;
 		void render(sf::RenderTarget& target) override;

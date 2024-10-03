@@ -10,17 +10,16 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-
-		void save(cereal::JSONOutputArchive& oarchive) override;
-		void load(cereal::JSONInputArchive& iarchive) override;
+		void onStart() override;
 
 	private:
-		void onItemAdd(entt::registry& registry, entt::entity);
+		void onItemAdd(entt::registry& registry, entt::entity entity);
+		void onItemIDTrackerAdded(entt::registry& registry, entt::entity entity);
 
 	private:
 		friend class ItemDatabase;
-		unsigned long _nextAvailableID = 1;
-		static std::unordered_map<unsigned long, entt::entity> _itemToEntityCache;
+		entt::entity _idTracker = entt::null;
+		static inline std::unordered_map<unsigned long, entt::entity> _itemToEntityCache;
 	};
 }
 

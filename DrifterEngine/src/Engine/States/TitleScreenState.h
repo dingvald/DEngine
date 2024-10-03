@@ -1,12 +1,12 @@
 #pragma once
-#include "State.h"
+#include <Engine/States/State.h>
 
 namespace drft
 {
 	class TitleScreenState : public State
 	{
 	public:
-		TitleScreenState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
+		TitleScreenState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

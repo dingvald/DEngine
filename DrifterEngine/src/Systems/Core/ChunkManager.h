@@ -24,7 +24,7 @@ namespace drft::system
 		using System::System;
 
 		virtual void onUpdate(const float dt) override;
-		virtual void save(cereal::JSONOutputArchive& oarchive);
+		virtual void shutdown() override;
 
 	private:
 		void updateChunkStates(const CameraInfo& camera);

@@ -1,5 +1,5 @@
 #pragma once
-#include "State.h"
+#include <Engine/States/State.h>
 #include "GUI/GUIElement.h"
 
 namespace drft
@@ -14,14 +14,17 @@ namespace drft
 		};
 
 	public:
-		PauseState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
+		PauseState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev);
 
 	private:
-		void onContinue();
-		void onSettings();
-		void onExit();
+		void onContinueButton();
+		void onSettingsButton();
+		void onExitButton();
+
+	private:
+		tgui::Group::Ptr _group;
 	};
 }
 

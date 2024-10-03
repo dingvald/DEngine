@@ -188,6 +188,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp" />
+    <ClCompile Include="src\Engine\CommonEngineDirectories.cpp" />
+    <ClCompile Include="src\Engine\States\GameStates\SimulationState.cpp" />
+    <ClCompile Include="src\Systems\Core\MouseVisualizationSystem.cpp" />
     <ClCompile Include="src\JSON\StringExpressions.cpp" />
     <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\FillLayer.cpp" />
@@ -200,6 +203,8 @@
     <ClCompile Include="src\Spatial\ChunkPosition.cpp" />
     <ClCompile Include="src\Spatial\TilePosition.cpp" />
     <ClCompile Include="src\Spatial\WorldMapPosition.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\PathNavSystem.cpp" />
+    <ClCompile Include="src\Systems\Helpers\GetMouseTilePosition.cpp" />
     <ClCompile Include="src\Systems\Rendering\SpriteControllerSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\CollisionSystem.cpp" />
     <ClCompile Include="src\Components\ComponentMetaBinder.cpp" />
@@ -212,7 +217,7 @@
     <ClCompile Include="src\Biomes\Biome.cpp" />
     <ClCompile Include="src\JSON\JSONHelpers.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
-    <ClCompile Include="src\Engine\States\SelectTargetState.cpp" />
+    <ClCompile Include="src\Engine\States\GameStates\SelectTargetState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\TargetSelectSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetPrimaryMaterial.cpp" />
     <ClCompile Include="src\Systems\Rendering\AnimationSystem.cpp" />
@@ -269,7 +274,7 @@
     <ClCompile Include="src\Systems\Rendering\LightingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\CraftItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
-    <ClCompile Include="src\Engine\States\CraftingState.cpp" />
+    <ClCompile Include="src\Engine\States\GameStates\CraftingState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.cpp" />
     <ClCompile Include="src\Random\PerlinNoise.cpp" />
@@ -278,9 +283,9 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\EquipItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\BodyPartSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\DropItemSystem.cpp" />
-    <ClCompile Include="src\Engine\States\GameOverState.cpp" />
+    <ClCompile Include="src\Engine\States\GameStates\GameOverState.cpp" />
     <ClCompile Include="src\GUI\GUIElement.cpp" />
-    <ClCompile Include="src\Engine\States\InventoryState.cpp" />
+    <ClCompile Include="src\Engine\States\GameStates\InventoryState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
     <ClCompile Include="src\Utility\RectPacker.cpp" />
@@ -373,13 +378,13 @@
     <ClCompile Include="src\Engine\States\TitleScreenState.cpp" />
     <ClCompile Include="src\Engine\States\StateContext.cpp" />
     <ClCompile Include="src\ProcGen\WorldGeneration\WorldGenerator.cpp" />
-    <ClCompile Include="src\Engine\States\WorldMapState.cpp" />
+    <ClCompile Include="src\Engine\States\GameStates\WorldMapState.cpp" />
     <ClCompile Include="src\Utility\stdHashing.cpp" />
     <ClCompile Include="src\Utility\TGUIHelpers.cpp" />
     <ClCompile Include="src\Utility\Visibility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\StaminaSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\WaitingSystem.cpp" />
-    <ClCompile Include="src\Engine\States\SelectDirectionState.cpp" />
+    <ClCompile Include="src\Engine\States\GameStates\SelectDirectionState.cpp" />
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
     <ClCompile Include="src\WorldMap\WorldMap.cpp" />
@@ -733,6 +738,14 @@
     <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\TreeView.hpp" />
     <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\VerticalLayout.hpp" />
     <ClInclude Include="deps\TGUI-1.5\include\TGUI\WindowsIMM.hpp" />
+    <ClInclude Include="src\Components\DateAndTimeTrackerComponent.h" />
+    <ClInclude Include="src\Components\ItemIDTrackerComponent.h" />
+    <ClInclude Include="src\Components\MouseCursorComponent.h" />
+    <ClInclude Include="src\Components\PathNavComponent.h" />
+    <ClInclude Include="src\Engine\CommonEngineDirectories.h" />
+    <ClInclude Include="src\Engine\ControlsContext.h" />
+    <ClInclude Include="src\Engine\States\GameStates\SimulationState.h" />
+    <ClInclude Include="src\Systems\Core\MouseVisualizationSystem.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\JSON\StringExpressions.h" />
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h" />
@@ -752,6 +765,8 @@
     <ClInclude Include="src\Spatial\ChunkPosition.h" />
     <ClInclude Include="src\Spatial\Grid3d.h" />
     <ClInclude Include="src\Spatial\WorldMapPosition.h" />
+    <ClInclude Include="src\Systems\Gameplay\PathNavSystem.h" />
+    <ClInclude Include="src\Systems\Helpers\GetMouseTilePosition.h" />
     <ClInclude Include="src\Systems\Rendering\SpriteControllerSystem.h" />
     <ClInclude Include="src\Components\Actions\MeleeAttackAction.h" />
     <ClInclude Include="src\Components\Actions\MoveAction.h" />
@@ -811,7 +826,7 @@
     <ClInclude Include="src\Algorithms\FloodFill.h" />
     <ClInclude Include="src\Spatial\AutoGrid.h" />
     <ClInclude Include="src\Engine\EngineConstants.h" />
-    <ClInclude Include="src\Engine\States\SelectTargetState.h" />
+    <ClInclude Include="src\Engine\States\GameStates\SelectTargetState.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\TargetSelectSystem.h" />
     <ClInclude Include="src\Systems\Helpers\GetPrimaryMaterial.h" />
     <ClInclude Include="src\Systems\Rendering\AnimationSystem.h" />
@@ -884,7 +899,7 @@
     <ClInclude Include="src\Systems\Rendering\LightingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\CraftItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
-    <ClInclude Include="src\Engine\States\CraftingState.h" />
+    <ClInclude Include="src\Engine\States\GameStates\CraftingState.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.h" />
     <ClInclude Include="src\Random\PerlinNoise.h" />
@@ -893,9 +908,9 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\EquipItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\BodyPartSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\DropItemSystem.h" />
-    <ClInclude Include="src\Engine\States\GameOverState.h" />
+    <ClInclude Include="src\Engine\States\GameStates\GameOverState.h" />
     <ClInclude Include="src\GUI\GUIElement.h" />
-    <ClInclude Include="src\Engine\States\InventoryState.h" />
+    <ClInclude Include="src\Engine\States\GameStates\InventoryState.h" />
     <ClInclude Include="src\Events\RequestStateChange.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
@@ -1121,14 +1136,14 @@
     <ClInclude Include="src\Engine\States\TitleScreenState.h" />
     <ClInclude Include="src\Engine\States\StateContext.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\WorldGenerator.h" />
-    <ClInclude Include="src\Engine\States\WorldMapState.h" />
+    <ClInclude Include="src\Engine\States\GameStates\WorldMapState.h" />
     <ClInclude Include="src\Utility\stdHashing.h" />
     <ClInclude Include="src\Utility\TGUIHelpers.h" />
     <ClInclude Include="src\Utility\Vector2Serialization.h" />
     <ClInclude Include="src\Utility\Visibility.h" />
     <ClInclude Include="src\Systems\Gameplay\StaminaSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\WaitingSystem.h" />
-    <ClInclude Include="src\Engine\States\SelectDirectionState.h" />
+    <ClInclude Include="src\Engine\States\GameStates\SelectDirectionState.h" />
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h" />
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h" />
     <ClInclude Include="src\WorldMap\WorldMap.h" />
@@ -1189,6 +1204,9 @@
     <Image Include="resources\Icon\drifter-project-icon.png" />
     <Image Include="resources\Textures\basic_tile.png" />
     <Image Include="resources\Textures\Effects\hit_particle.png" />
+    <Image Include="resources\Textures\Effects\mouse_cursor_effect.png" />
+    <Image Include="resources\Textures\Effects\slash_effect.png" />
+    <Image Include="resources\Textures\Environmentals\sharp_stone.png" />
     <Image Include="resources\Textures\Human\human_male_idle.png" />
     <Image Include="resources\Textures\icons.png" />
     <Image Include="resources\Textures\Environmentals\liquid.png" />

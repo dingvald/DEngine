@@ -1,6 +1,7 @@
 #pragma once
 #include "Utility/ResourceHolder.h"
 #include "Utility/TextureAtlas.h"
+#include "States/StateIdentifiers.h"
 #include "StateStack.h"
 #include "Utility/Statistics.h"
 
@@ -39,15 +40,16 @@ namespace drft
 		entt::registry _registry;
 		TextureAtlas _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
-		StateStack _stateStack{ StateContext{_window, _registry, _textures, _fonts}, _gui };
-
-		enum class NavigationType
-		{
-			Keyboard,
-			Mouse
+		ControlsContext _controlsContext = {};
+		StateContext _stateContext = {
+			_window,
+			_registry,
+			_textures,
+			_fonts,
+			_gui,
+			_controlsContext
 		};
-
-		NavigationType _navigationType = NavigationType::Keyboard;
+		StateStack _stateStack{ _stateContext };
 
 		float _dtSinceLastRender = 0.0f;
 		float _dtSinceLastFixedUpdate = 0.0f;

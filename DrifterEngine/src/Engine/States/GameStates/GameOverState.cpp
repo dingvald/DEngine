@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "GameOverState.h"
 
-drft::GameOverState::GameOverState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
-	: State(stack, context, gui)
+drft::GameOverState::GameOverState(StateStack& stack, StateContext& context)
+	: State(stack, context)
 {
 	const auto& VIEW = getContext().window.getView();
 

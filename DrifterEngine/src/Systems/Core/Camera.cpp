@@ -12,7 +12,7 @@
 static const float CAMERA_SPEED = 7.0f;
 
 
-void drft::system::Camera::onStart(bool)
+void drft::system::Camera::onStart()
 {
 	_camera = _registry.create();
 	const float viewportWidth = _registry.ctx().get<const sf::RenderWindow&>().getView().getSize().x;

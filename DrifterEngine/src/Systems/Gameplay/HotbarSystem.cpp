@@ -19,18 +19,17 @@ void drft::system::HotbarSystem::init()
 	AbilityRegistry::bind();
 }
 
-void drft::system::HotbarSystem::onStart(bool isNewGame)
+void drft::system::HotbarSystem::onStart()
 {
-	if (isNewGame)
+	auto playerView = _registry.view<PlayerComponent>();
+	for (auto entity : playerView)
 	{
-		auto playerView = _registry.view<PlayerComponent>();
-		for (auto entity : playerView)
-		{
-			auto& hotbar = _registry.emplace<HotbarComponent>(entity);
-			// For testing purposes:
-			hotbar.abilities[toHotbarIndex(1)] = AbilityType::Sprint;
-			hotbar.abilities[toHotbarIndex(2)] = AbilityType::Throw;
-		}
+		if (_registry.all_of<HotbarComponent>(entity)) continue;
+
+		auto& hotbar = _registry.emplace<HotbarComponent>(entity);
+		// TODO: For testing purposes only
+		hotbar.abilities[toHotbarIndex(1)] = AbilityType::Sprint;
+		hotbar.abilities[toHotbarIndex(2)] = AbilityType::Throw;
 	}
 }
 

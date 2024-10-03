@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "TGUIHelpers.h"
 
-tgui::UIntRect drft::toUIntRect(sf::IntRect rect)
+
+tgui::UIntRect drft::GuiHelpers::toUIntRect(sf::IntRect rect)
 {
     return {
         static_cast<unsigned int>(rect.left),
@@ -9,4 +10,70 @@ tgui::UIntRect drft::toUIntRect(sf::IntRect rect)
         static_cast<unsigned int>(rect.width),
         static_cast<unsigned int>(rect.height),
     };
+}
+
+void drft::GuiHelpers::setupNavigationGraph(tgui::PanelListBox::Ptr list)
+{
+	if (list->getItemCount() == 0) return;
+
+	tgui::Panel::Ptr previous = list->getItemByIndex(list->getItemCount() - 1);
+	for (auto&& panel : list->getItems())
+	{
+		panel->setNavigationUp(previous);
+		previous->setNavigationDown(panel);
+		previous = panel;
+	}
+}
+
+void drft::GuiHelpers::tryFocusItem(tgui::PanelListBox::Ptr list, size_t index)
+{
+	if (auto item = list->getItemByIndex(index))
+	{
+		item->setFocused(true);
+	}
+}
+
+tgui::Button::Ptr drft::GuiHelpers::buttonizePanel(tgui::Panel::Ptr panel)
+{
+	auto button = tgui::Button::create();
+	panel->add(button, "buttonized_panel");
+	panel->onFocus([button]() { button->setFocused(true); });
+	panel->onUnfocus([button]() {button->setFocused(false); });
+	button->setSize("100%, 100%");
+	button->moveToBack();
+
+	return button;
+}
+
+tgui::Button::Ptr drft::GuiHelpers::buttonizePanel(tgui::Panel::Ptr panel, tgui::Label::Ptr text)
+{
+	auto button = tgui::Button::create();
+	auto defaultTextColor = text->getRenderer()->getTextColor();
+	panel->add(button, "buttonized_panel");
+	panel->onFocus([button, text]() { 
+		button->setFocused(true);
+		auto textColor = button->getRenderer()->getTextColorFocused();
+		text->getRenderer()->setTextColor(textColor);
+		});
+	panel->onUnfocus([button, text, defaultTextColor]() {
+		button->setFocused(false); 
+		text->getRenderer()->setTextColor(defaultTextColor);
+		});
+	button->setSize("100%, 100%");
+	button->moveToBack();
+
+	return button;
+}
+
+int drft::GuiHelpers::getFocusedIndex(tgui::PanelListBox::Ptr list)
+{
+	if (list->getItemCount() == 0) return -1;
+	if (auto focused = list->getFocusedChild())
+	{
+		if (auto panel = focused->cast<tgui::Panel>())
+		{
+			return list->getIndexByItem(panel);
+		}
+	}
+	return -1;
 }

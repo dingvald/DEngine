@@ -2,6 +2,7 @@
 #include "DayNightCycleSystem.h"
 #include "Components/CameraComponent.h"
 #include "Components/GlobalLightSourceComponent.h"
+#include <Components/DateAndTimeTrackerComponent.h>
 #include "Events/DayStartEvent.h"
 #include "Events/NightStartEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
@@ -24,7 +25,19 @@ static const sf::Color DAY_COLOR = { 225,225,225 };
 
 void drft::system::DayNightCycleSystem::init()
 {
-	_dispatcher.sink<events::GameTickEvent>().connect<&DayNightCycleSystem::onGameTickEvent>(this);
+	_dispatcher.sink<events::GameTickEvent>()
+		.connect<&DayNightCycleSystem::onGameTickEvent>(this);
+	_registry.on_construct<DateAndTimeTrackerComponent>()
+		.connect<&DayNightCycleSystem::onConstructDateAndTimeTracker>(this);
+}
+
+void drft::system::DayNightCycleSystem::onStart()
+{
+	if (_dateAndTimeTracker == entt::null)
+	{
+		_dateAndTimeTracker = _registry.create();
+		_registry.emplace<DateAndTimeTrackerComponent>(_dateAndTimeTracker, 0, 12, 0, 0);
+	}
 }
 
 void drft::system::DayNightCycleSystem::onFixedUpdate()
@@ -36,46 +49,36 @@ void drft::system::DayNightCycleSystem::onFixedUpdate()
 		_registry.emplace_or_replace<GlobalLightSourceComponent>(entity, color);
 	}
 
-	auto time = std::format("Day {} - {}:{:02} {}", _days, _hours > 12 ? _hours - 12 : _hours, _minutes, _hours >= 12 ? "pm" : "am");
-	service::DebugInfo::instance().putInfo("Time", time);
-}
-
-void drft::system::DayNightCycleSystem::save(cereal::JSONOutputArchive& oarchive)
-{
-	oarchive(cereal::make_nvp("Days", _days));
-	oarchive(cereal::make_nvp("Hours", _hours));
-	oarchive(cereal::make_nvp("Minutes", _minutes));
-	oarchive(cereal::make_nvp("Seconds", _seconds));
-}
-
-void drft::system::DayNightCycleSystem::load(cereal::JSONInputArchive& iarchive)
-{
-	iarchive(cereal::make_nvp("Days", _days));
-	iarchive(cereal::make_nvp("Hours", _hours));
-	iarchive(cereal::make_nvp("Minutes", _minutes));
-	iarchive(cereal::make_nvp("Seconds", _seconds));
+	auto& time = _registry.get<DateAndTimeTrackerComponent>(_dateAndTimeTracker);
+	auto timeMessage = std::format("Day {} - {}:{:02} {}", 
+		time.days, 
+		time.hours > 12 ? time.hours - 12 : time.hours, 
+		time.minutes, 
+		time.hours >= 12 ? "pm" : "am");
+	service::DebugInfo::instance().putInfo("Time", timeMessage);
 }
 
 void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEvent& ev)
 {
-	_seconds += SECONDS_PER_TICK;
-	if (_seconds >= SECONDS_PER_MINUTE)
+	auto& time = _registry.get<DateAndTimeTrackerComponent>(_dateAndTimeTracker);
+	time.seconds += SECONDS_PER_TICK;
+	if (time.seconds >= SECONDS_PER_MINUTE)
 	{
-		++_minutes;
-		_seconds -= SECONDS_PER_MINUTE;
+		++time.minutes;
+		time.seconds -= SECONDS_PER_MINUTE;
 	}
-	if (_minutes >= MINUTES_PER_HOUR)
+	if (time.minutes >= MINUTES_PER_HOUR)
 	{
-		++_hours;
-		_minutes = 0;
+		++time.hours;
+		time.minutes = 0;
 	}
-	if (_hours >= HOURS_PER_DAY)
+	if (time.hours >= HOURS_PER_DAY)
 	{
-		++_days;
-		_hours = 0;
+		++time.days;
+		time.hours = 0;
 	}
 
-	if (_hours == NIGHT_START_HOUR && _minutes == 0 && _seconds == 0)
+	if (time.hours == NIGHT_START_HOUR && time.minutes == 0 && time.seconds == 0)
 	{
 		auto camera = getCurrentCamera(_registry);
 		_dispatcher.trigger(events::NightStartEvent());
@@ -88,7 +91,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 			.ttl = 120
 			});
 	}
-	else if (_hours == DAY_START_HOUR && _minutes == 0 && _seconds == 0)
+	else if (time.hours == DAY_START_HOUR && time.minutes == 0 && time.seconds == 0)
 	{
 		auto camera = getCurrentCamera(_registry);
 		_dispatcher.trigger(events::DayStartEvent());
@@ -103,42 +106,48 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 	}
 }
 
+void drft::system::DayNightCycleSystem::onConstructDateAndTimeTracker(entt::registry& registry, entt::entity entity)
+{
+	_dateAndTimeTracker = entity;
+}
+
 sf::Color drft::system::DayNightCycleSystem::determineGlobalIllumination() const
 {
 	sf::Color result = { sf::Color::White };
 
+	auto& time = _registry.get<DateAndTimeTrackerComponent>(_dateAndTimeTracker);
 	// Night
-	if ((_hours >= NIGHT_START_HOUR && _hours < 24) || (_hours >= 0 && _hours < DAY_START_HOUR))
+	if ((time.hours >= NIGHT_START_HOUR && time.hours < 24) || (time.hours >= 0 && time.hours < DAY_START_HOUR))
 	{
 		result = NIGHT_COLOR;
 	}
 	// First Dawn
-	else if (_hours >= DAY_START_HOUR && _hours < 8)
+	else if (time.hours >= DAY_START_HOUR && time.hours < 8)
 	{
 		util::SmoothColorTransition color(NIGHT_COLOR, { 150,150,255 }, 
 			DAY_START_HOUR * MINUTES_PER_HOUR, 8 * MINUTES_PER_HOUR);
-		result = color.compute(_hours * MINUTES_PER_HOUR + _minutes);
+		result = color.compute(time.hours * MINUTES_PER_HOUR + time.minutes);
 	}
 	// Early Dawn
-	else if (_hours >= 8 && _hours < 10)
+	else if (time.hours >= 8 && time.hours < 10)
 	{
 		util::SmoothColorTransition color({ 150,150,225 }, DAY_COLOR, 
 			8*MINUTES_PER_HOUR, 10 * MINUTES_PER_HOUR);
-		result = color.compute(_hours * MINUTES_PER_HOUR + _minutes);
+		result = color.compute(time.hours * MINUTES_PER_HOUR + time.minutes);
 	}
 	// Early Dusk
-	else if (_hours >= 18 && _hours < 20)
+	else if (time.hours >= 18 && time.hours < 20)
 	{
 		util::SmoothColorTransition color(DAY_COLOR, { 225,200,100 }, 
 			18 * MINUTES_PER_HOUR, 20 * MINUTES_PER_HOUR);
-		result = color.compute(_hours * MINUTES_PER_HOUR + _minutes);
+		result = color.compute(time.hours * MINUTES_PER_HOUR + time.minutes);
 	}
 	// Late Dusk
-	else if (_hours >= 20 && _hours < NIGHT_START_HOUR)
+	else if (time.hours >= 20 && time.hours < NIGHT_START_HOUR)
 	{
 		util::SmoothColorTransition color({ 255,200,100 }, NIGHT_COLOR, 
 			20 * MINUTES_PER_HOUR, NIGHT_START_HOUR * MINUTES_PER_HOUR);
-		result = color.compute(_hours * MINUTES_PER_HOUR + _minutes);
+		result = color.compute(time.hours * MINUTES_PER_HOUR + time.minutes);
 	}
 
 	return result;

@@ -18,8 +18,8 @@ static const sf::Color DEFAULT_TARGET_RANGE_COLOR = sf::Color(0, 0, 100, 100);
 static const sf::Color DEFAULT_TARGET_AOE_COLOR = sf::Color(50, 50, 200, 150);
 static const sf::Color TARGET_AOE_OUT_OF_RANGE_COLOR = sf::Color(255, 0, 0, 100);
 
-drft::SelectTargetState::SelectTargetState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
-	: State(stack, context, gui)
+drft::SelectTargetState::SelectTargetState(StateStack& stack, StateContext& context)
+	: State(stack, context)
 {
 	_displayText.setStyle(gui::ElementState::Idle, {
 			.fillColor = sf::Color(0,0,0,100),

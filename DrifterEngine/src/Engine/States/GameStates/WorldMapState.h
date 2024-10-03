@@ -1,5 +1,5 @@
 #pragma once
-#include "State.h"
+#include <Engine/States/State.h>
 #include "GUI/GUIElement.h"
 #include "Utility/SpriteBatch.h"
 #include "Utility/SpriteIndexer.h"
@@ -43,7 +43,7 @@ namespace drft
 	class WorldMapState : public State
 	{
 	public:
-		WorldMapState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
+		WorldMapState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

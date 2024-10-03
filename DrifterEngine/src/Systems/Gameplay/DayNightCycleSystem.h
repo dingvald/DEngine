@@ -10,19 +10,16 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
+		void onStart() override;
 		void onFixedUpdate() override;
-		void save(cereal::JSONOutputArchive& oarchive) override;
-		void load(cereal::JSONInputArchive& iarchive) override;
 
 	private:
 		void onGameTickEvent(const events::GameTickEvent& ev);
+		void onConstructDateAndTimeTracker(entt::registry& registry, entt::entity entity);
 		sf::Color determineGlobalIllumination() const;
 
 	private:
-		int _seconds = 0;
-		int _minutes = 0;
-		int _hours = 7;
-		int _days = 0;
+		entt::entity _dateAndTimeTracker = entt::null;
 	};
 }
 

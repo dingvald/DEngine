@@ -34,7 +34,7 @@ void drft::system::WorldGridResolver::onPositionUpdate(entt::registry& registry,
 	auto& pos = registry.get<PositionComponent>(entity);
 	const auto prevPos = _grid->getPosition(entity);
 	_grid->moveEntity(entity, pos.tile);
-	_dispatcher.trigger(events::LeaveTileEvent(entity, prevPos));
+	_dispatcher.trigger(events::LeaveTileEvent{ entity, prevPos });
 	_dispatcher.trigger(events::EnterTileEvent{ entity, pos.tile });
 }
 

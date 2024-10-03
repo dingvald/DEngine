@@ -31,29 +31,25 @@ static const char* ItemIconWidget = "icon";
 static const char* NameGridWidget = "name_grid";
 static const char* RecipeGridWidget = "recipe_grid";
 
-drft::CraftingState::CraftingState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
-    : State(stack, context, gui)
+drft::CraftingState::CraftingState(StateStack& stack, StateContext& context)
+    : State(stack, context)
 {
 	_factory = &getContext().registry.ctx().get<const EntityFactory&>();
 	determineSessionEntities();
 
 	auto list = tgui::PanelListBox::create();
-	_gui->add(list, CraftablesListWidget);
+	_guiGroup->add(list, CraftablesListWidget);
 	list->setOrigin(0.5f, 0.5f);
 	list->setPosition("50%, 50%");
-	list->setSize(tgui::bindWidth(_gui) * 0.5f, tgui::bindHeight(_gui) * 0.5f);
+	list->setSize(tgui::bindWidth(_guiGroup) * 0.5f, tgui::bindHeight(_guiGroup) * 0.5f);
 	list->setItemsHeight(48.f);
 
 	auto templatePanel = list->getPanelTemplate();
-	setupCraftableEntryTemplate(templatePanel);
-	
-	_gui->setNavigationDown(list);
-	_gui->setNavigationUp(list);
-	list->onFocus([this, list]() { tryFocusFirstItem(list); });
+	setupPanelTemplate(templatePanel);
 
 	refreshCraftingList(list);
 }
-88
+
 bool drft::CraftingState::handleEvent(const sf::Event& ev)
 {
 	switch (ev.type)
@@ -62,7 +58,7 @@ bool drft::CraftingState::handleEvent(const sf::Event& ev)
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
 			requestStackPop();
-			return false;
+			return true;
 		}
 		break;
 	}
@@ -70,12 +66,8 @@ bool drft::CraftingState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-void drft::CraftingState::setupCraftableEntryTemplate(tgui::Panel::Ptr templatePanel)
+void drft::CraftingState::setupPanelTemplate(tgui::Panel::Ptr templatePanel)
 {
-	auto button = tgui::Button::create();
-	templatePanel->add(button, ListEntryButtonWidget);
-	button->setSize("100%, 100%");
-
 	auto icon = tgui::Picture::create();
 	templatePanel->add(icon, ItemIconWidget);
 	icon->setSize(32, 48);
@@ -105,6 +97,7 @@ void drft::CraftingState::determineSessionEntities()
 void drft::CraftingState::refreshCraftingList(tgui::PanelListBox::Ptr list)
 {
 	refreshSessionEntityIngredients();
+	auto index = GuiHelpers::getFocusedIndex(list);
 	list->removeAllItems();
 	list->setFocused(false);
 
@@ -114,15 +107,33 @@ void drft::CraftingState::refreshCraftingList(tgui::PanelListBox::Ptr list)
 		for (auto&& craftable : craftables->craftables)
 		{
 			auto panel = list->addItem();
-			addItemToCraftingList({ prototypeReg, craftable }, panel);
+			addItemToCraftingList({ prototypeReg, craftable }, panel, false);
 		}
 		for (auto&& partial : craftables->partialCraftables)
 		{
 			auto panel = list->addItem();
-			addItemToCraftingList({ prototypeReg, partial }, panel);
+			addItemToCraftingList({ prototypeReg, partial }, panel, true);
 		}
 	}
-	setupNavigationGraph(list);
+
+	GuiHelpers::setupNavigationGraph(list);
+	list->onFocus([this, index, list]() {
+		if (getContext().controls.navigation == NavigationType::Keyboard)
+		{
+			GuiHelpers::tryFocusItem(list, std::max(0, index));
+		}
+		});
+
+	if (getContext().controls.navigation == NavigationType::Keyboard)
+	{
+		GuiHelpers::tryFocusItem(list, std::max(0, index));
+	}
+
+	if (list->getItemCount() == 0)
+	{
+		auto panel = list->addItem();
+		addNothingToCraftWidget(panel);
+	}
 }
 
 void drft::CraftingState::refreshSessionEntityIngredients()
@@ -141,24 +152,18 @@ void drft::CraftingState::refreshSessionEntityIngredients()
 	}
 }
 
-void drft::CraftingState::addItemToCraftingList(entt::const_handle item, tgui::Panel::Ptr panel)
+void drft::CraftingState::addItemToCraftingList(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
 {
 	auto name = util::getEntityName(item);
-	addItemIconAndNameWidgets(name, item, panel);
-	addItemRecipeWidgets(item, panel);
-
-	auto button = panel->get<tgui::Button>(ListEntryButtonWidget);
-	panel->onFocus([button]() { button->setFocused(true); });
-	panel->onUnfocus([button]() {button->setFocused(false); });
-
-	button->onPress([this, name] { onCraft(name); });
+	addItemIconAndNameWidgets(name, item, panel, isPartial);
+	addItemRecipeWidgets(item, panel, isPartial);
 }
 
-void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, entt::const_handle item, tgui::Panel::Ptr panel)
+void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
 {
 	auto render = util::getRenderData(item);
 	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
-	tgui::Texture texture{ name, toUIntRect(rect) };
+	tgui::Texture texture{ name, GuiHelpers::toUIntRect(rect) };
 	texture.setColor(render.color);
 
 	auto icon = panel->get<tgui::Picture>(ItemIconWidget);
@@ -168,9 +173,17 @@ void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, ent
 	auto text = panel->get<tgui::Label>(ItemNameWidget);
 	text->setText(name);
 	text->setIgnoreMouseEvents(true);
+	if (isPartial)
+	{
+		text->getRenderer()->setTextColor({ 100, 100, 100 });
+	}
+
+	auto button = GuiHelpers::buttonizePanel(panel, text);
+
+	button->onPress([this, name](){ onCraft(name); });
 }
 
-void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Panel::Ptr panel)
+void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
 {
 	auto& craftable = item.get<CraftableComponent>();
 	auto grid = panel->get<tgui::Grid>(RecipeGridWidget);
@@ -180,19 +193,19 @@ void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Pa
 	for (auto&& [ingredient, amount] : craftable.recipe)
 	{
 		auto prototype = _factory->get(ingredient);
-		addIngredientWidget(prototype, amount, grid, index);
+		addIngredientWidget(prototype, amount, grid, index, isPartial);
 		index++;
 	}
 }
 
-void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned int amount, tgui::Grid::Ptr grid, int index)
+void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned int amount, tgui::Grid::Ptr grid, int index, bool isPartial)
 {
 	auto sub_grid = tgui::Grid::create();
 	auto ingredientName = util::getEntityName(item);
 
 	auto render = util::getRenderData(item);
 	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
-	tgui::Texture texture{ ingredientName, toUIntRect(rect)};
+	tgui::Texture texture{ ingredientName, GuiHelpers::toUIntRect(rect)};
 	texture.setColor(render.color);
 
 	auto icon = tgui::Picture::create(texture);
@@ -207,37 +220,28 @@ void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned 
 	label->setIgnoreMouseEvents(true);
 	sub_grid->addWidget(label, 0, 1);
 	sub_grid->setIgnoreMouseEvents(true);
+	if (isPartial)
+	{
+		label->getRenderer()->setTextColor({ 100, 100, 100 });
+	}
 
 	grid->add(sub_grid, ingredientName);
 	grid->setWidgetCell(sub_grid, 0, index);
+}
+
+void drft::CraftingState::addNothingToCraftWidget(tgui::Panel::Ptr panel)
+{
+	auto text = panel->get<tgui::Label>(ItemNameWidget);
+	text->setText("Nothing to craft.");
+	text->getRenderer()->setTextColor(tgui::Color{ 100, 100, 100 });
+	text->setIgnoreMouseEvents(true);
 }
 
 void drft::CraftingState::onCraft(const std::string& name)
 {
 	if (system::CraftItemSystem::craftItem(_sessionEntity, name))
 	{
-		refreshCraftingList(_gui->get<tgui::PanelListBox>(CraftablesListWidget));
-	}
-}
-
-void drft::CraftingState::tryFocusFirstItem(tgui::PanelListBox::Ptr list)
-{
-	if (auto first = list->getItemByIndex(0))
-	{
-		first->setFocused(true);
-	}
-}
-
-void drft::CraftingState::setupNavigationGraph(tgui::PanelListBox::Ptr list)
-{
-	if (list->getItemCount() == 0) return;
-
-	tgui::Panel::Ptr previous = list->getItemByIndex(list->getItemCount() - 1);
-	for (auto&& panel : list->getItems())
-	{
-		panel->setNavigationUp(previous);
-		previous->setNavigationDown(panel);
-		previous = panel;
+		refreshCraftingList(getContext().gui.get<tgui::PanelListBox>(CraftablesListWidget));
 	}
 }
 

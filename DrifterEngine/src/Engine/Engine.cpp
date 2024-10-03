@@ -1,29 +1,18 @@
 #include "pch.h"
 #include "Engine.h"
 #include "EngineConstants.h"
+#include <Engine/CommonEngineDirectories.h>
 #include "States/GameState.h"
 #include "States/TitleScreenState.h"
 #include "States/MainMenuState.h"
-#include "States/InventoryState.h"
-#include "States/CraftingState.h"
 #include "States/PauseState.h"
-#include "States/GameOverState.h"
-#include "States/WorldMapState.h"
-#include "States/SelectDirectionState.h"
-#include "States/SelectTargetState.h"
 #include "Services/DebugInfo.h"
 #include "Utility/TextureAtlas.h"
 #include <Utility/StandardLogger.h>
 
 using namespace drft;
 
-static const std::filesystem::path RESOURCE_PATH = std::filesystem::current_path() / "resources";
-static const std::filesystem::path TEXTURE_PATH = RESOURCE_PATH / "Textures";
-static const std::filesystem::path FONTS_PATH = RESOURCE_PATH / "Fonts";
-static const std::filesystem::path ICONS_PATH = RESOURCE_PATH / "Icon";
-static const std::filesystem::path THEMES_PATH = RESOURCE_PATH / "GUI" / "Themes";
-
-static const std::filesystem::path DEFAULT_THEME = "debug_theme.txt";
+static const std::filesystem::path DEFAULT_THEME = "drifter_theme.txt";
 
 static const float TARGET_DT = (1.0f / TARGET_FPS);
 
@@ -114,13 +103,7 @@ void drft::Engine::registerStates()
 	_stateStack.registerState<TitleScreenState>(States::Title);
 	_stateStack.registerState<MainMenuState>(States::MainMenu);
 	_stateStack.registerState<GameState>(States::Game);
-	_stateStack.registerState<InventoryState>(States::Inventory); // TODO: Move to substate of game
-	_stateStack.registerState<CraftingState>(States::Crafting); // TODO: Move to substate of game
-	_stateStack.registerState<WorldMapState>(States::Map); // TODO: Move to substate of game
 	_stateStack.registerState<PauseState>(States::Pause);
-	_stateStack.registerState<GameOverState>(States::GameOver);
-	_stateStack.registerState<SelectDirectionState>(States::SelectDirection); // TODO: Move to substate of game
-	_stateStack.registerState<SelectTargetState>(States::SelectTarget); // TODO: Move to substate of game
 }
 
 void drft::Engine::handleEvents()
@@ -193,7 +176,7 @@ void drft::Engine::handleMouseEvents(sf::Event event)
 	case sf::Event::MouseMoved:
 	case sf::Event::MouseWheelMoved:
 	case sf::Event::MouseWheelScrolled:
-		if (_navigationType == NavigationType::Keyboard)
+		if (_controlsContext.navigation == NavigationType::Keyboard)
 			swapToMouse();
 		break;
 	default:
@@ -220,7 +203,7 @@ void drft::Engine::handleKeyboardEvents(sf::Event event)
 	case Key::Numpad6:
 	case Key::Numpad4:
 	case Key::Numpad2:
-		if (_navigationType == NavigationType::Mouse) 
+		if (_controlsContext.navigation == NavigationType::Mouse)
 			swapToKeyboard();
 		break;
 	default:
@@ -262,18 +245,15 @@ void drft::Engine::passEventToState(sf::Event event)
 
 void drft::Engine::swapToMouse()
 {
-	_window.setMouseCursorVisible(true);
 	sf::Event ev{};
 	ev.type = sf::Event::MouseEntered;
 	_gui.handleEvent(ev);
 	_gui.unfocusAllWidgets();
-	_navigationType = NavigationType::Mouse;
+	_controlsContext.navigation = NavigationType::Mouse;
 }
 
 void drft::Engine::swapToKeyboard()
 {
-	_window.setMouseCursorVisible(false);
-
 	sf::Event ev{};
 	ev.type = sf::Event::MouseLeft;
 	_gui.handleEvent(ev);
@@ -284,7 +264,7 @@ void drft::Engine::swapToKeyboard()
 		child->setFocused(true);
 		break;
 	}
-	_navigationType = NavigationType::Keyboard;
+	_controlsContext.navigation = NavigationType::Keyboard;
 }
 
 void drft::Engine::toggleFullscreen()

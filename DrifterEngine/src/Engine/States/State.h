@@ -13,7 +13,7 @@ namespace drft
 		using StatePtr = std::unique_ptr<State>;
 
 	public:
-		State(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
+		State(StateStack& stack, StateContext& context);
 		virtual ~State();
 
 		virtual bool handleEvent(const sf::Event& ev);
@@ -21,6 +21,8 @@ namespace drft
 		virtual bool fixedUpdate();
 		virtual void render(sf::RenderTarget& target) {};
 
+		virtual void onEnter();
+		virtual void onExit();
 		virtual void onPush();
 		virtual void onPop();
 
@@ -33,11 +35,11 @@ namespace drft
 		StateContext& getContext();
 
 	protected:
-		tgui::Group::Ptr _gui;
+		tgui::Group::Ptr _guiGroup;
 
 	private:
-		StateStack* _stack;
-		StateContext _context;
+		StateStack& _stack;
+		StateContext& _context;
 	};
 }
 

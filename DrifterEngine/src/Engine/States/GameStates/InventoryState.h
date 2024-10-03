@@ -1,5 +1,5 @@
 #pragma once
-#include "State.h"
+#include <Engine/States/State.h>
 #include "GUI/GUIElement.h"
 
 namespace drft
@@ -16,7 +16,7 @@ namespace drft
 	private:
 
 	public:
-		InventoryState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui);
+		InventoryState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
 		bool update(const float dt) override;

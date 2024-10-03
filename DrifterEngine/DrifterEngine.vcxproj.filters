@@ -165,13 +165,13 @@
     <ClCompile Include="src\Engine\States\StateContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\InventoryState.cpp">
+    <ClCompile Include="src\Engine\States\GameStates\InventoryState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\GUIElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameOverState.cpp">
+    <ClCompile Include="src\Engine\States\GameStates\GameOverState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\Actions\DropItemSystem.cpp">
@@ -195,7 +195,7 @@
     <ClCompile Include="src\Random\RandomNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\WorldMapState.cpp">
+    <ClCompile Include="src\Engine\States\GameStates\WorldMapState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.cpp">
@@ -204,7 +204,7 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\CraftingState.cpp">
+    <ClCompile Include="src\Engine\States\GameStates\CraftingState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp">
@@ -273,7 +273,7 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\InteractionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\SelectDirectionState.cpp">
+    <ClCompile Include="src\Engine\States\GameStates\SelectDirectionState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp">
@@ -420,7 +420,7 @@
     <ClCompile Include="src\Systems\Gameplay\Actions\TargetSelectSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\SelectTargetState.cpp">
+    <ClCompile Include="src\Engine\States\GameStates\SelectTargetState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Ability\Abilities\ThrowAbility.cpp">
@@ -544,6 +544,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\TGUIHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Core\MouseVisualizationSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\GetMouseTilePosition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\PathNavSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\States\GameStates\SimulationState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\CommonEngineDirectories.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1187,13 +1202,13 @@
     <ClInclude Include="src\Events\RequestStateChange.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\InventoryState.h">
+    <ClInclude Include="src\Engine\States\GameStates\InventoryState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\GUIElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\GameOverState.h">
+    <ClInclude Include="src\Engine\States\GameStates\GameOverState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\DropItemSystem.h">
@@ -1217,7 +1232,7 @@
     <ClInclude Include="src\Random\RandomNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\WorldMapState.h">
+    <ClInclude Include="src\Engine\States\GameStates\WorldMapState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenWorldMapSystem.h">
@@ -1226,7 +1241,7 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\CraftingState.h">
+    <ClInclude Include="src\Engine\States\GameStates\CraftingState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h">
@@ -1319,7 +1334,7 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\InteractionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\SelectDirectionState.h">
+    <ClInclude Include="src\Engine\States\GameStates\SelectDirectionState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h">
@@ -1496,7 +1511,7 @@
     <ClInclude Include="src\Systems\Gameplay\Actions\TargetSelectSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\SelectTargetState.h">
+    <ClInclude Include="src\Engine\States\GameStates\SelectTargetState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Ability\Abilities\ThrowAbility.h">
@@ -2792,6 +2807,36 @@
     <ClInclude Include="deps\SFML-2.6.1\include\SFML\Window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Systems\Core\MouseVisualizationSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ControlsContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\MouseCursorComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\GetMouseTilePosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\PathNavComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\PathNavSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\States\GameStates\SimulationState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\ItemIDTrackerComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\CommonEngineDirectories.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\DateAndTimeTrackerComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -2903,6 +2948,15 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\Shapes\diamond.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Effects\slash_effect.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Environmentals\sharp_stone.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Effects\mouse_cursor_effect.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

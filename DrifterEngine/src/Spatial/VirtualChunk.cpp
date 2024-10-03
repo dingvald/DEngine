@@ -86,7 +86,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::
 	{
 		setFuture(std::async(std::launch::async, &VirtualChunk::loadChunkFromFile, this, filename));
 		setState(ChunkState::Loading);
-		std::cout << "Loading chunk " << ChunkPosition::toString(_coordinate) << std::endl;
+		//std::cout << "Loading chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	}
 
 	auto status = getFuture().wait_for(WAIT_TIME);
@@ -117,16 +117,13 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 		if (entities.empty())
 		{
 			setState(ChunkState::Saved);
-			//std::cout << ChunkPosition::toString(_coordinate) << " is empty - no need to save" << std::endl;
 			return ioStatus::Done;
 		}
 		
 		util::copyEntities(entities, _asyncRegistry, reg);
 		
-		for (auto e : entities)
-		{
-			reg.destroy(e);
-		}
+		reg.destroy(entities.begin(), entities.end());
+
 		reg.compact();
 		
 		setFuture(std::async(std::launch::async, &VirtualChunk::saveChunkToFile, this, filename));

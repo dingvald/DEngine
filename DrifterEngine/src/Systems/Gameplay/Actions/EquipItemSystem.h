@@ -15,7 +15,4 @@ namespace drft::system
 		void onItemEquipped(entt::registry& registry, entt::entity entity);
 		void onItemUnequipped(entt::registry& registry, entt::entity entity);
 	};
-
 }
-
-

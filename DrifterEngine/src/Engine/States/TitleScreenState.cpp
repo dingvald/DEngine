@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "TitleScreenState.h"
 
-drft::TitleScreenState::TitleScreenState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
-    : State(stack, context, gui)
+drft::TitleScreenState::TitleScreenState(StateStack& stack, StateContext& context)
+    : State(stack, context)
 {
 	float centerX = getContext().window.getSize().x / 2.f;
 	float centerY = getContext().window.getSize().y / 2.f;

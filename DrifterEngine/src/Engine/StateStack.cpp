@@ -3,18 +3,16 @@
 
 using namespace drft;
 
-StateStack::StateStack(StateContext context, tgui::Gui& gui)
+StateStack::StateStack(StateContext& context)
 	: _context(context)
-	, _gui(gui)
 {}
 
 void StateStack::update(const float dt)
 {
 	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
 	{
-		if (!state->ptr->update(dt)) break;
+		if (!(*state)->update(dt)) break;
 	}
-
 	applyPendingChanges();
 }
 
@@ -22,9 +20,8 @@ void drft::StateStack::fixedUpdate()
 {
 	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
 	{
-		if (!state->ptr->fixedUpdate()) break;
+		if (!(*state)->fixedUpdate()) break;
 	}
-
 	applyPendingChanges();
 }
 
@@ -32,20 +29,21 @@ void StateStack::render(sf::RenderTarget& target)
 {
 	for (auto& state : _stack)
 	{
-		state.ptr->render(target);
+		state->render(target);
 	}
-
 	applyPendingChanges();
 }
 
-void StateStack::handleEvent(const sf::Event& event)
+bool StateStack::handleEvent(const sf::Event& event)
 {
+	bool handled = false;
 	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
 	{
-		if (!state->ptr->handleEvent(event)) break;
+		handled = (*state)->handleEvent(event);
+		if (handled) break;
 	}
-
 	applyPendingChanges();
+	return handled;
 }
 
 void StateStack::pushState(States stateID)
@@ -72,9 +70,7 @@ State::StatePtr StateStack::createState(States stateID)
 {
 	assert(_factories.contains(stateID));
 
-	auto guiGroup = createGuiGroup(stateID);
-
-	return _factories.at(stateID)(guiGroup);
+	return _factories.at(stateID)();
 }
 
 void StateStack::applyPendingChanges()
@@ -89,26 +85,31 @@ void StateStack::applyPendingChanges()
 			{
 				if (!_stack.empty())
 				{
-					disableGuiGroup(_stack.back().id);
+					_stack.back()->onExit();
 				}
 				State::StatePtr newState = createState(stateID);
 				newState->onPush();
-				_stack.emplace_back(stateID, std::move(newState));
+				newState->onEnter();
+				_stack.emplace_back(std::move(newState));
 			}
 			break;
 			case Pop:
 			{
-				_stack.back().ptr->onPop();
-				disableGuiGroup(_stack.back().id);
+				_stack.back()->onExit();
+				_stack.back()->onPop();
 				_stack.pop_back();
+				if (!_stack.empty())
+				{
+					_stack.back()->onEnter();
+				}
 			}
 			break;
 			case Clear:
 			{
 				while (!_stack.empty())
 				{
-					_stack.back().ptr->onPop();
-					disableGuiGroup(_stack.back().id);
+					_stack.back()->onExit();
+					_stack.back()->onPop();
 					_stack.pop_back();
 				}
 			}
@@ -117,32 +118,4 @@ void StateStack::applyPendingChanges()
 	}
 
 	_pendingList.clear();
-}
-
-tgui::Group::Ptr drft::StateStack::createGuiGroup(States stateID)
-{
-	std::string groupID = std::to_string(static_cast<unsigned int>(stateID));
-	if (auto group = _gui.get<tgui::Group>(groupID))
-	{
-		_gui.remove(group);
-	}
-
-	auto group = tgui::Group::create();
-	_gui.add(group, groupID);
-	group->setVisible(true);
-	group->setEnabled(true);
-	group->setFocused(true);
-
-	return group;
-}
-
-void drft::StateStack::disableGuiGroup(States stateID)
-{
-	std::string groupID = std::to_string(static_cast<unsigned int>(stateID));
-	if (auto group = _gui.get<tgui::Group>(groupID))
-	{
-		group->setVisible(false);
-		group->setEnabled(false);
-		group->setFocused(false);
-	}
 }

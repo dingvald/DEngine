@@ -1,0 +1,29 @@
+#include "pch.h"
+#include "PathNavSystem.h"
+
+#include <Components/Actions/MoveAction.h>
+#include <Components/PathNavComponent.h>
+#include <Components/PositionComponent.h>
+#include <Components/Tags.h>
+
+#include <Spatial/Helpers.h>
+
+
+void drft::system::PathNavSystem::onUpdate(float dt)
+{
+	auto view = _registry.view<PathNavComponent, PositionComponent, component::tag::CurrentActor>();
+	for (auto [entity, nav, position] : view.each())
+	{
+		if (nav.progress >= nav.path.size())
+		{
+			_registry.remove<PathNavComponent>(entity);
+			continue;
+		}
+
+		TilePosition nextPosition = nav.path.at(nav.progress);
+		TilePosition delta = nextPosition - position.tile;
+
+		_registry.emplace_or_replace<MoveAction>(entity, spatial::toXY(delta));
+		nav.progress++;
+	}
+}

@@ -54,7 +54,7 @@
           "max": 25.0
         },
         "Player": {
-          "sightRange": 50
+          "sightRange": 35
         },
         "Attacker": {
           "baseDamage": 1

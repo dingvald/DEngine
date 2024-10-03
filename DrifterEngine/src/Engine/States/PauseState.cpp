@@ -3,8 +3,8 @@
 
 static const char* LayoutName = "Layout";
 
-drft::PauseState::PauseState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
-    :State(stack, context, gui)
+drft::PauseState::PauseState(StateStack& stack, StateContext& context)
+    :State(stack, context)
 {
 	auto background = tgui::Panel::create();
 	background->setSize("100%, 100%");
@@ -15,23 +15,23 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context, tgui::Gro
 	layout->setSize("30%, 75%");
 	layout->setPosition("50%, 50%");
 
-	gui->add(background);
-	gui->add(layout, LayoutName);
+	_guiGroup->add(background);
+	_guiGroup->add(layout, LayoutName);
 
 	auto button_continue = tgui::Button::create();
 	button_continue->setTextSize(32);
 	button_continue->setText("Continue");
-	button_continue->onPress([this]() { onContinue(); });
+	button_continue->onPress([this]() { onContinueButton(); });
 
 	auto button_settings = tgui::Button::create();
 	button_settings->setTextSize(32);
 	button_settings->setText("Settings");
-	button_settings->onPress([this]() { onSettings(); });
+	button_settings->onPress([this]() { onSettingsButton(); });
 
 	auto button_exit = tgui::Button::create();
 	button_exit->setTextSize(32);
 	button_exit->setText("Exit");
-	button_exit->onPress([this]() { onExit(); });
+	button_exit->onPress([this]() { onExitButton(); });
 
 	layout->add(button_continue);
 	layout->addSpace(0.2f);
@@ -47,9 +47,6 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context, tgui::Gro
 
 	button_exit->setNavigationUp(button_settings);
 	button_exit->setNavigationDown(button_continue);
-
-	_gui->setNavigationUp(button_continue);
-	_gui->setNavigationDown(button_continue);
 }
 
 bool drft::PauseState::handleEvent(const sf::Event& ev)
@@ -59,25 +56,25 @@ bool drft::PauseState::handleEvent(const sf::Event& ev)
 	case sf::Event::KeyPressed:
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
-			requestStackPop();
-			return false;
+			onContinueButton();
+			return true;
 		}
 	}
 
 	return false;
 }
 
-void drft::PauseState::onContinue()
+void drft::PauseState::onContinueButton()
 {
 	requestStackPop();
 }
 
-void drft::PauseState::onSettings()
+void drft::PauseState::onSettingsButton()
 {
 	// TODO: implement
 }
 
-void drft::PauseState::onExit()
+void drft::PauseState::onExitButton()
 {
 	requestStackClear();
 	requestStackPush(States::MainMenu);

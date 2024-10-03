@@ -4,30 +4,43 @@
 
 using namespace drft;
 
-State::State(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
-	: _gui(gui)
-	, _stack(&stack)
+State::State(StateStack& stack, StateContext& context)
+	: _stack(stack)
 	, _context(context)
-{}
+{
+	_guiGroup = tgui::Group::create();
+	context.gui.add(_guiGroup);
+	_guiGroup->setFocused(true);
+}
 
 State::~State()
-{}
+{
+	getContext().gui.remove(_guiGroup);
+}
 
 
 bool State::handleEvent(const sf::Event& ev)
 {
-	return true;
+	return false;
 }
 
 bool drft::State::update(const float dt)
 {
-	return true;
+	return false;
 }
 
 bool drft::State::fixedUpdate()
 {
 	return true;
 }
+
+void drft::State::onEnter()
+{
+	getContext().window.setMouseCursorVisible(true);
+}
+
+void drft::State::onExit()
+{}
 
 void drft::State::onPush()
 {}
@@ -37,17 +50,17 @@ void drft::State::onPop()
 
 void State::requestStackPush(States stateId)
 {
-	_stack->pushState(stateId);
+	_stack.pushState(stateId);
 }
 
 void State::requestStackPop()
 {
-	_stack->popState();
+	_stack.popState();
 }
 
 void State::requestStackClear()
 {
-	_stack->clearStates();
+	_stack.clearStates();
 }
 
 const StateContext& State::getContext() const

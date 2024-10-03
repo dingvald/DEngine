@@ -2,40 +2,39 @@
 #include "MainMenuState.h"
 #include "WorldMap/WorldMap.h"
 #include <Engine/StateStack.h>
+#include <Engine/CommonEngineDirectories.h>
 
-
-const std::filesystem::path SAVE_GAME_FILE_PATH = std::filesystem::current_path() / "data" / "savegame";
 
 static const char* LayoutName = "Layout";
 
-drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context, tgui::Group::Ptr gui)
-	: State(stack, context, gui)
+drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
+	: State(stack, context)
 {
 	auto layout = tgui::VerticalLayout::create();
 	layout->setOrigin(0.5f, 0.5f);
 	layout->setSize("30%, 75%");
 	layout->setPosition("50%, 50%");
-	gui->add(layout, LayoutName);
+	_guiGroup->add(layout, LayoutName);
 
 	auto button_continue = tgui::Button::create();
 	button_continue->setTextSize(32);
 	button_continue->setText("Continue");
-	button_continue->onPress([this]() { onContinue(); });
+	button_continue->onPress([this]() { onContinueButton(); });
 
 	auto button_new_game = tgui::Button::create();
 	button_new_game->setTextSize(32);
 	button_new_game->setText("New Game");
-	button_new_game->onPress([this]() { onNewGame(); });
+	button_new_game->onPress([this]() { onNewGameButton(); });
 
 	auto button_settings = tgui::Button::create();
 	button_settings->setTextSize(32);
 	button_settings->setText("Settings");
-	button_settings->onPress([this]() { onSettings(); });
+	button_settings->onPress([this]() { onSettingsButton(); });
 
 	auto button_exit = tgui::Button::create();
 	button_exit->setTextSize(32);
 	button_exit->setText("Exit");
-	button_exit->onPress([this]() { onExit(); });
+	button_exit->onPress([this]() { onExitButton(); });
 
 	layout->add(button_continue);
 	layout->addSpace(0.2f);
@@ -56,9 +55,6 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context, tgu
 
 	button_exit->setNavigationUp(button_settings);
 	button_exit->setNavigationDown(button_continue);
-
-	_gui->setNavigationDown(button_continue);
-	_gui->setNavigationUp(button_continue);
 }
 
 bool drft::MainMenuState::handleEvent(const sf::Event& ev)
@@ -69,83 +65,39 @@ bool drft::MainMenuState::handleEvent(const sf::Event& ev)
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
 			requestStackClear();
-			return false;
+			return true;
 		}
-		/*
-		if (ev.key.code == sf::Keyboard::Up || ev.key.code == sf::Keyboard::Numpad8)
-		{
-			onPressUp();
-		}
-		if (ev.key.code == sf::Keyboard::Down || ev.key.code == sf::Keyboard::Numpad2)
-		{
-			onPressDown();
-		}
-		*/
 		break;
 	}
 
 	return false;
 }
 
-void drft::MainMenuState::onNewGame()
+void drft::MainMenuState::onNewGameButton()
 {
-	std::filesystem::remove_all(SAVE_GAME_FILE_PATH);
-	std::filesystem::create_directory(SAVE_GAME_FILE_PATH);
+	std::filesystem::remove_all(SAVE_DIRECTORY);
+	std::filesystem::create_directory(SAVE_DIRECTORY);
 	requestStackClear();
 	requestStackPush(States::Game);
 }
 
-void drft::MainMenuState::onContinue()
+void drft::MainMenuState::onContinueButton()
 {
 	requestStackClear();
 	requestStackPush(States::Game);
 }
 
-void drft::MainMenuState::onSettings()
+void drft::MainMenuState::onSettingsButton()
 {
 	// TODO: implement
 }
 
-void drft::MainMenuState::onExit()
+void drft::MainMenuState::onExitButton()
 {
 	requestStackClear();
 }
 
-void drft::MainMenuState::onPressDown()
-{
- 	auto layout = _gui->get<tgui::VerticalLayout>(LayoutName);
-	auto focused = layout->getFocusedChild();
-	if (!focused)
-	{
-		const auto& children = layout->getWidgets();
-		focused = children[0];
-		focused->setFocused(true);
-	}
-	else
-	{
-		auto next = focused->getNavigationDown();
-		next->setFocused(true);
-	}
-}
-
-void drft::MainMenuState::onPressUp()
-{
-	auto layout = _gui->get<tgui::VerticalLayout>(LayoutName);
-	auto focused = layout->getFocusedChild();
-	if (!focused)
-	{
-		const auto& children = layout->getWidgets();
-		focused = children[0];
-		focused->setFocused(true);
-	}
-	else
-	{
-		auto next = focused->getNavigationUp();
-		next->setFocused(true);
-	}
-}
-
 bool drft::MainMenuState::hasSaveFile() const
 {
-	return std::filesystem::exists(".\\data\\savegame\\");
+	return std::filesystem::exists(SAVE_DIRECTORY);
 }
