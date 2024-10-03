@@ -16,6 +16,7 @@ namespace drft
 
 	public:
 		explicit StateStack(StateContext& context);
+
 		template<typename T>
 		void registerState(States stateID)
 		{
