@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "SystemScheduler.h"
 
-void drft::system::SystemScheduler::startAll(bool isNewGame) const
+void drft::system::SystemScheduler::startAll() const
 {
 	std::cout << "Starting Systems..." << std::endl;
 	for (auto& system : _systems)
 	{
 		std::string typeName = typeid(*system).name();
 		std::cout << "Starting " << typeName << "..." << std::endl;
-		system->onStart(isNewGame);
+		system->onStart();
 	}
 }
 
@@ -23,15 +23,6 @@ void drft::system::SystemScheduler::initAll() const
 	}
 }
 
-void drft::system::SystemScheduler::loadAll(cereal::JSONInputArchive& iarchive)
-{
-	for (auto& system : _systems)
-	{
-		std::string typeName = typeid(*system).name();
-		std::cout << "Loading " << typeName << "..." << std::endl;
-		system->load(iarchive);
-	}
-}
 
 void drft::system::SystemScheduler::update(const float dt) const
 {
@@ -86,16 +77,6 @@ void drft::system::SystemScheduler::render(sf::RenderTarget& target) const
 	for (auto& system : _systems)
 	{
 		system->render(target);
-	}
-}
-
-void drft::system::SystemScheduler::saveAll(cereal::JSONOutputArchive& oarchive)
-{
-	for (auto& system : _systems)
-	{
-		std::string typeName = typeid(*system).name();
-		std::cout << "Saving " << typeName << "..." << std::endl;
-		system->save(oarchive);
 	}
 }
 

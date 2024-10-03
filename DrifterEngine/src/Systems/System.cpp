@@ -13,15 +13,7 @@ void drft::system::System::init()
 {
 }
 
-void drft::system::System::onStart(bool)
-{
-}
-
-void drft::system::System::save(cereal::JSONOutputArchive& oarchive)
-{
-}
-
-void drft::system::System::load(cereal::JSONInputArchive& iarchive)
+void drft::system::System::onStart()
 {
 }
 

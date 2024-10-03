@@ -20,10 +20,7 @@ namespace drft::system
 		virtual ~System() = default;
 
 		virtual void init();
-		virtual void onStart(bool isNewGame);
-
-		virtual void save(cereal::JSONOutputArchive& oarchive);
-		virtual void load(cereal::JSONInputArchive& iarchive);
+		virtual void onStart();
 
 		virtual void onUpdateBegin();
 		virtual void onUpdate(const float dt);

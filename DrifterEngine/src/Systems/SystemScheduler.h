@@ -10,9 +10,8 @@ namespace drft::system
 	public:
 		SystemScheduler(entt::registry& registry) : _registry(registry) {}
 
-		void startAll(bool isNewGame) const;
+		void startAll() const;
 		void initAll() const;
-		void loadAll(cereal::JSONInputArchive& iarchive);
 
 		template <typename T>
 		void add()
@@ -28,8 +27,6 @@ namespace drft::system
 		void fixedUpdate() const;
 		void fixedUpdateEnd() const;
 		void render(sf::RenderTarget& target) const;
-
-		void saveAll(cereal::JSONOutputArchive& oarchive);
 		void shutdownAll();
 
 	private:

@@ -16,7 +16,6 @@ namespace drft
 	private:
 		void setupCraftableEntryTemplate(tgui::Panel::Ptr templatePanel);
 		void determineSessionEntities();
-		void shutdownSessionEntities();
 		void refreshCraftingList(tgui::PanelListBox::Ptr list);
 
 		void refreshSessionEntityIngredients();
@@ -27,6 +26,8 @@ namespace drft
 		void addIngredientWidget(entt::const_handle item, unsigned int amount, tgui::Grid::Ptr grid, int index);
 
 		void onCraft(const std::string& name);
+		void tryFocusFirstItem(tgui::PanelListBox::Ptr list);
+		void setupNavigationGraph(tgui::PanelListBox::Ptr list);
 
 	private:
 		entt::handle _sessionEntity = {};

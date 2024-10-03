@@ -9,6 +9,7 @@
 #include "ConsumableComponent.h"
 #include "ContainerComponent.h"
 #include "CraftableComponent.h"
+#include "DateAndTimeTrackerComponent.h"
 #include "DescriptionComponent.h"
 #include "FactionComponent.h"
 #include "FlyingComponent.h"
@@ -19,6 +20,7 @@
 #include "InheritanceComponent.h"
 #include "InLiquidComponent.h"
 #include "ItemComponent.h"
+#include "ItemIDTrackerComponent.h"
 #include "LevelingComponent.h"
 #include "LightBlockingComponent.h"
 #include "LiquidComponent.h"
@@ -51,6 +53,7 @@ void ComponentMetaBinder::bindComponents()
 	ContainerComponent::bind();
 	ConsumableComponent::bind();
 	CraftableComponent::bind();
+	DateAndTimeTrackerComponent::bind();
 	DescriptionComponent::bind();
 	FactionComponent::bind();
 	FlyingComponent::bind();
@@ -61,6 +64,7 @@ void ComponentMetaBinder::bindComponents()
 	InheritanceComponent::bind();
 	InLiquidComponent::bind();
 	ItemComponent::bind();
+	ItemIDTrackerComponent::bind();
 	LevelingComponent::bind();
 	LightBlockingComponent::bind();
 	LiquidComponent::bind();
