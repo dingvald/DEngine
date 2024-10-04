@@ -10,5 +10,4 @@ void drft::util::saveEntityToFile(entt::handle entity, const std::filesystem::pa
 	util::copyEntity(tempEnt, entity.entity(), tempReg, *entity.registry());
 
 	util::saveRegistryToFile(tempReg, path);
-	entity.destroy();
 }

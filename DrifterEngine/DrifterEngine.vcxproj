@@ -1200,8 +1200,8 @@
     <None Include="src\Utility\ResourceHolder.inl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\Icon\drifter-project-icon.ico" />
-    <Image Include="resources\Icon\drifter-project-icon.png" />
+    <Image Include="resources\Icons\drifter-project-icon.ico" />
+    <Image Include="resources\Icons\drifter-project-icon.png" />
     <Image Include="resources\Textures\basic_tile.png" />
     <Image Include="resources\Textures\Effects\hit_particle.png" />
     <Image Include="resources\Textures\Effects\mouse_cursor_effect.png" />
