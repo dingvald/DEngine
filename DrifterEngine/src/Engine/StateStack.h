@@ -34,6 +34,7 @@ namespace drft
 		void pushState(States stateID);
 		void popState();
 		void clearStates();
+		void clearStatesNow();
 
 		bool isEmpty() const;
 

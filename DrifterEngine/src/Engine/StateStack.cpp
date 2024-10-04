@@ -61,6 +61,12 @@ void StateStack::clearStates()
 	_pendingList.push_back({ Action::Clear, States::None });
 }
 
+void drft::StateStack::clearStatesNow()
+{
+	clearStates();
+	applyPendingChanges();
+}
+
 bool StateStack::isEmpty() const
 {
 	return _stack.empty();
