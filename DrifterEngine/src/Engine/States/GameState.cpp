@@ -148,6 +148,7 @@ void drft::GameState::render(sf::RenderTarget& target)
 
 void drft::GameState::onPop()
 {	
+	_gameStateStack.clearStatesNow();
 	getContext().registry = entt::registry{}; // There was a bug when calling registry::clear
 }
 
