@@ -65,7 +65,7 @@ void drft::Engine::initialize()
 void drft::Engine::setWindowIcon()
 {
 	sf::Image icon;
-	const std::filesystem::path iconPath = ICONS_PATH / "drifter-project-icon.png";
+	const std::filesystem::path iconPath = ICONS_DIRECTORY / "drifter-project-icon.png";
 	if (icon.loadFromFile(iconPath.string()))
 	{
 		_window.setIcon(32, 32, icon.getPixelsPtr());
@@ -79,14 +79,14 @@ void drft::Engine::setWindowIcon()
 
 void drft::Engine::loadResources()
 {
-	_textures.load(TEXTURE_PATH);
+	_textures.load(TEXTURES_DIRECTORY);
 
-	std::string terminus_font_path = (FONTS_PATH / "terminus.ttf").string();
+	std::string terminus_font_path = (FONTS_DIRECTORY / "terminus.ttf").string();
 	_fonts.load("Terminus", terminus_font_path);
 	tgui::Font globalFont = { terminus_font_path };
 	tgui::Font::setGlobalFont(globalFont);
 
-	std::string default_theme_path = (THEMES_PATH / DEFAULT_THEME).string();
+	std::string default_theme_path = (THEMES_DIRECTORY / DEFAULT_THEME).string();
 	tgui::Theme::setDefault(default_theme_path);
 
 	tgui::Texture::setBackendTextureLoader(
