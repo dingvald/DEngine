@@ -40,6 +40,7 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 			}
 			else
 			{
+				toStorage->remove(to);
 				toStorage->emplace(to, fromStorage.get(from));
 			}
 		}
