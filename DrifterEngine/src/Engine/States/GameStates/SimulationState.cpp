@@ -112,9 +112,8 @@ void drft::SimulationState::onEnter()
 
 void drft::SimulationState::onPop()
 {
-	_systems->shutdownAll();
-
 	savePlayer();
+	_systems->shutdownAll();
 	saveRegistry();
 }
 
@@ -210,26 +209,25 @@ void drft::SimulationState::loadPlayer()
 
 void drft::SimulationState::savePlayer()
 {
-	if (isPlayerAlive())
-	{
-		util::saveEntityToFile(_player, PLAYER_SAVE_FILE_PATH);
-	}
+	if (!isPlayerAlive()) return;
+
+	util::saveEntityToFile(_player, PLAYER_SAVE_FILE_PATH);
+	_player.destroy();
+	getContext().registry.compact();
 }
 
 void drft::SimulationState::loadRegistry()
 {
-	if (std::filesystem::exists(GAMESTATE_SAVE_FILE_PATH))
-	{
-		util::loadRegistryFromFile(getContext().registry, MAIN_REGISTRY_FILE_PATH);
-	}
+	if (!std::filesystem::exists(GAMESTATE_SAVE_FILE_PATH)) return;
+
+	util::loadRegistryFromFile(getContext().registry, MAIN_REGISTRY_FILE_PATH);
 }
 
 void drft::SimulationState::saveRegistry()
 {
-	if (isPlayerAlive())
-	{
-		util::saveRegistryToFile(getContext().registry, MAIN_REGISTRY_FILE_PATH);
-	}
+	if (!std::filesystem::exists(PLAYER_SAVE_FILE_PATH)) return;
+
+	util::saveRegistryToFile(getContext().registry, MAIN_REGISTRY_FILE_PATH);
 }
 
 bool drft::SimulationState::isPlayerAlive() const

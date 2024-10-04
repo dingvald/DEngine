@@ -41,52 +41,52 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 		if (ev.key.code == sf::Keyboard::Numpad8)
 		{
 			moveCursor(sf::Vector2i(0, -1));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad2)
 		{
 			moveCursor(sf::Vector2i(0, 1));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad6)
 		{
 			moveCursor(sf::Vector2i(1, 0));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad4)
 		{
 			moveCursor(sf::Vector2i(-1, 0));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad7)
 		{
 			moveCursor(sf::Vector2i(-1, -1));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad9)
 		{
 			moveCursor(sf::Vector2i(1, -1));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad3)
 		{
 			moveCursor(sf::Vector2i(1, 1));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad1)
 		{
 			moveCursor(sf::Vector2i(-1, 1));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad5)
 		{
 			moveCursor(sf::Vector2i(0, 0));
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
 			requestStackPop();
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Space)
 		{
@@ -103,16 +103,18 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 					.isScreenSpace = false,
 					.ttl = 80
 				});
-
-				return false;
 			}
-
-			auto selectTargetView = getContext().registry.view<component::action::SelectTarget>();
-			if (auto selectTarget = getContext().registry.try_get<component::action::SelectTarget>(selectTargetView.front()))
+			else
 			{
-				selectTarget->onTargetSelect(_cursorPosition);
+				auto selectTargetView = getContext().registry.view<component::action::SelectTarget>();
+				if (auto selectTarget = getContext().registry.try_get<component::action::SelectTarget>(selectTargetView.front()))
+				{
+					selectTarget->onTargetSelect(_cursorPosition);
+				}
+				requestStackPop();
 			}
-			requestStackPop();
+
+			return true;
 		}
 		break;
 	}

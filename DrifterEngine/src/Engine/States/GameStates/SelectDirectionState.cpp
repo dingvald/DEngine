@@ -35,7 +35,7 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad2)
 		{
@@ -43,7 +43,7 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad6)
 		{
@@ -51,7 +51,7 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad4)
 		{
@@ -59,7 +59,7 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad7)
 		{
@@ -67,7 +67,7 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad9)
 		{
@@ -75,7 +75,7 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad3)
 		{
@@ -83,7 +83,7 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad1)
 		{
@@ -91,7 +91,7 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Numpad5)
 		{
@@ -99,12 +99,12 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
 			{
 				requestStackPop();
 			}
-			return false;
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
 			requestStackPop();
-			return false;
+			return true;
 		}
 		break;
 	}
