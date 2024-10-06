@@ -218,7 +218,7 @@ void drft::SimulationState::savePlayer()
 
 void drft::SimulationState::loadRegistry()
 {
-	if (!std::filesystem::exists(GAMESTATE_SAVE_FILE_PATH)) return;
+	if (!std::filesystem::exists(MAIN_REGISTRY_FILE_PATH)) return;
 
 	util::loadRegistryFromFile(getContext().registry, MAIN_REGISTRY_FILE_PATH);
 }
