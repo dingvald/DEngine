@@ -353,34 +353,37 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
 {
 	using namespace entt::literals;
-	const auto& itemRender = _registry.get<RenderComponent>(item);
-	const auto& textureAtlas = _registry.ctx().get<TextureAtlas&>();
-
-	sf::Sprite sprite = textureAtlas.getSprite(itemRender.texture, itemRender.uvSize, itemRender.uvCoords);
-	container.insert("Icon", gui::Icon(sprite))
-		.setSize({ 32,32 })
-		.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-		.setStyle(gui::ElementState::Idle, {
-				.fillColor = itemRender.color
-			})
-		.setStyle(gui::ElementState::Focused, {
-					.fillColor = itemRender.color
-			});
-
-	if (auto health = _registry.try_get<HealthComponent>(item))
+	if (const auto itemRender = _registry.try_get<RenderComponent>(item))
 	{
-		float scalingFactor = health->current / health->max;
-		container.insert("Health", gui::Panel())
-			.setSize({ 32, (32 - 32 * scalingFactor) })
-			.setLocalPosition({ 0, 16 })
-			.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
+		const auto& textureAtlas = _registry.ctx().get<TextureAtlas&>();
+
+		sf::Sprite sprite = textureAtlas.getSprite(itemRender->texture, itemRender->uvSize, itemRender->uvCoords);
+		container.insert("Icon", gui::Icon(sprite))
+			.setSize({ 32,32 })
+			.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
 			.setStyle(gui::ElementState::Idle, {
-				.fillColor = sf::Color(255,0,0,60)
+					.fillColor = itemRender->color
 				})
 			.setStyle(gui::ElementState::Focused, {
-				.fillColor = sf::Color(255,0,0,60)
+						.fillColor = itemRender->color
 				});
+
+		if (auto health = _registry.try_get<HealthComponent>(item))
+		{
+			float scalingFactor = health->current / health->max;
+			container.insert("Health", gui::Panel())
+				.setSize({ 32, (32 - 32 * scalingFactor) })
+				.setLocalPosition({ 0, 16 })
+				.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
+				.setStyle(gui::ElementState::Idle, {
+					.fillColor = sf::Color(255,0,0,60)
+					})
+				.setStyle(gui::ElementState::Focused, {
+					.fillColor = sf::Color(255,0,0,60)
+					});
+		}
 	}
+	
 }
 
 void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl, bool fades /*=false*/)

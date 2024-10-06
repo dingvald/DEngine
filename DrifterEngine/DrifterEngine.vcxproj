@@ -738,6 +738,7 @@
     <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\TreeView.hpp" />
     <ClInclude Include="deps\TGUI-1.5\include\TGUI\Widgets\VerticalLayout.hpp" />
     <ClInclude Include="deps\TGUI-1.5\include\TGUI\WindowsIMM.hpp" />
+    <ClInclude Include="deps\thread_pool\BS_thread_pool.hpp" />
     <ClInclude Include="src\Components\DateAndTimeTrackerComponent.h" />
     <ClInclude Include="src\Components\ItemIDTrackerComponent.h" />
     <ClInclude Include="src\Components\MouseCursorComponent.h" />
