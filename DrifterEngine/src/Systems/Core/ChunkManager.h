@@ -5,6 +5,8 @@
 #include "Spatial/VirtualChunk.h"
 #include "Utility/stdHashing.h"
 
+#include <thread_pool/BS_thread_pool.hpp>
+
 namespace drft::system
 {
 	struct CameraInfo;
@@ -17,7 +19,7 @@ namespace drft::system
 			LOAD
 		};
 	}
-
+	
 	class ChunkManager : public System
 	{
 	public:
@@ -38,6 +40,7 @@ namespace drft::system
 		bool isWithinChunkSaveDisk(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const;
 
 	private:
+		BS::thread_pool _threadPool;
 		std::unordered_map<ChunkPosition, spatial::VirtualChunk> _chunks;
 
 		std::queue<ChunkPosition> _toBuild;

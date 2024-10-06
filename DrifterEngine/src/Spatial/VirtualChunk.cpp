@@ -6,6 +6,7 @@
 #include "Utility/LoadRegistry.h"
 #include "Conversions.h"
 #include "WorldGrid.h"
+#include <thread_pool/BS_thread_pool.hpp>
 
 #pragma optimize("", off)
 
@@ -80,11 +81,11 @@ ioStatus drft::spatial::VirtualChunk::load(entt::registry& reg, const std::files
 	return ioStatus::Done;
 }
 
-ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::filesystem::path& filename)
+ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, BS::thread_pool& threadPool, const std::filesystem::path& filename)
 {
 	if (getState() == ChunkState::ToLoad)
 	{
-		setFuture(std::async(std::launch::async, &VirtualChunk::loadChunkFromFile, this, filename));
+		setFuture(threadPool.submit_task([this, filename] {this->loadChunkFromFile(filename); }));
 		setState(ChunkState::Loading);
 	}
 
@@ -104,7 +105,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, const std::
 	return ioStatus::Done;
 }
 
-ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::filesystem::path& filename)
+ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, BS::thread_pool& threadPool, const std::filesystem::path& filename)
 {
 	if (getState() == ChunkState::ToSave)
 	{
@@ -123,7 +124,7 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 
 		reg.compact();
 		
-		setFuture(std::async(std::launch::async, &VirtualChunk::saveChunkToFile, this, filename));
+		setFuture(threadPool.submit_task([this, filename] { this->saveChunkToFile(filename); }));
 		setState(ChunkState::Saving);
 	}
 
@@ -140,12 +141,12 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, const std::
 	return ioStatus::Done;
 }
 
-void VirtualChunk::setFuture(std::shared_future<bool> future)
+void VirtualChunk::setFuture(std::shared_future<void> future)
 {
 	this->_future = future;
 }
 
-const std::shared_future<bool>& VirtualChunk::getFuture() const
+const std::shared_future<void>& VirtualChunk::getFuture() const
 {
 	return this->_future;
 }

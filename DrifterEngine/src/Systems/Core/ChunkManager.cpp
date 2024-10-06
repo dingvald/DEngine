@@ -29,6 +29,7 @@ void drft::system::ChunkManager::onUpdate(const float dt)
 	cleanUpChunks();
 
 	service::DebugInfo::instance().putInfo("Active chunks", std::to_string(_chunks.size()));
+	service::DebugInfo::instance().putInfo("Pending chunks", std::to_string(_toBuild.size() + _toLoad.size()));
 }
 
 void drft::system::ChunkManager::shutdown()
@@ -120,7 +121,7 @@ void drft::system::ChunkManager::processLoadQueue()
 	ChunkPosition coord = _toLoad.front();
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
-	status = chunk.asyncLoad(_registry, buildChunkFilename(chunk));
+	status = chunk.asyncLoad(_registry, _threadPool, buildChunkFilename(chunk));
 
 	// Always load in order
 	if (status == spatial::ioStatus::Done)
@@ -136,7 +137,7 @@ void drft::system::ChunkManager::processSaveQueue()
 	ChunkPosition coord = _toSave.front();
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
-	status = chunk.asyncSave(_registry, buildChunkFilename(chunk));
+	status = chunk.asyncSave(_registry, _threadPool, buildChunkFilename(chunk));
 
 	// Can save out of order
 	if (status == spatial::ioStatus::Busy)
