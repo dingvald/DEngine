@@ -3,22 +3,6 @@
 #include "Utility/stdHashing.h"
 #include <Spatial/TilePosition.h>
 
-namespace 
-{
-	std::vector<sf::Vector2i> getEightWaySymmetry(int x, int y)
-	{
-		return {
-				{x, y},
-				{y, x},
-				{-x, y},
-				{-x, -y},
-				{x, -y},
-				{-y, x},
-				{-y, -x},
-				{y, -x}
-		};
-	}
-}
 
 sf::Vector3i drft::spatial::vec3FromPlanar(sf::Vector2i plane)
 {
@@ -73,22 +57,23 @@ std::vector<sf::Vector2i> drft::spatial::getOutlineIntRect(sf::Vector2i origin, 
 std::vector<sf::Vector3i> drft::spatial::getIntCircleInRadius(sf::Vector3i centerPosition, int radius)
 {
 	std::vector<sf::Vector3i> result;
-	std::unordered_set<sf::Vector2i> visited;
-	size_t approxSquares = static_cast<size_t>(std::ceil(3.5 * radius * radius));
+	size_t approxSquares = static_cast<size_t>(std::ceil(4 * radius * radius)); // Close enough to pi for reserve
 	result.reserve(approxSquares);
-	const int z = centerPosition.z;
 
 	for (int i = 0; i <= radius; i++)
 	{
 		for (int j = 0; j <= i; j++)
 		{
 			if (!isWithinRadius2d({ i, j }, radius)) continue;
-			for (auto&& p : getEightWaySymmetry(i, j))
-			{
-				if (visited.contains(p)) continue;
-				result.push_back(centerPosition + sf::Vector3i{p.x, p.y, 0});
-				visited.insert(p);
-			}
+
+			result.push_back(centerPosition + sf::Vector3i{ i,j,0 });
+			result.push_back(centerPosition + sf::Vector3i{ -i,j,0 });
+			result.push_back(centerPosition + sf::Vector3i{ i,-j,0 });
+			result.push_back(centerPosition + sf::Vector3i{ -i,-j,0 });
+			result.push_back(centerPosition + sf::Vector3i{ j,i,0 });
+			result.push_back(centerPosition + sf::Vector3i{ -j,i,0 });
+			result.push_back(centerPosition + sf::Vector3i{ j,-i,0 });
+			result.push_back(centerPosition + sf::Vector3i{ -j,-i,0 });
 		}
 	}
 
