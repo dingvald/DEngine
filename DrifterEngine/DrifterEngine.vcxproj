@@ -92,10 +92,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;BOOST_IOSTREAMS_NO_LIB;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\include;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\include;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\include;$(SolutionDir)DrifterEngine\deps\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
@@ -106,8 +106,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-window-s-d.lib;sfml-graphics-s-d.lib;sfml-system-s-d.lib;tgui-s-d.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;$(SolutionDir)DrifterEngine\deps\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-window-s-d.lib;sfml-graphics-s-d.lib;sfml-system-s-d.lib;tgui-s-d.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;%(AdditionalDependencies);zlibstat-d.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -119,10 +119,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;BOOST_IOSTREAMS_NO_LIB;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\include;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\include;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\include;$(SolutionDir)DrifterEngine\deps\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -135,8 +135,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;sfml-system-s.lib;sfml-window-s.lib;sfml-graphics-s.lib;tgui-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DrifterEngine\deps\SFML-2.6.1\lib;$(SolutionDir)DrifterEngine\deps\TGUI-1.5\lib;$(SolutionDir)DrifterEngine\deps\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;sfml-system-s.lib;sfml-window-s.lib;sfml-graphics-s.lib;tgui-s.lib;%(AdditionalDependencies);zlibstat.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -187,6 +187,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Utility\ChunkSerializer.cpp" />
     <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp" />
     <ClCompile Include="src\Engine\CommonEngineDirectories.cpp" />
     <ClCompile Include="src\Engine\States\GameStates\SimulationState.cpp" />
@@ -288,6 +289,7 @@
     <ClCompile Include="src\Engine\States\GameStates\InventoryState.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
+    <ClCompile Include="src\Utility\CompressData.cpp" />
     <ClCompile Include="src\Utility\RectPacker.cpp" />
     <ClCompile Include="src\Utility\SpriteOptions.cpp" />
     <ClCompile Include="src\Utility\StandardLogger.cpp" />
@@ -404,6 +406,17 @@
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="deps\zlib\include\crc32.h" />
+    <ClInclude Include="deps\zlib\include\deflate.h" />
+    <ClInclude Include="deps\zlib\include\gzguts.h" />
+    <ClInclude Include="deps\zlib\include\inffast.h" />
+    <ClInclude Include="deps\zlib\include\inflate.h" />
+    <ClInclude Include="deps\zlib\include\inftrees.h" />
+    <ClInclude Include="deps\zlib\include\trees.h" />
+    <ClInclude Include="deps\zlib\include\zconf.h" />
+    <ClInclude Include="deps\zlib\include\zlib.h" />
+    <ClInclude Include="deps\zlib\include\zutil.h" />
+    <ClInclude Include="src\Utility\ChunkSerializer.h" />
     <ClInclude Include="deps\jc_voronoi\jc_voronoi.h" />
     <ClInclude Include="deps\jc_voronoi\jc_voronoi_adaptor.h" />
     <ClInclude Include="deps\SFML-2.6.1\include\SFML\Audio.hpp" />
@@ -917,6 +930,7 @@
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
     <ClInclude Include="src\Systems\Rendering\RenderLayers.h" />
     <ClInclude Include="src\Utility\ColorSerialization.h" />
+    <ClInclude Include="src\Utility\CompressData.h" />
     <ClInclude Include="src\Utility\ContainerHelpers.h" />
     <ClInclude Include="src\Utility\RectPacker.h" />
     <ClInclude Include="src\Utility\SpriteOptions.h" />
@@ -1141,6 +1155,7 @@
     <ClInclude Include="src\Utility\stdHashing.h" />
     <ClInclude Include="src\Utility\TGUIHelpers.h" />
     <ClInclude Include="src\Utility\Vector2Serialization.h" />
+    <ClInclude Include="src\Utility\VectorBuffer.h" />
     <ClInclude Include="src\Utility\Visibility.h" />
     <ClInclude Include="src\Systems\Gameplay\StaminaSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\WaitingSystem.h" />
@@ -1229,6 +1244,10 @@
   <ItemGroup>
     <Text Include="resources\GUI\Themes\debug_theme.txt" />
     <Text Include="resources\GUI\Themes\drifter_theme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="deps\zlib\lib\zlibstat-d.lib" />
+    <Library Include="deps\zlib\lib\zlibstat.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

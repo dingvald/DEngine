@@ -7,6 +7,7 @@
 #include "Conversions.h"
 #include "WorldGrid.h"
 #include <thread_pool/BS_thread_pool.hpp>
+#include <Utility/ChunkSerializer.h>
 
 #pragma optimize("", off)
 
@@ -58,6 +59,7 @@ ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const std::files
 	const auto entities = grid.getAllEntities(this->_coordinate);
 
 	util::copyEntities(entities, temp, reg);
+
 	for (auto entity : entities)
 	{
 		reg.destroy(entity);
@@ -66,6 +68,8 @@ ioStatus drft::spatial::VirtualChunk::save(entt::registry& reg, const std::files
 
 	if (!temp.empty())
 	{
+		ChunkSerializer serializer;
+		serializer.save(_coordinate, temp);
 		util::saveRegistryToFile(temp, filename);
 	}
 	
