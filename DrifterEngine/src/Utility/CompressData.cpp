@@ -4,9 +4,7 @@
 
 const unsigned int BUFFER_CHUNK_SIZE = 1024u;
 
-using namespace drft::util;
-
-std::vector<char> compressData(const std::vector<char>& inData)
+std::vector<char> drft::util::compressData(const std::vector<char>& inData)
 {
     std::vector<char> result;
 
