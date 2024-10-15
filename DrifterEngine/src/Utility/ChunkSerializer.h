@@ -9,6 +9,10 @@ namespace drft
 	{
 	public:
 		ChunkSerializer();
+		~ChunkSerializer();
+
+		bool isSerialized(ChunkPosition position) const;
+
 		std::future<void> queueForSave(ChunkPosition position, entt::registry& registry);
 		std::future<void> queueForLoad(ChunkPosition position, entt::registry& registry);
 
@@ -21,7 +25,11 @@ namespace drft
 		void processSaveList();
 		void processLoadList();
 
+		void saveSerializedChunkList();
+		void loadSerializedChunkList();
+
 		std::vector<char> serializeAndCompressChunk(entt::registry& registry) const;
+		void decompressAndDeserializeChunk(std::vector<char>& compressed, entt::registry& registry) const;
 		std::filesystem::path getRegionFilePath(ChunkPosition position) const;
 
 	private:
@@ -30,8 +38,12 @@ namespace drft
 			ChunkPosition position;
 			entt::registry& registry;
 		};
+		std::unordered_set<ChunkPosition> _serializedChunks;
 
 		std::unordered_map<std::filesystem::path, RegionFile> _regionFiles;
+
+		std::thread _serializationThread;
+		std::atomic_bool _shouldShutdown = false;
 
 		std::mutex _saveQueueLock;
 		std::mutex _loadQueueLock;

@@ -6,9 +6,26 @@
 #include <Engine/CommonEngineDirectories.h>
 #include <Utility/StandardLogger.h>
 
+const std::filesystem::path CHUNK_LIST_FILEPATH = REGION_DIRECTORY / "chunk_list.dat";
+
 drft::ChunkSerializer::ChunkSerializer()
 {
 	std::filesystem::create_directory(REGION_DIRECTORY);
+	loadSerializedChunkList();
+	_shouldShutdown = false;
+	_serializationThread = std::thread(&ChunkSerializer::serializationThread, this);
+}
+
+drft::ChunkSerializer::~ChunkSerializer()
+{
+	_shouldShutdown = true;
+	_serializationThread.join();
+	saveSerializedChunkList();
+}
+
+bool drft::ChunkSerializer::isSerialized(ChunkPosition position) const
+{
+	return _serializedChunks.contains(position);
 }
 
 std::future<void> drft::ChunkSerializer::queueForSave(ChunkPosition position, entt::registry& registry)
@@ -17,6 +34,8 @@ std::future<void> drft::ChunkSerializer::queueForSave(ChunkPosition position, en
 		std::lock_guard<std::mutex> lock(_saveQueueLock);
 		_saveQueue.emplace_back(position, registry);
 	}
+
+	_serializedChunks.insert(position); // TODO: Maybe not the best place to add because it assumes serialization, but avoids needing a mutex
 	
 	std::lock_guard<std::mutex> lock(_savePromiseLock);
 	_savePromises.emplace(position, std::promise<void>{});
@@ -37,11 +56,16 @@ std::future<void> drft::ChunkSerializer::queueForLoad(ChunkPosition position, en
 
 void drft::ChunkSerializer::serializationThread()
 {
-	syncSaveList();
-	syncLoadList();
+	do {
+		syncSaveList();
+		syncLoadList();
 
-	processSaveList();
-	processLoadList();
+		processSaveList();
+		processLoadList();
+	} while (
+			!_shouldShutdown
+		||	!_saveList.empty()
+		||	!_loadList.empty());
 }
 
 void drft::ChunkSerializer::syncSaveList()
@@ -52,6 +76,7 @@ void drft::ChunkSerializer::syncSaveList()
 		auto path = getRegionFilePath(position);
 		_saveList[path].emplace_back(position, registry);
 	}
+	_saveQueue.clear();
 }
 
 void drft::ChunkSerializer::syncLoadList()
@@ -62,6 +87,7 @@ void drft::ChunkSerializer::syncLoadList()
 		auto path = getRegionFilePath(position);
 		_loadList[path].emplace_back(position, registry);
 	}
+	_loadQueue.clear();
 }
 
 void drft::ChunkSerializer::processSaveList()
@@ -87,6 +113,8 @@ void drft::ChunkSerializer::processSaveList()
 		regionFile.close();
 	}
 
+	_saveList.clear();
+
 	std::lock_guard<std::mutex> lock(_savePromiseLock);
 	for (auto&& chunk : promisesToComplete)
 	{
@@ -97,6 +125,51 @@ void drft::ChunkSerializer::processSaveList()
 
 void drft::ChunkSerializer::processLoadList()
 {
+	std::vector<ChunkPosition> promisesToComplete;
+	for (auto&& [region, list] : _loadList)
+	{
+		if (!_regionFiles.contains(region))
+		{
+			_regionFiles.emplace(region, region);
+		}
+
+		RegionFile& regionFile = _regionFiles.at(region);
+		if (regionFile.open())
+		{
+			for (auto&& [position, registry] : list)
+			{
+				auto compressed = regionFile.readChunk(position);
+				decompressAndDeserializeChunk(compressed, registry);
+				promisesToComplete.push_back(position);
+			}
+		}
+		regionFile.close();
+	}
+
+	_loadList.clear();
+
+	std::lock_guard<std::mutex> lock(_loadPromiseLock);
+	for (auto&& chunk : promisesToComplete)
+	{
+		_loadPromises.at(chunk).set_value();
+		_loadPromises.erase(chunk);
+	}
+}
+
+void drft::ChunkSerializer::saveSerializedChunkList()
+{
+	std::ofstream file{ CHUNK_LIST_FILEPATH, std::ios::binary | std::ios::trunc };
+	cereal::BinaryOutputArchive archive{ file };
+	archive(_serializedChunks);
+}
+
+void drft::ChunkSerializer::loadSerializedChunkList()
+{
+	if (!std::filesystem::exists(CHUNK_LIST_FILEPATH)) return;
+
+	std::ifstream file{ CHUNK_LIST_FILEPATH, std::ios::binary | std::ios::trunc };
+	cereal::BinaryInputArchive archive{ file };
+	archive(_serializedChunks);
 }
 
 std::vector<char> drft::ChunkSerializer::serializeAndCompressChunk(entt::registry& registry) const
@@ -107,6 +180,11 @@ std::vector<char> drft::ChunkSerializer::serializeAndCompressChunk(entt::registr
 	snapshot::Snapshot::save(output, registry);
 
 	return util::compressData(buffer);
+}
+
+void drft::ChunkSerializer::decompressAndDeserializeChunk(std::vector<char>& compressed, entt::registry& registry) const
+{
+
 }
 
 std::filesystem::path drft::ChunkSerializer::getRegionFilePath(ChunkPosition position) const
