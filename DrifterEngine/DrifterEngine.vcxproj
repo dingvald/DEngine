@@ -193,7 +193,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Utility\SharedQueue.cpp" />
     <ClCompile Include="src\Utility\RegionFile.cpp" />
     <ClCompile Include="src\Utility\ChunkSerializer.cpp" />
     <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp" />
@@ -424,7 +423,6 @@
     <ClInclude Include="deps\zlib\include\zconf.h" />
     <ClInclude Include="deps\zlib\include\zlib.h" />
     <ClInclude Include="deps\zlib\include\zutil.h" />
-    <ClInclude Include="src\Utility\SharedQueue.h" />
     <ClInclude Include="src\Utility\RegionFile.h" />
     <ClInclude Include="src\Utility\ChunkSerializer.h" />
     <ClInclude Include="deps\jc_voronoi\jc_voronoi.h" />
