@@ -1,6 +1,6 @@
 #pragma once
 
-const int SECTOR_SIZE = 4092;
+const int SECTOR_SIZE = 8184;
 const int REGION_DIMENSIONS = 32;
 const int LOOKUP_TABLE_NUM_ENTRIES = REGION_DIMENSIONS * REGION_DIMENSIONS;
 const int LOOKUP_TABLE_ENTRY_BYTE_SIZE = 3; // 2 Bytes: offset in sectors - 1 Byte: size in sectors

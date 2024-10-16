@@ -8,7 +8,6 @@
 #include "Events/LeaveTileEvent.h"
 #include "Events/EnterTileEvent.h"
 
-
 void drft::system::WorldGridResolver::init()
 {
 	_grid = &_registry.ctx().get<spatial::WorldGrid&>();

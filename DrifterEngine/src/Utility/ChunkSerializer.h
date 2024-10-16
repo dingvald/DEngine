@@ -16,6 +16,9 @@ namespace drft
 		std::future<void> queueForSave(ChunkPosition position, entt::registry& registry);
 		std::future<void> queueForLoad(ChunkPosition position, entt::registry& registry);
 
+		static std::vector<char> serializeAndCompressRegistry(const entt::registry& registry);
+		static void decompressAndDeserializeRegistry(const std::vector<char>& compressed, entt::registry& registry);
+
 	private:
 		void serializationThread();
 
@@ -28,8 +31,6 @@ namespace drft
 		void saveSerializedChunkList();
 		void loadSerializedChunkList();
 
-		std::vector<char> serializeAndCompressChunk(entt::registry& registry) const;
-		void decompressAndDeserializeChunk(std::vector<char>& compressed, entt::registry& registry) const;
 		std::filesystem::path getRegionFilePath(ChunkPosition position) const;
 
 	private:

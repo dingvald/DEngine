@@ -6,9 +6,9 @@ namespace drft::gen
 	class WorldGenerator;
 }
 
-namespace BS
+namespace drft
 {
-	class thread_pool;
+	class ChunkSerializer;
 }
 
 namespace drft::spatial
@@ -46,25 +46,20 @@ namespace drft::spatial
 		ChunkPosition getPosition() const;
 
 		ioStatus build(entt::registry& reg);
-		ioStatus save(entt::registry& reg, const std::filesystem::path& filename) const;
-		ioStatus load(entt::registry& reg, const std::filesystem::path& filename) const;
 
-		ioStatus asyncLoad(entt::registry& reg, BS::thread_pool& threadPool, const std::filesystem::path& filename);
-		ioStatus asyncSave(entt::registry& reg, BS::thread_pool& threadPool, const std::filesystem::path& filename);
+		ioStatus asyncLoad(entt::registry& reg, ChunkSerializer& serializer);
+		ioStatus asyncSave(entt::registry& reg, ChunkSerializer& serializer);
 
 		std::string toString() const;
 
 	private:
-		void setFuture(std::shared_future<void> future);
-		const std::shared_future<void>& getFuture() const;
-
-		bool saveChunkToFile(const std::filesystem::path& filename) const;
-		bool loadChunkFromFile(const std::filesystem::path& filename);
+		void setFuture(std::future<void> future);
+		const std::future<void>& getFuture() const;
 
 	private:
 		ChunkPosition _coordinate;
 		ChunkState _state = ChunkState::None;
-		std::shared_future<void> _future;
+		std::future<void> _future;
 		entt::registry _asyncRegistry;
 	};
 

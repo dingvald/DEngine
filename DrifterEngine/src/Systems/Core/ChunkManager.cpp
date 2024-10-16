@@ -13,7 +13,7 @@
 
 
 static constexpr int ACTIVE_CHUNK_RADIUS_XY = 10;
-static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 10;
+static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 2;
 
 void drft::system::ChunkManager::onUpdate(const float dt)
 {
@@ -36,7 +36,8 @@ void drft::system::ChunkManager::shutdown()
 {
 	for (auto& [_, chunk] : _chunks)
 	{
-		chunk.save(_registry, buildChunkFilename(chunk));
+		chunk.setState(spatial::ChunkState::ToSave);
+		chunk.asyncSave(_registry, _serializer);
 	}
 }
 
@@ -121,7 +122,7 @@ void drft::system::ChunkManager::processLoadQueue()
 	ChunkPosition coord = _toLoad.front();
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
-	status = chunk.asyncLoad(_registry, _threadPool, buildChunkFilename(chunk));
+	status = chunk.asyncLoad(_registry, _serializer);
 
 	// Always load in order
 	if (status == spatial::ioStatus::Done)
@@ -137,7 +138,7 @@ void drft::system::ChunkManager::processSaveQueue()
 	ChunkPosition coord = _toSave.front();
 	auto status = spatial::ioStatus::Busy;
 	spatial::VirtualChunk& chunk = _chunks.at(coord);
-	status = chunk.asyncSave(_registry, _threadPool, buildChunkFilename(chunk));
+	status = chunk.asyncSave(_registry, _serializer);
 
 	// Can save out of order
 	if (status == spatial::ioStatus::Busy)
@@ -155,7 +156,7 @@ void drft::system::ChunkManager::processSaveQueue()
 
 void drft::system::ChunkManager::loadOrBuildChunk(ChunkPosition position, spatial::VirtualChunk& chunk)
 {
-	if (std::filesystem::exists(buildChunkFilename(chunk)))
+	if (_serializer.isSerialized(position))
 	{
 		chunk.setState(spatial::ChunkState::ToLoad);
 		_toLoad.push(std::move(position));
@@ -165,12 +166,6 @@ void drft::system::ChunkManager::loadOrBuildChunk(ChunkPosition position, spatia
 		chunk.setState(spatial::ChunkState::ToBuild);
 		_toBuild.push(std::move(position));
 	}
-}
-
-std::filesystem::path drft::system::ChunkManager::buildChunkFilename(const spatial::VirtualChunk& chunk) const
-{
-	std::filesystem::path chunkFileName = CHUNK_DIRECTORY / chunk.toString();
-	return chunkFileName += ".dat";
 }
 
 bool drft::system::ChunkManager::isWithinChunkSaveDisk(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const

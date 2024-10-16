@@ -28,8 +28,9 @@ bool drft::RegionFile::open()
 		}	
 	}
 
-	if (!_filestream && !_filestream.is_open())
+	if (!_filestream || !_filestream.is_open())
 	{
+		error_logger << "Error in RegionFile: " << _filepath.filename() << " could not be opened." << std::endl;
 		return false;
 	}
 	return true;
@@ -40,54 +41,73 @@ void drft::RegionFile::close()
 	_filestream.close();
 }
 
-
 void drft::RegionFile::writeChunk(ChunkPosition position, const CompressedChunk& compressed)
 {
 	if (!_filestream || !_filestream.is_open())
 	{
-		error_logger << "Trying to write to unopened region file" << std::endl;
-		return;
+		throw std::exception("Trying to write to unopened region file");
 	}
 
-	const size_t	index	= calculateLookupIndex(position);
-	uint16_t		offset	= getOffset(index);
-	uint8_t			size	= getSize(index);
+	const size_t	totalSize	= compressed.size() + sizeof(uint64_t);
+	const size_t	index		= calculateLookupIndex(position);
+	uint16_t		offset		= getOffset(index);
+	uint8_t			size		= getSize(index);
 
 	if (offset == 0 && size == 0)
 	{
-		auto [newOffset, newSize] = createNewFileEntry(index, compressed.size());
+		auto [newOffset, newSize] = createNewFileEntry(index, totalSize);
 		offset = newOffset;
 		size = newSize;
 	}
 
-	if (compressed.size() > size * SECTOR_SIZE)
+	if (totalSize > static_cast<size_t>(size * SECTOR_SIZE))
 	{
-
+		// I just want to see how often this case happens... for now
+		throw std::exception("Implement file re-write here");
 	}
 
 	const int write_position = LOOKUP_TABLE_BYTE_SIZE + (offset * SECTOR_SIZE);
 	_filestream.seekp(write_position);
-	_filestream << compressed.size();
+	uint64_t byte_size = compressed.size();
+	_filestream.write(reinterpret_cast<const char*>(&byte_size), sizeof(uint64_t));
 	_filestream.write(compressed.data(), compressed.size());
 
+	// Add buffer space so chunk data isn't packed
 	std::vector<char> buffer;
-	buffer.resize(size * SECTOR_SIZE - compressed.size() - sizeof(size_t), 0);
+	buffer.resize(size * SECTOR_SIZE - totalSize, 0);
 	_filestream.write(buffer.data(), buffer.size());
 }
 
 std::vector<char> drft::RegionFile::readChunk(ChunkPosition position)
 {
+	CompressedChunk result;
 	if (!_filestream || !_filestream.is_open())
 	{
-		error_logger << "Trying to read unopened region file" << std::endl;
-		return {};
+		throw std::exception("Trying to read unopened region file");
 	}
-	return std::vector<char>();
+
+	uint64_t		byte_size		= 0u;
+	const size_t	index			= calculateLookupIndex(position);
+	uint16_t		offset			= getOffset(index);
+	uint8_t			size			= getSize(index);
+
+	if (offset == 0 && size == 0)
+	{
+		throw std::exception("Trying to load chunk from file, but chunk does not exist.");
+	}
+
+	const int read_position = LOOKUP_TABLE_BYTE_SIZE + (offset * SECTOR_SIZE);
+	_filestream.seekg(read_position);
+	_filestream.read(reinterpret_cast<char*>(&byte_size), sizeof(uint64_t));
+	result.resize(byte_size);
+	_filestream.read(result.data(), byte_size);
+
+	return result;
 }
 
 uint16_t drft::RegionFile::getOffset(size_t index) const
 {
-	return (_lookupTable.at(index) << 8) | _lookupTable.at(index + 1);
+	return (_lookupTable.at(index) << 8) | static_cast<uint8_t>(_lookupTable.at(index + 1));
 }
 
 uint8_t drft::RegionFile::getSize(size_t index) const
@@ -100,7 +120,7 @@ void drft::RegionFile::setOffset(size_t index, uint16_t offset)
 	std::streampos startPos = _filestream.tellp();
 
 	char msb = offset >> 8;
-	char lsb = static_cast<char>(offset);
+	char lsb = offset & 0xFF;
 
 	_filestream.seekp(index);
 	_filestream.put(msb);
@@ -132,7 +152,7 @@ drft::RegionFile::NewFileEntry drft::RegionFile::createNewFileEntry(size_t index
 	std::streampos end_pos = _filestream.tellg();
 
 	uint16_t offset = static_cast<uint16_t>((static_cast<int>(end_pos) - LOOKUP_TABLE_BYTE_SIZE) / SECTOR_SIZE);
-	uint8_t size = ((compressedSize + sizeof(size_t)) / SECTOR_SIZE) + 1;
+	uint8_t size	= static_cast<uint8_t>((compressedSize + sizeof(size_t)) / SECTOR_SIZE) + 1;
 
 	setOffset(index, offset);
 	setSize(index, size);

@@ -54,18 +54,44 @@ std::future<void> drft::ChunkSerializer::queueForLoad(ChunkPosition position, en
 	return _loadPromises.at(position).get_future();
 }
 
+std::vector<char> drft::ChunkSerializer::serializeAndCompressRegistry(const entt::registry& registry)
+{
+	std::stringstream oss;
+	cereal::BinaryOutputArchive output{ oss };
+	snapshot::Snapshot::save(output, registry);
+
+	std::vector<char> data;
+	data.assign(std::istreambuf_iterator<char>(oss), std::istreambuf_iterator<char>());
+
+	return util::compressData(data);
+}
+
+void drft::ChunkSerializer::decompressAndDeserializeRegistry(const std::vector<char>& compressed, entt::registry& registry)
+{
+	auto decompressed = util::decompressData(compressed);
+	std::stringstream iss;
+	iss.write(decompressed.data(), decompressed.size());
+	cereal::BinaryInputArchive input{ iss };
+	snapshot::SnapshotLoader::load(input, registry);
+}
+
 void drft::ChunkSerializer::serializationThread()
 {
-	do {
-		syncSaveList();
-		syncLoadList();
+	do 
+	{
+		try {
+			processSaveList();
+			processLoadList();
 
-		processSaveList();
-		processLoadList();
-	} while (
-			!_shouldShutdown
-		||	!_saveList.empty()
-		||	!_loadList.empty());
+			syncSaveList();
+			syncLoadList();
+		}
+		catch (std::exception e)
+		{
+			error_logger << "Error in serlialization thread: " << e.what() << std::endl;
+		}
+	} 
+	while (!_shouldShutdown || !_saveList.empty() || !_loadList.empty());
 }
 
 void drft::ChunkSerializer::syncSaveList()
@@ -105,7 +131,7 @@ void drft::ChunkSerializer::processSaveList()
 		{
 			for (auto&& [position, registry] : list)
 			{
-				auto compressed = serializeAndCompressChunk(registry);
+				auto compressed = serializeAndCompressRegistry(registry);
 				regionFile.writeChunk(position, compressed);
 				promisesToComplete.push_back(position);
 			}
@@ -139,7 +165,7 @@ void drft::ChunkSerializer::processLoadList()
 			for (auto&& [position, registry] : list)
 			{
 				auto compressed = regionFile.readChunk(position);
-				decompressAndDeserializeChunk(compressed, registry);
+				decompressAndDeserializeRegistry(compressed, registry);
 				promisesToComplete.push_back(position);
 			}
 		}
@@ -158,7 +184,7 @@ void drft::ChunkSerializer::processLoadList()
 
 void drft::ChunkSerializer::saveSerializedChunkList()
 {
-	std::ofstream file{ CHUNK_LIST_FILEPATH, std::ios::binary | std::ios::trunc };
+	std::ofstream file{ CHUNK_LIST_FILEPATH, std::ios::trunc | std::ios::binary };
 	cereal::BinaryOutputArchive archive{ file };
 	archive(_serializedChunks);
 }
@@ -167,24 +193,9 @@ void drft::ChunkSerializer::loadSerializedChunkList()
 {
 	if (!std::filesystem::exists(CHUNK_LIST_FILEPATH)) return;
 
-	std::ifstream file{ CHUNK_LIST_FILEPATH, std::ios::binary | std::ios::trunc };
+	std::ifstream file{ CHUNK_LIST_FILEPATH, std::ios::binary };
 	cereal::BinaryInputArchive archive{ file };
 	archive(_serializedChunks);
-}
-
-std::vector<char> drft::ChunkSerializer::serializeAndCompressChunk(entt::registry& registry) const
-{
-	VectorBuffer buffer;
-	std::ostream os{ &buffer };
-	cereal::BinaryOutputArchive output{ os };
-	snapshot::Snapshot::save(output, registry);
-
-	return util::compressData(buffer);
-}
-
-void drft::ChunkSerializer::decompressAndDeserializeChunk(std::vector<char>& compressed, entt::registry& registry) const
-{
-
 }
 
 std::filesystem::path drft::ChunkSerializer::getRegionFilePath(ChunkPosition position) const
