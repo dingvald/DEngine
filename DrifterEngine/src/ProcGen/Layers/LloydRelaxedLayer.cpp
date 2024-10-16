@@ -1,5 +1,3 @@
-#pragma optimize("", off)
-
 #include "pch.h"
 #include <ProcGen/Layers/LloydRelaxedLayer.h>
 #include <Random/Random.h>
