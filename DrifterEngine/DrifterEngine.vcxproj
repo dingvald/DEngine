@@ -112,6 +112,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
+    <PostBuildEvent>
+      <Command>lib /NOLOGO /OUT:"$(OutDir)$(AssemblyName).lib" "$(IntDirFullPath)*.obj"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -139,6 +142,9 @@
       <AdditionalDependencies>opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;sfml-system-s.lib;sfml-window-s.lib;sfml-graphics-s.lib;tgui-s.lib;%(AdditionalDependencies);zlibstat.lib</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
+    <PostBuildEvent>
+      <Command>lib /NOLOGO /OUT:"$(OutDir)$(AssemblyName).lib" "$(IntDirFullPath)*.obj"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -187,6 +193,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Utility\SharedQueue.cpp" />
+    <ClCompile Include="src\Utility\RegionFile.cpp" />
     <ClCompile Include="src\Utility\ChunkSerializer.cpp" />
     <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp" />
     <ClCompile Include="src\Engine\CommonEngineDirectories.cpp" />
@@ -416,6 +424,8 @@
     <ClInclude Include="deps\zlib\include\zconf.h" />
     <ClInclude Include="deps\zlib\include\zlib.h" />
     <ClInclude Include="deps\zlib\include\zutil.h" />
+    <ClInclude Include="src\Utility\SharedQueue.h" />
+    <ClInclude Include="src\Utility\RegionFile.h" />
     <ClInclude Include="src\Utility\ChunkSerializer.h" />
     <ClInclude Include="deps\jc_voronoi\jc_voronoi.h" />
     <ClInclude Include="deps\jc_voronoi\jc_voronoi_adaptor.h" />

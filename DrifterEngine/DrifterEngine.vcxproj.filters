@@ -567,6 +567,12 @@
     <ClCompile Include="src\Utility\CompressData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility\RegionFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\SharedQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -2883,6 +2889,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="deps\zlib\include\zutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\RegionFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\SharedQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
