@@ -1,7 +1,6 @@
 #pragma once
 #include <Spatial/ChunkPosition.h>
 #include <Utility/RegionFile.h>
-#include <Utility/SharedQueue.h>
 
 namespace drft
 {
