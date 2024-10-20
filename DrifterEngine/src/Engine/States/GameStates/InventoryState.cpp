@@ -59,11 +59,12 @@ bool drft::InventoryState::handleEvent(const sf::Event& ev)
 		if (ev.key.code == sf::Keyboard::Tab)
 		{
 			_flowControl.cycleControl();
+			return true;
 		}
 		if (ev.key.code == sf::Keyboard::Escape)
 		{
 			requestStackPop();
-			return false;
+			return true;
 		}
 		break;
 	}
