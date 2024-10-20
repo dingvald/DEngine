@@ -24,6 +24,7 @@
 #include "Systems/Core/ChunkManager.h"
 #include "Systems/Core/ItemUniqueIDGenerator.h"
 #include "Systems/Core/TurnManager.h"
+#include <Systems/Core/TweeningSystem.h>
 #include "Systems/Core/WorldGridResolver.h"
 #include "Systems/Core/FloatingTextSystem.h"
 #include "Systems/Core/VisualEffectSystem.h"
@@ -149,6 +150,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<LevelingSystem>();
 	_systems->add<Camera>();
 	_systems->add<ChunkManager>();
+	_systems->add<TweeningSystem>();
 
 	_systems->add<DayNightCycleSystem>();
 	_systems->add<SprintingSystem>();

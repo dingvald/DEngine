@@ -10,6 +10,8 @@
 #include "Components/AttackerComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/ProjectileComponent.h"
+#include <Components/TweeningComponent.h>
+#include <Systems/Core/TweeningSystem.h>
 
 #include "Components/Tags.h"
 #include "Utility/EntityHelpers.h"
@@ -17,6 +19,13 @@
 #include "Systems/Helpers/SpawnEffect.h"
 
 using namespace entt::literals;
+
+const std::unordered_map<std::string, entt::id_type> DamageTypeToEffectTexture
+{
+	{"slashing", "slash_effect"_hs},
+	{"crushing", "impact_effect"_hs},
+	{"piercing", "slash_effect"_hs}
+};
 
 void drft::system::MeleeAttackActionSystem::init()
 {
@@ -28,7 +37,16 @@ void drft::system::MeleeAttackActionSystem::onUpdateLate(const float dt)
 	auto view = _registry.view<MeleeAttackAction>();
 	for (auto&& [entity, meleeAttackAction] : view.each())
 	{
-		processMeleeAttackAction(entity, meleeAttackAction);
+		Tween moveToTween = {
+			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.5f,
+			.time = 4,
+			.easing = [](float f) {return f; },
+			.onFinish = [this, entity, action = meleeAttackAction](entt::handle handle) {
+				processMeleeAttackAction(entity, action);
+			}
+		};
+		TweeningSystem::tween({ _registry, entity }, moveToTween);
+		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { _registry, entity });
 	}
 }
 
@@ -46,7 +64,7 @@ void drft::system::MeleeAttackActionSystem::onMeleeAttackActionAdded(entt::regis
 	}
 }
 
-void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entity entity, MeleeAttackAction& action)
+void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entity entity, MeleeAttackAction action) const
 {
 	for (auto target : action.targets)
 	{
@@ -56,21 +74,14 @@ void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entit
 	if (auto positionComponent = _registry.try_get<PositionComponent>(entity))
 	{
 		sf::Color effectColor = sf::Color::White;
+		entt::id_type effectTextureId = getEffectTexture(action.damageTypes);
 
-		std::vector<SpriteOptions> frames = // crushing
+		std::vector<SpriteOptions> frames =
 		{
-			SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "impact_effect"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
-			SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "impact_effect"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = effectTextureId, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{1, 0}},
 		};
 
-		if (action.damageTypes.contains("slashing") || action.damageTypes.contains("piercing"))
-		{
-			frames = // slashing
-			{
-				SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "slash_effect"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
-				SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "slash_effect"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
-			};
-		}
 		const sf::Vector3i targetPosition = positionComponent->tile + spatial::vec3FromPlanar(action.direction);
 		spawnEffect(_registry, {
 			.frames = frames,
@@ -78,6 +89,21 @@ void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entit
 			.animationSpeed = 20.0f
 			});
 	}
+}
 
-	spendActionPoints(BASE_ACTION_COST, ActionType::Act, { _registry, entity });
+entt::id_type drft::system::MeleeAttackActionSystem::getEffectTexture(const std::unordered_map<std::string, int>& damageTypes) const
+{
+	entt::id_type result = {};
+	int maxDamage = 0;
+
+	for (auto&& [type, damage] : damageTypes)
+	{
+		if (damage > maxDamage)
+		{
+			maxDamage = damage;
+			result = DamageTypeToEffectTexture.at(type);
+		}
+	}
+
+	return result;
 }

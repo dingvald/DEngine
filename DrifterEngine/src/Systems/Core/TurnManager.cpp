@@ -3,11 +3,14 @@
 #include "Components/Components.h"
 #include "Components/ActorComponent.h"
 #include "Components/DescriptionComponent.h"
+#include <Components/TweeningComponent.h>
 #include "Components/Tags.h"
 #include "Events/GameTickEvent.h"
 #include "Events/TurnStartEvent.h"
 #include "Events/TurnEndEvent.h"
 #include "Utility/EntityHelpers.h"
+
+using namespace entt::literals;
 
 void drft::system::TurnManager::init()
 {
@@ -30,6 +33,9 @@ void drft::system::TurnManager::onStart()
 
 void drft::system::TurnManager::onUpdate(const float)
 {
+	auto& storage = _registry.storage<TweeningComponent>();
+	if (!storage.empty()) return;
+
 	_actorQueue->refresh(_managedEntities);
 	_currentActor = determineCurrentActor();
 
@@ -47,6 +53,7 @@ void drft::system::TurnManager::onUpdate(const float)
 
 	_registry.clear<component::tag::CurrentActor>();
 	_previousActor = _currentActor;
+
 	if (_currentActor == _timeKeeper)
 	{
 		_actorQueue->tick();
@@ -83,8 +90,9 @@ void drft::system::TurnManager::onSpendActionPoints(entt::registry& registry, en
 	if (auto actor = registry.try_get<ActorComponent>(entity))
 	{
 		auto& spentPoints = registry.get<component::action::SpendPoints>(entity);
-		actor->ap -= spentPoints.amount;
+		actor->ap -= spentPoints.amount;	
 	}
+	registry.remove<component::tag::CurrentActor>(entity);
 }
 
 entt::entity drft::system::TurnManager::determineCurrentActor()
