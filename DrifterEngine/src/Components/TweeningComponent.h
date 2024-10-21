@@ -17,9 +17,7 @@ struct Tween
 
 struct TweeningComponent
 {
-	sf::Vector3f offset = {};
 	std::vector<Tween> tweens = {};
-
 	uint8_t index = 0;
 	float elapsed = 0.f;
 };

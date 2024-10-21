@@ -8,6 +8,7 @@
 struct PositionComponent
 {
 	drft::TilePosition tile = { 0,0,0 };
+	sf::Vector3f offset = { 0,0,0 };
 
 private:
 	friend class ComponentMetaBinder;
@@ -26,6 +27,13 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, PositionComponent& position)
 	{
-		archive(position.tile.x, position.tile.y, position.tile.z);
+		archive(
+			position.tile.x, 
+			position.tile.y, 
+			position.tile.z,
+			position.offset.x, 
+			position.offset.y, 
+			position.offset.z
+		);
 	}
 }
