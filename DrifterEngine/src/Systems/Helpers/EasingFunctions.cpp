@@ -1,0 +1,21 @@
+#include "pch.h"
+#include "EasingFunctions.h"
+
+float drft::Easing::linear(float f)
+{
+	return f;
+}
+
+float drft::Easing::easeOutElastic(float f)
+{
+	const float c4 = (2 * 3.1415f) / 3;
+	return f == 0 ? 0 : (f == 1.f ? 1.f : std::powf(2, -10 * f) * std::sinf((f * 10 - 0.75f) * c4) + 1);
+}
+
+float drft::Easing::easeOutBack(float f)
+{
+	const float c1 = 1.70158f;
+	const float c3 = c1 + 1.f;
+
+	return 1 + c3 * std::powf(f - 1, 3) + c1 * std::powf(f - 1, 2);
+}
