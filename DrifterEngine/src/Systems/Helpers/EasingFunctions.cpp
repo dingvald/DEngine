@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "EasingFunctions.h"
 
+// Easings taken from easing.net
+
 float drft::Easing::linear(float f)
 {
 	return f;
