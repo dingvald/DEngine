@@ -22,6 +22,7 @@ bool drft::TitleScreenState::handleEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
+	case sf::Event::MouseButtonPressed:
 		requestStackPop();
 		requestStackPush(States::MainMenu);
 		break;
