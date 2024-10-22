@@ -51,6 +51,8 @@ void drft::Engine::run()
 
 void drft::Engine::initialize()
 {
+	std::cout << "Initializing Engine..." << std::endl;
+	std::cout << "Working Directory: " << WORKING_DIRECTORY << std::endl;
 	setWindowIcon();
 	loadResources();
 	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
@@ -89,6 +91,7 @@ void drft::Engine::loadResources()
 	std::string default_theme_path = (THEMES_DIRECTORY / DEFAULT_THEME).string();
 	tgui::Theme::setDefault(default_theme_path);
 
+	// Needed so TGUI can use my texture atlas for sprites
 	tgui::Texture::setBackendTextureLoader(
 		[this](tgui::BackendTexture& backendTexture, const tgui::String&, bool) -> bool
 		{

@@ -87,6 +87,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -113,7 +114,9 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
     <PostBuildEvent>
-      <Command>lib /NOLOGO /OUT:"$(OutDir)$(AssemblyName).lib" "$(IntDirFullPath)*.obj"</Command>
+      <Command>xcopy "$(ProjectDir)data\static\" "$(OutDir)data\static\" /y /s /d
+xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,7 +146,9 @@
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>lib /NOLOGO /OUT:"$(OutDir)$(AssemblyName).lib" "$(IntDirFullPath)*.obj"</Command>
+      <Command>xcopy "$(ProjectDir)data\static\" "$(OutDir)data\static\" /y /s /d
+xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -193,6 +198,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Systems\Core\TweeningSystem.cpp" />
+    <ClCompile Include="src\Systems\Helpers\EasingFunctions.cpp" />
     <ClCompile Include="src\Utility\RegionFile.cpp" />
     <ClCompile Include="src\Utility\ChunkSerializer.cpp" />
     <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp" />
@@ -390,6 +397,7 @@
     <ClCompile Include="src\Engine\States\GameStates\WorldMapState.cpp" />
     <ClCompile Include="src\Utility\stdHashing.cpp" />
     <ClCompile Include="src\Utility\TGUIHelpers.cpp" />
+    <ClCompile Include="src\Utility\Vector3Utils.cpp" />
     <ClCompile Include="src\Utility\Visibility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\StaminaSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\Actions\WaitingSystem.cpp" />
@@ -423,6 +431,9 @@
     <ClInclude Include="deps\zlib\include\zconf.h" />
     <ClInclude Include="deps\zlib\include\zlib.h" />
     <ClInclude Include="deps\zlib\include\zutil.h" />
+    <ClInclude Include="src\Components\TweeningComponent.h" />
+    <ClInclude Include="src\Systems\Core\TweeningSystem.h" />
+    <ClInclude Include="src\Systems\Helpers\EasingFunctions.h" />
     <ClInclude Include="src\Utility\RegionFile.h" />
     <ClInclude Include="src\Utility\ChunkSerializer.h" />
     <ClInclude Include="deps\jc_voronoi\jc_voronoi.h" />
@@ -1164,6 +1175,7 @@
     <ClInclude Include="src\Utility\TGUIHelpers.h" />
     <ClInclude Include="src\Utility\Vector2Serialization.h" />
     <ClInclude Include="src\Utility\VectorBuffer.h" />
+    <ClInclude Include="src\Utility\Vector3Utils.h" />
     <ClInclude Include="src\Utility\Visibility.h" />
     <ClInclude Include="src\Systems\Gameplay\StaminaSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\Actions\WaitingSystem.h" />
