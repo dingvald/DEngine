@@ -16,6 +16,7 @@
 #include "Components/Tags.h"
 #include "Utility/EntityHelpers.h"
 #include "Utility/SpriteOptions.h"
+#include <Systems/Helpers/EasingFunctions.h>
 #include "Systems/Helpers/SpawnEffect.h"
 
 using namespace entt::literals;
@@ -38,15 +39,16 @@ void drft::system::MeleeAttackActionSystem::onUpdateLate(const float dt)
 	for (auto&& [entity, meleeAttackAction] : view.each())
 	{
 		Tween moveToTween = {
-			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.5f,
-			.time = 4,
-			.easing = [](float f) {return f; },
-			.onFinish = [this, entity, action = meleeAttackAction](entt::handle handle) {
-				processMeleeAttackAction(entity, action);
+			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.3f,
+			.time = 8,
+			.easing = Easing::easeOutBack,
+			.onFinish = [this, entity, action = meleeAttackAction](entt::handle) {
+				processMeleeAttackAction(entity, std::move(action));
 			}
 		};
-		TweeningSystem::tween({ _registry, entity }, moveToTween);
-		spendActionPoints(BASE_ACTION_COST, ActionType::Act, { _registry, entity });
+		entt::handle handle = { _registry, entity };
+		TweeningSystem::tween(handle, moveToTween);
+		spendActionPoints(BASE_ACTION_COST, ActionType::Act, handle);
 	}
 }
 
