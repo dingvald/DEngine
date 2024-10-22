@@ -14,7 +14,6 @@
 #include "Systems/Helpers/SpendActionPoints.h"
 #include "Utility/EntityHelpers.h"
 
-
 void drft::system::MoveActionSystem::init()
 {
 	_registry.on_construct<MoveAction>().connect<&MoveActionSystem::onMoveActionAdded>(this);
@@ -62,10 +61,16 @@ void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, Move
 {
 	if (action.direction == sf::Vector2i{ 0,0 }) return;
 
-	_registry.patch<PositionComponent>(entity,
-		[&action](PositionComponent& positionComponent)
-		{
-			positionComponent.tile += spatial::vec3FromPlanar(action.direction);
-		});
-	spendActionPoints(BASE_ACTION_COST, ActionType::Move, { _registry, entity });
+	entt::handle handle = { _registry, entity };
+	move(handle, action.direction);
+	spendActionPoints(BASE_ACTION_COST, ActionType::Move, handle);
+}
+
+void drft::system::MoveActionSystem::move(entt::handle entity, sf::Vector2i direction) const
+{
+	TilePosition tileDirection = spatial::asTileSpace(direction);
+	entity.patch<PositionComponent>([tileDirection](PositionComponent& position) {
+			position.tile += tileDirection;
+		}
+	);
 }
