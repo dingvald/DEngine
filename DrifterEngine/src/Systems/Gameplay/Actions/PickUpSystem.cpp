@@ -47,13 +47,16 @@ void drft::system::PickUpSystem::onPickupAction(entt::registry& registry, entt::
 	bool putDirectlyInHand = false;
 	if (auto body = _registry.try_get<BodyComponent>(entity))
 	{
-		const auto handParts = body->parts.search(PartType::Hand);
+		auto handParts = body->parts.getAllPartsWithSlot("held");
 		for (auto hand : handParts)
 		{
-			if (!hand->getSlotItem(EquipmentLayer::Held).has_value())
+			if (auto slot = hand->getSlot("held"))
 			{
-				hand->addSlotItem(item.id, EquipmentLayer::Held);
-				putDirectlyInHand = true;
+				if (slot->item == 0u)
+				{
+					slot->item = item.id;
+					putDirectlyInHand = true;
+				}
 				break;
 			}
 		}

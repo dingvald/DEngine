@@ -1,16 +1,11 @@
 #pragma once
 #include <Engine/States/State.h>
-#include "GUI/GUIElement.h"
+#include <Systems/HelperClasses/ContainerWrapper.h>
+
+struct BodyPart;
 
 namespace drft
 {
-	enum class CommandListType
-	{
-		Inventory,
-		Held,
-		Worn
-	};
-
 	class InventoryState : public State
 	{
 	private:
@@ -19,37 +14,24 @@ namespace drft
 		InventoryState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
-		bool update(const float dt) override;
-		void render(sf::RenderTarget& target) override;
-		void onPush() override;
-		void onPop() override;
 
 	private:
-		void addItemIcon(gui::Element& container, entt::entity item, sf::Vector2f iconSize);
-		void setupPanels();
-		void setupInventoryDisplay();
-		void setupWornItemsDisplay();
-		void setupHeldItemsDisplay();
-
-		void updateInventoryDisplay();
-		void updateWornItemsDisplay();
-		void updateHeldItemsDisplay();
 		void determineSessionEntities();
-		void shutdownSessionEntities();
 
-		void createItemCommandList(CommandListType type, sf::Vector2f position, unsigned long itemID);
-		void tryEquipItem(unsigned long itemID, sf::Vector2f position);
-		void tryUnequipItem(unsigned long itemID);
+		void setupInventoryEntryTemplate(tgui::Panel::Ptr templatePanel);
+		void setupEquipmentEntryTemplate(tgui::Panel::Ptr templatePanel);
+
+		void refreshInventoryUI(tgui::PanelListBox::Ptr list);
+		void refreshEquipmentUI(tgui::PanelListBox::Ptr equipment);
+
+		void addItemToInventoryUI(entt::const_handle item, tgui::Panel::Ptr panel);
+		void addItemToEquipmentUI(const BodyPart& part, tgui::Panel::Ptr panel);
 
 		std::string shortenPartName(const std::string& fullPartName) const;
 
 	private:
-		std::vector<entt::entity> _sessionEntities;
-
-		gui::Panel _inventoryBackground;
-		gui::FlowControl _flowControl;
-		gui::Stack _inventoryStack;
-		gui::Blob _inventoryBlob;
+		ContainerWrapper _container;
+		entt::handle _sessionEntity;
 	};
 }
 

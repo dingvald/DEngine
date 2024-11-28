@@ -18,7 +18,6 @@
 #include "Components/RenderComponent.h"
 #include "Components/HealthComponent.h"
 #include "Components/LevelingComponent.h"
-#include "Components/BodyComponent.h"
 #include "Components/StaminaComponent.h"
 #include "Components/HotbarComponent.h"
 
@@ -254,30 +253,7 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 
 void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
 {
-	_inHandsDisplay.clear();
-	if (auto body = player.try_get<BodyComponent>())
-	{
-		auto handParts = body->parts.search(PartType::Hand);
-		for (auto hand : handParts)
-		{
-			auto& handContainer = _inHandsDisplay.insert(std::string(hand->name), gui::DualContainer());
-			handContainer.setSize({ 32, 32 })
-				.setStyle(gui::ElementState::Idle, {
-					.fillColor = {0,0,0,150},
-					.outlineColor = {150,150,150,100},
-					.outlineThickness = 1.f
-					})
-				.insert("Item", gui::DualContainer());
 
-			auto heldItems = hand->getSlotItem(EquipmentLayer::Held);
-			if (heldItems.has_value())
-			{
-				auto itemEntity = ItemDatabase::getEntityFromItemID(heldItems.value());
-				addItemIcon(handContainer["Item"], itemEntity);
-			}
-		}
-	}
-	_inHandsDisplay.update(0.f);
 }
 
 void drft::system::HUD::updateFlashEffects()

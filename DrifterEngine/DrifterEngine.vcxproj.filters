@@ -306,7 +306,7 @@
     <ClCompile Include="src\Utility\Math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\HelperClasses\BodyParts.cpp">
+    <ClCompile Include="src\Systems\HelperClasses\BodyPart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\StringManipulation.cpp">
@@ -577,6 +577,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\EasingFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\HelperClasses\ContainerWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1388,7 +1391,7 @@
     <ClInclude Include="src\Utility\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\HelperClasses\BodyParts.h">
+    <ClInclude Include="src\Systems\HelperClasses\BodyPart.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\StringManipulation.h">
@@ -2910,6 +2913,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\EasingFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\HelperClasses\ContainerWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\DominantHandComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

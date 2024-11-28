@@ -22,7 +22,6 @@ namespace drft
 		bool update(const float dt) override;
 		bool fixedUpdate() override;
 		void render(sf::RenderTarget& target) override;
-		void onEnter() override;
 		void onPop() override;
 
 	private:

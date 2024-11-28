@@ -23,13 +23,11 @@ static constexpr float CRAFTING_WINDOW_WIDTH = 512.f;
 static constexpr float CRAFTING_WINDOW_HEIGHT = 480.f;
 static constexpr float DISTANCE_BETWEEN_ITEMS_AND_REQUIREMENTS = 180.f;
 
-static const char* CraftablesListWidget = "list_box";
-static const char* ListEntryWidget = "list_entry";
-static const char* ListEntryButtonWidget = "list_entry_button";
-static const char* ItemNameWidget = "item_name";
-static const char* ItemIconWidget = "icon";
-static const char* NameGridWidget = "name_grid";
-static const char* RecipeGridWidget = "recipe_grid";
+static const char* w_CraftablesList		= "list_box";
+static const char* w_EntryButton		= "list_entry_button";
+static const char* w_EntryName			= "item_name";
+static const char* w_EntryIcon			= "icon";
+static const char* w_RecipeGrid			= "recipe_grid";
 
 drft::CraftingState::CraftingState(StateStack& stack, StateContext& context)
     : State(stack, context)
@@ -38,7 +36,7 @@ drft::CraftingState::CraftingState(StateStack& stack, StateContext& context)
 	determineSessionEntities();
 
 	auto list = tgui::PanelListBox::create();
-	_guiGroup->add(list, CraftablesListWidget);
+	_guiGroup->add(list, w_CraftablesList);
 	list->setOrigin(0.5f, 0.5f);
 	list->setPosition("50%, 50%");
 	list->setSize(tgui::bindWidth(_guiGroup) * 0.5f, tgui::bindHeight(_guiGroup) * 0.5f);
@@ -69,20 +67,20 @@ bool drft::CraftingState::handleEvent(const sf::Event& ev)
 void drft::CraftingState::setupPanelTemplate(tgui::Panel::Ptr templatePanel)
 {
 	auto icon = tgui::Picture::create();
-	templatePanel->add(icon, ItemIconWidget);
+	templatePanel->add(icon, w_EntryIcon);
 	icon->setSize(32, 48);
 	icon->setOrigin(0.f, 0.5f);
 	icon->setPosition(4, "50%");
 
 	auto text = tgui::Label::create();
-	templatePanel->add(text, ItemNameWidget);
+	templatePanel->add(text, w_EntryName);
 	text->setVerticalAlignment(tgui::VerticalAlignment::Center);
 	text->setTextSize(16);
 	text->setOrigin(0.f, 0.5f);
 	text->setPosition(icon->getSize().x + 4, "50%");
 
 	auto recipe_grid = tgui::Grid::create();
-	templatePanel->add(recipe_grid, RecipeGridWidget);
+	templatePanel->add(recipe_grid, w_RecipeGrid);
 	recipe_grid->setOrigin(0.f, 0.5f);
 	recipe_grid->setPosition("50%, 50%");
 }
@@ -166,13 +164,14 @@ void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, ent
 	tgui::Texture texture{ name, GuiHelpers::toUIntRect(rect) };
 	texture.setColor(render.color);
 
-	auto icon = panel->get<tgui::Picture>(ItemIconWidget);
+	auto icon = panel->get<tgui::Picture>(w_EntryIcon);
 	icon->getRenderer()->setTexture(texture);
 	icon->setIgnoreMouseEvents(true);
 
-	auto text = panel->get<tgui::Label>(ItemNameWidget);
+	auto text = panel->get<tgui::Label>(w_EntryName);
 	text->setText(name);
 	text->setIgnoreMouseEvents(true);
+
 	if (isPartial)
 	{
 		text->getRenderer()->setTextColor({ 100, 100, 100 });
@@ -186,7 +185,7 @@ void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, ent
 void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
 {
 	auto& craftable = item.get<CraftableComponent>();
-	auto grid = panel->get<tgui::Grid>(RecipeGridWidget);
+	auto grid = panel->get<tgui::Grid>(w_RecipeGrid);
 	grid->setIgnoreMouseEvents(true);
 
 	int index = 0;
@@ -220,6 +219,7 @@ void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned 
 	label->setIgnoreMouseEvents(true);
 	sub_grid->addWidget(label, 0, 1);
 	sub_grid->setIgnoreMouseEvents(true);
+
 	if (isPartial)
 	{
 		label->getRenderer()->setTextColor({ 100, 100, 100 });
@@ -231,7 +231,7 @@ void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned 
 
 void drft::CraftingState::addNothingToCraftWidget(tgui::Panel::Ptr panel)
 {
-	auto text = panel->get<tgui::Label>(ItemNameWidget);
+	auto text = panel->get<tgui::Label>(w_EntryName);
 	text->setText("Nothing to craft.");
 	text->getRenderer()->setTextColor(tgui::Color{ 100, 100, 100 });
 	text->setIgnoreMouseEvents(true);
@@ -241,7 +241,7 @@ void drft::CraftingState::onCraft(const std::string& name)
 {
 	if (system::CraftItemSystem::craftItem(_sessionEntity, name))
 	{
-		refreshCraftingList(getContext().gui.get<tgui::PanelListBox>(CraftablesListWidget));
+		refreshCraftingList(getContext().gui.get<tgui::PanelListBox>(w_CraftablesList));
 	}
 }
 

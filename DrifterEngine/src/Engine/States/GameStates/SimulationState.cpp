@@ -106,11 +106,6 @@ void drft::SimulationState::render(sf::RenderTarget& target)
 	_systems->fixedUpdateEnd();
 }
 
-void drft::SimulationState::onEnter()
-{
-	getContext().window.setMouseCursorVisible(false);
-}
-
 void drft::SimulationState::onPop()
 {
 	savePlayer();

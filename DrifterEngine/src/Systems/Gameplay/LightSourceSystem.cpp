@@ -15,7 +15,7 @@ void drft::system::LightSourceSystem::onFixedUpdate()
 	for (auto [entity, body] : bodyView.each())
 	{
 		auto equippedItems = body.parts.getAllEquipped();
-		for (auto&& [part, item] : equippedItems)
+		for (auto&& item : equippedItems)
 		{
 			const auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 			if (const auto light = _registry.try_get<LocalLightSourceComponent>(itemEntity))

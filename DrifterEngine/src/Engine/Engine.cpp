@@ -16,8 +16,8 @@ static const std::filesystem::path DEFAULT_THEME = "drifter_theme.txt";
 
 static const float TARGET_DT = (1.0f / TARGET_FPS);
 
-static const unsigned int WINDOW_WIDTH = 1280;
-static const unsigned int WINDOW_HEIGHT = 720;
+static const unsigned int WINDOW_WIDTH = 2560;
+static const unsigned int WINDOW_HEIGHT = 1440;
 
 static const float DEBUG_X_POSITION = WINDOW_WIDTH - 256;
 static const float DEBUG_Y_POSITION = 16;

@@ -92,8 +92,7 @@ private:
 					node.synced = value["synced"].GetBool();
 				}
 				spriteController.states.emplace(entt::hashed_string(name.GetString()), std::move(node));
-			}
-			
+			}	
 		}
 	}
 

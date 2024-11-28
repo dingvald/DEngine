@@ -7,118 +7,58 @@
       "Components": {
         "Body": {
           "Torso": {
-            "type": "Torso",
+            "slots": [ "torso" ],
             "size": 36,
-            "attachedParts": {
+            "attached_parts": {
               "Head": {
-                "type": "Head",
+                "slots": [ "head" ],
                 "size": 9
               },
               "Right Arm": {
-                "type": "Upper Limb",
+                "slots": [ "upper_limb:0" ],
                 "size": 7,
-                "attachedParts": {
+                "attached_parts": {
                   "Right Hand": {
-                    "type": "Hand",
+                    "slots": [ "hand:0", "held:0" ],
                     "size": 2
                   }
                 }
               },
               "Left Arm": {
-                "type": "Upper Limb",
+                "slots": [ "upper_limb:1" ],
                 "size": 7,
-                "attachedParts": {
+                "attached_parts": {
                   "Left Hand": {
-                    "type": "Hand",
+                    "slots": [ "hand:1", "held:1" ],
                     "size": 2
                   }
                 }
               },
               "Right Leg": {
-                "type": "Lower Limb",
+                "slots": [ "lower_limb" ],
                 "size": 15,
-                "layers": 2,
-                "attachedParts": {
+                "attached_parts": {
                   "Right Foot": {
-                    "type": "Foot",
-                    "size": 3,
-                    "layers": 2
+                    "slots": [ "feet" ],
+                    "size": 3
                   }
                 }
               },
               "Left Leg": {
-                "type": "Lower Limb",
+                "slots": [ "lower_limb" ],
                 "size": 15,
-                "layers": 2,
-                "attachedParts": {
+                "attached_parts": {
                   "Left Foot": {
-                    "type": "Foot",
-                    "size": 3,
-                    "layers": 2
+                    "slots": [ "feet" ],
+                    "size": 3
                   }
                 }
               }
             }
           }
-        }
-      }
-    },
-    "Quadruped": {
-      "Inherits": [
-        "Object"
-      ],
-      "Components": {
-        "Body": {
-          "Torso": {
-            "type": "Torso",
-            "size": 36,
-            "attachedParts": {
-              "Head": {
-                "type": "Head",
-                "size": 9
-              },
-              "Right Foreleg": {
-                "type": "Lower Limb",
-                "size": 10,
-                "attachedParts": {
-                  "Right Foot": {
-                    "type": "Foot",
-                    "size": 2
-                  }
-                }
-              },
-              "Left Foreleg": {
-                "type": "Lower Limb",
-                "size": 10,
-                "attachedParts": {
-                  "Left Foot": {
-                    "type": "Foot",
-                    "size": 2
-                  }
-                }
-              },
-              "Right Hindleg": {
-                "type": "Lower Limb",
-                "size": 12,
-                "attachedParts": {
-                  "Right Foot": {
-                    "type": "Foot",
-                    "size": 2
-                  }
-                }
-              },
-              "Left Hindleg": {
-                "type": "Lower Limb",
-                "size": 12,
-                "attachedParts": {
-                  "Left Foot": {
-                    "type": "Foot",
-                    "size": 2
-                  }
-                }
-              }
-            }
-          }
+        },
+        "DominantHand": {
+          "held_uid": 0
         }
       }
     }

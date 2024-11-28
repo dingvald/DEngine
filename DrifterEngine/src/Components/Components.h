@@ -1,6 +1,5 @@
 #pragma once
 #include "Utility/Math.h"
-#include "Systems/HelperClasses/BodyParts.h"
 
 
 namespace component::action
@@ -55,8 +54,8 @@ namespace component::action
 	struct Equip
 	{
 		unsigned long toEquip = 0;
-		std::string partName = {};
-		EquipmentLayer layer = EquipmentLayer::Base;
+		std::string slotName = {};
+		unsigned int uid = 0;
 	};
 
 	struct Unequip

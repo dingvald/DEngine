@@ -32,14 +32,9 @@ void drft::system::BodyPartSystem::onIncomingDamage(entt::registry& registry, en
 	{
 		auto& incomingDamage = registry.get<component::action::IncomingDamage>(entity);
 		if (incomingDamage.damageTypes.empty()) return;
-		
-		const auto& partHit = determinePartHit({registry, entity});
 
-		const auto sourceName = util::getEntityName({ registry, incomingDamage.source });
-		const auto targetName = util::getEntityName({ registry, entity });
-		std::cout << sourceName << " attacks " << targetName << "'s " << partHit.name << "!" << std::endl;
-		auto mitigatedDamage = calculateMitigationFromWorn(entity, partHit, incomingDamage.damageTypes);
-		incomingDamage.damageTypes = mitigatedDamage;
+		// TODO: Add damage mitigation
+
 	}
 }
 
@@ -59,7 +54,7 @@ void drft::system::BodyPartSystem::onMeleeAttackActionAdded(entt::registry& regi
 void drft::system::BodyPartSystem::onItemBreakEvent(events::ItemBreakEvent& ev)
 {
 	auto& body = _registry.get<BodyComponent>(ev.owner);
-	body.parts.unequipItem(ev.itemID);
+	body.parts.removeItem(ev.itemID);
 }
 
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDamageTypesFromHeld(entt::entity attacker)
@@ -67,93 +62,28 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 	std::unordered_map<std::string, int> result;
 	if (auto body = _registry.try_get<BodyComponent>(attacker))
 	{
-		if (const auto rightHand = body->parts.search("Right Hand")) // TODO: Use preferred hand - don't hard code right hand
-		{
-			auto optionalHeld = rightHand->getSlotItem(EquipmentLayer::Held);
-			auto itemEntity = ItemDatabase::getEntityFromItemID(optionalHeld.value_or(ItemComponent::NONE));
-			if (itemEntity != entt::null)
-			{
-				if (auto material = _registry.try_get<MaterialComponent>(itemEntity))
-				{
-					result["crushing"] += material->weight;
-				}
-				if (auto sharp = _registry.try_get<SharpComponent>(itemEntity))
-				{
-					result["slashing"] += sharp->sharpness;
-				}
-			}
-
-			if (rng::percentChance(CHANCE_TO_DAMAGE_EQUIPPED_WEAPON))
-			{
-				component::action::TakeDamage damage{ .amount = 1, .source = entt::null };
-				_registry.emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
-			}
-		}
-	}
-
-	return result;
-}
-
-std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateMitigationFromWorn(entt::entity defender, const BodyPart& partHit, const std::unordered_map<std::string, int> incomingDamageTypes)
-{
-	std::unordered_map<std::string, int> result = incomingDamageTypes;
-	auto itemsEquipped = partHit.getAllSlottedExcept({ EquipmentLayer::Held });
-	for (auto item : itemsEquipped)
-	{
+		auto item = body->parts.getEquipped("held", 0);
 		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+
 		if (itemEntity != entt::null)
 		{
-			if (auto wearable = _registry.try_get<WearableComponent>(itemEntity))
+			if (auto material = _registry.try_get<MaterialComponent>(itemEntity))
 			{
-				int sum = 0;
-				for (auto& [damageType, amount] : result)
-				{
-					if (wearable->protections.contains(damageType))
-					{
-						sum += wearable->protections.at(damageType);
-						amount = std::max(0, amount - wearable->protections.at(damageType));
-					}
-				}
-
-				if (_registry.all_of<HealthComponent>(itemEntity))
-				{
-					component::action::TakeDamage damage{ .amount = sum, .source = entt::null };
-					_registry.emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
-				}
+				result["crushing"] += material->weight;
 			}
+			if (auto sharp = _registry.try_get<SharpComponent>(itemEntity))
+			{
+				result["slashing"] += sharp->sharpness;
+			}
+		}
+
+		if (rng::percentChance(CHANCE_TO_DAMAGE_EQUIPPED_WEAPON))
+		{
+			component::action::TakeDamage damage{ .amount = 1, .source = entt::null };
+			_registry.emplace_or_replace<component::action::TakeDamage>(itemEntity, damage);
 		}
 	}
 
 	return result;
 }
-
-const BodyPart& drft::system::BodyPartSystem::determinePartHit(entt::handle entity)
-{
-	BodyPart partHit;
-	if (auto body = entity.try_get<BodyComponent>())
-	{
-		int sum = 0;
-		auto partsVector = body->parts.flatten();
-		for (auto&& part : partsVector)
-		{
-			sum += part->size;
-		}
-		static rng::Random random{ rng::GlobalSeed };
-		const int choice = random.intInRange(0, sum);
-		auto rd = std::random_device{};
-		auto rng = std::default_random_engine{rd()};
-		std::shuffle(begin(partsVector), end(partsVector), rng);
-		for (auto&& part : partsVector)
-		{
-			sum -= part->size;
-			if (sum <= choice)
-			{
-				return *part;
-			}
-		}
-	}
-
-	return partHit;
-}
-
  

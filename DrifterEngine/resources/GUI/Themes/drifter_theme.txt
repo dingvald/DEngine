@@ -11,7 +11,5 @@ ScrollbarWidth					= 2;
 Button {
 	TextColorFocused			= Yellow;
 	Borders						= 0;
-}
-
-SplitContainer {
+	BackgroundColorHover		= rgba(100,100,100,100);
 }

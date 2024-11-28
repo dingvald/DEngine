@@ -11,6 +11,7 @@
 #include "CraftableComponent.h"
 #include "DateAndTimeTrackerComponent.h"
 #include "DescriptionComponent.h"
+#include "DominantHandComponent.h"
 #include "FactionComponent.h"
 #include "FlyingComponent.h"
 #include "GlobalLightSourceComponent.h"
@@ -55,6 +56,7 @@ void ComponentMetaBinder::bindComponents()
 	CraftableComponent::bind();
 	DateAndTimeTrackerComponent::bind();
 	DescriptionComponent::bind();
+	DominantHandComponent::bind();
 	FactionComponent::bind();
 	FlyingComponent::bind();
 	GlobalLightSourceComponent::bind();

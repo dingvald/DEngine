@@ -31,11 +31,10 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 	auto itemItr = std::find(container.contents.begin(), container.contents.end(), equipItem.toEquip);
 	if (itemItr != container.contents.end())
 	{
-		auto itemEntity = ItemDatabase::getEntityFromItemID(equipItem.toEquip);
-		if (auto currentlyEquipped = body.parts.getEquippedOnPart(equipItem.partName, equipItem.layer))
+		auto oldItem = body.parts.swapItem(equipItem.toEquip, equipItem.slotName, equipItem.uid);
+		if (oldItem)
 		{
-			*itemItr = currentlyEquipped.value();
-			body.parts.unequipItem(currentlyEquipped.value());
+			*itemItr = oldItem;
 		}
 		else
 		{
@@ -44,7 +43,6 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 					cont.contents.erase(itemItr);
 				});
 		}
-		body.parts.equipItem(equipItem.toEquip, equipItem.layer, equipItem.partName);
 	}
 }
 
@@ -55,9 +53,10 @@ void drft::system::EquipItemSystem::onItemUnequipped(entt::registry& registry, e
 	auto& body = registry.get<BodyComponent>(entity);
 
 	if (container.contents.size() >= container.capacity) return;
+
 	registry.patch<ContainerComponent>(entity, [&unequipItem](ContainerComponent& cont)
 		{
 			cont.contents.push_back(unequipItem.toUnequip);
 		});
-	body.parts.unequipItem(unequipItem.toUnequip);
+	body.parts.removeItem(unequipItem.toUnequip);
 }

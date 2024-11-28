@@ -19,9 +19,6 @@ namespace drft::system
 		void onItemBreakEvent(events::ItemBreakEvent& ev);
 
 		std::unordered_map<std::string, int> calculateDamageTypesFromHeld(entt::entity attacker);
-		std::unordered_map<std::string, int> calculateMitigationFromWorn(entt::entity defender, const BodyPart& partHit, const std::unordered_map<std::string, int> incomingDamageTypes);
-
-		const BodyPart& determinePartHit(entt::handle entity);
 	};
 
 }

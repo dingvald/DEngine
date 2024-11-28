@@ -199,6 +199,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Systems\Core\TweeningSystem.cpp" />
+    <ClCompile Include="src\Systems\HelperClasses\ContainerWrapper.cpp" />
     <ClCompile Include="src\Systems\Helpers\EasingFunctions.cpp" />
     <ClCompile Include="src\Utility\RegionFile.cpp" />
     <ClCompile Include="src\Utility\ChunkSerializer.cpp" />
@@ -263,7 +264,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\GOAP\Sensors\Utility\IsHostile.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp" />
-    <ClCompile Include="src\Systems\HelperClasses\BodyParts.cpp" />
+    <ClCompile Include="src\Systems\HelperClasses\BodyPart.cpp" />
     <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\EquipmentSlots.cpp" />
     <ClCompile Include="src\Systems\Helpers\ContainerHasItem.cpp" />
@@ -431,8 +432,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="deps\zlib\include\zconf.h" />
     <ClInclude Include="deps\zlib\include\zlib.h" />
     <ClInclude Include="deps\zlib\include\zutil.h" />
+    <ClInclude Include="src\Components\DominantHandComponent.h" />
     <ClInclude Include="src\Components\TweeningComponent.h" />
     <ClInclude Include="src\Systems\Core\TweeningSystem.h" />
+    <ClInclude Include="src\Systems\HelperClasses\ContainerWrapper.h" />
     <ClInclude Include="src\Systems\Helpers\EasingFunctions.h" />
     <ClInclude Include="src\Utility\RegionFile.h" />
     <ClInclude Include="src\Utility\ChunkSerializer.h" />
@@ -898,7 +901,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h" />
     <ClInclude Include="src\Systems\HelperClasses\AIStates.h" />
-    <ClInclude Include="src\Systems\HelperClasses\BodyParts.h" />
+    <ClInclude Include="src\Systems\HelperClasses\BodyPart.h" />
     <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\EquipmentSlots.h" />
     <ClInclude Include="src\Systems\Helpers\ContainerHasItem.h" />

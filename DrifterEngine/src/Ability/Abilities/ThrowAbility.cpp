@@ -29,11 +29,8 @@ bool drft::ThrowAbility::isValid(entt::const_handle actor) const
 {
 	if (auto body = actor.try_get<BodyComponent>())
 	{
-		if (const auto rightHand = body->parts.search("Right Hand"))
-		{
-			auto optionalItem = rightHand->getSlotItem(EquipmentLayer::Held);
-			if (optionalItem.has_value()) return true;
-		}
+		auto item = body->parts.getEquipped("held", 0);
+		return item != 0u;
 	}
 	return false;
 }
@@ -44,27 +41,24 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<TilePosition>
 	if (!targetPosition.has_value()) throw std::exception("You need a target to throw at.");
 	if (auto body = actor.try_get<BodyComponent>())
 	{
-		if (const auto rightHand = body->parts.search("Right Hand"))
+		auto item = body->parts.getEquipped("held", 0);
+		if (item)
 		{
-			auto optionalItem = rightHand->getSlotItem(EquipmentLayer::Held);
-			if (optionalItem.has_value())
+			body->parts.removeItem(item);
+			auto& throwerPos = actor.get<PositionComponent>();
+			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+
+			if (targetPosition.value() == throwerPos.tile)
 			{
-				body->parts.unequipItem(optionalItem.value());
-				auto& throwerPos = actor.get<PositionComponent>();
-				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalItem.value());
+				actor.registry()->emplace<PositionComponent>(itemEntity, targetPosition.value());
+			}
+			else
+			{
+				auto line = spatial::getLine2d(spatial::toXY(throwerPos.tile), spatial::toXY(targetPosition.value()));
 
-				if (targetPosition.value() == throwerPos.tile)
-				{
-					actor.registry()->emplace<PositionComponent>(itemEntity, targetPosition.value());
-				}
-				else
-				{
-					auto line = spatial::getLine2d(spatial::toXY(throwerPos.tile), spatial::toXY(targetPosition.value()));
-
-					TilePosition projectilePosition = { line.front().x, line.front().y, throwerPos.tile.z };
-					actor.registry()->emplace<PositionComponent>(itemEntity, projectilePosition);
-					actor.registry()->emplace<ProjectileComponent>(itemEntity, std::move(line), 1, throwSpeed);
-				}
+				TilePosition projectilePosition = { line.front().x, line.front().y, throwerPos.tile.z };
+				actor.registry()->emplace<PositionComponent>(itemEntity, projectilePosition);
+				actor.registry()->emplace<ProjectileComponent>(itemEntity, std::move(line), 1, throwSpeed);
 			}
 		}
 	}
@@ -75,19 +69,17 @@ drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) co
 	const int maxRange = 12;
 	if (auto body = actor.try_get<BodyComponent>())
 	{
-		if (const auto rightHand = body->parts.search("Right Hand"))
+		auto item = body->parts.getEquipped("held", 0);
+		if (item)
 		{
-			auto optionalItem = rightHand->getSlotItem(EquipmentLayer::Held);
-			if (optionalItem.has_value())
+			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+			if (auto material = actor.registry()->try_get<MaterialComponent>(itemEntity))
 			{
-				auto itemEntity = ItemDatabase::getEntityFromItemID(optionalItem.value());
-				if (auto material = actor.registry()->try_get<MaterialComponent>(itemEntity))
-				{
-					int rangeVal = std::max(1, (maxRange - static_cast<int>(material->weight)));
-					return { 0, rangeVal };
-				}
+				int rangeVal = std::max(1, (maxRange - static_cast<int>(material->weight)));
+				return { 0, rangeVal };
 			}
 		}
+
 	}
 	return {0, 0};
 }
