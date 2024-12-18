@@ -41,6 +41,7 @@
 #include "SyncedAnimationComponent.h"
 #include "TemporaryLightSourceComponent.h"
 #include "TickingLifetimeComponent.h"
+#include "VisionComponent.h"
 #include "VisualEffectComponent.h"
 #include "WearableComponent.h"
 
@@ -86,6 +87,7 @@ void ComponentMetaBinder::bindComponents()
 	SyncedAnimationComponent::bind();
 	TemporaryLightSourceComponent::bind();
 	TickingLifetimeComponent::bind();
+	VisionComponent::bind();
 	VisualEffectComponent::bind();
 	WearableComponent::bind();
 }

@@ -5,6 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/LightBlockingComponent.h"
+#include <Components/VisionComponent.h>
 #include "Components/Tags.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Helpers.h"
@@ -44,10 +45,10 @@ void drft::system::PlayerFOVSystem::onFixedUpdate()
 		}
 	}
 
-	auto playerView = _registry.view<PlayerComponent, PositionComponent>();
-	for (auto [_, player, pos] : playerView.each())
+	auto playerView = _registry.view<PlayerComponent, VisionComponent, PositionComponent>();
+	for (auto [_, player, vision, pos] : playerView.each())
 	{
-		_fov->compute(pos.tile, player.sightRange);
+		_fov->compute(pos.tile, vision.sightRange);
 		for (auto entityToLight : _toLight)
 		{
 			_registry.emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);
