@@ -5,7 +5,6 @@
 
 #include "Events/RequestStateChange.h"
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
-#include "WorldMap/WorldMap.h"
 
 #include <Engine/States/GameStates/CraftingState.h>
 #include <Engine/States/GameStates/GameOverState.h>
@@ -13,7 +12,6 @@
 #include <Engine/States/GameStates/SelectDirectionState.h>
 #include <Engine/States/GameStates/SelectTargetState.h>
 #include <Engine/States/GameStates/SimulationState.h>
-#include <Engine/States/GameStates/WorldMapState.h>
 
 #include <JSON/JSONHelpers.h>
 #include "Utility/StandardLogger.h"
@@ -27,7 +25,6 @@ drft::GameState::GameState(StateStack& stack, StateContext& context)
 	std::cout << "Initializing GameState..." << std::endl;
 
 	_worldGenerator = std::make_unique<gen::WorldGenerator>();
-	_worldMap = std::make_unique<WorldMap>(*_worldGenerator);
 	_factory = std::make_unique<EntityFactory>();
 	_dispatcher = std::make_unique<entt::dispatcher>();
 
@@ -46,7 +43,6 @@ void drft::GameState::registerGameStates()
 	_gameStateStack.registerState<SimulationState>(States::Simulation);
 	_gameStateStack.registerState<InventoryState>(States::Inventory);
 	_gameStateStack.registerState<CraftingState>(States::Crafting);
-	_gameStateStack.registerState<WorldMapState>(States::Map);
 	_gameStateStack.registerState<SelectDirectionState>(States::SelectDirection);
 	_gameStateStack.registerState<SelectTargetState>(States::SelectTarget);
 	_gameStateStack.registerState<GameOverState>(States::GameOver);
@@ -96,7 +92,6 @@ void drft::GameState::setupRegistryContext()
 
 	getContext().registry.ctx().emplace<system::InputBuffer&>(_inputBuffer);
 	getContext().registry.ctx().emplace<gen::WorldGenerator&>(*_worldGenerator);
-	getContext().registry.ctx().emplace<WorldMap>(*_worldMap);
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace<TextureAtlas&>(getContext().textures);
 	getContext().registry.ctx().emplace<const ControlsContext&>(getContext().controls);

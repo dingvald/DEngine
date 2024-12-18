@@ -14,7 +14,6 @@
 #include "Utility/ContainerHelpers.h"
 #include "Utility/stdHashing.h"
 #include "Utility/Math.h"
-#include "Spatial/WorldMapPosition.h"
 
 #include <ProcGen/Layers/PerlinNoiseLayer.h>
 #include <ProcGen/Layers/BiomeLayer.h>
@@ -61,9 +60,8 @@ void drft::gen::WorldGenerator::createFromJson(const rapidjson::Value& json)
 	{
 		const int raw_x = json["dimensions"].GetArray()[0].GetInt();
 		const int raw_y = json["dimensions"].GetArray()[1].GetInt();
-		const auto worldMapPosition = WorldMapPosition{ raw_x, raw_y };
 
-		_dimensions = spatial::toChunkSpace(worldMapPosition);
+		_dimensions = ChunkPosition{ raw_x * 8, raw_y * 8, 0 };
 	}
 	if (json.HasMember("layers"))
 	{

@@ -6,7 +6,6 @@
 namespace drft
 {
 	class EntityFactory;
-	class WorldMap;
 
 	namespace gen
 	{
@@ -52,7 +51,6 @@ namespace drft
 		system::InputBuffer _inputBuffer{ 3 };
 		
 		std::unique_ptr<gen::WorldGenerator> _worldGenerator;
-		std::unique_ptr<WorldMap> _worldMap;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
 	};

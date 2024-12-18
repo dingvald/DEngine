@@ -68,14 +68,6 @@ sf::Vector2i drft::spatial::toLocalChunkSpace(sf::Vector2i tilePosition)
 	return { xPos, yPos };
 }
 
-drft::WorldMapPosition drft::spatial::toWorldMapSpace(TilePosition tilePosition)
-{
-	WorldMapPosition result;
-	result.x = tilePosition.x * WorldMapPosition::TileDimensions.x;
-	result.y = tilePosition.y * WorldMapPosition::TileDimensions.y;
-	return std::move(result);
-}
-
 drft::TilePosition drft::spatial::asTileSpace(sf::Vector2i position)
 {
 	return TilePosition{ position.x, position.y, 0 };
@@ -110,16 +102,6 @@ drft::ChunkPosition drft::spatial::toChunkSpace(TilePosition tilePosition)
 	result.z = tilePosition.z / ChunkDimensions.z;
 	return std::move(result);
 }
-
-drft::ChunkPosition drft::spatial::toChunkSpace(WorldMapPosition worldMapPosition)
-{
-	ChunkPosition result;
-	result.x = worldMapPosition.x * WorldMapPosition::TileDimensions.x / ChunkDimensions.x;
-	result.y = worldMapPosition.y * WorldMapPosition::TileDimensions.y / ChunkDimensions.y;
-	result.z = 0;
-	return std::move(result);
-}
-
 
 sf::Vector3i drft::spatial::toChunkLocalSpace(TilePosition tilePosition)
 {

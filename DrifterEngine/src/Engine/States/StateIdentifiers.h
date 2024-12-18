@@ -11,7 +11,6 @@ namespace drft
 		Inventory,
 		Pause,
 		GameOver,
-		Map,
 		Crafting,
 		SelectDirection,
 		SelectTarget,

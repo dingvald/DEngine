@@ -48,9 +48,6 @@ void drft::system::PlayerInput::init()
 	_actionMap.addAction(Key::E, [](entt::handle entity) {
 		entity.emplace_or_replace<component::action::OpenEquipment>();
 		});
-	_actionMap.addAction(Key::M, [](entt::handle entity) {
-		entity.emplace_or_replace<component::action::OpenWorldMap>();
-		});
 	_actionMap.addAction(Key::C, [](entt::handle entity) {
 		entity.emplace_or_replace<component::action::OpenCrafting>();
 		});

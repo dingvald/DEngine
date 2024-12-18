@@ -58,7 +58,6 @@
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
 #include "Systems/Gameplay/Actions/OpenEquipmentSystem.h"
 #include "Systems/Gameplay/Actions/OpenCraftingSystem.h"
-#include "Systems/Gameplay/Actions/OpenWorldMapSystem.h"
 #include "Systems/Gameplay/DetermineCraftableItemsSystem.h"
 
 #include "Utility/SaveEntity.h"
@@ -175,7 +174,6 @@ void drft::SimulationState::importSystems()
 	_systems->add<HealingSystem>();
 	_systems->add<OpenCraftingSystem>();
 	_systems->add<OpenEquipmentSystem>();
-	_systems->add<OpenWorldMapSystem>();
 	_systems->add<PickUpSystem>();
 	_systems->add<MoveActionSystem>();
 	_systems->add<MeleeAttackActionSystem>();
