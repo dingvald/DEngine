@@ -3,6 +3,7 @@
 
 #include "Components/Actions/MoveAction.h"
 #include "Components/AIComponent.h"
+#include <Components/CurrentActorComponent.h>
 #include "Components/PositionComponent.h"
 #include "Components/FactionComponent.h"
 #include "Components/MaterialComponent.h"
@@ -37,8 +38,8 @@ void drft::system::ArtificialInput::init()
 
 void drft::system::ArtificialInput::onUpdate(const float dt)
 {
-	auto view = _registry.view<AIComponent, const PositionComponent, component::tag::CurrentActor>();
-	for (auto [entity, ai, myPos] : view.each())
+	auto view = _registry.view<AIComponent, const PositionComponent, CurrentActorComponent>();
+	for (auto [entity, ai, myPos, currentActor] : view.each())
 	{
 		cleanUpMemory(ai);
 		senseWorldState(ai);

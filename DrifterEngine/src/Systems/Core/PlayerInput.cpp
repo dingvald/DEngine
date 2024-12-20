@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerInput.h"
 #include "Components/Components.h"
+#include <Components/CurrentActorComponent.h>
 #include "Components/Actions/MoveAction.h"
 #include "Components/Actions/InteractionAction.h"
 #include "Components/SprintingComponent.h"
@@ -78,7 +79,7 @@ void drft::system::PlayerInput::init()
 void drft::system::PlayerInput::onUpdate(const float dt)
 {
 	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
-	auto turnView = _registry.view<PlayerComponent, component::tag::CurrentActor>();
+	auto turnView = _registry.view<PlayerComponent, CurrentActorComponent>();
 	for (auto entity : turnView)
 	{
 		const auto key = inputBuffer.pop();

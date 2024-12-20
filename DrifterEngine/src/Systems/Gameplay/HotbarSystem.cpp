@@ -2,6 +2,7 @@
 #include "HotbarSystem.h"
 
 #include "Components/Components.h"
+#include <Components/CurrentActorComponent.h>
 #include "Components/PlayerComponent.h"
 #include "Components/HotbarComponent.h"
 #include "Components/PositionComponent.h"
@@ -35,8 +36,8 @@ void drft::system::HotbarSystem::onStart()
 
 void drft::system::HotbarSystem::onUpdate(float dt)
 {
-	auto view = _registry.view<HotbarComponent, component::action::HotbarPressed, component::tag::CurrentActor>();
-	for (auto&& [entity, hotbar, hotbarSlot] : view.each())
+	auto view = _registry.view<HotbarComponent, component::action::HotbarPressed, CurrentActorComponent>();
+	for (auto&& [entity, hotbar, hotbarSlot, currentActor] : view.each())
 	{
 		entt::handle handle = { _registry, entity };
 		AbilityType abilityType = hotbar.abilities[hotbarSlot.slot];

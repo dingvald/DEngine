@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PathNavSystem.h"
 
+#include <Components/CurrentActorComponent.h>
 #include <Components/Actions/MoveAction.h>
 #include <Components/PathNavComponent.h>
 #include <Components/PositionComponent.h>
@@ -11,8 +12,8 @@
 
 void drft::system::PathNavSystem::onUpdate(float dt)
 {
-	auto view = _registry.view<PathNavComponent, PositionComponent, component::tag::CurrentActor>();
-	for (auto [entity, nav, position] : view.each())
+	auto view = _registry.view<PathNavComponent, PositionComponent, CurrentActorComponent>();
+	for (auto [entity, nav, position, current] : view.each())
 	{
 		if (nav.progress >= nav.path.size())
 		{

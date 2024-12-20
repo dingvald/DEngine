@@ -3,6 +3,7 @@
 
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/Actions/MoveAction.h"
+#include <Components/CurrentActorComponent.h>
 #include "Components/ProjectileComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
@@ -24,8 +25,8 @@ void drft::system::ProjectileSystem::init()
 
 void drft::system::ProjectileSystem::onUpdate(float dt)
 {
-	auto view = _registry.view<PositionComponent, ProjectileComponent, component::tag::CurrentActor>();
-	for (auto [entity, pos, proj] : view.each())
+	auto view = _registry.view<PositionComponent, ProjectileComponent, CurrentActorComponent>();
+	for (auto [entity, pos, proj, currentActor] : view.each())
 	{
 		if (proj.progress >= proj.line.size())
 		{

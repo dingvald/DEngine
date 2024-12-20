@@ -9,7 +9,7 @@
 #include "Components/RenderComponent.h"
 #include "Components/ContainerComponent.h"
 
-#include <Systems/Gameplay/Actions/CraftItemSystem.h>
+#include <Systems/Actions/CraftItemSystem.h>
 
 #include "Factory/EntityFactory.h"
 #include "Utility/EntityHelpers.h"
