@@ -56,9 +56,12 @@ void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry,
 
 void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, MoveAction& action) const
 {
-	if (action.direction == sf::Vector2i{ 0,0 }) return;
-
 	entt::handle handle = { _registry, entity };
+	if (action.direction == sf::Vector2i{ 0,0 })
+	{
+		ActorSystem::completeAction(handle, ActionCategory::None, 0);
+	}
+
 	move(handle, action.direction);
 	ActorSystem::completeAction(handle, ActionCategory::Move);
 }
