@@ -36,7 +36,7 @@ void drft::system::ActorSystem::onUpdate(const float)
 	auto& storage = _registry.storage<CurrentActorComponent>();
 	if (storage.size() > 1)
 	{
-		// This is not good
+		throw std::exception("Cannot be more than one currently-acting actor");
 	}
 	else if (storage.size() == 1)
 	{
@@ -75,6 +75,7 @@ void drft::system::ActorSystem::onUpdate(const float)
 	if (_currentActor == _timeKeeper)
 	{
 		tick();
+		rotateQueue();
 		return;
 	}
 
@@ -127,8 +128,7 @@ void drft::system::ActorSystem::processPoints(entt::handle entity, int points) c
 
 void drft::system::ActorSystem::tick()
 {
-	auto& dispatcher = _registry.ctx().get<entt::dispatcher&>();
-	dispatcher.trigger(events::GameTickEvent());
+	_dispatcher.trigger(events::GameTickEvent());
 
 	auto actorView = _registry.view<ActorComponent, component::tag::Active>();
 	for (auto&& [entity, actor] : actorView.each())
@@ -136,6 +136,14 @@ void drft::system::ActorSystem::tick()
 		if (entity == _timeKeeper) continue;
 
 		actor.ap += AP_PER_TICK;
+	}
+}
+
+void drft::system::ActorSystem::rotateQueue()
+{
+	if (_queue.size() > 1)
+	{
+		std::rotate(_queue.begin(), _queue.begin() + 1, _queue.end());
 	}
 }
 
@@ -173,10 +181,12 @@ entt::entity drft::system::ActorSystem::rotateQueueToCurrentActor()
 	for (auto it = _queue.begin(); it != _queue.end(); ++it)
 	{
 		auto& actor = _registry.get<ActorComponent>(*it);
-		if (actor.ap < 0) continue;
-
-		pos = it;
-		result = *it;
+		if (actor.ap >= 0)
+		{
+			pos = it;
+			result = *it;
+			break;
+		}
 	}
 
 	std::rotate(_queue.begin(), pos, _queue.end());

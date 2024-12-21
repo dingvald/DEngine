@@ -18,17 +18,18 @@ namespace drft::system
 	public:
 		using System::System;
 
+		static void completeAction(entt::handle entity, ActionCategory category, int cost = BASE_ACTION_COST);
+
+	private:
 		void init() override;
 		void onStart() override;
 		void onUpdate(const float dt) override;
 		void shutdown() override;
 
-		static void completeAction(entt::handle entity, ActionCategory category, int cost = BASE_ACTION_COST);
-
-	private:
 		void onActorRemove(entt::registry& registry, entt::entity entity);
 		void processPoints(entt::handle entity, int points) const;
 		void tick();
+		void rotateQueue();
 
 		void refreshActorQueue();
 		entt::entity rotateQueueToCurrentActor();
