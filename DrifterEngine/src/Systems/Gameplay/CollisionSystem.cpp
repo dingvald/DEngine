@@ -3,6 +3,7 @@
 
 #include "Components/Components.h"
 #include "Components/Actions/MeleeAttackAction.h"
+#include "Components/Actions/WaitAction.h"
 #include "Components/PositionComponent.h"
 #include "Components/CollisionComponent.h"
 #include "Components/FactionComponent.h"
@@ -29,7 +30,7 @@ void drft::system::CollisionSystem::onCollisionAdded(entt::registry& registry, e
 	{
 	case drft::system::Relationship::Friendly:
 		// TODO: Implement swap
-		_registry.emplace_or_replace<component::action::Wait>(entity);
+		_registry.emplace_or_replace<WaitAction>(entity);
 		break;
 	case drft::system::Relationship::Neutral:
 	case drft::system::Relationship::Hostile:

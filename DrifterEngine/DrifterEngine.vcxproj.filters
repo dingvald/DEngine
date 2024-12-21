@@ -75,7 +75,7 @@
     <ClCompile Include="src\Factory\EntityFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Core\TurnManager.cpp">
+    <ClCompile Include="src\Systems\Core\ActorSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Core\RealityBubble.cpp">
@@ -111,10 +111,10 @@
     <ClCompile Include="src\Systems\Gameplay\HealthSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\MoveActionSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\MoveActionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\MeleeAttackActionSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\MeleeAttackActionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\DeathSystem.cpp">
@@ -159,7 +159,7 @@
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\PickUpSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\PickUpSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\States\StateContext.cpp">
@@ -174,16 +174,16 @@
     <ClCompile Include="src\Engine\States\GameStates\GameOverState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\DropItemSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\DropItemSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\BodyPartSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\EquipItemSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\EquipItemSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\OpenEquipmentSystem.cpp">
+    <ClCompile Include="src\Systems\PlayerSpecific\OpenEquipmentSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Random\PerlinNoise.cpp">
@@ -195,7 +195,7 @@
     <ClCompile Include="src\Random\RandomNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.cpp">
+    <ClCompile Include="src\Systems\PlayerSpecific\OpenCraftingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\States\GameStates\CraftingState.cpp">
@@ -204,7 +204,7 @@
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\CraftItemSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\CraftItemSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\stdHashing.cpp">
@@ -237,13 +237,10 @@
     <ClCompile Include="src\Systems\Gameplay\StaminaSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Helpers\SpendActionPoints.cpp">
+    <ClCompile Include="src\Systems\Actions\WaitActionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\WaitingSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\SprintingSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\SprintingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\AddToContainer.cpp">
@@ -264,7 +261,7 @@
     <ClCompile Include="src\Utility\GetTextCenter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\InteractionSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\InteractionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\States\GameStates\SelectDirectionState.cpp">
@@ -273,7 +270,7 @@
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.cpp">
+    <ClCompile Include="src\Systems\PlayerSpecific\SelectDirectionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\HelperClasses\InputBuffer.cpp">
@@ -408,7 +405,7 @@
     <ClCompile Include="src\Systems\Helpers\GetPrimaryMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\Actions\TargetSelectSystem.cpp">
+    <ClCompile Include="src\Systems\PlayerSpecific\TargetSelectSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\States\GameStates\SelectTargetState.cpp">
@@ -570,7 +567,7 @@
     <ClCompile Include="src\Systems\HelperClasses\ContainerWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Core\ActorSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\AbilityActionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1115,7 +1112,7 @@
     <ClInclude Include="deps\cereal\version.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Core\TurnManager.h">
+    <ClInclude Include="src\Systems\Core\ActorSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Core\RealityBubble.h">
@@ -1154,10 +1151,10 @@
     <ClInclude Include="src\Systems\Gameplay\HealthSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\MoveActionSystem.h">
+    <ClInclude Include="src\Systems\Actions\MoveActionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\MeleeAttackActionSystem.h">
+    <ClInclude Include="src\Systems\Actions\MeleeAttackActionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\DeathSystem.h">
@@ -1205,7 +1202,7 @@
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\PickUpSystem.h">
+    <ClInclude Include="src\Systems\Actions\PickUpSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\States\StateContext.h">
@@ -1223,16 +1220,16 @@
     <ClInclude Include="src\Engine\States\GameStates\GameOverState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\DropItemSystem.h">
+    <ClInclude Include="src\Systems\Actions\DropItemSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\BodyPartSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\EquipItemSystem.h">
+    <ClInclude Include="src\Systems\Actions\EquipItemSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\OpenEquipmentSystem.h">
+    <ClInclude Include="src\Systems\PlayerSpecific\OpenEquipmentSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\PerlinNoise.h">
@@ -1244,7 +1241,7 @@
     <ClInclude Include="src\Random\RandomNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\OpenCraftingSystem.h">
+    <ClInclude Include="src\Systems\PlayerSpecific\OpenCraftingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\States\GameStates\CraftingState.h">
@@ -1253,7 +1250,7 @@
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\CraftItemSystem.h">
+    <ClInclude Include="src\Systems\Actions\CraftItemSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\stdHashing.h">
@@ -1298,16 +1295,13 @@
     <ClInclude Include="src\Systems\Gameplay\StaminaSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Helpers\SpendActionPoints.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Events\EnterTileEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\LeaveTileEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\WaitingSystem.h">
+    <ClInclude Include="src\Systems\Actions\WaitActionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\TurnStartEvent.h">
@@ -1316,7 +1310,7 @@
     <ClInclude Include="src\Events\TurnEndEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\SprintingSystem.h">
+    <ClInclude Include="src\Systems\Actions\SprintingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\AddToContainer.h">
@@ -1337,7 +1331,7 @@
     <ClInclude Include="src\Utility\GetTextCenter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\InteractionSystem.h">
+    <ClInclude Include="src\Systems\Actions\InteractionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\States\GameStates\SelectDirectionState.h">
@@ -1346,7 +1340,7 @@
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\SelectDirectionSystem.h">
+    <ClInclude Include="src\Systems\PlayerSpecific\SelectDirectionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\HelperClasses\InputBuffer.h">
@@ -1511,7 +1505,7 @@
     <ClInclude Include="src\Systems\Helpers\GetPrimaryMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\Actions\TargetSelectSystem.h">
+    <ClInclude Include="src\Systems\PlayerSpecific\TargetSelectSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\States\GameStates\SelectTargetState.h">
@@ -2900,7 +2894,16 @@
     <ClInclude Include="src\Components\DominantHandComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Core\ActorSystem.h">
+    <ClInclude Include="src\Components\CurrentActorComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Actions\WaitAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Actions\AbilityAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Actions\AbilityActionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

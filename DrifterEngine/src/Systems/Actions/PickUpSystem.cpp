@@ -9,67 +9,60 @@
 
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
-#include "Systems/Helpers/SpendActionPoints.h"
+
+#include <Systems/Core/ActorSystem.h>
+
 #include "Utility/EntityHelpers.h"
 
-void drft::system::PickUpSystem::init()
+void drft::system::PickUpSystem::onUpdate(const float dt)
 {
-	_registry.on_construct<component::action::PickUp>().connect<&PickUpSystem::onPickupAction>(this);
-}
-
-void drft::system::PickUpSystem::onUpdateEnd()
-{
-	_registry.clear<component::action::PickUp>();
-}
-
-void drft::system::PickUpSystem::onPickupAction(entt::registry& registry, entt::entity entity) const
-{
-	auto container = registry.try_get<ContainerComponent>(entity);
-	auto position = registry.try_get<PositionComponent>(entity);
-
-	if (!container || !position) return;
-	if (container->contents.size() >= container->capacity) return;
-
-	auto& grid = registry.ctx().get<spatial::WorldGrid&>();
-	const auto myTilePosition = position->tile;
-	auto checkForItem = [this](entt::entity entity) -> bool
+	auto view = _registry.view<component::action::PickUp, PositionComponent, ContainerComponent>();
+	for (auto&& [entity, position, container] : view.each())
 	{
-		return _registry.all_of<ItemComponent>(entity);
-	};
-	const auto items = grid.entitiesAt(myTilePosition, checkForItem);
+		if (container.contents.size() >= container.capacity) return;
 
-	if (items.empty()) return;
-
-	_registry.remove<PositionComponent>(items.front());
-
-	auto& item = _registry.get<ItemComponent>(items.front());
-
-	bool putDirectlyInHand = false;
-	if (auto body = _registry.try_get<BodyComponent>(entity))
-	{
-		auto handParts = body->parts.getAllPartsWithSlot("held");
-		for (auto hand : handParts)
-		{
-			if (auto slot = hand->getSlot("held"))
+		auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
+		const auto myTilePosition = position.tile;
+		auto checkForItem = [this](entt::entity entity) -> bool
 			{
-				if (slot->item == 0u)
+				return _registry.all_of<ItemComponent>(entity);
+			};
+		const auto items = grid.entitiesAt(myTilePosition, checkForItem);
+
+		if (items.empty()) return;
+
+		_registry.remove<PositionComponent>(items.front());
+
+		auto& item = _registry.get<ItemComponent>(items.front());
+
+		bool putDirectlyInHand = false;
+		if (auto body = _registry.try_get<BodyComponent>(entity))
+		{
+			auto handParts = body->parts.getAllPartsWithSlot("held");
+			for (auto hand : handParts)
+			{
+				if (auto slot = hand->getSlot("held"))
 				{
-					slot->item = item.id;
-					putDirectlyInHand = true;
+					if (slot->item == 0u)
+					{
+						slot->item = item.id;
+						putDirectlyInHand = true;
+					}
+					break;
 				}
-				break;
 			}
 		}
-	}
-	// otherwise put into inventory
-	if (!putDirectlyInHand)
-	{
-		_registry.patch<ContainerComponent>(entity,
-			[item](ContainerComponent& cont)
-			{
-				cont.contents.push_back(item.id);
-			});
-	}
+		// otherwise put into inventory
+		if (!putDirectlyInHand)
+		{
+			_registry.patch<ContainerComponent>(entity,
+				[item](ContainerComponent& cont)
+				{
+					cont.contents.push_back(item.id);
+				});
 
-	spendActionPoints(BASE_ACTION_COST, ActionType::Act, { _registry, entity });
+			ActorSystem::completeAction({ _registry, entity }, ActionCategory::Act);
+		}
+		_registry.remove<component::action::PickUp>(entity);
+	}
 }

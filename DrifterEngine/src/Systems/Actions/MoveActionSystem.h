@@ -13,8 +13,7 @@ namespace drft::system
 
 	private:
 		void init() override;
-		void onUpdateLate(const float dt) override;
-		void onUpdateEnd() override;
+		void onUpdate(const float dt) override;
 
 		void onMoveActionAdded(entt::registry& registry, entt::entity entity) const;
 		void processMoveAction(entt::entity entity, MoveAction& action) const;

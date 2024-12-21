@@ -47,7 +47,7 @@
           "actSpeed": 1.0
         },
         "Vision": {
-          "sight_range": 50
+          "sight_range": 100
         },
         "Health": {
           "max": 25.0,

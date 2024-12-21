@@ -12,8 +12,7 @@ namespace drft::system
 
 	private:
 		void init() override;
-		void onUpdateLate(const float dt) override;
-		void onUpdateEnd() override;
+		void onUpdate(const float dt) override;
 
 		void onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity) const;
 		void processMeleeAttackAction(entt::entity entity, MeleeAttackAction action) const;

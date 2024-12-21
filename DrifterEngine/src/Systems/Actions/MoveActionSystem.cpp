@@ -6,12 +6,13 @@
 
 #include "Components/Components.h"
 #include "Components/CollisionComponent.h"
+#include "Components/CurrentActorComponent.h"
 #include "Components/Actions/MoveAction.h"
 #include "Components/MaterialComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/StaminaComponent.h"
 
-#include "Systems/Helpers/SpendActionPoints.h"
+#include "Systems/Core/ActorSystem.h"
 #include "Utility/EntityHelpers.h"
 
 void drft::system::MoveActionSystem::init()
@@ -19,18 +20,14 @@ void drft::system::MoveActionSystem::init()
 	_registry.on_construct<MoveAction>().connect<&MoveActionSystem::onMoveActionAdded>(this);
 }
 
-void drft::system::MoveActionSystem::onUpdateLate(const float dt)
+void drft::system::MoveActionSystem::onUpdate(const float dt)
 {
 	auto view = _registry.view<PositionComponent, MoveAction>();
 	for (auto&& [entity, position, move] : view.each())
 	{
 		processMoveAction(entity, move);
+		_registry.remove<MoveAction>(entity);
 	}
-}
-
-void drft::system::MoveActionSystem::onUpdateEnd()
-{
-	_registry.clear<MoveAction>();
 }
 
 void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry, entt::entity entity) const
@@ -63,7 +60,7 @@ void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, Move
 
 	entt::handle handle = { _registry, entity };
 	move(handle, action.direction);
-	spendActionPoints(BASE_ACTION_COST, ActionType::Move, handle);
+	ActorSystem::completeAction(handle, ActionCategory::Move);
 }
 
 void drft::system::MoveActionSystem::move(entt::handle entity, sf::Vector2i direction) const

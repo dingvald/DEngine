@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "MeleeAttackActionSystem.h"
-#include "Systems/Helpers/SpendActionPoints.h"
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Conversions.h"
 #include <Spatial/Helpers.h>
@@ -11,7 +10,9 @@
 #include "Components/PositionComponent.h"
 #include "Components/ProjectileComponent.h"
 #include <Components/TweeningComponent.h>
+
 #include <Systems/Core/TweeningSystem.h>
+#include <Systems/Core/ActorSystem.h>
 
 #include "Components/Tags.h"
 #include "Utility/EntityHelpers.h"
@@ -33,7 +34,7 @@ void drft::system::MeleeAttackActionSystem::init()
 	_registry.on_construct<MeleeAttackAction>().connect<&MeleeAttackActionSystem::onMeleeAttackActionAdded>(this);
 }
 
-void drft::system::MeleeAttackActionSystem::onUpdateLate(const float dt)
+void drft::system::MeleeAttackActionSystem::onUpdate(const float dt)
 {
 	auto view = _registry.view<MeleeAttackAction>();
 	for (auto&& [entity, meleeAttackAction] : view.each())
@@ -48,13 +49,9 @@ void drft::system::MeleeAttackActionSystem::onUpdateLate(const float dt)
 		};
 		entt::handle handle = { _registry, entity };
 		TweeningSystem::tween(handle, moveToTween);
-		spendActionPoints(BASE_ACTION_COST, ActionType::Act, handle);
-	}
-}
 
-void drft::system::MeleeAttackActionSystem::onUpdateEnd()
-{
-	_registry.clear<MeleeAttackAction>();
+		handle.remove<MeleeAttackAction>();
+	}
 }
 
 void drft::system::MeleeAttackActionSystem::onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity) const
@@ -91,6 +88,8 @@ void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entit
 			.animationSpeed = 20.0f
 			});
 	}
+
+	ActorSystem::completeAction({ _registry, entity }, ActionCategory::Act);
 }
 
 entt::id_type drft::system::MeleeAttackActionSystem::getEffectTexture(const std::unordered_map<std::string, int>& damageTypes) const

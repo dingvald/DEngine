@@ -11,8 +11,6 @@ namespace component::action
 
 	struct ToggleSprint {};
 
-	struct Wait {};
-
 	struct SelectDirection
 	{
 		std::function<bool(sf::Vector2i)> onDirectionSelect;
@@ -95,10 +93,5 @@ namespace component::action
 	struct LevelUp 
 	{
 		std::unordered_map<std::string, int> statChanges;
-	};
-
-	struct DisplayText
-	{
-		std::unordered_map<std::string, std::string> parameters;
 	};
 }

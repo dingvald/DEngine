@@ -4,6 +4,7 @@
 #include <Components/CurrentActorComponent.h>
 #include "Components/Actions/MoveAction.h"
 #include "Components/Actions/InteractionAction.h"
+#include "Components/Actions/WaitAction.h"
 #include "Components/SprintingComponent.h"
 #include "Components/PlayerComponent.h"
 
@@ -41,7 +42,7 @@ void drft::system::PlayerInput::init()
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(1, -1));
 		});
 	_actionMap.addAction(Key::Numpad5, [](entt::handle entity) {
-		entity.emplace_or_replace<component::action::Wait>();
+		entity.emplace_or_replace<WaitAction>();
 		});
 	_actionMap.addAction(Key::G, [](entt::handle entity) {
 		entity.emplace_or_replace<component::action::PickUp>();

@@ -54,6 +54,7 @@ void drft::system::ActorSystem::onUpdate(const float)
 		}
 	}
 
+	_registry.clear<CurrentActorComponent>();
 	refreshActorQueue();
 	_currentActor = rotateQueueToCurrentActor();
 
@@ -77,17 +78,37 @@ void drft::system::ActorSystem::onUpdate(const float)
 		return;
 	}
 
-	_registry.emplace_or_replace<CurrentActorComponent>(_currentActor);
-}
-
-void drft::system::ActorSystem::onUpdateEnd()
-{
-	_registry.clear<component::action::SpendPoints>();
+	_registry.emplace<CurrentActorComponent>(_currentActor);
 }
 
 void drft::system::ActorSystem::shutdown()
 {
 	_registry.destroy(_timeKeeper);
+}
+
+void drft::system::ActorSystem::completeAction(entt::handle entity, ActionCategory category, int cost)
+{
+	float actionCost = cost;
+	if (const auto actorComp = entity.try_get<ActorComponent>())
+	{
+		switch (category)
+		{
+		case ActionCategory::Move:
+			actionCost *= (1.0f / actorComp->moveSpeed);
+			break;
+		case ActionCategory::Act:
+			actionCost *= (1.0f / actorComp->actSpeed);
+			break;
+		case ActionCategory::None:
+			break;
+		}
+	}
+
+	if (auto currentActor = entity.try_get<CurrentActorComponent>())
+	{
+		currentActor->pointsSpent += static_cast<int>(actionCost);
+		currentActor->state = CurrentActorState::Complete;
+	}
 }
 
 void drft::system::ActorSystem::onActorRemove(entt::registry& registry, entt::entity entity)

@@ -1,16 +1,16 @@
 #pragma once
+
 #include "Systems/System.h"
 
 namespace drft::system
 {
-	class PickUpSystem : public System
+	class AbilityActionSystem : public System
 	{
 	public:
 		using System::System;
 
 	private:
+		void init() override;
 		void onUpdate(const float dt) override;
 	};
 }
-
-

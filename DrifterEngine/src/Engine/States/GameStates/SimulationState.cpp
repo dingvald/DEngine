@@ -9,12 +9,13 @@
 
 #include "Systems/SystemScheduler.h"
 
+#include <Systems/Actions/AbilityActionSystem.h>
 #include "Systems/Actions/SprintingSystem.h"
 #include "Systems/Actions/DropItemSystem.h"
 #include "Systems/Actions/EquipItemSystem.h"
 #include "Systems/Actions/CraftItemSystem.h"
 #include "Systems/Actions/MoveActionSystem.h"
-#include "Systems/Actions/WaitingSystem.h"
+#include "Systems/Actions/WaitActionSystem.h"
 #include "Systems/Actions/PickUpSystem.h"
 #include "Systems/Actions/InteractionSystem.h"
 #include "Systems/Actions/MeleeAttackActionSystem.h"
@@ -138,7 +139,8 @@ void drft::SimulationState::importSystems()
 	_systems->add<PathNavSystem>();
 	_systems->add<ProjectileSystem>();
 	_systems->add<InteractionSystem>();
-	_systems->add<WaitingSystem>();
+	_systems->add<WaitActionSystem>();
+	_systems->add<AbilityActionSystem>();
 	_systems->add<DropItemSystem>();
 	_systems->add<EquipItemSystem>();
 	_systems->add<CraftItemSystem>();

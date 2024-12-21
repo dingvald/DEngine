@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "SpotHostileAction.h"
 #include "Components/Components.h"
+#include "Components/Actions/WaitAction.h"
 #include "Components/PositionComponent.h"
 #include "Components/AIComponent.h"
 #include "Events/SendFloatingMessageEvent.h"
@@ -30,7 +31,7 @@ drft::goap::ActionResult drft::goap::SpotHostileAction::perform(entt::handle age
 		});
 
 	ai.blackboard.merge(effects());
-	agent.emplace_or_replace<component::action::Wait>();
+	agent.emplace_or_replace<WaitAction>();
 	return ActionResult::Complete;
 }
 

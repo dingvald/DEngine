@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DrifterEngine", "DrifterEngine\DrifterEngine.vcxproj", "{22FA031B-6312-4FC7-9D4D-C789F7F3ACD4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "UnitTests\UnitTests.vcxproj", "{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{22FA031B-6312-4FC7-9D4D-C789F7F3ACD4}.Release|x64.Build.0 = Release|x64
 		{22FA031B-6312-4FC7-9D4D-C789F7F3ACD4}.Release|x86.ActiveCfg = Release|Win32
 		{22FA031B-6312-4FC7-9D4D-C789F7F3ACD4}.Release|x86.Build.0 = Release|Win32
-		{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}.Debug|x64.ActiveCfg = Debug|x64
-		{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}.Debug|x64.Build.0 = Debug|x64
-		{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}.Debug|x86.ActiveCfg = Debug|Win32
-		{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}.Debug|x86.Build.0 = Debug|Win32
-		{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}.Release|x64.ActiveCfg = Release|x64
-		{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}.Release|x64.Build.0 = Release|x64
-		{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}.Release|x86.ActiveCfg = Release|Win32
-		{A194FDC5-7A2C-40CA-AE74-53074FFE9C13}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

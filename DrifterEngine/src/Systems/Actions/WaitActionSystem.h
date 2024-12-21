@@ -3,14 +3,12 @@
 
 namespace drft::system
 {
-	class PickUpSystem : public System
+	class WaitActionSystem : public System
 	{
 	public:
 		using System::System;
 
-	private:
 		void onUpdate(const float dt) override;
 	};
 }
-
 

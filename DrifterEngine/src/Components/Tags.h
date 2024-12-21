@@ -12,9 +12,6 @@ namespace component::tag
 	struct InViewport
 	{};
 
-	struct CurrentActor
-	{};
-
 	struct PlayerHasSeen
 	{};
 }

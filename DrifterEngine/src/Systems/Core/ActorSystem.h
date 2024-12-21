@@ -4,16 +4,26 @@
 
 namespace drft::system
 {
+	enum class ActionCategory
+	{
+		None,
+		Move,
+		Act,
+	};
+
 	class ActorSystem : public System
 	{
+	public:
+		static const int BASE_ACTION_COST = 100;
 	public:
 		using System::System;
 
 		void init() override;
 		void onStart() override;
 		void onUpdate(const float dt) override;
-		void onUpdateEnd() override;
 		void shutdown() override;
+
+		static void completeAction(entt::handle entity, ActionCategory category, int cost = BASE_ACTION_COST);
 
 	private:
 		void onActorRemove(entt::registry& registry, entt::entity entity);

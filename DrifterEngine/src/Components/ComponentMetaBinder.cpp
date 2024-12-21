@@ -9,6 +9,7 @@
 #include "ConsumableComponent.h"
 #include "ContainerComponent.h"
 #include "CraftableComponent.h"
+#include "CurrentActorComponent.h"
 #include "DateAndTimeTrackerComponent.h"
 #include "DescriptionComponent.h"
 #include "DominantHandComponent.h"
@@ -55,6 +56,7 @@ void ComponentMetaBinder::bindComponents()
 	ContainerComponent::bind();
 	ConsumableComponent::bind();
 	CraftableComponent::bind();
+	CurrentActorComponent::bind();
 	DateAndTimeTrackerComponent::bind();
 	DescriptionComponent::bind();
 	DominantHandComponent::bind();
