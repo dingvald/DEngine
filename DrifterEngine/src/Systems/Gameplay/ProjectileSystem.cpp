@@ -4,6 +4,7 @@
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/Actions/MoveAction.h"
 #include <Components/CurrentActorComponent.h>
+#include <Components/CollisionComponent.h>
 #include "Components/ProjectileComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
@@ -18,7 +19,7 @@
 
 void drft::system::ProjectileSystem::init()
 {
-	_registry.on_construct<MeleeAttackAction>().connect<&ProjectileSystem::onMeleeAttackActionAdded>(this);
+	_registry.on_construct<CollisionComponent>().connect<&ProjectileSystem::onCollisionComponentAdded>(this);
 	_registry.on_construct<ProjectileComponent>().connect<&ProjectileSystem::onProjectileAdded>(this);
 	_registry.on_destroy<ProjectileComponent>().connect<&ProjectileSystem::onProjectileRemoved>(this);
 }
@@ -30,6 +31,7 @@ void drft::system::ProjectileSystem::onUpdate(float dt)
 	{
 		if (proj.progress >= proj.line.size())
 		{
+			_registry.emplace_or_replace<MoveAction>(entity, sf::Vector2i{0,0}); // HACKZ: Needed so the projectile actor completes it's action
 			_registry.remove<ProjectileComponent>(entity);
 			continue;
 		}
@@ -80,7 +82,7 @@ void drft::system::ProjectileSystem::onProjectileRemoved(entt::registry& registr
 	}
 }
 
-void drft::system::ProjectileSystem::onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity)
+void drft::system::ProjectileSystem::onCollisionComponentAdded(entt::registry& registry, entt::entity entity)
 {
 	registry.remove<ProjectileComponent>(entity);
 }

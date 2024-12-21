@@ -14,7 +14,7 @@ namespace drft::system
 	private:
 		void onProjectileAdded(entt::registry& registry, entt::entity entity);
 		void onProjectileRemoved(entt::registry& registry, entt::entity entity);
-		void onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity);
+		void onCollisionComponentAdded(entt::registry& registry, entt::entity entity);
 
 	private:
 		std::unordered_set<entt::entity> _attackerAdded;
