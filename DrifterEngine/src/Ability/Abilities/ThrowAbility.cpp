@@ -8,7 +8,6 @@
 #include "Components/MaterialComponent.h"
 
 #include "Systems/Helpers/ItemDatabase.h"
-#include "Spatial/Helpers.h"
 
 sf::Color drft::ThrowAbility::getIconColor() const
 {
