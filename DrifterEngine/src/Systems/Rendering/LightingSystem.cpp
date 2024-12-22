@@ -27,7 +27,7 @@ void drft::system::LightingSystem::init()
 	};
 	auto setVisible = [this, &grid](sf::Vector3i position)
 	{
-		const auto entities = grid.entitiesAt(spatial::asTileSpace(position));
+		const auto& entities = grid.entitiesAt(spatial::asTileSpace(position));
 		_toLight.insert(_toLight.end(), entities.begin(), entities.end());
 	};
 	auto getDistance = [](sf::Vector3i position) -> int
@@ -47,25 +47,16 @@ void drft::system::LightingSystem::onFixedUpdate()
 	{
 		for (auto entity : positions)
 		{
-			if (auto lit = _registry.try_get<LitComponent>(entity))
-			{
-				lit->color = globalLight.color;
-			}
-			else
-			{
-				_registry.emplace<LitComponent>(entity, globalLight.color);
-			}
+			_registry.emplace_or_replace<LitComponent>(entity, globalLight.color);
 		}
 	}
 
 	// Get all light blocking entities to be checked by the FOV algo
-	_lightBlockingPositions.reserve(positions.size_hint() / 4); // Arbitrarily reserve a fourth of the positions.
-	for (auto [entity, pos] : positions.each())
+	auto lightBlockingPositions = _registry.view<const PositionComponent, LightBlockingComponent, component::tag::InViewport>();
+	_lightBlockingPositions.reserve(lightBlockingPositions.size_hint());
+	for (auto&& [entity, pos, lightBlocking] : lightBlockingPositions.each())
 	{
-		if (_registry.any_of<LightBlockingComponent>(entity))
-		{
-			_lightBlockingPositions.emplace(pos.tile);
-		}
+		_lightBlockingPositions.emplace(pos.tile);
 	}
 
 	// Apply light from local light sources

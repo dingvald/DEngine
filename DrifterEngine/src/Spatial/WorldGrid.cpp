@@ -7,6 +7,8 @@
 
 using namespace drft::spatial;
 
+static const drft::spatial::EntityList EmptyEntityList = {};
+
 void drft::spatial::WorldGrid::placeEntity(entt::entity entity, TilePosition tilePosition)
 {	
 	if (entity == entt::null) return;
@@ -49,13 +51,13 @@ drft::TilePosition drft::spatial::WorldGrid::getPosition(entt::entity entity) co
 	return _entityPositions.at(entity);
 }
 
-EntityList drft::spatial::WorldGrid::entitiesAt(TilePosition tilePosition) const
+const EntityList& drft::spatial::WorldGrid::entitiesAt(TilePosition tilePosition) const
 {
 	auto chunkPosition = toChunkSpace(tilePosition);
 	auto localPosition = toChunkLocalSpace(tilePosition);
 
 	if (!_chunks.contains(chunkPosition)) {
-		return EntityList{};
+		return EmptyEntityList;
 	}
 
 	return _chunks.at(chunkPosition).entitiesAt(localPosition);;
@@ -108,9 +110,9 @@ std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin,
 
 	const auto points = spatial::getLine3d(origin, destination);
 	result.reserve(points.size());
-	for (sf::Vector3i point : points)
+	for (const sf::Vector3i& point : points)
 	{
-		auto entities = entitiesAt(TilePosition{ point });
+		auto& entities = entitiesAt(TilePosition{ point });
 		result.insert(result.end(), entities.begin(), entities.end());
 	}
 	return result;
@@ -122,10 +124,10 @@ std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin,
 
 	const auto points = spatial::getLine3d(origin, destination);
 	result.reserve(points.size());
-	for (sf::Vector3i point : points)
+	for (const sf::Vector3i& point : points)
 	{
-		auto entities = entitiesAt(TilePosition{point});
-		for (auto entity : entities)
+		auto& entities = entitiesAt(TilePosition{point});
+		for (auto&& entity : entities)
 		{
 			if (!filterFunc(entity)) continue;
 			result.push_back(entity);

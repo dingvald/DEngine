@@ -22,7 +22,7 @@ void drft::system::PlayerFOVSystem::init()
 	};
 	auto setVisible = [this, &grid](sf::Vector3i position)
 	{
-		const auto entities = grid.entitiesAt(spatial::asTileSpace(position));
+		const auto& entities = grid.entitiesAt(spatial::asTileSpace(position));
 		_toLight.insert(_toLight.end(), entities.begin(), entities.end());
 	};
 	auto getDistance = [](sf::Vector3i position) -> int
@@ -35,14 +35,11 @@ void drft::system::PlayerFOVSystem::init()
 
 void drft::system::PlayerFOVSystem::onFixedUpdate()
 {
-	auto positions = _registry.view<const PositionComponent, component::tag::InViewport>();
-	_lightBlockingPositions.reserve(positions.size_hint() / 4);
-	for (auto [entity, pos] : positions.each())
+	auto positions = _registry.view<const PositionComponent, LightBlockingComponent, component::tag::InViewport>();
+	_lightBlockingPositions.reserve(positions.size_hint());
+	for (auto&& [entity, pos, lightBlocking] : positions.each())
 	{
-		if (_registry.any_of<LightBlockingComponent>(entity))
-		{
-			_lightBlockingPositions.emplace(pos.tile);
-		}
+		_lightBlockingPositions.emplace(pos.tile);
 	}
 
 	auto playerView = _registry.view<PlayerComponent, VisionComponent, PositionComponent>();

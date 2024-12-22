@@ -32,7 +32,7 @@ namespace drft::spatial
 		TilePosition getPosition(entt::entity entity) const;
 
 		// Returns all entities at the given world tile position.
-		EntityList entitiesAt(TilePosition tilePosition) const;
+		const EntityList& entitiesAt(TilePosition tilePosition) const;
 		// Returns entities at the given world tile position using the provided filter function.
 		EntityList entitiesAt(TilePosition tilePosition, std::function<bool(entt::entity)> filterFunc) const;
 

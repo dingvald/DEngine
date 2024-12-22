@@ -35,6 +35,8 @@ void drft::system::HotbarSystem::onUpdate(float dt)
 		entt::handle handle = { _registry, entity };
 		AbilityType abilityType = hotbar.abilities[hotbarSlot.slot];
 
+		//TODO: add ability targeting here - this is really only used by player anyways
+
 		handle.emplace_or_replace<AbilityAction>(abilityType);
 
 		handle.remove<component::action::HotbarPressed>();
