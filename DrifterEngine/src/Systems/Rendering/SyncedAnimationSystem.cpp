@@ -10,8 +10,8 @@ void drft::system::SyncedAnimationSystem::onFixedUpdate()
 {
 	updateSyncPoints();
 
-	auto withRenderView = _registry.view<SyncedAnimationComponent, component::tag::InPlayerFOV>();
-	for (auto&& [entity, animation] : withRenderView.each())
+	auto view = _registry.view<SyncedAnimationComponent, component::tag::InPlayerFOV>();
+	for (auto&& [entity, animation] : view.each())
 	{
 		int index = _syncPoints[convertFloatToIntDec(animation.speed)].index % animation.frames.size();
 		if (auto render = _registry.try_get<RenderComponent>(entity))
