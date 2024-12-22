@@ -38,10 +38,11 @@ void drft::Engine::run()
 	sf::Clock clock;
 	while (_window.isOpen())
 	{
-		sf::Time deltaTime = clock.restart();
+		const sf::Time deltaTime = clock.restart();
 		handleEvents();
 		update(deltaTime.asSeconds());
 		render(deltaTime.asSeconds());
+
 		if (_stateStack.isEmpty())
 		{
 			shutDown();
@@ -155,6 +156,7 @@ void drft::Engine::render(const float dt)
 
 		if (_showDebug)
 		{
+			service::DebugInfo::instance().putInfo("Frame Time (ms)", std::format("{:5.2f} ms", dt * 1000.f));
 			service::DebugInfo::instance().render(_window);
 		}
 			
