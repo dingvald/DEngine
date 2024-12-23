@@ -6,7 +6,7 @@
 #include "Components/Tags.h"
 
 
-void drft::system::SyncedAnimationSystem::onFixedUpdate()
+void drft::system::SyncedAnimationSystem::update()
 {
 	updateSyncPoints();
 
@@ -26,7 +26,7 @@ void drft::system::SyncedAnimationSystem::onFixedUpdate()
 	}
 }
 
-void drft::system::SyncedAnimationSystem::onFixedUpdateEnd()
+void drft::system::SyncedAnimationSystem::updateEnd()
 {
 	for (auto entity : _toRemoveAnimation)
 	{
@@ -40,7 +40,7 @@ void drft::system::SyncedAnimationSystem::updateSyncPoints()
 	for (auto&& [intDec, syncData] : _syncPoints)
 	{
 		++syncData.elapsed;
-		const float numFramesTillNextIndex = TARGET_FPS / std::abs(convertIntDecToFloat(intDec));
+		const float numFramesTillNextIndex = TARGET_UPDATES_PER_SECOND / std::abs(convertIntDecToFloat(intDec));
 		if (syncData.elapsed >= numFramesTillNextIndex)
 		{
 			syncData.index++;

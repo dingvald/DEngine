@@ -11,6 +11,6 @@ namespace drft::system
 
 	private:
 		void init() override;
-		void onUpdate(const float dt) override;
+		void update() override;
 	};
 }

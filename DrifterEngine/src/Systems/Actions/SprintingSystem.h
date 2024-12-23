@@ -12,7 +12,7 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void onFixedUpdate() override;
+		void update() override;
 
 	private:
 		void onSprintingAdded(entt::registry& registry, entt::entity);

@@ -14,7 +14,7 @@
 
 #include "Utility/EntityHelpers.h"
 
-void drft::system::PickUpSystem::onUpdate(const float dt)
+void drft::system::PickUpSystem::update()
 {
 	auto view = _registry.view<component::action::PickUp, PositionComponent, ContainerComponent>();
 	for (auto&& [entity, position, container] : view.each())

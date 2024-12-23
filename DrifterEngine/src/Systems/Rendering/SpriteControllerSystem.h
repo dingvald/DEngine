@@ -13,7 +13,6 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void onUpdateEnd() override;
 
 		static RenderComponent getDefaultRenderComponent(entt::const_handle entity);
 

@@ -17,11 +17,6 @@ void drft::system::SpriteControllerSystem::init()
 	_registry.on_construct<SpriteChangeRequestComponent>().connect<&SpriteControllerSystem::onSpriteChangeRequest>(this);
 }
 
-void drft::system::SpriteControllerSystem::onUpdateEnd()
-{
-	_registry.clear<SpriteChangeRequestComponent>();
-}
-
 /*static*/RenderComponent drft::system::SpriteControllerSystem::getDefaultRenderComponent(entt::const_handle entity)
 {
 	RenderComponent result = DebugRenderComponent;
@@ -69,6 +64,7 @@ void drft::system::SpriteControllerSystem::onSpriteChangeRequest(entt::registry&
 
 		handleNewSpriteState({ registry, entity }, *controller, request.stateId);
 	}
+	_registry.clear<SpriteChangeRequestComponent>();
 }
 
 void drft::system::SpriteControllerSystem::handleNewSpriteState(entt::handle handle, SpriteControllerComponent& controller, entt::id_type stateId) const

@@ -12,7 +12,7 @@ void drft::system::DropItemSystem::init()
 	_registry.on_update<component::action::Drop>().connect<&DropItemSystem::onItemDropped>(this);
 }
 
-void drft::system::DropItemSystem::onUpdate(const float dt)
+void drft::system::DropItemSystem::update()
 {
 	auto view = _registry.view<component::action::Drop, PositionComponent>();
 
@@ -26,7 +26,7 @@ void drft::system::DropItemSystem::onUpdate(const float dt)
 	}
 }
 
-void drft::system::DropItemSystem::onUpdateEnd()
+void drft::system::DropItemSystem::updateEnd()
 {
 	_registry.clear<component::action::Drop>();
 }

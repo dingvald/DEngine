@@ -8,7 +8,7 @@
 
 #include "Systems/Core/ActorSystem.h"
 
-void drft::system::WaitActionSystem::onUpdate(const float dt)
+void drft::system::WaitActionSystem::update()
 {
 	auto view = _registry.view<WaitAction, CurrentActorComponent, component::tag::Active>();
 	for (auto&& [entity, currentActor] : view.each())

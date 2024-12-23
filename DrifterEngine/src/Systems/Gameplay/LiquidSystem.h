@@ -21,8 +21,8 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void onFixedUpdate() override;
-		void onFixedUpdateEnd() override;
+		void update() override;
+		void updateEnd() override;
 
 	private:
 		void addInLiquidEffect(sf::Vector3i position, sf::Color color);

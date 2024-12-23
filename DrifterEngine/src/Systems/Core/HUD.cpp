@@ -49,7 +49,7 @@ void drft::system::HUD::init()
 	_registry.on_construct<component::action::HotbarPressed>().connect<&HUD::onHotbarPressed>(this);
 }
 
-void drft::system::HUD::onFixedUpdate()
+void drft::system::HUD::update()
 {
 	auto view = _registry.view<PlayerComponent>();
 	auto player = entt::handle(_registry, view.front());

@@ -30,7 +30,7 @@ void drft::system::LiquidSystem::init()
 	_registry.on_destroy<InLiquidComponent>().connect<&LiquidSystem::onRemoveInLiquid>(this);
 }
 
-void drft::system::LiquidSystem::onFixedUpdate()
+void drft::system::LiquidSystem::update()
 {
 	auto liquidAffectedView = _registry.view<MaterialComponent, PositionComponent>(entt::exclude<LiquidComponent, FlyingComponent>);
 	for (auto [entity, material, pos] : liquidAffectedView.each())
@@ -60,7 +60,7 @@ void drft::system::LiquidSystem::onFixedUpdate()
 	}
 }
 
-void drft::system::LiquidSystem::onFixedUpdateEnd()
+void drft::system::LiquidSystem::updateEnd()
 {
 	for (auto e : _inLiquidEffects)
 	{

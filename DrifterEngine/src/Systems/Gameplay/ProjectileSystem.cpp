@@ -24,7 +24,7 @@ void drft::system::ProjectileSystem::init()
 	_registry.on_destroy<ProjectileComponent>().connect<&ProjectileSystem::onProjectileRemoved>(this);
 }
 
-void drft::system::ProjectileSystem::onUpdate(float dt)
+void drft::system::ProjectileSystem::update()
 {
 	auto view = _registry.view<PositionComponent, ProjectileComponent, CurrentActorComponent>();
 	for (auto [entity, pos, proj, currentActor] : view.each())

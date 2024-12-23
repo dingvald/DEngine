@@ -9,7 +9,7 @@ namespace drft
 		TitleScreenState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
-		bool update(const float dt) override;
+		bool update() override;
 		void render(sf::RenderTarget& target) override;
 
 	private:

@@ -8,7 +8,7 @@ namespace drft::system
 	public:
 		using System::System;
 
-		void onFixedUpdate() override;
+		void update() override;
 	};
 }
 

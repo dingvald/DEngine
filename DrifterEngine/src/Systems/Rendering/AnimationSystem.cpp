@@ -6,7 +6,7 @@
 
 #include "Utility/Math.h"
 
-void drft::system::AnimationSystem::onFixedUpdate()
+void drft::system::AnimationSystem::update()
 {
 	auto noRenderView = _registry.view<AnimationComponent>(entt::exclude<RenderComponent>);
 	for (auto&& [entity, animation] : noRenderView.each())
@@ -18,7 +18,7 @@ void drft::system::AnimationSystem::onFixedUpdate()
 	for (auto&& [entity, animation, render] : withRenderView.each())
 	{
 		++animation.elapsed;
-		const float numFramesTillNextIndex = TARGET_FPS / std::abs(animation.speed);
+		const float numFramesTillNextIndex = TARGET_UPDATES_PER_SECOND / std::abs(animation.speed);
 		if (animation.elapsed >= numFramesTillNextIndex)
 		{
 			animation.index = math::wrap(animation.index + math::sign(animation.speed), 0, animation.frames.size() - 1);
@@ -34,7 +34,7 @@ void drft::system::AnimationSystem::onFixedUpdate()
 	}
 }
 
-void drft::system::AnimationSystem::onFixedUpdateEnd()
+void drft::system::AnimationSystem::updateEnd()
 {
 	for (auto entity : _toRemoveAnimation)
 	{

@@ -15,7 +15,7 @@
 static constexpr int ACTIVE_CHUNK_RADIUS_XY = 10;
 static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 2;
 
-void drft::system::ChunkManager::onUpdate(const float dt)
+void drft::system::ChunkManager::update()
 {
 	const CameraInfo camera = getCurrentCamera(_registry);
 	if (!camera.isInitialized) return;
@@ -102,6 +102,8 @@ void drft::system::ChunkManager::cleanUpChunks()
 void drft::system::ChunkManager::processBuildQueue()
 {
 	if (_toBuild.empty()) return;
+
+
 
 	ChunkPosition coord = _toBuild.front();
 	auto status = spatial::ioStatus::Busy;

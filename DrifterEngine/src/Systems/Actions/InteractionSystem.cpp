@@ -17,7 +17,7 @@ void drft::system::InteractionSystem::init()
 	_registry.on_construct<InteractionAction>().connect<&InteractionSystem::onConstructInteractionAction>(this);
 }
 
-void drft::system::InteractionSystem::onUpdateEnd()
+void drft::system::InteractionSystem::updateEnd()
 {
 	_registry.clear<InteractionAction>();
 }

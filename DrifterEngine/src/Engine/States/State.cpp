@@ -24,14 +24,9 @@ bool State::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::State::update(const float dt)
+bool drft::State::update()
 {
 	return false;
-}
-
-bool drft::State::fixedUpdate()
-{
-	return true;
 }
 
 void drft::State::onEnter()

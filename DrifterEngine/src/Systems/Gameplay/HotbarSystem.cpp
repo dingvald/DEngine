@@ -13,7 +13,7 @@
 #include "Systems/Helpers/ToHotbarIndex.h"
 
 
-void drft::system::HotbarSystem::onStart()
+void drft::system::HotbarSystem::start()
 {
 	auto playerView = _registry.view<PlayerComponent>();
 	for (auto entity : playerView)
@@ -27,7 +27,7 @@ void drft::system::HotbarSystem::onStart()
 	}
 }
 
-void drft::system::HotbarSystem::onUpdate(float dt)
+void drft::system::HotbarSystem::update()
 {
 	auto view = _registry.view<HotbarComponent, component::action::HotbarPressed, CurrentActorComponent>();
 	for (auto&& [entity, hotbar, hotbarSlot, currentActor] : view.each())

@@ -17,8 +17,7 @@ namespace drft
 		virtual ~State();
 
 		virtual bool handleEvent(const sf::Event& ev);
-		virtual bool update(const float dt);
-		virtual bool fixedUpdate();
+		virtual bool update();
 		virtual void render(sf::RenderTarget& target) {};
 
 		virtual void onEnter();

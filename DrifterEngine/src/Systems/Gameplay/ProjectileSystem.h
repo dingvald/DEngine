@@ -9,7 +9,7 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void onUpdate(float dt) override;
+		void update() override;
 
 	private:
 		void onProjectileAdded(entt::registry& registry, entt::entity entity);

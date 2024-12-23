@@ -77,7 +77,7 @@ void drft::system::PlayerInput::init()
 	}
 }
 
-void drft::system::PlayerInput::onUpdate(const float dt)
+void drft::system::PlayerInput::update()
 {
 	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
 	auto turnView = _registry.view<PlayerComponent, CurrentActorComponent>();

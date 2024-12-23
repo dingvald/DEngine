@@ -9,8 +9,8 @@ namespace drft::system
 	public:
 		using System::System;
 
-		void onStart() override;
-		void onUpdate(float dt) override;
+		void start() override;
+		void update() override;
 		void shutdown() override;
 
 	private:

@@ -32,7 +32,7 @@ namespace drft::system
 		using System::System;
 
 		virtual void init() override;
-		virtual void onUpdate(const float dt) override;
+		virtual void update() override;
 
 	private:
 		std::unordered_map<sf::Keyboard::Key, KeyState> _keyState;

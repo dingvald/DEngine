@@ -26,7 +26,7 @@ entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& 
 	}
 	else if (effect.frames.size() > 1) // must be an animation
 	{
-		ttl = effect.loops ? ttl : (TARGET_FPS / effect.animationSpeed) * effect.frames.size();
+		ttl = effect.loops ? ttl : (TARGET_UPDATES_PER_SECOND / effect.animationSpeed) * effect.frames.size();
 		AnimationComponent animation = { .frames = effect.frames, .speed = effect.animationSpeed, .loops = effect.loops };
 		effectHandle.emplace<AnimationComponent>(animation);
 	}

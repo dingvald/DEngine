@@ -11,7 +11,7 @@ drft::system::InputBuffer::InputBuffer(unsigned int maxBufferSize)
 {
 }
 
-void drft::system::InputBuffer::update(const float dt)
+void drft::system::InputBuffer::update()
 {
     for (auto&& [key, state] : _pressedKeys)
     {
@@ -27,7 +27,7 @@ void drft::system::InputBuffer::update(const float dt)
             state.timeHeld -= REFRACTORY_PERIOD;
         }
 
-        state.timeHeld = std::min(state.timeHeld + dt, HOLD_TIME + dt);
+        state.timeHeld = std::min(state.timeHeld + 1.0f, HOLD_TIME + 1.0f);
     }
 
     service::DebugInfo::instance().putInfo("Input Buffer", std::to_string(_buffer.size()));

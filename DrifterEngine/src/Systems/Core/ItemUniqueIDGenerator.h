@@ -10,7 +10,7 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void onStart() override;
+		void start() override;
 
 	private:
 		void onItemAdd(entt::registry& registry, entt::entity entity);

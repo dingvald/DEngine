@@ -20,7 +20,7 @@ void drft::system::MoveActionSystem::init()
 	_registry.on_construct<MoveAction>().connect<&MoveActionSystem::onMoveActionAdded>(this);
 }
 
-void drft::system::MoveActionSystem::onUpdate(const float dt)
+void drft::system::MoveActionSystem::update()
 {
 	auto view = _registry.view<PositionComponent, MoveAction>();
 	for (auto&& [entity, position, move] : view.each())

@@ -6,7 +6,7 @@
 #include "Utility/Math.h"
 
 
-void drft::system::VisualEffectSystem::onFixedUpdate()
+void drft::system::VisualEffectSystem::update()
 {
 	auto view = _registry.view<PositionComponent, VisualEffectComponent, RenderComponent>();
 	for (auto [entity, pos, effect, render] : view.each())

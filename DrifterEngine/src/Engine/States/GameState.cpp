@@ -123,16 +123,10 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::GameState::update(const float dt)
+bool drft::GameState::update()
 {
-	_inputBuffer.update(dt);
-	_gameStateStack.update(dt);
-	return true;
-}
-
-bool drft::GameState::fixedUpdate()
-{
-	_gameStateStack.fixedUpdate();
+	_inputBuffer.update();
+	_gameStateStack.update();
 	return true;
 }
 

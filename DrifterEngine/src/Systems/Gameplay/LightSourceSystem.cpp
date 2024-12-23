@@ -9,8 +9,10 @@
 #include "Systems/Helpers/ItemDatabase.h"
 
 
-void drft::system::LightSourceSystem::onFixedUpdate()
+void drft::system::LightSourceSystem::update()
 {
+	_registry.clear<TemporaryLightSourceComponent>();
+
 	auto bodyView = _registry.view<BodyComponent, component::tag::InViewport>();
 	for (auto [entity, body] : bodyView.each())
 	{
@@ -37,10 +39,5 @@ void drft::system::LightSourceSystem::onFixedUpdate()
 			}
 		}
 	}
-}
-
-void drft::system::LightSourceSystem::onFixedUpdateEnd()
-{
-	_registry.clear<TemporaryLightSourceComponent>();
 }
 

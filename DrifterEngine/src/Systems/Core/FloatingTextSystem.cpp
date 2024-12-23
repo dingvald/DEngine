@@ -12,7 +12,7 @@ void drft::system::FloatingTextSystem::init()
 	_dispatcher.sink<events::SendFloatingMessageEvent>().connect<&FloatingTextSystem::onSendFloatingMessageEvent>(this);
 }
 
-void drft::system::FloatingTextSystem::onFixedUpdate()
+void drft::system::FloatingTextSystem::update()
 {
 	updateFloatingMessagesDisplay();
 }

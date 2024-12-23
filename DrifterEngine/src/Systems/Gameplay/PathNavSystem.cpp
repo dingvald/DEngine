@@ -10,7 +10,7 @@
 #include <Spatial/Helpers.h>
 
 
-void drft::system::PathNavSystem::onUpdate(float dt)
+void drft::system::PathNavSystem::update()
 {
 	auto view = _registry.view<PathNavComponent, PositionComponent, CurrentActorComponent>();
 	for (auto [entity, nav, position, current] : view.each())

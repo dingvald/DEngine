@@ -36,7 +36,7 @@ void drft::system::ArtificialInput::init()
 	_dispatcher.sink<events::TurnEndEvent>().connect<&ArtificialInput::onTurnEndEvent>(this);
 }
 
-void drft::system::ArtificialInput::onUpdate(const float dt)
+void drft::system::ArtificialInput::update()
 {
 	auto view = _registry.view<AIComponent, const PositionComponent, CurrentActorComponent>();
 	for (auto [entity, ai, myPos, currentActor] : view.each())

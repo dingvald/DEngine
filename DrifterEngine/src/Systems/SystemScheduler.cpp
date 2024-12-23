@@ -8,7 +8,7 @@ void drft::system::SystemScheduler::startAll() const
 	{
 		std::string typeName = typeid(*system).name();
 		std::cout << "Starting " << typeName << "..." << std::endl;
-		system->onStart();
+		system->start();
 	}
 }
 
@@ -24,51 +24,23 @@ void drft::system::SystemScheduler::initAll() const
 }
 
 
-void drft::system::SystemScheduler::update(const float dt) const
+void drft::system::SystemScheduler::update() const
 {
 	for (auto& system : _systems)
 	{
-		system->onUpdateBegin();
+		system->updateBegin();
 	}
 	for (auto& system : _systems)
 	{
-		system->onUpdate(dt);
+		system->update();
 	}
 	for (auto& system : _systems)
 	{
-		system->onUpdateLate(dt);
-	}
-}
-
-void drft::system::SystemScheduler::updateEnd() const
-{
-	for (auto& system : _systems)
-	{
-		system->onUpdateEnd();
-	}
-}
-
-void drft::system::SystemScheduler::fixedUpdate() const
-{
-	for (auto& system : _systems)
-	{
-		system->onFixedUpdateBegin();
+		system->updateLate();
 	}
 	for (auto& system : _systems)
 	{
-		system->onFixedUpdate();
-	}
-	for (auto& system : _systems)
-	{
-		system->onFixedUpdateLate();
-	}
-}
-
-void drft::system::SystemScheduler::fixedUpdateEnd() const
-{
-	for (auto& system : _systems)
-	{
-		system->onFixedUpdateEnd();
+		system->updateEnd();
 	}
 }
 

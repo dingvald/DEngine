@@ -9,7 +9,7 @@ void drft::system::ItemUniqueIDGenerator::init()
 	_registry.on_construct<ItemIDTrackerComponent>().connect<&ItemUniqueIDGenerator::onItemIDTrackerAdded>(this);
 }
 
-void drft::system::ItemUniqueIDGenerator::onStart()
+void drft::system::ItemUniqueIDGenerator::start()
 {
 	if (_idTracker == entt::null)
 	{

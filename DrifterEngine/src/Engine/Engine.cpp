@@ -14,8 +14,6 @@ using namespace drft;
 
 static const std::filesystem::path DEFAULT_THEME = "drifter_theme.txt";
 
-static const float TARGET_DT = (1.0f / TARGET_FPS);
-
 static const unsigned int WINDOW_WIDTH = 2560;
 static const unsigned int WINDOW_HEIGHT = 1440;
 
@@ -23,6 +21,8 @@ static const float DEBUG_X_POSITION = WINDOW_WIDTH - 256;
 static const float DEBUG_Y_POSITION = 16;
 
 static const float MOUSE_TIMEOUT_TIME = 1.5f; // in seconds
+
+static constexpr int UPDATE_PER_FRAME_LIMIT = 10;
 
 
 drft::Engine::Engine()
@@ -36,11 +36,21 @@ drft::Engine::Engine()
 void drft::Engine::run()
 {
 	sf::Clock clock;
+	float lag = 0.0f;
+
 	while (_window.isOpen())
 	{
 		const sf::Time deltaTime = clock.restart();
+		lag += std::min(deltaTime.asSeconds(), SECONDS_PER_FRAME * UPDATE_PER_FRAME_LIMIT);
+
 		handleEvents();
-		update(deltaTime.asSeconds());
+
+		while (lag >= SECONDS_PER_FRAME)
+		{
+			update();
+			lag -= SECONDS_PER_FRAME;
+		}
+		
 		render(deltaTime.asSeconds());
 
 		if (_stateStack.isEmpty())
@@ -133,36 +143,24 @@ void drft::Engine::handleEvents()
 	}
 }
 
-void drft::Engine::update(const float dt)
+void drft::Engine::update()
 {
-	_stateStack.update(dt);
-	
-	_dtSinceLastFixedUpdate += dt;
-	if (_dtSinceLastFixedUpdate > TARGET_DT)
-	{
-		_stateStack.fixedUpdate();
-		_dtSinceLastFixedUpdate = 0.f;
-	}
+	_stateStack.update();
 }
 
 void drft::Engine::render(const float dt)
 {
-	_dtSinceLastRender += dt;
-	if (_dtSinceLastRender > TARGET_DT)
-	{
-		_window.clear();
-		_stateStack.render(_window);
-		_gui.draw();
+	_window.clear();
+	_stateStack.render(_window);
+	_gui.draw();
 
-		if (_showDebug)
-		{
-			service::DebugInfo::instance().putInfo("Frame Time (ms)", std::format("{:5.2f} ms", dt * 1000.f));
-			service::DebugInfo::instance().render(_window);
-		}
-			
-		_window.display();
-		_dtSinceLastRender = 0.f;
+	if (_showDebug)
+	{
+		service::DebugInfo::instance().putInfo("Frame Time (ms)", std::format("{:5.2f} ms", dt * 1000.f));
+		service::DebugInfo::instance().render(_window);
 	}
+			
+	_window.display();
 }
 
 void drft::Engine::shutDown()

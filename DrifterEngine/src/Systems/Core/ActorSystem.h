@@ -22,8 +22,8 @@ namespace drft::system
 
 	private:
 		void init() override;
-		void onStart() override;
-		void onUpdate(const float dt) override;
+		void start() override;
+		void update() override;
 		void shutdown() override;
 
 		void onActorRemove(entt::registry& registry, entt::entity entity);

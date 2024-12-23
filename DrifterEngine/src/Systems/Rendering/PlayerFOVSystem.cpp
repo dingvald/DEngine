@@ -22,8 +22,7 @@ void drft::system::PlayerFOVSystem::init()
 	};
 	auto setVisible = [this, &grid](sf::Vector3i position)
 	{
-		const auto& entities = grid.entitiesAt(spatial::asTileSpace(position));
-		_toLight.insert(_toLight.end(), entities.begin(), entities.end());
+		_toLight.insert(position);
 	};
 	auto getDistance = [](sf::Vector3i position) -> int
 	{
@@ -33,34 +32,32 @@ void drft::system::PlayerFOVSystem::init()
 	_fov = std::make_unique<Visibility>(blocksLight, setVisible, getDistance);
 }
 
-void drft::system::PlayerFOVSystem::onFixedUpdate()
+void drft::system::PlayerFOVSystem::update()
 {
-	auto positions = _registry.view<const PositionComponent, LightBlockingComponent, component::tag::InViewport>();
-	_lightBlockingPositions.reserve(positions.size_hint());
-	for (auto&& [entity, pos, lightBlocking] : positions.each())
+	_registry.clear<component::tag::InPlayerFOV>();
+
+	auto lightBlockingPositions = _registry.view<const PositionComponent, LightBlockingComponent, component::tag::InViewport>();
+	_lightBlockingPositions.reserve(lightBlockingPositions.size_hint());
+	for (auto&& [entity, pos, lightBlocking] : lightBlockingPositions.each())
 	{
 		_lightBlockingPositions.emplace(pos.tile);
 	}
 
 	auto playerView = _registry.view<PlayerComponent, VisionComponent, PositionComponent>();
-	for (auto [_, player, vision, pos] : playerView.each())
+	for (auto&& [entity, player, vision, pos] : playerView.each())
 	{
 		_fov->compute(pos.tile, vision.sightRange);
-		for (auto entityToLight : _toLight)
-		{
-			_registry.emplace_or_replace<component::tag::InPlayerFOV>(entityToLight);
-			if (!_registry.all_of<ActorComponent>(entityToLight) 
-				&& _registry.all_of<component::tag::InViewport>(entityToLight))
-			{
-				_registry.emplace_or_replace<component::tag::PlayerHasSeen>(entityToLight);
-			}
-		}
-		_toLight.clear();
 	}
-	_lightBlockingPositions.clear();
-}
 
-void drft::system::PlayerFOVSystem::onFixedUpdateEnd()
-{
-	_registry.clear<component::tag::InPlayerFOV>();
+	auto positions = _registry.view<const PositionComponent, component::tag::InViewport>();
+	for (auto&& [entity, pos] : positions.each())
+	{
+		if (!_toLight.contains(pos.tile)) continue;
+
+		_registry.emplace_or_replace<component::tag::InPlayerFOV>(entity);
+		_registry.emplace_or_replace<component::tag::PlayerHasSeen>(entity);
+	}
+
+	_toLight.clear();
+	_lightBlockingPositions.clear();
 }

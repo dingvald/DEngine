@@ -8,8 +8,8 @@ namespace drft::system
 	public:
 		using System::System;
 
-		virtual void onStart() override;
-		virtual void onUpdate(float dt) override;
+		virtual void start() override;
+		virtual void update() override;
 	};
 }
 

@@ -12,8 +12,9 @@
 static const float REALITY_RADIUS = 96.0f; // in tiles
 
 
-void drft::system::RealityBubble::onUpdateBegin()
+void drft::system::RealityBubble::updateBegin()
 {
+	_registry.clear<component::tag::Active>();
 	const auto camera = getCurrentCamera(_registry);
 
 	auto actorView = _registry.view<const ActorComponent, const PositionComponent>();
@@ -25,9 +26,4 @@ void drft::system::RealityBubble::onUpdateBegin()
 			_registry.emplace<component::tag::Active>(entity);
 		}
 	}
-}
-
-void drft::system::RealityBubble::onUpdateEnd()
-{
-	_registry.clear<component::tag::Active>();
 }

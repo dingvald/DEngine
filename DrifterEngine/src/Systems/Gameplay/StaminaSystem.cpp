@@ -11,7 +11,7 @@ void drft::system::StaminaSystem::init()
 	_registry.on_construct<MoveAction>().connect<&StaminaSystem::onMoveActionAdded>(this);
 }
 
-void drft::system::StaminaSystem::onUpdateEnd()
+void drft::system::StaminaSystem::updateEnd()
 {
 	_registry.clear<component::action::ConsumeStamina>();
 }

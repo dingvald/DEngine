@@ -19,22 +19,17 @@ namespace drft::system
 		System(entt::registry& registry, entt::dispatcher& dispatcher);
 		virtual ~System() = default;
 
-		virtual void init();
-		virtual void onStart();
+		virtual void init() {};
+		virtual void start() {};
 
-		virtual void onUpdateBegin();
-		virtual void onUpdate(const float dt);
-		virtual void onUpdateLate(const float dt);
-		virtual void onUpdateEnd();
+		virtual void updateBegin() {};
+		virtual void update() {};
+		virtual void updateLate() {};
+		virtual void updateEnd() {};
 
-		virtual void onFixedUpdateBegin();
-		virtual void onFixedUpdate();
-		virtual void onFixedUpdateLate();
-		virtual void onFixedUpdateEnd();
-
-		virtual void render(sf::RenderTarget& target);
+		virtual void render(sf::RenderTarget& target) {};
 		
-		virtual void shutdown();
+		virtual void shutdown() {};
 
 	protected:
 		entt::registry& _registry;

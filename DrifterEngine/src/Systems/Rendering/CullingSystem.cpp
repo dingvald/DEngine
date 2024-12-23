@@ -7,8 +7,10 @@
 #include <Spatial/Helpers.h>
 
 
-void drft::system::CullingSystem::onFixedUpdate()
+void drft::system::CullingSystem::update()
 {
+	_registry.clear<component::tag::InViewport>();
+
 	const auto camera = getCurrentCamera(_registry);
 	const auto viewport = addBufferToViewport(camera.viewport);
 	const auto cameraTilePosition = spatial::asTileSpace(camera.position);
@@ -23,11 +25,6 @@ void drft::system::CullingSystem::onFixedUpdate()
 
 		_registry.emplace<component::tag::InViewport>(entity);
 	}
-}
-
-void drft::system::CullingSystem::onFixedUpdateEnd()
-{
-	_registry.clear<component::tag::InViewport>();
 }
 
 sf::FloatRect drft::system::CullingSystem::addBufferToViewport(const sf::FloatRect& viewport) const

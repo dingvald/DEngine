@@ -24,7 +24,7 @@ namespace drft::system
 	public:
 		using System::System;
 
-		virtual void onUpdate(const float dt) override;
+		virtual void update() override;
 		virtual void shutdown() override;
 
 	private:

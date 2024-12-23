@@ -38,8 +38,10 @@ void drft::system::LightingSystem::init()
 	_fov = std::make_unique<Visibility>(blocksLight, setVisible, getDistance);
 }
 
-void drft::system::LightingSystem::onFixedUpdate()
+void drft::system::LightingSystem::update()
 {
+	_registry.clear<LitComponent>();
+
 	auto globalLightView = _registry.view<GlobalLightSourceComponent>();
 	auto positions = _registry.view<const PositionComponent, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
 	// Apply global lighting
@@ -119,13 +121,6 @@ void drft::system::LightingSystem::onFixedUpdate()
 
 	_lightBlockingPositions.clear();
 }
-
-void drft::system::LightingSystem::onFixedUpdateEnd()
-{
-	_registry.clear<LitComponent>();
-}
-
-
 
 sf::Color drft::system::LightingSystem::blendColor(const sf::Color& color1, const sf::Color& color2)
 {

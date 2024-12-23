@@ -20,7 +20,7 @@ void drft::system::ActorSystem::init()
 	_registry.on_destroy<ActorComponent>().connect<&ActorSystem::onActorRemove>(this);
 }
 
-void drft::system::ActorSystem::onStart()
+void drft::system::ActorSystem::start()
 {
 	_timeKeeper = _registry.create();
 	_registry.emplace<ActorComponent>(_timeKeeper, 0, 1.0f, 1.0f);
@@ -31,7 +31,7 @@ void drft::system::ActorSystem::onStart()
 	_currentActor = _timeKeeper;
 }
 
-void drft::system::ActorSystem::onUpdate(const float)
+void drft::system::ActorSystem::update()
 {
 	auto& storage = _registry.storage<CurrentActorComponent>();
 	if (storage.size() > 1)

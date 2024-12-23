@@ -31,7 +31,7 @@ void drft::system::DayNightCycleSystem::init()
 		.connect<&DayNightCycleSystem::onConstructDateAndTimeTracker>(this);
 }
 
-void drft::system::DayNightCycleSystem::onStart()
+void drft::system::DayNightCycleSystem::start()
 {
 	if (_dateAndTimeTracker == entt::null)
 	{
@@ -40,7 +40,7 @@ void drft::system::DayNightCycleSystem::onStart()
 	}
 }
 
-void drft::system::DayNightCycleSystem::onFixedUpdate()
+void drft::system::DayNightCycleSystem::update()
 {
 	const auto color = determineGlobalIllumination();
 	auto cameraView = _registry.view<CameraComponent>();

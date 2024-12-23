@@ -8,6 +8,6 @@ namespace drft::system
 	public:
 		using System::System;
 
-		void onUpdate(float dt) override;
+		void update() override;
 	};
 }

@@ -92,23 +92,15 @@ bool drft::SimulationState::handleEvent(const sf::Event& ev)
     return false;
 }
 
-bool drft::SimulationState::update(const float dt)
+bool drft::SimulationState::update()
 {
-	_systems->update(dt);
-	_systems->updateEnd();
+	_systems->update();
     return true;
-}
-
-bool drft::SimulationState::fixedUpdate()
-{
-	_systems->fixedUpdate();
-	return true;
 }
 
 void drft::SimulationState::render(sf::RenderTarget& target)
 {
 	_systems->render(target);
-	_systems->fixedUpdateEnd();
 }
 
 void drft::SimulationState::onPop()

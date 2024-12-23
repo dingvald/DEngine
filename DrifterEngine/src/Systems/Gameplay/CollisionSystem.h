@@ -12,7 +12,7 @@ namespace drft::system
 
     private:
         void init() override;
-        void onUpdateEnd() override;
+        void updateEnd() override;
 
         void onCollisionAdded(entt::registry& registry, entt::entity entity) const;
         Relationship determineTargetRelationship(entt::const_handle sourceEntity, const std::vector<entt::entity>& entities) const;

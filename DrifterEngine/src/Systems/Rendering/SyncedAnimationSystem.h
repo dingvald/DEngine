@@ -17,8 +17,8 @@ namespace drft::system
 			unsigned int index = 0;
 		};
 	private:
-		void onFixedUpdate() override;
-		void onFixedUpdateEnd() override;
+		void update() override;
+		void updateEnd() override;
 
 		void updateSyncPoints();
 		IntDec convertFloatToIntDec(float fl) const;

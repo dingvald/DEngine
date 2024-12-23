@@ -121,7 +121,7 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::SelectTargetState::update(const float dt)
+bool drft::SelectTargetState::update()
 {
 	return true;
 }

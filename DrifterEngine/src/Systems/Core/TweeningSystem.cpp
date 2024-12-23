@@ -14,7 +14,7 @@ void drft::system::TweeningSystem::tween(entt::handle entity, Tween tween)
 	tweening.tweens.push_back(std::move(tween));
 }
 
-void drft::system::TweeningSystem::onFixedUpdate()
+void drft::system::TweeningSystem::update()
 {
 	const auto& inputBuffer = _registry.ctx().get<const InputBuffer&>();
 	const bool isInputWaiting = !inputBuffer.isEmpty();

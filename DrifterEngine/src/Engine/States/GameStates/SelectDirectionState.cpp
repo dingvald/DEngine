@@ -111,9 +111,9 @@ bool drft::SelectDirectionState::handleEvent(const sf::Event& ev)
     return false;
 }
 
-bool drft::SelectDirectionState::update(const float dt)
+bool drft::SelectDirectionState::update()
 {
-	_displayText.update(dt);
+	_displayText.update(0.5f);
     return false;
 }
 

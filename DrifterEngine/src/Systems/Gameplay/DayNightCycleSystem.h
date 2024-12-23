@@ -10,8 +10,8 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void onStart() override;
-		void onFixedUpdate() override;
+		void start() override;
+		void update() override;
 
 	private:
 		void onGameTickEvent(const events::GameTickEvent& ev);

@@ -20,7 +20,7 @@
 #include "Events/SendFloatingMessageEvent.h"
 
 
-void drft::system::DeathSystem::onUpdate(const float dt)
+void drft::system::DeathSystem::update()
 {
 	const auto& factory = _registry.ctx().get<EntityFactory&>();
 	auto view = _registry.view<component::action::Die, MaterialComponent, PositionComponent>();

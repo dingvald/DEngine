@@ -31,13 +31,13 @@ bool drft::TitleScreenState::handleEvent(const sf::Event& ev)
 	return true;
 }
 
-bool drft::TitleScreenState::update(const float dt)
+bool drft::TitleScreenState::update()
 {
 	float alpha = 255;
 	const float twoPI = 2.0f * 3.14152f;
 	const float f = 0.5f;
 	static float elapsed = 0.0f;
-	elapsed += dt;
+	elapsed++;
 	if (elapsed > 10.0)
 	{
 		elapsed = 0.0;

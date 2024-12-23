@@ -17,7 +17,7 @@ void drft::system::CollisionSystem::init()
 	_registry.on_construct<CollisionComponent>().connect<&CollisionSystem::onCollisionAdded>(this);
 }
 
-void drft::system::CollisionSystem::onUpdateEnd()
+void drft::system::CollisionSystem::updateEnd()
 {
 	_registry.clear<CollisionComponent>();
 }

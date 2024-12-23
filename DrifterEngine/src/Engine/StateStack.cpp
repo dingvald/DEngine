@@ -7,20 +7,11 @@ StateStack::StateStack(StateContext& context)
 	: _context(context)
 {}
 
-void StateStack::update(const float dt)
+void StateStack::update()
 {
 	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
 	{
-		if (!(*state)->update(dt)) break;
-	}
-	applyPendingChanges();
-}
-
-void drft::StateStack::fixedUpdate()
-{
-	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
-	{
-		if (!(*state)->fixedUpdate()) break;
+		if (!(*state)->update()) break;
 	}
 	applyPendingChanges();
 }

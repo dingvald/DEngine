@@ -22,10 +22,7 @@ namespace drft::system
 			_systems.emplace_back(std::make_unique<T>(_registry, dispatcher));
 		}
 
-		void update(const float dt) const;
-		void updateEnd() const;
-		void fixedUpdate() const;
-		void fixedUpdateEnd() const;
+		void update() const;
 		void render(sf::RenderTarget& target) const;
 		void shutdownAll();
 

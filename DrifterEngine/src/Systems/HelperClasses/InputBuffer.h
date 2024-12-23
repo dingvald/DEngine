@@ -7,7 +7,7 @@ namespace drft::system
 	public:
 		InputBuffer(unsigned int maxBufferSize);
 
-		void update(const float dt);
+		void update();
 		void press(sf::Keyboard::Key key);
 		void release(sf::Keyboard::Key key);
 

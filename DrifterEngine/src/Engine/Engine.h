@@ -19,7 +19,7 @@ namespace drft
 		void loadResources();
 		void registerStates();
 		void handleEvents();
-		void update(const float dt);
+		void update();
 		void render(const float dt);
 		void shutDown();
 

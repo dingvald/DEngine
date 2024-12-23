@@ -12,7 +12,7 @@
 
 using namespace entt::literals;
 
-void drft::system::MouseVisualizationSystem::onStart()
+void drft::system::MouseVisualizationSystem::start()
 {
 	_cursorSprite = {
 		.uvCoords = sf::Vector2i{0, 0},
@@ -32,7 +32,7 @@ void drft::system::MouseVisualizationSystem::onStart()
 	_registry.emplace<MouseCursorComponent>(_cursor);
 }
 
-void drft::system::MouseVisualizationSystem::onUpdate(float dt)
+void drft::system::MouseVisualizationSystem::update()
 {
 	auto mouseTilePosition = getMouseTilePosition(_registry);
 

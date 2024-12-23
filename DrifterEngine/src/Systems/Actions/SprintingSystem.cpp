@@ -23,7 +23,7 @@ void drft::system::SprintingSystem::init()
 	_registry.on_destroy<SprintingComponent>().connect<&SprintingSystem::onSprintingRemoved>(this);
 }
 
-void drft::system::SprintingSystem::onFixedUpdate()
+void drft::system::SprintingSystem::update()
 {
 	auto sprintView = _registry.view<SprintingComponent, StaminaComponent, const PositionComponent>();
 	for (auto [entity, sprinting, stamina, pos] : sprintView.each())

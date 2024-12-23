@@ -28,7 +28,7 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void onUpdate(const float dt) override;
+		void update() override;
 
 	private:
 		using GoalName = std::string;

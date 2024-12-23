@@ -8,8 +8,7 @@ namespace drft::system
 	public:
 		using System::System;
 
-		void onUpdateBegin() override;
-		void onUpdateEnd() override;
+		void updateBegin() override;
 	};
 }
 

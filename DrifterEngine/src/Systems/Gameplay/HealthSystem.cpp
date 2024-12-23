@@ -26,7 +26,7 @@ void drft::system::HealthSystem::init()
 	_registry.on_construct<HealthComponent>().connect<&HealthSystem::onHealthComponentAdded>(this);
 }
 
-void drft::system::HealthSystem::onUpdate(const float dt)
+void drft::system::HealthSystem::update()
 {
 	// This sepration of incoming / taking damage allows for event handlers to react to the events separately
 	auto incomingDamageView = _registry.view<component::action::IncomingDamage>();

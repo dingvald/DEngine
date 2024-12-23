@@ -34,14 +34,14 @@ void drft::system::MeleeAttackActionSystem::init()
 	_registry.on_construct<MeleeAttackAction>().connect<&MeleeAttackActionSystem::onMeleeAttackActionAdded>(this);
 }
 
-void drft::system::MeleeAttackActionSystem::onUpdate(const float dt)
+void drft::system::MeleeAttackActionSystem::update()
 {
 	auto view = _registry.view<MeleeAttackAction>();
 	for (auto&& [entity, meleeAttackAction] : view.each())
 	{
 		Tween moveToTween = {
 			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.3f,
-			.time = 8,
+			.time = 4,
 			.easing = Easing::easeOutBack,
 			.onFinish = [this, entity, action = meleeAttackAction](entt::handle) {
 				processMeleeAttackAction(entity, std::move(action));
