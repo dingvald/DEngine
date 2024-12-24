@@ -15,7 +15,7 @@ namespace drft::system
 
 	private:
 		void init() override;
-		void update() override;
+		void render(sf::RenderTarget& target) override;
 
 	private:
 		std::unique_ptr<Visibility> _fov;

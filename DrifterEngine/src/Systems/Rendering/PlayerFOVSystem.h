@@ -11,12 +11,12 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void update() override;
+		void render(sf::RenderTarget& target) override;
 
 	private:
 		std::unique_ptr<Visibility> _fov;
 		std::unordered_set<sf::Vector3i> _lightBlockingPositions;
-		std::unordered_set<sf::Vector3i> _toLight;
+		std::vector<entt::entity> _toLight;
 
 	};
 }

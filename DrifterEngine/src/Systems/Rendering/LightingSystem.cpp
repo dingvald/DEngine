@@ -38,7 +38,7 @@ void drft::system::LightingSystem::init()
 	_fov = std::make_unique<Visibility>(blocksLight, setVisible, getDistance);
 }
 
-void drft::system::LightingSystem::update()
+void drft::system::LightingSystem::render(sf::RenderTarget& target)
 {
 	_registry.clear<LitComponent>();
 

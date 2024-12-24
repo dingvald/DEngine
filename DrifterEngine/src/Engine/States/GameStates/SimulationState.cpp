@@ -147,19 +147,14 @@ void drft::SimulationState::importSystems()
 
 	_systems->add<DayNightCycleSystem>();
 	_systems->add<SprintingSystem>();
-	_systems->add<CullingSystem>();
 	_systems->add<LiquidSystem>();
-	_systems->add<PlayerFOVSystem>();
+	
 	_systems->add<LightSourceSystem>();
-	_systems->add<LightingSystem>();
+	
 	_systems->add<VisualEffectSystem>();
 	_systems->add<SpriteControllerSystem>();
 	_systems->add<AnimationSystem>();
 	_systems->add<SyncedAnimationSystem>();
-
-	_systems->add<EntityRenderer>();
-	_systems->add<HUD>();
-	_systems->add<FloatingTextSystem>();
 
 	_systems->add<WorldGridResolver>();
 	_systems->add<FactionSystem>();
@@ -178,6 +173,14 @@ void drft::SimulationState::importSystems()
 	_systems->add<MeleeAttackActionSystem>();
 	_systems->add<CollisionSystem>();
 	_systems->add<StaminaSystem>();
+
+	// Rendering Systems - Be mindful of the order
+	_systems->add<CullingSystem>();
+	_systems->add<PlayerFOVSystem>();
+	_systems->add<LightingSystem>();
+	_systems->add<EntityRenderer>();
+	_systems->add<FloatingTextSystem>();
+	_systems->add<HUD>();
 
 	_systems->initAll();
 }

@@ -28,6 +28,7 @@ void drft::system::EntityRenderer::init()
 void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
 	const CameraInfo camera = getCurrentCamera(_registry);
+	target.setView(camera.camera.view);
 
 	batchLitEntities(camera);
 	batchHadSeenEntities(camera);
@@ -38,6 +39,8 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 		target.draw(batch);
 		batch.clear();
 	}
+
+	target.setView(target.getDefaultView());
 }
 
 void drft::system::EntityRenderer::batchLitEntities(const CameraInfo& camera)

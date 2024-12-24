@@ -9,7 +9,7 @@ namespace drft::system
 	public:
 		using System::System;
 
-		void update() override;
+		void render(sf::RenderTarget& target) override;
 
 	private:
 		sf::FloatRect addBufferToViewport(const sf::FloatRect& viewport) const;

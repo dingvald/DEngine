@@ -22,7 +22,8 @@ void drft::system::PlayerFOVSystem::init()
 	};
 	auto setVisible = [this, &grid](sf::Vector3i position)
 	{
-		_toLight.insert(position);
+		const auto& entities = grid.entitiesAt(spatial::asTileSpace(position));
+		_toLight.insert(_toLight.end(), entities.begin(), entities.end());
 	};
 	auto getDistance = [](sf::Vector3i position) -> int
 	{
@@ -32,7 +33,7 @@ void drft::system::PlayerFOVSystem::init()
 	_fov = std::make_unique<Visibility>(blocksLight, setVisible, getDistance);
 }
 
-void drft::system::PlayerFOVSystem::update()
+void drft::system::PlayerFOVSystem::render(sf::RenderTarget& target)
 {
 	_registry.clear<component::tag::InPlayerFOV>();
 
@@ -49,11 +50,8 @@ void drft::system::PlayerFOVSystem::update()
 		_fov->compute(pos.tile, vision.sightRange);
 	}
 
-	auto positions = _registry.view<const PositionComponent, component::tag::InViewport>();
-	for (auto&& [entity, pos] : positions.each())
+	for (auto&& entity : _toLight)
 	{
-		if (!_toLight.contains(pos.tile)) continue;
-
 		_registry.emplace_or_replace<component::tag::InPlayerFOV>(entity);
 		_registry.emplace_or_replace<component::tag::PlayerHasSeen>(entity);
 	}

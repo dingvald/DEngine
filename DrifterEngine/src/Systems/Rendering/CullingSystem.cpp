@@ -7,21 +7,24 @@
 #include <Spatial/Helpers.h>
 
 
-void drft::system::CullingSystem::update()
+void drft::system::CullingSystem::render(sf::RenderTarget& target)
 {
 	_registry.clear<component::tag::InViewport>();
 
 	const auto camera = getCurrentCamera(_registry);
-	const auto viewport = addBufferToViewport(camera.viewport);
-	const auto cameraTilePosition = spatial::asTileSpace(camera.position);
+	const auto& cameraView = camera.camera.view;
+	const auto cameraTilePosition = camera.position.tile;
+
+	sf::FloatRect viewRect = { cameraView.getCenter() - cameraView.getSize() / 2.f, cameraView.getSize()};
+	viewRect = addBufferToViewport(viewRect);
 
 	const auto view = _registry.view<const PositionComponent>();
 	for (auto [entity, pos] : view.each())
 	{
 		if (cameraTilePosition.z != pos.tile.z) continue;
 
-		sf::Vector2f xyTilePos = spatial::toXY(spatial::toFloatSpace(pos.tile - cameraTilePosition));
-		if (!viewport.contains(xyTilePos)) continue;
+		auto screenPosition = toScreenSpace(pos.tile, camera);
+		if (!viewRect.contains(screenPosition)) continue;
 
 		_registry.emplace<component::tag::InViewport>(entity);
 	}
