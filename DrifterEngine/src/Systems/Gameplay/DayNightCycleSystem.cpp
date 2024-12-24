@@ -85,7 +85,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 		_dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dusk has fallen...",
 			.color = sf::Color(125,0,255),
-			.position = spatial::toXY(spatial::toFloatSpace(spatial::asTileSpace(camera.position))),
+			.position = spatial::toXY(spatial::toFloatSpace(camera.position.tile)),
 			.velocity = {0,0},
 			.isScreenSpace = true,
 			.ttl = 120
@@ -98,7 +98,7 @@ void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEv
 		_dispatcher.trigger(events::SendFloatingMessageEvent{
 			.message = "Dawn has broken...",
 			.color = sf::Color::Yellow,
-			.position = spatial::toXY(spatial::toFloatSpace(spatial::asTileSpace(camera.position))),
+			.position = spatial::toXY(spatial::toFloatSpace(camera.position.tile)),
 			.velocity = {0,0},
 			.isScreenSpace = true,
 			.ttl = 120

@@ -43,7 +43,7 @@ void drft::system::ChunkManager::shutdown()
 
 void drft::system::ChunkManager::updateChunkStates(const CameraInfo& camera)
 {
-	ChunkPosition cameraChunkPosition = spatial::toChunkSpace(spatial::asTileSpace(camera.position));
+	ChunkPosition cameraChunkPosition = spatial::toChunkSpace(camera.position.tile);
 
 	auto activeCoords = spatial::getIntCircleInRadius(cameraChunkPosition, ACTIVE_CHUNK_RADIUS_XY);
 

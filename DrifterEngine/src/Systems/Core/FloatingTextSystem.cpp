@@ -19,10 +19,13 @@ void drft::system::FloatingTextSystem::update()
 
 void drft::system::FloatingTextSystem::render(sf::RenderTarget& target)
 {
+	const auto camera = getCurrentCamera(_registry);
+	target.setView(camera.camera.view);
 	for (auto& message : _floatingMessages)
 	{
 		target.draw(message.text);
 	}
+	target.setView(target.getDefaultView());
 }
 
 void drft::system::FloatingTextSystem::onSendFloatingMessageEvent(events::SendFloatingMessageEvent& ev)

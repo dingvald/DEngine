@@ -13,7 +13,7 @@ void drft::system::LightSourceSystem::update()
 {
 	_registry.clear<TemporaryLightSourceComponent>();
 
-	auto bodyView = _registry.view<BodyComponent, component::tag::InViewport>();
+	auto bodyView = _registry.view<BodyComponent>();
 	for (auto [entity, body] : bodyView.each())
 	{
 		auto equippedItems = body.parts.getAllEquipped();

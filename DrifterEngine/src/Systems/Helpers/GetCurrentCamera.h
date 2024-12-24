@@ -1,13 +1,14 @@
 #pragma once
 #include <Spatial/TilePosition.h>
+#include <Components/CameraComponent.h>
+#include <Components/PositionComponent.h>
 
 namespace drft::system
 {
 	struct CameraInfo
 	{
-		sf::Vector3i position;
-		sf::Vector3f lag;
-		sf::FloatRect viewport;
+		const PositionComponent& position;
+		const CameraComponent& camera;
 		bool isInitialized = false;
 	};
 
