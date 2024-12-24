@@ -10,19 +10,33 @@
 #include "Factory/EntityFactory.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include "Utility/EntityHelpers.h"
+#include <Utility/StandardLogger.h>
 
 
 bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, const std::string& itemName)
 {
-	auto& container = crafter.get<ContainerComponent>();
+	if (!crafter.all_of<ContainerComponent>())
+	{
+		warning_logger << "Warning: Entity without a container is attempting to craft an item." << std::endl;
+		return false;
+	}
+
 	auto& factory = crafter.registry()->ctx().get<const EntityFactory&>();
 	auto itemPrototype = factory.get(itemName);
+
+	if (!itemPrototype.valid())
+	{
+		warning_logger << "Warning: Trying to craft unknown item " << itemName << std::endl;
+		return false;
+	}
 
 	if (auto craftable = itemPrototype.try_get<CraftableComponent>())
 	{
 		std::vector<ItemComponent::ID> itemIdsToRemove;
 		std::vector<entt::entity> itemEntitiesToDestroy;
+
 		bool canCraft = true;
+		auto& container = crafter.get<ContainerComponent>();
 		for (auto&& [matName, amount] : craftable->recipe)
 		{
 			int count = 0;

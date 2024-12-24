@@ -24,10 +24,7 @@ void drft::system::DropItemSystem::update()
 			_registry.emplace<PositionComponent>(itemEntity, pos.tile);
 		}
 	}
-}
 
-void drft::system::DropItemSystem::updateEnd()
-{
 	_registry.clear<component::action::Drop>();
 }
 

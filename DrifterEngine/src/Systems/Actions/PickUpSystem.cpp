@@ -19,7 +19,7 @@ void drft::system::PickUpSystem::update()
 	auto view = _registry.view<component::action::PickUp, PositionComponent, ContainerComponent>();
 	for (auto&& [entity, position, container] : view.each())
 	{
-		if (container.contents.size() >= container.capacity) return;
+		if (container.contents.size() >= container.capacity) continue;
 
 		auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 		const auto myTilePosition = position.tile;
@@ -29,7 +29,7 @@ void drft::system::PickUpSystem::update()
 			};
 		const auto items = grid.entitiesAt(myTilePosition, checkForItem);
 
-		if (items.empty()) return;
+		if (items.empty()) continue;
 
 		_registry.remove<PositionComponent>(items.front());
 
@@ -52,6 +52,7 @@ void drft::system::PickUpSystem::update()
 				}
 			}
 		}
+
 		// otherwise put into inventory
 		if (!putDirectlyInHand)
 		{
@@ -63,6 +64,7 @@ void drft::system::PickUpSystem::update()
 
 			ActorSystem::completeAction({ _registry, entity }, ActionCategory::Act);
 		}
-		_registry.remove<component::action::PickUp>(entity);
 	}
+
+	_registry.clear<component::action::Drop>();
 }
