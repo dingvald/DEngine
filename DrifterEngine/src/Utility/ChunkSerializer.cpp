@@ -35,7 +35,7 @@ std::future<void> drft::ChunkSerializer::queueForSave(ChunkPosition position, en
 		_saveQueue.emplace_back(position, registry);
 	}
 
-	_serializedChunks.insert(position); // TODO: Maybe not the best place to add because it assumes serialization, but avoids needing a mutex
+	_serializedChunks.insert(position); // HACKZ: Maybe not the best place to add because it assumes serialization worked, but avoids needing a mutex
 	
 	std::lock_guard<std::mutex> lock(_savePromiseLock);
 	_savePromises.emplace(position, std::promise<void>{});
