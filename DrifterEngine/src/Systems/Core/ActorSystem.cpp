@@ -129,6 +129,7 @@ void drft::system::ActorSystem::processPoints(entt::handle entity, int points) c
 void drft::system::ActorSystem::tick()
 {
 	_dispatcher.trigger(events::GameTickEvent());
+	std::cout << "TICK" << std::endl;
 
 	auto actorView = _registry.view<ActorComponent, component::tag::Active>();
 	for (auto&& [entity, actor] : actorView.each())
