@@ -24,6 +24,7 @@
 #include "Systems/Core/RealityBubble.h"
 #include "Systems/Core/PlayerInput.h"
 #include "Systems/Core/ArtificialInput.h"
+#include <Systems/Core/AISystem.h>
 #include "Systems/Core/Camera.h"
 #include <Systems/Core/MouseVisualizationSystem.h>
 #include "Systems/Core/ChunkManager.h"
@@ -127,6 +128,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<MouseVisualizationSystem>();
 	_systems->add<PlayerInput>();
 	_systems->add<ArtificialInput>();
+	_systems->add<AISystem>();
 
 	_systems->add<PathNavSystem>();
 	_systems->add<ProjectileSystem>();

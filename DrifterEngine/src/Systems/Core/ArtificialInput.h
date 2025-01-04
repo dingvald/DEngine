@@ -1,9 +1,9 @@
 #pragma once
 #include "Systems/System.h"
 #include "Systems/HelperClasses/AIStates.h"
-#include "GOAP/Actions/AiActionTypes.h"
-#include "GOAP/IGoal.h"
-#include "GOAP/SensorRunner.h"
+#include "AI/GOAP/Actions/AiActionTypes.h"
+#include "AI/GOAP/IGoal.h"
+#include "AI/GOAP/SensorRunner.h"
 
 #include <Spatial/TilePosition.h>
 

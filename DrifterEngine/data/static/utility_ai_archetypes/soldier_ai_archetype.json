@@ -1,0 +1,29 @@
+{
+  "ai_archetype": {
+    "name": "soldier",
+    "actions": [
+      {
+        "name": "melee_attack",
+        "target_type": "actors",
+        "considerations": [
+          {
+            "input": "my_health",
+            "curve": [ "linear", 0.5, 1.0, 0.8, 0.5 ]
+          },
+          {
+            "input": "target_health",
+            "curve": [ "linear", 0.5, 1.0, 0.8, 0.5 ]
+          },
+          {
+            "input": "distance_to_target",
+            "curve": [ "linear", 0.5, 1.0, 0.8, 0.5 ]
+          },
+          {
+            "input": "target_relationship",
+            "curve": [ "linear", 0.5, 1.0, 0.5, 1.0 ]
+          }
+        ]
+      }
+    ]
+  }
+}

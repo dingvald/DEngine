@@ -309,67 +309,67 @@
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\IAction.cpp">
+    <ClCompile Include="src\AI\GOAP\IAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\WorldState.cpp">
+    <ClCompile Include="src\AI\GOAP\WorldState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\GoalRegistry.cpp">
+    <ClCompile Include="src\AI\GOAP\GoalRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\ActionRegistry.cpp">
+    <ClCompile Include="src\AI\GOAP\ActionRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Plan.cpp">
+    <ClCompile Include="src\AI\GOAP\Plan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\HasLineOfSight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Actions\SpotHostileAction.cpp">
+    <ClCompile Include="src\AI\GOAP\Actions\SpotHostileAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Actions\RandomMoveAction.cpp">
+    <ClCompile Include="src\AI\GOAP\Actions\RandomMoveAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Actions\AttackHostileAction.cpp">
+    <ClCompile Include="src\AI\GOAP\Actions\AttackHostileAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Actions\EscapeHostilesAction.cpp">
+    <ClCompile Include="src\AI\GOAP\Actions\EscapeHostilesAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\ISensor.cpp">
+    <ClCompile Include="src\AI\GOAP\ISensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Sensors\HostileSensor.cpp">
+    <ClCompile Include="src\AI\GOAP\Sensors\HostileSensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\SensorRunner.cpp">
+    <ClCompile Include="src\AI\GOAP\SensorRunner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\IGoal.cpp">
+    <ClCompile Include="src\AI\GOAP\IGoal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Goals\ExploreGoal.cpp">
+    <ClCompile Include="src\AI\GOAP\Goals\ExploreGoal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Goals\KillHostileGoal.cpp">
+    <ClCompile Include="src\AI\GOAP\Goals\KillHostileGoal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Goals\EscapeHostileGoal.cpp">
+    <ClCompile Include="src\AI\GOAP\Goals\EscapeHostileGoal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Actions\InvestigateHostileAction.cpp">
+    <ClCompile Include="src\AI\GOAP\Actions\InvestigateHostileAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Sensors\Utility\GetClosestEntity.cpp">
+    <ClCompile Include="src\AI\GOAP\Sensors\Utility\GetClosestEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Sensors\Utility\IsHostile.cpp">
+    <ClCompile Include="src\AI\GOAP\Sensors\Utility\IsHostile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp">
+    <ClCompile Include="src\AI\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Core\FloatingTextSystem.cpp">
@@ -568,6 +568,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Actions\AbilityActionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\Utility\Impl\ResponseCurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Core\AISystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\Blackboard\Blackboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\Utility\Impl\UtilityArchetype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\Utility\Impl\UtilityAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\Utility\UtilityAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\InputClearingHouse\AIDataClearingHouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\InputClearingHouse\InputFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1385,76 +1412,76 @@
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\IAction.h">
+    <ClInclude Include="src\AI\GOAP\IAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\WorldState.h">
+    <ClInclude Include="src\AI\GOAP\WorldState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\GoalRegistry.h">
+    <ClInclude Include="src\AI\GOAP\GoalRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\ActionRegistry.h">
+    <ClInclude Include="src\AI\GOAP\ActionRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Plan.h">
+    <ClInclude Include="src\AI\GOAP\Plan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Actions\AiActionTypes.h">
+    <ClInclude Include="src\AI\GOAP\Actions\AiActionTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\HasLineOfSight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Actions\SpotHostileAction.h">
+    <ClInclude Include="src\AI\GOAP\Actions\SpotHostileAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Actions\RandomMoveAction.h">
+    <ClInclude Include="src\AI\GOAP\Actions\RandomMoveAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Actions\AttackHostileAction.h">
+    <ClInclude Include="src\AI\GOAP\Actions\AttackHostileAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Actions\EscapeHostilesAction.h">
+    <ClInclude Include="src\AI\GOAP\Actions\EscapeHostilesAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\IGoal.h">
+    <ClInclude Include="src\AI\GOAP\IGoal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\ISensor.h">
+    <ClInclude Include="src\AI\GOAP\ISensor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Sensors\HostileSensor.h">
+    <ClInclude Include="src\AI\GOAP\Sensors\HostileSensor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\SensorRunner.h">
+    <ClInclude Include="src\AI\GOAP\SensorRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\SensorTypes.h">
+    <ClInclude Include="src\AI\GOAP\SensorTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\WorldStateTypes.h">
+    <ClInclude Include="src\AI\GOAP\WorldStateTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Goals\ExploreGoal.h">
+    <ClInclude Include="src\AI\GOAP\Goals\ExploreGoal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Goals\KillHostileGoal.h">
+    <ClInclude Include="src\AI\GOAP\Goals\KillHostileGoal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Goals\EscapeHostileGoal.h">
+    <ClInclude Include="src\AI\GOAP\Goals\EscapeHostileGoal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Actions\InvestigateHostileAction.h">
+    <ClInclude Include="src\AI\GOAP\Actions\InvestigateHostileAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Sensors\Utility\GetClosestEntity.h">
+    <ClInclude Include="src\AI\GOAP\Sensors\Utility\GetClosestEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Sensors\Utility\IsHostile.h">
+    <ClInclude Include="src\AI\GOAP\Sensors\Utility\IsHostile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.h">
+    <ClInclude Include="src\AI\GOAP\Sensors\Utility\IsEntityInSurroundings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Core\FloatingTextSystem.h">
@@ -2906,6 +2933,60 @@
     <ClInclude Include="src\Systems\Actions\AbilityActionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\AI\Utility\Impl\ResponseCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Utility\Impl\Consideration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\UtilityAIComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\VisionComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Core\AISystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Blackboard\Blackboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Utility\UtilityAI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\AiActions\IAiAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Utility\Impl\UtilityAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Utility\Impl\UtilityAISharedTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Utility\Impl\UtilityArchetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Utility\IUtilityInputProvider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Utility\IUtilityBlackboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\Utility\UtilityActionTargetPair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\InputClearingHouse\AIDataClearingHouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\InputClearingHouse\InputFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\AiActions\AiActionRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\AiActions\MeleeAttackAiAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -2972,6 +3053,8 @@
     <None Include="deps\SFML-2.6.1\include\SFML\System\Vector3.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />
+    <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

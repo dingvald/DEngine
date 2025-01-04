@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Systems/HelperClasses/AIStates.h"
-#include "GOAP/WorldState.h"
-#include "GOAP/Actions/AiActionTypes.h"
-#include "GOAP/SensorTypes.h"
+#include "AI/GOAP/WorldState.h"
+#include "AI/GOAP/Actions/AiActionTypes.h"
+#include "AI/GOAP/SensorTypes.h"
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"

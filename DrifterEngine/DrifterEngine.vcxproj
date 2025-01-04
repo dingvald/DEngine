@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
@@ -199,7 +199,16 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
+    <ClCompile Include="src\AI\InputClearingHouse\AIDataClearingHouse.cpp" />
+    <ClCompile Include="src\AI\Blackboard\Blackboard.cpp" />
+    <ClCompile Include="src\AI\InputClearingHouse\InputFunctions.cpp" />
+    <ClCompile Include="src\AI\Utility\Impl\ResponseCurve.cpp" />
+    <ClCompile Include="src\AI\Utility\Impl\UtilityAction.cpp" />
+    <ClCompile Include="src\AI\Utility\Impl\UtilityArchetype.cpp" />
+    <ClCompile Include="src\AI\Utility\UtilityAI.cpp" />
     <ClCompile Include="src\Systems\Actions\AbilityActionSystem.cpp" />
+    <ClCompile Include="src\Systems\Core\AISystem.cpp" />
     <ClCompile Include="src\Systems\Core\TweeningSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\ContainerWrapper.cpp" />
     <ClCompile Include="src\Systems\Helpers\EasingFunctions.cpp" />
@@ -244,25 +253,25 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Ability\AbilityRegistry.cpp" />
     <ClCompile Include="src\Ability\IAbility.cpp" />
     <ClCompile Include="src\Systems\Core\FloatingTextSystem.cpp" />
-    <ClCompile Include="src\GOAP\Actions\InvestigateHostileAction.cpp" />
-    <ClCompile Include="src\GOAP\Goals\EscapeHostileGoal.cpp" />
-    <ClCompile Include="src\GOAP\Goals\KillHostileGoal.cpp" />
-    <ClCompile Include="src\GOAP\Goals\ExploreGoal.cpp" />
-    <ClCompile Include="src\GOAP\IGoal.cpp" />
-    <ClCompile Include="src\GOAP\SensorRunner.cpp" />
-    <ClCompile Include="src\GOAP\Sensors\HostileSensor.cpp" />
-    <ClCompile Include="src\GOAP\ISensor.cpp" />
-    <ClCompile Include="src\GOAP\Actions\EscapeHostilesAction.cpp" />
-    <ClCompile Include="src\GOAP\Actions\AttackHostileAction.cpp" />
-    <ClCompile Include="src\GOAP\Actions\RandomMoveAction.cpp" />
-    <ClCompile Include="src\GOAP\Actions\SpotHostileAction.cpp" />
-    <ClCompile Include="src\GOAP\Plan.cpp" />
-    <ClCompile Include="src\GOAP\ActionRegistry.cpp" />
-    <ClCompile Include="src\GOAP\GoalRegistry.cpp" />
-    <ClCompile Include="src\GOAP\IAction.cpp" />
-    <ClCompile Include="src\GOAP\Sensors\Utility\GetClosestEntity.cpp" />
-    <ClCompile Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp" />
-    <ClCompile Include="src\GOAP\Sensors\Utility\IsHostile.cpp" />
+    <ClCompile Include="src\AI\GOAP\Actions\InvestigateHostileAction.cpp" />
+    <ClCompile Include="src\AI\GOAP\Goals\EscapeHostileGoal.cpp" />
+    <ClCompile Include="src\AI\GOAP\Goals\KillHostileGoal.cpp" />
+    <ClCompile Include="src\AI\GOAP\Goals\ExploreGoal.cpp" />
+    <ClCompile Include="src\AI\GOAP\IGoal.cpp" />
+    <ClCompile Include="src\AI\GOAP\SensorRunner.cpp" />
+    <ClCompile Include="src\AI\GOAP\Sensors\HostileSensor.cpp" />
+    <ClCompile Include="src\AI\GOAP\ISensor.cpp" />
+    <ClCompile Include="src\AI\GOAP\Actions\EscapeHostilesAction.cpp" />
+    <ClCompile Include="src\AI\GOAP\Actions\AttackHostileAction.cpp" />
+    <ClCompile Include="src\AI\GOAP\Actions\RandomMoveAction.cpp" />
+    <ClCompile Include="src\AI\GOAP\Actions\SpotHostileAction.cpp" />
+    <ClCompile Include="src\AI\GOAP\Plan.cpp" />
+    <ClCompile Include="src\AI\GOAP\ActionRegistry.cpp" />
+    <ClCompile Include="src\AI\GOAP\GoalRegistry.cpp" />
+    <ClCompile Include="src\AI\GOAP\IAction.cpp" />
+    <ClCompile Include="src\AI\GOAP\Sensors\Utility\GetClosestEntity.cpp" />
+    <ClCompile Include="src\AI\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp" />
+    <ClCompile Include="src\AI\GOAP\Sensors\Utility\IsHostile.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\BodyPart.cpp" />
@@ -403,7 +412,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Engine\States\GameStates\SelectDirectionState.cpp" />
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
-    <ClCompile Include="src\GOAP\WorldState.cpp" />
+    <ClCompile Include="src\AI\GOAP\WorldState.cpp" />
     <ClCompile Include="src\Ability\Abilities\ToggleSprintAbility.cpp" />
     <ClCompile Include="src\Ability\Abilities\ThrowAbility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ProjectileSystem.cpp" />
@@ -429,12 +438,30 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="deps\zlib\include\zconf.h" />
     <ClInclude Include="deps\zlib\include\zlib.h" />
     <ClInclude Include="deps\zlib\include\zutil.h" />
+    <ClInclude Include="src\AI\AiActions\AiActionRegistry.h" />
+    <ClInclude Include="src\AI\AiActions\IAiAction.h" />
+    <ClInclude Include="src\AI\AiActions\MeleeAttackAiAction.h" />
+    <ClInclude Include="src\AI\InputClearingHouse\AIDataClearingHouse.h" />
+    <ClInclude Include="src\AI\Blackboard\Blackboard.h" />
+    <ClInclude Include="src\AI\InputClearingHouse\InputFunctions.h" />
+    <ClInclude Include="src\AI\Utility\Impl\Consideration.h" />
+    <ClInclude Include="src\AI\Utility\IUtilityBlackboard.h" />
+    <ClInclude Include="src\AI\Utility\IUtilityInputProvider.h" />
+    <ClInclude Include="src\AI\Utility\Impl\ResponseCurve.h" />
+    <ClInclude Include="src\AI\Utility\Impl\UtilityAction.h" />
+    <ClInclude Include="src\AI\Utility\UtilityActionTargetPair.h" />
+    <ClInclude Include="src\AI\Utility\Impl\UtilityAISharedTypes.h" />
+    <ClInclude Include="src\AI\Utility\UtilityAI.h" />
+    <ClInclude Include="src\AI\Utility\Impl\UtilityArchetype.h" />
     <ClInclude Include="src\Components\Actions\AbilityAction.h" />
     <ClInclude Include="src\Components\Actions\WaitAction.h" />
     <ClInclude Include="src\Components\CurrentActorComponent.h" />
     <ClInclude Include="src\Components\DominantHandComponent.h" />
     <ClInclude Include="src\Components\TweeningComponent.h" />
+    <ClInclude Include="src\Components\UtilityAIComponent.h" />
+    <ClInclude Include="src\Components\VisionComponent.h" />
     <ClInclude Include="src\Systems\Actions\AbilityActionSystem.h" />
+    <ClInclude Include="src\Systems\Core\AISystem.h" />
     <ClInclude Include="src\Systems\Core\TweeningSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\ContainerWrapper.h" />
     <ClInclude Include="src\Systems\Helpers\EasingFunctions.h" />
@@ -875,28 +902,28 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Ability\AbilityType.h" />
     <ClInclude Include="src\Ability\IAbility.h" />
     <ClInclude Include="src\Systems\Core\FloatingTextSystem.h" />
-    <ClInclude Include="src\GOAP\Actions\InvestigateHostileAction.h" />
-    <ClInclude Include="src\GOAP\Goals\EscapeHostileGoal.h" />
-    <ClInclude Include="src\GOAP\Goals\KillHostileGoal.h" />
-    <ClInclude Include="src\GOAP\Goals\ExploreGoal.h" />
-    <ClInclude Include="src\GOAP\SensorRunner.h" />
-    <ClInclude Include="src\GOAP\Sensors\HostileSensor.h" />
-    <ClInclude Include="src\GOAP\ISensor.h" />
-    <ClInclude Include="src\GOAP\Actions\EscapeHostilesAction.h" />
-    <ClInclude Include="src\GOAP\Actions\AttackHostileAction.h" />
-    <ClInclude Include="src\GOAP\Actions\RandomMoveAction.h" />
-    <ClInclude Include="src\GOAP\Actions\SpotHostileAction.h" />
-    <ClInclude Include="src\GOAP\Actions\AiActionTypes.h" />
-    <ClInclude Include="src\GOAP\IGoal.h" />
-    <ClInclude Include="src\GOAP\Plan.h" />
-    <ClInclude Include="src\GOAP\ActionRegistry.h" />
-    <ClInclude Include="src\GOAP\GoalRegistry.h" />
-    <ClInclude Include="src\GOAP\IAction.h" />
-    <ClInclude Include="src\GOAP\Sensors\Utility\GetClosestEntity.h" />
-    <ClInclude Include="src\GOAP\Sensors\Utility\IsEntityInSurroundings.h" />
-    <ClInclude Include="src\GOAP\Sensors\Utility\IsHostile.h" />
-    <ClInclude Include="src\GOAP\SensorTypes.h" />
-    <ClInclude Include="src\GOAP\WorldStateTypes.h" />
+    <ClInclude Include="src\AI\GOAP\Actions\InvestigateHostileAction.h" />
+    <ClInclude Include="src\AI\GOAP\Goals\EscapeHostileGoal.h" />
+    <ClInclude Include="src\AI\GOAP\Goals\KillHostileGoal.h" />
+    <ClInclude Include="src\AI\GOAP\Goals\ExploreGoal.h" />
+    <ClInclude Include="src\AI\GOAP\SensorRunner.h" />
+    <ClInclude Include="src\AI\GOAP\Sensors\HostileSensor.h" />
+    <ClInclude Include="src\AI\GOAP\ISensor.h" />
+    <ClInclude Include="src\AI\GOAP\Actions\EscapeHostilesAction.h" />
+    <ClInclude Include="src\AI\GOAP\Actions\AttackHostileAction.h" />
+    <ClInclude Include="src\AI\GOAP\Actions\RandomMoveAction.h" />
+    <ClInclude Include="src\AI\GOAP\Actions\SpotHostileAction.h" />
+    <ClInclude Include="src\AI\GOAP\Actions\AiActionTypes.h" />
+    <ClInclude Include="src\AI\GOAP\IGoal.h" />
+    <ClInclude Include="src\AI\GOAP\Plan.h" />
+    <ClInclude Include="src\AI\GOAP\ActionRegistry.h" />
+    <ClInclude Include="src\AI\GOAP\GoalRegistry.h" />
+    <ClInclude Include="src\AI\GOAP\IAction.h" />
+    <ClInclude Include="src\AI\GOAP\Sensors\Utility\GetClosestEntity.h" />
+    <ClInclude Include="src\AI\GOAP\Sensors\Utility\IsEntityInSurroundings.h" />
+    <ClInclude Include="src\AI\GOAP\Sensors\Utility\IsHostile.h" />
+    <ClInclude Include="src\AI\GOAP\SensorTypes.h" />
+    <ClInclude Include="src\AI\GOAP\WorldStateTypes.h" />
     <ClInclude Include="src\Random\PercentChance.h" />
     <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h" />
@@ -1182,7 +1209,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Engine\States\GameStates\SelectDirectionState.h" />
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h" />
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h" />
-    <ClInclude Include="src\GOAP\WorldState.h" />
+    <ClInclude Include="src\AI\GOAP\WorldState.h" />
     <ClInclude Include="src\Ability\Abilities\ToggleSprintAbility.h" />
     <ClInclude Include="src\Ability\Abilities\ThrowAbility.h" />
     <ClInclude Include="src\Systems\Gameplay\ProjectileSystem.h" />
@@ -1200,6 +1227,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemGroup>
   <ItemGroup>
     <None Include="data\static\entities\bodies.json" />
+    <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
+    <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />
     <None Include="data\static\world_generation.json" />
     <None Include="data\static\biomes\biomes.json" />
     <None Include="data\static\entities\bases.json" />

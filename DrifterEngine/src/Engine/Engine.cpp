@@ -22,7 +22,7 @@ static const float DEBUG_Y_POSITION = 16;
 
 static const float MOUSE_TIMEOUT_TIME = 1.5f; // in seconds
 
-static constexpr int UPDATE_PER_FRAME_LIMIT = 10;
+static constexpr int UPDATES_PER_FRAME_LIMIT = 10;
 
 
 drft::Engine::Engine()
@@ -40,8 +40,8 @@ void drft::Engine::run()
 
 	while (_window.isOpen())
 	{
-		const sf::Time deltaTime = clock.restart();
-		lag += std::min(deltaTime.asSeconds(), SECONDS_PER_FRAME * UPDATE_PER_FRAME_LIMIT);
+		const float secondsPassed = clock.restart().asSeconds();
+		lag += std::min(secondsPassed, SECONDS_PER_FRAME * UPDATES_PER_FRAME_LIMIT);
 
 		handleEvents();
 
@@ -51,7 +51,7 @@ void drft::Engine::run()
 			lag -= SECONDS_PER_FRAME;
 		}
 		
-		render(deltaTime.asSeconds());
+		render(secondsPassed);
 
 		if (_stateStack.isEmpty())
 		{
@@ -148,7 +148,7 @@ void drft::Engine::update()
 	_stateStack.update();
 }
 
-void drft::Engine::render(const float dt)
+void drft::Engine::render(const float)
 {
 	_window.clear();
 	_stateStack.render(_window);
@@ -156,7 +156,6 @@ void drft::Engine::render(const float dt)
 
 	if (_showDebug)
 	{
-		service::DebugInfo::instance().putInfo("Frame Time (ms)", std::format("{:5.2f} ms", dt * 1000.f));
 		service::DebugInfo::instance().render(_window);
 	}
 			

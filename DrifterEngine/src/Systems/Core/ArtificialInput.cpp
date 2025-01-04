@@ -16,13 +16,12 @@
 #include "Spatial/Conversions.h"
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Helpers/HasLineOfSight.h"
-#include "GOAP/Plan.h"
-#include "GOAP/GoalRegistry.h"
-#include "GOAP/ActionRegistry.h"
-#include "GOAP/WorldStateTypes.h"
-#include "GOAP/Sensors/HostileSensor.h"
+#include "AI/GOAP/Plan.h"
+#include "AI/GOAP/GoalRegistry.h"
+#include "AI/GOAP/ActionRegistry.h"
+#include "AI/GOAP/WorldStateTypes.h"
+#include "AI/GOAP/Sensors/HostileSensor.h"
 
-#pragma optimize("", off)
 
 
 void drft::system::ArtificialInput::init()

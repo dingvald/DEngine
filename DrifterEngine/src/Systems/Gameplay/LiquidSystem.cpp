@@ -20,6 +20,10 @@
 #include "Utility/SpriteIndexer.h"
 #include "Utility/stdHashing.h"
 
+using namespace entt::literals;
+
+const float DEEP_LIQUID_VOLUME = 200.0f;
+
 void drft::system::LiquidSystem::init()
 {
 	_grid = &(_registry.ctx().get<spatial::WorldGrid&>());
@@ -32,41 +36,47 @@ void drft::system::LiquidSystem::init()
 
 void drft::system::LiquidSystem::update()
 {
-	auto liquidAffectedView = _registry.view<MaterialComponent, PositionComponent>(entt::exclude<LiquidComponent, FlyingComponent>);
-	for (auto [entity, material, pos] : liquidAffectedView.each())
+	std::unordered_map<sf::Vector3i, entt::entity> liquidPositions;
+	auto liquidView = _registry.view<PositionComponent, LiquidComponent>();
+	for (auto&& [entity, position, liquid] : liquidView.each())
 	{
-		auto liquidEntity = getLiquidAt(pos.tile);
-		if (auto liquid = _registry.try_get<LiquidComponent>(liquidEntity))
-		{
-			_registry.emplace_or_replace<InLiquidComponent>(entity, liquid->volume);
-		}
+		liquidPositions.emplace(position.tile, entity);
 	}
 
-	auto inLiquidView = _registry.view<InLiquidComponent, PositionComponent>();
-	for (auto [entity, inLiquid, pos] : inLiquidView.each())
+	auto liquidAffectedView = _registry.view<MaterialComponent, PositionComponent>
+		(entt::exclude<LiquidComponent, FlyingComponent, InLiquidComponent>);
+	for (auto&& [entity, material, pos] : liquidAffectedView.each())
 	{
-		auto liquidEntity = getLiquidAt(pos.tile);
-		if (liquidEntity != entt::null && inLiquid.volume > 200.0f)
+		if (!liquidPositions.contains(pos.tile)) continue;
+
+		auto& liquid = _registry.get<LiquidComponent>(liquidPositions.at(pos.tile));
+		_registry.emplace<InLiquidComponent>(entity, liquid.volume);
+	}
+
+	for (auto e : _inLiquidEffects)
+	{
+		_registry.destroy(e);
+	}
+	_inLiquidEffects.clear();
+
+	auto inLiquidView = _registry.view<InLiquidComponent, PositionComponent>();
+	for (auto&& [entity, inLiquid, pos] : inLiquidView.each())
+	{
+		if (!liquidPositions.contains(pos.tile))
+		{
+			_registry.remove<InLiquidComponent>(entity);
+			continue;
+		}
+
+		auto liquidEntity = liquidPositions.at(pos.tile);
+		if (inLiquid.volume > DEEP_LIQUID_VOLUME)
 		{
 			if (auto render = _registry.try_get<RenderComponent>(liquidEntity))
 			{
 				addInLiquidEffect(pos.tile, render->color);
 			}
 		}
-		else
-		{
-			_registry.remove<InLiquidComponent>(entity);
-		}
 	}
-}
-
-void drft::system::LiquidSystem::updateEnd()
-{
-	for (auto e : _inLiquidEffects)
-	{
-		_registry.destroy(e);
-	}
-	_inLiquidEffects.clear();
 }
 
 void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector3i position, sf::Color color)
@@ -75,7 +85,7 @@ void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector3i position, sf::Co
 	auto effect = entt::handle{ _registry, _registry.create() };
 	RenderComponent renderComponent =
 	{
-		.texture = entt::hashed_string("liquid"),
+		.texture = "liquid"_hs,
 		.uvSize = DefaultTileTextureSize,
 		.uvCoords = {2, 0},
 		.layer = 5u,
@@ -83,7 +93,6 @@ void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector3i position, sf::Co
 	};
 	effect.emplace<RenderComponent>(renderComponent);
 	effect.emplace<PositionComponent>(spatial::asTileSpace(position));
-	effect.emplace<component::tag::InViewport>();
 	_inLiquidEffects.push_back(effect.entity());
 }
 
@@ -110,6 +119,9 @@ void drft::system::LiquidSystem::onTurnEndEvent(events::TurnEndEvent& ev) const
 
 void drft::system::LiquidSystem::onUpdateInLiquid(entt::registry& registry, entt::entity entity)
 {
+	auto& inLiquid = registry.get<InLiquidComponent>(entity);
+	if (inLiquid.volume < DEEP_LIQUID_VOLUME) return;
+
 	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
 		stamina->baseConsumption += 1.f;
@@ -118,6 +130,9 @@ void drft::system::LiquidSystem::onUpdateInLiquid(entt::registry& registry, entt
 
 void drft::system::LiquidSystem::onRemoveInLiquid(entt::registry& registry, entt::entity entity)
 {
+	auto& inLiquid = registry.get<InLiquidComponent>(entity);
+	if (inLiquid.volume < DEEP_LIQUID_VOLUME) return;
+
 	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
 		stamina->baseConsumption -= 1.f;
