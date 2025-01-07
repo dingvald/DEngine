@@ -51,9 +51,6 @@ namespace drft
 		};
 		StateStack _stateStack{ _stateContext };
 
-		float _dtSinceLastRender = 0.0f;
-		float _dtSinceLastFixedUpdate = 0.0f;
-
 		bool _showDebug;
 		bool _isFullScreen = false;
 	};
