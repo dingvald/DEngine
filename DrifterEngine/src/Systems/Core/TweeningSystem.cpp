@@ -3,6 +3,7 @@
 #include <Systems/HelperClasses/InputBuffer.h>
 #include <Spatial/Conversions.h>
 #include <Utility/Vector3Utils.h>
+#include <Engine/EngineConstants.h>
 
 #include <Components/PositionComponent.h>
 #include <Components/TweeningComponent.h>
@@ -23,7 +24,7 @@ void drft::system::TweeningSystem::update()
 	auto view = _registry.view<PositionComponent, TweeningComponent>();
 	for (auto&& [entity, position, tweening] : view.each())
 	{
-		tweening.elapsed += timeInc;
+		tweening.elapsed += timeInc * SECONDS_PER_FRAME;
 
 		const Tween& tween = tweening.tweens.at(tweening.index);
 		const sf::Vector3f start = tweening.index > 0 ? tweening.tweens.at(tweening.index - 1).targetOffset : sf::Vector3f{0, 0, 0};
