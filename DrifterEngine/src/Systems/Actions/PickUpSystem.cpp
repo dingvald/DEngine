@@ -35,6 +35,7 @@ void drft::system::PickUpSystem::update()
 
 		auto& item = _registry.get<ItemComponent>(items.front());
 
+		// Try to put directly into dominant hand
 		bool putDirectlyInHand = false;
 		if (auto body = _registry.try_get<BodyComponent>(entity))
 		{
@@ -61,10 +62,9 @@ void drft::system::PickUpSystem::update()
 				{
 					cont.contents.push_back(item.id);
 				});
-
 			ActorSystem::completeAction({ _registry, entity }, ActionCategory::Act);
 		}
 	}
 
-	_registry.clear<component::action::Drop>();
+	_registry.clear<component::action::PickUp>();
 }
