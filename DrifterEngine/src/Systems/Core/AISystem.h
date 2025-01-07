@@ -2,9 +2,8 @@
 #include <Systems/System.h>
 
 #include <AI/Utility/UtilityAI.h>
-
-class AIDataClearingHouse;
-class AiActionRegistry;
+#include <AI/InputClearingHouse/AIDataClearingHouse.h>
+#include <AI/AiActions/AiActionRegistry.h>
 
 namespace drft::system
 {
@@ -20,7 +19,7 @@ namespace drft::system
 	private:
 		UtilityAI<entt::entity> _utility;
 
-		std::unique_ptr<AIDataClearingHouse> _inputClearingHouse;
-		std::unique_ptr<AiActionRegistry> _actionRegistry;
+		AIDataClearingHouse _inputClearingHouse{_registry};
+		AiActionRegistry _actionRegistry;
 	};
 }
