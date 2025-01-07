@@ -1,6 +1,6 @@
 #pragma once
 
-class IAiAction;
+#include <AI/AiActions/IAiAction.h>
 
 class AiActionRegistry
 {
