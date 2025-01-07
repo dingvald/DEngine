@@ -77,13 +77,13 @@ void drft::system::ChunkManager::updateChunkStates(const CameraInfo& camera)
 	}
 
 	// Then, scan for chunks to save
-	for (auto& [coord, chunk] : _chunks)
+	for (auto&& [coord, chunk] : _chunks)
 	{
 		if (chunk.getState() != spatial::ChunkState::Active) continue;
 
 		if (isWithinChunkSaveDisk(coord, cameraChunkPosition)) continue;
 
-		_toSave.push(coord);
+		_toSave.push_back(coord);
 		chunk.setState(spatial::ChunkState::ToSave);
 	}
 }
@@ -103,17 +103,20 @@ void drft::system::ChunkManager::processBuildQueue()
 {
 	if (_toBuild.empty()) return;
 
-
-
-	ChunkPosition coord = _toBuild.front();
-	auto status = spatial::ioStatus::Busy;
-	spatial::VirtualChunk& chunk = _chunks.at(coord);
-	status = chunk.build(_registry);
-
-	// Always build in order
-	if (status == spatial::ioStatus::Done)
+	std::vector<ChunkPosition> toRemove;
+	for (auto&& coord : _toBuild)
 	{
-		_toBuild.pop();
+		spatial::VirtualChunk& chunk = _chunks.at(coord);
+
+		spatial::ioStatus status = chunk.build(_registry);
+		if (status == spatial::ioStatus::Done)
+		{
+			toRemove.push_back(coord);
+		}
+	}
+	for (auto&& coord : toRemove)
+	{
+		std::erase(_toBuild, coord);
 	}
 }
 
@@ -121,15 +124,20 @@ void drft::system::ChunkManager::processLoadQueue()
 {
 	if (_toLoad.empty()) return;
 
-	ChunkPosition coord = _toLoad.front();
-	auto status = spatial::ioStatus::Busy;
-	spatial::VirtualChunk& chunk = _chunks.at(coord);
-	status = chunk.asyncLoad(_registry, _serializer);
-
-	// Always load in order
-	if (status == spatial::ioStatus::Done)
+	std::vector<ChunkPosition> toRemove;
+	for (auto&& coord : _toLoad)
 	{
-		_toLoad.pop();
+		spatial::VirtualChunk& chunk = _chunks.at(coord);
+
+		spatial::ioStatus status = chunk.asyncLoad(_registry, _serializer);
+		if (status == spatial::ioStatus::Done)
+		{
+			toRemove.push_back(coord);
+		}
+	}
+	for (auto&& coord : toRemove)
+	{
+		std::erase(_toLoad, coord);
 	}
 }
 
@@ -137,23 +145,22 @@ void drft::system::ChunkManager::processSaveQueue()
 {
 	if (_toSave.empty()) return;
 
-	ChunkPosition coord = _toSave.front();
-	auto status = spatial::ioStatus::Busy;
-	spatial::VirtualChunk& chunk = _chunks.at(coord);
-	status = chunk.asyncSave(_registry, _serializer);
+	std::vector<ChunkPosition> toRemove;
+	for (auto&& coord : _toSave)
+	{
+		spatial::VirtualChunk& chunk = _chunks.at(coord);
 
-	// Can save out of order
-	if (status == spatial::ioStatus::Busy)
-	{
-		// Send to the back of the queue
-		ChunkPosition temp = _toSave.front();
-		_toSave.push(temp);
+		spatial::ioStatus status = chunk.asyncSave(_registry, _serializer);
+		if (status == spatial::ioStatus::Done)
+		{
+			toRemove.push_back(coord);
+		}
 	}
-	else
+	for (auto&& coord : toRemove)
 	{
+		std::erase(_toSave, coord);
 		_toDelete.push_back(coord);
 	}
-	_toSave.pop();
 }
 
 void drft::system::ChunkManager::loadOrBuildChunk(ChunkPosition position, spatial::VirtualChunk& chunk)
@@ -161,12 +168,12 @@ void drft::system::ChunkManager::loadOrBuildChunk(ChunkPosition position, spatia
 	if (_serializer.isSerialized(position))
 	{
 		chunk.setState(spatial::ChunkState::ToLoad);
-		_toLoad.push(std::move(position));
+		_toLoad.push_back(std::move(position));
 	}
 	else
 	{
 		chunk.setState(spatial::ChunkState::ToBuild);
-		_toBuild.push(std::move(position));
+		_toBuild.push_back(std::move(position));
 	}
 }
 

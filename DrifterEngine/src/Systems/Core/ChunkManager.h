@@ -41,9 +41,9 @@ namespace drft::system
 		std::unordered_map<ChunkPosition, spatial::VirtualChunk> _chunks;
 		ChunkSerializer _serializer;
 
-		std::queue<ChunkPosition> _toBuild;
-		std::queue<ChunkPosition> _toLoad;
-		std::queue<ChunkPosition> _toSave;
+		std::vector<ChunkPosition> _toBuild;
+		std::vector<ChunkPosition> _toLoad;
+		std::vector<ChunkPosition> _toSave;
 		std::vector<ChunkPosition> _toDelete;
 	};
 }
