@@ -41,7 +41,7 @@ void drft::system::MeleeAttackActionSystem::update()
 	{
 		Tween moveToTween = {
 			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.3f,
-			.time = 4,
+			.time = 0.1f,
 			.easing = Easing::easeOutBack,
 			.onFinish = [this, entity, action = meleeAttackAction](entt::handle) {
 				processMeleeAttackAction(entity, std::move(action));
@@ -61,6 +61,7 @@ void drft::system::MeleeAttackActionSystem::onMeleeAttackActionAdded(entt::regis
 	{
 		meleeAttack.damageTypes["crushing"] += attackerComponent->baseDamage;
 	}
+
 }
 
 void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entity entity, MeleeAttackAction action) const
