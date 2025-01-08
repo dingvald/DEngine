@@ -9,7 +9,7 @@ namespace drft::system
 		using System::System;
 
 		void start() override;
-		void updateEnd() override;
+		void render(sf::RenderTarget& target) override;
 		void shutdown() override;
 
 	private:

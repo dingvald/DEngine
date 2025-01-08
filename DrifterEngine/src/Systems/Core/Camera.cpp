@@ -23,7 +23,7 @@ void drft::system::Camera::start()
 	_registry.emplace<PositionComponent>(_camera, TilePosition{0,0,0});
 }
 
-void drft::system::Camera::updateEnd()
+void drft::system::Camera::render(sf::RenderTarget& target)
 {
 	auto cameraView = _registry.view<CameraComponent, PositionComponent>();
 
