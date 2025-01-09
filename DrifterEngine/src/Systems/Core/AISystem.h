@@ -7,7 +7,7 @@
 
 namespace drft::system
 {
-	class AISystem : public System
+	class AiSystem : public System
 	{
 	public:
 		using System::System;
@@ -15,6 +15,8 @@ namespace drft::system
 	private:
 		void init() override;
 		void update() override;
+
+		std::pair<const IAiAction*, entt::entity> selectAction(const UtilityAI<entt::entity>::ScoredActions& actions, entt::const_handle actor) const;
 
 	private:
 		UtilityAI<entt::entity> _utility;

@@ -24,7 +24,7 @@
 #include "Systems/Core/RealityBubble.h"
 #include "Systems/Core/PlayerInput.h"
 #include "Systems/Core/ArtificialInput.h"
-#include <Systems/Core/AISystem.h>
+#include <Systems/Core/AiSystem.h>
 #include "Systems/Core/Camera.h"
 #include <Systems/Core/MouseVisualizationSystem.h>
 #include "Systems/Core/ChunkManager.h"
@@ -128,7 +128,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<MouseVisualizationSystem>();
 	_systems->add<PlayerInput>();
 	_systems->add<ArtificialInput>();
-	_systems->add<AISystem>();
+	_systems->add<AiSystem>();
 
 	_systems->add<PathNavSystem>();
 	_systems->add<ProjectileSystem>();
@@ -143,7 +143,6 @@ void drft::SimulationState::importSystems()
 	_systems->add<HealthSystem>();
 	_systems->add<DeathSystem>();
 	_systems->add<LevelingSystem>();
-	_systems->add<Camera>();
 	_systems->add<ChunkManager>();
 	_systems->add<TweeningSystem>();
 
@@ -177,6 +176,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<StaminaSystem>();
 
 	// Rendering Systems - Be mindful of the order
+	_systems->add<Camera>();
 	_systems->add<CullingSystem>();
 	_systems->add<PlayerFOVSystem>();
 	_systems->add<LightingSystem>();
