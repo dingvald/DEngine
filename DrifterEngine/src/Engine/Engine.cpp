@@ -274,12 +274,14 @@ void drft::Engine::toggleFullscreen()
 	if (_isFullScreen)
 	{
 		_window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Drifter Engine");
+		_window.setVerticalSyncEnabled(false);
 		_isFullScreen = false;
 		std::cout << "Window set to windowed mode" << std::endl;
 	}
 	else
 	{
 		_window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Drifter Engine", sf::Style::Fullscreen);
+		_window.setVerticalSyncEnabled(true);
 		_isFullScreen = true;
 		std::cout << "Window set to fullscreen mode" << std::endl;
 	}
