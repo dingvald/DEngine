@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine/States/State.h>
 #include <Engine/StateStack.h>
+#include <Spatial/WorldGrid.h>
 
 namespace drft
 {
@@ -35,7 +36,7 @@ namespace drft
 		bool isPlayerAlive() const;
 
 	private:
-		std::unique_ptr<spatial::WorldGrid> _world;
+		spatial::WorldGrid _world;
 		std::unique_ptr<system::SystemScheduler> _systems;
 		entt::handle _player{};
 	};

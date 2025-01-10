@@ -5,6 +5,7 @@
 
 #include <Factory/EntityFactory.h>
 #include <Components/PositionComponent.h>
+#include <Components/CameraTargetComponent.h>
 #include <Spatial/WorldGrid.h>
 
 #include "Systems/SystemScheduler.h"
@@ -76,7 +77,6 @@ drft::SimulationState::SimulationState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
 	_systems = std::make_unique<system::SystemScheduler>(getContext().registry);
-	_world = std::make_unique<spatial::WorldGrid>();
 
 	setupRegistryContext();
 	importSystems();
@@ -113,7 +113,7 @@ void drft::SimulationState::onPop()
 
 void drft::SimulationState::setupRegistryContext()
 {
-	getContext().registry.ctx().emplace<spatial::WorldGrid&>(*_world);
+	getContext().registry.ctx().emplace<spatial::WorldGrid&>(_world);
 }
 
 void drft::SimulationState::importSystems()
@@ -204,6 +204,8 @@ void drft::SimulationState::loadPlayer()
 				pos.tile = { 1024, 1024, 0 };
 			});
 	}
+
+	_player.emplace<CameraTargetComponent>();
 }
 
 void drft::SimulationState::savePlayer()

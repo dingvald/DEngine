@@ -8,9 +8,14 @@ namespace drft::system
 	public:
 		using System::System;
 
+		
+
+	private:
 		void start() override;
 		void render(sf::RenderTarget& target) override;
 		void shutdown() override;
+
+		entt::entity tryFindTarget() const;
 
 	private:
 		entt::entity _camera = entt::null;

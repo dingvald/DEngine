@@ -3,7 +3,7 @@
 
 #include "Components/CameraComponent.h"
 #include "Components/PositionComponent.h"
-#include "Components/PlayerComponent.h"
+#include "Components/CameraTargetComponent.h"
 
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
@@ -29,15 +29,7 @@ void drft::system::Camera::render(sf::RenderTarget& target)
 
 	for (auto [entity, camera, pos] : cameraView.each())
 	{
-		if (camera.target == entt::null)
-		{
-			auto playerView = _registry.view<PlayerComponent, PositionComponent>();
-			for (auto [entity, _, playerPos] : playerView.each())
-			{
-				camera.target = entity;
-				pos.tile = playerPos.tile;
-			}
-		}
+		camera.target = tryFindTarget();
 	}
 
 	for (auto [entity, camera, pos] : cameraView.each())
@@ -54,4 +46,14 @@ void drft::system::Camera::render(sf::RenderTarget& target)
 void drft::system::Camera::shutdown()
 {
 	_registry.destroy(_camera);
+}
+
+entt::entity drft::system::Camera::tryFindTarget() const
+{
+	auto view = _registry.view<CameraTargetComponent, PositionComponent>();
+	for (auto entity : view)
+	{
+		return entity;
+	}
+	return entt::null;
 }
