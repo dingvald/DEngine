@@ -16,7 +16,7 @@ void drft::system::WaitActionSystem::update()
 		entt::handle handle = { _registry, entity };
 
 		handle.emplace_or_replace<component::action::ConsumeStamina>(-0.5f);
-		ActorSystem::completeAction(handle, ActionCategory::None);
+		ActorSystem::setActionComplete(handle, ActionCategory::None);
 		handle.remove<WaitAction>();
 	}
 }

@@ -33,7 +33,7 @@ void drft::system::AbilityActionSystem::update()
 			{
 			case AbilityTargetingType::Auto:
 				ability.perform(handle);
-				ActorSystem::completeAction(handle, ActionCategory::Act, ability.getCost());
+				ActorSystem::setActionComplete(handle, ActionCategory::Act, ability.getCost());
 				break;
 			case AbilityTargetingType::SelectDirection:
 			{
@@ -42,7 +42,7 @@ void drft::system::AbilityActionSystem::update()
 					[tilePosition, &ability, &handle](sf::Vector2i direction) -> bool
 					{
 						ability.perform(handle, tilePosition + spatial::asTileSpace(direction));
-						ActorSystem::completeAction(handle, ActionCategory::Act, ability.getCost());
+						ActorSystem::setActionComplete(handle, ActionCategory::Act, ability.getCost());
 						return true;
 					});
 			}
@@ -54,7 +54,7 @@ void drft::system::AbilityActionSystem::update()
 				handle.emplace<component::action::SelectTarget>(range, targetingShape,
 					[&ability, handle](sf::Vector3i position) -> bool {
 						ability.perform(handle, spatial::asTileSpace(position));
-						ActorSystem::completeAction(handle, ActionCategory::Act, ability.getCost());
+						ActorSystem::setActionComplete(handle, ActionCategory::Act, ability.getCost());
 						return true;
 					});
 			}
@@ -76,7 +76,7 @@ void drft::system::AbilityActionSystem::update()
 		if (ability.isValid(handle))
 		{
 			ability.perform(handle, action.target);
-			ActorSystem::completeAction(handle, ActionCategory::Act, ability.getCost());
+			ActorSystem::setActionComplete(handle, ActionCategory::Act, ability.getCost());
 		}
 
 		handle.remove<AbilityAction>();

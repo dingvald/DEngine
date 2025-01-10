@@ -62,7 +62,7 @@ void drft::system::PickUpSystem::update()
 				{
 					cont.contents.push_back(item.id);
 				});
-			ActorSystem::completeAction({ _registry, entity }, ActionCategory::Act);
+			ActorSystem::setActionComplete({ _registry, entity }, ActionCategory::Act);
 		}
 	}
 

@@ -200,6 +200,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
+    <ClCompile Include="src\AI\AiActions\IAiAction.cpp" />
+    <ClCompile Include="src\AI\AiActions\MeleeAttackAiAction.cpp" />
     <ClCompile Include="src\AI\InputClearingHouse\AIDataClearingHouse.cpp" />
     <ClCompile Include="src\AI\Blackboard\Blackboard.cpp" />
     <ClCompile Include="src\AI\InputClearingHouse\InputFunctions.cpp" />
@@ -208,7 +210,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\AI\Utility\Impl\UtilityArchetype.cpp" />
     <ClCompile Include="src\AI\Utility\UtilityAI.cpp" />
     <ClCompile Include="src\Systems\Actions\AbilityActionSystem.cpp" />
-    <ClCompile Include="src\Systems\Core\AISystem.cpp" />
+    <ClCompile Include="src\Systems\Core\AiSystem.cpp" />
     <ClCompile Include="src\Systems\Core\TweeningSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\ContainerWrapper.cpp" />
     <ClCompile Include="src\Systems\Helpers\EasingFunctions.cpp" />
@@ -455,13 +457,14 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\AI\Utility\Impl\UtilityArchetype.h" />
     <ClInclude Include="src\Components\Actions\AbilityAction.h" />
     <ClInclude Include="src\Components\Actions\WaitAction.h" />
+    <ClInclude Include="src\Components\CameraTargetComponent.h" />
     <ClInclude Include="src\Components\CurrentActorComponent.h" />
     <ClInclude Include="src\Components\DominantHandComponent.h" />
     <ClInclude Include="src\Components\TweeningComponent.h" />
     <ClInclude Include="src\Components\UtilityAIComponent.h" />
     <ClInclude Include="src\Components\VisionComponent.h" />
     <ClInclude Include="src\Systems\Actions\AbilityActionSystem.h" />
-    <ClInclude Include="src\Systems\Core\AISystem.h" />
+    <ClInclude Include="src\Systems\Core\AiSystem.h" />
     <ClInclude Include="src\Systems\Core\TweeningSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\ContainerWrapper.h" />
     <ClInclude Include="src\Systems\Helpers\EasingFunctions.h" />

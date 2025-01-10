@@ -59,11 +59,11 @@ void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, Move
 	entt::handle handle = { _registry, entity };
 	if (action.direction == sf::Vector2i{ 0,0 })
 	{
-		ActorSystem::completeAction(handle, ActionCategory::None, 0);
+		ActorSystem::setActionComplete(handle, ActionCategory::None, 0);
 	}
 
 	move(handle, action.direction);
-	ActorSystem::completeAction(handle, ActionCategory::Move);
+	ActorSystem::setActionComplete(handle, ActionCategory::Move);
 }
 
 void drft::system::MoveActionSystem::move(entt::handle entity, sf::Vector2i direction) const

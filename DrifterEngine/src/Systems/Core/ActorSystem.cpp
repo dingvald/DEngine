@@ -87,7 +87,15 @@ void drft::system::ActorSystem::shutdown()
 	_registry.destroy(_timeKeeper);
 }
 
-void drft::system::ActorSystem::completeAction(entt::handle entity, ActionCategory category, int cost)
+void drft::system::ActorSystem::setActionInProgress(entt::handle entity)
+{
+	if (auto currentActor = entity.try_get<CurrentActorComponent>())
+	{
+		currentActor->state = CurrentActorState::InProgress;
+	}
+}
+
+void drft::system::ActorSystem::setActionComplete(entt::handle entity, ActionCategory category, int cost)
 {
 	float actionCost = cost;
 	if (const auto actorComp = entity.try_get<ActorComponent>())

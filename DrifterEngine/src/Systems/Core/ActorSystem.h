@@ -18,7 +18,8 @@ namespace drft::system
 	public:
 		using System::System;
 
-		static void completeAction(entt::handle entity, ActionCategory category, int cost = BASE_ACTION_COST);
+		static void setActionInProgress(entt::handle);
+		static void setActionComplete(entt::handle entity, ActionCategory category, int cost = BASE_ACTION_COST);
 
 	private:
 		void init() override;

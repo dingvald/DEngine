@@ -42,14 +42,25 @@ void drft::system::MeleeAttackActionSystem::update()
 		Tween moveToTween = {
 			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.3f,
 			.time = 0.1f,
-			.easing = Easing::easeOutBack,
-			.onFinish = [this, entity, action = meleeAttackAction](entt::handle) {
-				processMeleeAttackAction(entity, std::move(action));
+			.easing = Easing::linear,
+			.onFinish = [this, action = meleeAttackAction](entt::handle entity) {
+				onCollideWithTarget(entity, std::move(action));
 			}
 		};
+		Tween moveBackTween = {
+			.targetOffset = {0.f, 0.f, 0.f},
+			.time = 0.2f,
+			.easing = Easing::easeOutBack,
+			.onFinish = [this](entt::handle entity) {
+				onReturnToStartPosition(entity);
+			}
+		};
+
 		entt::handle handle = { _registry, entity };
 		TweeningSystem::tween(handle, moveToTween);
+		TweeningSystem::tween(handle, moveBackTween);
 
+		ActorSystem::setActionInProgress(handle);
 		handle.remove<MeleeAttackAction>();
 	}
 }
@@ -64,7 +75,7 @@ void drft::system::MeleeAttackActionSystem::onMeleeAttackActionAdded(entt::regis
 
 }
 
-void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entity entity, MeleeAttackAction action) const
+void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle entity, MeleeAttackAction action) const
 {
 	for (auto target : action.targets)
 	{
@@ -89,8 +100,11 @@ void drft::system::MeleeAttackActionSystem::processMeleeAttackAction(entt::entit
 			.animationSpeed = 20.0f
 			});
 	}
+}
 
-	ActorSystem::completeAction({ _registry, entity }, ActionCategory::Act);
+void drft::system::MeleeAttackActionSystem::onReturnToStartPosition(entt::handle entity) const
+{
+	ActorSystem::setActionComplete(entity, ActionCategory::Act);
 }
 
 entt::id_type drft::system::MeleeAttackActionSystem::getEffectTexture(const std::unordered_map<std::string, int>& damageTypes) const

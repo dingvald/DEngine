@@ -573,7 +573,7 @@
     <ClCompile Include="src\AI\Utility\Impl\ResponseCurve.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Core\AISystem.cpp">
+    <ClCompile Include="src\Systems\Core\AiSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AI\Blackboard\Blackboard.cpp">
@@ -595,6 +595,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\AiActions\MeleeAttackAiAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\AiActions\IAiAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2945,7 +2951,7 @@
     <ClInclude Include="src\Components\VisionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Core\AISystem.h">
+    <ClInclude Include="src\Systems\Core\AiSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AI\Blackboard\Blackboard.h">
@@ -2985,6 +2991,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AI\AiActions\MeleeAttackAiAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\CameraTargetComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

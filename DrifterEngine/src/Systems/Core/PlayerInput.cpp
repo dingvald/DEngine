@@ -81,8 +81,10 @@ void drft::system::PlayerInput::update()
 {
 	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
 	auto turnView = _registry.view<PlayerComponent, CurrentActorComponent>();
-	for (auto entity : turnView)
+	for (auto&& [entity, player, currentActor] : turnView.each())
 	{
+		if (currentActor.state != CurrentActorState::Pending) continue;
+
 		const auto key = inputBuffer.pop();
 		if (!_actionMap.contains(key)) continue;
 
