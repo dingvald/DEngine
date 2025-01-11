@@ -247,6 +247,8 @@ void drft::Engine::passEventToState(sf::Event event)
 
 void drft::Engine::swapToMouse()
 {
+	_window.setMouseCursorVisible(true);
+
 	sf::Event ev{};
 	ev.type = sf::Event::MouseEntered;
 	_gui.handleEvent(ev);
@@ -256,6 +258,8 @@ void drft::Engine::swapToMouse()
 
 void drft::Engine::swapToKeyboard()
 {
+	_window.setMouseCursorVisible(false);
+
 	sf::Event ev{};
 	ev.type = sf::Event::MouseLeft;
 	_gui.handleEvent(ev);
