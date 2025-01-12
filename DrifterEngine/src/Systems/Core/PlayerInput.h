@@ -1,19 +1,8 @@
 #pragma once
 #include "Systems/System.h"
 
-namespace drft::action
-{
-	struct Action;
-}
-
 namespace drft::system
 {
-	struct KeyState
-	{
-		float timeHeld = 0;
-		bool active = false;
-	};
-
 	class ActionMap
 	{
 	public:
@@ -35,7 +24,6 @@ namespace drft::system
 		virtual void update() override;
 
 	private:
-		std::unordered_map<sf::Keyboard::Key, KeyState> _keyState;
 		ActionMap _actionMap;
 	};
 
