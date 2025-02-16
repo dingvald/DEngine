@@ -6,7 +6,7 @@
 #include "Components/Actions/InteractionAction.h"
 #include "Components/Actions/WaitAction.h"
 #include "Components/SprintingComponent.h"
-#include "Components/PlayerComponent.h"
+#include "Components/PlayerInputComponent.h"
 
 #include "Components/Tags.h"
 #include "Systems/HelperClasses/InputBuffer.h"
@@ -80,7 +80,7 @@ void drft::system::PlayerInput::init()
 void drft::system::PlayerInput::update()
 {
 	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
-	auto turnView = _registry.view<PlayerComponent, CurrentActorComponent>();
+	auto turnView = _registry.view<PlayerInputComponent, CurrentActorComponent>();
 	for (auto&& [entity, player, currentActor] : turnView.each())
 	{
 		if (currentActor.state != CurrentActorState::Pending) continue;

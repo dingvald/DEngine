@@ -14,7 +14,7 @@
 
 #include "Components/DescriptionComponent.h"
 #include "Components/PositionComponent.h"
-#include "Components/PlayerComponent.h"
+#include "Components/PlayerInputComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/HealthComponent.h"
 #include "Components/LevelingComponent.h"
@@ -51,7 +51,7 @@ void drft::system::HUD::init()
 
 void drft::system::HUD::update()
 {
-	auto view = _registry.view<PlayerComponent>();
+	auto view = _registry.view<PlayerInputComponent>();
 	auto player = entt::handle(_registry, view.front());
 
 	// Player relevant displays
@@ -228,7 +228,7 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 			[this](entt::entity entity) -> bool
 			{
 				if (_registry.all_of<DescriptionComponent>(entity)
-				&& !_registry.any_of<PlayerComponent>(entity))
+				&& !_registry.any_of<PlayerInputComponent>(entity))
 				{
 					return true;
 				}
@@ -383,7 +383,7 @@ void drft::system::HUD::onHotbarPressed(entt::registry& registry, entt::entity e
 
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)
 {
-	if (!registry.all_of<PlayerComponent>(entity)) return;
+	if (!registry.all_of<PlayerInputComponent>(entity)) return;
 
 	if (auto health = registry.try_get<HealthComponent>(entity))
 	{
@@ -399,7 +399,7 @@ void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity enti
 
 void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity entity)
 {
-	if (!registry.all_of<PlayerComponent>(entity)) return;
+	if (!registry.all_of<PlayerInputComponent>(entity)) return;
 
 	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{

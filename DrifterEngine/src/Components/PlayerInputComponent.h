@@ -3,27 +3,28 @@
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
+#include <Actions/ActionTypeIds.h>
 
-struct PlayerComponent
+struct PlayerInputComponent
 {
-	int sightRange = 10;
+	ActionID selectedAction = ActionID::None;
+
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "Player";
 	static void bind()
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<PlayerComponent, NAME>()
-			.prop("serialize"_hs)
-			.data<&PlayerComponent::sightRange>("sightRange"_hs);
+		snapshot::reflectComponent<PlayerInputComponent, NAME>()
+			.prop("serialize"_hs);
 	}
 };
 
 namespace cereal
 {
 	template<class Archive>
-	void serialize(Archive& archive, PlayerComponent& player)
+	void serialize(Archive& archive, PlayerInputComponent& player)
 	{
-		archive(player.sightRange);
+		archive(player.selectedAction);
 	}
 }

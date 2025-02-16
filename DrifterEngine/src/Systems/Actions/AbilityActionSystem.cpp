@@ -5,7 +5,7 @@
 
 #include <Components/Actions/AbilityAction.h>
 #include <Components/Components.h>
-#include <Components/PlayerComponent.h>
+#include <Components/PlayerInputComponent.h>
 #include <Components/PositionComponent.h>
 
 #include <Spatial/Conversions.h>
@@ -22,7 +22,7 @@ void drft::system::AbilityActionSystem::init()
 
 void drft::system::AbilityActionSystem::update()
 {
-	auto playerView = _registry.view<AbilityAction, PlayerComponent>();
+	auto playerView = _registry.view<AbilityAction, PlayerInputComponent>();
 	for (auto&& [entity, action, player] : playerView.each())
 	{
 		const auto& ability = AbilityRegistry::get(action.ability);
@@ -68,7 +68,7 @@ void drft::system::AbilityActionSystem::update()
 		handle.remove<AbilityAction>();
 	}
 
-	auto nonPlayerView = _registry.view<AbilityAction>(entt::exclude<PlayerComponent>);
+	auto nonPlayerView = _registry.view<AbilityAction>(entt::exclude<PlayerInputComponent>);
 	for (auto&& [entity, action] : nonPlayerView.each())
 	{
 		const auto& ability = AbilityRegistry::get(action.ability);

@@ -4,7 +4,7 @@
 #include <Components/Actions/AbilityAction.h>
 #include "Components/Components.h"
 #include <Components/CurrentActorComponent.h>
-#include "Components/PlayerComponent.h"
+#include "Components/PlayerInputComponent.h"
 #include "Components/HotbarComponent.h"
 #include "Components/PositionComponent.h"
 
@@ -15,7 +15,7 @@
 
 void drft::system::HotbarSystem::start()
 {
-	auto playerView = _registry.view<PlayerComponent>();
+	auto playerView = _registry.view<PlayerInputComponent>();
 	for (auto entity : playerView)
 	{
 		if (_registry.all_of<HotbarComponent>(entity)) continue;

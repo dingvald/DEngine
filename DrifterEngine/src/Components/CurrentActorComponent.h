@@ -1,6 +1,4 @@
 #pragma once
-
-
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
@@ -16,6 +14,7 @@ struct CurrentActorComponent
 {
 	CurrentActorState state = CurrentActorState::Pending;
 	int pointsSpent = 0;
+	int time = 0;
 
 private:
 	friend class ComponentMetaBinder;

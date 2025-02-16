@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PlayerFOVSystem.h"
 #include "Components/Components.h"
-#include "Components/PlayerComponent.h"
+#include "Components/PlayerInputComponent.h"
 #include "Components/ActorComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/LightBlockingComponent.h"
@@ -44,7 +44,7 @@ void drft::system::PlayerFOVSystem::render(sf::RenderTarget& target)
 		_lightBlockingPositions.emplace(pos.tile);
 	}
 
-	auto playerView = _registry.view<PlayerComponent, VisionComponent, PositionComponent>();
+	auto playerView = _registry.view<PlayerInputComponent, VisionComponent, PositionComponent>();
 	for (auto&& [entity, player, vision, pos] : playerView.each())
 	{
 		_fov->compute(pos.tile, vision.sightRange);

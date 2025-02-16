@@ -6,7 +6,7 @@
 #include "Components/DescriptionComponent.h"
 #include "Components/MaterialComponent.h"
 #include "Components/PositionComponent.h"
-#include "Components/PlayerComponent.h"
+#include "Components/PlayerInputComponent.h"
 #include "Components/ItemComponent.h"
 
 #include "Events/RequestStateChange.h"
@@ -51,7 +51,7 @@ void drft::system::DeathSystem::update()
 			}
 			chance *= 0.5;
 		}
-		if (_registry.any_of<PlayerComponent>(entity))
+		if (_registry.any_of<PlayerInputComponent>(entity))
 		{
 			std::filesystem::remove_all(".\\data\\savegame\\");
 			_dispatcher.trigger(events::RequestStateStackPush(States::GameOver));

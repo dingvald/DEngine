@@ -199,6 +199,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Actions\PlayerActionMap.cpp" />
+    <ClCompile Include="src\Utility\HashedString.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
     <ClCompile Include="src\AI\AiActions\IAiAction.cpp" />
     <ClCompile Include="src\AI\AiActions\MeleeAttackAiAction.cpp" />
@@ -430,6 +432,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Actions\PlayerActionMap.h" />
+    <ClInclude Include="src\Components\ArtificalInputComponent.h" />
+    <ClInclude Include="src\Utility\HashedString.h" />
     <ClInclude Include="deps\zlib\include\crc32.h" />
     <ClInclude Include="deps\zlib\include\deflate.h" />
     <ClInclude Include="deps\zlib\include\gzguts.h" />
@@ -440,6 +445,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="deps\zlib\include\zconf.h" />
     <ClInclude Include="deps\zlib\include\zlib.h" />
     <ClInclude Include="deps\zlib\include\zutil.h" />
+    <ClInclude Include="src\Actions\ActionTypeIds.h" />
     <ClInclude Include="src\AI\AiActions\AiActionRegistry.h" />
     <ClInclude Include="src\AI\AiActions\IAiAction.h" />
     <ClInclude Include="src\AI\AiActions\MeleeAttackAiAction.h" />
@@ -868,7 +874,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\MaterialComponent.h" />
     <ClInclude Include="src\Components\MyCraftableItemsComponent.h" />
     <ClInclude Include="src\Components\OpenableComponent.h" />
-    <ClInclude Include="src\Components\PlayerComponent.h" />
+    <ClInclude Include="src\Components\PlayerInputComponent.h" />
     <ClInclude Include="src\Components\PositionComponent.h" />
     <ClInclude Include="src\Components\ProjectileComponent.h" />
     <ClInclude Include="src\Components\PrototypeComponent.h" />

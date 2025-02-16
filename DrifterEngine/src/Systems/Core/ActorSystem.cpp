@@ -41,10 +41,13 @@ void drft::system::ActorSystem::update()
 	else if (storage.size() == 1)
 	{
 		auto currentActor = storage.begin();
+
 		switch (currentActor->state)
 		{
 		case CurrentActorState::Pending:
+			return;
 		case CurrentActorState::InProgress:
+			currentActor->time++;
 			return;
 		case CurrentActorState::Complete:
 			processPoints({ _registry, _currentActor }, currentActor->pointsSpent);
