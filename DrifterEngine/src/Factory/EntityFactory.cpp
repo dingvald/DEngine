@@ -7,11 +7,13 @@
 
 #include "Components/InheritanceComponent.h"
 #include "Components/PrototypeComponent.h"
-#include "Components/BodyComponent.h"
 
 #include <Utility/StandardLogger.h>
 
 using namespace entt::literals;
+
+static const char* COMPONENTS_KEY_NAME = "components";
+static const char* INHERITS_KEY_NAME = "inherits";
 
 drft::EntityFactory::EntityFactory()
 {
@@ -191,11 +193,11 @@ void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, co
 {
 	const auto entityObject = json.GetObject();
 
-	if (entityObject.HasMember("Inherits"))
+	if (entityObject.HasMember(INHERITS_KEY_NAME))
 	{
 		InheritanceRelationship newRelationship;
 		newRelationship.entityName = entityName;
-		for (auto&& base : entityObject["Inherits"].GetArray())
+		for (auto&& base : entityObject[INHERITS_KEY_NAME].GetArray())
 		{
 			auto baseName = std::string(base.GetString());
 			if (baseName.empty()) continue;
@@ -208,10 +210,10 @@ void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, co
 		_resolvedInheritance.insert(entityName);
 	}
 
-	if (entityObject.HasMember("Components"))
+	if (entityObject.HasMember(COMPONENTS_KEY_NAME))
 	{
 		// Iterate each component
-		for (auto&& component : entityObject["Components"].GetObject())
+		for (auto&& component : entityObject[COMPONENTS_KEY_NAME].GetObject())
 		{
 			auto componentName = component.name.GetString();
 			auto meta = entt::resolve(entt::hashed_string(componentName));
