@@ -14,7 +14,7 @@ struct CurrentActorComponent
 {
 	CurrentActorState state = CurrentActorState::Pending;
 	int pointsSpent = 0;
-	int time = 0;
+	int ticks = 0;
 
 private:
 	friend class ComponentMetaBinder;
