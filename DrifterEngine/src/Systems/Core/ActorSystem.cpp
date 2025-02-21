@@ -33,29 +33,7 @@ void drft::system::ActorSystem::start()
 
 void drft::system::ActorSystem::update()
 {
-	auto& storage = _registry.storage<CurrentActorComponent>();
-	if (storage.size() > 1)
-	{
-		throw std::exception("Cannot be more than one currently-acting actor");
-	}
-	else if (storage.size() == 1)
-	{
-		auto currentActor = storage.begin();
-
-		switch (currentActor->state)
-		{
-		case CurrentActorState::Pending:
-			return;
-		case CurrentActorState::InProgress:
-			currentActor->ticks++;
-			return;
-		case CurrentActorState::Complete:
-			processPoints({ _registry, _currentActor }, currentActor->pointsSpent);
-			break;
-		default:
-			break;
-		}
-	}
+	if (!handleCurrentActor()) return;
 
 	_registry.clear<CurrentActorComponent>();
 	refreshActorQueue();
@@ -121,6 +99,34 @@ void drft::system::ActorSystem::setActionComplete(entt::handle entity, ActionCat
 		currentActor->pointsSpent += static_cast<int>(actionCost);
 		currentActor->state = CurrentActorState::Complete;
 	}
+}
+
+bool drft::system::ActorSystem::handleCurrentActor() const
+{
+	auto& storage = _registry.storage<CurrentActorComponent>();
+	if (storage.size() > 1)
+	{
+		throw std::exception("Cannot be more than one currently-acting actor");
+	}
+	else if (storage.size() == 1)
+	{
+		auto currentActor = storage.begin();
+
+		switch (currentActor->state)
+		{
+		case CurrentActorState::Pending:
+			return false;
+		case CurrentActorState::InProgress:
+			currentActor->ticks++;
+			return false;
+		case CurrentActorState::Complete:
+			processPoints({ _registry, _currentActor }, currentActor->pointsSpent);
+			break;
+		default:
+			break;
+		}
+	}
+	return true;
 }
 
 void drft::system::ActorSystem::onActorRemove(entt::registry& registry, entt::entity entity)

@@ -27,6 +27,7 @@ namespace drft::system
 		void update() override;
 		void shutdown() override;
 
+		bool handleCurrentActor() const;
 		void onActorRemove(entt::registry& registry, entt::entity entity);
 		void processPoints(entt::handle entity, int points) const;
 		void tick();
