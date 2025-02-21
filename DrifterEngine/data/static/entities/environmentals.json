@@ -188,13 +188,13 @@
           "color": [ 65, 97, 63 ]
         },
         "Material": {
-          "blocks": true,
-          "weight": 400.0,
-          "materials": [
-            "Wood",
-            "Plant Fibre"
-          ]
+            "weight": 400.0,
+            "materials": [
+                "Wood",
+                "Plant Fibre"
+            ]
         },
+        "physical_blocking": {},
         "Health": {
           "max": 70.0
         },
@@ -207,67 +207,67 @@
       "Inherits": [
         "Object"
       ],
-      "Components": {
-        "Description": {
-          "name": "Boulder",
-          "description": "A very large chunk of rock."
-        },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 3, 2 ],
-          "layer": 2,
-          "color": [ 100, 100, 100 ]
-        },
-        "Material": {
-          "blocks": true,
-          "weight": 1000.0,
-          "materials": [ "Stone" ]
-        },
-        "Health": {
-          "max": 500.0
-        },
-        "LightBlocking": {
-          "opacity": 1.0
+        "Components": {
+            "Description": {
+                "name": "Boulder",
+                "description": "A very large chunk of rock."
+            },
+            "Render": {
+                "texture": "simple_tileset",
+                "uv_size": [ 16, 16 ],
+                "uv_coords": [ 3, 2 ],
+                "layer": 2,
+                "color": [ 100, 100, 100 ]
+            },
+            "Material": {
+                "weight": 1000.0,
+                "materials": [ "Stone" ]
+            },
+            "physical_blocking": {},
+            "Health": {
+                "max": 500.0
+            },
+            "LightBlocking": {
+                "opacity": 1.0
+            }
         }
-      }
     },
     "Iron Deposit": {
       "Inherits": [
         "Object"
       ],
-      "Components": {
-        "Description": {
-          "name": "Iron Deposit",
-          "description": "A deposit of iron ore."
-        },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 2, 4 ],
-          "layer": 3,
-          "color": [ 161, 157, 148 ]
-        },
-        "Material": {
-          "blocks": true,
-          "weight": 800.0,
-          "materials": [
-            "Stone",
-            "Iron"
-          ]
-        },
-        "Health": {
-          "max": 300.0
-        },
-        "LightBlocking": {
-          "opacity": 1.0
-        },
-        "LocalLightSource": {
-          "radius": 3,
-          "dropOff": 0.4,
-          "color": [ 180, 180, 180 ]
+        "Components": {
+            "Description": {
+                "name": "Iron Deposit",
+                "description": "A deposit of iron ore."
+            },
+            "Render": {
+                "texture": "simple_tileset",
+                "uv_size": [ 16, 16 ],
+                "uv_coords": [ 2, 4 ],
+                "layer": 3,
+                "color": [ 161, 157, 148 ]
+            },
+            "Material": {
+                "weight": 800.0,
+                "materials": [
+                    "Stone",
+                    "Iron"
+                ]
+            },
+            "physical_blocking": {},
+            "Health": {
+                "max": 300.0
+            },
+            "LightBlocking": {
+                "opacity": 1.0
+            },
+            "LocalLightSource": {
+                "radius": 3,
+                "dropOff": 0.4,
+                "color": [ 180, 180, 180 ]
+            }
         }
-      }
     }
   }
 }

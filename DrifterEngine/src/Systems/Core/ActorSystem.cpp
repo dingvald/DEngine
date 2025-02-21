@@ -47,7 +47,7 @@ void drft::system::ActorSystem::update()
 		case CurrentActorState::Pending:
 			return;
 		case CurrentActorState::InProgress:
-			currentActor->time++;
+			currentActor->ticks++;
 			return;
 		case CurrentActorState::Complete:
 			processPoints({ _registry, _currentActor }, currentActor->pointsSpent);

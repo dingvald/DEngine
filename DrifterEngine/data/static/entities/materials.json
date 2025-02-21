@@ -17,7 +17,6 @@
           "color": [ 88, 8, 8 ]
         },
         "Material": {
-          "blocks": false,
           "weight": 60.0,
           "materials": [ "Corpse" ]
         }
@@ -40,7 +39,6 @@
           "color": [ 68, 48, 40 ]
         },
         "Material": {
-          "blocks": false,
           "weight": 2.5,
           "materials": [ "Wood" ]
         }
@@ -63,7 +61,6 @@
           "color": [ 128, 132, 135 ]
         },
         "Material": {
-          "blocks": false,
           "weight": 1.5,
           "materials": [ "Stone" ]
         }
@@ -86,7 +83,6 @@
           "color": [ 161, 157, 148 ]
         },
         "Material": {
-          "blocks": false,
           "weight": 3.0,
           "materials": [ "Iron" ]
         }
@@ -109,7 +105,6 @@
           "color": [ 1, 50, 35 ]
         },
         "Material": {
-          "blocks": false,
           "weight": 0.25,
           "materials": [ "Plant Fibre" ]
         }
@@ -132,7 +127,6 @@
           "color": [ 186, 161, 127 ]
         },
         "Material": {
-          "blocks": false,
           "weight": 0.5,
           "materials": [ "Plant Fibre" ]
         },
@@ -160,7 +154,6 @@
           "color": [ 98, 74, 46 ]
         },
         "Material": {
-          "blocks": false,
           "weight": 0.5,
           "materials": [ "Leather" ]
         }
@@ -182,7 +175,6 @@
           "color": [ 128, 132, 135 ]
         },
         "Material": {
-          "blocks": false,
           "weight": 1.0,
           "materials": [ "Stone" ]
         },

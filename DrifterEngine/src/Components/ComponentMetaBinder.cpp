@@ -30,6 +30,7 @@
 #include "LocalLightSourceComponent.h"
 #include "MaterialComponent.h"
 #include "OpenableComponent.h"
+#include "PhysicalBlockingComponent.h"
 #include "PlayerInputComponent.h"
 #include "PositionComponent.h"
 #include "ProjectileComponent.h"
@@ -77,6 +78,7 @@ void ComponentMetaBinder::bindComponents()
 	LocalLightSourceComponent::bind();
 	MaterialComponent::bind();
 	OpenableComponent::bind();
+	PhysicalBlockingComponent::bind();
 	PlayerInputComponent::bind();
 	PositionComponent::bind();
 	ProjectileComponent::bind();

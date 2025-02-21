@@ -5,7 +5,7 @@
 #include "Components/OpenableComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/PhysicalBlockingComponent.h"
 #include "Components/LightBlockingComponent.h"
 #include "Components/InteractableComponent.h"
 #include "Components/SpriteChangeRequestComponent.h"
@@ -37,8 +37,7 @@ void drft::system::OpenableSystem::openInteraction(entt::entity actor, entt::ent
 		if (canOpen)
 		{
 			_registry.emplace_or_replace<SpriteChangeRequestComponent>(subject, "open"_hs);
-			auto& material = _registry.get<MaterialComponent>(subject);
-			material.blocks = false;
+			_registry.remove<PhysicalBlockingComponent>(subject);
 			if (!_registry.any_of<ContainerComponent>(subject))
 			{
 				_registry.remove<LightBlockingComponent>(subject);
@@ -66,8 +65,7 @@ void drft::system::OpenableSystem::closeInteraction(entt::entity actor, entt::en
 	{
 		_registry.emplace_or_replace<SpriteChangeRequestComponent>(subject, "closed"_hs);
 
-		auto& material = _registry.get<MaterialComponent>(subject);
-		material.blocks = true;
+		_registry.emplace_or_replace<PhysicalBlockingComponent>(subject);
 
 		bool isContainer = _registry.any_of<ContainerComponent>(subject);
 		if (!isContainer)

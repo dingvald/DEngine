@@ -4,7 +4,7 @@
 #include "Components/Components.h"
 #include "Components/AIComponent.h"
 #include "Components/PositionComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/PhysicalBlockingComponent.h"
 
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Spatial/WorldGrid.h"
@@ -67,11 +67,7 @@ std::optional<drft::TilePosition> drft::goap::EscapeHostilesAction::trySetTarget
 
 		auto blockerFilter = [&agent](entt::entity entity) -> bool
 		{
-			if (auto physical = agent.registry()->try_get<MaterialComponent>(entity))
-			{
-				return physical->blocks;
-			}
-			return false;
+			return agent.registry()->all_of<PhysicalBlockingComponent>(entity);
 		};
 
 		auto blockers = grid.entitiesAt(newRandomDirection, blockerFilter);

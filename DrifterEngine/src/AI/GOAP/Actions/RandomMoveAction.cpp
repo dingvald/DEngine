@@ -3,7 +3,7 @@
 #include "Spatial/WorldGrid.h"
 #include "Components/Actions/MoveAction.h"
 #include "Components/PositionComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/PhysicalBlockingComponent.h"
 #include "Random/Random.h"
 
 drft::goap::RandomMoveAction::RandomMoveAction()
@@ -22,11 +22,7 @@ drft::goap::ActionResult drft::goap::RandomMoveAction::perform(entt::handle agen
 
 	auto blockerFilter = [&agent](entt::entity entity) -> bool
 	{
-		if (auto material = agent.registry()->try_get<MaterialComponent>(entity))
-		{
-			return material->blocks;
-		}
-		return false;
+		return agent.registry()->all_of<PhysicalBlockingComponent>(entity);
 	};
 
 	auto blockers = grid.entitiesAt(tilepos + TilePosition{ randx, randy, 0 }, blockerFilter);

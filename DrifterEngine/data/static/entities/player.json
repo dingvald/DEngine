@@ -38,10 +38,10 @@
           }
         },
         "Material": {
-          "blocks": true,
-          "weight": 80.0,
-          "materials": [ "Corpse" ]
+            "weight": 80.0,
+            "materials": [ "Corpse" ]
         },
+        "physical_blocking": {},
         "Actor": {
           "moveSpeed": 1.0,
           "actSpeed": 1.0

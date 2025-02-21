@@ -8,7 +8,7 @@
 #include "Components/CollisionComponent.h"
 #include "Components/CurrentActorComponent.h"
 #include "Components/Actions/MoveAction.h"
-#include "Components/MaterialComponent.h"
+#include "Components/PhysicalBlockingComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/StaminaComponent.h"
 
@@ -39,11 +39,7 @@ void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry,
 	sf::Vector3i targetPosition = positionComponent.tile + spatial::vec3FromPlanar(moveAction.direction);
 	auto checkForBlockers = [this](entt::entity entity) -> bool
 		{
-			if (auto material = _registry.try_get<MaterialComponent>(entity))
-			{
-				return material->blocks;
-			}
-			return false;
+			return _registry.all_of<PhysicalBlockingComponent>(entity);
 		};
 	auto blockers = grid.entitiesAt(spatial::asTileSpace(targetPosition), checkForBlockers);
 

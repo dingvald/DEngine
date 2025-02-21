@@ -6,7 +6,7 @@
 #include <Components/CurrentActorComponent.h>
 #include "Components/PositionComponent.h"
 #include "Components/FactionComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/PhysicalBlockingComponent.h"
 #include "Components/Tags.h"
 
 #include "Events/TurnEndEvent.h"
@@ -82,9 +82,9 @@ void drft::system::ArtificialInput::pathToTarget(entt::handle entity, TilePositi
 			{
 				for (auto entity : entities)
 				{
-					if (auto material = _registry.try_get<MaterialComponent>(entity))
+					if (_registry.all_of<PhysicalBlockingComponent>(entity))
 					{
-						if (material->blocks) return 1000;
+						return 1000;
 					}
 				}
 				return 0;
