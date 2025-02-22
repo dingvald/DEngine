@@ -19,7 +19,9 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 	std::unordered_map<int, entt::hashed_string> imageNames;
 	std::vector<PackingRect> rects;
 	int currentId = 0;
-	const int maxSizeInPixels = static_cast<int>(sf::Texture::getMaximumSize());
+	const unsigned int maxSizeInPixels = sf::Texture::getMaximumSize();
+
+	std::cout << "Maximum texture size for GPU: " << maxSizeInPixels << std::endl;
 
 	// Collect all images from directory + subdirectories
 	for (const auto& entry : std::filesystem::recursive_directory_iterator(directoryPath))
@@ -33,7 +35,7 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 			warning_logger << "All files in " << directoryPath << " must be the following types:" << std::endl;
 			for (auto&& ext : SupportedImageTypes)
 			{
-				warning_logger << ext << std::endl;
+				warning_logger << ext << "\n";
 			}
 			continue;
 		}
@@ -41,8 +43,8 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 		sf::Image subImage;
 		if (subImage.loadFromFile(entry.path().string()))
 		{
-			const std::string& imageName = entry.path().filename().replace_extension().string();
-			std::cout << "Adding " << imageName << std::endl;
+			const std::string imageName = entry.path().filename().replace_extension().string();
+			std::cout << "Adding " << imageName << extension << std::endl;
 			PackingRect rect = {};
 			rect.id = currentId;
 			rect.w = subImage.getSize().x;

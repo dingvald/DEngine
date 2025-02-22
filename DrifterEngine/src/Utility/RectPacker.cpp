@@ -2,9 +2,9 @@
 #define STB_RECT_PACK_IMPLEMENTATION
 #include "RectPacker.h"
 
-RectPacker::RectPacker(int width, int height)
-	: _width(width)
-	, _height(height)
+RectPacker::RectPacker(unsigned int width, unsigned int height)
+	: _width(static_cast<int>(width))
+	, _height(static_cast<int>(height))
 	, _maxWidth(0)
 	, _maxHeight(0)
 {}

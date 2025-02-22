@@ -6,7 +6,7 @@ using PackingRect = stbrp_rect;
 class RectPacker
 {
 public:
-	RectPacker(int width, int height);
+	RectPacker(unsigned int width, unsigned int height);
 	bool pack(std::vector<PackingRect>& inoutRects);
 	sf::Vector2i getActualSize();
 
