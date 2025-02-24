@@ -3,14 +3,13 @@
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
-#include <Actions/ActionTypeIds.h>
 
 struct PlayerInputComponent
 {
-	ActionID selectedAction = ActionID::None;
-
 private:
+	std::byte _byte;
 	friend class ComponentMetaBinder;
+	friend class cereal::access;
 	static inline const std::string_view NAME = "Player";
 	static void bind()
 	{
@@ -18,13 +17,10 @@ private:
 		snapshot::reflectComponent<PlayerInputComponent, NAME>()
 			.prop("serialize"_hs);
 	}
-};
 
-namespace cereal
-{
 	template<class Archive>
-	void serialize(Archive& archive, PlayerInputComponent& player)
+	void serialize(Archive& archive)
 	{
-		archive(player.selectedAction);
+		archive(_byte);
 	}
-}
+};

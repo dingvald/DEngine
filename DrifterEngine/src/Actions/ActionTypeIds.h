@@ -1,39 +1,5 @@
 #pragma once
 
-enum class ActionID
-{
-	None,
+using ActionTypeId = entt::hashed_string;
 
-	Wait,
-	MoveNorth,
-	MoveSouth,
-	MoveWest,
-	MoveEast,
-	MoveNorthWest,
-	MoveSouthWest,
-	MoveNorthEast,
-	MoveSouthEast,
-
-	MeleeAttackNorth,
-	MeleeAttackSouth,
-	MeleeAttackWest,
-	MeleeAttackEast,
-	MeleeAttackNorthWest,
-	MeleeAttackSouthWest,
-	MeleeAttackNorthEast,
-	MeleeAttackSouthEast,
-
-	Drop,
-	PickUp,
-
-	ContextualInteract,
-	InteractNorth,
-	InteractSouth,
-	InteractWest,
-	InteractEast,
-	InteractNorthWest,
-	InteractSouthWest,
-	InteractNorthEast,
-	InteractSouthEast,
-};
 

@@ -3,6 +3,8 @@
 #include "Utility/TextureAtlas.h"
 #include <Engine/ControlsContext.h>
 
+class Keybindings;
+
 namespace drft
 {
 	struct StateContext
@@ -16,13 +18,15 @@ namespace drft
 			TextureAtlas& textures, 
 			FontHolder& fonts,
 			tgui::Gui& gui,
-			const ControlsContext& controls)
+			const ControlsContext& controls,
+			Keybindings& keybindings)
 			: window(window)
 			, registry(registry)
 			, textures(textures)
 			, fonts(fonts)
 			, gui(gui)
 			, controls(controls)
+			, keybindings(keybindings)
 		{}
 
 		sf::RenderWindow& window;
@@ -31,6 +35,7 @@ namespace drft
 		FontHolder& fonts;
 		tgui::Gui& gui;
 		const ControlsContext& controls;
+		Keybindings& keybindings;
 	};
 }
 

@@ -9,6 +9,7 @@
 #include "Services/DebugInfo.h"
 #include "Utility/TextureAtlas.h"
 #include <Utility/StandardLogger.h>
+#include <JSON/JSONHelpers.h>
 
 using namespace drft;
 
@@ -66,6 +67,7 @@ void drft::Engine::initialize()
 	std::cout << "Working Directory: " << WORKING_DIRECTORY << std::endl;
 	setWindowIcon();
 	loadResources();
+	loadKeybindings();
 	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
 	service::DebugInfo::instance().setPosition({ DEBUG_X_POSITION, DEBUG_Y_POSITION });
 	registerStates();
@@ -110,6 +112,22 @@ void drft::Engine::loadResources()
 			sfmlTexture.replaceInternalTexture(_textures.getTexture());
 			return true;
 		});
+}
+
+void drft::Engine::loadKeybindings()
+{
+	std::filesystem::path keybindingPath = SETTINGS_DIRECTORY / "keybindings.json";
+	json::JsonRootExtractor jsonRootExtractor{ keybindingPath, "keybindings" };
+	if (!jsonRootExtractor.isValid())
+	{
+		error_logger << "Error: " << keybindingPath << " could not be parsed." << std::endl;
+	}
+	else
+	{
+		auto& root = jsonRootExtractor.getRoot();
+		_keybindings.createFromJson(root);
+	}
+	std::cout << "Finished loading keybindings" << std::endl;
 }
 
 void drft::Engine::registerStates()

@@ -609,6 +609,12 @@
     <ClCompile Include="src\Actions\PlayerActionMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Keybindings\StateKeybindings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Keybindings\Keybindings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3017,6 +3023,12 @@
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Keybindings\StateKeybindings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Keybindings\Keybindings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -3085,6 +3097,7 @@
     </None>
     <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
+    <None Include="data\settings\keybindings.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

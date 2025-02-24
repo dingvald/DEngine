@@ -4,6 +4,7 @@
 #include "States/StateIdentifiers.h"
 #include "StateStack.h"
 #include "Utility/Statistics.h"
+#include <Keybindings/Keybindings.h>
 
 namespace drft
 {
@@ -17,6 +18,7 @@ namespace drft
 		void initialize();
 		void setWindowIcon();
 		void loadResources();
+		void loadKeybindings();
 		void registerStates();
 		void handleEvents();
 		void update();
@@ -39,6 +41,7 @@ namespace drft
 		tgui::Gui _gui;
 		entt::registry _registry;
 		TextureAtlas _textures;
+		Keybindings _keybindings;
 		ResourceHolder<sf::Font, std::string> _fonts;
 		ControlsContext _controlsContext = {};
 		StateContext _stateContext = {
@@ -47,7 +50,8 @@ namespace drft
 			_textures,
 			_fonts,
 			_gui,
-			_controlsContext
+			_controlsContext,
+			_keybindings
 		};
 		StateStack _stateStack{ _stateContext };
 
