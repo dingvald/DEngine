@@ -5,6 +5,7 @@
 #include "StateStack.h"
 #include "Utility/Statistics.h"
 #include <Keybindings/Keybindings.h>
+#include <Actions/StateActionMap.h>
 
 namespace drft
 {
@@ -19,6 +20,7 @@ namespace drft
 		void setWindowIcon();
 		void loadResources();
 		void loadKeybindings();
+		void setupActionMap();
 		void registerStates();
 		void handleEvents();
 		void update();
@@ -54,6 +56,7 @@ namespace drft
 			_keybindings
 		};
 		StateStack _stateStack{ _stateContext };
+		StateActionMap<std::function<void(void)>> _actionMap;
 
 		bool _showDebug;
 		bool _isFullScreen = false;

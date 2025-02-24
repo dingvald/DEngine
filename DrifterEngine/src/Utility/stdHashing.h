@@ -46,3 +46,12 @@ struct std::hash<std::pair<int, int>>
 	}
 };
 
+template<>
+struct std::hash<entt::hashed_string>
+{
+	size_t operator() (const entt::hashed_string& str) const noexcept
+	{
+		return std::hash<entt::id_type>{}(str.value());
+	}
+};
+

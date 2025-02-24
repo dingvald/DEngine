@@ -24,12 +24,12 @@ void Keybindings::saveToJson(rapidjson::Value& json) const
 {
 }
 
-const StateKeybindings& Keybindings::getBindings(const std::string& state) const
+const StateKeybindings& Keybindings::forState(entt::hashed_string state) const
 {
 	return _keybindings.at(state);
 }
 
-StateKeybindings& Keybindings::getBindingsNonConst(const std::string& state)
+StateKeybindings& Keybindings::forStateNonConst(entt::hashed_string state)
 {
 	return _keybindings.at(state);
 }

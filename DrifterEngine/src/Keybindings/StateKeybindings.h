@@ -1,5 +1,6 @@
 #pragma once
 #include <JSON/ICreateFromJson.h>
+#include <Utility/stdHashing.h>
 
 enum class KeyModifier
 {
@@ -20,10 +21,10 @@ public:
 	void createFromJson(const rapidjson::Value& json) override;
 	void saveToJson(rapidjson::Value& json) const;
 
-	void bindKeyToAction(sf::Keyboard::Key key, KeyModifier modifier, std::string_view actionName, BindingPosition position);
+	void bindKeyToAction(sf::Keyboard::Key key, KeyModifier modifier, entt::hashed_string actionName, BindingPosition position);
 	bool isKeyBound(sf::Keyboard::Key key, KeyModifier modifier) const;
 
-	std::optional<std::string_view> getActionForKey(sf::Keyboard::Key key, KeyModifier modifier);
+	std::optional<entt::hashed_string> getActionForKey(sf::Keyboard::Key key, KeyModifier modifier) const;
 
 private:
 	struct Key
@@ -57,7 +58,7 @@ private:
 	StateKeybindings::Key parseStringToKey(const std::string& input);
 
 private:
-	std::unordered_map<std::string_view, BoundKeys> _actionToKeys;
-	std::unordered_map<Key, std::string_view, HashKey> _keyToAction;
+	std::unordered_map<entt::hashed_string, BoundKeys> _actionToKeys;
+	std::unordered_map<Key, entt::hashed_string, HashKey> _keyToAction;
 };
 

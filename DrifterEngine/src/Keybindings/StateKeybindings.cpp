@@ -313,7 +313,7 @@ void StateKeybindings::saveToJson(rapidjson::Value& json) const
 {
 }
 
-void StateKeybindings::bindKeyToAction(sf::Keyboard::Key key, KeyModifier modifier, std::string_view actionName, BindingPosition position)
+void StateKeybindings::bindKeyToAction(sf::Keyboard::Key key, KeyModifier modifier, entt::hashed_string actionName, BindingPosition position)
 {
     StateKeybindings::Key newKey = { modifier, key };
 
@@ -349,7 +349,7 @@ bool StateKeybindings::isKeyBound(sf::Keyboard::Key key, KeyModifier modifier) c
     return _keyToAction.contains(StateKeybindings::Key{ modifier, key });
 }
 
-std::optional<std::string_view> StateKeybindings::getActionForKey(sf::Keyboard::Key key, KeyModifier modifier)
+std::optional<entt::hashed_string> StateKeybindings::getActionForKey(sf::Keyboard::Key key, KeyModifier modifier) const
 {
     if (!_keyToAction.contains({ modifier, key }))
     {

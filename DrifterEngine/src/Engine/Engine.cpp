@@ -2,10 +2,10 @@
 #include "Engine.h"
 #include "EngineConstants.h"
 #include <Engine/CommonEngineDirectories.h>
-#include "States/GameState.h"
-#include "States/TitleScreenState.h"
-#include "States/MainMenuState.h"
-#include "States/PauseState.h"
+#include <States/GameState.h>
+#include <States/TitleScreenState.h>
+#include <States/MainMenuState.h>
+#include <States/PauseState.h>
 #include "Services/DebugInfo.h"
 #include "Utility/TextureAtlas.h"
 #include <Utility/StandardLogger.h>
@@ -68,6 +68,7 @@ void drft::Engine::initialize()
 	setWindowIcon();
 	loadResources();
 	loadKeybindings();
+	setupActionMap();
 	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
 	service::DebugInfo::instance().setPosition({ DEBUG_X_POSITION, DEBUG_Y_POSITION });
 	registerStates();
@@ -128,6 +129,21 @@ void drft::Engine::loadKeybindings()
 		_keybindings.createFromJson(root);
 	}
 	std::cout << "Finished loading keybindings" << std::endl;
+}
+
+void drft::Engine::setupActionMap()
+{
+	_actionMap.bindAction("toggle_fullscreen",	[this]() {toggleFullscreen();});
+	_actionMap.bindAction("toggle_debug",		[this]() {toggleDebug();});
+	_actionMap.bindAction("move_east",			[this]() {swapToKeyboard();});
+	_actionMap.bindAction("move_west",			[this]() {swapToKeyboard();});
+	_actionMap.bindAction("move_north",			[this]() {swapToKeyboard();});
+	_actionMap.bindAction("move_south",			[this]() {swapToKeyboard();});
+	_actionMap.bindAction("move_north_east",	[this]() {swapToKeyboard();});
+	_actionMap.bindAction("move_north_west",	[this]() {swapToKeyboard();});
+	_actionMap.bindAction("move_south_east",	[this]() {swapToKeyboard();});
+	_actionMap.bindAction("move_south_west",	[this]() {swapToKeyboard();});
+	_actionMap.bindAction("wait",				[this]() {swapToKeyboard();});
 }
 
 void drft::Engine::registerStates()
@@ -207,28 +223,24 @@ void drft::Engine::handleMouseEvents(sf::Event event)
 void drft::Engine::handleKeyboardEvents(sf::Event event)
 {
 	using Key = sf::Keyboard;
-	switch (event.key.code)
+	KeyModifier modifier = KeyModifier::None;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
+		|| sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
 	{
-	case Key::F5:
-		toggleDebug();
-		break;
-	case Key::F11:
-		toggleFullscreen();
-		break;
-	case Key::Up:
-	case Key::Down:
-	case Key::Left:
-	case Key::Right:
-	case Key::Numpad8:
-	case Key::Numpad6:
-	case Key::Numpad4:
-	case Key::Numpad2:
-		if (_controlsContext.navigation == NavigationType::Mouse)
-			swapToKeyboard();
-		break;
-	default:
-		break;
+		modifier = KeyModifier::Ctrl;
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
+		|| sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+	{
+		modifier = KeyModifier::Shift;
+	}
+
+	auto generalAction = _keybindings.forState("general").getActionForKey(event.key.code, modifier);
+	if (generalAction) _actionMap.callAction(generalAction.value());
+
+	auto simulationAction = _keybindings.forState("simulation").getActionForKey(event.key.code, modifier);
+	if (simulationAction) _actionMap.callAction(simulationAction.value());
 }
 
 void drft::Engine::passEventToGui(sf::Event event)
