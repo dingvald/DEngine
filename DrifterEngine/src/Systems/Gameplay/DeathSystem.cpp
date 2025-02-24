@@ -10,7 +10,7 @@
 #include "Components/ItemComponent.h"
 
 #include "Events/RequestStateChange.h"
-#include "Engine/States/StateIdentifiers.h"
+#include <States/StateIdentifiers.h>
 #include "Spatial/Conversions.h"
 #include <Spatial/Helpers.h>
 #include "Systems/Helpers/FindItemOwner.h"

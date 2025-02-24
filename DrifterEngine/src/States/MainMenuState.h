@@ -1,10 +1,10 @@
 #pragma once
-#include <Engine/States/State.h>
+#include <States/State.h>
 #include "GUI/GUIElement.h"
 
 namespace drft
 {
-	class PauseState : public State
+	class MainMenuState : public State
 	{
 	private:
 		struct MenuOption
@@ -14,17 +14,17 @@ namespace drft
 		};
 
 	public:
-		PauseState(StateStack& stack, StateContext& context);
+		MainMenuState(StateStack& stack, StateContext& context);
 
-		bool handleEvent(const sf::Event& ev);
+		bool handleEvent(const sf::Event& ev) override;
 
 	private:
+		void onNewGameButton();
 		void onContinueButton();
 		void onSettingsButton();
 		void onExitButton();
 
-	private:
-		tgui::Group::Ptr _group;
+		bool hasSaveFile() const;
 	};
 }
 

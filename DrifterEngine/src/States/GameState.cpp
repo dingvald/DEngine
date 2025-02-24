@@ -6,12 +6,12 @@
 #include "Events/RequestStateChange.h"
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
 
-#include <Engine/States/GameStates/CraftingState.h>
-#include <Engine/States/GameStates/GameOverState.h>
-#include <Engine/States/GameStates/InventoryState.h>
-#include <Engine/States/GameStates/SelectDirectionState.h>
-#include <Engine/States/GameStates/SelectTargetState.h>
-#include <Engine/States/GameStates/SimulationState.h>
+#include <States/GameStates/CraftingState.h>
+#include <States/GameStates/GameOverState.h>
+#include <States/GameStates/InventoryState.h>
+#include <States/GameStates/SelectDirectionState.h>
+#include <States/GameStates/SelectTargetState.h>
+#include <States/GameStates/SimulationState.h>
 
 #include <JSON/JSONHelpers.h>
 #include "Utility/StandardLogger.h"
