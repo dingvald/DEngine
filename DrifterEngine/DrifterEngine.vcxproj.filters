@@ -21,10 +21,10 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\State.cpp">
+    <ClCompile Include="src\States\State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameState.cpp">
+    <ClCompile Include="src\States\GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Engine.cpp">
@@ -135,13 +135,13 @@
     <ClCompile Include="src\Engine\StateStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\TitleScreenState.cpp">
+    <ClCompile Include="src\States\TitleScreenState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\MainMenuState.cpp">
+    <ClCompile Include="src\States\MainMenuState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\PauseState.cpp">
+    <ClCompile Include="src\States\PauseState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\SaveRegistry.cpp">
@@ -162,16 +162,16 @@
     <ClCompile Include="src\Systems\Actions\PickUpSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\StateContext.cpp">
+    <ClCompile Include="src\States\StateContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameStates\InventoryState.cpp">
+    <ClCompile Include="src\States\GameStates\InventoryState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\GUIElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameStates\GameOverState.cpp">
+    <ClCompile Include="src\States\GameStates\GameOverState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Actions\DropItemSystem.cpp">
@@ -198,7 +198,7 @@
     <ClCompile Include="src\Systems\PlayerSpecific\OpenCraftingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameStates\CraftingState.cpp">
+    <ClCompile Include="src\States\GameStates\CraftingState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp">
@@ -264,7 +264,7 @@
     <ClCompile Include="src\Systems\Actions\InteractionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameStates\SelectDirectionState.cpp">
+    <ClCompile Include="src\States\GameStates\SelectDirectionState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp">
@@ -408,7 +408,7 @@
     <ClCompile Include="src\Systems\PlayerSpecific\TargetSelectSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameStates\SelectTargetState.cpp">
+    <ClCompile Include="src\States\GameStates\SelectTargetState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Ability\Abilities\ThrowAbility.cpp">
@@ -540,7 +540,7 @@
     <ClCompile Include="src\Systems\Gameplay\PathNavSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameStates\SimulationState.cpp">
+    <ClCompile Include="src\States\GameStates\SimulationState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\CommonEngineDirectories.cpp">
@@ -606,13 +606,13 @@
     <ClCompile Include="src\Utility\HashedString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Actions\PlayerActionMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Keybindings\StateKeybindings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Keybindings\Keybindings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actions\StateActionMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -623,10 +623,10 @@
     <ClInclude Include="src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\GameState.h">
+    <ClInclude Include="src\States\GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\State.h">
+    <ClInclude Include="src\States\State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Engine.h">
@@ -1220,16 +1220,16 @@
     <ClInclude Include="src\Engine\StateStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\StateIdentifiers.h">
+    <ClInclude Include="src\States\StateIdentifiers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\TitleScreenState.h">
+    <ClInclude Include="src\States\TitleScreenState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\MainMenuState.h">
+    <ClInclude Include="src\States\MainMenuState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\PauseState.h">
+    <ClInclude Include="src\States\PauseState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\SaveRegistry.h">
@@ -1250,19 +1250,19 @@
     <ClInclude Include="src\Systems\Actions\PickUpSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\StateContext.h">
+    <ClInclude Include="src\States\StateContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\RequestStateChange.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\GameStates\InventoryState.h">
+    <ClInclude Include="src\States\GameStates\InventoryState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\GUIElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\GameStates\GameOverState.h">
+    <ClInclude Include="src\States\GameStates\GameOverState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Actions\DropItemSystem.h">
@@ -1289,7 +1289,7 @@
     <ClInclude Include="src\Systems\PlayerSpecific\OpenCraftingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\GameStates\CraftingState.h">
+    <ClInclude Include="src\States\GameStates\CraftingState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h">
@@ -1379,7 +1379,7 @@
     <ClInclude Include="src\Systems\Actions\InteractionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\GameStates\SelectDirectionState.h">
+    <ClInclude Include="src\States\GameStates\SelectDirectionState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h">
@@ -1553,7 +1553,7 @@
     <ClInclude Include="src\Systems\PlayerSpecific\TargetSelectSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\GameStates\SelectTargetState.h">
+    <ClInclude Include="src\States\GameStates\SelectTargetState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Ability\Abilities\ThrowAbility.h">
@@ -2864,7 +2864,7 @@
     <ClInclude Include="src\Systems\Gameplay\PathNavSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\States\GameStates\SimulationState.h">
+    <ClInclude Include="src\States\GameStates\SimulationState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\ItemIDTrackerComponent.h">
@@ -3017,9 +3017,6 @@
     <ClInclude Include="src\Components\ArtificalInputComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Actions\PlayerActionMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -3027,6 +3024,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Keybindings\Keybindings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actions\StateActionMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,7 @@
     "keybindings": {
         "states": {
             "simulation": {
+                "wait": ["Numpad5"],
                 "move_east": [ "Numpad6", "Right" ],
                 "move_west": [ "Numpad4", "Left" ],
                 "move_north": [ "Numpad8", "Up" ],

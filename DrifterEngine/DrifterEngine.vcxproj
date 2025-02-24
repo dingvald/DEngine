@@ -199,8 +199,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Actions\StateActionMap.cpp" />
     <ClCompile Include="src\Keybindings\Keybindings.cpp" />
-    <ClCompile Include="src\Actions\PlayerActionMap.cpp" />
     <ClCompile Include="src\Keybindings\StateKeybindings.cpp" />
     <ClCompile Include="src\Utility\HashedString.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
@@ -222,7 +222,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Utility\ChunkSerializer.cpp" />
     <ClCompile Include="deps\jc_voronoi\jc_voronoi_adaptor.cpp" />
     <ClCompile Include="src\Engine\CommonEngineDirectories.cpp" />
-    <ClCompile Include="src\Engine\States\GameStates\SimulationState.cpp" />
+    <ClCompile Include="src\States\GameStates\SimulationState.cpp" />
     <ClCompile Include="src\Systems\Core\MouseVisualizationSystem.cpp" />
     <ClCompile Include="src\JSON\StringExpressions.cpp" />
     <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp" />
@@ -249,7 +249,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Biomes\Biome.cpp" />
     <ClCompile Include="src\JSON\JSONHelpers.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
-    <ClCompile Include="src\Engine\States\GameStates\SelectTargetState.cpp" />
+    <ClCompile Include="src\States\GameStates\SelectTargetState.cpp" />
     <ClCompile Include="src\Systems\PlayerSpecific\TargetSelectSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetPrimaryMaterial.cpp" />
     <ClCompile Include="src\Systems\Rendering\AnimationSystem.cpp" />
@@ -305,7 +305,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Rendering\LightingSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\CraftItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
-    <ClCompile Include="src\Engine\States\GameStates\CraftingState.cpp" />
+    <ClCompile Include="src\States\GameStates\CraftingState.cpp" />
     <ClCompile Include="src\Systems\PlayerSpecific\OpenCraftingSystem.cpp" />
     <ClCompile Include="src\Random\PerlinNoise.cpp" />
     <ClCompile Include="src\Random\RandomNoise.cpp" />
@@ -313,9 +313,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Actions\EquipItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\BodyPartSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\DropItemSystem.cpp" />
-    <ClCompile Include="src\Engine\States\GameStates\GameOverState.cpp" />
+    <ClCompile Include="src\States\GameStates\GameOverState.cpp" />
     <ClCompile Include="src\GUI\GUIElement.cpp" />
-    <ClCompile Include="src\Engine\States\GameStates\InventoryState.cpp" />
+    <ClCompile Include="src\States\GameStates\InventoryState.cpp" />
     <ClCompile Include="src\Systems\Actions\PickUpSystem.cpp" />
     <ClCompile Include="src\Systems\Core\ItemUniqueIDGenerator.cpp" />
     <ClCompile Include="src\Utility\CompressData.cpp" />
@@ -329,8 +329,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Utility\Statistics.cpp" />
     <ClCompile Include="src\Utility\SaveEntity.cpp" />
     <ClCompile Include="src\Utility\LoadRegistry.cpp" />
-    <ClCompile Include="src\Engine\States\PauseState.cpp" />
-    <ClCompile Include="src\Engine\States\MainMenuState.cpp" />
+    <ClCompile Include="src\States\PauseState.cpp" />
+    <ClCompile Include="src\States\MainMenuState.cpp" />
     <ClCompile Include="src\Systems\Core\HUD.cpp" />
     <ClCompile Include="src\Random\Random.cpp" />
     <ClCompile Include="src\Systems\Gameplay\FactionSystem.cpp" />
@@ -358,13 +358,13 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\GameState.cpp">
+    <ClCompile Include="src\States\GameState.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Engine\States\State.cpp">
+    <ClCompile Include="src\States\State.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -406,8 +406,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Components\Tags.cpp" />
     <ClCompile Include="src\Spatial\VirtualChunk.cpp" />
     <ClCompile Include="src\Engine\StateStack.cpp" />
-    <ClCompile Include="src\Engine\States\TitleScreenState.cpp" />
-    <ClCompile Include="src\Engine\States\StateContext.cpp" />
+    <ClCompile Include="src\States\TitleScreenState.cpp" />
+    <ClCompile Include="src\States\StateContext.cpp" />
     <ClCompile Include="src\ProcGen\WorldGeneration\WorldGenerator.cpp" />
     <ClCompile Include="src\Utility\stdHashing.cpp" />
     <ClCompile Include="src\Utility\TGUIHelpers.cpp" />
@@ -415,7 +415,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Utility\Visibility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\StaminaSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\WaitActionSystem.cpp" />
-    <ClCompile Include="src\Engine\States\GameStates\SelectDirectionState.cpp" />
+    <ClCompile Include="src\States\GameStates\SelectDirectionState.cpp" />
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
     <ClCompile Include="src\AI\GOAP\WorldState.cpp" />
@@ -434,9 +434,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Actions\StateActionMap.h" />
     <ClInclude Include="src\Keybindings\Keybindings.h" />
     <ClInclude Include="src\Keybindings\StateKeybindings.h" />
-    <ClInclude Include="src\Actions\PlayerActionMap.h" />
     <ClInclude Include="src\Components\ArtificalInputComponent.h" />
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h" />
     <ClInclude Include="src\Utility\HashedString.h" />
@@ -822,7 +822,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\PathNavComponent.h" />
     <ClInclude Include="src\Engine\CommonEngineDirectories.h" />
     <ClInclude Include="src\Engine\ControlsContext.h" />
-    <ClInclude Include="src\Engine\States\GameStates\SimulationState.h" />
+    <ClInclude Include="src\States\GameStates\SimulationState.h" />
     <ClInclude Include="src\Systems\Core\MouseVisualizationSystem.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\JSON\StringExpressions.h" />
@@ -903,7 +903,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Algorithms\FloodFill.h" />
     <ClInclude Include="src\Spatial\AutoGrid.h" />
     <ClInclude Include="src\Engine\EngineConstants.h" />
-    <ClInclude Include="src\Engine\States\GameStates\SelectTargetState.h" />
+    <ClInclude Include="src\States\GameStates\SelectTargetState.h" />
     <ClInclude Include="src\Systems\PlayerSpecific\TargetSelectSystem.h" />
     <ClInclude Include="src\Systems\Helpers\GetPrimaryMaterial.h" />
     <ClInclude Include="src\Systems\Rendering\AnimationSystem.h" />
@@ -975,7 +975,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Rendering\LightingSystem.h" />
     <ClInclude Include="src\Systems\Actions\CraftItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
-    <ClInclude Include="src\Engine\States\GameStates\CraftingState.h" />
+    <ClInclude Include="src\States\GameStates\CraftingState.h" />
     <ClInclude Include="src\Systems\PlayerSpecific\OpenCraftingSystem.h" />
     <ClInclude Include="src\Random\PerlinNoise.h" />
     <ClInclude Include="src\Random\RandomNoise.h" />
@@ -983,9 +983,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Actions\EquipItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\BodyPartSystem.h" />
     <ClInclude Include="src\Systems\Actions\DropItemSystem.h" />
-    <ClInclude Include="src\Engine\States\GameStates\GameOverState.h" />
+    <ClInclude Include="src\States\GameStates\GameOverState.h" />
     <ClInclude Include="src\GUI\GUIElement.h" />
-    <ClInclude Include="src\Engine\States\GameStates\InventoryState.h" />
+    <ClInclude Include="src\States\GameStates\InventoryState.h" />
     <ClInclude Include="src\Events\RequestStateChange.h" />
     <ClInclude Include="src\Systems\Actions\PickUpSystem.h" />
     <ClInclude Include="src\Systems\Core\ItemUniqueIDGenerator.h" />
@@ -1003,9 +1003,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Utility\Statistics.h" />
     <ClInclude Include="src\Utility\SaveEntity.h" />
     <ClInclude Include="src\Utility\LoadRegistry.h" />
-    <ClInclude Include="src\Engine\States\PauseState.h" />
-    <ClInclude Include="src\Engine\States\MainMenuState.h" />
-    <ClInclude Include="src\Engine\States\StateIdentifiers.h" />
+    <ClInclude Include="src\States\PauseState.h" />
+    <ClInclude Include="src\States\MainMenuState.h" />
+    <ClInclude Include="src\States\StateIdentifiers.h" />
     <ClInclude Include="src\Systems\Core\HUD.h" />
     <ClInclude Include="src\Random\Random.h" />
     <ClInclude Include="src\Systems\Gameplay\FactionSystem.h" />
@@ -1189,8 +1189,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Spatial\Grid2d.h" />
     <ClInclude Include="src\Components\Components.h" />
     <ClInclude Include="src\Engine\Engine.h" />
-    <ClInclude Include="src\Engine\States\GameState.h" />
-    <ClInclude Include="src\Engine\States\State.h" />
+    <ClInclude Include="src\States\GameState.h" />
+    <ClInclude Include="src\States\State.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Systems\Rendering\EntityRenderer.h" />
     <ClInclude Include="src\Systems\System.h" />
@@ -1209,8 +1209,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\Tags.h" />
     <ClInclude Include="src\Spatial\VirtualChunk.h" />
     <ClInclude Include="src\Engine\StateStack.h" />
-    <ClInclude Include="src\Engine\States\TitleScreenState.h" />
-    <ClInclude Include="src\Engine\States\StateContext.h" />
+    <ClInclude Include="src\States\TitleScreenState.h" />
+    <ClInclude Include="src\States\StateContext.h" />
     <ClInclude Include="src\ProcGen\WorldGeneration\WorldGenerator.h" />
     <ClInclude Include="src\Utility\stdHashing.h" />
     <ClInclude Include="src\Utility\TGUIHelpers.h" />
@@ -1220,7 +1220,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Utility\Visibility.h" />
     <ClInclude Include="src\Systems\Gameplay\StaminaSystem.h" />
     <ClInclude Include="src\Systems\Actions\WaitActionSystem.h" />
-    <ClInclude Include="src\Engine\States\GameStates\SelectDirectionState.h" />
+    <ClInclude Include="src\States\GameStates\SelectDirectionState.h" />
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h" />
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h" />
     <ClInclude Include="src\AI\GOAP\WorldState.h" />
