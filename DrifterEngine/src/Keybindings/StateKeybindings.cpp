@@ -358,7 +358,7 @@ std::optional<entt::hashed_string> StateKeybindings::getActionForKey(sf::Keyboar
     return _keyToAction.at({ modifier, key });
 }
 
-StateKeybindings::Key StateKeybindings::parseStringToKey(const std::string& input)
+StateKeybindings::Key StateKeybindings::parseStringToKey(const std::string& input) const
 {
 	auto inputNoWhitespace = drft::util::removeWhitespace(input);
 	auto splitStrings = drft::util::split(inputNoWhitespace, "+");
@@ -379,23 +379,20 @@ StateKeybindings::Key StateKeybindings::parseStringToKey(const std::string& inpu
 	}
 	else if (splitStrings.size() == 2)
 	{
-        if (StringToSfmlKey.contains(splitStrings[0]))
+        if (splitStrings[0] == "Shift")
         {
-            auto mod = StringToSfmlKey.at(splitStrings[0]);
-            if (mod == sf::Keyboard::Key::LShift || mod == sf::Keyboard::Key::RShift)
-            {
-                result.modifier = KeyModifier::Shift;
-            }
-            else if (mod == sf::Keyboard::Key::LControl || mod == sf::Keyboard::Key::RControl)
-            {
-                result.modifier = KeyModifier::Ctrl;
-            }
-            else
-            {
-                logUnknownModifierValueError(splitStrings[0]);
-                return InvalidKeyBind;
-            }
+            result.modifier = KeyModifier::Shift;
         }
+        else if (splitStrings[0] == "Ctrl")
+        {
+            result.modifier = KeyModifier::Ctrl;
+        }
+        else
+        {
+            logUnknownModifierValueError(splitStrings[0]);
+            return InvalidKeyBind;
+        }
+
         if (StringToSfmlKey.contains(splitStrings[1]))
         {
             result.key = StringToSfmlKey.at(splitStrings[1]);
@@ -411,6 +408,26 @@ StateKeybindings::Key StateKeybindings::parseStringToKey(const std::string& inpu
         logTooManyTokensError(input);
         return InvalidKeyBind;
     }
+
+    return result;
+}
+
+std::string StateKeybindings::convertKeyToString(Key key) const
+{
+    std::string result;
+    switch (key.modifier)
+    {
+    case KeyModifier::Shift:
+        result = "Shift + ";
+        break;
+    case KeyModifier::Ctrl:
+        result = "Ctrl + ";
+        break;
+    default:
+        break;
+    }
+
+    result.append(SfmlKeyToString.at(key.key));
 
     return result;
 }

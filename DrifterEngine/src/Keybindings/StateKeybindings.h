@@ -1,13 +1,7 @@
 #pragma once
 #include <JSON/ICreateFromJson.h>
 #include <Utility/stdHashing.h>
-
-enum class KeyModifier
-{
-	None,
-	Shift,
-	Ctrl
-};
+#include <Keybindings/KeybindingsUtils.h>
 
 enum class BindingPosition
 {
@@ -55,7 +49,8 @@ private:
 		Key secondary = {};
 	};
 
-	StateKeybindings::Key parseStringToKey(const std::string& input);
+	StateKeybindings::Key parseStringToKey(const std::string& input) const;
+	std::string convertKeyToString(Key key) const;
 
 private:
 	std::unordered_map<entt::hashed_string, BoundKeys> _actionToKeys;
