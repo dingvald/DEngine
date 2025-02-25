@@ -6,6 +6,7 @@
 #include <Factory/EntityFactory.h>
 #include <Components/PositionComponent.h>
 #include <Components/CameraTargetComponent.h>
+#include <Keybindings/Keybindings.h>
 #include <Spatial/WorldGrid.h>
 
 #include "Systems/SystemScheduler.h"
@@ -114,6 +115,7 @@ void drft::SimulationState::onPop()
 void drft::SimulationState::setupRegistryContext()
 {
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(_world);
+	getContext().registry.ctx().emplace<Keybindings&>(getContext().keybindings);
 }
 
 void drft::SimulationState::importSystems()

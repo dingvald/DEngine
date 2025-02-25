@@ -2,6 +2,7 @@
 #include "PlayerInput.h"
 #include "Components/Components.h"
 #include <Components/CurrentActorComponent.h>
+#include <Components/Actions/MeleeAttackAction.h>
 #include "Components/Actions/MoveAction.h"
 #include "Components/Actions/InteractionAction.h"
 #include "Components/Actions/WaitAction.h"
@@ -9,51 +10,76 @@
 #include "Components/PlayerInputComponent.h"
 
 #include "Components/Tags.h"
+#include <Keybindings/Keybindings.h>
 #include "Systems/HelperClasses/InputBuffer.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
 
 
 void drft::system::PlayerInput::init()
 {
-	using Key = sf::Keyboard;
-
-	_actionMap.addAction(Key::Numpad1, [](entt::handle entity) {
+	_actionMap.bindAction("move_south_west",	[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(-1, 1));
 		});
-	_actionMap.addAction(Key::Numpad2, [](entt::handle entity) {
+	_actionMap.bindAction("move_south",			[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(0, 1));
 		});
-	_actionMap.addAction(Key::Numpad3, [](entt::handle entity) {
+	_actionMap.bindAction("move_south_east",	[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(1, 1));
 		});
-	_actionMap.addAction(Key::Numpad4, [](entt::handle entity) {
+	_actionMap.bindAction("move_west",			[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(-1, 0));
 		});
-	_actionMap.addAction(Key::Numpad6, [](entt::handle entity) {
+	_actionMap.bindAction("move_east",			[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(1, 0));
 		});
-	_actionMap.addAction(Key::Numpad7, [](entt::handle entity) {
+	_actionMap.bindAction("move_north_west",	[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(-1, -1));
 		});
-	_actionMap.addAction(Key::Numpad8, [](entt::handle entity) {
+	_actionMap.bindAction("move_north",			[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(0, -1));
 		});
-	_actionMap.addAction(Key::Numpad9, [](entt::handle entity) {
+	_actionMap.bindAction("move_north_east",	[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(1, -1));
 		});
-	_actionMap.addAction(Key::Numpad5, [](entt::handle entity) {
+	_actionMap.bindAction("wait",				[](entt::handle entity) {
 		entity.emplace_or_replace<WaitAction>();
 		});
-	_actionMap.addAction(Key::G, [](entt::handle entity) {
+
+	_actionMap.bindAction("force_attack_south_west", [](entt::handle entity) {
+		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(-1, 1));
+		});
+	_actionMap.bindAction("force_attack_south", [](entt::handle entity) {
+		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(0, 1));
+		});
+	_actionMap.bindAction("force_attack_south_east", [](entt::handle entity) {
+		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(1, 1));
+		});
+	_actionMap.bindAction("force_attack_west", [](entt::handle entity) {
+		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(-1, 0));
+		});
+	_actionMap.bindAction("force_attack_east", [](entt::handle entity) {
+		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(1, 0));
+		});
+	_actionMap.bindAction("force_attack_north_west", [](entt::handle entity) {
+		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(-1, -1));
+		});
+	_actionMap.bindAction("force_attack_north", [](entt::handle entity) {
+		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(0, -1));
+		});
+	_actionMap.bindAction("force_attack_north_east", [](entt::handle entity) {
+		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(1, -1));
+		});
+
+	_actionMap.bindAction("pick_up",			[](entt::handle entity) {
 		entity.emplace_or_replace<component::action::PickUp>();
 		});
-	_actionMap.addAction(Key::E, [](entt::handle entity) {
+	_actionMap.bindAction("open_equipment",		[](entt::handle entity) {
 		entity.emplace_or_replace<component::action::OpenEquipment>();
 		});
-	_actionMap.addAction(Key::C, [](entt::handle entity) {
+	_actionMap.bindAction("open_crafting",		[](entt::handle entity) {
 		entity.emplace_or_replace<component::action::OpenCrafting>();
 		});
-	_actionMap.addAction(Key::S, [](entt::handle entity) {
+	_actionMap.bindAction("toggle_sprint",		[](entt::handle entity) {
 			if (entity.all_of<SprintingComponent>())
 			{
 				entity.remove<SprintingComponent>();
@@ -63,15 +89,15 @@ void drft::system::PlayerInput::init()
 				entity.emplace<SprintingComponent>();
 			}
 		});
-	_actionMap.addAction(Key::Space, [](entt::handle entity) {
+	_actionMap.bindAction("interact",			[](entt::handle entity) {
 		entity.emplace_or_replace<InteractionAction>();
 		});
 
 	// Hotbar //
 	for (int i = 0; i < HOTBAR_SIZE; ++i)
 	{
-		_actionMap.addAction(static_cast<sf::Keyboard::Key>(static_cast<int>(Key::Num0) + i), 
-			[i](entt::handle entity) {
+		entt::hashed_string actionName{ std::format("hotbar_{}", i).c_str() };
+		_actionMap.bindAction(actionName, [i](entt::handle entity) {
 			entity.emplace<component::action::HotbarPressed>(toHotbarIndex(i));
 		});
 	}
@@ -80,36 +106,17 @@ void drft::system::PlayerInput::init()
 void drft::system::PlayerInput::update()
 {
 	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
+	auto& keybindings = _registry.ctx().get<Keybindings&>();
+
 	auto turnView = _registry.view<PlayerInputComponent, CurrentActorComponent>();
 	for (auto&& [entity, player, currentActor] : turnView.each())
 	{
 		if (currentActor.state != CurrentActorState::Pending) continue;
 
-		const auto key = inputBuffer.pop();
-		if (!_actionMap.contains(key)) continue;
+		ModifiedKey key = inputBuffer.pop();
 
-		_actionMap[key](entt::handle{ _registry, entity });
+		auto action = keybindings["simulation"].getActionForKey(key);
+		if (action) _actionMap.callAction(action.value(), entt::handle{ _registry, entity });
 	}
 }
-
-void drft::system::ActionMap::addAction(sf::Keyboard::Key key, emplaceFunc func)
-{
-	_map[key] = func;
-}
-
-bool drft::system::ActionMap::contains(sf::Keyboard::Key key) const
-{
-	return _map.contains(key);
-}
-
-drft::system::ActionMap::emplaceFunc drft::system::ActionMap::operator[](sf::Keyboard::Key key)
-{
-	return _map.at(key);
-}
-
-std::unordered_map<sf::Keyboard::Key, drft::system::ActionMap::emplaceFunc>& drft::system::ActionMap::iterate()
-{
-	return _map;
-}
-
 

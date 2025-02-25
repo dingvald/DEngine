@@ -33,20 +33,23 @@ void drft::system::InputBuffer::update()
     service::DebugInfo::instance().putInfo("Input Buffer", std::to_string(_buffer.size()));
 }
 
-void drft::system::InputBuffer::press(sf::Keyboard::Key key)
+void drft::system::InputBuffer::press(ModifiedKey key)
 {
+    if (key.key == sf::Keyboard::Unknown) return;
     if (_buffer.size() >= INPUT_BUFFER_MAX_SIZE) return;
 
     _buffer.push_back(key);
     _pressedKeys.emplace(key, KeyState{});
 }
 
-void drft::system::InputBuffer::release(sf::Keyboard::Key key)
+void drft::system::InputBuffer::release(ModifiedKey key)
 {
+    if (key.key == sf::Keyboard::Unknown) return;
+
     _pressedKeys.erase(key);
 }
 
-sf::Keyboard::Key drft::system::InputBuffer::pop()
+ModifiedKey drft::system::InputBuffer::pop()
 {
     auto itr = _buffer.begin();
     while (itr != _buffer.end())
@@ -59,7 +62,7 @@ sf::Keyboard::Key drft::system::InputBuffer::pop()
         {
             if (_pressedKeys.at(*itr).active)
             {
-                sf::Keyboard::Key result = *itr;
+                ModifiedKey result = *itr;
                 _buffer.erase(itr);
                 return result;
             }
@@ -67,7 +70,7 @@ sf::Keyboard::Key drft::system::InputBuffer::pop()
         }
     }
 
-    return sf::Keyboard::Key::Unknown;
+    return {};
 }
 
 bool drft::system::InputBuffer::isEmpty() const

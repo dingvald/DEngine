@@ -1,20 +1,9 @@
 #pragma once
 #include "Systems/System.h"
+#include <Actions/StateActionMap.h>
 
 namespace drft::system
 {
-	class ActionMap
-	{
-	public:
-		using emplaceFunc = std::function<void(entt::handle)>;
-		void addAction(sf::Keyboard::Key key, emplaceFunc);
-		bool contains(sf::Keyboard::Key key) const;
-		emplaceFunc operator[](sf::Keyboard::Key key);
-		std::unordered_map<sf::Keyboard::Key, emplaceFunc>& iterate();
-	private:
-		std::unordered_map<sf::Keyboard::Key, emplaceFunc> _map;
-	};
-
 	class PlayerInput : public System
 	{
 	public:
@@ -24,7 +13,8 @@ namespace drft::system
 		virtual void update() override;
 
 	private:
-		ActionMap _actionMap;
+		using ActionType = std::function<void(entt::handle)>;
+		StateActionMap<ActionType> _actionMap;
 	};
 
 }

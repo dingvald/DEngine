@@ -226,12 +226,12 @@ void drft::Engine::handleMouseEvents(sf::Event event)
 void drft::Engine::handleKeyboardEvents(sf::Event event)
 {
 	using Key = sf::Keyboard;
-	KeyModifier modifier = getKeyModifier();
+	ModifiedKey key = KeybindingUtils::getModifiedKey(event.key.scancode);
 
-	auto generalAction = _keybindings["general"].getActionForKey(event.key.code, modifier);
+	auto generalAction = _keybindings["engine"].getActionForKey(key);
 	if (generalAction) _actionMap.callAction(generalAction.value());
 
-	auto simulationAction = _keybindings["simulation"].getActionForKey(event.key.code, modifier);
+	auto simulationAction = _keybindings["simulation"].getActionForKey(key);
 	if (simulationAction) _actionMap.callAction(simulationAction.value());
 }
 

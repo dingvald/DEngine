@@ -7,7 +7,7 @@
 
 struct MeleeAttackAction
 {
+	using DamageTypeMap = std::unordered_map<std::string, int>;
 	sf::Vector2i direction = { 0,0 };
-	std::vector<entt::entity> targets;
-	std::unordered_map<std::string, int> damageTypes;
+	DamageTypeMap damageTypes = {};
 };

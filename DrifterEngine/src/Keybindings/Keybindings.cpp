@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Keybindings.h"
 #include <Utility/StandardLogger.h>
+#include <Utility/stdHashing.h>
 
 static inline StateKeybindings NullStateKeybinding = {};
 static inline StateKeybindings NullStateKeybindingNonConst = {};

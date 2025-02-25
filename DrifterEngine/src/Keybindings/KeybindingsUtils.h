@@ -1,10 +1,9 @@
 #pragma once
+#include <Keybindings/ModifiedKey.h>
 
-enum class KeyModifier
+
+namespace KeybindingUtils
 {
-	None,
-	Shift,
-	Ctrl
-};
-
-KeyModifier getKeyModifier();
+	ModifiedKey getModifiedKey(sf::Keyboard::Scancode key);
+	KeyModifier convertStringToKeyModifier(const std::string& input);
+}

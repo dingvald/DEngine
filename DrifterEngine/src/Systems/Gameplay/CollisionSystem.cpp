@@ -35,7 +35,7 @@ void drft::system::CollisionSystem::onCollisionAdded(entt::registry& registry, e
 	case drft::system::Relationship::Neutral:
 	case drft::system::Relationship::Hostile:
 	{
-		_registry.emplace_or_replace<MeleeAttackAction>(entity, collisionComponent.direction, collisionComponent.blockers);
+		_registry.emplace_or_replace<MeleeAttackAction>(entity, collisionComponent.direction);
 	}
 		break;
 	default:

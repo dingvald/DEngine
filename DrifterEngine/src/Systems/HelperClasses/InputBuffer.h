@@ -1,4 +1,5 @@
 #pragma once
+#include <Keybindings/ModifiedKey.h>
 
 namespace drft::system
 {
@@ -8,21 +9,21 @@ namespace drft::system
 		InputBuffer(unsigned int maxBufferSize);
 
 		void update();
-		void press(sf::Keyboard::Key key);
-		void release(sf::Keyboard::Key key);
+		void press(ModifiedKey key);
+		void release(ModifiedKey key);
 
-		sf::Keyboard::Key pop();
+		ModifiedKey pop();
 
 		bool isEmpty() const;
 
 	private:
-		using KeyBuffer = std::deque<sf::Keyboard::Key>;
+		using KeyBuffer = std::deque<ModifiedKey>;
 		struct KeyState
 		{
 			float timeHeld = 0;
 			bool active = false;
 		};
-		std::unordered_map<sf::Keyboard::Key, KeyState> _pressedKeys;
+		std::unordered_map<ModifiedKey, KeyState> _pressedKeys;
 		unsigned int _maxBufferSize = 1;
 		KeyBuffer _buffer;
 	};

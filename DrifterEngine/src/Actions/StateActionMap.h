@@ -1,6 +1,7 @@
 #pragma once
+#include <Utility/stdHashing.h>
 
-template <std::invocable ActionType>
+template <typename ActionType>
 class StateActionMap
 {
 public:
@@ -12,13 +13,13 @@ private:
 	std::unordered_map<entt::hashed_string, ActionType> _actionMap;
 };
 
-template<std::invocable ActionType>
+template<typename ActionType>
 inline void StateActionMap<ActionType>::bindAction(entt::hashed_string actionName, ActionType action)
 {
 	_actionMap.emplace(actionName, action);
 }
 
-template<std::invocable ActionType>
+template<typename ActionType>
 template<typename ...Args>
 inline void StateActionMap<ActionType>::callAction(entt::hashed_string actionName, Args ...args)
 {

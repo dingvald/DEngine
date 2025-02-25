@@ -438,6 +438,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Actions\StateActionMap.h" />
     <ClInclude Include="src\Keybindings\Keybindings.h" />
     <ClInclude Include="src\Keybindings\KeybindingsUtils.h" />
+    <ClInclude Include="src\Keybindings\ModifiedKey.h" />
     <ClInclude Include="src\Keybindings\StateKeybindings.h" />
     <ClInclude Include="src\Components\ArtificalInputComponent.h" />
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h" />

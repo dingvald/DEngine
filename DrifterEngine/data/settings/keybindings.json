@@ -3,18 +3,29 @@
         "states": {
             "simulation": {
                 "wait": [ "Numpad5" ],
-                "move_east": [ "Numpad6", "Right" ],
-                "move_west": [ "Numpad4", "Left" ],
-                "move_north": [ "Numpad8", "Up" ],
-                "move_south": [ "Numpad2", "Down" ],
+                "move_east": [ "Numpad6" ],
+                "move_west": [ "Numpad4" ],
+                "move_north": [ "Numpad8" ],
+                "move_south": [ "Numpad2" ],
                 "move_north_east": [ "Numpad9" ],
                 "move_north_west": [ "Numpad7" ],
                 "move_south_east": [ "Numpad3" ],
                 "move_south_west": [ "Numpad1" ],
 
+                "force_attack_east": [ "Shift + Numpad6" ],
+                "force_attack_west": [ "Shift + Numpad4" ],
+                "force_attack_north": [ "Shift + Numpad8" ],
+                "force_attack_south": [ "Shift + Numpad2" ],
+                "force_attack_north_east": [ "Shift + Numpad9" ],
+                "force_attack_north_west": [ "Shift + Numpad7" ],
+                "force_attack_south_east": [ "Shift + Numpad3" ],
+                "force_attack_south_west": [ "Shift + Numpad1" ],
+
+                "toggle_sprint": [ "S" ],
                 "pick_up": [ "G" ],
                 "drop": [ "D" ],
                 "open_equipment": [ "E" ],
+                "open_crafting": [ "C" ],
                 "interact": [ "Space" ],
 
                 "hotbar_1": [ "Num1" ],

@@ -7,6 +7,7 @@
 #include "Components/Components.h"
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/AttackerComponent.h"
+#include <Components/PhysicalBlockingComponent.h>
 #include "Components/PositionComponent.h"
 #include "Components/ProjectileComponent.h"
 #include <Components/TweeningComponent.h>
@@ -77,7 +78,16 @@ void drft::system::MeleeAttackActionSystem::onMeleeAttackActionAdded(entt::regis
 
 void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle entity, MeleeAttackAction action) const
 {
-	for (auto target : action.targets)
+	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
+	const auto& positionComponent = entity.get<PositionComponent>();
+
+	sf::Vector3i targetPosition = positionComponent.tile + spatial::vec3FromPlanar(action.direction);
+	auto checkForBlockers = [this](entt::entity entity) -> bool
+		{
+			return _registry.all_of<PhysicalBlockingComponent>(entity);
+		};
+	auto blockers = grid.entitiesAt(spatial::asTileSpace(targetPosition), checkForBlockers);
+	for (auto target : blockers)
 	{
 		_registry.emplace_or_replace<component::action::IncomingDamage>(target, action.damageTypes, entity);
 	}

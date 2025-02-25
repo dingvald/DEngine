@@ -3035,6 +3035,9 @@
     <ClInclude Include="src\Keybindings\KeybindingsUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Keybindings\ModifiedKey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">

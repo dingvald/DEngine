@@ -5,6 +5,7 @@
 
 #include "Events/RequestStateChange.h"
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
+#include <Keybindings/KeybindingsUtils.h>
 
 #include <States/GameStates/CraftingState.h>
 #include <States/GameStates/GameOverState.h>
@@ -107,15 +108,21 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 		case sf::Event::KeyPressed:
+		{
 			if (ev.key.code == sf::Keyboard::Escape)
 			{
 				requestStackPush(States::Pause);
 				return false;
 			}
-			_inputBuffer.press(ev.key.code);
+			ModifiedKey key = KeybindingUtils::getModifiedKey(ev.key.scancode);
+			_inputBuffer.press(key);
+		}
 		break;
 		case sf::Event::KeyReleased:
-			_inputBuffer.release(ev.key.code);
+		{
+			ModifiedKey key = KeybindingUtils::getModifiedKey(ev.key.scancode);
+			_inputBuffer.release(key);
+		}
 		break;
 
 	}
