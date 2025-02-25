@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   <ItemGroup>
     <ClCompile Include="src\Actions\StateActionMap.cpp" />
     <ClCompile Include="src\Keybindings\Keybindings.cpp" />
+    <ClCompile Include="src\Keybindings\KeybindingsUtils.cpp" />
     <ClCompile Include="src\Keybindings\StateKeybindings.cpp" />
     <ClCompile Include="src\Utility\HashedString.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
@@ -436,6 +437,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   <ItemGroup>
     <ClInclude Include="src\Actions\StateActionMap.h" />
     <ClInclude Include="src\Keybindings\Keybindings.h" />
+    <ClInclude Include="src\Keybindings\KeybindingsUtils.h" />
     <ClInclude Include="src\Keybindings\StateKeybindings.h" />
     <ClInclude Include="src\Components\ArtificalInputComponent.h" />
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h" />

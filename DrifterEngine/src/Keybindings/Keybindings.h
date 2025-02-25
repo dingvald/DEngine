@@ -9,6 +9,8 @@ public:
 	void createFromJson(const rapidjson::Value& json) override;
 	void saveToJson(rapidjson::Value& json) const;
 
+	const StateKeybindings& operator [](entt::hashed_string state) const;
+
 	const StateKeybindings& forState(entt::hashed_string state) const;
 	StateKeybindings& forStateNonConst(entt::hashed_string state);
 

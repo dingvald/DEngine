@@ -133,8 +133,11 @@ void drft::Engine::loadKeybindings()
 
 void drft::Engine::setupActionMap()
 {
+	// General engine actions
 	_actionMap.bindAction("toggle_fullscreen",	[this]() {toggleFullscreen();});
 	_actionMap.bindAction("toggle_debug",		[this]() {toggleDebug();});
+
+	// Movement actions
 	_actionMap.bindAction("move_east",			[this]() {swapToKeyboard();});
 	_actionMap.bindAction("move_west",			[this]() {swapToKeyboard();});
 	_actionMap.bindAction("move_north",			[this]() {swapToKeyboard();});
@@ -223,23 +226,12 @@ void drft::Engine::handleMouseEvents(sf::Event event)
 void drft::Engine::handleKeyboardEvents(sf::Event event)
 {
 	using Key = sf::Keyboard;
-	KeyModifier modifier = KeyModifier::None;
+	KeyModifier modifier = getKeyModifier();
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
-		|| sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
-	{
-		modifier = KeyModifier::Ctrl;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
-		|| sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
-	{
-		modifier = KeyModifier::Shift;
-	}
-
-	auto generalAction = _keybindings.forState("general").getActionForKey(event.key.code, modifier);
+	auto generalAction = _keybindings["general"].getActionForKey(event.key.code, modifier);
 	if (generalAction) _actionMap.callAction(generalAction.value());
 
-	auto simulationAction = _keybindings.forState("simulation").getActionForKey(event.key.code, modifier);
+	auto simulationAction = _keybindings["simulation"].getActionForKey(event.key.code, modifier);
 	if (simulationAction) _actionMap.callAction(simulationAction.value());
 }
 

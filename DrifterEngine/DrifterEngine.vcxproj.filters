@@ -615,6 +615,9 @@
     <ClCompile Include="src\Actions\StateActionMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Keybindings\KeybindingsUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3027,6 +3030,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Actions\StateActionMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Keybindings\KeybindingsUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
