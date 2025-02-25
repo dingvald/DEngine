@@ -49,7 +49,7 @@ private:
 		Key secondary = {};
 	};
 
-	StateKeybindings::Key parseStringToKey(const std::string& input) const;
+	StateKeybindings::Key convertStringToKey(const std::string& input) const;
 	std::string convertKeyToString(Key key) const;
 
 private:

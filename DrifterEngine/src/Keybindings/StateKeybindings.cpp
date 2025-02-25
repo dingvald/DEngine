@@ -287,13 +287,13 @@ void StateKeybindings::createFromJson(const rapidjson::Value& json)
             continue;
         }
 
-        auto key1 = parseStringToKey(keyNames[0].GetString());
+        auto key1 = convertStringToKey(keyNames[0].GetString());
         boundKeys.primary = key1;
         _keyToAction.emplace(key1, actionName);
         
         if (keyNames.Size() > 1)
         {
-            auto key2 = parseStringToKey(keyNames[1].GetString());
+            auto key2 = convertStringToKey(keyNames[1].GetString());
             boundKeys.secondary = key2;
             _keyToAction.emplace(key2, actionName);
         }
@@ -358,7 +358,7 @@ std::optional<entt::hashed_string> StateKeybindings::getActionForKey(sf::Keyboar
     return _keyToAction.at({ modifier, key });
 }
 
-StateKeybindings::Key StateKeybindings::parseStringToKey(const std::string& input) const
+StateKeybindings::Key StateKeybindings::convertStringToKey(const std::string& input) const
 {
 	auto inputNoWhitespace = drft::util::removeWhitespace(input);
 	auto splitStrings = drft::util::split(inputNoWhitespace, "+");
