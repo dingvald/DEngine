@@ -2,7 +2,7 @@
     "keybindings": {
         "states": {
             "simulation": {
-                "wait": ["Numpad5"],
+                "wait": [ "Numpad5" ],
                 "move_east": [ "Numpad6", "Right" ],
                 "move_west": [ "Numpad4", "Left" ],
                 "move_north": [ "Numpad8", "Up" ],
@@ -28,9 +28,17 @@
                 "hotbar_9": [ "Num9" ],
                 "hotbar_0": [ "Num0" ]
             },
-            "general": {
+            "menu": {
+                "navigate_right": [ "Numpad6", "Right" ],
+                "navigate_left": [ "Numpad4", "Left" ],
+                "navigate_up": [ "Numpad8", "Up" ],
+                "navigate_down": [ "Numpad2", "Down" ],
+                "select": [ "Space" ],
+                "exit": ["Escape"]
+            },
+            "engine": {
                 "toggle_fullscreen": [ "F11" ],
-                "toggle_debug": ["F5"]
+                "toggle_debug": [ "F5" ]
             }
         }
     }
