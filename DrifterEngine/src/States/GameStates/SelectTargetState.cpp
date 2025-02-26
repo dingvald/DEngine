@@ -50,6 +50,12 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
+		if (ev.key.code == sf::Keyboard::Escape)
+		{
+			requestStackPop();
+			return true;
+		}
+
 		const Keybindings& keybindings = getContext().keybindings;
 		const ModifiedKey key = KeybindingUtils::getModifiedKey(ev.key.scancode);
 		auto action = keybindings["simulation"].getActionForKey(key);
