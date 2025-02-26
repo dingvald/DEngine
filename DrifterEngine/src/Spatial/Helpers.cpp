@@ -494,9 +494,9 @@ std::vector<sf::Vector3i> drft::spatial::getSurroundingPoints(sf::Vector3i point
 
 void drft::spatial::forEachPointInRect(sf::IntRect rect, std::function<void(sf::Vector2i)> func)
 {
-	for (int y = rect.top; y < rect.top + rect.height; ++y)
+	for (int y = rect.position.y; y < rect.position.y + rect.size.y; ++y)
 	{
-		for (int x = rect.left; x < rect.left + rect.width; ++x)
+		for (int x = rect.position.x; x < rect.position.x + rect.size.y; ++x)
 		{
 			func(sf::Vector2i{ x, y });
 		}

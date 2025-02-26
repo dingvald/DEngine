@@ -14,7 +14,6 @@
 
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
-#include "Utility/SpriteIndexer.h"
 #include <Utility/StandardLogger.h>
 #include "Utility/StringManipulation.h"
 #include "Utility/TextureAtlas.h"
@@ -59,16 +58,15 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 
 bool drft::InventoryState::handleEvent(const sf::Event& ev)
 {
-	switch (ev.type)
+	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
 	{
-	case sf::Event::KeyPressed:
-		if (ev.key.code == sf::Keyboard::Escape)
+		if (keypressed->code == sf::Keyboard::Key::Escape)
 		{
 			requestStackPop();
 			return true;
 		}
-		break;
 	}
+	return false;
 
 	return false;
 }

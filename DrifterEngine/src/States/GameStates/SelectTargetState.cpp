@@ -35,25 +35,23 @@ drft::SelectTargetState::SelectTargetState(StateStack& stack, StateContext& cont
 }
 
 bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
-{;
-	switch (ev.type)
+{
+	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
 	{
-	case sf::Event::KeyPressed:
-		if (ev.key.code == sf::Keyboard::Escape)
+		if (keypressed->code == sf::Keyboard::Key::Escape)
 		{
 			requestStackPop();
 			return true;
 		}
 
 		const Keybindings& keybindings = getContext().keybindings;
-		const ModifiedKey key = KeybindingUtils::getModifiedKey(ev.key.scancode);
+		const ModifiedKey key = KeybindingUtils::getModifiedKey(keypressed->scancode);
 		auto action = keybindings["simulation"].getActionForKey(key);
 		if (action)
 		{
 			_actionMap.callAction(action.value());
 			return true;
 		}
-		break;
 	}
 	return false;
 }

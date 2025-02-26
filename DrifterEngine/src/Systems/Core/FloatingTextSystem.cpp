@@ -44,7 +44,7 @@ void drft::system::FloatingTextSystem::queueFloatingMessage(const std::string& m
 		position = toScreenSpace(position, camera);
 	}
 
-	_floatingMessages.emplace_back(sf::Text(std::string(message), font), position, velocity, trackedEntity, fades, ttl, isScreenSpace);
+	_floatingMessages.emplace_back(sf::Text{ font, message }, position, velocity, trackedEntity, fades, ttl, isScreenSpace);
 	auto& newMessage = _floatingMessages.back();
 	newMessage.text.setFillColor(color);
 	newMessage.text.setCharacterSize(16);
@@ -78,7 +78,7 @@ void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 		if (it->fades)
 		{
 			sf::Color color = it->text.getFillColor();
-			color.a = math::remap(0, 120, 0, 255, it->ttl);
+			color.a = static_cast<std::uint8_t>(math::remap(0, 120, 0, 255, it->ttl));
 			it->text.setFillColor(color);
 		}
 

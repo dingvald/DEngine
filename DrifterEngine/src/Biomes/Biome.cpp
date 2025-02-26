@@ -202,13 +202,13 @@ void Biome::setBaseTileColor(sf::Color iconColor)
 {
 	auto max_val = std::max(iconColor.r, std::max(iconColor.g, iconColor.b));
 	sf::Color intermediate;
-	intermediate.r = static_cast<sf::Uint8>(drft::math::remap(0, max_val, 0, 255, iconColor.r));
-	intermediate.g = static_cast<sf::Uint8>(drft::math::remap(0, max_val, 0, 255, iconColor.g));
-	intermediate.b = static_cast<sf::Uint8>(drft::math::remap(0, max_val, 0, 255, iconColor.b));
+	intermediate.r = static_cast<std::uint8_t>(drft::math::remap(0, max_val, 0, 255, iconColor.r));
+	intermediate.g = static_cast<std::uint8_t>(drft::math::remap(0, max_val, 0, 255, iconColor.g));
+	intermediate.b = static_cast<std::uint8_t>(drft::math::remap(0, max_val, 0, 255, iconColor.b));
 
-	_baseTileColor.r = static_cast<sf::Uint8>(drft::math::remap(0, 255, 0, 40, intermediate.r));
-	_baseTileColor.g = static_cast<sf::Uint8>(drft::math::remap(0, 255, 0, 40, intermediate.g));
-	_baseTileColor.b = static_cast<sf::Uint8>(drft::math::remap(0, 255, 0, 40, intermediate.b));
+	_baseTileColor.r = static_cast<std::uint8_t>(drft::math::remap(0, 255, 0, 40, intermediate.r));
+	_baseTileColor.g = static_cast<std::uint8_t>(drft::math::remap(0, 255, 0, 40, intermediate.g));
+	_baseTileColor.b = static_cast<std::uint8_t>(drft::math::remap(0, 255, 0, 40, intermediate.b));
 }
 
 

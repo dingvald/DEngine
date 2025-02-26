@@ -20,16 +20,14 @@ drft::GameOverState::GameOverState(StateStack& stack, StateContext& context)
 
 bool drft::GameOverState::handleEvent(const sf::Event& ev)
 {
-	switch (ev.type)
+	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
 	{
-	case sf::Event::KeyPressed:
-		if (ev.key.code == sf::Keyboard::Escape)
+		if (keypressed->code == sf::Keyboard::Key::Escape)
 		{
 			requestStackClear();
 			requestStackPush(States::MainMenu);
-			return false;
+			return true;
 		}
-		break;
 	}
 	return false;
 }

@@ -11,7 +11,7 @@ sf::Color drft::ToggleSprintAbility::getIconColor() const
 
 sf::IntRect drft::ToggleSprintAbility::getTextureUV() const
 {
-	return { 1, 0, 16, 16 };
+	return { {1, 0}, {16, 16} };
 }
 
 drft::AbilityTargetingType drft::ToggleSprintAbility::getTargetingType() const

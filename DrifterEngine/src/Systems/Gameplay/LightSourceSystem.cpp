@@ -24,9 +24,9 @@ void drft::system::LightSourceSystem::update()
 			{
 				if (auto tempLight = _registry.try_get<TemporaryLightSourceComponent>(entity))
 				{
-					sf::Uint8 r = static_cast<sf::Uint8>(std::clamp(tempLight->color.r * (static_cast<float>(light->color.r) / 255.f), 0.f, 255.f));
-					sf::Uint8 g = static_cast<sf::Uint8>(std::clamp(tempLight->color.g * (static_cast<float>(light->color.g) / 255.f), 0.f, 255.f));
-					sf::Uint8 b = static_cast<sf::Uint8>(std::clamp(tempLight->color.b * (static_cast<float>(light->color.b) / 255.f), 0.f, 255.f));
+					std::uint8_t r = static_cast<std::uint8_t>(std::clamp(tempLight->color.r * (static_cast<float>(light->color.r) / 255.f), 0.f, 255.f));
+					std::uint8_t g = static_cast<std::uint8_t>(std::clamp(tempLight->color.g * (static_cast<float>(light->color.g) / 255.f), 0.f, 255.f));
+					std::uint8_t b = static_cast<std::uint8_t>(std::clamp(tempLight->color.b * (static_cast<float>(light->color.b) / 255.f), 0.f, 255.f));
 
 					const float radius = std::max(tempLight->radius, light->radius);
 					const float dropOff = std::min(tempLight->dropOff, light->dropOff);

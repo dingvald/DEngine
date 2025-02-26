@@ -8,7 +8,7 @@ class RectPacker
 public:
 	RectPacker(unsigned int width, unsigned int height);
 	bool pack(std::vector<PackingRect>& inoutRects);
-	sf::Vector2i getActualSize();
+	sf::Vector2u getActualSize();
 
 private:
 	int _width;

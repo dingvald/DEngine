@@ -244,9 +244,9 @@ void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, co
 						else if (size == 3 && arr[0].IsInt())
 						{
 							sf::Color col = {
-								static_cast<sf::Uint8>(arr[0].GetInt()),
-								static_cast<sf::Uint8>(arr[1].GetInt()),
-								static_cast<sf::Uint8>(arr[2].GetInt())
+								static_cast<std::uint8_t>(arr[0].GetInt()),
+								static_cast<std::uint8_t>(arr[1].GetInt()),
+								static_cast<std::uint8_t>(arr[2].GetInt())
 							};
 							meta.data(entt::hashed_string(memberName)).set(any, col);
 						}

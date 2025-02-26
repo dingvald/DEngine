@@ -61,17 +61,17 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 	RectPacker packer = { maxSizeInPixels, maxSizeInPixels };
 	if (packer.pack(rects))
 	{
-		sf::Image image;
-		image.create(packer.getActualSize().x, packer.getActualSize().y);
+		sf::Image image{ packer.getActualSize() };
+
 		for (auto&& rect : rects)
 		{
 			if (!rect.was_packed) continue;
 			const auto& subImage = imageData.at(rect.id);
 			const auto& imageName = imageNames.at(rect.id);
 
-			image.copy(subImage, rect.x, rect.y);
+			image.copy(subImage, { static_cast<unsigned int>(rect.x), static_cast<unsigned int>(rect.y) });
 
-			sf::IntRect intRect = { rect.x, rect.y, rect.w, rect.h };
+			sf::IntRect intRect = { {rect.x, rect.y}, {rect.w, rect.h} };
 			_subTextures.emplace(imageName.value(), std::move(intRect));
 		}
 		_texture.loadFromImage(image);
@@ -99,7 +99,7 @@ bool TextureAtlas::hasTexture(const std::string& name) const
 sf::IntRect TextureAtlas::getUV(entt::id_type textureId, sf::Vector2i uvSize, sf::Vector2i localUV) const
 {
 	sf::IntRect rect = _subTextures.at(textureId);
-	sf::Vector2i uvCoords = { rect.left + (localUV.x * uvSize.x), rect.top + (localUV.y * uvSize.y) };
+	sf::Vector2i uvCoords = { rect.position.x + (localUV.x * uvSize.x), rect.position.y + (localUV.y * uvSize.y) };
 	return {uvCoords, uvSize};
 }
 

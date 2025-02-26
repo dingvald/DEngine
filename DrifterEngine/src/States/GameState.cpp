@@ -105,26 +105,21 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 {	
 	if (_gameStateStack.handleEvent(ev)) return true;
 
-	switch (ev.type)
+	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
 	{
-		case sf::Event::KeyPressed:
+		if (keypressed->code == sf::Keyboard::Key::Escape)
 		{
-			if (ev.key.code == sf::Keyboard::Escape)
-			{
-				requestStackPush(States::Pause);
-				return false;
-			}
-			ModifiedKey key = KeybindingUtils::getModifiedKey(ev.key.scancode);
-			_inputBuffer.press(key);
+			requestStackPush(States::Pause);
+			return true;
 		}
-		break;
-		case sf::Event::KeyReleased:
-		{
-			ModifiedKey key = KeybindingUtils::getModifiedKey(ev.key.scancode);
-			_inputBuffer.release(key);
-		}
-		break;
+		ModifiedKey key = KeybindingUtils::getModifiedKey(keypressed->scancode);
+		_inputBuffer.press(key);
+	}
 
+	if (const auto keyreleased = ev.getIf<sf::Event::KeyReleased>())
+	{
+		ModifiedKey key = KeybindingUtils::getModifiedKey(keyreleased->scancode);
+		_inputBuffer.release(key);
 	}
 
 	return false;

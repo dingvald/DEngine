@@ -7,7 +7,6 @@
 
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
-#include "Services/DebugInfo.h"
 
 static const float CAMERA_SPEED = 7.0f;
 
@@ -27,19 +26,17 @@ void drft::system::Camera::render(sf::RenderTarget& target)
 {
 	auto cameraView = _registry.view<CameraComponent, PositionComponent>();
 
-	for (auto [entity, camera, pos] : cameraView.each())
+	for (auto&& [entity, camera, pos] : cameraView.each())
 	{
 		camera.target = tryFindTarget();
 	}
 
-	for (auto [entity, camera, pos] : cameraView.each())
+	for (auto&& [entity, camera, pos] : cameraView.each())
 	{
 		const auto& target = _registry.try_get<const PositionComponent>(camera.target);
 		if (!target) continue;
 
 		pos.tile = target->tile;
-
-		service::DebugInfo::instance().putInfo("Position", TilePosition::toString(pos.tile));
 	}
 }
 

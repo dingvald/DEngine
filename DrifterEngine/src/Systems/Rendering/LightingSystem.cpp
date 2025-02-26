@@ -74,9 +74,9 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 			float i = std::clamp( 1 / (denom*denom), 0.0f, 1.0f);
 			sf::Color lightColor = 
 			{
-				static_cast<sf::Uint8>(light.color.r * i),
-				static_cast<sf::Uint8>(light.color.g * i),
-				static_cast<sf::Uint8>(light.color.b * i)
+				static_cast<std::uint8_t>(light.color.r * i),
+				static_cast<std::uint8_t>(light.color.g * i),
+				static_cast<std::uint8_t>(light.color.b * i)
 			};
 			if (auto lit = _registry.try_get<LitComponent>(entity))
 			{
@@ -103,9 +103,9 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 			float i = std::clamp(1 / (denom * denom), 0.0f, 1.0f);
 			sf::Color lightColor =
 			{
-				static_cast<sf::Uint8>(light.color.r * i),
-				static_cast<sf::Uint8>(light.color.g * i),
-				static_cast<sf::Uint8>(light.color.b * i)
+				static_cast<std::uint8_t>(light.color.r * i),
+				static_cast<std::uint8_t>(light.color.g * i),
+				static_cast<std::uint8_t>(light.color.b * i)
 			};
 			if (auto lit = _registry.try_get<LitComponent>(entity))
 			{
@@ -125,17 +125,17 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 sf::Color drft::system::LightingSystem::blendColor(const sf::Color& color1, const sf::Color& color2)
 {
 	sf::Color result;
-	result.r = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(color1.r), (color1.r + color2.r) / 2), 0, 255));
-	result.g = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(color1.g), (color1.g + color2.g) / 2), 0, 255));
-	result.b = static_cast<sf::Uint8>(std::clamp(std::max(static_cast<int>(color1.b), (color1.b + color2.b) / 2), 0, 255));
+	result.r = static_cast<std::uint8_t>(std::clamp(std::max(static_cast<int>(color1.r), (color1.r + color2.r) / 2), 0, 255));
+	result.g = static_cast<std::uint8_t>(std::clamp(std::max(static_cast<int>(color1.g), (color1.g + color2.g) / 2), 0, 255));
+	result.b = static_cast<std::uint8_t>(std::clamp(std::max(static_cast<int>(color1.b), (color1.b + color2.b) / 2), 0, 255));
 	return result;
 }
 
 sf::Color drft::system::LightingSystem::blendLight(const sf::Color& color1, const sf::Color& color2)
 {
 	sf::Color result;
-	result.r = static_cast<sf::Uint8>(std::clamp(color1.r * (static_cast<float>(color2.r) / 255.f), 0.f, 255.f));
-	result.g = static_cast<sf::Uint8>(std::clamp(color1.g * (static_cast<float>(color2.g) / 255.f), 0.f, 255.f));
-	result.b = static_cast<sf::Uint8>(std::clamp(color1.b * (static_cast<float>(color2.b) / 255.f), 0.f, 255.f));
+	result.r = static_cast<std::uint8_t>(std::clamp(color1.r * (static_cast<float>(color2.r) / 255.f), 0.f, 255.f));
+	result.g = static_cast<std::uint8_t>(std::clamp(color1.g * (static_cast<float>(color2.g) / 255.f), 0.f, 255.f));
+	result.b = static_cast<std::uint8_t>(std::clamp(color1.b * (static_cast<float>(color2.b) / 255.f), 0.f, 255.f));
 	return result;
 }

@@ -9,7 +9,6 @@
 #include "Components/RenderComponent.h"
 #include "Components/SpriteChangeRequestComponent.h"
 
-#include "Utility/SpriteIndexer.h"
 #include "Systems/Helpers/SpawnEffect.h"
 #include "Utility/SpriteOptions.h"
 

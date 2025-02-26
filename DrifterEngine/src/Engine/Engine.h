@@ -27,8 +27,9 @@ namespace drft
 		void render(const float dt);
 		void shutDown();
 
-		void handleMouseEvents(sf::Event event);
-		void handleKeyboardEvents(sf::Event event);
+		void onMouseMoved();
+		void onKeyboardPressed(sf::Keyboard::Scancode scancode);
+
 		void passEventToGui(sf::Event event);
 		void passEventToState(sf::Event event);
 

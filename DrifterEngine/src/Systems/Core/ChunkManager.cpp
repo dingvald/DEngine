@@ -8,7 +8,6 @@
 #include "Components/PositionComponent.h"
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
 
-#include "Services/DebugInfo.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 
 
@@ -27,9 +26,6 @@ void drft::system::ChunkManager::update()
 	processSaveQueue();
 
 	cleanUpChunks();
-
-	service::DebugInfo::instance().putInfo("Active chunks", std::to_string(_chunks.size()));
-	service::DebugInfo::instance().putInfo("Pending chunks", std::to_string(_toBuild.size() + _toLoad.size()));
 }
 
 void drft::system::ChunkManager::shutdown()

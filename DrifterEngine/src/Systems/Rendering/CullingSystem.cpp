@@ -33,10 +33,10 @@ void drft::system::CullingSystem::render(sf::RenderTarget& target)
 sf::FloatRect drft::system::CullingSystem::addBufferToViewport(const sf::FloatRect& viewport) const
 {
 	sf::FloatRect result = viewport;
-	result.left -= spatial::TILE_WIDTH;
-	result.top -= spatial::TILE_HEIGHT;
-	result.width += 2 * spatial::TILE_WIDTH;
-	result.height += 2 * spatial::TILE_HEIGHT;
+	result.position.x -= spatial::TILE_WIDTH;
+	result.position.y -= spatial::TILE_HEIGHT;
+	result.size.x += 2 * spatial::TILE_WIDTH;
+	result.size.y += 2 * spatial::TILE_HEIGHT;
 
 	return result;
 }

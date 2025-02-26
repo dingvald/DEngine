@@ -5,10 +5,10 @@
 tgui::UIntRect drft::GuiHelpers::toUIntRect(sf::IntRect rect)
 {
     return {
-        static_cast<unsigned int>(rect.left),
-        static_cast<unsigned int>(rect.top),
-        static_cast<unsigned int>(rect.width),
-        static_cast<unsigned int>(rect.height),
+        static_cast<unsigned int>(rect.position.x),
+        static_cast<unsigned int>(rect.position.y),
+        static_cast<unsigned int>(rect.size.x),
+        static_cast<unsigned int>(rect.size.y),
     };
 }
 

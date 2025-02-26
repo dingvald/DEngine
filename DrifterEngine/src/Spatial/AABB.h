@@ -80,6 +80,6 @@ namespace drft::spatial
 	template<typename T>
 	inline sf::Rect<T> AABB<T>::flatten() const
 	{
-		return sf::Rect<T>{min.x, min.y, dimensions().x, dimensions().y};
+		return sf::Rect<T>{{ min.x, min.y }, { dimensions().x, dimensions().y }};
 	}
 }

@@ -31,16 +31,15 @@ drft::SettingsState::SettingsState(StateStack& stack, StateContext& context)
 
 bool drft::SettingsState::handleEvent(const sf::Event& ev)
 {
-	switch (ev.type)
+	if (auto keyPressed = ev.getIf<sf::Event::KeyPressed>())
 	{
-	case sf::Event::KeyPressed:
-		if (ev.key.code == sf::Keyboard::Escape)
+		if (keyPressed->code == sf::Keyboard::Key::Escape)
 		{
 			requestStackPop();
 			return true;
 		}
 	}
-
+		
 	return false;
 }
 

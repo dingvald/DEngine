@@ -23,13 +23,13 @@ ModifiedKey KeybindingUtils::getModifiedKey(sf::Keyboard::Scancode key)
 	result.key = key;
 	result.modifier = KeyModifier::None;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
-		|| sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)
+		|| sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RControl))
 	{
 		result.modifier = KeyModifier::Ctrl;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
-		|| sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)
+		|| sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift))
 	{
 		result.modifier = KeyModifier::Shift;
 	}

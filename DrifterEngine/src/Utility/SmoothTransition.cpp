@@ -27,9 +27,9 @@ drft::util::SmoothColorTransition::SmoothColorTransition(sf::Color start, sf::Co
 sf::Color drft::util::SmoothColorTransition::compute(float currentRange) const
 {
     sf::Color result;
-    result.r = static_cast<sf::Uint8>(_r.compute(currentRange));
-    result.g = static_cast<sf::Uint8>(_g.compute(currentRange));
-    result.b = static_cast<sf::Uint8>(_b.compute(currentRange));
+    result.r = static_cast<std::uint8_t>(_r.compute(currentRange));
+    result.g = static_cast<std::uint8_t>(_g.compute(currentRange));
+    result.b = static_cast<std::uint8_t>(_b.compute(currentRange));
 
     return result;
 }

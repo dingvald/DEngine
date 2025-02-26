@@ -10,7 +10,6 @@
 #include <Spatial/Helpers.h>
 #include "Utility/SmoothTransition.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
-#include "Services/DebugInfo.h"
 
 static constexpr int DAY_START_HOUR = 5;
 static constexpr int NIGHT_START_HOUR = 23;
@@ -55,7 +54,6 @@ void drft::system::DayNightCycleSystem::update()
 		time.hours > 12 ? time.hours - 12 : time.hours, 
 		time.minutes, 
 		time.hours >= 12 ? "pm" : "am");
-	service::DebugInfo::instance().putInfo("Time", timeMessage);
 }
 
 void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEvent& ev)

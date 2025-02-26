@@ -345,8 +345,8 @@ namespace drft
 			sf::Vector3i chunkOrigin = toChunkPosition(origin);
 			const int z = chunkOrigin.z;
 
-			sf::Vector3i top_left_point = toChunkPosition({ area.left, area.top, 0 });
-			sf::Vector3i bottom_right_point = toChunkPosition({ area.left + area.width, area.top + area.height, 0 });
+			sf::Vector3i top_left_point = toChunkPosition(spatial::vec3FromPlanar(area.position));
+			sf::Vector3i bottom_right_point = toChunkPosition(spatial::vec3FromPlanar(area.position + area.size));
 			for (int y = top_left_point.y; y <= bottom_right_point.y; ++y)
 			{
 				for (int x = top_left_point.x; x <= bottom_right_point.x; ++x)

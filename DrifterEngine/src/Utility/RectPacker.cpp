@@ -28,7 +28,7 @@ bool RectPacker::pack(std::vector<PackingRect>& inoutRects)
 	return result;
 }
 
-sf::Vector2i RectPacker::getActualSize()
+sf::Vector2u RectPacker::getActualSize()
 {
-	return {_maxWidth, _maxHeight};
+	return { static_cast<unsigned int>(_maxWidth), static_cast<unsigned int>(_maxHeight) };
 }

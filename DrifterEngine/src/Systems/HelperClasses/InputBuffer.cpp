@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "InputBuffer.h"
-#include <Services/DebugInfo.h>
 
 static constexpr unsigned int INPUT_BUFFER_MAX_SIZE = 2;
 static constexpr float REFRACTORY_PERIOD = 0.10f; // sec
@@ -29,13 +28,11 @@ void drft::system::InputBuffer::update()
 
         state.timeHeld = std::min(state.timeHeld + 1.0f, HOLD_TIME + 1.0f);
     }
-
-    service::DebugInfo::instance().putInfo("Input Buffer", std::to_string(_buffer.size()));
 }
 
 void drft::system::InputBuffer::press(ModifiedKey key)
 {
-    if (key.key == sf::Keyboard::Unknown) return;
+    if (key.key == sf::Keyboard::Scan::Unknown) return;
     if (_buffer.size() >= INPUT_BUFFER_MAX_SIZE) return;
 
     _buffer.push_back(key);
@@ -44,7 +41,7 @@ void drft::system::InputBuffer::press(ModifiedKey key)
 
 void drft::system::InputBuffer::release(ModifiedKey key)
 {
-    if (key.key == sf::Keyboard::Unknown) return;
+    if (key.key == sf::Keyboard::Scan::Unknown) return;
 
     _pressedKeys.erase(key);
 }

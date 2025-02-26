@@ -17,7 +17,6 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Spatial/WorldGrid.h"
-#include "Utility/SpriteIndexer.h"
 #include "Utility/stdHashing.h"
 
 using namespace entt::literals;

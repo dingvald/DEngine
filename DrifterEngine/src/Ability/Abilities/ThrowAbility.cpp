@@ -16,7 +16,7 @@ sf::Color drft::ThrowAbility::getIconColor() const
 
 sf::IntRect drft::ThrowAbility::getTextureUV() const
 {
-	return { 2, 0, 16, 16 };
+	return { { 2, 0 }, { 16, 16 } };
 }
 
 drft::AbilityTargetingType drft::ThrowAbility::getTargetingType() const

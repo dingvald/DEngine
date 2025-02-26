@@ -40,15 +40,15 @@ sf::Vector2i drft::rng::Random::positionInCircle(sf::Vector2i origin, int radius
 
 sf::Vector2i drft::rng::Random::positionInRect(sf::IntRect rect)
 {
-	int x = intInRange(rect.left, rect.left + rect.width);
-	int y = intInRange(rect.top, rect.top + rect.height);
+	int x = intInRange(rect.position.x, rect.position.x + rect.size.x);
+	int y = intInRange(rect.position.y, rect.position.y + rect.size.y);
 
 	return { x,y };
 }
 
 std::vector<sf::Vector2i> drft::rng::Random::shuffleRect(sf::IntRect rect)
 {
-	auto positions = spatial::getIntRect({ rect.left, rect.top }, rect.width, rect.height);
+	auto positions = spatial::getIntRect(rect.position, rect.size.x, rect.size.y);
 	std::shuffle(positions.begin(), positions.end(), _gen);
 	return positions;
 }

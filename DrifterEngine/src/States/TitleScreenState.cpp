@@ -1,34 +1,29 @@
 #include "pch.h"
 #include "TitleScreenState.h"
 
+static const char* PressAnyButtonLabel = "PressAnyButton";
+
 drft::TitleScreenState::TitleScreenState(StateStack& stack, StateContext& context)
     : State(stack, context)
 {
-	float centerX = getContext().window.getSize().x / 2.f;
-	float centerY = getContext().window.getSize().y / 2.f;
-	float threeQuarterY = (centerY + getContext().window.getSize().y) / 2.f;
-	sf::Vector2f textPosition = { centerX, threeQuarterY };
-
-	_pressAnyButtonText.setFont(getContext().fonts.get("Terminus"));
-	_pressAnyButtonText.setFillColor(sf::Color::White);
-	_pressAnyButtonText.setString("Press any button...");
-	float textWidth = static_cast<float>(_pressAnyButtonText.getCharacterSize() * _pressAnyButtonText.getString().getSize());
-	_pressAnyButtonText.setOrigin({ textWidth / 4.f, 0.f });
-	_pressAnyButtonText.setPosition(textPosition);
+	auto label = tgui::Label::create("Press Any Button");
+	label->setTextSize(32);
+	label->setPosition("50%, 80%");
+	
+	_guiGroup->add(label, PressAnyButtonLabel);
 }
 
 bool drft::TitleScreenState::handleEvent(const sf::Event& ev)
 {
-	switch (ev.type)
+	if (ev.is<sf::Event::KeyPressed>()
+		|| ev.is<sf::Event::MouseButtonPressed>())
 	{
-	case sf::Event::KeyPressed:
-	case sf::Event::MouseButtonPressed:
 		requestStackPop();
 		requestStackPush(States::MainMenu);
-		break;
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 bool drft::TitleScreenState::update()
@@ -42,14 +37,10 @@ bool drft::TitleScreenState::update()
 	{
 		elapsed = 0.0;
 	}
-	alpha = 255 * ((std::sinf(twoPI * f * elapsed) + 1.f) / 2.f);
+	alpha = ((std::sinf(twoPI * f * elapsed) + 1.f) / 2.f);
 
-	_pressAnyButtonText.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));
+	auto text = _guiGroup->get(PressAnyButtonLabel);
+	text->getRenderer()->setOpacity(alpha);
 	
     return false;
-}
-
-void drft::TitleScreenState::render(sf::RenderTarget& target)
-{
-	target.draw(_pressAnyButtonText);
 }

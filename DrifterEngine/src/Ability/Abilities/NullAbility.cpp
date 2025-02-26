@@ -38,5 +38,5 @@ sf::Color drft::NullAbility::getIconColor() const
 
 sf::IntRect drft::NullAbility::getTextureUV() const
 {
-	return { 0,0,16,16 };
+	return { { 0,0 }, { 16,16 } };
 }

@@ -58,17 +58,14 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 
 bool drft::MainMenuState::handleEvent(const sf::Event& ev)
 {
-	switch (ev.type)
+	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
 	{
-	case sf::Event::KeyPressed:
-		if (ev.key.code == sf::Keyboard::Escape)
+		if (keypressed->code == sf::Keyboard::Key::Escape)
 		{
 			requestStackClear();
 			return true;
 		}
-		break;
 	}
-
 	return false;
 }
 

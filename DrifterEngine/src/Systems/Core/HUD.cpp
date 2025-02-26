@@ -67,18 +67,7 @@ void drft::system::HUD::update()
 }
 
 void drft::system::HUD::render(sf::RenderTarget& target)
-{
-	target.draw(_lvlText);
-	target.draw(_xpText);
-
-	target.draw(_healthBarContainer);
-	target.draw(_healthBar);
-	target.draw(_heartIcon);
-
-	target.draw(_staminaBarContainer);
-	target.draw(_staminaBar);
-	target.draw(_staminaIcon);
-	
+{	
 	for (auto&& effect : _flashEffects)
 	{
 		target.draw(effect.shape);
@@ -87,55 +76,17 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 
 void drft::system::HUD::createLevelInfo()
 {
-	using namespace entt::literals;
-	const auto& font = _registry.ctx().get<sf::Font&>("terminus"_hs);
 
-	_lvlText.setFont(font);
-	_xpText.setFont(font);
-
-	_lvlText.setPosition(HEALTHBAR_POSITION - sf::Vector2f(0.f, 24.f));
-	_lvlText.setString("Level: ");
-	_lvlText.setCharacterSize(16);
-
-	_xpText.setPosition(HEALTHBAR_POSITION - sf::Vector2f(-64.f, 24.f));
-	_xpText.setString("xp: 0/100 ");
-	_xpText.setCharacterSize(16);
 }
 
 void drft::system::HUD::createHealthBar()
 {
-	using namespace entt::literals;
-	const auto& textureAtlas = _registry.ctx().get<TextureAtlas&>();
 
-	_heartIcon = textureAtlas.getSprite("simple_tileset"_hs, { 16, 16 }, { 5, 1 });
-	_heartIcon.setPosition(HEALTHBAR_POSITION - sf::Vector2f(20.f, 4.f));
-	_heartIcon.setColor(sf::Color(150, 60, 60, 200));
-
-	_healthBarContainer.setSize({ 1.f, HEALTHBAR_HEIGHT + 2.f });
-	_healthBarContainer.setPosition(HEALTHBAR_POSITION);
-	_healthBarContainer.setFillColor(sf::Color(180, 180, 180, 128));
-
-	_healthBar.setSize({ 1.f, HEALTHBAR_HEIGHT });
-	_healthBar.setPosition(HEALTHBAR_POSITION + sf::Vector2f{ 1.f, 1.f });
-	_healthBar.setFillColor(sf::Color(150, 60, 60, 200));
 }
 
 void drft::system::HUD::createStaminaBar()
 {
-	using namespace entt::literals;
-	const auto& textureAtlas = _registry.ctx().get<TextureAtlas&>();
 
-	_staminaIcon = textureAtlas.getSprite("simple_tileset"_hs, { 16, 16 }, { 8, 1 });
-	_staminaIcon.setPosition(STAMINABAR_POSITION - sf::Vector2f(20.f, 4.f));
-	_staminaIcon.setColor(sf::Color(60, 150, 60, 200));
-
-	_staminaBarContainer.setSize({ 1.f, STAMINABAR_HEIGHT + 2.f });
-	_staminaBarContainer.setPosition(STAMINABAR_POSITION);
-	_staminaBarContainer.setFillColor(sf::Color(180, 180, 180, 128));
-
-	_staminaBar.setSize({ 1.f, STAMINABAR_HEIGHT });
-	_staminaBar.setPosition(STAMINABAR_POSITION + sf::Vector2f{ 1.f, 1.f });
-	_staminaBar.setFillColor(sf::Color(60, 150, 60, 200));
 }
 
 void drft::system::HUD::createInHandsDisplay()
@@ -157,8 +108,7 @@ void drft::system::HUD::updateLevelInfo(entt::const_handle player)
 {
 	if (auto level = player.try_get<LevelingComponent>())
 	{
-		_lvlText.setString("Lvl " + std::to_string(level->currentLevel));
-		_xpText.setString("XP " + std::to_string(level->currentXP) + "/" + std::to_string(level->neededXP));
+
 	}
 }
 
@@ -166,13 +116,11 @@ void drft::system::HUD::updateHealthBar(entt::const_handle player)
 {
 	if (auto health = player.try_get<HealthComponent>())
 	{
-		_healthBarContainer.setSize({health->max * HEALTHBAR_WIDTH_MULTIPLIER, HEALTHBAR_HEIGHT + 2.f });
-		_healthBar.setSize({ (health->current / health->max)
-			* (health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT });
+
 	}
 	else
 	{
-		_healthBar.setSize({ 0.f, HEALTHBAR_HEIGHT });
+
 	}
 }
 
@@ -180,12 +128,11 @@ void drft::system::HUD::updateStaminaBar(entt::const_handle player)
 {
 	if (auto stamina = player.try_get<StaminaComponent>())
 	{
-		_staminaBarContainer.setSize({ stamina->max * STAMINABAR_WIDTH_MULTIPLIER, STAMINABAR_HEIGHT + 2.f });
-		_staminaBar.setSize({ (stamina->current / stamina->max) * (stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.f, STAMINABAR_HEIGHT });
+
 	}
 	else
 	{
-		_staminaBar.setSize({ 0.f, HEALTHBAR_HEIGHT });
+
 	}
 }
 

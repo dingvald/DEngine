@@ -42,17 +42,6 @@ namespace drft::system
 			int ttl = 0; // in frames
 		};
 
-		sf::Text _lvlText{};
-		sf::Text _xpText{};
-
-		sf::RectangleShape _healthBar{};
-		sf::RectangleShape _healthBarContainer{};
-		sf::Sprite _heartIcon{};
-
-		sf::RectangleShape _staminaBar{};
-		sf::RectangleShape _staminaBarContainer{};
-		sf::Sprite _staminaIcon{};
-
 		std::vector<FlashEffect> _flashEffects;
 	};
 }

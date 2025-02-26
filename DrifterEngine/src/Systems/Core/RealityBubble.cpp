@@ -6,7 +6,6 @@
 #include "Components/Tags.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
-#include "Services/DebugInfo.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 
 static const float REALITY_RADIUS = 96.0f; // in tiles

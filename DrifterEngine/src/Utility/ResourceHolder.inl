@@ -7,7 +7,7 @@ template <typename Resource, typename Identifier>
 void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::filesystem::path& filename)
 {
 	std::unique_ptr<Resource> resource(std::make_unique<Resource>());
-	if (!resource->loadFromFile(filename.string()))
+	if (!resource->openFromFile(filename))
 	{
 		throw std::runtime_error("TextureHolder::load - Failed to load " + filename.string());
 	}
@@ -21,7 +21,7 @@ void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::filesy
 												const Parameter& param)
 {
 	std::unique_ptr<Resource> resource(std::make_unique<Resource>());
-	if (!resource->loadFromFile(filename.string(), param))
+	if (!resource->openFromFile(filename, param))
 	{
 		throw std::runtime_error("TextureHolder::load - Failed to load " + filename.string());
 	}

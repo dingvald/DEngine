@@ -9,7 +9,6 @@
 #include <States/PauseState.h>
 #include <States/SettingsState.h>
 
-#include "Services/DebugInfo.h"
 #include "Utility/TextureAtlas.h"
 #include <Utility/StandardLogger.h>
 #include <JSON/JSONHelpers.h>
@@ -30,7 +29,7 @@ static constexpr int UPDATES_PER_FRAME_LIMIT = 10;
 
 
 drft::Engine::Engine()
-	: _window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Drifter Engine")
+	: _window(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine")
 	, _gui(_window)
 	, _showDebug(false)
 {
@@ -72,8 +71,6 @@ void drft::Engine::initialize()
 	loadResources();
 	loadKeybindings();
 	setupActionMap();
-	service::DebugInfo::instance().setFont(_fonts.get("Terminus"));
-	service::DebugInfo::instance().setPosition({ DEBUG_X_POSITION, DEBUG_Y_POSITION });
 	registerStates();
 
 	_gui.setKeyboardNavigationEnabled(true);
@@ -87,7 +84,7 @@ void drft::Engine::setWindowIcon()
 	const std::filesystem::path iconPath = ICONS_DIRECTORY / "drifter-project-icon.png";
 	if (icon.loadFromFile(iconPath.string()))
 	{
-		_window.setIcon(32, 32, icon.getPixelsPtr());
+		_window.setIcon({ 32, 32 }, icon.getPixelsPtr());
 	}
 	else
 	{
@@ -163,24 +160,23 @@ void drft::Engine::registerStates()
 
 void drft::Engine::handleEvents()
 {
-	sf::Event event;
-	while (_window.pollEvent(event))
+	while (const auto event = _window.pollEvent())
 	{
-		switch (event.type)
+		if (auto keypressed = event->getIf<sf::Event::KeyPressed>())
 		{
-			case sf::Event::KeyPressed:
-				handleKeyboardEvents(event);
-				break;
-			case sf::Event::Closed:
-				shutDown();
-				break;
-			default:
-				handleMouseEvents(event);
-				break;
+			onKeyboardPressed(keypressed->scancode);
+		}
+		if (event->is<sf::Event::Closed>())
+		{
+			shutDown();
+		}
+		if (event->is<sf::Event::MouseMoved>())
+		{
+			onMouseMoved();
 		}
 
-		passEventToGui(event);
-		passEventToState(event);
+		passEventToGui(event.value());
+		passEventToState(event.value());
 	}
 }
 
@@ -197,7 +193,7 @@ void drft::Engine::render(const float)
 
 	if (_showDebug)
 	{
-		service::DebugInfo::instance().render(_window);
+		// TODO: re-implement a debug display
 	}
 			
 	_window.display();
@@ -209,28 +205,17 @@ void drft::Engine::shutDown()
 	_window.close();
 }
 
-void drft::Engine::handleMouseEvents(sf::Event event)
+void drft::Engine::onMouseMoved()
 {
-	switch (event.type)
+	if (_controlsContext.navigation == NavigationType::Keyboard)
 	{
-	// If you so much as touch the mouse the engine swaps to mouse input for the game
-	case sf::Event::MouseButtonPressed:
-	case sf::Event::MouseButtonReleased:
-	case sf::Event::MouseMoved:
-	case sf::Event::MouseWheelMoved:
-	case sf::Event::MouseWheelScrolled:
-		if (_controlsContext.navigation == NavigationType::Keyboard)
-			swapToMouse();
-		break;
-	default:
-		break;
+		swapToMouse();
 	}
 }
 
-void drft::Engine::handleKeyboardEvents(sf::Event event)
+void drft::Engine::onKeyboardPressed(sf::Keyboard::Scancode scancode)
 {
-	using Key = sf::Keyboard;
-	ModifiedKey key = KeybindingUtils::getModifiedKey(event.key.scancode);
+	ModifiedKey key = KeybindingUtils::getModifiedKey(scancode);
 
 	auto generalAction = _keybindings["engine"].getActionForKey(key);
 	if (generalAction) _actionMap.callAction(generalAction.value());
@@ -241,28 +226,6 @@ void drft::Engine::handleKeyboardEvents(sf::Event event)
 
 void drft::Engine::passEventToGui(sf::Event event)
 {
-	// Convert numpad directions to keyboard arrow directions so it can be handled by the GUI
-	if (event.type == sf::Event::KeyPressed)
-	{
-		using Key = sf::Keyboard;
-		switch (event.key.code)
-		{
-		case Key::Numpad8:
-			event.key.code = Key::Up;
-			break;
-		case Key::Numpad6:
-			event.key.code = Key::Right;
-			break;
-		case Key::Numpad4:
-			event.key.code = Key::Left;
-			break;
-		case Key::Numpad2:
-			event.key.code = Key::Down;
-			break;
-		default:
-			break;
-		}
-	}
 	_gui.handleEvent(event);
 }
 
@@ -275,9 +238,7 @@ void drft::Engine::swapToMouse()
 {
 	_window.setMouseCursorVisible(true);
 
-	sf::Event ev{};
-	ev.type = sf::Event::MouseEntered;
-	_gui.handleEvent(ev);
+	_gui.handleEvent(sf::Event::MouseEntered{});
 	_gui.unfocusAllWidgets();
 	_controlsContext.navigation = NavigationType::Mouse;
 }
@@ -286,9 +247,7 @@ void drft::Engine::swapToKeyboard()
 {
 	_window.setMouseCursorVisible(false);
 
-	sf::Event ev{};
-	ev.type = sf::Event::MouseLeft;
-	_gui.handleEvent(ev);
+	_gui.handleEvent(sf::Event::MouseLeft{});
 	auto container = _gui.getContainer();
 	for (auto&& child : container->getWidgets())
 	{
@@ -303,14 +262,14 @@ void drft::Engine::toggleFullscreen()
 {
 	if (_isFullScreen)
 	{
-		_window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Drifter Engine");
+		_window.create(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine");
 		_window.setVerticalSyncEnabled(false);
 		_isFullScreen = false;
 		std::cout << "Window set to windowed mode" << std::endl;
 	}
 	else
 	{
-		_window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Drifter Engine", sf::Style::Fullscreen);
+		_window.create(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine", sf::State::Fullscreen);
 		_window.setVerticalSyncEnabled(true);
 		_isFullScreen = true;
 		std::cout << "Window set to fullscreen mode" << std::endl;
