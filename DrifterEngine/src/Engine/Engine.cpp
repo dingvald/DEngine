@@ -2,10 +2,13 @@
 #include "Engine.h"
 #include "EngineConstants.h"
 #include <Engine/CommonEngineDirectories.h>
+
 #include <States/GameState.h>
 #include <States/TitleScreenState.h>
 #include <States/MainMenuState.h>
 #include <States/PauseState.h>
+#include <States/SettingsState.h>
+
 #include "Services/DebugInfo.h"
 #include "Utility/TextureAtlas.h"
 #include <Utility/StandardLogger.h>
@@ -155,6 +158,7 @@ void drft::Engine::registerStates()
 	_stateStack.registerState<MainMenuState>(States::MainMenu);
 	_stateStack.registerState<GameState>(States::Game);
 	_stateStack.registerState<PauseState>(States::Pause);
+	_stateStack.registerState<SettingsState>(States::Settings);
 }
 
 void drft::Engine::handleEvents()

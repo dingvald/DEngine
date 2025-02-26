@@ -168,9 +168,6 @@
     <ClCompile Include="src\States\GameStates\InventoryState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\GUIElement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\States\GameStates\GameOverState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -616,6 +613,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Keybindings\KeybindingsUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\SettingsState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1260,9 +1260,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\States\GameStates\InventoryState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\GUIElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\States\GameStates\GameOverState.h">
@@ -3033,6 +3030,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Keybindings\ModifiedKey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\States\SettingsState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

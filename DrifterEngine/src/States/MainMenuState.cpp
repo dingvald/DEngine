@@ -88,7 +88,7 @@ void drft::MainMenuState::onContinueButton()
 
 void drft::MainMenuState::onSettingsButton()
 {
-	// TODO: implement
+	requestStackPush(States::Settings);
 }
 
 void drft::MainMenuState::onExitButton()
