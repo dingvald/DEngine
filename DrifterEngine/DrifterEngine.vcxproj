@@ -963,7 +963,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Events\TurnEndEvent.h" />
     <ClInclude Include="src\Events\TurnStartEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\LiquidSystem.h" />
-    <ClInclude Include="src\Events\ItemBreakEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\LightSourceSystem.h" />
     <ClInclude Include="src\Events\DayStartEvent.h" />
     <ClInclude Include="src\Events\NightStartEvent.h" />

@@ -1334,9 +1334,6 @@
     <ClInclude Include="src\Systems\Gameplay\LightSourceSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\ItemBreakEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\LiquidSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>

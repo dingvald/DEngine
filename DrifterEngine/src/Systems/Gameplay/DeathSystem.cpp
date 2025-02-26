@@ -16,7 +16,6 @@
 #include "Systems/Helpers/FindItemOwner.h"
 #include "Random/PercentChance.h"
 #include "Utility/EntityHelpers.h"
-#include "Events/ItemBreakEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
 
 
@@ -56,24 +55,6 @@ void drft::system::DeathSystem::update()
 			std::filesystem::remove_all(".\\data\\savegame\\");
 			_dispatcher.trigger(events::RequestStateStackPush(States::GameOver));
 		}
-		_registry.destroy(entity);
-	}
-
-	// Equipped item breaking
-	auto itemView = _registry.view<component::action::Die, ItemComponent>(entt::exclude<PositionComponent>);
-	for (auto [entity, item] : itemView.each())
-	{
-		auto owner = findItemOwner(_registry, item.id, WhereToLook::Bodies);
-		_dispatcher.trigger(events::ItemBreakEvent(item.id, owner));
-		_dispatcher.trigger(events::SendFloatingMessageEvent{
-			.message = util::getEntityName({_registry, entity}) + " broke!",
-			.color = sf::Color::Yellow,
-			.tracksEntity = owner,
-			.position = spatial::toXY(spatial::toFloatSpace(_registry.get<PositionComponent>(owner).tile)),
-			.velocity = {0,-0.25},
-			.isScreenSpace = false,
-			.ttl = 100
-			});
 		_registry.destroy(entity);
 	}
 }

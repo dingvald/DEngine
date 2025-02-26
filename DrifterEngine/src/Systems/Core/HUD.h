@@ -1,7 +1,6 @@
 #pragma once
 #include "Systems/System.h"
 #include "GUI/GUIElement.h"
-#include "Events/ItemBreakEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
 
 namespace drft::system
