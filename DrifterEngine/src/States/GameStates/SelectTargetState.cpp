@@ -22,17 +22,6 @@ static const sf::Color TARGET_AOE_OUT_OF_RANGE_COLOR = sf::Color(255, 0, 0, 100)
 drft::SelectTargetState::SelectTargetState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
-	_displayText.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,100),
-			.innerPadding = {4.f, 4.f},
-			.font = &context.fonts.get("Terminus"),
-			.textColor = sf::Color::White,
-			.textSize = 16
-		});
-	_displayText.setTextString("Select target");
-	_displayText.setOrigin(gui::ElementPosition::CENTER);
-	_displayText.setPosition(context.window.getView().getCenter() + sf::Vector2f(8.f, -64.f));
-
 	_actionMap.bindAction("move_south_west",	[this]() { moveCursor({ -1, 1 }); });
 	_actionMap.bindAction("move_south",			[this]() { moveCursor({ 0, 1 }); });
 	_actionMap.bindAction("move_south_east",	[this]() { moveCursor({ 1, 1 }); });
@@ -72,11 +61,6 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 bool drft::SelectTargetState::update()
 {
 	return true;
-}
-
-void drft::SelectTargetState::render(sf::RenderTarget& target)
-{
-	_displayText.render(target);
 }
 
 void drft::SelectTargetState::onPush()

@@ -78,10 +78,6 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 	target.draw(_staminaBarContainer);
 	target.draw(_staminaBar);
 	target.draw(_staminaIcon);
-
-	_inHandsDisplay.render(target);
-	_itemsOnGround.render(target);
-	_hotbar.render(target);
 	
 	for (auto&& effect : _flashEffects)
 	{
@@ -144,39 +140,17 @@ void drft::system::HUD::createStaminaBar()
 
 void drft::system::HUD::createInHandsDisplay()
 {
-	_inHandsDisplay.setPosition(HEALTHBAR_POSITION + sf::Vector2f(16.f, 64.f))
-		.setChildrenOrigin(gui::ElementPosition::CENTER_LEFT)
-		.setStyle(gui::ElementState::Idle, {
-			.childPadding = {48.f, 0.f}
-			});
+
 }
 
 void drft::system::HUD::createItemsOnGroundDisplay()
 {
-	using namespace entt::literals;
-	const auto& view = _registry.ctx().get<sf::RenderWindow&>().getView();
-	_itemsOnGround.setPosition({ view.getCenter().x + (view.getSize().x / 2) - 80, view.getCenter().y + (view.getSize().y / 2) - 64 })
-		.setStyle(gui::ElementState::Idle, {
-			.fillColor = sf::Color(0,0,0,100),
-			.outlineThickness = 1.f,
-			.innerPadding = {0.f, 0.f},
-			.childPadding = {0.f, 4.f},
-			.font = &_registry.ctx().get<sf::Font&>("terminus"_hs),
-			.textColor = sf::Color(200,200,200,200),
-			.textSize = 16
-			})
-		.setChildrenOrigin(gui::ElementPosition::BOTTOM_LEFT);
+
 }
 
 void drft::system::HUD::createHotbar()
 {
-	const auto& view = _registry.ctx().get<sf::RenderWindow&>().getView();
-	const sf::Vector2f position = { view.getCenter().x - 208, view.getCenter().y + (view.getSize().y / 2) - 64 };
 
-	_hotbar.setPosition(position)
-		.setStyle(gui::ElementState::Idle, {
-					.childPadding = {HOTBAR_ICON_X_OFFSET, 0.f}
-			});
 }
 
 void drft::system::HUD::updateLevelInfo(entt::const_handle player)
@@ -220,8 +194,6 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 	using namespace entt::literals;
 	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 
-	_itemsOnGround.clear();
-
 	if (auto pos = player.try_get<PositionComponent>())
 	{
 		auto entities = grid.entitiesAt(pos->tile,
@@ -237,18 +209,9 @@ void drft::system::HUD::updateItemsOnGround(entt::const_handle player)
 		int count = 0;
 		for (auto entity : entities)
 		{
-			_itemsOnGround.insert(std::to_string(count), gui::Label())
-				.setStyle(gui::ElementState::Idle, {
-					.font = &_registry.ctx().get<sf::Font&>("terminus"_hs),
-					.textColor = sf::Color::White,
-					.textSize = 16
-					})
-				.setOrigin(gui::ElementPosition::CENTER_LEFT)
-				.setTextString(util::getEntityName({ _registry, entity }));
+
 		}
 	}
-	
-	_itemsOnGround.update(0.f);
 }
 
 void drft::system::HUD::updateInHandsDisplay(entt::const_handle player)
@@ -281,85 +244,7 @@ void drft::system::HUD::updateFlashEffects()
 
 void drft::system::HUD::updateHotbar(entt::const_handle player)
 {
-	using namespace entt::literals;
-	_hotbar.clear();
-	if (auto hotbar = player.try_get<HotbarComponent>())
-	{
-		const int hotbarSize = hotbar->abilities.size();
-		const auto& textureAtlas = _registry.ctx().get<TextureAtlas&>();
-		for (int i = 0; i < hotbarSize; ++i) 
-		{
-			const auto& ability = AbilityRegistry::get(static_cast<AbilityType>(hotbar->abilities[i]));
-			const bool isValidAbility = ability.isValid(player);
-			const bool isToggledOn = ability.isToggledOn(player);
-			auto& hotbarContainer = _hotbar.insert(std::to_string(i), gui::DualContainer());
-			hotbarContainer.setSize({ 32,32 });
-			hotbarContainer.setStyle(gui::ElementState::Idle, {
-					.fillColor = isValidAbility ? sf::Color(0,0,0,60) : sf::Color(100,100,100,60),
-					.outlineColor = isValidAbility ? (isToggledOn ? sf::Color::Yellow : sf::Color(255,255,255,50)) : sf::Color(100,100,100,100),
-					.outlineThickness = 1.f,
-					.innerPadding = {0.f, 0.f}
-				});
-			hotbarContainer.setOrigin(gui::ElementPosition::CENTER);
 
-			const auto textureUV = ability.getTextureUV();
-			sf::Sprite abilitySprite = textureAtlas.getSprite("icons"_hs, { textureUV.width, textureUV.height }, { textureUV.left, textureUV.top });
-			auto& abilityIconGUI = hotbarContainer.insert("icon", gui::Icon{ abilitySprite });
-			abilityIconGUI.setSize({ 32,32 });
-			abilityIconGUI.setStyle(gui::ElementState::Idle, {
-					.fillColor = isValidAbility ? ability.getIconColor() : sf::Color(100,100,100,100)
-				});
-
-			hotbarContainer.insert("Slot Abbrev", gui::Label())
-				.setLocalPosition({ -8, -8 })
-				.setStyle(gui::ElementState::Idle, {
-					.font = &_registry.ctx().get<sf::Font&>("terminus"_hs),
-					.textColor = sf::Color::White
-					})
-				.setStyle(gui::ElementState::Focused, {
-					.font = &_registry.ctx().get<sf::Font&>("terminus"_hs),
-					.textColor = sf::Color::White
-					})
-				.setTextString(std::to_string((i+1)%10));
-		}
-	}
-	_hotbar.update(0.f);
-}
-
-void drft::system::HUD::addItemIcon(gui::Element& container, entt::entity item)
-{
-	using namespace entt::literals;
-	if (const auto itemRender = _registry.try_get<RenderComponent>(item))
-	{
-		const auto& textureAtlas = _registry.ctx().get<TextureAtlas&>();
-
-		sf::Sprite sprite = textureAtlas.getSprite(itemRender->texture, itemRender->uvSize, itemRender->uvCoords);
-		container.insert("Icon", gui::Icon(sprite))
-			.setSize({ 32,32 })
-			.setOrigin(gui::ElementPosition::BOTTOM_RIGHT)
-			.setStyle(gui::ElementState::Idle, {
-					.fillColor = itemRender->color
-				})
-			.setStyle(gui::ElementState::Focused, {
-						.fillColor = itemRender->color
-				});
-
-		if (auto health = _registry.try_get<HealthComponent>(item))
-		{
-			float scalingFactor = health->current / health->max;
-			container.insert("Health", gui::Panel())
-				.setSize({ 32, (32 - 32 * scalingFactor) })
-				.setLocalPosition({ 0, 16 })
-				.setOrigin(gui::ElementPosition::BOTTOM_CENTER)
-				.setStyle(gui::ElementState::Idle, {
-					.fillColor = sf::Color(255,0,0,60)
-					})
-				.setStyle(gui::ElementState::Focused, {
-					.fillColor = sf::Color(255,0,0,60)
-					});
-		}
-	}
-	
 }
 
 void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl, bool fades /*=false*/)
@@ -374,11 +259,7 @@ void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f siz
 
 void drft::system::HUD::onHotbarPressed(entt::registry& registry, entt::entity entity)
 {
-	auto& hotbarPressed = registry.get<component::action::HotbarPressed>(entity);
-	sf::Vector2f hotbarPosition = _hotbar.getPosition();
-	hotbarPosition.x += hotbarPressed.slot * HOTBAR_ICON_X_OFFSET;
-	hotbarPosition += sf::Vector2f{ -16, -16 }; // to offset from center
-	queueFlashEffect(hotbarPosition, { 32,32 }, 60, true);
+
 }
 
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)

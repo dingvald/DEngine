@@ -1,6 +1,5 @@
 #pragma once
 #include "Systems/System.h"
-#include "GUI/GUIElement.h"
 #include "Events/SendFloatingMessageEvent.h"
 
 namespace drft::system
@@ -30,8 +29,6 @@ namespace drft::system
 		void updateFlashEffects();
 		void updateHotbar(entt::const_handle player);
 
-		void addItemIcon(gui::Element& container, entt::entity item);
-
 		void queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl, bool fades = false);
 		void onHotbarPressed(entt::registry& registry, entt::entity entity);
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
@@ -55,10 +52,6 @@ namespace drft::system
 		sf::RectangleShape _staminaBar{};
 		sf::RectangleShape _staminaBarContainer{};
 		sf::Sprite _staminaIcon{};
-
-		gui::MultiContainer _inHandsDisplay;
-		gui::MultiContainer _hotbar;
-		gui::List _itemsOnGround{ false };
 
 		std::vector<FlashEffect> _flashEffects;
 	};

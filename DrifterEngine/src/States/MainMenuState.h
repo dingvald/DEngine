@@ -1,6 +1,5 @@
 #pragma once
 #include <States/State.h>
-#include "GUI/GUIElement.h"
 
 namespace drft
 {
