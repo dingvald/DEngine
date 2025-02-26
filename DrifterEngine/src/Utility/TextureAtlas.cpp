@@ -69,12 +69,19 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 			const auto& subImage = imageData.at(rect.id);
 			const auto& imageName = imageNames.at(rect.id);
 
-			image.copy(subImage, { static_cast<unsigned int>(rect.x), static_cast<unsigned int>(rect.y) });
+			if (!image.copy(subImage, { static_cast<unsigned int>(rect.x), static_cast<unsigned int>(rect.y) }))
+			{
+				warning_logger << "Warning: Image could not be copied." << std::endl;
+			}
 
 			sf::IntRect intRect = { {rect.x, rect.y}, {rect.w, rect.h} };
 			_subTextures.emplace(imageName.value(), std::move(intRect));
 		}
-		_texture.loadFromImage(image);
+
+		if (!_texture.loadFromImage(image))
+		{
+			warning_logger << "Warning: Image could not be loaded into the texture atlas." << std::endl;
+		}
 	}
 	else
 	{

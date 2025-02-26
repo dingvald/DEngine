@@ -2,7 +2,6 @@
 #include "HUD.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/WorldGrid.h"
-#include "Utility/SpriteIndexer.h"
 #include "Utility/EntityHelpers.h"
 #include "Utility/GetTextCenter.h"
 #include "Utility/SmoothTransition.h"
