@@ -2,6 +2,7 @@
 #include <States/State.h>
 #include "GUI/GUIElement.h"
 #include <Spatial/TilePosition.h>
+#include <Actions/StateActionMap.h>
 
 namespace component::action
 {
@@ -24,8 +25,10 @@ namespace drft
 	private:
 		bool isInRange() const;
 		void moveCursor(sf::Vector2i direction);
+		void select();
 
 	private:
+		StateActionMap<std::function<void()>> _actionMap;
 		component::action::SelectTarget* _targetSelect = nullptr;
 		TilePosition _cursorPosition = { 0,0,0 };
 		TilePosition _startPosition = { 0,0,0 };

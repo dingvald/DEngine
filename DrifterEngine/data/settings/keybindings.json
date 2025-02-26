@@ -2,7 +2,6 @@
     "keybindings": {
         "states": {
             "simulation": {
-                "wait": [ "Numpad5" ],
                 "move_east": [ "Numpad6" ],
                 "move_west": [ "Numpad4" ],
                 "move_north": [ "Numpad8" ],
@@ -11,6 +10,8 @@
                 "move_north_west": [ "Numpad7" ],
                 "move_south_east": [ "Numpad3" ],
                 "move_south_west": [ "Numpad1" ],
+
+                "wait": [ "Numpad5" ],
 
                 "force_attack_east": [ "Shift + Numpad6" ],
                 "force_attack_west": [ "Shift + Numpad4" ],

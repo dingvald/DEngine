@@ -6,6 +6,7 @@
 #include "Components/RenderComponent.h"
 
 #include "Events/SendFloatingMessageEvent.h"
+#include <Keybindings/Keybindings.h>
 
 #include <Spatial/Conversions.h>
 #include "Spatial/Helpers.h"
@@ -31,89 +32,29 @@ drft::SelectTargetState::SelectTargetState(StateStack& stack, StateContext& cont
 	_displayText.setTextString("Select target");
 	_displayText.setOrigin(gui::ElementPosition::CENTER);
 	_displayText.setPosition(context.window.getView().getCenter() + sf::Vector2f(8.f, -64.f));
+
+	_actionMap.bindAction("move_south_west",	[this]() { moveCursor({ -1, 1 }); });
+	_actionMap.bindAction("move_south",			[this]() { moveCursor({ 0, 1 }); });
+	_actionMap.bindAction("move_south_east",	[this]() { moveCursor({ 1, 1 }); });
+	_actionMap.bindAction("move_west",			[this]() { moveCursor({ -1, 0 }); });
+	_actionMap.bindAction("move_east",			[this]() { moveCursor({ 1, 0 }); });
+	_actionMap.bindAction("move_north_west",	[this]() { moveCursor({ -1, -1 }); });
+	_actionMap.bindAction("move_north",			[this]() { moveCursor({ 0, -1 }); });
+	_actionMap.bindAction("move_north_east",	[this]() { moveCursor({ 1, -1 }); });
+
+	_actionMap.bindAction("interact", [this]() { select(); });
 }
 
 bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
-{
+{;
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
-		if (ev.key.code == sf::Keyboard::Numpad8)
+		auto& keybindings = getContext().keybindings;
+		auto action = keybindings["simulation"].getActionForKey(KeybindingUtils::getModifiedKey(ev.key.scancode));
+		if (action)
 		{
-			moveCursor(sf::Vector2i(0, -1));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad2)
-		{
-			moveCursor(sf::Vector2i(0, 1));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad6)
-		{
-			moveCursor(sf::Vector2i(1, 0));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad4)
-		{
-			moveCursor(sf::Vector2i(-1, 0));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad7)
-		{
-			moveCursor(sf::Vector2i(-1, -1));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad9)
-		{
-			moveCursor(sf::Vector2i(1, -1));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad3)
-		{
-			moveCursor(sf::Vector2i(1, 1));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad1)
-		{
-			moveCursor(sf::Vector2i(-1, 1));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Numpad5)
-		{
-			moveCursor(sf::Vector2i(0, 0));
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Escape)
-		{
-			requestStackPop();
-			return true;
-		}
-		if (ev.key.code == sf::Keyboard::Space)
-		{
-			if (!isInRange())
-			{
-				const sf::Vector2f messagePosition = spatial::toXY(spatial::toFloatSpace(_startPosition));
-				auto& dispatcher = getContext().registry.ctx().get<entt::dispatcher&>();
-
-				dispatcher.trigger(events::SendFloatingMessageEvent{
-					.message = "Out of range",
-					.color = sf::Color::Red,
-					.position = messagePosition,
-					.velocity = {0.f,-0.1f},
-					.isScreenSpace = false,
-					.ttl = 80
-				});
-			}
-			else
-			{
-				auto selectTargetView = getContext().registry.view<component::action::SelectTarget>();
-				if (auto selectTarget = getContext().registry.try_get<component::action::SelectTarget>(selectTargetView.front()))
-				{
-					selectTarget->onTargetSelect(_cursorPosition);
-				}
-				requestStackPop();
-			}
-
+			_actionMap.callAction(action.value());
 			return true;
 		}
 		break;
@@ -257,4 +198,31 @@ void drft::SelectTargetState::moveCursor(sf::Vector2i direction)
 		});
 
 	_cursorPosition += dir;
+}
+
+void drft::SelectTargetState::select()
+{
+	if (!isInRange())
+	{
+		const sf::Vector2f messagePosition = spatial::toXY(spatial::toFloatSpace(_startPosition));
+		auto& dispatcher = getContext().registry.ctx().get<entt::dispatcher&>();
+
+		dispatcher.trigger(events::SendFloatingMessageEvent{
+			.message = "Out of range",
+			.color = sf::Color::Red,
+			.position = messagePosition,
+			.velocity = {0.f,-0.1f},
+			.isScreenSpace = false,
+			.ttl = 80
+			});
+	}
+	else
+	{
+		auto selectTargetView = getContext().registry.view<component::action::SelectTarget>();
+		if (auto selectTarget = getContext().registry.try_get<component::action::SelectTarget>(selectTargetView.front()))
+		{
+			selectTarget->onTargetSelect(_cursorPosition);
+		}
+		requestStackPop();
+	}
 }

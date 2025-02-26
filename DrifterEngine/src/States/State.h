@@ -26,6 +26,8 @@ namespace drft
 		virtual void onPop();
 
 	protected:
+		using FullyProcessed = std::true_type;
+
 		void requestStackPush(States stateId);
 		void requestStackPop();
 		void requestStackClear();
