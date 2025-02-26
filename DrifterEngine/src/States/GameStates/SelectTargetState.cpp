@@ -50,8 +50,9 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
-		auto& keybindings = getContext().keybindings;
-		auto action = keybindings["simulation"].getActionForKey(KeybindingUtils::getModifiedKey(ev.key.scancode));
+		const Keybindings& keybindings = getContext().keybindings;
+		const ModifiedKey key = KeybindingUtils::getModifiedKey(ev.key.scancode);
+		auto action = keybindings["simulation"].getActionForKey(key);
 		if (action)
 		{
 			_actionMap.callAction(action.value());
