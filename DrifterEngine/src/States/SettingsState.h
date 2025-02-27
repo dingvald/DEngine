@@ -11,6 +11,16 @@ namespace drft
 		bool handleEvent(const sf::Event& ev);
 
 	private:
-		void registerSubStates(StateStack& stack);
+		void returnToSettingsList();
+		void showSettingSelection(tgui::Group::Ptr group);
+
+		void createSettingsListGroup();
+		void createKeybindingsGroup();
+
+	private:
+		tgui::Group::Ptr _settingsListGroup;
+		tgui::Group::Ptr _keybindingsGroup;
+
+		bool _isShowingSettingsList = true;
 	};
 }
