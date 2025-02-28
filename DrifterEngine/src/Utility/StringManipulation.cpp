@@ -58,3 +58,13 @@ std::vector<std::string> drft::util::removeWhitespace(const std::vector<std::str
     return result;
 }
 
+std::string drft::util::capitalize(const std::string& str)
+{
+    if (str.size() == 0) return {};
+
+    std::string result = str;
+    result[0] = std::toupper(result[0]);
+
+    return result;
+}
+

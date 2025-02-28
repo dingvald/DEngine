@@ -28,12 +28,12 @@ void Keybindings::saveToJson(rapidjson::Value& json) const
 {
 }
 
-const StateKeybindings& Keybindings::operator[](entt::hashed_string state) const
+const StateKeybindings& Keybindings::operator[](const std::string& state) const
 {
 	return forState(state);
 }
 
-const StateKeybindings& Keybindings::forState(entt::hashed_string state) const
+const StateKeybindings& Keybindings::forState(const std::string& state) const
 {
 	if (!_keybindings.contains(state))
 	{
@@ -44,7 +44,7 @@ const StateKeybindings& Keybindings::forState(entt::hashed_string state) const
 	return _keybindings.at(state);
 }
 
-StateKeybindings& Keybindings::forStateNonConst(entt::hashed_string state)
+StateKeybindings& Keybindings::forStateNonConst(const std::string& state)
 {
 	if (!_keybindings.contains(state))
 	{
@@ -53,4 +53,14 @@ StateKeybindings& Keybindings::forStateNonConst(entt::hashed_string state)
 		return NullStateKeybindingNonConst;
 	}
 	return _keybindings.at(state);
+}
+
+const std::unordered_map<std::string, StateKeybindings>& Keybindings::getKeybindings() const
+{
+	return _keybindings;
+}
+
+std::unordered_map<std::string, StateKeybindings>& Keybindings::getKeybindings()
+{
+	return _keybindings;
 }

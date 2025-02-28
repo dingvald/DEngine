@@ -96,8 +96,7 @@ void drft::system::PlayerInput::init()
 	// Hotbar //
 	for (int i = 0; i < HOTBAR_SIZE; ++i)
 	{
-		entt::hashed_string actionName{ std::format("hotbar_{}", i).c_str() };
-		_actionMap.bindAction(actionName, [i](entt::handle entity) {
+		_actionMap.bindAction(std::format("hotbar_{}", i), [i](entt::handle entity) {
 			entity.emplace<component::action::HotbarPressed>(toHotbarIndex(i));
 		});
 	}
@@ -115,7 +114,7 @@ void drft::system::PlayerInput::update()
 
 		ModifiedKey key = inputBuffer.pop();
 
-		auto action = keybindings["simulation"].getActionForKey(key);
+		auto action = keybindings["gameplay"].getActionForKey(key);
 		if (action) _actionMap.callAction(action.value(), entt::handle{ _registry, entity });
 	}
 }

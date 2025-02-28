@@ -9,10 +9,11 @@ static const char* LayoutName = "Layout";
 drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
-	auto layout = tgui::VerticalLayout::create();
+	auto layout = tgui::GrowVerticalLayout::create();
 	layout->setOrigin(0.5f, 0.5f);
 	layout->setSize("30%, 75%");
 	layout->setPosition("50%, 50%");
+	layout->getRenderer()->setSpaceBetweenWidgets(32);
 	_guiGroup->add(layout, LayoutName);
 
 	auto button_continue = tgui::Button::create();
@@ -36,11 +37,8 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 	button_exit->onPress([this]() { onExitButton(); });
 
 	layout->add(button_continue);
-	layout->addSpace(0.2f);
 	layout->add(button_new_game);
-	layout->addSpace(0.2f);
 	layout->add(button_settings);
-	layout->addSpace(0.2f);
 	layout->add(button_exit);
 
 	button_continue->setNavigationUp(button_exit);

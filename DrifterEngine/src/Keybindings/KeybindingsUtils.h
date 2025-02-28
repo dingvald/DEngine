@@ -1,9 +1,10 @@
 #pragma once
 #include <Keybindings/ModifiedKey.h>
 
-
 namespace KeybindingUtils
 {
 	ModifiedKey getModifiedKey(sf::Keyboard::Scancode key);
-	KeyModifier convertStringToKeyModifier(const std::string& input);
+
+	ModifiedKey convertStringToModifiedKey(const std::string& str);
+	std::string convertModifiedKeyToString(const ModifiedKey& key);
 }

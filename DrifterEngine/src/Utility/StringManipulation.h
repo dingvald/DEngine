@@ -6,4 +6,6 @@ namespace drft::util
 	std::vector<std::string> split(const std::string& string, const std::string& delimiters);
 	std::string removeWhitespace(const std::string& str);
 	std::vector<std::string> removeWhitespace(const std::vector<std::string>& strings);
+
+	std::string capitalize(const std::string& str);
 }

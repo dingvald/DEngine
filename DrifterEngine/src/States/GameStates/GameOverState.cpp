@@ -31,11 +31,3 @@ bool drft::GameOverState::handleEvent(const sf::Event& ev)
 	}
 	return false;
 }
-
-bool drft::GameOverState::update(const float dt)
-{
-}
-
-void drft::GameOverState::render(sf::RenderTarget& target)
-{
-}

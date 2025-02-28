@@ -1,7 +1,7 @@
 {
     "keybindings": {
         "states": {
-            "simulation": {
+            "gameplay": {
                 "move_east": [ "Numpad6" ],
                 "move_west": [ "Numpad4" ],
                 "move_north": [ "Numpad8" ],
@@ -48,7 +48,7 @@
                 "select": [ "Space" ],
                 "exit": ["Escape"]
             },
-            "engine": {
+            "general": {
                 "toggle_fullscreen": [ "F11" ],
                 "toggle_debug": [ "F5" ]
             }

@@ -217,11 +217,11 @@ void drft::Engine::onKeyboardPressed(sf::Keyboard::Scancode scancode)
 {
 	ModifiedKey key = KeybindingUtils::getModifiedKey(scancode);
 
-	auto generalAction = _keybindings["engine"].getActionForKey(key);
+	auto generalAction = _keybindings["general"].getActionForKey(key);
 	if (generalAction) _actionMap.callAction(generalAction.value());
 
-	auto simulationAction = _keybindings["simulation"].getActionForKey(key);
-	if (simulationAction) _actionMap.callAction(simulationAction.value());
+	auto gameplayAction = _keybindings["gameplay"].getActionForKey(key);
+	if (gameplayAction) _actionMap.callAction(gameplayAction.value());
 }
 
 void drft::Engine::passEventToGui(sf::Event event)
