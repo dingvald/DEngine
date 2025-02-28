@@ -29,6 +29,7 @@ public:
 	void saveToJson(rapidjson::Value& json) const;
 
 	void bindKeyToAction(ModifiedKey key, const std::string& actionName, BindingPosition position);
+	void unbindKeyFromAction(ModifiedKey key, const std::string& actionName);
 	bool isKeyBound(ModifiedKey key) const;
 
 	std::optional<std::string> getActionForKey(ModifiedKey key) const;

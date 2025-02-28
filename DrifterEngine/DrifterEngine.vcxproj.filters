@@ -612,6 +612,9 @@
     <ClCompile Include="src\States\SettingsState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\States\KeybindingState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3021,6 +3024,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\States\SettingsState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\States\KeybindingState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

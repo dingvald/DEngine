@@ -69,7 +69,7 @@ void drft::PauseState::onContinueButton()
 
 void drft::PauseState::onSettingsButton()
 {
-	// TODO: implement
+	requestStackPush(States::Settings);
 }
 
 void drft::PauseState::onExitButton()

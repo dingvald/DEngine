@@ -86,6 +86,27 @@ void StateKeybindings::bindKeyToAction(ModifiedKey key, const std::string& actio
     }
 }
 
+void StateKeybindings::unbindKeyFromAction(ModifiedKey key, const std::string& actionName)
+{
+    if (_actionToKeys.contains(actionName))
+    {
+        auto isMatch = [&actionName](const ActionKeyPair& pair) -> bool {return pair.actionName == actionName;};
+        auto keyPair = std::find_if(_actionKeyPairs.begin(), _actionKeyPairs.end(), isMatch);
+
+        auto& boundKeys = _actionToKeys.at(actionName);
+        if (boundKeys.primary == key)
+        {
+            boundKeys.primary = InvalidKey;
+            keyPair->boundKeys.primary = InvalidKey;
+        }
+        else if (boundKeys.secondary == key)
+        {
+            boundKeys.secondary = InvalidKey;
+            keyPair->boundKeys.secondary = InvalidKey;
+        }
+    }
+}
+
 bool StateKeybindings::isKeyBound(ModifiedKey key) const
 {
     return _keyToAction.contains(key);

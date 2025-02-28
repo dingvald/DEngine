@@ -8,6 +8,7 @@ namespace drft
 		Title,
 		MainMenu,
 		Settings,
+		Keybindings,
 		Game,
 		Inventory,
 		Pause,

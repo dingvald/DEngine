@@ -8,6 +8,7 @@
 #include <States/MainMenuState.h>
 #include <States/PauseState.h>
 #include <States/SettingsState.h>
+#include <States/KeybindingState.h>
 
 #include "Utility/TextureAtlas.h"
 #include <Utility/StandardLogger.h>
@@ -156,6 +157,7 @@ void drft::Engine::registerStates()
 	_stateStack.registerState<GameState>(States::Game);
 	_stateStack.registerState<PauseState>(States::Pause);
 	_stateStack.registerState<SettingsState>(States::Settings);
+	_stateStack.registerState<KeybindingState>(States::Keybindings);
 }
 
 void drft::Engine::handleEvents()

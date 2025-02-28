@@ -21,6 +21,8 @@ struct ModifiedKey
 	}
 };
 
+static const ModifiedKey InvalidKey = ModifiedKey{};
+
 template<>
 struct std::hash<ModifiedKey>
 {

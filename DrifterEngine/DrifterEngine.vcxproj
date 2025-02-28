@@ -203,6 +203,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Keybindings\Keybindings.cpp" />
     <ClCompile Include="src\Keybindings\KeybindingsUtils.cpp" />
     <ClCompile Include="src\Keybindings\StateKeybindings.cpp" />
+    <ClCompile Include="src\States\KeybindingState.cpp" />
     <ClCompile Include="src\States\SettingsState.cpp" />
     <ClCompile Include="src\Utility\HashedString.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
@@ -440,6 +441,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Keybindings\StateKeybindings.h" />
     <ClInclude Include="src\Components\ArtificalInputComponent.h" />
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h" />
+    <ClInclude Include="src\States\KeybindingState.h" />
     <ClInclude Include="src\States\SettingsState.h" />
     <ClInclude Include="src\Utility\HashedString.h" />
     <ClInclude Include="deps\zlib\include\crc32.h" />
