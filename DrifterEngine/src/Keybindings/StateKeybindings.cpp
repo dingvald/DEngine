@@ -11,11 +11,18 @@ void StateKeybindings::createFromJson(const rapidjson::Value& json)
 		auto actionName = binding.name.GetString();
 		auto keyNames = binding.value.GetArray();
 		BoundKeys boundKeys;
+
+        if (_actionToKeys.contains(actionName))
+        {
+            warning_logger << std::format("Warning: Duplicate action {} found in keybindings file", actionName) << std::endl;
+            warning_logger << "--- Using first-found binding" << std::endl;
+            continue;
+        }
 		
         if (keyNames.Empty())
         {
             error_logger << "Error: No keys bound to action " << actionName << std::endl;
-            error_logger << "--- Please check key_bindings.json" << std::endl;
+            error_logger << "--- Please check keybindings.json" << std::endl;
             continue;
         }
 
@@ -36,14 +43,35 @@ void StateKeybindings::createFromJson(const rapidjson::Value& json)
             warning_logger << "--- only the first two will be used" << std::endl;
         }
 		
-        std::cout << "adding action: " << actionName << std::endl;
 		_actionToKeys.emplace(actionName, boundKeys);
         _actionKeyPairs.emplace_back(actionName, boundKeys);
 	}
 }
 
-void StateKeybindings::saveToJson(rapidjson::Value& json) const
+void StateKeybindings::saveToJson(rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const
 {
+    using namespace rapidjson;
+    for (auto&& [actionName, boundKeys] : _actionKeyPairs)
+    {
+        auto arr = Value{ kArrayType };
+        arr.Clear();
+        if (boundKeys.primary)
+        {
+            rapidjson::Value keyVal{ kStringType };
+            keyVal.SetString(KeybindingUtils::convertModifiedKeyToString(boundKeys.primary).c_str(), allocator);
+            arr.PushBack(keyVal, allocator);
+        }
+        if (boundKeys.secondary)
+        {
+            rapidjson::Value keyVal{ kStringType };
+            keyVal.SetString(KeybindingUtils::convertModifiedKeyToString(boundKeys.secondary).c_str(), allocator);
+            arr.PushBack(keyVal, allocator);
+        }
+
+        auto name = GenericStringRef<char>{ actionName.c_str() };
+        json.RemoveMember(name);
+        json.AddMember(name, arr, allocator);
+    }
 }
 
 void StateKeybindings::bindKeyToAction(ModifiedKey key, const std::string& actionName, BindingPosition position)

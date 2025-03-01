@@ -81,6 +81,18 @@ void drft::KeybindingState::createKeybindingsGroup()
 	secondaryKey->getRenderer()->setBorderColor({ 100,100,100,100 });
 	panelTemplate->add(secondaryKey, "SecondaryKey");
 
+	auto restoreDefaultsButton = tgui::Button::create();
+	restoreDefaultsButton->setPosition({ "40%", tgui::bindBottom(_keybindingList) + 64});
+	restoreDefaultsButton->setText("Restore Defaults");
+	restoreDefaultsButton->setTextSize(24);
+	restoreDefaultsButton->getRenderer()->setBorders({ 1, 1 });
+	restoreDefaultsButton->getRenderer()->setBorderColor({ 100, 100, 100 });
+	restoreDefaultsButton->onPress([this] { 
+		getContext().keybindings.restoreDefaultKeybindings(); 
+		refreshKeybindingList(_keybindingList);
+		});
+	_guiGroup->add(restoreDefaultsButton);
+
 	// Populate list
 	refreshKeybindingList(_keybindingList);
 }

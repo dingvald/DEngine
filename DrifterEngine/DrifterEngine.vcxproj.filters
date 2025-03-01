@@ -3097,7 +3097,7 @@
     </None>
     <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
-    <None Include="data\settings\keybindings.json" />
+    <None Include="data\settings\default\_default_keybindings.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

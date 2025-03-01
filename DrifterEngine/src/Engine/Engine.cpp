@@ -70,7 +70,8 @@ void drft::Engine::initialize()
 	std::cout << "Working Directory: " << WORKING_DIRECTORY << std::endl;
 	setWindowIcon();
 	loadResources();
-	loadKeybindings();
+	loadDefaultKeybindings();
+	loadSavedKeybindings();
 	setupActionMap();
 	registerStates();
 
@@ -116,20 +117,36 @@ void drft::Engine::loadResources()
 		});
 }
 
-void drft::Engine::loadKeybindings()
+void drft::Engine::loadSavedKeybindings()
 {
-	std::filesystem::path keybindingPath = SETTINGS_DIRECTORY / "keybindings.json";
-	json::JsonRootExtractor jsonRootExtractor{ keybindingPath, "keybindings" };
-	if (!jsonRootExtractor.isValid())
+	std::cout << "Loading player saved keybindings..." << std::endl;
+	std::filesystem::path keybindingPath = SAVED_SETTINGS_DIRECTORY / "keybindings.json";
+	json::JsonFileWrapper json{ keybindingPath, "keybindings" };
+	if (!json.load())
 	{
-		error_logger << "Error: " << keybindingPath << " could not be parsed." << std::endl;
+		std::cout << "Could not load " << keybindingPath << std::endl;
+		std::cout << "--- Using default settings" << std::endl;
+		_keybindings.restoreDefaultKeybindings();
 	}
 	else
 	{
-		auto& root = jsonRootExtractor.getRoot();
-		_keybindings.createFromJson(root);
+		_keybindings.createFromJson(json.getRoot());
 	}
-	std::cout << "Finished loading keybindings" << std::endl;
+}
+
+void drft::Engine::loadDefaultKeybindings()
+{
+	std::cout << "Loading default keybindings..." << std::endl;
+	std::filesystem::path keybindingPath = DEFAULT_SETTINGS_DIRECTORY / "_default_keybindings.json";
+	json::JsonFileWrapper json{ keybindingPath, "keybindings" };
+	if (!json.load())
+	{
+		error_logger << "Error: " << keybindingPath << " could not be loaded." << std::endl;
+	}
+	else
+	{
+		_keybindings.createDefaultsFromJson(json.getRoot());
+	}
 }
 
 void drft::Engine::setupActionMap()
@@ -204,6 +221,9 @@ void drft::Engine::render(const float)
 void drft::Engine::shutDown()
 {
 	std::cout << "Closing Engine" << std::endl;
+
+	saveKeybindings();
+
 	_window.close();
 }
 
@@ -281,4 +301,18 @@ void drft::Engine::toggleFullscreen()
 void drft::Engine::toggleDebug()
 {
 	_showDebug = !_showDebug;
+}
+
+void drft::Engine::saveKeybindings()
+{
+	std::cout << "Saving keybindings..." << std::endl;
+	std::filesystem::path keybindingPath = SAVED_SETTINGS_DIRECTORY / "keybindings.json";
+	
+	json::JsonFileWrapper keybindingFile{ keybindingPath, "keybindings"};
+	if (keybindingFile.create())
+	{
+		auto& val = keybindingFile.getRoot();
+		_keybindings.saveToJson(keybindingFile.getRoot(), keybindingFile.getAllocator());
+		keybindingFile.save();
+	}
 }

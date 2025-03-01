@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "PauseState.h"
 
-static const char* LayoutName = "Layout";
 
 drft::PauseState::PauseState(StateStack& stack, StateContext& context)
     :State(stack, context)
@@ -16,7 +15,7 @@ drft::PauseState::PauseState(StateStack& stack, StateContext& context)
 	layout->setPosition("50%, 50%");
 
 	_guiGroup->add(background);
-	_guiGroup->add(layout, LayoutName);
+	_guiGroup->add(layout);
 
 	auto button_continue = tgui::Button::create();
 	button_continue->setTextSize(32);

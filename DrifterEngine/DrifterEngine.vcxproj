@@ -1240,7 +1240,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Spatial\TilePosition.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\settings\keybindings.json" />
+    <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\bodies.json" />
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
     <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />

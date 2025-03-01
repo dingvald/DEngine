@@ -19,7 +19,8 @@ namespace drft
 		void initialize();
 		void setWindowIcon();
 		void loadResources();
-		void loadKeybindings();
+		void loadSavedKeybindings();
+		void loadDefaultKeybindings();
 		void setupActionMap();
 		void registerStates();
 		void handleEvents();
@@ -38,6 +39,8 @@ namespace drft
 
 		void toggleFullscreen();
 		void toggleDebug();
+
+		void saveKeybindings();
 
 	private:
 		sf::RenderWindow _window;

@@ -46,7 +46,7 @@
                 "navigate_up": [ "Numpad8", "Up" ],
                 "navigate_down": [ "Numpad2", "Down" ],
                 "select": [ "Space" ],
-                "exit": ["Escape"]
+                "exit": [ "Escape" ]
             },
             "general": {
                 "toggle_fullscreen": [ "F11" ],

@@ -4,8 +4,10 @@
 class Keybindings : public ICreateFromJson
 {
 public:
+	void createDefaultsFromJson(const rapidjson::Value& json);
 	void createFromJson(const rapidjson::Value& json) override;
-	void saveToJson(rapidjson::Value& json) const;
+
+	void saveToJson(rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const;
 
 	const StateKeybindings& operator [](const std::string& state) const;
 
@@ -15,7 +17,10 @@ public:
 	const std::unordered_map<std::string, StateKeybindings>& getKeybindings() const;
 	std::unordered_map<std::string, StateKeybindings>& getKeybindings();
 
+	void restoreDefaultKeybindings();
+
 private:
 	std::unordered_map<std::string, StateKeybindings> _keybindings;
+	std::unordered_map<std::string, StateKeybindings> _defaultKeybindings;
 };
 

@@ -26,7 +26,7 @@ public:
 
 public:
 	void createFromJson(const rapidjson::Value& json) override;
-	void saveToJson(rapidjson::Value& json) const;
+	void saveToJson(rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const;
 
 	void bindKeyToAction(ModifiedKey key, const std::string& actionName, BindingPosition position);
 	void unbindKeyFromAction(ModifiedKey key, const std::string& actionName);

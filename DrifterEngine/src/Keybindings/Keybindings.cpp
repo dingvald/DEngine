@@ -6,6 +6,24 @@
 static inline StateKeybindings NullStateKeybinding = {};
 static inline StateKeybindings NullStateKeybindingNonConst = {};
 
+void Keybindings::createDefaultsFromJson(const rapidjson::Value& json)
+{
+	if (json.HasMember("states"))
+	{
+		auto& states = json["states"];
+		for (auto&& state : states.GetObject())
+		{
+			StateKeybindings newStateBindings;
+			newStateBindings.createFromJson(state.value);
+			_defaultKeybindings.emplace(state.name.GetString(), std::move(newStateBindings));
+		}
+	}
+	else
+	{
+		error_logger << "Error: Could not parse keybindings, does not contain 'states' key" << std::endl;
+	}
+}
+
 void Keybindings::createFromJson(const rapidjson::Value& json)
 {
 	if (json.HasMember("states"))
@@ -24,8 +42,24 @@ void Keybindings::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-void Keybindings::saveToJson(rapidjson::Value& json) const
+void Keybindings::saveToJson(rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const
 {
+	using namespace rapidjson;
+	if (!json.HasMember("states"))
+	{
+		json.AddMember("states", Value{ kObjectType }, allocator);
+	}
+
+	auto& statesObj = json["states"];
+	for (auto&& [stateName, stateKeybinding] : _keybindings)
+	{
+		Value newVal{ kObjectType };
+		auto name = GenericStringRef<char>{ stateName.c_str() };
+		statesObj.AddMember(name, newVal, allocator);
+		auto& val = statesObj[stateName.c_str()];
+			
+		stateKeybinding.saveToJson(val, allocator);
+	}
 }
 
 const StateKeybindings& Keybindings::operator[](const std::string& state) const
@@ -63,4 +97,9 @@ const std::unordered_map<std::string, StateKeybindings>& Keybindings::getKeybind
 std::unordered_map<std::string, StateKeybindings>& Keybindings::getKeybindings()
 {
 	return _keybindings;
+}
+
+void Keybindings::restoreDefaultKeybindings()
+{
+	_keybindings = _defaultKeybindings;
 }

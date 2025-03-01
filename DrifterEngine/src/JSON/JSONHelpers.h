@@ -2,17 +2,22 @@
 
 namespace drft::json
 {
-	class JsonRootExtractor
+	class JsonFileWrapper
 	{
 	public:
-		JsonRootExtractor(const std::filesystem::path& filepath, const char* rootObjectName);
-		bool isValid() const;
+		JsonFileWrapper(const std::filesystem::path& path, const char* rootName);
+
+		bool load();
+		bool create();
+		bool loadOrCreate();
+		const rapidjson::Value& getRoot() const;
 		rapidjson::Value& getRoot();
+		rapidjson::Document::AllocatorType& getAllocator();
+		bool save();
+		bool save(const std::filesystem::path& path);
 
 	private:
-		std::optional<rapidjson::Document> extractDOM(const std::filesystem::path& filepath, const char* rootObjectName);
-
-	private:
+		std::filesystem::path _path;
 		const char* _rootName;
 		std::optional<rapidjson::Document> _optionalDoc;
 	};

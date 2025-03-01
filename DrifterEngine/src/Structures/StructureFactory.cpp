@@ -20,14 +20,14 @@ void drft::StructureFactory::createStructureBlueprintsFromJSON(const std::filesy
 
 	for (const auto& filename : std::filesystem::directory_iterator(directoryPath))
 	{
-		json::JsonRootExtractor jsonRootExtractor{ filename.path(), "Structure" };
-		if (!jsonRootExtractor.isValid())
+		json::JsonFileWrapper json{ filename.path(), "Structure" };
+		if (!json.load())
 		{
-			std::cout << "Failure: " << filename << " could not be parsed." << std::endl;
+			std::cout << "Failure: " << filename << " could not be loaded." << std::endl;
 		}
 		else
 		{
-			for (auto&& node : jsonRootExtractor.getRoot().GetObject())
+			for (auto&& node : json.getRoot().GetObject())
 			{
 				StructureBlueprint blueprint{ node.name.GetString() };
 				blueprint.createFromJSON(node.value);

@@ -24,19 +24,19 @@ public:
 		{
 			if (entry.is_directory()) continue;
 
-			drft::json::JsonRootExtractor jsonRootExtractor{ entry.path(), "ai_archetype" };
-			if (!jsonRootExtractor.isValid())
+			drft::json::JsonFileWrapper json{ entry.path(), "ai_archetype" };
+			if (!json.load())
 			{
-				error_logger << "Error: " << entry << " could not be parsed." << std::endl;
+				error_logger << "Error: " << entry << " could not be loaded." << std::endl;
 			}
 			else
 			{
-				auto arch = jsonRootExtractor.getRoot().GetObject();
+				auto arch = json.getRoot().GetObject();
 				if (arch.HasMember("name"))
 				{
 					auto name = arch["name"].GetString();
 					UtilityArchetype newArchetype;
-					newArchetype.createFromJson(jsonRootExtractor.getRoot());
+					newArchetype.createFromJson(json.getRoot());
 					_archetypes.emplace(entt::hashed_string{ name }, std::move(newArchetype));
 				}
 				else

@@ -13,6 +13,8 @@ static const std::filesystem::path THEMES_DIRECTORY = RESOURCES_DIRECTORY / "GUI
 static const std::filesystem::path SAVE_DIRECTORY = WORKING_DIRECTORY / "data" / "savegame";
 static const std::filesystem::path STATIC_DATA_DIRECTORY = WORKING_DIRECTORY / "data" / "static";
 static const std::filesystem::path SETTINGS_DIRECTORY = WORKING_DIRECTORY / "data" / "settings";
+static const std::filesystem::path SAVED_SETTINGS_DIRECTORY = SETTINGS_DIRECTORY / "saved";
+static const std::filesystem::path DEFAULT_SETTINGS_DIRECTORY = SETTINGS_DIRECTORY / "default";
 
 static const std::filesystem::path PLAYER_SAVE_FILE_PATH = SAVE_DIRECTORY / "player_save.json";
 static const std::filesystem::path GAMESTATE_SAVE_FILE_PATH = SAVE_DIRECTORY / "gamestate.json";

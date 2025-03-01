@@ -19,6 +19,10 @@ struct ModifiedKey
 		return other.modifier == this->modifier
 			&& other.key == this->key;
 	}
+	operator bool() const
+	{
+		return key != sf::Keyboard::Scancode::Unknown;
+	}
 };
 
 static const ModifiedKey InvalidKey = ModifiedKey{};
