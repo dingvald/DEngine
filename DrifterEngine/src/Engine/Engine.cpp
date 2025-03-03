@@ -8,7 +8,7 @@
 #include <States/MainMenuState.h>
 #include <States/PauseState.h>
 #include <States/SettingsState.h>
-#include <States/KeybindingState.h>
+#include <States/Settings/KeybindingState.h>
 
 #include "Utility/TextureAtlas.h"
 #include <Utility/StandardLogger.h>
