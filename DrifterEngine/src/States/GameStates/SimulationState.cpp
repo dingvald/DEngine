@@ -29,7 +29,7 @@
 #include "Systems/Core/ArtificialInput.h"
 #include <Systems/Core/AiSystem.h>
 #include "Systems/Core/Camera.h"
-#include <Systems/Core/MouseCursorSystem.h>
+#include <Systems/Core/MouseStateSystem.h>
 #include <Systems/Core/MouseVisualizationSystem.h>
 #include "Systems/Core/ChunkManager.h"
 #include "Systems/Core/ItemUniqueIDGenerator.h"
@@ -129,7 +129,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<RealityBubble>();
 	_systems->add<ActorSystem>();
 
-	_systems->add<MouseCursorSystem>();
+	_systems->add<MouseStateSystem>();
 	_systems->add<MouseVisualizationSystem>();
 	_systems->add<PlayerInput>();
 	_systems->add<ArtificialInput>();

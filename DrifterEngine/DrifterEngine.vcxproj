@@ -206,7 +206,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\States\Settings\KeybindingState.cpp" />
     <ClCompile Include="src\States\SettingsState.cpp" />
     <ClCompile Include="src\Systems\Actions\MouseActionSystem.cpp" />
-    <ClCompile Include="src\Systems\Core\MouseCursorSystem.cpp" />
+    <ClCompile Include="src\Systems\Core\MouseStateSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetPlayerHandle.cpp" />
     <ClCompile Include="src\Utility\HashedString.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
@@ -448,7 +448,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\States\Settings\KeybindingState.h" />
     <ClInclude Include="src\States\SettingsState.h" />
     <ClInclude Include="src\Systems\Actions\MouseActionSystem.h" />
-    <ClInclude Include="src\Systems\Core\MouseCursorSystem.h" />
+    <ClInclude Include="src\Systems\Core\MouseStateSystem.h" />
     <ClInclude Include="src\Systems\Helpers\GetPlayerHandle.h" />
     <ClInclude Include="src\Utility\HashedString.h" />
     <ClInclude Include="deps\zlib\include\crc32.h" />

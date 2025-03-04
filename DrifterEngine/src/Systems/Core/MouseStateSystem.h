@@ -3,7 +3,7 @@
 
 namespace drft::system
 {
-	class MouseCursorSystem : public System
+	class MouseStateSystem : public System
 	{
 	public:
 		using System::System;
