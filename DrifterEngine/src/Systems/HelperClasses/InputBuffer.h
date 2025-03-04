@@ -12,11 +12,17 @@ namespace drft::system
 		void press(ModifiedKey key);
 		void release(ModifiedKey key);
 
-		ModifiedKey pop();
+		void mousePress(sf::Mouse::Button button);
+		void mouseRelease(sf::Mouse::Button button);
+
+		std::optional<sf::Mouse::Button> popMouse();
+
+		ModifiedKey popKey();
 
 		bool isEmpty() const;
 
 	private:
+		using MouseBuffer = std::deque<sf::Mouse::Button>;
 		using KeyBuffer = std::deque<ModifiedKey>;
 		struct KeyState
 		{
@@ -24,8 +30,10 @@ namespace drft::system
 			bool active = false;
 		};
 		std::unordered_map<ModifiedKey, KeyState> _pressedKeys;
+		std::unordered_map<sf::Mouse::Button, KeyState> _pressedMouse;
 		unsigned int _maxBufferSize = 1;
-		KeyBuffer _buffer;
+		KeyBuffer _keyBuffer;
+		MouseBuffer _mouseBuffer;
 	};
 }
 

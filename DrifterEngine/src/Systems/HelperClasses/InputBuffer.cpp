@@ -12,6 +12,23 @@ drft::system::InputBuffer::InputBuffer(unsigned int maxBufferSize)
 
 void drft::system::InputBuffer::update()
 {
+    for (auto&& [button, state] : _pressedMouse)
+    {
+        state.active = false;
+        if (std::abs(state.timeHeld) <= std::numeric_limits<float>::epsilon())
+        {
+            state.active = true;
+        }
+        else if (state.timeHeld >= HOLD_TIME)
+        {
+            // Held key long enough
+            state.active = true;
+            state.timeHeld -= REFRACTORY_PERIOD;
+        }
+
+        state.timeHeld = std::min(state.timeHeld + 1.0f, HOLD_TIME + 1.0f);
+    }
+
     for (auto&& [key, state] : _pressedKeys)
     {
         state.active = false;
@@ -33,9 +50,9 @@ void drft::system::InputBuffer::update()
 void drft::system::InputBuffer::press(ModifiedKey key)
 {
     if (key.key == sf::Keyboard::Scan::Unknown) return;
-    if (_buffer.size() >= INPUT_BUFFER_MAX_SIZE) return;
+    if (_keyBuffer.size() >= INPUT_BUFFER_MAX_SIZE) return;
 
-    _buffer.push_back(key);
+    _keyBuffer.push_back(key);
     _pressedKeys.emplace(key, KeyState{});
 }
 
@@ -46,21 +63,58 @@ void drft::system::InputBuffer::release(ModifiedKey key)
     _pressedKeys.erase(key);
 }
 
-ModifiedKey drft::system::InputBuffer::pop()
+void drft::system::InputBuffer::mousePress(sf::Mouse::Button button)
 {
-    auto itr = _buffer.begin();
-    while (itr != _buffer.end())
+    if (_mouseBuffer.size() >= INPUT_BUFFER_MAX_SIZE) return;
+    _mouseBuffer.push_back(button);
+    _pressedMouse.emplace(button, KeyState{});
+}
+
+void drft::system::InputBuffer::mouseRelease(sf::Mouse::Button button)
+{
+    _pressedMouse.erase(button);
+}
+
+std::optional<sf::Mouse::Button> drft::system::InputBuffer::popMouse()
+{
+    auto itr = _mouseBuffer.begin();
+    while (itr != _mouseBuffer.end())
+    {
+        if (!_pressedMouse.contains(*itr))
+        {
+            itr = _mouseBuffer.erase(itr);
+        }
+        else
+        {
+            if (_pressedMouse.at(*itr).active)
+            {
+                sf::Mouse::Button result = *itr;
+                _mouseBuffer.erase(itr);
+                return result;
+            }
+            ++itr;
+        }
+    }
+
+    return {};
+}
+
+
+ModifiedKey drft::system::InputBuffer::popKey()
+{
+    auto itr = _keyBuffer.begin();
+    while (itr != _keyBuffer.end())
     {
         if (!_pressedKeys.contains(*itr))
         {
-            itr = _buffer.erase(itr);
+            itr = _keyBuffer.erase(itr);
         }
         else
         {
             if (_pressedKeys.at(*itr).active)
             {
                 ModifiedKey result = *itr;
-                _buffer.erase(itr);
+                _keyBuffer.erase(itr);
                 return result;
             }
             ++itr;
@@ -72,5 +126,5 @@ ModifiedKey drft::system::InputBuffer::pop()
 
 bool drft::system::InputBuffer::isEmpty() const
 {
-    return _buffer.empty();
+    return _keyBuffer.empty();
 }

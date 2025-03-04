@@ -3,6 +3,7 @@
 #include "Components/Components.h"
 #include <Components/CurrentActorComponent.h>
 #include <Components/Actions/MeleeAttackAction.h>
+#include <Components/Actions/MouseAction.h>
 #include "Components/Actions/MoveAction.h"
 #include "Components/Actions/InteractionAction.h"
 #include "Components/Actions/WaitAction.h"
@@ -107,15 +108,25 @@ void drft::system::PlayerInput::update()
 	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
 	auto& keybindings = _registry.ctx().get<Keybindings&>();
 
-	auto turnView = _registry.view<PlayerInputComponent, CurrentActorComponent>();
-	for (auto&& [entity, player, currentActor] : turnView.each())
+	auto currentPlayerView = _registry.view<PlayerInputComponent, CurrentActorComponent>();
+	for (auto&& [entity, player, currentActor] : currentPlayerView.each())
 	{
 		if (currentActor.state != CurrentActorState::Pending) continue;
 
-		ModifiedKey key = inputBuffer.pop();
+		entt::handle playerHandle = { _registry, entity };
 
-		auto action = keybindings["gameplay"].getActionForKey(key);
-		if (action) _actionMap.callAction(action.value(), entt::handle{ _registry, entity });
+		if (auto mouse = inputBuffer.popMouse())
+		{
+			playerHandle.emplace_or_replace<MouseAction>(mouse.value());
+		}
+		else
+		{
+			ModifiedKey key = inputBuffer.popKey();
+			if (auto action = keybindings["gameplay"].getActionForKey(key))
+			{
+				_actionMap.callAction(action.value(), playerHandle);
+			}
+		}
 	}
 }
 

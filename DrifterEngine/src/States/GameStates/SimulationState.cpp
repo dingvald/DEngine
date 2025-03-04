@@ -16,6 +16,7 @@
 #include "Systems/Actions/DropItemSystem.h"
 #include "Systems/Actions/EquipItemSystem.h"
 #include "Systems/Actions/CraftItemSystem.h"
+#include <Systems/Actions/MouseActionSystem.h>
 #include "Systems/Actions/MoveActionSystem.h"
 #include "Systems/Actions/WaitActionSystem.h"
 #include "Systems/Actions/PickUpSystem.h"
@@ -28,6 +29,7 @@
 #include "Systems/Core/ArtificialInput.h"
 #include <Systems/Core/AiSystem.h>
 #include "Systems/Core/Camera.h"
+#include <Systems/Core/MouseCursorSystem.h>
 #include <Systems/Core/MouseVisualizationSystem.h>
 #include "Systems/Core/ChunkManager.h"
 #include "Systems/Core/ItemUniqueIDGenerator.h"
@@ -127,6 +129,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<RealityBubble>();
 	_systems->add<ActorSystem>();
 
+	_systems->add<MouseCursorSystem>();
 	_systems->add<MouseVisualizationSystem>();
 	_systems->add<PlayerInput>();
 	_systems->add<ArtificialInput>();
@@ -137,6 +140,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<InteractionSystem>();
 	_systems->add<WaitActionSystem>();
 	_systems->add<AbilityActionSystem>();
+	_systems->add<MouseActionSystem>();
 	_systems->add<DropItemSystem>();
 	_systems->add<EquipItemSystem>();
 	_systems->add<CraftItemSystem>();

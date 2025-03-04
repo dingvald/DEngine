@@ -32,8 +32,6 @@ void drft::system::MouseVisualizationSystem::start()
 
 void drft::system::MouseVisualizationSystem::update()
 {
-	auto mouseTilePosition = getMouseTilePosition(_registry);
-
 	auto& controls = _registry.ctx().get<const ControlsContext&>();
 	if (controls.navigation == NavigationType::Keyboard)
 	{
@@ -45,10 +43,6 @@ void drft::system::MouseVisualizationSystem::update()
 		auto& render = _registry.get_or_emplace<RenderComponent>(_cursor);
 		applySpriteOptionsToRenderComponent(render, _cursorSprite);
 	}
-
-	_registry.patch<PositionComponent>(_cursor, [mouseTilePosition](PositionComponent& comp) {
-		comp.tile = mouseTilePosition;
-		});
 }
 
 void drft::system::MouseVisualizationSystem::shutdown()

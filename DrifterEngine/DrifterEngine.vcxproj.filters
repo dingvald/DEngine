@@ -612,7 +612,16 @@
     <ClCompile Include="src\States\SettingsState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\States\KeybindingState.cpp">
+    <ClCompile Include="src\States\Settings\KeybindingState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Core\MouseCursorSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\GetPlayerHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Actions\MouseActionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3026,7 +3035,19 @@
     <ClInclude Include="src\States\SettingsState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\States\KeybindingState.h">
+    <ClInclude Include="src\States\Settings\KeybindingState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Core\MouseCursorSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\GetPlayerHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Actions\MouseAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Actions\MouseActionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -102,7 +102,7 @@ void drft::GameState::setupRegistryContext()
 }
 
 bool drft::GameState::handleEvent(const sf::Event& ev)
-{	
+{
 	if (_gameStateStack.handleEvent(ev)) return true;
 
 	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
@@ -120,6 +120,16 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 	{
 		ModifiedKey key = KeybindingUtils::getModifiedKey(keyreleased->scancode);
 		_inputBuffer.release(key);
+	}
+
+	if (const auto mousepressed = ev.getIf<sf::Event::MouseButtonPressed>())
+	{
+		_inputBuffer.mousePress(mousepressed->button);
+	}
+
+	if (const auto mousereleased = ev.getIf<sf::Event::MouseButtonReleased>())
+	{
+		_inputBuffer.mouseRelease(mousereleased->button);
 	}
 
 	return false;
