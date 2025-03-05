@@ -1297,6 +1297,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <Image Include="resources\Textures\basic_tile.png" />
     <Image Include="resources\Textures\Effects\hit_particle.png" />
     <Image Include="resources\Textures\Effects\mouse_cursor_effect.png" />
+    <Image Include="resources\Textures\Effects\path_effect.png" />
     <Image Include="resources\Textures\Effects\slash_effect.png" />
     <Image Include="resources\Textures\Environmentals\sharp_stone.png" />
     <Image Include="resources\Textures\Human\human_male_idle.png" />

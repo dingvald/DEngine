@@ -3193,6 +3193,9 @@
     <Image Include="resources\Textures\Effects\mouse_cursor_effect.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="resources\Textures\Effects\path_effect.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />
