@@ -56,7 +56,7 @@ namespace drft::system
 
 	private:
 		goap::SensorRunner _sensorySystem;
-		using aStarPath = std::deque<sf::Vector3i>;
+		using aStarPath = std::deque<TilePosition>;
 		mutable std::unordered_map<entt::entity, aStarPath> _cachedPaths;
 	};
 }

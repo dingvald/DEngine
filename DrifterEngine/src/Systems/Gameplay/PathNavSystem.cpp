@@ -9,7 +9,6 @@
 
 #include <Spatial/Helpers.h>
 
-
 void drft::system::PathNavSystem::update()
 {
 	auto view = _registry.view<PathNavComponent, PositionComponent, CurrentActorComponent>();

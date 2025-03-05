@@ -3,14 +3,15 @@
 #include "Components/Components.h"
 #include <Components/CurrentActorComponent.h>
 #include <Components/Actions/MeleeAttackAction.h>
-#include <Components/Actions/MouseAction.h>
+#include <Components/Actions/MouseContextAction.h>
+#include <Components/Actions/MouseInspectAction.h>
 #include "Components/Actions/MoveAction.h"
 #include "Components/Actions/InteractionAction.h"
 #include "Components/Actions/WaitAction.h"
 #include "Components/SprintingComponent.h"
 #include "Components/PlayerInputComponent.h"
+#include <Components/PathNavComponent.h>
 
-#include "Components/Tags.h"
 #include <Keybindings/Keybindings.h>
 #include "Systems/HelperClasses/InputBuffer.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
@@ -108,16 +109,24 @@ void drft::system::PlayerInput::update()
 	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
 	auto& keybindings = _registry.ctx().get<Keybindings&>();
 
-	auto currentPlayerView = _registry.view<PlayerInputComponent, CurrentActorComponent>();
+	auto currentPlayerView = _registry.view<PlayerInputComponent, CurrentActorComponent>(entt::exclude<PathNavComponent>);
 	for (auto&& [entity, player, currentActor] : currentPlayerView.each())
 	{
 		if (currentActor.state != CurrentActorState::Pending) continue;
 
 		entt::handle playerHandle = { _registry, entity };
 
+		// TODO: Unifiy mouse input and keyboard input into single datastructure
 		if (auto mouse = inputBuffer.popMouse())
 		{
-			playerHandle.emplace_or_replace<MouseAction>(mouse.value());
+			if (mouse.value() == sf::Mouse::Button::Left)
+			{
+				playerHandle.emplace_or_replace<MouseContextAction>();
+			}
+			else if (mouse.value() == sf::Mouse::Button::Right)
+			{
+				playerHandle.emplace_or_replace<MouseInspectAction>();
+			}
 		}
 		else
 		{

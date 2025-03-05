@@ -9,6 +9,49 @@ using namespace drft::spatial;
 
 static const drft::spatial::EntityList EmptyEntityList = {};
 
+namespace
+{
+	
+	struct Node
+	{
+		Node() = default;
+		Node(sf::Vector2i coordinate)
+			: coordinate(coordinate) {}
+
+		sf::Vector2i coordinate;
+		float h = 0;
+		float g = 0;
+		float getScore() const
+		{
+			return h + g;
+		}
+
+		bool operator ==(const Node& other)
+		{
+			return coordinate == other.coordinate;
+		}
+
+		bool operator !=(const Node& other)
+		{
+			return coordinate != other.coordinate;
+		}
+	};
+
+	using NodeSet = std::vector<Node>;
+
+	Node* findNodeInList(NodeSet& nodes, sf::Vector2i coordinate)
+	{
+		for (auto&& node : nodes)
+		{
+			if (node.coordinate == coordinate)
+			{
+				return &node;
+			}
+		}
+		return nullptr;
+	}
+}
+
 void drft::spatial::WorldGrid::placeEntity(entt::entity entity, TilePosition tilePosition)
 {	
 	if (entity == entt::null) return;
@@ -136,107 +179,74 @@ std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin,
 	return result;
 }
 
-std::deque<sf::Vector3i> drft::spatial::WorldGrid::getPath(TilePosition pt1, TilePosition pt2, Heuristic costFunc) const
+std::deque<drft::TilePosition> drft::spatial::WorldGrid::getPath(TilePosition pt1, TilePosition pt2, Heuristic costFunc) const
 {
-	// A* 
+	const sf::Vector2i start = toXY(pt1);
+	const sf::Vector2i end = toXY(pt2);
 
-	struct Node
+	NodeSet openSet;
+	NodeSet closedSet;
+
+	std::unordered_map<sf::Vector2i, Node> connections;
+
+	Node current = { start };
+	connections[start] = current;
+
+	openSet.emplace_back(start);
+
+	while (!openSet.empty())
 	{
-		sf::Vector2i value;
-		int distance = 0;
-		int cost = 0;
+		auto currentItr = openSet.begin();
+		current = *currentItr;
 
-		bool operator<(const Node& rhs) const
+		for (auto it = openSet.begin(); it != openSet.end(); ++it)
 		{
-			if (cost == rhs.cost)
+			auto& node = *it;
+			if (node.getScore() <= current.getScore())
 			{
-				if (value.x == rhs.value.x)
-				{
-					return value.y < rhs.value.y;
-				}
-				else
-				{
-					return value.x < rhs.value.x;
-				}
-			}
-			else
-			{
-				return cost < rhs.cost;
-			}
-		}
-	};
-
-	int z = pt1.z;
-	sf::Vector2i pt1_2d = { pt1.x, pt1.y };
-	sf::Vector2i pt2_2d = { pt2.x, pt2.y };
-
-	std::unordered_set<sf::Vector2i> closedSet;
-	std::set<Node> openSet;
-	std::unordered_map<sf::Vector2i, sf::Vector2i> cameFrom;
-	auto constructPath = [z, &cameFrom](sf::Vector2i endPosition) -> std::deque<sf::Vector3i>
-	{
-		sf::Vector2i currentPosition = endPosition;
-		std::deque<sf::Vector3i> path;
-		while (currentPosition != cameFrom[currentPosition])
-		{
-			path.push_front({currentPosition.x, currentPosition.y, z});
-			currentPosition = cameFrom[currentPosition];
-		}
-
-		return path;
-	};
-	
-	openSet.emplace(Node(pt1_2d,0,0));
-	cameFrom[pt1_2d] = pt1_2d;
-
-	const int LIMIT = 50;
-	int passes = 0;
-	while (!openSet.empty() && passes < LIMIT)
-	{
-		Node currentNode = *(openSet.begin());
-		if (currentNode.value == pt2_2d) return constructPath(currentNode.value);
-		openSet.erase(openSet.begin());
-		closedSet.emplace(currentNode.value);
-
-		// check neighbors
-		for (int y = currentNode.value.y - 1; y <= currentNode.value.y + 1; ++y)
-		{
-			for (int x = currentNode.value.x - 1; x <= currentNode.value.x + 1; ++x)
-			{
-				if (closedSet.contains({x,y})) continue;
-				cameFrom[{x, y}] = currentNode.value;
-				if (sf::Vector2i(x,y) == pt2_2d) return constructPath(sf::Vector2i(x,y));
-
-				int distanceSoFar = currentNode.distance + 1;
-				int distanceFromTarget = static_cast<int>(std::sqrtf(std::powf(pt2.x - x, 2.f) + std::powf(pt2.y - y, 2.f)));
-				const auto entities = entitiesAt({ x,y,z });
-				int cost = distanceSoFar + distanceFromTarget + costFunc(entities);
-
-				Node neighbor = Node({ x,y }, distanceSoFar, cost);
-
-				auto inOpenSet = openSet.find(neighbor);
-				if (inOpenSet == openSet.end())
-				{
-					openSet.emplace(neighbor);
-				}
-				else
-				{
-					if (inOpenSet->distance > distanceSoFar)
-					{
-						openSet.erase(inOpenSet);
-						openSet.emplace(neighbor);
-					}
-				}
+				current = node;
+				currentItr = it;
 			}
 		}
 
-		++passes;
+		if (current.coordinate == end) break;
+
+		closedSet.emplace_back(current);
+		openSet.erase(currentItr);
+
+		for (int y = current.coordinate.y - 1; y <= current.coordinate.y + 1; ++y)
+		{
+			for (int x = current.coordinate.x - 1; x <= current.coordinate.x + 1; ++x)
+			{
+				const sf::Vector2i neighbourCoordinates = { x, y };
+				if (findNodeInList(closedSet, neighbourCoordinates)) continue;
+
+				float totalCost = current.g + 1.f + distance2d(neighbourCoordinates, end);
+
+				Node* neighbour = findNodeInList(openSet, neighbourCoordinates);
+				if (!neighbour)
+				{
+					Node newNode = { neighbourCoordinates };
+					connections[neighbourCoordinates] = current;
+					newNode.g = totalCost;
+					newNode.h = costFunc(entitiesAt({ neighbourCoordinates.x, neighbourCoordinates.y, pt1.z }));
+					openSet.emplace_back(std::move(newNode));
+				}
+				else if (totalCost < neighbour->g)
+				{
+					connections[neighbourCoordinates] = current;
+					neighbour->g = totalCost;
+				}
+			}
+		}
 	}
 
-	if (!openSet.empty())
+	std::deque<TilePosition> result;
+	while (current != connections.at(current.coordinate))
 	{
-		return constructPath(openSet.begin()->value);
+		result.emplace_front(current.coordinate.x, current.coordinate.y, pt1.z);
+		current = connections.at(current.coordinate);
 	}
 
-	return std::deque<sf::Vector3i>();
+	return result;
 }

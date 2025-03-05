@@ -4,7 +4,6 @@
 #include "Components/ActorComponent.h"
 #include <Components/CurrentActorComponent.h>
 #include "Components/DescriptionComponent.h"
-#include <Components/TweeningComponent.h>
 #include "Components/Tags.h"
 #include "Events/GameTickEvent.h"
 #include "Events/TurnStartEvent.h"

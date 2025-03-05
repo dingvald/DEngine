@@ -1,21 +1,59 @@
 #include "pch.h"
 #include "MouseActionSystem.h"
 
-#include <Components/Actions/MouseAction.h>
+#include <Components/Actions/InspectAction.h>
+#include <Components/Actions/MouseContextAction.h>
+#include <Components/Actions/MouseInspectAction.h>
+#include <Components/MouseCursorComponent.h>
+#include <Components/PositionComponent.h>
+
+#include <Systems/Helpers/EmplacePathNavToPosition.h>
+#include <Systems/Helpers/GetMouseHandle.h>
 
 void drft::system::MouseActionSystem::init()
 {
-	_registry.on_construct<MouseAction>().connect<&MouseActionSystem::onMouseActionAdded>(this);
+	_registry.on_construct<MouseContextAction>().connect<&MouseActionSystem::onMouseContextActionAdded>(this);
+	_registry.on_construct<MouseInspectAction>().connect<&MouseActionSystem::onMouseInspectActionAdded>(this);
 }
 
 void drft::system::MouseActionSystem::update()
 {
-	_registry.clear<MouseAction>();
+	_registry.clear<MouseContextAction>();
+	_registry.clear<MouseInspectAction>();
 }
 
-void drft::system::MouseActionSystem::onMouseActionAdded(entt::registry& registry, entt::entity entity) const
+void drft::system::MouseActionSystem::onMouseContextActionAdded(entt::registry& registry, entt::entity entity) const
 {
-	auto& mouseAction = registry.get<MouseAction>(entity);
+	auto mouse = getMouseConstHandle(registry);
 
+	auto mouseCursorComponent = mouse.try_get<MouseCursorComponent>();
+	auto mousePositionComponent = mouse.try_get<PositionComponent>();
+
+	if (!mouseCursorComponent || !mousePositionComponent) return;
+
+	switch (mouseCursorComponent->actionState)
+	{
+	case MouseContextualActionState::Move:
+		emplacePathNavToPosition({ registry, entity }, mousePositionComponent->tile);
+		break;
+	case MouseContextualActionState::Attack:
+		std::cout << "Attack action" << std::endl;
+		break;
+	case MouseContextualActionState::Interact:
+		std::cout << "Interact action" << std::endl;
+		break;
+	default:
+		throw std::exception("Unhandled enum case in MouseActionSystem");
+		break;
+	}
+}
+
+void drft::system::MouseActionSystem::onMouseInspectActionAdded(entt::registry& registry, entt::entity entity) const
+{
+	auto mouse = getMouseConstHandle(registry);
+	if (auto positionComponent = mouse.try_get<PositionComponent>())
+	{
+		registry.emplace_or_replace<InspectAction>(entity, positionComponent->tile);
+	}
 }
 

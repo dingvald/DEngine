@@ -12,6 +12,7 @@ namespace drft::system
 		void init() override;
 		void update() override;
 
-		void onMouseActionAdded(entt::registry& registry, entt::entity entity) const;
+		void onMouseContextActionAdded(entt::registry& registry, entt::entity entity) const;
+		void onMouseInspectActionAdded(entt::registry& registry, entt::entity entity) const;
 	};
 }

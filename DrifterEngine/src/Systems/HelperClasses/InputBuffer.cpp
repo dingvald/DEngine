@@ -99,7 +99,6 @@ std::optional<sf::Mouse::Button> drft::system::InputBuffer::popMouse()
     return {};
 }
 
-
 ModifiedKey drft::system::InputBuffer::popKey()
 {
     auto itr = _keyBuffer.begin();

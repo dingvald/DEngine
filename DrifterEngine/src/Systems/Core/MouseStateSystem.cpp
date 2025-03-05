@@ -44,19 +44,18 @@ void drft::system::MouseStateSystem::updateMouseContextualState(entt::entity mou
 	const auto& entities = grid.entitiesAt(mouseTilePosition);
 	for (auto&& entity : entities)
 	{
-		auto handle = entt::const_handle{ _registry, entity };
-		if (FactionSystem::resolveRelationship(player, handle) == Relationship::Hostile)
+		auto entityHandle = entt::const_handle{ _registry, entity };
+		if (FactionSystem::resolveRelationship(player, entityHandle) == Relationship::Hostile)
 		{
 			mouseCursor.actionState = MouseContextualActionState::Attack;
 			return;
 		}
-		if (handle.any_of<PhysicalBlockingComponent>())
+		if (entityHandle.any_of<PhysicalBlockingComponent>())
 		{
 			mouseCursor.actionState = MouseContextualActionState::Attack;
 			return;
 		}
-
-		if (handle.any_of<InteractableComponent>())
+		if (entityHandle.any_of<InteractableComponent>())
 		{
 			mouseCursor.actionState = MouseContextualActionState::Interact;
 			continue;
