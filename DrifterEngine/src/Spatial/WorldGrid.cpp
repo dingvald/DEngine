@@ -9,47 +9,41 @@ using namespace drft::spatial;
 
 static const drft::spatial::EntityList EmptyEntityList = {};
 
+static const size_t PathingSetReserveSize = 100; // Arbitrary
+
 namespace
 {
-	
-	struct Node
-	{
-		Node() = default;
-		Node(sf::Vector2i coordinate)
-			: coordinate(coordinate) {}
+	template<typename T, typename priority_t>
+	struct PriorityQueue {
+		struct Element {
+			priority_t first;
+			T second;
 
-		sf::Vector2i coordinate;
-		float h = 0;
-		float g = 0;
-		float getScore() const
-		{
-			return h + g;
+			bool operator >(const Element& other) const {
+				return first > other.first;
+			}
+			bool operator <(const Element& other) const {
+				return first < other.first;
+			}
+		};
+
+		std::priority_queue<Element, std::vector<Element>,
+			std::greater<Element>> elements;
+
+		inline bool empty() const {
+			return elements.empty();
 		}
 
-		bool operator ==(const Node& other)
-		{
-			return coordinate == other.coordinate;
+		inline void put(T item, priority_t priority) {
+			elements.emplace(priority, item);
 		}
 
-		bool operator !=(const Node& other)
-		{
-			return coordinate != other.coordinate;
+		T get() {
+			T best_item = elements.top().second;
+			elements.pop();
+			return best_item;
 		}
 	};
-
-	using NodeSet = std::vector<Node>;
-
-	Node* findNodeInList(NodeSet& nodes, sf::Vector2i coordinate)
-	{
-		for (auto&& node : nodes)
-		{
-			if (node.coordinate == coordinate)
-			{
-				return &node;
-			}
-		}
-		return nullptr;
-	}
 }
 
 void drft::spatial::WorldGrid::placeEntity(entt::entity entity, TilePosition tilePosition)
@@ -182,71 +176,46 @@ std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin,
 std::deque<drft::TilePosition> drft::spatial::WorldGrid::getPath(TilePosition pt1, TilePosition pt2, Heuristic costFunc) const
 {
 	const sf::Vector2i start = toXY(pt1);
-	const sf::Vector2i end = toXY(pt2);
+	const sf::Vector2i goal = toXY(pt2);
 
-	NodeSet openSet;
-	NodeSet closedSet;
+	std::unordered_map<sf::Vector2i, sf::Vector2i> cameFrom;
+	std::unordered_map<sf::Vector2i, double> costSoFar;
 
-	std::unordered_map<sf::Vector2i, Node> connections;
+	PriorityQueue<sf::Vector2i, double> frontier;
+	frontier.put(start, 0);
 
-	Node current = { start };
-	connections[start] = current;
+	cameFrom[start] = start;
+	costSoFar[start] = 0;
 
-	openSet.emplace_back(start);
-
-	while (!openSet.empty())
+	while (!frontier.empty())
 	{
-		auto currentItr = openSet.begin();
-		current = *currentItr;
+		const sf::Vector2i current = frontier.get();
 
-		for (auto it = openSet.begin(); it != openSet.end(); ++it)
+		if (current == goal) break;
+
+		for (auto&& neighbour : spatial::getAdjacentPoints(current))
 		{
-			auto& node = *it;
-			if (node.getScore() <= current.getScore())
+			double newCost = costSoFar[current] + costFunc(entitiesAt({ neighbour.x, neighbour.y, pt1.z }));
+			if (!costSoFar.contains(neighbour) || newCost < costSoFar[neighbour])
 			{
-				current = node;
-				currentItr = it;
-			}
-		}
-
-		if (current.coordinate == end) break;
-
-		closedSet.emplace_back(current);
-		openSet.erase(currentItr);
-
-		for (int y = current.coordinate.y - 1; y <= current.coordinate.y + 1; ++y)
-		{
-			for (int x = current.coordinate.x - 1; x <= current.coordinate.x + 1; ++x)
-			{
-				const sf::Vector2i neighbourCoordinates = { x, y };
-				if (findNodeInList(closedSet, neighbourCoordinates)) continue;
-
-				float totalCost = current.g + 1.f + distance2d(neighbourCoordinates, end);
-
-				Node* neighbour = findNodeInList(openSet, neighbourCoordinates);
-				if (!neighbour)
-				{
-					Node newNode = { neighbourCoordinates };
-					connections[neighbourCoordinates] = current;
-					newNode.g = totalCost;
-					newNode.h = costFunc(entitiesAt({ neighbourCoordinates.x, neighbourCoordinates.y, pt1.z }));
-					openSet.emplace_back(std::move(newNode));
-				}
-				else if (totalCost < neighbour->g)
-				{
-					connections[neighbourCoordinates] = current;
-					neighbour->g = totalCost;
-				}
+				costSoFar[neighbour] = newCost;
+				double priority = newCost + distance2d(neighbour, goal);
+				frontier.put(neighbour, priority);
+				cameFrom[neighbour] = current;
 			}
 		}
 	}
 
 	std::deque<TilePosition> result;
-	while (current != connections.at(current.coordinate))
+	sf::Vector2i current = goal;
+	if (!cameFrom.contains(current))
 	{
-		result.emplace_front(current.coordinate.x, current.coordinate.y, pt1.z);
-		current = connections.at(current.coordinate);
+		return result; // no path
 	}
-
+	while (current != start)
+	{
+		result.emplace_front(current.x, current.y, pt1.z);
+		current = cameFrom[current];
+	}
 	return result;
 }
