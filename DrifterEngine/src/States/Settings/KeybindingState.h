@@ -30,19 +30,19 @@ namespace drft
 			KeybindingListener(tgui::Button::Ptr button, tgui::Group::Ptr keybindingsGroup, StateKeybindings& bindings, const std::string& actionName, BindingPosition bindingPosition);
 			~KeybindingListener();
 
-			bool handleKeyPress(ModifiedKey key);
+			bool handleInput(ModifiedInput key);
 			bool isRequestingReset() const;
 			bool isDirty() const;
 
 		private:
 			void onUnfocus();
-			void createBindingConflictPopup(ModifiedKey key, const std::string& conflictingActionName);
+			void createBindingConflictPopup(ModifiedInput key, const std::string& conflictingActionName);
 			void closePopup();
-			void doSetBinding(ModifiedKey key);
+			void doSetBinding(ModifiedInput key);
 
-			bool handleKeyInListeningState(ModifiedKey key);
-			bool handleKeyInConflictState(ModifiedKey key);
-			bool handleKeyInRequestResetState(ModifiedKey key);
+			bool handleKeyInListeningState(ModifiedInput key);
+			bool handleKeyInConflictState(ModifiedInput key);
+			bool handleKeyInRequestResetState(ModifiedInput key);
 
 		private:
 			State _state = State::Listening;

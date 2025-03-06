@@ -15,8 +15,8 @@ class StateKeybindings : public ICreateFromJson
 public:
 	struct BoundKeys
 	{
-		ModifiedKey primary = {};
-		ModifiedKey secondary = {};
+		ModifiedInput primary = {};
+		ModifiedInput secondary = {};
 	};
 	struct ActionKeyPair
 	{
@@ -28,16 +28,16 @@ public:
 	void createFromJson(const rapidjson::Value& json) override;
 	void saveToJson(rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const;
 
-	void bindKeyToAction(ModifiedKey key, const std::string& actionName, BindingPosition position);
-	void unbindKeyFromAction(ModifiedKey key, const std::string& actionName);
-	bool isKeyBound(ModifiedKey key) const;
+	void bindKeyToAction(ModifiedInput key, const std::string& actionName, BindingPosition position);
+	void unbindKeyFromAction(ModifiedInput key, const std::string& actionName);
+	bool isKeyBound(ModifiedInput key) const;
 
-	std::optional<std::string> getActionForKey(ModifiedKey key) const;
+	std::optional<std::string> getActionForKey(ModifiedInput key) const;
 	std::vector<ActionKeyPair>& getActionKeyPairs();
 
 private:
 	std::unordered_map<std::string, BoundKeys> _actionToKeys;
 	std::vector<ActionKeyPair> _actionKeyPairs;
-	std::unordered_map<ModifiedKey, std::string> _keyToAction;
+	std::unordered_map<ModifiedInput, std::string> _keyToAction;
 };
 

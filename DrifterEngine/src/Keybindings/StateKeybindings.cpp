@@ -26,13 +26,13 @@ void StateKeybindings::createFromJson(const rapidjson::Value& json)
             continue;
         }
 
-        auto key1 = KeybindingUtils::convertStringToModifiedKey(keyNames[0].GetString());
+        auto key1 = KeybindingUtils::convertStringToModifiedInput(keyNames[0].GetString());
         boundKeys.primary = key1;
         _keyToAction.emplace(key1, actionName);
         
         if (keyNames.Size() > 1)
         {
-            auto key2 = KeybindingUtils::convertStringToModifiedKey(keyNames[1].GetString());
+            auto key2 = KeybindingUtils::convertStringToModifiedInput(keyNames[1].GetString());
             boundKeys.secondary = key2;
             _keyToAction.emplace(key2, actionName);
         }
@@ -58,13 +58,13 @@ void StateKeybindings::saveToJson(rapidjson::Value& json, rapidjson::Document::A
         if (boundKeys.primary)
         {
             rapidjson::Value keyVal{ kStringType };
-            keyVal.SetString(KeybindingUtils::convertModifiedKeyToString(boundKeys.primary).c_str(), allocator);
+            keyVal.SetString(KeybindingUtils::convertModifiedInputToString(boundKeys.primary).c_str(), allocator);
             arr.PushBack(keyVal, allocator);
         }
         if (boundKeys.secondary)
         {
             rapidjson::Value keyVal{ kStringType };
-            keyVal.SetString(KeybindingUtils::convertModifiedKeyToString(boundKeys.secondary).c_str(), allocator);
+            keyVal.SetString(KeybindingUtils::convertModifiedInputToString(boundKeys.secondary).c_str(), allocator);
             arr.PushBack(keyVal, allocator);
         }
 
@@ -74,7 +74,7 @@ void StateKeybindings::saveToJson(rapidjson::Value& json, rapidjson::Document::A
     }
 }
 
-void StateKeybindings::bindKeyToAction(ModifiedKey key, const std::string& actionName, BindingPosition position)
+void StateKeybindings::bindKeyToAction(ModifiedInput key, const std::string& actionName, BindingPosition position)
 {
     if (_actionToKeys.contains(actionName))
     {
@@ -87,8 +87,8 @@ void StateKeybindings::bindKeyToAction(ModifiedKey key, const std::string& actio
             
             if (boundKeys.secondary == key)
             {
-                boundKeys.secondary = ModifiedKey{};
-                keyPair->boundKeys.secondary = ModifiedKey{};
+                boundKeys.secondary = ModifiedInput{};
+                keyPair->boundKeys.secondary = ModifiedInput{};
             }
             _keyToAction.erase(boundKeys.primary);
             boundKeys.primary = key;
@@ -98,8 +98,8 @@ void StateKeybindings::bindKeyToAction(ModifiedKey key, const std::string& actio
         {
             if (boundKeys.primary == key)
             {
-                boundKeys.primary = ModifiedKey{};
-                keyPair->boundKeys.primary = ModifiedKey{};
+                boundKeys.primary = ModifiedInput{};
+                keyPair->boundKeys.primary = ModifiedInput{};
             }
             _keyToAction.erase(boundKeys.secondary);
             boundKeys.secondary = key;
@@ -114,7 +114,7 @@ void StateKeybindings::bindKeyToAction(ModifiedKey key, const std::string& actio
     }
 }
 
-void StateKeybindings::unbindKeyFromAction(ModifiedKey key, const std::string& actionName)
+void StateKeybindings::unbindKeyFromAction(ModifiedInput key, const std::string& actionName)
 {
     if (_actionToKeys.contains(actionName))
     {
@@ -135,12 +135,12 @@ void StateKeybindings::unbindKeyFromAction(ModifiedKey key, const std::string& a
     }
 }
 
-bool StateKeybindings::isKeyBound(ModifiedKey key) const
+bool StateKeybindings::isKeyBound(ModifiedInput key) const
 {
     return _keyToAction.contains(key);
 }
 
-std::optional<std::string> StateKeybindings::getActionForKey(ModifiedKey key) const
+std::optional<std::string> StateKeybindings::getActionForKey(ModifiedInput key) const
 {
     if (!_keyToAction.contains(key))
     {

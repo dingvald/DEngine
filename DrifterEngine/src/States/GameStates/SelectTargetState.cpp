@@ -45,7 +45,7 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 		}
 
 		const Keybindings& keybindings = getContext().keybindings;
-		const ModifiedKey key = KeybindingUtils::getModifiedKey(keypressed->scancode);
+		const ModifiedInput key = KeybindingUtils::getModifiedInput(keypressed->scancode);
 		auto action = keybindings["gameplay"].getActionForKey(key);
 		if (action)
 		{

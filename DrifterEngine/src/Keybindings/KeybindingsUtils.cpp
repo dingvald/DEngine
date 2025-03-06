@@ -3,7 +3,9 @@
 #include <Utility/StandardLogger.h>
 #include <Utility/StringManipulation.h>
 
-static inline const std::unordered_map<sf::Keyboard::Scancode, std::string> SfmlKeyToString =
+using KeyOrMouseCode = std::variant<std::monostate, sf::Keyboard::Scancode, sf::Mouse::Button>;
+
+static inline const std::unordered_map<KeyOrMouseCode, std::string> SfmlKeyToString =
 {
     {sf::Keyboard::Scancode::Unknown,          "Unknown"},
 
@@ -92,8 +94,6 @@ static inline const std::unordered_map<sf::Keyboard::Scancode, std::string> Sfml
     {sf::Keyboard::Scancode::Insert,          "Insert"},
     {sf::Keyboard::Scancode::Delete,          "Delete"},
 
-    // Modifiers handled through KeybindingUtils
-
     // Special
     {sf::Keyboard::Scancode::Space,           "Space"},
     {sf::Keyboard::Scancode::Enter,           "Enter"},
@@ -113,10 +113,17 @@ static inline const std::unordered_map<sf::Keyboard::Scancode, std::string> Sfml
     {sf::Keyboard::Scancode::Apostrophe,      "'"},
     {sf::Keyboard::Scancode::Comma,           ","},
     {sf::Keyboard::Scancode::Period,          "."},
-    {sf::Keyboard::Scancode::Slash,           "/"}
+    {sf::Keyboard::Scancode::Slash,           "/"},
+
+    // Mouse
+    {sf::Mouse::Button::Right,                "Mouse Right"},
+    {sf::Mouse::Button::Left,                 "Mouse Left" },
+    {sf::Mouse::Button::Middle,               "Mouse Middle"},
+    {sf::Mouse::Button::Extra1,               "Mouse Extra 1" },
+    {sf::Mouse::Button::Extra2,               "Mouse Extra 2" },
 };
 
-static inline const std::unordered_map<std::string, sf::Keyboard::Scancode> StringToSfmlKey =
+static inline const std::unordered_map<std::string, KeyOrMouseCode> StringToSfmlKey =
 {
     // Unknown
     {"Unknown", sf::Keyboard::Scancode::Unknown},
@@ -227,7 +234,14 @@ static inline const std::unordered_map<std::string, sf::Keyboard::Scancode> Stri
     {"'", sf::Keyboard::Scancode::Apostrophe},
     {",", sf::Keyboard::Scancode::Comma},
     {".", sf::Keyboard::Scancode::Period},
-    {"/", sf::Keyboard::Scancode::Slash}
+    {"/", sf::Keyboard::Scancode::Slash},
+
+    // Mouse
+    {"MouseRight", sf::Mouse::Button::Right},
+    {"MouseLeft", sf::Mouse::Button::Left},
+    {"MouseMiddle", sf::Mouse::Button::Middle},
+    {"MouseExtra1", sf::Mouse::Button::Extra1},
+    {"MouseExtra2", sf::Mouse::Button::Extra2}
 };
 
 static const std::unordered_map<std::string, KeyModifier> StringToKeyModifier =
@@ -236,7 +250,7 @@ static const std::unordered_map<std::string, KeyModifier> StringToKeyModifier =
 	{"Ctrl", KeyModifier::Ctrl}
 };
 
-static const std::unordered_set<sf::Keyboard::Scancode> SfmlKeyModifiers =
+static const std::unordered_set<KeyOrMouseCode> SfmlKeyModifiers =
 {
 	sf::Keyboard::Scancode::LShift,
 	sf::Keyboard::Scancode::RShift,
@@ -244,7 +258,7 @@ static const std::unordered_set<sf::Keyboard::Scancode> SfmlKeyModifiers =
 	sf::Keyboard::Scancode::RControl
 };
 
-static inline const ModifiedKey InvalidKeyBind = {};
+static inline const ModifiedInput InvalidKeyBind = {};
 
 namespace
 {
@@ -274,12 +288,12 @@ namespace
     }
 }
 
-ModifiedKey KeybindingUtils::getModifiedKey(sf::Keyboard::Scancode key)
+ModifiedInput KeybindingUtils::getModifiedInput(ModifiedInput::Value input)
 {
-	if (SfmlKeyModifiers.contains(key)) return {};
+	if (SfmlKeyModifiers.contains(input)) return {};
 
-	ModifiedKey result;
-	result.key = key;
+	ModifiedInput result;
+	result.value = input;
 	result.modifier = KeyModifier::None;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)
@@ -296,18 +310,18 @@ ModifiedKey KeybindingUtils::getModifiedKey(sf::Keyboard::Scancode key)
 	return result;
 }
 
-ModifiedKey KeybindingUtils::convertStringToModifiedKey(const std::string& str)
+ModifiedInput KeybindingUtils::convertStringToModifiedInput(const std::string& str)
 {
     auto inputNoWhitespace = drft::util::removeWhitespace(str);
     auto splitStrings = drft::util::split(inputNoWhitespace, "+");
 
-    ModifiedKey result = {};
+    ModifiedInput result = {};
 
     if (splitStrings.size() == 1)
     {
         if (StringToSfmlKey.contains(splitStrings[0]))
         {
-            result.key = StringToSfmlKey.at(splitStrings[0]);
+            result.value = StringToSfmlKey.at(splitStrings[0]);
         }
         else
         {
@@ -326,7 +340,7 @@ ModifiedKey KeybindingUtils::convertStringToModifiedKey(const std::string& str)
 
         if (StringToSfmlKey.contains(splitStrings[1]))
         {
-            result.key = StringToSfmlKey.at(splitStrings[1]);
+            result.value = StringToSfmlKey.at(splitStrings[1]);
         }
         else
         {
@@ -336,7 +350,7 @@ ModifiedKey KeybindingUtils::convertStringToModifiedKey(const std::string& str)
     }
     else if (StringToSfmlKey.contains(str))
     {
-        result.key = StringToSfmlKey.at(str);
+        result.value = StringToSfmlKey.at(str);
     }
     else
     {
@@ -347,7 +361,7 @@ ModifiedKey KeybindingUtils::convertStringToModifiedKey(const std::string& str)
     return result;
 }
 
-std::string KeybindingUtils::convertModifiedKeyToString(const ModifiedKey& key)
+std::string KeybindingUtils::convertModifiedInputToString(const ModifiedInput& key)
 {
     std::string result;
     switch (key.modifier)
@@ -362,7 +376,7 @@ std::string KeybindingUtils::convertModifiedKeyToString(const ModifiedKey& key)
         break;
     }
 
-    result.append(SfmlKeyToString.at(key.key));
+    result.append(SfmlKeyToString.at(key.value));
 
     return result;
 }

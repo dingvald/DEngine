@@ -29,7 +29,7 @@ namespace drft
 		void shutDown();
 
 		void onMouseMoved();
-		void onKeyboardPressed(sf::Keyboard::Scancode scancode);
+		bool onKeyboardPressed(sf::Keyboard::Scancode scancode);
 
 		void passEventToGui(sf::Event event);
 		void passEventToState(sf::Event event);

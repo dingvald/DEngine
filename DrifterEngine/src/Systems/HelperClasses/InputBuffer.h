@@ -9,35 +9,27 @@ namespace drft::system
 		InputBuffer(unsigned int maxBufferSize);
 
 		void update();
-		void press(ModifiedKey key);
-		void release(ModifiedKey key);
+		void press(ModifiedInput input);
+		void release(ModifiedInput input);
 
-		void mousePress(sf::Mouse::Button button);
-		void mouseRelease(sf::Mouse::Button button);
-
-		std::optional<sf::Mouse::Button> popMouse();
-
-		ModifiedKey popKey();
+		ModifiedInput pop();
 
 		bool isEmpty() const;
 
 	private:
-		struct KeyState
+		struct InputState
 		{
 			float timeHeld = 0;
 			bool active = false;
 		};
-		void updateKeyState(KeyState& state);
+		void updateInputState(const ModifiedInput& input, InputState& state);
 
 	private:
-		using MouseBuffer = std::deque<sf::Mouse::Button>;
-		using KeyBuffer = std::deque<ModifiedKey>;
+		using ModifiedInputBuffer = std::deque<ModifiedInput>;
 		
-		std::unordered_map<ModifiedKey, KeyState> _pressedKeys;
-		std::unordered_map<sf::Mouse::Button, KeyState> _pressedMouse;
+		std::unordered_map<ModifiedInput, InputState> _activeInputs;
 		unsigned int _maxBufferSize = 1;
-		KeyBuffer _keyBuffer;
-		MouseBuffer _mouseBuffer;
+		ModifiedInputBuffer _inputBuffer;
 	};
 }
 

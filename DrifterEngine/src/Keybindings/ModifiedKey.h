@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Window/Keyboard.hpp>
-#include <memory> // For std::hash definition
+#include <Utility/stdHashing.h>
 
 enum class KeyModifier
 {
@@ -9,30 +9,32 @@ enum class KeyModifier
 	Ctrl
 };
 
-struct ModifiedKey
+struct ModifiedInput
 {
-	sf::Keyboard::Scancode key = sf::Keyboard::Scancode::Unknown;
+	using Value = std::variant<std::monostate, sf::Keyboard::Scancode, sf::Mouse::Button>;
+	Value value = std::monostate{};
 	KeyModifier modifier = KeyModifier::None;
 
-	bool operator ==(const ModifiedKey& other) const
+	bool operator ==(const ModifiedInput& other) const
 	{
 		return other.modifier == this->modifier
-			&& other.key == this->key;
+			&& other.value == this->value;
 	}
 	operator bool() const
 	{
-		return key != sf::Keyboard::Scancode::Unknown;
+		return static_cast<bool>(value.index());
 	}
 };
 
-static const ModifiedKey InvalidKey = ModifiedKey{};
+static const ModifiedInput InvalidKey = ModifiedInput{};
 
 template<>
-struct std::hash<ModifiedKey>
+struct std::hash<ModifiedInput>
 {
-	std::size_t operator()(const ModifiedKey& key) const noexcept
+	std::size_t operator()(const ModifiedInput& input) const noexcept
 	{
-		size_t pos = static_cast<int>(key.modifier) * sf::Keyboard::ScancodeCount;
-		return pos + static_cast<size_t>(key.key);
+		size_t variantHash = std::hash<ModifiedInput::Value>{}(input.value);
+		hash_combine(variantHash, input.modifier);
+		return variantHash;
 	}
 };

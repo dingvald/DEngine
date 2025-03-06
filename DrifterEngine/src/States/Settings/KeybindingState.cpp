@@ -21,8 +21,16 @@ bool drft::KeybindingState::handleEvent(const sf::Event& ev)
 
 		if (!_keybindingListener) return false;
 
-		auto key = KeybindingUtils::getModifiedKey(keyPressed->scancode);
-		return _keybindingListener->handleKeyPress(key);
+		auto key = KeybindingUtils::getModifiedInput(keyPressed->scancode);
+		return _keybindingListener->handleInput(key);
+	}
+
+	if (auto mousePress = ev.getIf<sf::Event::MouseButtonPressed>())
+	{
+		if (!_keybindingListener) return false;
+
+		auto key = KeybindingUtils::getModifiedInput(mousePress->button);
+		return _keybindingListener->handleInput(key);
 	}
 
 	return false;
@@ -124,24 +132,24 @@ void drft::KeybindingState::refreshKeybindingList(tgui::PanelListBox::Ptr list)
 
 			auto key1 = newEntry->get<tgui::Button>("PrimaryKey");
 			key1->onPress([this, key1, &stateBinding, &actionName]() { onKeybindSlotPressed(key1, _guiGroup, stateBinding, actionName, BindingPosition::Primary); });
-			if (keys.primary.key == sf::Keyboard::Scan::Unknown)
+			if (keys.primary.value.index() == 0)
 			{
 				key1->setText("");
 			}
 			else
 			{
-				key1->setText(KeybindingUtils::convertModifiedKeyToString(keys.primary));
+				key1->setText(KeybindingUtils::convertModifiedInputToString(keys.primary));
 			}
 
 			auto key2 = newEntry->get<tgui::Button>("SecondaryKey");
 			key2->onPress([this, key2, &stateBinding, &actionName]() { onKeybindSlotPressed(key2, _guiGroup, stateBinding, actionName, BindingPosition::Secondary); });
-			if (keys.secondary.key == sf::Keyboard::Scan::Unknown)
+			if (keys.secondary.value.index() == 0)
 			{
 				key2->setText("");
 			}
 			else
 			{
-				key2->setText(KeybindingUtils::convertModifiedKeyToString(keys.secondary));
+				key2->setText(KeybindingUtils::convertModifiedInputToString(keys.secondary));
 			}
 		}
 	}
@@ -178,9 +186,9 @@ drft::KeybindingState::KeybindingListener::~KeybindingListener()
 	_button->onUnfocus.disconnect(_onFocusHandlerID);
 }
 
-bool drft::KeybindingState::KeybindingListener::handleKeyPress(ModifiedKey key)
+bool drft::KeybindingState::KeybindingListener::handleInput(ModifiedInput key)
 {
-	if (key.key == sf::Keyboard::Scan::Unknown) return false; // Continue Listening
+	if (key.value.index() == 0) return false; // Continue Listening
 
 	switch (_state)
 	{
@@ -214,7 +222,7 @@ void drft::KeybindingState::KeybindingListener::onUnfocus()
 	_state = State::RequestReset;
 }
 
-void drft::KeybindingState::KeybindingListener::createBindingConflictPopup(ModifiedKey key, const std::string& conflictingActionName)
+void drft::KeybindingState::KeybindingListener::createBindingConflictPopup(ModifiedInput key, const std::string& conflictingActionName)
 {
 	auto backgroud = tgui::Panel::create();
 	backgroud->setSize("100%", "100%");
@@ -230,7 +238,7 @@ void drft::KeybindingState::KeybindingListener::createBindingConflictPopup(Modif
 	_popup->setTitle("Keybinding Conflict");
 	_popup->setTitleTextSize(16);
 	_popup->setText(std::format("Key {} is bound to action:\n\n( {} )\n\nClear previous binding and continue?", 
-		KeybindingUtils::convertModifiedKeyToString(key), 
+		KeybindingUtils::convertModifiedInputToString(key), 
 		conflictingActionName));
 	_popup->setTextSize(14);
 	_popup->setLabelAlignment(tgui::HorizontalAlignment::Center);
@@ -264,38 +272,38 @@ void drft::KeybindingState::KeybindingListener::closePopup()
 	_group->remove(_group->get("PopupBackground"));
 }
 
-void drft::KeybindingState::KeybindingListener::doSetBinding(ModifiedKey key)
+void drft::KeybindingState::KeybindingListener::doSetBinding(ModifiedInput key)
 {
 	_bindings.bindKeyToAction(key, _actionName, _bindingPosition);
-	_keyName = KeybindingUtils::convertModifiedKeyToString(key);
+	_keyName = KeybindingUtils::convertModifiedInputToString(key);
 	_state = State::RequestReset;
 	_isDirty = true;
 }
 
-bool drft::KeybindingState::KeybindingListener::handleKeyInListeningState(ModifiedKey key)
+bool drft::KeybindingState::KeybindingListener::handleKeyInListeningState(ModifiedInput input)
 {
-	if (key.key == sf::Keyboard::Scan::Escape)
+	if (auto key = std::get_if<sf::Keyboard::Scancode>(&input.value); key && *key == sf::Keyboard::Scan::Escape)
 	{
 		_state = State::RequestReset;
 		return true;
 	}
 
-	auto action = _bindings.getActionForKey(key);
+	auto action = _bindings.getActionForKey(input);
 	if (action.has_value() && action.value() != _actionName)
 	{
-		createBindingConflictPopup(key, action.value());
+		createBindingConflictPopup(input, action.value());
 		_state = State::Conflict;
 		return true;
 	}
 
-	doSetBinding(key);
+	doSetBinding(input);
 	_state = State::RequestReset;
 	return true;
 }
 
-bool drft::KeybindingState::KeybindingListener::handleKeyInConflictState(ModifiedKey key)
+bool drft::KeybindingState::KeybindingListener::handleKeyInConflictState(ModifiedInput input)
 {
-	if (key.key == sf::Keyboard::Scan::Escape)
+	if (auto key = std::get_if<sf::Keyboard::Scancode>(&input.value); key && *key == sf::Keyboard::Scan::Escape)
 	{
 		closePopup();
 		_state = State::RequestReset;
@@ -304,7 +312,7 @@ bool drft::KeybindingState::KeybindingListener::handleKeyInConflictState(Modifie
 	return false;
 }
 
-bool drft::KeybindingState::KeybindingListener::handleKeyInRequestResetState(ModifiedKey key)
+bool drft::KeybindingState::KeybindingListener::handleKeyInRequestResetState(ModifiedInput key)
 {
 	return handleKeyInListeningState(key);
 }

@@ -123,7 +123,7 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 			return true;
 		}
 
-		ModifiedKey key = KeybindingUtils::getModifiedKey(keypressed->scancode);
+		ModifiedInput key = KeybindingUtils::getModifiedInput(keypressed->scancode);
 		auto action = getContext().keybindings["gameplay"].getActionForKey(key);
 		if (_actionMap.contains(action.value_or("NONE")))
 		{
@@ -136,18 +136,20 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 
 	if (const auto keyreleased = ev.getIf<sf::Event::KeyReleased>())
 	{
-		ModifiedKey key = KeybindingUtils::getModifiedKey(keyreleased->scancode);
+		ModifiedInput key = KeybindingUtils::getModifiedInput(keyreleased->scancode);
 		_inputBuffer.release(key);
 	}
 
 	if (const auto mousepressed = ev.getIf<sf::Event::MouseButtonPressed>())
 	{
-		_inputBuffer.mousePress(mousepressed->button);
+		ModifiedInput key = KeybindingUtils::getModifiedInput(mousepressed->button);
+		_inputBuffer.press(key);
 	}
 
 	if (const auto mousereleased = ev.getIf<sf::Event::MouseButtonReleased>())
 	{
-		_inputBuffer.mouseRelease(mousereleased->button);
+		ModifiedInput key = KeybindingUtils::getModifiedInput(mousereleased->button);
+		_inputBuffer.release(key);
 	}
 
 	if (const auto mousescroll = ev.getIf<sf::Event::MouseWheelScrolled>())

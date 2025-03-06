@@ -3,8 +3,8 @@
 
 namespace KeybindingUtils
 {
-	ModifiedKey getModifiedKey(sf::Keyboard::Scancode key);
+	ModifiedInput getModifiedInput(ModifiedInput::Value input);
 
-	ModifiedKey convertStringToModifiedKey(const std::string& str);
-	std::string convertModifiedKeyToString(const ModifiedKey& key);
+	ModifiedInput convertStringToModifiedInput(const std::string& str);
+	std::string convertModifiedInputToString(const ModifiedInput& key);
 }

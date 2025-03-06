@@ -95,6 +95,13 @@ void drft::system::PlayerInput::init()
 		entity.emplace_or_replace<InteractionAction>();
 		});
 
+	_actionMap.bindAction("mouse_contextual", [](entt::handle entity) {
+		entity.emplace_or_replace<MouseContextAction>();
+		});
+	_actionMap.bindAction("mouse_inspect", [](entt::handle entity) {
+		entity.emplace_or_replace<MouseInspectAction>();
+		});
+
 	// Hotbar //
 	for (int i = 0; i < HOTBAR_SIZE; ++i)
 	{
@@ -116,25 +123,10 @@ void drft::system::PlayerInput::update()
 
 		entt::handle playerHandle = { _registry, entity };
 
-		// TODO: Unifiy mouse input and keyboard input into single datastructure
-		if (auto mouse = inputBuffer.popMouse())
+		ModifiedInput key = inputBuffer.pop();
+		if (auto action = keybindings["gameplay"].getActionForKey(key))
 		{
-			if (mouse.value() == sf::Mouse::Button::Left)
-			{
-				playerHandle.emplace_or_replace<MouseContextAction>();
-			}
-			else if (mouse.value() == sf::Mouse::Button::Right)
-			{
-				playerHandle.emplace_or_replace<MouseInspectAction>();
-			}
-		}
-		else
-		{
-			ModifiedKey key = inputBuffer.popKey();
-			if (auto action = keybindings["gameplay"].getActionForKey(key))
-			{
-				_actionMap.callAction(action.value(), playerHandle);
-			}
+			_actionMap.callAction(action.value(), playerHandle);
 		}
 	}
 }

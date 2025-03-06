@@ -183,7 +183,7 @@ void drft::Engine::handleEvents()
 	{
 		if (auto keypressed = event->getIf<sf::Event::KeyPressed>())
 		{
-			onKeyboardPressed(keypressed->scancode);
+			if (onKeyboardPressed(keypressed->scancode)) continue;
 		}
 		if (event->is<sf::Event::Closed>())
 		{
@@ -235,15 +235,24 @@ void drft::Engine::onMouseMoved()
 	}
 }
 
-void drft::Engine::onKeyboardPressed(sf::Keyboard::Scancode scancode)
+bool drft::Engine::onKeyboardPressed(sf::Keyboard::Scancode scancode)
 {
-	ModifiedKey key = KeybindingUtils::getModifiedKey(scancode);
+	ModifiedInput key = KeybindingUtils::getModifiedInput(scancode);
 
 	auto generalAction = _keybindings["general"].getActionForKey(key);
-	if (generalAction) _actionMap.callAction(generalAction.value());
+	if (generalAction)
+	{
+		_actionMap.callAction(generalAction.value());
+		return true;
+	}
 
 	auto gameplayAction = _keybindings["gameplay"].getActionForKey(key);
-	if (gameplayAction) _actionMap.callAction(gameplayAction.value());
+	if (gameplayAction)
+	{
+		_actionMap.callAction(gameplayAction.value());
+	}
+
+	return false;
 }
 
 void drft::Engine::passEventToGui(sf::Event event)

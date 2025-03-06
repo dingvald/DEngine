@@ -14,84 +14,43 @@ drft::system::InputBuffer::InputBuffer(unsigned int maxBufferSize)
 
 void drft::system::InputBuffer::update()
 {
-    for (auto&& [button, state] : _pressedMouse)
+    for (auto&& [key, state] : _activeInputs)
     {
-        updateKeyState(state);
-    }
-    for (auto&& [key, state] : _pressedKeys)
-    {
-        updateKeyState(state);
+        updateInputState(key, state);
     }
 }
 
-void drft::system::InputBuffer::press(ModifiedKey key)
+void drft::system::InputBuffer::press(ModifiedInput key)
 {
-    if (key.key == sf::Keyboard::Scan::Unknown) return;
-    if (_keyBuffer.size() >= INPUT_BUFFER_MAX_SIZE) return;
+    if (key.value.index() == 0) return;
+    if (_inputBuffer.size() >= INPUT_BUFFER_MAX_SIZE) return;
 
-    _keyBuffer.push_back(key);
-    _pressedKeys.emplace(key, KeyState{});
+    _inputBuffer.push_back(key);
+    _activeInputs.emplace(key, InputState{});
 }
 
-void drft::system::InputBuffer::release(ModifiedKey key)
+void drft::system::InputBuffer::release(ModifiedInput key)
 {
-    if (key.key == sf::Keyboard::Scan::Unknown) return;
+    if (key.value.index() == 0) return;
 
-    _pressedKeys.erase(key);
-    std::erase(_keyBuffer, key);
+    _activeInputs.erase(key);
+    std::erase(_inputBuffer, key);
 }
 
-void drft::system::InputBuffer::mousePress(sf::Mouse::Button button)
+ModifiedInput drft::system::InputBuffer::pop()
 {
-    if (_mouseBuffer.size() >= INPUT_BUFFER_MAX_SIZE) return;
-
-    _mouseBuffer.push_back(button);
-    _pressedMouse.emplace(button, KeyState{});
-}
-
-void drft::system::InputBuffer::mouseRelease(sf::Mouse::Button button)
-{
-    _pressedMouse.erase(button);
-    std::erase(_mouseBuffer, button);
-}
-
-std::optional<sf::Mouse::Button> drft::system::InputBuffer::popMouse()
-{
-    auto itr = _mouseBuffer.begin();
-    while (itr != _mouseBuffer.end())
+    auto itr = _inputBuffer.begin();
+    while (itr != _inputBuffer.end())
     {
-        if (!_pressedMouse.contains(*itr))
+        if (!_activeInputs.contains(*itr))
         {
-            itr = _mouseBuffer.erase(itr);
+            itr = _inputBuffer.erase(itr);
         }
         else
         {
-            if (_pressedMouse.at(*itr).active)
+            if (_activeInputs.at(*itr).active)
             {
-                sf::Mouse::Button result = *itr;
-                return result;
-            }
-            ++itr;
-        }
-    }
-
-    return {};
-}
-
-ModifiedKey drft::system::InputBuffer::popKey()
-{
-    auto itr = _keyBuffer.begin();
-    while (itr != _keyBuffer.end())
-    {
-        if (!_pressedKeys.contains(*itr))
-        {
-            itr = _keyBuffer.erase(itr);
-        }
-        else
-        {
-            if (_pressedKeys.at(*itr).active)
-            {
-                ModifiedKey result = *itr;
+                ModifiedInput result = *itr;
                 return result;
             }
             ++itr;
@@ -103,10 +62,10 @@ ModifiedKey drft::system::InputBuffer::popKey()
 
 bool drft::system::InputBuffer::isEmpty() const
 {
-    return _keyBuffer.empty();
+    return _inputBuffer.empty();
 }
 
-void drft::system::InputBuffer::updateKeyState(KeyState& state)
+void drft::system::InputBuffer::updateInputState(const ModifiedInput& input, InputState& state)
 {
     state.active = false;
     if (std::abs(state.timeHeld) <= std::numeric_limits<float>::epsilon())

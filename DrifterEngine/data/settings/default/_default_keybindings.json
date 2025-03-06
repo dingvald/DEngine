@@ -41,7 +41,10 @@
                 "hotbar_0": [ "Num0" ],
 
                 "zoom_in": [ "+" ],
-                "zoom_out": ["-"]
+                "zoom_out": [ "-" ],
+
+                "mouse_contextual": [ "MouseLeft" ],
+                "mouse_inspect": ["MouseRight"]
             },
             "menu": {
                 "navigate_right": [ "Numpad6", "Right" ],
