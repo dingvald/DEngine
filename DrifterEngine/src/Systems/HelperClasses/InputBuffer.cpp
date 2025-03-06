@@ -79,5 +79,5 @@ void drft::system::InputBuffer::updateInputState(const ModifiedInput& input, Inp
         state.active = true;
         state.timeHeld -= REFRACTORY_PERIOD;
     }
-    state.timeHeld = std::min(state.timeHeld + SECONDS_PER_FRAME, HOLD_TIME + SECONDS_PER_FRAME);
+    state.timeHeld = std::min(state.timeHeld + SECONDS_PER_FRAME, HOLD_TIME);
 }
