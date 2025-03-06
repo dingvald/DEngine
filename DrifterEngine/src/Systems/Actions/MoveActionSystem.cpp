@@ -46,7 +46,7 @@ void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry,
 	if (!blockers.empty())
 	{
 		_registry.emplace_or_replace<CollisionComponent>(entity, moveAction.direction, std::move(blockers));
-		moveAction.direction = sf::Vector2i{ 0,0 };
+		_registry.remove<MoveAction>(entity);
 	}
 }
 

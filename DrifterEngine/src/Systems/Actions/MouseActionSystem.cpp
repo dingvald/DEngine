@@ -37,7 +37,7 @@ void drft::system::MouseActionSystem::onMouseContextActionAdded(entt::registry& 
 		emplacePathNavToPosition({ registry, entity }, mousePositionComponent->tile);
 		break;
 	case MouseContextualActionState::Attack:
-		std::cout << "Attack action" << std::endl;
+		emplacePathNavToPosition({ registry, entity }, mousePositionComponent->tile);
 		break;
 	case MouseContextualActionState::Interact:
 		std::cout << "Interact action" << std::endl;
