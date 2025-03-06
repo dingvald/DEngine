@@ -22,13 +22,17 @@ namespace drft::system
 		bool isEmpty() const;
 
 	private:
-		using MouseBuffer = std::deque<sf::Mouse::Button>;
-		using KeyBuffer = std::deque<ModifiedKey>;
 		struct KeyState
 		{
 			float timeHeld = 0;
 			bool active = false;
 		};
+		void updateKeyState(KeyState& state);
+
+	private:
+		using MouseBuffer = std::deque<sf::Mouse::Button>;
+		using KeyBuffer = std::deque<ModifiedKey>;
+		
 		std::unordered_map<ModifiedKey, KeyState> _pressedKeys;
 		std::unordered_map<sf::Mouse::Button, KeyState> _pressedMouse;
 		unsigned int _maxBufferSize = 1;
