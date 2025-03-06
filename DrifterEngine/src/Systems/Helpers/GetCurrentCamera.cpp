@@ -8,18 +8,21 @@
 static CameraComponent EmptyCamera = {};
 static PositionComponent EmptyPosition = {};
 
-drft::system::CameraInfo drft::system::getCurrentCamera(const entt::registry& registry)
+static constexpr float ZoomIncrement = 0.5f;
+
+
+drft::system::CameraHandle drft::system::getCurrentCamera(entt::registry& registry)
 {
 	auto cameraView = registry.view<CameraComponent, PositionComponent>();
 	for (auto&& [_, camera, pos] : cameraView.each())
 	{
-		return CameraInfo{ .position = pos, .camera = camera, .isInitialized = (camera.target == entt::null ? false : true) };
+		return CameraHandle{ .position = pos, .camera = camera, .isInitialized = (camera.target == entt::null ? false : true) };
 	}
 
-	return CameraInfo{ .position = EmptyPosition, .camera = EmptyCamera, .isInitialized = false };
+	return CameraHandle{ .position = EmptyPosition, .camera = EmptyCamera, .isInitialized = false };
 }
 
-sf::Vector2f drft::system::toScreenSpace(TilePosition tilePosition, CameraInfo camera)
+sf::Vector2f drft::system::toScreenSpace(TilePosition tilePosition, CameraHandle camera)
 {
 	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) - camera.camera.lag;
 	const sf::Vector3f relativeToCameraPosition = spatial::toFloatSpace(tilePosition) - cameraPosition;
@@ -27,7 +30,7 @@ sf::Vector2f drft::system::toScreenSpace(TilePosition tilePosition, CameraInfo c
 	return spatial::toXY(relativeToCameraPosition);
 }
 
-sf::Vector2f drft::system::toScreenSpace(sf::Vector2f worldPosition, CameraInfo camera)
+sf::Vector2f drft::system::toScreenSpace(sf::Vector2f worldPosition, CameraHandle camera)
 {
 	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) - camera.camera.lag;
 	const sf::Vector2f relativeToCameraPosition = worldPosition - spatial::toXY(cameraPosition);
@@ -35,7 +38,7 @@ sf::Vector2f drft::system::toScreenSpace(sf::Vector2f worldPosition, CameraInfo 
 	return relativeToCameraPosition;
 }
 
-drft::TilePosition drft::system::fromScreenSpace(sf::Vector2i screenPosition, CameraInfo camera)
+drft::TilePosition drft::system::fromScreenSpace(sf::Vector2i screenPosition, CameraHandle camera)
 {
 	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) - camera.camera.lag;
 	auto topleft = spatial::toXY(cameraPosition) - (camera.camera.view.getSize() / 2.f);
@@ -44,3 +47,14 @@ drft::TilePosition drft::system::fromScreenSpace(sf::Vector2i screenPosition, Ca
 	return spatial::toTileSpace(sf::Vector3f{ totalPosition.x, totalPosition.y, static_cast<float>(camera.position.tile.z) });
 }
 
+void drft::system::CameraHandle::zoomIn()
+{
+	camera.view.zoom(ZoomIncrement);
+	camera.scale *= ZoomIncrement;
+}
+
+void drft::system::CameraHandle::zoomOut()
+{
+	camera.view.zoom(1.f / ZoomIncrement);
+	camera.scale /= ZoomIncrement;
+}

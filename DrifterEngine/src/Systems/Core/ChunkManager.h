@@ -8,7 +8,7 @@
 
 namespace drft::system
 {
-	struct CameraInfo;
+	struct CameraHandle;
 	namespace
 	{
 		enum ProcessType
@@ -28,7 +28,7 @@ namespace drft::system
 		virtual void shutdown() override;
 
 	private:
-		void updateChunkStates(const CameraInfo& camera);
+		void updateChunkStates(const CameraHandle& camera);
 		void cleanUpChunks();
 		void processBuildQueue();
 		void processLoadQueue();

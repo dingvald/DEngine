@@ -8,8 +8,6 @@ namespace drft::system
 	public:
 		using System::System;
 
-		
-
 	private:
 		void start() override;
 		void render(sf::RenderTarget& target) override;

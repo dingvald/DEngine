@@ -8,17 +8,24 @@
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
 
+#include <Systems/Helpers/GetCurrentCamera.h>
+
 static const float CAMERA_SPEED = 7.0f;
+
+static const float STARTING_ZOOM_SCALE = 0.5f;
 
 void drft::system::Camera::start()
 {
 	_camera = _registry.create();
 
-	sf::View view = _registry.ctx().get<const sf::RenderWindow&>().getView();
+	sf::RenderWindow& window = _registry.ctx().get<sf::RenderWindow>();
+
+	sf::View view = window.getView();
 	view.setCenter({ 0,0 });
+	view.zoom(STARTING_ZOOM_SCALE);
 
 	// component order matters for camera because it determines order of component destruction.
-	_registry.emplace<CameraComponent>(_camera, view, sf::Vector3f{}, entt::null);
+	_registry.emplace<CameraComponent>(_camera, view, STARTING_ZOOM_SCALE, sf::Vector3f{}, entt::null);
 	_registry.emplace<PositionComponent>(_camera, TilePosition{0,0,0});
 }
 
@@ -42,6 +49,7 @@ void drft::system::Camera::render(sf::RenderTarget& target)
 
 void drft::system::Camera::shutdown()
 {
+	// Prevents saving the camera entity
 	_registry.destroy(_camera);
 }
 

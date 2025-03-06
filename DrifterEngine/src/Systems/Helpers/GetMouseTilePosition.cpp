@@ -8,5 +8,9 @@ drft::TilePosition drft::getMouseTilePosition(entt::registry& registry)
 	auto windowRelativeMousePosition = sf::Mouse::getPosition(window);
 	auto camera = system::getCurrentCamera(registry);
 
-	return fromScreenSpace(windowRelativeMousePosition, camera);
+	sf::Vector2f scaled;
+	scaled.x = static_cast<float>(windowRelativeMousePosition.x) * camera.camera.scale;
+	scaled.y = static_cast<float>(windowRelativeMousePosition.y) * camera.camera.scale;
+
+	return fromScreenSpace(sf::Vector2i{ scaled }, camera);
 }

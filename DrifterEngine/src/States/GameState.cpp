@@ -6,6 +6,7 @@
 #include "Events/RequestStateChange.h"
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include <Keybindings/KeybindingsUtils.h>
+#include <Keybindings/Keybindings.h>
 
 #include <States/GameStates/CraftingState.h>
 #include <States/GameStates/GameOverState.h>
@@ -13,6 +14,8 @@
 #include <States/GameStates/SelectDirectionState.h>
 #include <States/GameStates/SelectTargetState.h>
 #include <States/GameStates/SimulationState.h>
+
+#include <Systems/Helpers/GetCurrentCamera.h>
 
 #include <JSON/JSONHelpers.h>
 #include "Utility/StandardLogger.h"
@@ -32,6 +35,7 @@ drft::GameState::GameState(StateStack& stack, StateContext& context)
 	registerGameStates();
 	connectEventHandlers();
 	setupRegistryContext();
+	setupActionMap();
 
 	loadOrCreateWorldGenerator();
 	loadEntityPrototypes();
@@ -101,6 +105,12 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
 }
 
+void drft::GameState::setupActionMap()
+{
+	_actionMap.bindAction("zoom_in", [this]() {system::getCurrentCamera(getContext().registry).zoomIn();});
+	_actionMap.bindAction("zoom_out", [this]() {system::getCurrentCamera(getContext().registry).zoomOut();});
+}
+
 bool drft::GameState::handleEvent(const sf::Event& ev)
 {
 	if (_gameStateStack.handleEvent(ev)) return true;
@@ -112,7 +122,15 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 			requestStackPush(States::Pause);
 			return true;
 		}
+
 		ModifiedKey key = KeybindingUtils::getModifiedKey(keypressed->scancode);
+		auto action = getContext().keybindings["gameplay"].getActionForKey(key);
+		if (_actionMap.contains(action.value_or("NONE")))
+		{
+			_actionMap.callAction(action.value());
+			return true;
+		}
+
 		_inputBuffer.press(key);
 	}
 
@@ -130,6 +148,18 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 	if (const auto mousereleased = ev.getIf<sf::Event::MouseButtonReleased>())
 	{
 		_inputBuffer.mouseRelease(mousereleased->button);
+	}
+
+	if (const auto mousescroll = ev.getIf<sf::Event::MouseWheelScrolled>())
+	{
+		if (mousescroll->delta > 0.5f)
+		{
+			_actionMap.callAction("zoom_in");
+		}
+		else if (mousescroll->delta < -0.5f)
+		{
+			_actionMap.callAction("zoom_out");
+		}
 	}
 
 	return false;

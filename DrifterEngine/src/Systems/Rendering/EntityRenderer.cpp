@@ -27,7 +27,7 @@ void drft::system::EntityRenderer::init()
 
 void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 {
-	const CameraInfo camera = getCurrentCamera(_registry);
+	const CameraHandle camera = getCurrentCamera(_registry);
 	target.setView(camera.camera.view);
 
 	batchLitEntities(camera);
@@ -43,7 +43,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 	target.setView(target.getDefaultView());
 }
 
-void drft::system::EntityRenderer::batchLitEntities(const CameraInfo& camera)
+void drft::system::EntityRenderer::batchLitEntities(const CameraHandle& camera)
 {
 	const auto view = _registry.view< const PositionComponent, const RenderComponent, const LitComponent, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
 	for (auto const& [entity, pos, ren, lit] : view.each())
@@ -57,7 +57,7 @@ void drft::system::EntityRenderer::batchLitEntities(const CameraInfo& camera)
 	}
 }
 
-void drft::system::EntityRenderer::batchHadSeenEntities(const CameraInfo& camera)
+void drft::system::EntityRenderer::batchHadSeenEntities(const CameraHandle& camera)
 {
 	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren] : seenView.each())
@@ -68,7 +68,7 @@ void drft::system::EntityRenderer::batchHadSeenEntities(const CameraInfo& camera
 	}
 }
 
-void drft::system::EntityRenderer::batchEffectEntities(const CameraInfo& camera)
+void drft::system::EntityRenderer::batchEffectEntities(const CameraHandle& camera)
 {
 	const auto effectsView = _registry.view< const PositionComponent, const RenderComponent, const VisualEffectComponent, component::tag::InViewport>();
 	for (auto const& [entity, pos, ren, effect] : effectsView.each())

@@ -5,18 +5,20 @@
 
 namespace drft::system
 {
-	struct CameraInfo
+	struct CameraHandle
 	{
-		const PositionComponent& position;
-		const CameraComponent& camera;
+		PositionComponent& position;
+		CameraComponent& camera;
 		bool isInitialized = false;
+
+		void zoomIn();
+		void zoomOut();
 	};
 
 	// Assumes only one entity has the camera component
-	CameraInfo getCurrentCamera(const entt::registry& registry);
+	CameraHandle getCurrentCamera(entt::registry& registry);
+	sf::Vector2f toScreenSpace(TilePosition tilePosition, CameraHandle camera);
+	sf::Vector2f toScreenSpace(sf::Vector2f worldPosition, CameraHandle camera);
 
-	sf::Vector2f toScreenSpace(TilePosition tilePosition, CameraInfo camera);
-	sf::Vector2f toScreenSpace(sf::Vector2f worldPosition, CameraInfo camera);
-
-	TilePosition fromScreenSpace(sf::Vector2i screenPosition, CameraInfo camera);
+	TilePosition fromScreenSpace(sf::Vector2i screenPosition, CameraHandle camera);
 }

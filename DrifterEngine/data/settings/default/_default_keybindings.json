@@ -38,7 +38,10 @@
                 "hotbar_7": [ "Num7" ],
                 "hotbar_8": [ "Num8" ],
                 "hotbar_9": [ "Num9" ],
-                "hotbar_0": [ "Num0" ]
+                "hotbar_0": [ "Num0" ],
+
+                "zoom_in": [ "+" ],
+                "zoom_out": ["-"]
             },
             "menu": {
                 "navigate_right": [ "Numpad6", "Right" ],

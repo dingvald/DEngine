@@ -16,7 +16,7 @@ static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 2;
 
 void drft::system::ChunkManager::update()
 {
-	const CameraInfo camera = getCurrentCamera(_registry);
+	const CameraHandle camera = getCurrentCamera(_registry);
 	if (!camera.isInitialized) return;
 
 	updateChunkStates(camera);
@@ -37,7 +37,7 @@ void drft::system::ChunkManager::shutdown()
 	}
 }
 
-void drft::system::ChunkManager::updateChunkStates(const CameraInfo& camera)
+void drft::system::ChunkManager::updateChunkStates(const CameraHandle& camera)
 {
 	ChunkPosition cameraChunkPosition = spatial::toChunkSpace(camera.position.tile);
 

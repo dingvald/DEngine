@@ -334,6 +334,10 @@ ModifiedKey KeybindingUtils::convertStringToModifiedKey(const std::string& str)
             return InvalidKeyBind;
         }
     }
+    else if (StringToSfmlKey.contains(str))
+    {
+        result.key = StringToSfmlKey.at(str);
+    }
     else
     {
         logTooManyTokensError(str);

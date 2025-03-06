@@ -2,6 +2,7 @@
 #include "State.h"
 #include "Systems/HelperClasses/InputBuffer.h"
 #include <Engine/StateStack.h>
+#include <Actions/StateActionMap.h>
 
 namespace drft
 {
@@ -43,12 +44,14 @@ namespace drft
 		void loadOrCreateWorldGenerator();
 		void loadEntityPrototypes();
 		void setupRegistryContext();
+		void setupActionMap();
 		void onRequestStatePush(const drft::events::RequestStateStackPush& ev);
 
 	private:
 		StateStack _gameStateStack;
 		system::InputBuffer _inputBuffer{ 3 };
-		
+		using ActionType = std::function<void()>;
+		StateActionMap<ActionType> _actionMap;
 		std::unique_ptr<gen::WorldGenerator> _worldGenerator;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
