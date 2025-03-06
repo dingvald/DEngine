@@ -208,7 +208,7 @@ std::deque<drft::TilePosition> drft::spatial::WorldGrid::getPath(TilePosition pt
 
 	std::deque<TilePosition> result;
 	sf::Vector2i current = goal;
-	if (!cameFrom.contains(current))
+	if (!cameFrom.contains(goal))
 	{
 		return result; // no path
 	}
