@@ -5,41 +5,41 @@ using namespace drft::spatial;
 
 sf::Vector2i drft::spatial::toTileSpace(sf::Vector2f worldPosition)
 {
-	int x = static_cast<int>(std::floor(worldPosition.x / TILE_WIDTH));
-	int y = static_cast<int>(std::floor(worldPosition.y / TILE_HEIGHT));
+	int x = static_cast<int>(std::floor(worldPosition.x / TileDimensions.x));
+	int y = static_cast<int>(std::floor(worldPosition.y / TileDimensions.y));
 
 	return { x, y };
 }
 
 sf::Vector2i drft::spatial::toTileSpace(sf::Vector2i chunkCoordinate)
 {
-	int x = chunkCoordinate.x * CHUNK_WIDTH;
-	int y = chunkCoordinate.y * CHUNK_HEIGHT;
+	int x = chunkCoordinate.x * ChunkDimensions.x;
+	int y = chunkCoordinate.y * ChunkDimensions.y;
 
 	return { x,y };
 }
 
 sf::Vector2f drft::spatial::toFloatSpace(sf::Vector2i tilePosition)
 {
-	float x = static_cast<float>(tilePosition.x * TILE_WIDTH);
-	float y = static_cast<float>(tilePosition.y * TILE_HEIGHT);
+	float x = static_cast<float>(tilePosition.x * TileDimensions.x);
+	float y = static_cast<float>(tilePosition.y * TileDimensions.y);
 
 	return { x, y };
 }
 
 sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2i tilePosition)
 {
-	int xChunk = tilePosition.x / CHUNK_WIDTH;
+	int xChunk = tilePosition.x / ChunkDimensions.x;
 	if (tilePosition.x < 0)
 	{
-		xChunk = (tilePosition.x + 1) / CHUNK_WIDTH;
+		xChunk = (tilePosition.x + 1) / ChunkDimensions.x;
 		--xChunk;
 	}
 
-	int yChunk = tilePosition.y / CHUNK_HEIGHT;
+	int yChunk = tilePosition.y / ChunkDimensions.y;
 	if (tilePosition.y < 0)
 	{
-		yChunk = (tilePosition.y + 1) / CHUNK_HEIGHT;
+		yChunk = (tilePosition.y + 1) / ChunkDimensions.y;
 		--yChunk;
 	}
 	return { xChunk, yChunk };
@@ -53,16 +53,16 @@ sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2f worldPosition)
 
 sf::Vector2i drft::spatial::toLocalChunkSpace(sf::Vector2i tilePosition)
 {
-	int xPos = tilePosition.x % CHUNK_WIDTH;
+	int xPos = tilePosition.x % ChunkDimensions.x;
 	if (xPos < 0)
 	{
-		xPos += CHUNK_WIDTH;
+		xPos += ChunkDimensions.x;
 	}
 
-	int yPos = tilePosition.y % CHUNK_HEIGHT;
+	int yPos = tilePosition.y % ChunkDimensions.y;
 	if (yPos < 0)
 	{
-		yPos += CHUNK_HEIGHT;
+		yPos += ChunkDimensions.y;
 	}
 
 	return { xPos, yPos };

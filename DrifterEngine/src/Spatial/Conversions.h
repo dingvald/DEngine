@@ -6,11 +6,6 @@ namespace drft::spatial
 {
 	// Spatial conversion functions //
 
-	constexpr int CHUNK_WIDTH = 8;
-	constexpr int CHUNK_HEIGHT = 8;
-	constexpr int TILE_WIDTH = 16;
-	constexpr int TILE_HEIGHT = 16;
-
 	// Converts a position in world space into a position in tile space.
 	sf::Vector2i toTileSpace(sf::Vector2f worldPosition);
 

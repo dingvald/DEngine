@@ -6,6 +6,7 @@
 #include "Spatial/Helpers.h"
 #include "Spatial/Conversions.h"
 #include "Utility/Math.h"
+#include <Utility/Vector3Utils.h>
 
 void drft::system::FloatingTextSystem::init()
 {
@@ -54,7 +55,7 @@ void drft::system::FloatingTextSystem::queueFloatingMessage(const std::string& m
 void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 {
 	const auto camera = getCurrentCamera(_registry);
-	const sf::Vector2f offset = { spatial::TILE_WIDTH / 2.f, 0.f }; // So messages originate from the center of cells
+	const sf::Vector2f offset = { TileDimensions.x / 2.f, 0.f }; // So messages originate from the center of cells
 
 	auto it = _floatingMessages.begin();
 	while (it != _floatingMessages.end())
@@ -66,13 +67,14 @@ void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 				it->position = spatial::toXY(spatial::toFloatSpace(posComp->tile));
 			}
 		}
+
 		if (it->isScreenSpace)
 		{
-			it->text.setPosition(it->position + it->distanceTraveled + offset);
+			it->text.setPosition(Vector3Utils::floor(it->position + it->distanceTraveled + offset));
 		}
 		else
 		{
-			it->text.setPosition(toScreenSpace(it->position, camera) + it->distanceTraveled + offset);
+			it->text.setPosition(Vector3Utils::floor(toScreenSpace(it->position, camera) + it->distanceTraveled + offset));
 		}
 
 		if (it->fades)
