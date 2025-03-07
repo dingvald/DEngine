@@ -3068,9 +3068,6 @@
     <ClInclude Include="src\Actions\ActionMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Keybindings\KeybindingStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">

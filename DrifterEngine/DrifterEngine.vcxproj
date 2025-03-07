@@ -444,7 +444,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\Actions\MouseContextAction.h" />
     <ClInclude Include="src\Components\Actions\MouseInspectAction.h" />
     <ClInclude Include="src\Keybindings\Keybindings.h" />
-    <ClInclude Include="src\Keybindings\KeybindingStates.h" />
     <ClInclude Include="src\Keybindings\KeybindingsUtils.h" />
     <ClInclude Include="src\Keybindings\ModifiedKey.h" />
     <ClInclude Include="src\Keybindings\StateKeybindings.h" />
