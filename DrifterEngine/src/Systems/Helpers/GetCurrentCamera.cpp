@@ -12,7 +12,7 @@ static PositionComponent EmptyPosition = {};
 
 static constexpr float ZoomIncrement = 2.0f;
 static constexpr float MaxZoomScale = 1.0f;
-static constexpr float MinZoomScale = 0.125f;
+static constexpr float MinZoomScale = 0.0625f;
 
 drft::system::CameraHandle drft::system::getCurrentCamera(entt::registry& registry)
 {
