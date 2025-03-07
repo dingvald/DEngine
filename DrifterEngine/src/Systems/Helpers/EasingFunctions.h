@@ -8,5 +8,6 @@ namespace drft
 		static float linear(float f);
 		static float easeOutElastic(float f);
 		static float easeOutBack(float f);
+		static float easeInOutCirc(float f);
 	};
 }

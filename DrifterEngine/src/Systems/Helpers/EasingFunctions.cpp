@@ -21,3 +21,10 @@ float drft::Easing::easeOutBack(float f)
 
 	return 1 + c3 * std::powf(f - 1, 3) + c1 * std::powf(f - 1, 2);
 }
+
+float drft::Easing::easeInOutCirc(float f)
+{
+	return f < 0.5f
+		? (1 - std::sqrtf(1.f - std::powf(2.f * f, 2.f))) / 2.f
+		: (std::sqrtf(1.f - std::powf(-2.f * f + 2.f, 2.f)) + 1.f) / 2.f;
+}
