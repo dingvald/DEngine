@@ -603,9 +603,6 @@
     <ClCompile Include="src\Keybindings\Keybindings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Actions\StateActionMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Keybindings\KeybindingsUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -628,6 +625,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\EmplacePathNavToPosition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actions\ActionMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3029,9 +3029,6 @@
     <ClInclude Include="src\Keybindings\Keybindings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Actions\StateActionMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Keybindings\KeybindingsUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -3066,6 +3063,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\EmplacePathNavToPosition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actions\ActionMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Keybindings\KeybindingStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

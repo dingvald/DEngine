@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "SelectTargetState.h"
 
+#include <Actions/ActionMap.h>
+
 #include "Components/Components.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
 
 #include "Events/SendFloatingMessageEvent.h"
-#include <Keybindings/Keybindings.h>
 
 #include <Spatial/Conversions.h>
 #include "Spatial/Helpers.h"
@@ -22,36 +23,28 @@ static const sf::Color TARGET_AOE_OUT_OF_RANGE_COLOR = sf::Color(255, 0, 0, 100)
 drft::SelectTargetState::SelectTargetState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
-	_actionMap.bindAction("move_south_west",	[this]() { moveCursor({ -1, 1 }); });
-	_actionMap.bindAction("move_south",			[this]() { moveCursor({ 0, 1 }); });
-	_actionMap.bindAction("move_south_east",	[this]() { moveCursor({ 1, 1 }); });
-	_actionMap.bindAction("move_west",			[this]() { moveCursor({ -1, 0 }); });
-	_actionMap.bindAction("move_east",			[this]() { moveCursor({ 1, 0 }); });
-	_actionMap.bindAction("move_north_west",	[this]() { moveCursor({ -1, -1 }); });
-	_actionMap.bindAction("move_north",			[this]() { moveCursor({ 0, -1 }); });
-	_actionMap.bindAction("move_north_east",	[this]() { moveCursor({ 1, -1 }); });
+	ActionMap& actions = getContext().actions;
 
-	_actionMap.bindAction("interact", [this]() { select(); });
+	actions.bind("select_target", "gameplay", "move_south_west",	[this]() { moveCursor({ -1, 1 }); });
+	actions.bind("select_target", "gameplay", "move_south",			[this]() { moveCursor({ 0, 1 }); });
+	actions.bind("select_target", "gameplay", "move_south_east",	[this]() { moveCursor({ 1, 1 }); });
+	actions.bind("select_target", "gameplay", "move_west",			[this]() { moveCursor({ -1, 0 }); });
+	actions.bind("select_target", "gameplay", "move_east",			[this]() { moveCursor({ 1, 0 }); });
+	actions.bind("select_target", "gameplay", "move_north_west",	[this]() { moveCursor({ -1, -1 }); });
+	actions.bind("select_target", "gameplay", "move_north",			[this]() { moveCursor({ 0, -1 }); });
+	actions.bind("select_target", "gameplay", "move_north_east",	[this]() { moveCursor({ 1, -1 }); });
+
+	actions.bind("select_target", "gameplay", "interact",			[this]() { select(); });
+	actions.bind("select_target", "menu", "exit",					[this]() { requestStackPop(); });
 }
 
 bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 {
 	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
 	{
-		if (keypressed->code == sf::Keyboard::Key::Escape)
-		{
-			requestStackPop();
-			return true;
-		}
-
-		const Keybindings& keybindings = getContext().keybindings;
-		const ModifiedInput key = KeybindingUtils::getModifiedInput(keypressed->scancode);
-		auto action = keybindings["gameplay"].getActionForKey(key);
-		if (action)
-		{
-			_actionMap.callAction(action.value());
-			return true;
-		}
+		const ModifiedInput input = KeybindingUtils::getModifiedInput(keypressed->scancode);
+		if (getContext().actions.call("select_target", "menu", input)) return true;
+		return getContext().actions.call("select_target", "gameplay", input);
 	}
 	return false;
 }

@@ -41,8 +41,8 @@ void drft::system::MeleeAttackActionSystem::update()
 	for (auto&& [entity, meleeAttackAction] : view.each())
 	{
 		Tween moveToTween = {
-			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.3f,
-			.time = 0.1f,
+			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.4f,
+			.time = 0.12f,
 			.easing = Easing::linear,
 			.onFinish = [this, action = meleeAttackAction](entt::handle entity) {
 				onCollideWithTarget(entity, std::move(action));
@@ -50,7 +50,7 @@ void drft::system::MeleeAttackActionSystem::update()
 		};
 		Tween moveBackTween = {
 			.targetOffset = {0.f, 0.f, 0.f},
-			.time = 0.2f,
+			.time = 0.22f,
 			.easing = Easing::easeOutBack,
 			.onFinish = [this](entt::handle entity) {
 				onReturnToStartPosition(entity);

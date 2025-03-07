@@ -2,6 +2,7 @@
 #include "GameState.h"
 
 #include <Engine/CommonEngineDirectories.h>
+#include <Actions/ActionMap.h>
 
 #include "Events/RequestStateChange.h"
 #include "ProcGen/WorldGeneration/WorldGenerator.h"
@@ -100,6 +101,7 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace<TextureAtlas&>(getContext().textures);
 	getContext().registry.ctx().emplace<const ControlsContext&>(getContext().controls);
+	getContext().registry.ctx().emplace<ActionMap>(getContext().actions);
 	getContext().registry.ctx().emplace_as<sf::Font&>("terminus"_hs, getContext().fonts.get("Terminus"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
@@ -107,8 +109,10 @@ void drft::GameState::setupRegistryContext()
 
 void drft::GameState::setupActionMap()
 {
-	_actionMap.bindAction("zoom_in", [this]() {system::getCurrentCamera(getContext().registry).zoomIn();});
-	_actionMap.bindAction("zoom_out", [this]() {system::getCurrentCamera(getContext().registry).zoomOut();});
+	ActionMap& actions = getContext().actions;
+	actions.bind("gameplay", "gameplay", "zoom_in",		[this]() {system::getCurrentCamera(getContext().registry).zoomIn();});
+	actions.bind("gameplay", "gameplay", "zoom_out",	[this]() {system::getCurrentCamera(getContext().registry).zoomOut();});
+	actions.bind("gameplay", "menu", "exit",			[this]() {requestStackPush(States::Pause);});
 }
 
 bool drft::GameState::handleEvent(const sf::Event& ev)
@@ -117,50 +121,40 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 
 	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
 	{
-		if (keypressed->code == sf::Keyboard::Key::Escape)
-		{
-			requestStackPush(States::Pause);
-			return true;
-		}
+		ModifiedInput input = KeybindingUtils::getModifiedInput(keypressed->scancode);
+		if (getContext().actions.call("gameplay", "menu", input)) return true;
+		if (getContext().actions.call("gameplay", "gameplay", input)) return true;
 
-		ModifiedInput key = KeybindingUtils::getModifiedInput(keypressed->scancode);
-		auto action = getContext().keybindings["gameplay"].getActionForKey(key);
-		if (_actionMap.contains(action.value_or("NONE")))
-		{
-			_actionMap.callAction(action.value());
-			return true;
-		}
-
-		_inputBuffer.press(key);
+		_inputBuffer.press(input);
 	}
 
 	if (const auto keyreleased = ev.getIf<sf::Event::KeyReleased>())
 	{
-		ModifiedInput key = KeybindingUtils::getModifiedInput(keyreleased->scancode);
-		_inputBuffer.release(key);
+		ModifiedInput input = KeybindingUtils::getModifiedInput(keyreleased->scancode);
+		_inputBuffer.release(input);
 	}
 
 	if (const auto mousepressed = ev.getIf<sf::Event::MouseButtonPressed>())
 	{
-		ModifiedInput key = KeybindingUtils::getModifiedInput(mousepressed->button);
-		_inputBuffer.press(key);
+		ModifiedInput input = KeybindingUtils::getModifiedInput(mousepressed->button);
+		_inputBuffer.press(input);
 	}
 
 	if (const auto mousereleased = ev.getIf<sf::Event::MouseButtonReleased>())
 	{
-		ModifiedInput key = KeybindingUtils::getModifiedInput(mousereleased->button);
-		_inputBuffer.release(key);
+		ModifiedInput input = KeybindingUtils::getModifiedInput(mousereleased->button);
+		_inputBuffer.release(input);
 	}
 
 	if (const auto mousescroll = ev.getIf<sf::Event::MouseWheelScrolled>())
 	{
 		if (mousescroll->delta > 0.5f)
 		{
-			_actionMap.callAction("zoom_in");
+			getContext().actions.call("gameplay", "gameplay", "zoom_in");
 		}
 		else if (mousescroll->delta < -0.5f)
 		{
-			_actionMap.callAction("zoom_out");
+			getContext().actions.call("gameplay", "gameplay", "zoom_out");
 		}
 	}
 

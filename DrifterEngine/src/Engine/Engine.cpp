@@ -151,20 +151,21 @@ void drft::Engine::loadDefaultKeybindings()
 
 void drft::Engine::setupActionMap()
 {
-	// General engine actions
-	_actionMap.bindAction("toggle_fullscreen",	[this]() {toggleFullscreen();});
-	_actionMap.bindAction("toggle_debug",		[this]() {toggleDebug();});
+	_actionMap.setKeybindings(_keybindings);
+
+	_actionMap.bind("engine", "general", "toggle_fullscreen",	[this]() {toggleFullscreen();});
+	_actionMap.bind("engine", "general", "toggle_debug",		[this]() {toggleDebug();});
 
 	// Movement actions
-	_actionMap.bindAction("move_east",			[this]() {swapToKeyboard();});
-	_actionMap.bindAction("move_west",			[this]() {swapToKeyboard();});
-	_actionMap.bindAction("move_north",			[this]() {swapToKeyboard();});
-	_actionMap.bindAction("move_south",			[this]() {swapToKeyboard();});
-	_actionMap.bindAction("move_north_east",	[this]() {swapToKeyboard();});
-	_actionMap.bindAction("move_north_west",	[this]() {swapToKeyboard();});
-	_actionMap.bindAction("move_south_east",	[this]() {swapToKeyboard();});
-	_actionMap.bindAction("move_south_west",	[this]() {swapToKeyboard();});
-	_actionMap.bindAction("wait",				[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "move_east",			[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "move_west",			[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "move_north",			[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "move_south",			[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "move_north_east",	[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "move_north_west",	[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "move_south_east",	[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "move_south_west",	[this]() {swapToKeyboard();});
+	_actionMap.bind("engine", "gameplay", "wait",				[this]() {swapToKeyboard();});
 }
 
 void drft::Engine::registerStates()
@@ -237,20 +238,11 @@ void drft::Engine::onMouseMoved()
 
 bool drft::Engine::onKeyboardPressed(sf::Keyboard::Scancode scancode)
 {
-	ModifiedInput key = KeybindingUtils::getModifiedInput(scancode);
+	ModifiedInput input = KeybindingUtils::getModifiedInput(scancode);
 
-	auto generalAction = _keybindings["general"].getActionForKey(key);
-	if (generalAction)
-	{
-		_actionMap.callAction(generalAction.value());
-		return true;
-	}
+	if (_actionMap.call("engine", "general", input)) return true;
 
-	auto gameplayAction = _keybindings["gameplay"].getActionForKey(key);
-	if (gameplayAction)
-	{
-		_actionMap.callAction(gameplayAction.value());
-	}
+	_actionMap.call("engine", "gameplay", input);
 
 	return false;
 }

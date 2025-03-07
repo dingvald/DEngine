@@ -1,7 +1,6 @@
 #pragma once
 #include <States/State.h>
 #include <Spatial/TilePosition.h>
-#include <Actions/StateActionMap.h>
 
 namespace component::action
 {
@@ -26,7 +25,6 @@ namespace drft
 		void select();
 
 	private:
-		StateActionMap<std::function<void()>> _actionMap;
 		component::action::SelectTarget* _targetSelect = nullptr;
 		TilePosition _cursorPosition = { 0,0,0 };
 		TilePosition _startPosition = { 0,0,0 };

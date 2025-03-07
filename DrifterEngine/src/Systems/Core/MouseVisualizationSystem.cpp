@@ -25,12 +25,15 @@ static const SpriteOptions CursorSprite = {
 		.color = sf::Color{255, 255, 255, 200}
 };
 
-static const SpriteOptions PathSprite = {
+static const SpriteOptions PathSprite1 = {
 		.uvCoords = sf::Vector2i{0, 0},
 		.texture = "path_effect"_hs,
 		.uvSize = DefaultTileTextureSize,
 		.layer = static_cast<unsigned int>(drft::system::RenderLayer::Tiles),
 		.color = sf::Color{255, 255, 255, 200}
+};
+static const SpriteOptions PathSprite2 = {
+		.uvCoords = sf::Vector2i{1, 0}
 };
 
 void drft::system::MouseVisualizationSystem::init()
@@ -125,10 +128,12 @@ void drft::system::MouseVisualizationSystem::refreshVisualizedPath(const std::de
 	{
 		auto entity = spawnEffect(_registry,
 			{
-				.frames = { PathSprite },
+				.frames = { PathSprite1, PathSprite2 },
 				.position = path[i],
+				.animationSpeed = 2.0f,
 				.ttl = -1,
-				.requiresInFOV = false
+				.loops = true,
+				.requiresInFOV = false,
 			});
 		_visualizedPath.push_back(entity);
 	}

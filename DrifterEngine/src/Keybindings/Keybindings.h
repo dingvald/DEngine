@@ -9,6 +9,8 @@ public:
 
 	void saveToJson(rapidjson::Value& json, rapidjson::Document::AllocatorType& allocator) const;
 
+	bool containsState(const std::string& state) const;
+
 	const StateKeybindings& operator [](const std::string& state) const;
 
 	const StateKeybindings& forState(const std::string& state) const;

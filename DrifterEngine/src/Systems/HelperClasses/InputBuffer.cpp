@@ -4,7 +4,7 @@
 #include <Engine/EngineConstants.h>
 
 static constexpr unsigned int INPUT_BUFFER_MAX_SIZE = 2;
-static constexpr float REFRACTORY_PERIOD = 0.08f; // sec
+static constexpr float REFRACTORY_PERIOD = 0.10f; // sec
 static constexpr float HOLD_TIME = 0.25f; // sec
 
 drft::system::InputBuffer::InputBuffer(unsigned int maxBufferSize)

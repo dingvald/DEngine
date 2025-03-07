@@ -5,7 +5,7 @@
 #include "StateStack.h"
 #include "Utility/Statistics.h"
 #include <Keybindings/Keybindings.h>
-#include <Actions/StateActionMap.h>
+#include <Actions/ActionMap.h>
 
 namespace drft
 {
@@ -47,9 +47,12 @@ namespace drft
 		tgui::Gui _gui;
 		entt::registry _registry;
 		TextureAtlas _textures;
-		Keybindings _keybindings;
 		ResourceHolder<sf::Font, std::string> _fonts;
 		ControlsContext _controlsContext = {};
+
+		Keybindings _keybindings;
+		ActionMap _actionMap;
+
 		StateContext _stateContext = {
 			_window,
 			_registry,
@@ -57,10 +60,10 @@ namespace drft
 			_fonts,
 			_gui,
 			_controlsContext,
-			_keybindings
+			_keybindings,
+			_actionMap
 		};
 		StateStack _stateStack{ _stateContext };
-		StateActionMap<std::function<void(void)>> _actionMap;
 
 		bool _showDebug;
 		bool _isFullScreen = false;

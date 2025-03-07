@@ -4,6 +4,7 @@
 #include <Engine/ControlsContext.h>
 
 class Keybindings;
+class ActionMap;
 
 namespace drft
 {
@@ -19,7 +20,8 @@ namespace drft
 			FontHolder& fonts,
 			tgui::Gui& gui,
 			const ControlsContext& controls,
-			Keybindings& keybindings)
+			Keybindings& keybindings,
+			ActionMap& actionMap)
 			: window(window)
 			, registry(registry)
 			, textures(textures)
@@ -27,6 +29,7 @@ namespace drft
 			, gui(gui)
 			, controls(controls)
 			, keybindings(keybindings)
+			, actions(actionMap)
 		{}
 
 		sf::RenderWindow& window;
@@ -36,6 +39,7 @@ namespace drft
 		tgui::Gui& gui;
 		const ControlsContext& controls;
 		Keybindings& keybindings;
+		ActionMap& actions;
 	};
 }
 

@@ -62,6 +62,11 @@ void Keybindings::saveToJson(rapidjson::Value& json, rapidjson::Document::Alloca
 	}
 }
 
+bool Keybindings::containsState(const std::string& state) const
+{
+	return _keybindings.contains(state);
+}
+
 const StateKeybindings& Keybindings::operator[](const std::string& state) const
 {
 	return forState(state);

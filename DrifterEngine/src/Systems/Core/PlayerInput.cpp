@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "PlayerInput.h"
+
+#include <Actions/ActionMap.h>
+
 #include "Components/Components.h"
 #include <Components/CurrentActorComponent.h>
 #include <Components/Actions/MeleeAttackAction.h>
@@ -19,69 +22,71 @@
 
 void drft::system::PlayerInput::init()
 {
-	_actionMap.bindAction("move_south_west",	[](entt::handle entity) {
+	ActionMap& actions = _registry.ctx().get<ActionMap>();
+
+	actions.bind("player_input", "gameplay", "move_south_west",	[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(-1, 1));
 		});
-	_actionMap.bindAction("move_south",			[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "move_south",			[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(0, 1));
 		});
-	_actionMap.bindAction("move_south_east",	[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "move_south_east",	[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(1, 1));
 		});
-	_actionMap.bindAction("move_west",			[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "move_west",			[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(-1, 0));
 		});
-	_actionMap.bindAction("move_east",			[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "move_east",			[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(1, 0));
 		});
-	_actionMap.bindAction("move_north_west",	[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "move_north_west",	[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(-1, -1));
 		});
-	_actionMap.bindAction("move_north",			[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "move_north",			[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(0, -1));
 		});
-	_actionMap.bindAction("move_north_east",	[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "move_north_east",	[](entt::handle entity) {
 		entity.emplace_or_replace<MoveAction>(sf::Vector2i(1, -1));
 		});
-	_actionMap.bindAction("wait",				[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "wait",				[](entt::handle entity) {
 		entity.emplace_or_replace<WaitAction>();
 		});
-
-	_actionMap.bindAction("force_attack_south_west", [](entt::handle entity) {
+											 
+	actions.bind("player_input", "gameplay", "force_attack_south_west", [](entt::handle entity) {
 		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(-1, 1));
 		});
-	_actionMap.bindAction("force_attack_south", [](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "force_attack_south", [](entt::handle entity) {
 		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(0, 1));
 		});
-	_actionMap.bindAction("force_attack_south_east", [](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "force_attack_south_east", [](entt::handle entity) {
 		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(1, 1));
 		});
-	_actionMap.bindAction("force_attack_west", [](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "force_attack_west", [](entt::handle entity) {
 		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(-1, 0));
 		});
-	_actionMap.bindAction("force_attack_east", [](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "force_attack_east", [](entt::handle entity) {
 		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(1, 0));
 		});
-	_actionMap.bindAction("force_attack_north_west", [](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "force_attack_north_west", [](entt::handle entity) {
 		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(-1, -1));
 		});
-	_actionMap.bindAction("force_attack_north", [](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "force_attack_north", [](entt::handle entity) {
 		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(0, -1));
 		});
-	_actionMap.bindAction("force_attack_north_east", [](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "force_attack_north_east", [](entt::handle entity) {
 		entity.emplace_or_replace<MeleeAttackAction>(sf::Vector2i(1, -1));
 		});
-
-	_actionMap.bindAction("pick_up",			[](entt::handle entity) {
+											 
+	actions.bind("player_input", "gameplay", "pick_up",			[](entt::handle entity) {
 		entity.emplace_or_replace<component::action::PickUp>();
 		});
-	_actionMap.bindAction("open_equipment",		[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "open_equipment",		[](entt::handle entity) {
 		entity.emplace_or_replace<component::action::OpenEquipment>();
 		});
-	_actionMap.bindAction("open_crafting",		[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "open_crafting",		[](entt::handle entity) {
 		entity.emplace_or_replace<component::action::OpenCrafting>();
 		});
-	_actionMap.bindAction("toggle_sprint",		[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "toggle_sprint",		[](entt::handle entity) {
 			if (entity.all_of<SprintingComponent>())
 			{
 				entity.remove<SprintingComponent>();
@@ -91,21 +96,21 @@ void drft::system::PlayerInput::init()
 				entity.emplace<SprintingComponent>();
 			}
 		});
-	_actionMap.bindAction("interact",			[](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "interact",			[](entt::handle entity) {
 		entity.emplace_or_replace<InteractionAction>();
 		});
-
-	_actionMap.bindAction("mouse_contextual", [](entt::handle entity) {
+											 
+	actions.bind("player_input", "gameplay", "mouse_contextual", [](entt::handle entity) {
 		entity.emplace_or_replace<MouseContextAction>();
 		});
-	_actionMap.bindAction("mouse_inspect", [](entt::handle entity) {
+	actions.bind("player_input", "gameplay", "mouse_inspect", [](entt::handle entity) {
 		entity.emplace_or_replace<MouseInspectAction>();
 		});
 
 	// Hotbar //
 	for (int i = 0; i < HOTBAR_SIZE; ++i)
 	{
-		_actionMap.bindAction(std::format("hotbar_{}", i), [i](entt::handle entity) {
+		actions.bind("player_input", "gameplay", std::format("hotbar_{}", i), [i](entt::handle entity) {
 			entity.emplace<component::action::HotbarPressed>(toHotbarIndex(i));
 		});
 	}
@@ -113,8 +118,8 @@ void drft::system::PlayerInput::init()
 
 void drft::system::PlayerInput::update()
 {
-	auto& inputBuffer = _registry.ctx().get<InputBuffer&>();
-	auto& keybindings = _registry.ctx().get<Keybindings&>();
+	auto& inputBuffer = _registry.ctx().get<InputBuffer>();
+	auto& actions = _registry.ctx().get<ActionMap>();
 
 	auto currentPlayerView = _registry.view<PlayerInputComponent, CurrentActorComponent>(entt::exclude<PathNavComponent>);
 	for (auto&& [entity, player, currentActor] : currentPlayerView.each())
@@ -124,10 +129,7 @@ void drft::system::PlayerInput::update()
 		entt::handle playerHandle = { _registry, entity };
 
 		ModifiedInput key = inputBuffer.pop();
-		if (auto action = keybindings["gameplay"].getActionForKey(key))
-		{
-			_actionMap.callAction(action.value(), playerHandle);
-		}
+		actions.call("player_input", "gameplay", key, playerHandle);
 	}
 }
 
