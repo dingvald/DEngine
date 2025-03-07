@@ -11,8 +11,10 @@
 #include "Components/PhysicalBlockingComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/StaminaComponent.h"
+#include <Components/TweeningComponent.h>
 
-#include "Systems/Core/ActorSystem.h"
+#include <Systems/Core/TweeningSystem.h>
+#include <Systems/Core/ActorSystem.h>
 #include "Utility/EntityHelpers.h"
 
 void drft::system::MoveActionSystem::init()
@@ -25,7 +27,19 @@ void drft::system::MoveActionSystem::update()
 	auto view = _registry.view<PositionComponent, MoveAction>();
 	for (auto&& [entity, position, move] : view.each())
 	{
-		processMoveAction(entity, move);
+		Tween moveToTween = {
+			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(move.direction)) * 1.0f,
+			.time = 0.05f,
+			.easing = Easing::linear,
+			.onFinish = [this, action = move](entt::handle entity) {
+				processMoveAction(entity, std::move(action));
+			}
+		};
+
+		entt::handle handle = { _registry, entity };
+		TweeningSystem::tween(handle, moveToTween);
+
+		ActorSystem::setActionInProgress(handle);
 		_registry.remove<MoveAction>(entity);
 	}
 }
@@ -50,7 +64,7 @@ void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry,
 	}
 }
 
-void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, MoveAction& action) const
+void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, MoveAction action) const
 {
 	entt::handle handle = { _registry, entity };
 	if (action.direction == sf::Vector2i{ 0,0 })
