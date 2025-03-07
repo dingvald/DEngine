@@ -1,6 +1,5 @@
 #pragma once
 #include <Utility/stdHashing.h>
-#include <Spatial/ChunkPosition.h>
 
 namespace drft
 {

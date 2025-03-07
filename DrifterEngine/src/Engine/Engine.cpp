@@ -68,6 +68,7 @@ void drft::Engine::initialize()
 {
 	std::cout << "Initializing Engine..." << std::endl;
 	std::cout << "Working Directory: " << WORKING_DIRECTORY << std::endl;
+
 	setWindowIcon();
 	loadResources();
 	loadDefaultKeybindings();

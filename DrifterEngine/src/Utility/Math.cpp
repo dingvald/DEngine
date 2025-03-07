@@ -16,6 +16,11 @@ double drft::math::remap(double iMin, double iMax, double oMin, double oMax, dou
     return lerp(oMin, oMax, inverseLerp(iMin, iMax, val));
 }
 
+float drft::math::floorToMultiple(float f, float multiple)
+{
+    return std::floorf(f / multiple) * multiple;
+}
+
 int drft::math::wrap(int val, int min, int max)
 {
     if (val < min) val = max;

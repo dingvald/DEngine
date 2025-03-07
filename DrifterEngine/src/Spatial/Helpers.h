@@ -1,13 +1,16 @@
 #pragma once
 #include <Spatial/AABB.h>
-
-namespace drft
-{
-	struct TilePosition;
-}
+#include <Spatial/TilePosition.h>
 
 namespace drft::spatial
 {
+	struct OffsetPosition
+	{
+		TilePosition position;
+		sf::Vector3f offset;
+	};
+
+	OffsetPosition collapseOffset(const TilePosition& position, const sf::Vector3f& offset);
 
 	// Returns a sf::Vector3i that copies the XY plane and assigns 0 to the Z dimension
 	sf::Vector3i vec3FromPlanar(sf::Vector2i plane);

@@ -13,6 +13,8 @@ namespace drft::system
 
 		void zoomIn();
 		void zoomOut();
+
+		sf::FloatRect getViewRect() const;
 	};
 
 	// Assumes only one entity has the camera component

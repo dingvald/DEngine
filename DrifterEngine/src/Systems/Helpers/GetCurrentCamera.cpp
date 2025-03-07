@@ -4,12 +4,14 @@
 #include "Components/PositionComponent.h"
 #include "Spatial/Conversions.h"
 #include <Spatial/Helpers.h>
+#include <Utility/Math.h>
+#include <Utility/Vector3Utils.h>
 
 static CameraComponent EmptyCamera = {};
 static PositionComponent EmptyPosition = {};
 
 static constexpr float ZoomIncrement = 2.0f;
-static constexpr float MaxZoomScale = 2.0f;
+static constexpr float MaxZoomScale = 1.0f;
 static constexpr float MinZoomScale = 0.125f;
 
 drft::system::CameraHandle drft::system::getCurrentCamera(entt::registry& registry)
@@ -25,7 +27,7 @@ drft::system::CameraHandle drft::system::getCurrentCamera(entt::registry& regist
 
 sf::Vector2f drft::system::toScreenSpace(TilePosition tilePosition, CameraHandle camera)
 {
-	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) - camera.camera.lag;
+	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) + Vector3Utils::floorToMultiple(camera.camera.lag, camera.camera.scale);
 	const sf::Vector3f relativeToCameraPosition = spatial::toFloatSpace(tilePosition) - cameraPosition;
 
 	return spatial::toXY(relativeToCameraPosition);
@@ -33,7 +35,7 @@ sf::Vector2f drft::system::toScreenSpace(TilePosition tilePosition, CameraHandle
 
 sf::Vector2f drft::system::toScreenSpace(sf::Vector2f worldPosition, CameraHandle camera)
 {
-	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) - camera.camera.lag;
+	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) + Vector3Utils::floorToMultiple(camera.camera.lag, camera.camera.scale);
 	const sf::Vector2f relativeToCameraPosition = worldPosition - spatial::toXY(cameraPosition);
 
 	return relativeToCameraPosition;
@@ -41,7 +43,7 @@ sf::Vector2f drft::system::toScreenSpace(sf::Vector2f worldPosition, CameraHandl
 
 drft::TilePosition drft::system::fromScreenSpace(sf::Vector2i screenPosition, CameraHandle camera)
 {
-	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) - camera.camera.lag;
+	const sf::Vector3f cameraPosition = spatial::toFloatSpace(camera.position.tile) + Vector3Utils::floorToMultiple(camera.camera.lag, camera.camera.scale);
 	auto topleft = spatial::toXY(cameraPosition) - (camera.camera.view.getSize() / 2.f);
 	auto totalPosition = topleft + sf::Vector2f{ static_cast<float>(screenPosition.x), static_cast<float>(screenPosition.y) };
 
@@ -62,4 +64,9 @@ void drft::system::CameraHandle::zoomOut()
 
 	camera.view.zoom(ZoomIncrement);
 	camera.scale *= ZoomIncrement;
+}
+
+sf::FloatRect drft::system::CameraHandle::getViewRect() const
+{
+	return { camera.view.getCenter() - camera.view.getSize() / 2.f, camera.view.getSize() };
 }

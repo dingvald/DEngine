@@ -1,8 +1,16 @@
 #include "pch.h"
 #include "Helpers.h"
 #include "Utility/stdHashing.h"
-#include <Spatial/TilePosition.h>
+#include <Spatial/Conversions.h>
 
+
+drft::spatial::OffsetPosition drft::spatial::collapseOffset(const TilePosition& position, const sf::Vector3f& offset)
+{
+	TilePosition tile = toTileSpace(offset);
+	sf::Vector3f remainder = offset - toFloatSpace(tile);
+	
+	return { position + tile, remainder};
+}
 
 sf::Vector3i drft::spatial::vec3FromPlanar(sf::Vector2i plane)
 {

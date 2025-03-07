@@ -7,7 +7,7 @@
 #include <Components/RenderComponent.h>
 #include <Components/MouseCursorComponent.h>
 #include <Components/PathNavComponent.h>
-#include <Components/PhysicalBlockingComponent.h>
+#include <Components/PhysicalBlockingComponent.h> 
 #include <Components/PositionComponent.h>
 #include <Systems/Helpers/SpawnEffect.h>
 #include <Systems/Helpers/GetPlayerHandle.h>
@@ -24,16 +24,12 @@ static const SpriteOptions CursorSprite = {
 		.layer = static_cast<unsigned int>(drft::system::RenderLayer::EffectsFront),
 		.color = sf::Color{255, 255, 255, 150}
 };
-
-static const SpriteOptions PathSprite1 = {
+static const SpriteOptions PathSprite = {
 		.uvCoords = sf::Vector2i{0, 0},
 		.texture = "path_effect"_hs,
 		.uvSize = DefaultTileTextureSize,
 		.layer = static_cast<unsigned int>(drft::system::RenderLayer::EffectsFront),
-		.color = sf::Color{255, 255, 255, 150}
-};
-static const SpriteOptions PathSprite2 = {
-		.uvCoords = sf::Vector2i{1, 0}
+		.color = sf::Color{255, 255, 255, 200}
 };
 
 void drft::system::MouseVisualizationSystem::init()
@@ -73,6 +69,11 @@ void drft::system::MouseVisualizationSystem::update()
 void drft::system::MouseVisualizationSystem::shutdown()
 {
 	_registry.destroy(_cursor);
+	for (auto&& entity : _visualizedPath)
+	{
+		_registry.destroy(entity);
+	}
+	_visualizedPath.clear();
 }
 
 void drft::system::MouseVisualizationSystem::showMouse()
@@ -128,7 +129,7 @@ void drft::system::MouseVisualizationSystem::refreshVisualizedPath(const std::de
 	{
 		auto entity = spawnEffect(_registry,
 			{
-				.frames = { PathSprite1, PathSprite2 },
+				.frames = { PathSprite },
 				.position = path[i],
 				.animationSpeed = 2.0f,
 				.ttl = -1,

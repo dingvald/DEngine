@@ -12,10 +12,9 @@ void drft::system::CullingSystem::render(sf::RenderTarget& target)
 	_registry.clear<component::tag::InViewport>();
 
 	const auto camera = getCurrentCamera(_registry);
-	const auto& cameraView = camera.camera.view;
 	const auto cameraTilePosition = camera.position.tile;
 
-	sf::FloatRect viewRect = { cameraView.getCenter() - cameraView.getSize() / 2.f, cameraView.getSize()};
+	sf::FloatRect viewRect = camera.getViewRect();
 	viewRect = addBufferToViewport(viewRect);
 
 	const auto view = _registry.view<const PositionComponent>();
@@ -33,10 +32,10 @@ void drft::system::CullingSystem::render(sf::RenderTarget& target)
 sf::FloatRect drft::system::CullingSystem::addBufferToViewport(const sf::FloatRect& viewport) const
 {
 	sf::FloatRect result = viewport;
-	result.position.x -= spatial::TILE_WIDTH;
-	result.position.y -= spatial::TILE_HEIGHT;
-	result.size.x += 2 * spatial::TILE_WIDTH;
-	result.size.y += 2 * spatial::TILE_HEIGHT;
+	result.position.x -= TileDimensions.x;
+	result.position.y -= TileDimensions.y;
+	result.size.x += 2 * TileDimensions.x;
+	result.size.y += 2 * TileDimensions.y;
 
 	return result;
 }

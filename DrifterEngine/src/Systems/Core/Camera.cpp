@@ -9,6 +9,8 @@
 #include <Spatial/Helpers.h>
 
 #include <Systems/Helpers/GetCurrentCamera.h>
+#include <Systems/Helpers/EasingFunctions.h>
+#include <Utility/Math.h>
 
 static const float CAMERA_SPEED = 7.0f;
 
@@ -29,28 +31,58 @@ void drft::system::Camera::start()
 	_registry.emplace<PositionComponent>(_camera, TilePosition{0,0,0});
 }
 
+void drft::system::Camera::updateEnd()
+{
+	CameraHandle camera = getCurrentCamera(_registry);
+	camera.camera.target = tryFindTarget();
+
+	const auto& target = _registry.try_get<const PositionComponent>(camera.camera.target);
+	if (!target) return;
+
+	smoothCameraToTarget(target->tile, camera);
+}
+
 void drft::system::Camera::render(sf::RenderTarget& target)
 {
-	auto cameraView = _registry.view<CameraComponent, PositionComponent>();
-
-	for (auto&& [entity, camera, pos] : cameraView.each())
-	{
-		camera.target = tryFindTarget();
-	}
-
-	for (auto&& [entity, camera, pos] : cameraView.each())
-	{
-		const auto& target = _registry.try_get<const PositionComponent>(camera.target);
-		if (!target) continue;
-
-		pos.tile = target->tile;
-	}
+	
 }
 
 void drft::system::Camera::shutdown()
 {
 	// Prevents saving the camera entity
 	_registry.destroy(_camera);
+}
+
+void drft::system::Camera::smoothCameraToTarget(const TilePosition& targetPosition, CameraHandle& cam) const
+{
+	sf::Vector2f target = toScreenSpace(targetPosition, cam);
+	sf::Vector2f camera = toScreenSpace(cam.position.tile, cam) + spatial::toXY(cam.camera.lag);
+
+	target.x += TileDimensions.x / 2.f;
+	target.y += TileDimensions.y / 2.f;
+
+	if (!cam.getViewRect().contains(target))
+	{
+		snapCameraToTarget(targetPosition, cam);
+		return;
+	}
+
+	sf::Vector2f delta = target - camera;
+
+	sf::Vector3f moveDistance = sf::Vector3f{ delta.x, delta.y, 0 } * 0.08f;
+
+	cam.camera.lag += moveDistance;
+
+	auto collapsed = spatial::collapseOffset(cam.position.tile, cam.camera.lag);
+
+	cam.position.tile = collapsed.position;
+	cam.camera.lag = collapsed.offset;
+}
+
+void drft::system::Camera::snapCameraToTarget(const TilePosition& targetPosition, CameraHandle& cam) const
+{
+	cam.position.tile = targetPosition;
+	cam.camera.lag = { 0, 0, 0 };
 }
 
 entt::entity drft::system::Camera::tryFindTarget() const
