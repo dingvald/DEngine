@@ -31,8 +31,8 @@ namespace drft
 		void onMouseMoved();
 		bool onKeyboardPressed(sf::Keyboard::Scancode scancode);
 
-		void passEventToGui(sf::Event event);
-		void passEventToState(sf::Event event);
+		bool passEventToGui(sf::Event event);
+		bool passEventToStates(sf::Event event);
 
 		void swapToMouse();
 		void swapToKeyboard();

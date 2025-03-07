@@ -195,8 +195,9 @@ void drft::Engine::handleEvents()
 			onMouseMoved();
 		}
 
-		passEventToGui(event.value());
-		passEventToState(event.value());
+		if (passEventToGui(event.value())) return;
+
+		passEventToStates(event.value());
 	}
 }
 
@@ -247,14 +248,14 @@ bool drft::Engine::onKeyboardPressed(sf::Keyboard::Scancode scancode)
 	return false;
 }
 
-void drft::Engine::passEventToGui(sf::Event event)
+bool drft::Engine::passEventToGui(sf::Event event)
 {
-	_gui.handleEvent(event);
+	return _gui.handleEvent(event);
 }
 
-void drft::Engine::passEventToState(sf::Event event)
+bool drft::Engine::passEventToStates(sf::Event event)
 {
-	_stateStack.handleEvent(event);
+	return _stateStack.handleEvent(event);
 }
 
 void drft::Engine::swapToMouse()
