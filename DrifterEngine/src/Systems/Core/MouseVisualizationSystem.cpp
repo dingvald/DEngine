@@ -116,7 +116,7 @@ void drft::system::MouseVisualizationSystem::updateMousePathVisualization()
 	}
 }
 
-void drft::system::MouseVisualizationSystem::refreshVisualizedPath(const std::deque<TilePosition>& path, size_t progress)
+void drft::system::MouseVisualizationSystem::refreshVisualizedPath(const std::vector<TilePosition>& path, size_t progress)
 {
 	// TODO: Recycle entities instead of just destroying them all each time
 	for (auto&& entity : _visualizedPath)

@@ -4,6 +4,6 @@
 
 struct PathNavComponent
 {
-	std::deque<drft::TilePosition> path;
+	std::vector<drft::TilePosition> path;
 	size_t progress = 0;
 };

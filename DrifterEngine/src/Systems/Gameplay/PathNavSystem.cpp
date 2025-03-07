@@ -14,6 +14,8 @@ void drft::system::PathNavSystem::update()
 	auto view = _registry.view<PathNavComponent, PositionComponent, CurrentActorComponent>();
 	for (auto [entity, nav, position, current] : view.each())
 	{
+		if (current.state == CurrentActorState::InProgress) continue;
+
 		if (nav.progress >= nav.path.size())
 		{
 			_registry.remove<PathNavComponent>(entity);

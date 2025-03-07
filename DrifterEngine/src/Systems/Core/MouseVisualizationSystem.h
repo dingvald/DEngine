@@ -20,7 +20,7 @@ namespace drft::system
 		void hideMouse();
 
 		void updateMousePathVisualization();
-		void refreshVisualizedPath(const std::deque<TilePosition>& path, size_t progress);
+		void refreshVisualizedPath(const std::vector<TilePosition>& path, size_t progress);
 
 		void creatNewVisualizedPathToPlayer(TilePosition mousePosition, TilePosition playerPosition);
 

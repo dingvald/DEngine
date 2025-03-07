@@ -56,9 +56,10 @@ namespace drft::spatial
 
 		///// Pathfinding /////
 		using Heuristic = std::function<int(const std::vector<entt::entity>&)>;
+		using GridPath = std::vector<TilePosition>;
 		// Produces a path from pt1 to pt2.
 		// Operates at the Z-Level of point 1
-		std::deque<TilePosition> getPath(TilePosition pt1, TilePosition pt2, Heuristic h = [](const EntityList&){return 0;}) const;
+		GridPath getPath(TilePosition pt1, TilePosition pt2, Heuristic h = [](const EntityList&){return 0;}) const;
 
 	private:
 		std::unordered_map<ChunkPosition, WorldChunk> _chunks;

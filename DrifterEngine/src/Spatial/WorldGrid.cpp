@@ -173,10 +173,10 @@ std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin,
 	return result;
 }
 
-std::deque<drft::TilePosition> drft::spatial::WorldGrid::getPath(TilePosition pt1, TilePosition pt2, Heuristic costFunc) const
+drft::spatial::WorldGrid::GridPath drft::spatial::WorldGrid::getPath(TilePosition pt1, TilePosition pt2, Heuristic costFunc) const
 {
-	const sf::Vector2i start = toXY(pt1);
-	const sf::Vector2i goal = toXY(pt2);
+	const sf::Vector2i start = toXY(pt2);
+	const sf::Vector2i goal = toXY(pt1);
 
 	std::unordered_map<sf::Vector2i, sf::Vector2i> cameFrom;
 	std::unordered_map<sf::Vector2i, double> costSoFar;
@@ -206,7 +206,7 @@ std::deque<drft::TilePosition> drft::spatial::WorldGrid::getPath(TilePosition pt
 		}
 	}
 
-	std::deque<TilePosition> result;
+	GridPath result;
 	sf::Vector2i current = goal;
 	if (!cameFrom.contains(goal))
 	{
@@ -214,7 +214,7 @@ std::deque<drft::TilePosition> drft::spatial::WorldGrid::getPath(TilePosition pt
 	}
 	while (current != start)
 	{
-		result.emplace_front(current.x, current.y, pt1.z);
+		result.emplace_back(current.x, current.y, pt1.z);
 		current = cameFrom[current];
 	}
 	return result;

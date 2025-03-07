@@ -12,7 +12,7 @@ void drft::emplacePathNavToPosition(entt::handle entity, drft::TilePosition posi
 
 	if (auto positionComponent = entity.try_get<PositionComponent>())
 	{
-		auto path = grid.getPath(positionComponent->tile, position, 
+		auto path = grid.getPath(positionComponent->tile, position,
 			[handle = entity](const std::vector<entt::entity>& entities) -> int
 			{
 				for (auto entity : entities)

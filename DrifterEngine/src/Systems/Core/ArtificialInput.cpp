@@ -97,7 +97,7 @@ void drft::system::ArtificialInput::pathToTarget(entt::handle entity, TilePositi
 	else
 	{
 		moveToTarget(entity, TilePosition{ _cachedPaths.at(entity.entity()).front() });
-		_cachedPaths.at(entity.entity()).pop_front();
+		_cachedPaths.at(entity.entity()).pop_back();
 	}
 }
 
