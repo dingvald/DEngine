@@ -8,8 +8,9 @@
 static CameraComponent EmptyCamera = {};
 static PositionComponent EmptyPosition = {};
 
-static constexpr float ZoomIncrement = 0.5f;
-
+static constexpr float ZoomIncrement = 2.0f;
+static constexpr float MaxZoomScale = 2.0f;
+static constexpr float MinZoomScale = 0.125f;
 
 drft::system::CameraHandle drft::system::getCurrentCamera(entt::registry& registry)
 {
@@ -49,12 +50,16 @@ drft::TilePosition drft::system::fromScreenSpace(sf::Vector2i screenPosition, Ca
 
 void drft::system::CameraHandle::zoomIn()
 {
-	camera.view.zoom(ZoomIncrement);
-	camera.scale *= ZoomIncrement;
+	if (camera.scale <= MinZoomScale) return;
+
+	camera.view.zoom(1.f / ZoomIncrement);
+	camera.scale /= ZoomIncrement;
 }
 
 void drft::system::CameraHandle::zoomOut()
 {
-	camera.view.zoom(1.f / ZoomIncrement);
-	camera.scale /= ZoomIncrement;
+	if (camera.scale >= MaxZoomScale) return;
+
+	camera.view.zoom(ZoomIncrement);
+	camera.scale *= ZoomIncrement;
 }
