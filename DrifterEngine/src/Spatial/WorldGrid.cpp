@@ -175,23 +175,23 @@ std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin,
 
 drft::spatial::WorldGrid::GridPath drft::spatial::WorldGrid::getPath(TilePosition pt1, TilePosition pt2, Heuristic costFunc) const
 {
-	const sf::Vector2i start = toXY(pt2);
-	const sf::Vector2i goal = toXY(pt1);
+	const sf::Vector2i start = toXY(pt1);
+	const sf::Vector2i goal = toXY(pt2);
 
 	std::unordered_map<sf::Vector2i, sf::Vector2i> cameFrom;
 	std::unordered_map<sf::Vector2i, double> costSoFar;
 
 	PriorityQueue<sf::Vector2i, double> frontier;
-	frontier.put(start, 0);
+	frontier.put(goal, 0);
 
-	cameFrom[start] = start;
-	costSoFar[start] = 0;
+	cameFrom[goal] = goal;
+	costSoFar[goal] = 0;
 
 	while (!frontier.empty())
 	{
 		const sf::Vector2i current = frontier.get();
 
-		if (current == goal) break;
+		if (current == start) break;
 
 		for (auto&& neighbour : spatial::getAdjacentPoints(current))
 		{
@@ -199,7 +199,7 @@ drft::spatial::WorldGrid::GridPath drft::spatial::WorldGrid::getPath(TilePositio
 			if (!costSoFar.contains(neighbour) || newCost < costSoFar[neighbour])
 			{
 				costSoFar[neighbour] = newCost;
-				double priority = newCost + distance2d(neighbour, goal);
+				double priority = newCost + distance2d(neighbour, start);
 				frontier.put(neighbour, priority);
 				cameFrom[neighbour] = current;
 			}
@@ -207,15 +207,18 @@ drft::spatial::WorldGrid::GridPath drft::spatial::WorldGrid::getPath(TilePositio
 	}
 
 	GridPath result;
-	sf::Vector2i current = goal;
-	if (!cameFrom.contains(goal))
+	if (!cameFrom.contains(start))
 	{
 		return result; // no path
 	}
-	while (current != start)
+
+	sf::Vector2i current = cameFrom[start];
+	while (current != goal)
 	{
 		result.emplace_back(current.x, current.y, pt1.z);
 		current = cameFrom[current];
 	}
+	result.emplace_back(goal.x, goal.y, pt1.z);
+
 	return result;
 }
