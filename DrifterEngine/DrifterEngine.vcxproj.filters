@@ -3145,9 +3145,6 @@
     <Image Include="resources\Textures\icons.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\Human\human_male_idle.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="resources\Textures\Environmentals\liquid.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -3194,6 +3191,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\Effects\path_effect.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Human\human_male_idle.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
