@@ -30,9 +30,12 @@ bool ActionMap::call(const std::string& domain, const std::string& state, const 
 	auto& map = _actionMap.at(domain).at(state);
 	if (!map.contains(actionName)) return false;
 
-	auto& action = std::get<BasicAction>(map.at(actionName));
-	action();
-	return true;
+	if (auto actionPtr = std::get_if<BasicAction>(&map.at(actionName)))
+	{
+		(*actionPtr)();
+		return true;
+	}
+	return false;
 }
 
 bool ActionMap::call(const std::string& domain, const std::string& state, const std::string& actionName, ArgType arg)
@@ -40,35 +43,46 @@ bool ActionMap::call(const std::string& domain, const std::string& state, const 
 	auto& map = _actionMap.at(domain).at(state);
 	if (!map.contains(actionName)) return false;
 
-	auto& action = std::get<EntityAction>(map.at(actionName));
-	action(arg);
-	return true;
+	if (auto actionPtr = std::get_if<EntityAction>(&map.at(actionName)))
+	{
+		(*actionPtr)(arg);
+		return true;
+	}
+	return false;
 }
 
 bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input)
 {
+	if (!_keybindings) return false;
+
 	if (auto actionName = _keybindings->forState(state).getActionForKey(input))
 	{
 		auto& map = _actionMap.at(domain).at(state);
 		if (!map.contains(actionName.value())) return false;
 
-		auto& action = std::get<BasicAction>(map.at(actionName.value()));
-		action();
-		return true;
+		if (auto actionPtr = std::get_if<BasicAction>(&map.at(actionName.value())))
+		{
+			(*actionPtr)();
+			return true;
+		}
 	}
 	return false;
 }
 
 bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input, ArgType arg)
 {
+	if (!_keybindings) return false;
+
 	if (auto actionName = _keybindings->forState(state).getActionForKey(input))
 	{
 		auto& map = _actionMap.at(domain).at(state);
 		if (!map.contains(actionName.value())) return false;
 
-		auto& action = std::get<EntityAction>(map.at(actionName.value()));
-		action(arg);
-		return true;
+		if (auto actionPtr = std::get_if<EntityAction>( &map.at( actionName.value() )))
+		{
+			(*actionPtr)(arg);
+			return true;
+		}
 	}
 	return false;
 }
