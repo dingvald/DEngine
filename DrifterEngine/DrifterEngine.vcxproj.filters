@@ -3193,7 +3193,10 @@
     <Image Include="resources\Textures\Effects\path_effect.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\Human\human_male_idle.png">
+    <Image Include="resources\Textures\Human\human_male_poncho_idle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Human\human_male_tunic_idle.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

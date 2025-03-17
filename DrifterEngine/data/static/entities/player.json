@@ -14,11 +14,11 @@
             "default": {
               "frames": [
                 {
-                  "texture": "human_male_idle",
+                  "texture": "human_male_tunic_idle",
                   "uv_size": [ 16, 24 ],
                   "uv_coords": [ 0, 0 ],
                   "layer": 2,
-                  "color": [ 200, 200, 200 ]
+                  "color": [ 193, 154, 107 ]
                 },
                 {
                   "uv_coords": [ 1, 0 ]
