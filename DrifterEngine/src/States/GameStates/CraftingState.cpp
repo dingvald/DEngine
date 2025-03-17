@@ -54,7 +54,7 @@ bool drft::CraftingState::handleEvent(const sf::Event& ev)
 	{
 		if (keypressed->code == sf::Keyboard::Key::Escape)
 		{
-			requestStackClear();
+			requestStackPop();
 			return true;
 		}
 	}
