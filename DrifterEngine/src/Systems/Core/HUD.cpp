@@ -9,6 +9,7 @@
 #include "Systems/Helpers/FindItemOwner.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
+#include <Systems/Helpers/GetPlayerHandle.h>
 #include "Components/Components.h"
 
 #include "Components/DescriptionComponent.h"
@@ -20,22 +21,27 @@
 #include "Components/StaminaComponent.h"
 #include "Components/HotbarComponent.h"
 
+
+#include <Events/ChangeMouseVisibilityEvent.h>
+#include <Events/HUDHotbarPressedEvent.h>
+#include <Events/ChangeHUDVisibilityEvent.h>
+
 #include "Ability/AbilityRegistry.h"
 
 #include "Utility/TextureAtlas.h"
+#include <Utility/TGUIHelpers.h>
 
-static const sf::Vector2f HEALTHBAR_POSITION = { 32.f, 32.f };
-static constexpr float HEALTHBAR_HEIGHT = 7;
-static constexpr int HEALTHBAR_WIDTH_MULTIPLIER = 7;
-
-static const sf::Vector2f STAMINABAR_POSITION = HEALTHBAR_POSITION + sf::Vector2f(0.f, 16.f);
-static constexpr float STAMINABAR_HEIGHT = HEALTHBAR_HEIGHT;
-static constexpr int STAMINABAR_WIDTH_MULTIPLIER = HEALTHBAR_WIDTH_MULTIPLIER;
-
-static constexpr float HOTBAR_ICON_X_OFFSET = 48.f;
+static const char* HotbarWidgetId = "hotbar";
 
 void drft::system::HUD::init()
 {
+	auto& gui = _registry.ctx().get<tgui::Gui>();
+	_gui = tgui::Group::create();
+	gui.add(_gui);
+	_gui->setVisible(true);
+	_gui->onMouseEnter([this]() { _dispatcher.trigger(events::ChangeMouseVisibilityEvent{ false }); });
+	_gui->onMouseLeave([this]() { _dispatcher.trigger(events::ChangeMouseVisibilityEvent{ true }); });
+
 	createLevelInfo();
 	createHealthBar();
 	createStaminaBar();
@@ -50,8 +56,7 @@ void drft::system::HUD::init()
 
 void drft::system::HUD::update()
 {
-	auto view = _registry.view<PlayerInputComponent>();
-	auto player = entt::handle(_registry, view.front());
+	auto player = getPlayerConstHandle(_registry);
 
 	// Player relevant displays
 	updateLevelInfo(player);
@@ -71,6 +76,12 @@ void drft::system::HUD::render(sf::RenderTarget& target)
 	{
 		target.draw(effect.shape);
 	}
+}
+
+void drft::system::HUD::shutdown()
+{
+	auto& gui = _registry.ctx().get<tgui::Gui>();
+	gui.remove(_gui);
 }
 
 void drft::system::HUD::createLevelInfo()
@@ -100,7 +111,52 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 
 void drft::system::HUD::createHotbar()
 {
+	// Template icon setup
+	_templateHotbarIcon = tgui::Group::create();
+	_templateHotbarIcon->setSize(64, 64);
 
+	auto button = tgui::Button::create();
+	button->setSize(tgui::bindSize(_templateHotbarIcon));
+	button->getRenderer()->setBorderColor(tgui::Color{ 100, 100, 100, 100 });
+	button->getRenderer()->setBorders({ 2, 2 });
+
+	_templateHotbarIcon->add(button, "button");
+
+	auto overlay = tgui::Panel::create();
+	overlay->setSize(tgui::bindSize(button));
+	overlay->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+	overlay->setIgnoreMouseEvents(true);
+
+	_templateHotbarIcon->add(overlay, "overlay");
+	///
+
+
+	auto hotbar = tgui::GrowHorizontalLayout::create();
+	hotbar->setHeight(64);
+	hotbar->setOrigin(0.5f, 0.5f);
+	hotbar->setPosition("50%", "95%");
+	hotbar->getRenderer()->setSpaceBetweenWidgets(12);
+
+	auto hotbarBackground = tgui::Panel::create();
+	hotbarBackground->setOrigin(0.5f, 0.5f);
+	hotbarBackground->setSize(tgui::bindSize(hotbar));
+	hotbarBackground->setPosition(tgui::bindPosition(hotbar));
+	hotbarBackground->getRenderer()->setBackgroundColor(tgui::Color::Black);
+
+	_gui->add(hotbarBackground);
+	_gui->add(hotbar, HotbarWidgetId);
+
+	for (size_t i = 0; i < HOTBAR_SIZE; i++)
+	{
+		auto newGroup = tgui::Group::copy(_templateHotbarIcon);
+		hotbar->add(newGroup, std::format("index_{}", i));
+
+		auto newButton = newGroup->get<tgui::Button>("button");
+		newButton->setText(tgui::String::fromNumber(toHotbarIndex(i)));
+		newButton->setTextSize(12);
+		newButton->setTextPosition("10%, 10%", { 0.5f, 0.5f });
+		newButton->onPress([this, i]() { _dispatcher.trigger(events::HUDHotbarPressedEvent{ i }); });
+	}
 }
 
 void drft::system::HUD::updateLevelInfo(entt::const_handle player)
@@ -190,7 +246,45 @@ void drft::system::HUD::updateFlashEffects()
 
 void drft::system::HUD::updateHotbar(entt::const_handle player)
 {
+	if (auto hotbarComponent = player.try_get<HotbarComponent>())
+	{
+		TextureAtlas& textures = _registry.ctx().get<TextureAtlas>();
 
+		auto hotbar = _gui->get<tgui::GrowHorizontalLayout>(HotbarWidgetId);
+		for (size_t i = 0; i < HOTBAR_SIZE; i++)
+		{
+			const auto groupName = std::format("index_{}", i);
+			auto group = hotbar->get<tgui::Group>(groupName);
+
+			auto abilityType = hotbarComponent->abilities.at(i);
+			const IAbility& ability = AbilityRegistry::get(abilityType);
+
+			auto icon = ability.getIconData();
+			auto uv = textures.getUV(icon.textureId, icon.uvSize, icon.uv);	
+			auto texture = GuiHelpers::createTGUITextureFromUV(groupName, uv);
+			if (ability.isValid(player))
+			{
+				texture.setColor(icon.color);
+			}
+			else
+			{
+				texture.setColor(tgui::Color{ 150,150,150,100 });
+			}
+
+			auto button = group->get<tgui::Button>("button");
+			button->getRenderer()->setTexture(texture);
+
+			auto overlay = group->get<tgui::Panel>("overlay");
+			if (ability.isToggledOn(player))
+			{
+				overlay->getRenderer()->setBackgroundColor(tgui::Color{ 255, 255, 0, 100 });
+			}
+			else
+			{
+				overlay->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+			}
+		}
+	}
 }
 
 void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl, bool fades /*=false*/)
@@ -211,31 +305,11 @@ void drft::system::HUD::onHotbarPressed(entt::registry& registry, entt::entity e
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)
 {
 	if (!registry.all_of<PlayerInputComponent>(entity)) return;
-
-	if (auto health = registry.try_get<HealthComponent>(entity))
-	{
-		auto& damage = registry.get<component::action::TakeDamage>(entity);
-		if (damage.amount != 0)
-		{
-			sf::Vector2f size = { (health->current / health->max)
-			* (health->max * HEALTHBAR_WIDTH_MULTIPLIER) - 2.0f, HEALTHBAR_HEIGHT + 2.f };
-			queueFlashEffect(HEALTHBAR_POSITION, size, 10);
-		}
-	}
+	
 }
 
 void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity entity)
 {
 	if (!registry.all_of<PlayerInputComponent>(entity)) return;
 
-	if (auto stamina = registry.try_get<StaminaComponent>(entity))
-	{
-		auto& consume = registry.get<component::action::ConsumeStamina>(entity);
-		if (stamina->baseConsumption + consume.amount > 0.f)
-		{
-			sf::Vector2f size = { (static_cast<float>(stamina->current) / static_cast<float>(stamina->max))
-			* static_cast<float>(stamina->max * STAMINABAR_WIDTH_MULTIPLIER) - 2.0f, STAMINABAR_HEIGHT + 2.f };
-			queueFlashEffect(STAMINABAR_POSITION, size, 10);
-		}
-	}
 }

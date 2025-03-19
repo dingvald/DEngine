@@ -151,7 +151,7 @@ void drft::InventoryState::addItemToInventoryUI(entt::const_handle item, tgui::P
 	auto name = util::getEntityName(item);
 	auto render = util::getRenderData(item);
 	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
-	tgui::Texture texture{ name, GuiHelpers::toUIntRect(rect) };
+	auto texture = GuiHelpers::createTGUITextureFromUV(name, rect);
 	texture.setColor(render.color);
 
 	auto icon = panel->get<tgui::Picture>(w_EntryIcon);

@@ -225,6 +225,8 @@ void drft::Engine::shutDown()
 {
 	std::cout << "Closing Engine" << std::endl;
 
+	_stateStack.clearStatesNow();
+
 	saveKeybindings();
 
 	_window.close();

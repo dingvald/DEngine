@@ -31,12 +31,12 @@ void drft::NullAbility::perform(entt::handle actor, std::optional<TilePosition> 
 		});
 }
 
-sf::Color drft::NullAbility::getIconColor() const
+drft::AbilityIconData drft::NullAbility::getIconData() const
 {
-	return sf::Color::Magenta;
-}
-
-sf::IntRect drft::NullAbility::getTextureUV() const
-{
-	return { { 0,0 }, { 16,16 } };
+	return AbilityIconData{ 
+		.textureId = entt::hashed_string{"icons"}, 
+		.color = sf::Color::Magenta, 
+		.uv = {0,0}, 
+		.uvSize = {16, 16} 
+	};
 }

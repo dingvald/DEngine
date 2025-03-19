@@ -3,6 +3,11 @@
 #include <Utility/SpriteOptions.h>
 #include <Spatial/TilePosition.h>
 
+namespace drft::events
+{
+	struct ChangeMouseVisibilityEvent;
+}
+
 namespace drft::system
 {
 	class MouseVisualizationSystem : public System
@@ -19,6 +24,8 @@ namespace drft::system
 		void showMouse();
 		void hideMouse();
 
+		void onChangeMouseVisibilityEvent(const events::ChangeMouseVisibilityEvent& ev);
+
 		void updateMousePathVisualization();
 		void refreshVisualizedPath(const std::vector<TilePosition>& path, size_t progress);
 
@@ -28,6 +35,7 @@ namespace drft::system
 		entt::entity _cursor = entt::null;
 		TilePosition _lastMousePosition;
 		bool _shouldShowMouse = true;
+		bool _hideMouse = false;
 		std::vector<entt::entity> _visualizedPath;
 	};
 }

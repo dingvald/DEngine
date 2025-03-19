@@ -12,6 +12,7 @@ namespace drft::system
 		void init() override;
 		void update() override;
 		void render(sf::RenderTarget& target) override;
+		void shutdown() override;
 
 	private:
 		void createLevelInfo();
@@ -43,6 +44,8 @@ namespace drft::system
 		};
 
 		std::vector<FlashEffect> _flashEffects;
+		tgui::Group::Ptr _gui;
+		tgui::Group::Ptr _templateHotbarIcon;
 	};
 }
 

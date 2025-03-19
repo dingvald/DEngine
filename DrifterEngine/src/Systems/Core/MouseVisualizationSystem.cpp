@@ -12,6 +12,7 @@
 #include <Systems/Helpers/SpawnEffect.h>
 #include <Systems/Helpers/GetPlayerHandle.h>
 #include <Engine/ControlsContext.h>
+#include <Events/ChangeMouseVisibilityEvent.h>
 
 using namespace entt::literals;
 
@@ -34,7 +35,7 @@ static const SpriteOptions PathSprite = {
 
 void drft::system::MouseVisualizationSystem::init()
 {
-	
+	_dispatcher.sink<events::ChangeMouseVisibilityEvent>().connect<&MouseVisualizationSystem::onChangeMouseVisibilityEvent>(this);
 }
 
 void drft::system::MouseVisualizationSystem::start()
@@ -52,14 +53,12 @@ void drft::system::MouseVisualizationSystem::start()
 void drft::system::MouseVisualizationSystem::update()
 {
 	auto& controls = _registry.ctx().get<const ControlsContext&>();
-	if (controls.navigation == NavigationType::Mouse && !_shouldShowMouse)
+	if (controls.navigation == NavigationType::Mouse && !_shouldShowMouse && !_hideMouse)
 	{
-		_shouldShowMouse = true;
 		showMouse();
 	}
 	else if (controls.navigation == NavigationType::Keyboard && _shouldShowMouse)
 	{
-		_shouldShowMouse = false;
 		hideMouse();
 	}
 
@@ -80,6 +79,7 @@ void drft::system::MouseVisualizationSystem::showMouse()
 {
 	auto& render = _registry.get_or_emplace<RenderComponent>(_cursor);
 	applySpriteOptionsToRenderComponent(render, CursorSprite);
+	_shouldShowMouse = true;
 }
 
 void drft::system::MouseVisualizationSystem::hideMouse()
@@ -90,6 +90,21 @@ void drft::system::MouseVisualizationSystem::hideMouse()
 		_registry.destroy(entity);
 	}
 	_visualizedPath.clear();
+	_shouldShowMouse = false;
+}
+
+void drft::system::MouseVisualizationSystem::onChangeMouseVisibilityEvent(const events::ChangeMouseVisibilityEvent& ev)
+{
+	if (ev.show)
+	{
+		showMouse();
+		_hideMouse = false;
+	}
+	else
+	{
+		hideMouse();
+		_hideMouse = true;
+	}
 }
 
 void drft::system::MouseVisualizationSystem::updateMousePathVisualization()

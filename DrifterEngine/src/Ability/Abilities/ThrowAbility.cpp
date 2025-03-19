@@ -9,16 +9,6 @@
 
 #include "Systems/Helpers/ItemDatabase.h"
 
-sf::Color drft::ThrowAbility::getIconColor() const
-{
-	return sf::Color::Magenta;
-}
-
-sf::IntRect drft::ThrowAbility::getTextureUV() const
-{
-	return { { 2, 0 }, { 16, 16 } };
-}
-
 drft::AbilityTargetingType drft::ThrowAbility::getTargetingType() const
 {
 	return AbilityTargetingType::SelectSquare;
@@ -86,4 +76,14 @@ drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) co
 std::vector<sf::Vector2i> drft::ThrowAbility::getTargetingShape(entt::const_handle actor) const
 {
 	return { {0,0} };
+}
+
+drft::AbilityIconData drft::ThrowAbility::getIconData() const
+{
+	return AbilityIconData{
+		.textureId = entt::hashed_string{"icons"},
+		.color = sf::Color::Magenta,
+		.uv = {2,0},
+		.uvSize = {16, 16}
+	};
 }

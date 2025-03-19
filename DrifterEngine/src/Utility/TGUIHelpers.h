@@ -2,7 +2,7 @@
 
 namespace drft::GuiHelpers
 {
-	tgui::UIntRect toUIntRect(sf::IntRect rect);
+	tgui::Texture createTGUITextureFromUV(const std::string& id, sf::IntRect uv);
 
 	void setupNavigationGraph(tgui::PanelListBox::Ptr list);
 

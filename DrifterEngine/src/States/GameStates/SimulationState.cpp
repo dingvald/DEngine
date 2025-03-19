@@ -16,6 +16,7 @@
 #include "Systems/Actions/DropItemSystem.h"
 #include "Systems/Actions/EquipItemSystem.h"
 #include "Systems/Actions/CraftItemSystem.h"
+#include "Systems/Actions/HotbarActionSystem.h"
 #include <Systems/Actions/MouseActionSystem.h>
 #include "Systems/Actions/MoveActionSystem.h"
 #include "Systems/Actions/WaitActionSystem.h"
@@ -51,7 +52,6 @@
 #include "Systems/Gameplay/CollisionSystem.h"
 #include "Systems/Gameplay/HealthSystem.h"
 #include "Systems/Gameplay/StaminaSystem.h"
-#include "Systems/Gameplay/HotbarSystem.h"
 #include "Systems/Gameplay/DayNightCycleSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
 #include "Systems/Gameplay/ProjectileSystem.h"
@@ -145,7 +145,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<EquipItemSystem>();
 	_systems->add<CraftItemSystem>();
 	_systems->add<BodyPartSystem>();
-	_systems->add<HotbarSystem>();
+	_systems->add<HotbarActionSystem>();
 	_systems->add<HealthSystem>();
 	_systems->add<DeathSystem>();
 	_systems->add<LevelingSystem>();

@@ -6,11 +6,18 @@
 
 namespace drft
 {
+	struct AbilityIconData
+	{
+		entt::id_type textureId;
+		sf::Color color;
+		sf::Vector2i uv;
+		sf::Vector2i uvSize;
+	};
+
 	class IAbility
 	{
 	public:
-		virtual sf::Color getIconColor() const = 0;
-		virtual sf::IntRect getTextureUV() const = 0;
+		virtual AbilityIconData getIconData() const = 0;
 
 		virtual AbilityTargetingType getTargetingType() const = 0;
 		virtual bool isValid(entt::const_handle actor) const = 0;

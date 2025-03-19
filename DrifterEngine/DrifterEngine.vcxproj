@@ -264,7 +264,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Rendering\AnimationSystem.cpp" />
     <ClCompile Include="src\Systems\Core\VisualEffectSystem.cpp" />
     <ClCompile Include="src\Ability\Abilities\NullAbility.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\HotbarSystem.cpp" />
+    <ClCompile Include="src\Systems\Actions\HotbarActionSystem.cpp" />
     <ClCompile Include="src\Ability\AbilityRegistry.cpp" />
     <ClCompile Include="src\Ability\IAbility.cpp" />
     <ClCompile Include="src\Systems\Core\FloatingTextSystem.cpp" />
@@ -441,9 +441,13 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Actions\ActionMap.h" />
+    <ClInclude Include="src\Components\Actions\HotbarAction.h" />
     <ClInclude Include="src\Components\Actions\InspectAction.h" />
     <ClInclude Include="src\Components\Actions\MouseContextAction.h" />
     <ClInclude Include="src\Components\Actions\MouseInspectAction.h" />
+    <ClInclude Include="src\Events\ChangeHUDVisibilityEvent.h" />
+    <ClInclude Include="src\Events\ChangeMouseVisibilityEvent.h" />
+    <ClInclude Include="src\Events\HUDHotbarPressedEvent.h" />
     <ClInclude Include="src\Keybindings\Keybindings.h" />
     <ClInclude Include="src\Keybindings\KeybindingsUtils.h" />
     <ClInclude Include="src\Keybindings\ModifiedKey.h" />
@@ -928,7 +932,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Events\SpawnEffectEvent.h" />
     <ClInclude Include="src\Systems\Core\VisualEffectSystem.h" />
     <ClInclude Include="src\Ability\Abilities\NullAbility.h" />
-    <ClInclude Include="src\Systems\Gameplay\HotbarSystem.h" />
+    <ClInclude Include="src\Systems\Actions\HotbarActionSystem.h" />
     <ClInclude Include="src\Ability\AbilityRegistry.h" />
     <ClInclude Include="src\Ability\AbilityTargetingType.h" />
     <ClInclude Include="src\Ability\AbilityType.h" />

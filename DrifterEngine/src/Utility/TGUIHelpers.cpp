@@ -1,15 +1,23 @@
 #include "pch.h"
 #include "TGUIHelpers.h"
 
-
-tgui::UIntRect drft::GuiHelpers::toUIntRect(sf::IntRect rect)
+namespace
 {
-    return {
-        static_cast<unsigned int>(rect.position.x),
-        static_cast<unsigned int>(rect.position.y),
-        static_cast<unsigned int>(rect.size.x),
-        static_cast<unsigned int>(rect.size.y),
-    };
+	tgui::UIntRect toUIntRect(sf::IntRect rect)
+	{
+		return {
+			static_cast<unsigned int>(rect.position.x),
+			static_cast<unsigned int>(rect.position.y),
+			static_cast<unsigned int>(rect.size.x),
+			static_cast<unsigned int>(rect.size.y),
+		};
+	}
+}
+
+
+tgui::Texture drft::GuiHelpers::createTGUITextureFromUV(const std::string& id, sf::IntRect uv)
+{
+	return tgui::Texture{ id, toUIntRect(uv) };
 }
 
 void drft::GuiHelpers::setupNavigationGraph(tgui::PanelListBox::Ptr list)

@@ -158,7 +158,7 @@ void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, ent
 {
 	auto render = util::getRenderData(item);
 	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
-	tgui::Texture texture{ name, GuiHelpers::toUIntRect(rect) };
+	auto texture = GuiHelpers::createTGUITextureFromUV(name, rect);
 	texture.setColor(render.color);
 
 	auto icon = panel->get<tgui::Picture>(w_EntryIcon);
@@ -201,7 +201,7 @@ void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned 
 
 	auto render = util::getRenderData(item);
 	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
-	tgui::Texture texture{ ingredientName, GuiHelpers::toUIntRect(rect)};
+	auto texture = GuiHelpers::createTGUITextureFromUV(ingredientName, rect);
 	texture.setColor(render.color);
 
 	auto icon = tgui::Picture::create(texture);

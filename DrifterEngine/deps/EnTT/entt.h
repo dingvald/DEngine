@@ -35479,8 +35479,7 @@ namespace entt {
         /**
          * @brief Patches the given component for an entity.
          *
-         * The signature of the function should be equivalent to the following:
-         *
+         * The signature of the function should be equivalent to the following:2148651321
          * @code{.cpp}
          * void(Type &);
          * @endcode

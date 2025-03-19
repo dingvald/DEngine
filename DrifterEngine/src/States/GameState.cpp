@@ -105,6 +105,7 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace_as<sf::Font&>("terminus"_hs, getContext().fonts.get("Terminus"));
 	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
+	getContext().registry.ctx().emplace<tgui::Gui&>(getContext().gui);
 }
 
 void drft::GameState::setupActionMap()

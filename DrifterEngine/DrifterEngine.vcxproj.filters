@@ -372,7 +372,7 @@
     <ClCompile Include="src\Ability\AbilityRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\HotbarSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\HotbarActionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Ability\Abilities\NullAbility.cpp">
@@ -1520,7 +1520,7 @@
     <ClInclude Include="src\Ability\AbilityRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\HotbarSystem.h">
+    <ClInclude Include="src\Systems\Actions\HotbarActionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Ability\Abilities\NullAbility.h">
@@ -3066,6 +3066,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Actions\ActionMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\ChangeHUDVisibilityEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\ChangeMouseVisibilityEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Actions\HotbarAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\HUDHotbarPressedEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

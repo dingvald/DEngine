@@ -4,15 +4,6 @@
 #include "Components/SprintingComponent.h"
 #include "Events/SendFloatingMessageEvent.h"
 
-sf::Color drft::ToggleSprintAbility::getIconColor() const
-{
-    return sf::Color(101,122,98);
-}
-
-sf::IntRect drft::ToggleSprintAbility::getTextureUV() const
-{
-	return { {1, 0}, {16, 16} };
-}
 
 drft::AbilityTargetingType drft::ToggleSprintAbility::getTargetingType() const
 {
@@ -52,4 +43,14 @@ bool drft::ToggleSprintAbility::isToggledOn(entt::const_handle actor) const
 		return true;
 	}
 	return false;
+}
+
+drft::AbilityIconData drft::ToggleSprintAbility::getIconData() const
+{
+	return AbilityIconData{
+		.textureId = entt::hashed_string{"icons"},
+		.color = sf::Color(101,122,98),
+		.uv = {1,0},
+		.uvSize = {16, 16}
+	};
 }
