@@ -10,7 +10,6 @@
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
 #include <Systems/Helpers/GetPlayerHandle.h>
-#include "Components/Components.h"
 
 #include "Components/DescriptionComponent.h"
 #include "Components/PositionComponent.h"
@@ -20,7 +19,9 @@
 #include "Components/LevelingComponent.h"
 #include "Components/StaminaComponent.h"
 #include "Components/HotbarComponent.h"
+#include <Components/Actions/HotbarAction.h>
 
+#include <Components/Components.h>
 
 #include <Events/ChangeMouseVisibilityEvent.h>
 #include <Events/HUDHotbarPressedEvent.h>
@@ -32,6 +33,15 @@
 #include <Utility/TGUIHelpers.h>
 
 static const char* HotbarWidgetId = "hotbar";
+
+namespace
+{
+	void setOverlayColor(tgui::Group::Ptr group, sf::Color color)
+	{
+		auto overlay = group->get<tgui::Panel>("overlay");
+		overlay->getRenderer()->setBackgroundColor(color);
+	}
+}
 
 void drft::system::HUD::init()
 {
@@ -51,7 +61,7 @@ void drft::system::HUD::init()
 
 	_registry.on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	_registry.on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
-	_registry.on_construct<component::action::HotbarPressed>().connect<&HUD::onHotbarPressed>(this);
+	_registry.on_construct<HotbarAction>().connect<&HUD::onHotbarPressed>(this);
 }
 
 void drft::system::HUD::update()
@@ -72,10 +82,7 @@ void drft::system::HUD::update()
 
 void drft::system::HUD::render(sf::RenderTarget& target)
 {	
-	for (auto&& effect : _flashEffects)
-	{
-		target.draw(effect.shape);
-	}
+	
 }
 
 void drft::system::HUD::shutdown()
@@ -119,6 +126,8 @@ void drft::system::HUD::createHotbar()
 	button->setSize(tgui::bindSize(_templateHotbarIcon));
 	button->getRenderer()->setBorderColor(tgui::Color{ 100, 100, 100, 100 });
 	button->getRenderer()->setBorders({ 2, 2 });
+	button->getRenderer()->setBorderColorHover(tgui::Color{ 255, 255, 255, 100 });
+	button->getRenderer()->setTextColorFocused(button->getRenderer()->getTextColor());
 
 	_templateHotbarIcon->add(button, "button");
 
@@ -129,7 +138,6 @@ void drft::system::HUD::createHotbar()
 
 	_templateHotbarIcon->add(overlay, "overlay");
 	///
-
 
 	auto hotbar = tgui::GrowHorizontalLayout::create();
 	hotbar->setHeight(64);
@@ -156,6 +164,9 @@ void drft::system::HUD::createHotbar()
 		newButton->setTextSize(12);
 		newButton->setTextPosition("10%, 10%", { 0.5f, 0.5f });
 		newButton->onPress([this, i]() { _dispatcher.trigger(events::HUDHotbarPressedEvent{ i }); });
+
+		auto overlay = newGroup->get<tgui::Panel>("overlay");
+		overlay->setIgnoreMouseEvents(true);
 	}
 }
 
@@ -229,12 +240,13 @@ void drft::system::HUD::updateFlashEffects()
 		--(it->ttl);
 		if (it->fades)
 		{
-			sf::Color color = it->shape.getFillColor();
+			sf::Color color = it->shape->getRenderer()->getBackgroundColor();
 			color.a = math::remap(0, 120, 0, 255, it->ttl);
-			it->shape.setFillColor(color);
+			it->shape->getRenderer()->setBackgroundColor(color);
 		}
 		if (it->ttl <= 0)
 		{
+			_gui->remove(it->shape);
 			it = _flashEffects.erase(it);
 		}
 		else
@@ -253,53 +265,52 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 		auto hotbar = _gui->get<tgui::GrowHorizontalLayout>(HotbarWidgetId);
 		for (size_t i = 0; i < HOTBAR_SIZE; i++)
 		{
-			const auto groupName = std::format("index_{}", i);
+			const std::string groupName = std::format("index_{}", i);
 			auto group = hotbar->get<tgui::Group>(groupName);
 
 			auto abilityType = hotbarComponent->abilities.at(i);
 			const IAbility& ability = AbilityRegistry::get(abilityType);
 
+			// Set Icon
 			auto icon = ability.getIconData();
 			auto uv = textures.getUV(icon.textureId, icon.uvSize, icon.uv);	
 			auto texture = GuiHelpers::createTGUITextureFromUV(groupName, uv);
-			if (ability.isValid(player))
-			{
-				texture.setColor(icon.color);
-			}
-			else
-			{
-				texture.setColor(tgui::Color{ 150,150,150,100 });
-			}
+
+			sf::Color iconColor = ability.isValid(player) ? icon.color : sf::Color{ 150, 150, 150, 100 };
+			texture.setColor(iconColor);
 
 			auto button = group->get<tgui::Button>("button");
 			button->getRenderer()->setTexture(texture);
 
-			auto overlay = group->get<tgui::Panel>("overlay");
-			if (ability.isToggledOn(player))
-			{
-				overlay->getRenderer()->setBackgroundColor(tgui::Color{ 255, 255, 0, 100 });
-			}
-			else
-			{
-				overlay->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-			}
+			sf::Color overlayColor = ability.isToggledOn(player) ? sf::Color{ 255, 255, 0, 100 } : sf::Color::Transparent;
+			setOverlayColor(group, overlayColor);
 		}
 	}
 }
 
 void drft::system::HUD::queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl, bool fades /*=false*/)
 {
-	sf::RectangleShape shape;
-	shape.setPosition(position);
-	shape.setSize(size);
-	shape.setFillColor(sf::Color::White);
+	auto shape = tgui::Panel::create();
+	shape->setPosition(position.x, position.y);
+	shape->setSize(size.x, size.y);
+	shape->getRenderer()->setBackgroundColor(tgui::Color::White);
+	shape->setIgnoreMouseEvents(true);
 
 	_flashEffects.emplace_back(shape, fades, ttl);
+	_gui->add(shape);
 }
 
 void drft::system::HUD::onHotbarPressed(entt::registry& registry, entt::entity entity)
 {
+	auto& hotbarAction = registry.get<HotbarAction>(entity);
 
+	auto hotbar = _gui->get<tgui::GrowHorizontalLayout>(HotbarWidgetId);
+	auto group = hotbar->get<tgui::Group>(std::format("index_{}", hotbarAction.index));
+
+	sf::Vector2f position = group->getAbsolutePosition();
+	sf::Vector2f size = group->getSize();
+
+	queueFlashEffect(position, size, 30, true);
 }
 
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)

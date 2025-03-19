@@ -38,7 +38,7 @@ namespace drft::system
 	private:
 		struct FlashEffect
 		{
-			sf::RectangleShape shape;
+			tgui::Panel::Ptr shape;
 			bool fades = false;
 			int ttl = 0; // in frames
 		};
