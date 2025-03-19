@@ -11,7 +11,6 @@ namespace drft::system
 
 		void init() override;
 		void update() override;
-		void render(sf::RenderTarget& target) override;
 		void shutdown() override;
 
 	private:

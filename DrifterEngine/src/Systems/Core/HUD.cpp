@@ -76,13 +76,7 @@ void drft::system::HUD::update()
 	updateItemsOnGround(player);
 	updateHotbar(player);
 
-	// Effects TODO: refactor into an effect system
 	updateFlashEffects();
-}
-
-void drft::system::HUD::render(sf::RenderTarget& target)
-{	
-	
 }
 
 void drft::system::HUD::shutdown()
@@ -310,7 +304,7 @@ void drft::system::HUD::onHotbarPressed(entt::registry& registry, entt::entity e
 	sf::Vector2f position = group->getAbsolutePosition();
 	sf::Vector2f size = group->getSize();
 
-	queueFlashEffect(position, size, 30, true);
+	queueFlashEffect(position, size, 45, true);
 }
 
 void drft::system::HUD::onTakeDamage(entt::registry& registry, entt::entity entity)
