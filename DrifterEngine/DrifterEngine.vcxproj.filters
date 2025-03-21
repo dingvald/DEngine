@@ -633,6 +633,9 @@
     <ClCompile Include="src\Systems\Helpers\GetDominantSide.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Components\Wrappers\BodyWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3071,7 +3074,7 @@
     <ClInclude Include="src\Actions\ActionMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\ChangeHUDVisibilityEvent.h">
+    <ClInclude Include="src\Events\ChangeHUDEnabledEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\ChangeMouseVisibilityEvent.h">
@@ -3090,6 +3093,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\GetDominantSide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Wrappers\BodyWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

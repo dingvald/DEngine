@@ -42,6 +42,8 @@ public:
 	Slot* getSlot(const std::string& slot);
 	Slot* getSlotType(Slot::Type type);
 
+	static std::optional<Slot::Type> stringToSlotType(const std::string& slot);
+
 private:
 	friend class BodyPartTree;
 

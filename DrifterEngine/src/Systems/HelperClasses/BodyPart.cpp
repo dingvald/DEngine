@@ -77,6 +77,12 @@ BodyPart::Slot* BodyPart::getSlotType(Slot::Type type)
 	return nullptr;
 }
 
+std::optional<BodyPart::Slot::Type> BodyPart::stringToSlotType(const std::string& slot)
+{
+	if (!String2SlotType.contains(slot)) return std::nullopt;
+	return String2SlotType.at(slot);
+}
+
 void BodyPartTree::createFromJson(const rapidjson::Value& json)
 {
 	auto root = json.MemberBegin();

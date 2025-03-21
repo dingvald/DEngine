@@ -1,7 +1,7 @@
 #pragma once
 #include <States/State.h>
 #include <Components/Wrappers/ContainerWrapper.h>
-#include "Components/BodyComponent.h"
+#include <Components/Wrappers/BodyWrapper.h>
 
 namespace drft
 {
@@ -17,8 +17,7 @@ namespace drft
 		struct DraggingFromEquipmentContext
 		{
 			entt::const_handle item;
-			unsigned int itemID;
-			BodyComponent* body;
+			BodyWrapper* body;
 			std::string slot;
 		};
 
@@ -59,16 +58,19 @@ namespace drft
 		void refreshEquipmentUI(tgui::Grid::Ptr equipment);
 
 		void addItemToInventoryUI(size_t index, entt::const_handle item, tgui::Panel::Ptr panel);
-		void addItemToEquipmentUI(const std::string& slotName, const BodyPart::Slot& slot, tgui::Panel::Ptr panel);
+		void addItemToEquipmentUI(const std::string& slotName, tgui::Panel::Ptr panel);
 
 		std::string shortenPartName(const std::string& fullPartName) const;
 
 		void onLeftMousePressInventoryItem(size_t index, entt::const_handle item);
-		void onLeftMousePressEquipmentItem(entt::const_handle item);
+		void onLeftMousePressEquipmentItem(const std::string& slotName, entt::const_handle item);
 		void onLeftMousePressInventoryWindow(tgui::Vector2f position);
+		void onLeftMousePressOutsideAllWindows();
 
 	private:
 		ContainerWrapper _container;
+		BodyWrapper _body;
+
 		entt::handle _sessionEntity;
 		tgui::Panel::Ptr _paperdollNodeTemplate;
 		std::optional<DraggingItem> _draggingItem;

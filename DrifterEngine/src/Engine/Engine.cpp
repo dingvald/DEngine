@@ -195,10 +195,9 @@ void drft::Engine::handleEvents()
 		{
 			onMouseMoved();
 		}
-
-		if (passEventToGui(event.value())) return;
-
-		passEventToStates(event.value());
+		
+		if (passEventToGui(event.value())) continue;
+		if (passEventToStates(event.value())) continue;
 	}
 }
 
@@ -253,6 +252,10 @@ bool drft::Engine::onKeyboardPressed(sf::Keyboard::Scancode scancode)
 
 bool drft::Engine::passEventToGui(sf::Event event)
 {
+	if (event.is<sf::Event::MouseButtonPressed>())
+	{
+		std::cout << "mouse" << std::endl;
+	}
 	return _gui.handleEvent(event);
 }
 

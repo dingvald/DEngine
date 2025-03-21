@@ -117,11 +117,13 @@ void drft::SimulationState::onPop()
 void drft::SimulationState::onEnter()
 {
 	system::MouseVisualizationSystem::changeMouseVisibility(getContext().registry, { true, true });
+	system::HUD::setEnabled(getContext().registry, true);
 }
 
 void drft::SimulationState::onExit()
 {
 	system::MouseVisualizationSystem::changeMouseVisibility(getContext().registry, { false, false });
+	system::HUD::setEnabled(getContext().registry, false);
 }
 
 void drft::SimulationState::setupRegistryContext()
