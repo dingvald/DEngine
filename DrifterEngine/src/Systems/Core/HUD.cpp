@@ -23,7 +23,7 @@
 
 #include <Components/Components.h>
 
-#include <Events/ChangeMouseVisibilityEvent.h>
+#include <Systems/Core/MouseVisualizationSystem.h>
 #include <Events/HUDHotbarPressedEvent.h>
 #include <Events/ChangeHUDVisibilityEvent.h>
 
@@ -49,8 +49,8 @@ void drft::system::HUD::init()
 	_gui = tgui::Group::create();
 	gui.add(_gui);
 	_gui->setVisible(true);
-	_gui->onMouseEnter([this]() { _dispatcher.trigger(events::ChangeMouseVisibilityEvent{ false }); });
-	_gui->onMouseLeave([this]() { _dispatcher.trigger(events::ChangeMouseVisibilityEvent{ true }); });
+	_gui->onMouseEnter([this]() { MouseVisualizationSystem::changeMouseVisibility(_registry, { false, false }); });
+	_gui->onMouseLeave([this]() { MouseVisualizationSystem::changeMouseVisibility(_registry, { true, true }); });
 
 	createLevelInfo();
 	createHealthBar();

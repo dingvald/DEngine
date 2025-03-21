@@ -33,6 +33,16 @@ static const SpriteOptions PathSprite = {
 		.color = sf::Color{255, 255, 255, 200}
 };
 
+void drft::system::MouseVisualizationSystem::changeMouseVisibility(entt::registry& registry, MouseVisibilityOptions&& options)
+{
+	events::ChangeMouseVisibilityEvent ev =
+	{
+		.showPath = options.shouldShowPath,
+		.showCursor = options.shouldShowCursor
+	};
+	registry.ctx().get<entt::dispatcher>().trigger(ev);
+}
+
 void drft::system::MouseVisualizationSystem::init()
 {
 	_dispatcher.sink<events::ChangeMouseVisibilityEvent>().connect<&MouseVisualizationSystem::onChangeMouseVisibilityEvent>(this);
@@ -95,7 +105,8 @@ void drft::system::MouseVisualizationSystem::hideMouse()
 
 void drft::system::MouseVisualizationSystem::onChangeMouseVisibilityEvent(const events::ChangeMouseVisibilityEvent& ev)
 {
-	if (ev.show)
+	// TODO: add support for show/hide mouse cursor separately
+	if (ev.showPath)
 	{
 		showMouse();
 		_hideMouse = false;

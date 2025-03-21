@@ -8,12 +8,20 @@ namespace drft::events
 	struct ChangeMouseVisibilityEvent;
 }
 
+struct MouseVisibilityOptions
+{
+	bool shouldShowPath = true;
+	bool shouldShowCursor = true;
+};
+
 namespace drft::system
 {
 	class MouseVisualizationSystem : public System
 	{
 	public:
 		using System::System;
+
+		static void changeMouseVisibility(entt::registry& registry, MouseVisibilityOptions&& options);
 
 	private:
 		void init() override;
