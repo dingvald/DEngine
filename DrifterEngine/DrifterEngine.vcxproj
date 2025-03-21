@@ -209,6 +209,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Actions\MouseActionSystem.cpp" />
     <ClCompile Include="src\Systems\Core\MouseStateSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\EmplacePathNavToPosition.cpp" />
+    <ClCompile Include="src\Systems\Helpers\GetDominantSide.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetMouseHandle.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetPlayerHandle.cpp" />
     <ClCompile Include="src\Utility\HashedString.cpp" />
@@ -225,7 +226,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Actions\AbilityActionSystem.cpp" />
     <ClCompile Include="src\Systems\Core\AiSystem.cpp" />
     <ClCompile Include="src\Systems\Core\TweeningSystem.cpp" />
-    <ClCompile Include="src\Systems\HelperClasses\ContainerWrapper.cpp" />
+    <ClCompile Include="src\Components\Wrappers\ContainerWrapper.cpp" />
     <ClCompile Include="src\Systems\Helpers\EasingFunctions.cpp" />
     <ClCompile Include="src\Utility\RegionFile.cpp" />
     <ClCompile Include="src\Utility\ChunkSerializer.cpp" />
@@ -445,6 +446,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\Actions\InspectAction.h" />
     <ClInclude Include="src\Components\Actions\MouseContextAction.h" />
     <ClInclude Include="src\Components\Actions\MouseInspectAction.h" />
+    <ClInclude Include="src\Components\PaperdollLayoutComponent.h" />
+    <ClInclude Include="src\Components\Wrappers\ComponentWrapper.h" />
     <ClInclude Include="src\Events\ChangeHUDVisibilityEvent.h" />
     <ClInclude Include="src\Events\ChangeMouseVisibilityEvent.h" />
     <ClInclude Include="src\Events\HUDHotbarPressedEvent.h" />
@@ -459,6 +462,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Actions\MouseActionSystem.h" />
     <ClInclude Include="src\Systems\Core\MouseStateSystem.h" />
     <ClInclude Include="src\Systems\Helpers\EmplacePathNavToPosition.h" />
+    <ClInclude Include="src\Systems\Helpers\GetDominantSide.h" />
     <ClInclude Include="src\Systems\Helpers\GetMouseHandle.h" />
     <ClInclude Include="src\Systems\Helpers\GetPlayerHandle.h" />
     <ClInclude Include="src\Utility\HashedString.h" />
@@ -492,14 +496,14 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\Actions\WaitAction.h" />
     <ClInclude Include="src\Components\CameraTargetComponent.h" />
     <ClInclude Include="src\Components\CurrentActorComponent.h" />
-    <ClInclude Include="src\Components\DominantHandComponent.h" />
+    <ClInclude Include="src\Components\DominantSideComponent.h" />
     <ClInclude Include="src\Components\TweeningComponent.h" />
     <ClInclude Include="src\Components\UtilityAIComponent.h" />
     <ClInclude Include="src\Components\VisionComponent.h" />
     <ClInclude Include="src\Systems\Actions\AbilityActionSystem.h" />
     <ClInclude Include="src\Systems\Core\AiSystem.h" />
     <ClInclude Include="src\Systems\Core\TweeningSystem.h" />
-    <ClInclude Include="src\Systems\HelperClasses\ContainerWrapper.h" />
+    <ClInclude Include="src\Components\Wrappers\ContainerWrapper.h" />
     <ClInclude Include="src\Systems\Helpers\EasingFunctions.h" />
     <ClInclude Include="src\Utility\RegionFile.h" />
     <ClInclude Include="src\Utility\ChunkSerializer.h" />

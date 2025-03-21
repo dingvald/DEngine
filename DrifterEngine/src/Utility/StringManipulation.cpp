@@ -68,3 +68,12 @@ std::string drft::util::capitalize(const std::string& str)
     return result;
 }
 
+bool drft::util::stringContains(const std::string& str, const std::string& subStr)
+{
+    if (str.find(subStr) != std::string::npos)
+    {
+        return true;
+    }
+    return false;
+}
+

@@ -3,7 +3,7 @@
 
 #include "Components/Components.h"
 #include "Components/RenderComponent.h"
-#include "Components/BodyComponent.h"
+#include <Components/PaperdollLayoutComponent.h>
 #include "Components/HealthComponent.h"
 #include "Components/ContainerComponent.h"
 #include "Components/InteractableComponent.h"
@@ -11,6 +11,8 @@
 #include "Components/WearableComponent.h"
 #include "Components/DescriptionComponent.h"
 #include "Components/MaterialComponent.h"
+
+#include <Events/ChangeMouseVisibilityEvent.h>
 
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
@@ -23,14 +25,14 @@ static const char* w_InventoryList			= "Inventory List";
 static const char* w_EntryIcon				= "Icon";
 static const char* w_EntryName				= "Name";
 
-static const char* w_EquipmentList			= "Equipment List";
-static const char* w_EquipmentListGrid		= "Equipment List Grid";
+static const char* w_EquipmentGrid			= "Equipment Grid";
 static const char* w_EntrySlotName			= "Slot Name";
 
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
     : State(stack, context)
 {
 	determineSessionEntities();
+
 
 	auto inventory = tgui::PanelListBox::create();
 	inventory->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
@@ -42,17 +44,22 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 	auto inventoryTemplate = inventory->getPanelTemplate();
 	setupInventoryEntryTemplate(inventoryTemplate);
 
-	auto equipment = tgui::PanelListBox::create();
-	equipment->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
+	auto equipmentBackground = tgui::Panel::create();
+	equipmentBackground->setOrigin(0.5f, 0.5f);
+	equipmentBackground->setPosition("25%", "50%");
+	equipmentBackground->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
+
+	auto equipment = tgui::Grid::create();
 	equipment->setOrigin(0.5f, 0.5f);
 	equipment->setPosition("25%", "50%");
-	equipment->setItemsHeight(32.f);
-	_guiGroup->add(equipment, w_EquipmentList);
+	equipment->setTextSize(16);
+	
+	_guiGroup->add(equipmentBackground);
+	_guiGroup->add(equipment, w_EquipmentGrid);
 
-	auto equipmentTemplate = equipment->getPanelTemplate();
-	setupEquipmentEntryTemplate(equipmentTemplate);
+	refreshInventoryUI(inventory, false);
 
-	refreshInventoryUI(inventory);
+	setupPaperdollNodeTemplate();
 	refreshEquipmentUI(equipment);
 }
 
@@ -62,13 +69,41 @@ bool drft::InventoryState::handleEvent(const sf::Event& ev)
 	{
 		if (keypressed->code == sf::Keyboard::Key::Escape)
 		{
-			requestStackPop();
+			if (_draggingItem.has_value())
+			{
+				_draggingItem->undo();
+				_draggingItem.reset();
+				refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
+				refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
+			}
+			else
+			{
+				requestStackPop();
+			}		
 			return true;
 		}
 	}
 	return false;
+}
 
+bool drft::InventoryState::update()
+{
+	if (_draggingItem.has_value())
+	{
+		sf::Vector2i mousePosition = sf::Mouse::getPosition(getContext().window);
+		_draggingItem->display->setPosition({ mousePosition.x, mousePosition.y });
+	}
 	return false;
+}
+
+void drft::InventoryState::onEnter()
+{
+	getContext().registry.ctx().get<entt::dispatcher>().trigger(events::ChangeMouseVisibilityEvent{ false });
+}
+
+void drft::InventoryState::onExit()
+{
+	getContext().registry.ctx().get<entt::dispatcher>().trigger(events::ChangeMouseVisibilityEvent{ true });
 }
 
 void drft::InventoryState::determineSessionEntities()
@@ -76,7 +111,7 @@ void drft::InventoryState::determineSessionEntities()
 	auto equipView = getContext().registry.view<component::action::OpenEquipment>();
 	_sessionEntity = { getContext().registry, equipView.front() };
 	_sessionEntity.remove<component::action::OpenEquipment>();
-	_container.setContainer(_sessionEntity);
+	_container.set(_sessionEntity);
 	if (!_container.isValid())
 	{
 		error_logger << "Error: trying to open inventory of an entity with no container component" << std::endl;
@@ -99,54 +134,82 @@ void drft::InventoryState::setupInventoryEntryTemplate(tgui::Panel::Ptr template
 	text->setPosition(icon->getSize().x + 8, "50%");
 }
 
-void drft::InventoryState::setupEquipmentEntryTemplate(tgui::Panel::Ptr templatePanel)
+void drft::InventoryState::setupPaperdollNodeTemplate()
 {
-	auto slotName = tgui::Label::create();
-	slotName->setVerticalAlignment(tgui::VerticalAlignment::Center);
-	slotName->setTextSize(16);
-	slotName->setPosition("0%, 0%");
-	templatePanel->add(slotName, w_EntrySlotName);
-	
-	auto icon = tgui::Picture::create();
-	icon->setSize(16, 24);
-	icon->setPosition("40%", 0.f);
-	templatePanel->add(icon, w_EntryIcon);
+	_paperdollNodeTemplate = tgui::Panel::create();
+	_paperdollNodeTemplate->setSize(64, 96);
+	_paperdollNodeTemplate->getRenderer()->setBorders({ 1, 1 });
+	_paperdollNodeTemplate->getRenderer()->setBorderColor(tgui::Color{ 100,100,100,100 });
 
-	auto itemName = tgui::Label::create();
-	itemName->setVerticalAlignment(tgui::VerticalAlignment::Center);
-	itemName->setTextSize(16);
-	itemName->setPosition(tgui::bindRight(icon) + 4.f, 0.f);
-	templatePanel->add(itemName, w_EntryName);
+	auto slotName = tgui::Label::create();
+	slotName->setTextSize(12);
+	slotName->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+	slotName->setOrigin(0.5f, 0.f);
+	slotName->setPosition("50%", "0%");
+	slotName->getRenderer()->setTextColor(tgui::Color{ 150,150,150,150 });
+
+	auto itemIcon = tgui::Picture::create();
+	itemIcon->setOrigin(0.5f, 0.5f);
+	itemIcon->setPosition("50%", "50%");
+	itemIcon->setSize(tgui::bindSize(_paperdollNodeTemplate));
+
+	_paperdollNodeTemplate->add(itemIcon, w_EntryIcon);
+	_paperdollNodeTemplate->add(slotName, w_EntrySlotName);
 }
 
-void drft::InventoryState::refreshInventoryUI(tgui::PanelListBox::Ptr list)
+void drft::InventoryState::refreshInventoryUI(tgui::PanelListBox::Ptr list, bool shouldSort)
 {
 	if (!_container.isValid()) return;
 
-	_container.sort();
+	if (shouldSort) _container.sort();
 
-	for (auto&& item_id : _container.getItems())
+	list->removeAllItems();
+
+	for (size_t index = 0; index < _container.getItems().size(); index++)
 	{
+		auto item_id = _container.getItems().at(index);
 		entt::entity item_entity = ItemDatabase::getEntityFromItemID(item_id);
 		entt::const_handle item_handle = { getContext().registry, item_entity };
 		auto panel = list->addItem();
-		addItemToInventoryUI(item_handle, panel);
+		addItemToInventoryUI(index, item_handle, panel);
 	}
 }
 
-void drft::InventoryState::refreshEquipmentUI(tgui::PanelListBox::Ptr equipment)
+void drft::InventoryState::refreshEquipmentUI(tgui::Grid::Ptr equipment)
 {
-	if (auto body = _sessionEntity.try_get<BodyComponent>())
+	equipment->removeAllWidgets();
+
+	auto body = _sessionEntity.try_get<BodyComponent>();
+	auto paperdoll = _sessionEntity.try_get<PaperdollLayoutComponent>();
+	if (!body || !paperdoll) return;
+
+	const tgui::Padding gridCellPadding = { 12, 8 };
+
+	for (int row = 0; row < paperdoll->dimensions.y; row++)
 	{
-		for (auto&& part : body->parts.getAllParts())
+		for (int col = 0; col < paperdoll->dimensions.x; col++)
 		{
-			auto panel = equipment->addItem();
-			addItemToEquipmentUI(*part, panel);
+			if (paperdoll->layout.contains({ col, row }))
+			{
+				const std::string slotName = paperdoll->layout.at({ col, row });
+				if (auto slot = body->parts.getSlot(slotName))
+				{
+					auto panel = tgui::Panel::copy(_paperdollNodeTemplate);
+					equipment->addWidget(panel, row, col, tgui::Grid::Alignment::Center, gridCellPadding);
+					addItemToEquipmentUI(slotName, *slot, panel);
+				}
+			}
+			else
+			{
+				auto emptyPanel = tgui::Panel::create();
+				emptyPanel->setSize(tgui::bindSize(_paperdollNodeTemplate));
+				equipment->addWidget(emptyPanel, row, col, tgui::Grid::Alignment::Center, gridCellPadding);
+			}
 		}
 	}
 }
 
-void drft::InventoryState::addItemToInventoryUI(entt::const_handle item, tgui::Panel::Ptr panel)
+void drft::InventoryState::addItemToInventoryUI(size_t index, entt::const_handle item, tgui::Panel::Ptr panel)
 {
 	auto name = util::getEntityName(item);
 	auto render = util::getRenderData(item);
@@ -162,30 +225,134 @@ void drft::InventoryState::addItemToInventoryUI(entt::const_handle item, tgui::P
 	text->setText(name);
 	text->setIgnoreMouseEvents(true);
 
-	GuiHelpers::buttonizePanel(panel);
+	auto button = GuiHelpers::buttonizePanel(panel);
+	button->onMousePress([this, index, item]() { onLeftMousePressInventoryItem(index, item); });
 }
 
-void drft::InventoryState::addItemToEquipmentUI(const BodyPart& part, tgui::Panel::Ptr panel)
+void drft::InventoryState::addItemToEquipmentUI(const std::string& slotName, const BodyPart::Slot& slot, tgui::Panel::Ptr layout)
 {
-	auto slotName = shortenPartName(part.getName());
-	auto slotNameWidget = panel->get<tgui::Label>(w_EntrySlotName);
-	slotNameWidget->setText(slotName);
-	slotNameWidget->setIgnoreMouseEvents(true);
+	auto label = layout->get<tgui::Label>(w_EntrySlotName);
+	label->setText(shortenPartName(slotName));
 
-	GuiHelpers::buttonizePanel(panel);
+	auto icon = layout->get<tgui::Picture>(w_EntryIcon);
+	if (slot.item != ItemComponent::NONE)
+	{
+		entt::entity item_entity = ItemDatabase::getEntityFromItemID(slot.item);
+		entt::const_handle item_handle = { getContext().registry, item_entity };
+
+		auto render = util::getRenderData(item_handle);
+		auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
+		auto texture = GuiHelpers::createTGUITextureFromUV(slotName, rect);
+		texture.setColor(render.color);
+		icon->getRenderer()->setTexture(texture);
+	}
 }
 
 std::string drft::InventoryState::shortenPartName(const std::string& fullPartName) const
 {
-	auto splitString = util::split(fullPartName, " ");
+	auto splitString = util::split(fullPartName, "_");
 	std::string result;
 	if (splitString.size() > 1)
 	{
-		result = util::getStringAcronym(splitString.front()) + " " + splitString.back();
+		result = util::getStringAcronym(util::capitalize(splitString.front())) + "." + util::capitalize(splitString.back());
 	}
 	else
 	{
-		result = fullPartName;
+		result = util::capitalize(fullPartName);
 	}
 	return result;
+}
+
+void drft::InventoryState::onLeftMousePressInventoryItem(size_t index, entt::const_handle item)
+{
+	if (_draggingItem.has_value())
+	{
+		_container.addBefore(_draggingItem.value().getItem().entity(), index);
+		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
+		_draggingItem.reset();
+	}
+	else
+	{
+		_container.remove(item.entity());
+		_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = index }, _guiGroup);
+		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
+	}
+}
+
+void drft::InventoryState::onLeftMousePressEquipmentItem(entt::const_handle item)
+{
+	if (_draggingItem.has_value())
+	{
+
+	}
+	else
+	{
+
+	}
+}
+
+drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx, tgui::Group::Ptr gui)
+	: context(ctx)
+{
+	if (std::holds_alternative<std::monostate>(context)) return;
+
+	entt::const_handle item = getItem();
+
+	display = tgui::Group::create();
+	gui->add(display);
+	display->setSize({ 32, 48 });
+	display->setIgnoreMouseEvents(true);
+
+	auto background = tgui::Panel::create();
+	background->setSize(tgui::bindSize(display));
+	background->getRenderer()->setBackgroundColor(tgui::Color{ 0, 0, 0, 200 });
+	display->add(background);
+
+	auto icon = tgui::Picture::create();
+	auto name = util::getEntityName(item);
+	auto render = util::getRenderData(item);
+	auto rect = item.registry()->ctx().get<TextureAtlas>().getUV(render.texture, render.uvSize, render.uvCoords);
+	auto texture = GuiHelpers::createTGUITextureFromUV(name, rect);
+	texture.setColor(render.color);
+
+	icon->getRenderer()->setTexture(texture);
+	icon->setSize(tgui::bindSize(display));
+	display->add(icon);
+}
+
+drft::InventoryState::DraggingItem::~DraggingItem()
+{
+	if (!display) return;
+
+	auto parent = display->getParent();
+	parent->remove(display);
+}
+
+entt::const_handle drft::InventoryState::DraggingItem::getItem() const
+{
+	if (std::holds_alternative<std::monostate>(context)) return entt::const_handle{};
+
+	if (auto fromInventory = std::get_if<DraggingFromInventoryContext>(&context))
+	{
+		return fromInventory->item;
+	}
+	else if (auto fromEquipment = std::get_if<DraggingFromEquipmentContext>(&context))
+	{
+		return fromEquipment->item;
+	}
+	return entt::const_handle{};
+}
+
+void drft::InventoryState::DraggingItem::undo()
+{
+	if (std::holds_alternative<std::monostate>(context)) return;
+
+	if (auto fromInventory = std::get_if<DraggingFromInventoryContext>(&context))
+	{
+		fromInventory->container->addBefore(fromInventory->item, fromInventory->index);
+	}
+	else if (auto fromEquipment = std::get_if<DraggingFromEquipmentContext>(&context))
+	{
+		fromEquipment->body->parts.equipItem(fromEquipment->itemID, fromEquipment->slot);
+	}
 }

@@ -555,7 +555,7 @@
     <ClCompile Include="src\Systems\Helpers\EasingFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\HelperClasses\ContainerWrapper.cpp">
+    <ClCompile Include="src\Components\Wrappers\ContainerWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Actions\AbilityActionSystem.cpp">
@@ -628,6 +628,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Actions\ActionMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\GetDominantSide.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2936,10 +2939,10 @@
     <ClInclude Include="src\Systems\Helpers\EasingFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\HelperClasses\ContainerWrapper.h">
+    <ClInclude Include="src\Components\Wrappers\ContainerWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\DominantHandComponent.h">
+    <ClInclude Include="src\Components\DominantSideComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\CurrentActorComponent.h">
@@ -3078,6 +3081,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\HUDHotbarPressedEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\PaperdollLayoutComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Wrappers\ComponentWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\GetDominantSide.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

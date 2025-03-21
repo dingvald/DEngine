@@ -11,6 +11,7 @@
 #include "Spatial/Conversions.h"
 
 #include <Systems/Core/ActorSystem.h>
+#include <Systems/Helpers/GetDominantSide.h>
 
 #include "Utility/EntityHelpers.h"
 
@@ -39,17 +40,15 @@ void drft::system::PickUpSystem::update()
 		bool putDirectlyInHand = false;
 		if (auto body = _registry.try_get<BodyComponent>(entity))
 		{
-			auto handParts = body->parts.getAllPartsWithSlot("held");
-			for (auto hand : handParts)
+			if (auto dominantHeld = body->parts.getPartWithSlotType(BodyPart::Slot::Type::Held, util::getDominantSide({ _registry, entity })))
 			{
-				if (auto slot = hand->getSlot("held"))
+				if (auto slot = dominantHeld->getSlotType(BodyPart::Slot::Type::Held))
 				{
 					if (slot->item == 0u)
 					{
 						slot->item = item.id;
 						putDirectlyInHand = true;
 					}
-					break;
 				}
 			}
 		}

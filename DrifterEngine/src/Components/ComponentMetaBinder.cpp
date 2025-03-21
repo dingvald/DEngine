@@ -12,7 +12,7 @@
 #include "CurrentActorComponent.h"
 #include "DateAndTimeTrackerComponent.h"
 #include "DescriptionComponent.h"
-#include "DominantHandComponent.h"
+#include "DominantSideComponent.h"
 #include "FactionComponent.h"
 #include "FlyingComponent.h"
 #include "GlobalLightSourceComponent.h"
@@ -30,6 +30,7 @@
 #include "LocalLightSourceComponent.h"
 #include "MaterialComponent.h"
 #include "OpenableComponent.h"
+#include "PaperdollLayoutComponent.h"
 #include "PhysicalBlockingComponent.h"
 #include "PlayerInputComponent.h"
 #include "PositionComponent.h"
@@ -60,7 +61,7 @@ void ComponentMetaBinder::bindComponents()
 	CurrentActorComponent::bind();
 	DateAndTimeTrackerComponent::bind();
 	DescriptionComponent::bind();
-	DominantHandComponent::bind();
+	DominantSideComponent::bind();
 	FactionComponent::bind();
 	FlyingComponent::bind();
 	GlobalLightSourceComponent::bind();
@@ -78,6 +79,7 @@ void ComponentMetaBinder::bindComponents()
 	LocalLightSourceComponent::bind();
 	MaterialComponent::bind();
 	OpenableComponent::bind();
+	PaperdollLayoutComponent::bind();
 	PhysicalBlockingComponent::bind();
 	PlayerInputComponent::bind();
 	PositionComponent::bind();

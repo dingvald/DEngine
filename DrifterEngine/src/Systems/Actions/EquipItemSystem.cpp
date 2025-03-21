@@ -31,7 +31,7 @@ void drft::system::EquipItemSystem::onItemEquipped(entt::registry& registry, ent
 	auto itemItr = std::find(container.contents.begin(), container.contents.end(), equipItem.toEquip);
 	if (itemItr != container.contents.end())
 	{
-		auto oldItem = body.parts.swapItem(equipItem.toEquip, equipItem.slotName, equipItem.uid);
+		auto oldItem = body.parts.swapItem(equipItem.toEquip, equipItem.slotName);
 		if (oldItem)
 		{
 			*itemItr = oldItem;

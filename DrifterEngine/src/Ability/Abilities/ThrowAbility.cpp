@@ -8,6 +8,7 @@
 #include "Components/MaterialComponent.h"
 
 #include "Systems/Helpers/ItemDatabase.h"
+#include <Systems/Helpers/GetDominantSide.h>
 
 drft::AbilityTargetingType drft::ThrowAbility::getTargetingType() const
 {
@@ -18,7 +19,7 @@ bool drft::ThrowAbility::isValid(entt::const_handle actor) const
 {
 	if (auto body = actor.try_get<BodyComponent>())
 	{
-		auto item = body->parts.getEquipped("held", 0);
+		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(actor));
 		return item != 0u;
 	}
 	return false;
@@ -30,7 +31,7 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<TilePosition>
 	if (!targetPosition.has_value()) throw std::exception("You need a target to throw at.");
 	if (auto body = actor.try_get<BodyComponent>())
 	{
-		auto item = body->parts.getEquipped("held", 0);
+		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(actor));
 		if (item)
 		{
 			body->parts.removeItem(item);
@@ -58,7 +59,7 @@ drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) co
 	const int maxRange = 12;
 	if (auto body = actor.try_get<BodyComponent>())
 	{
-		auto item = body->parts.getEquipped("held", 0);
+		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(actor));
 		if (item)
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);

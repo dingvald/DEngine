@@ -11,7 +11,7 @@ struct BodyComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Body";
+	static inline const std::string_view NAME = "body";
 
 	static void setFromJSON(BodyComponent& body, const rapidjson::Value& json)
 	{

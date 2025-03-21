@@ -12,6 +12,7 @@
 #include "Components/Tags.h"
 
 #include "Systems/Helpers/ItemDatabase.h"
+#include <Systems/Helpers/GetDominantSide.h>
 #include "Random/Random.h"
 #include "Random/PercentChance.h"
 #include "Utility/EntityHelpers.h"
@@ -52,9 +53,10 @@ void drft::system::BodyPartSystem::onMeleeAttackActionAdded(entt::registry& regi
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDamageTypesFromHeld(entt::entity attacker)
 {
 	std::unordered_map<std::string, int> result;
-	if (auto body = _registry.try_get<BodyComponent>(attacker))
+	entt::const_handle actor = { _registry, attacker };
+	if (auto body = actor.try_get<BodyComponent>())
 	{
-		auto item = body->parts.getEquipped("held", 0);
+		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(actor));
 		auto itemEntity = ItemDatabase::getEntityFromItemID(item);
 
 		if (itemEntity != entt::null)

@@ -8,4 +8,5 @@ namespace drft::util
 	std::vector<std::string> removeWhitespace(const std::vector<std::string>& strings);
 
 	std::string capitalize(const std::string& str);
+	bool stringContains(const std::string& str, const std::string& subStr);
 }

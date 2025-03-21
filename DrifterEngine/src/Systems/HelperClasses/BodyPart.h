@@ -1,21 +1,28 @@
 #pragma once
 #include <JSON/ICreateFromJson.h>
 
+
 class BodyPart : ICreateFromJson
 {
 public:
 	struct Slot
 	{
-		Slot() = default;
-		Slot(const char* str);
-
+		enum class Type
+		{
+			Torso,
+			Head,
+			UpperLimb,
+			Hand,
+			Held,
+			LowerLimb,
+			Feet
+		};
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(id, uid, item);
+			archive(type, item);
 		}
-		std::string id = {};
-		int uid = 0;
+		Type type = Type::Held;
 		unsigned int item = 0;
 	};
 
@@ -31,15 +38,16 @@ public:
 	void createFromJson(const rapidjson::Value& json) override;
 
 	const std::string& getName() const;
-	const std::vector<Slot>& getSlots() const;
+	const std::unordered_map<std::string, Slot>& getSlots() const;
 	Slot* getSlot(const std::string& slot);
+	Slot* getSlotType(Slot::Type type);
 
 private:
 	friend class BodyPartTree;
 
 	std::string _name = {};
 	std::vector<BodyPart> _children;
-	std::vector<Slot> _slots;
+	std::unordered_map<std::string, Slot> _slots;
 	int _size = 0;
 };
 
@@ -57,15 +65,22 @@ public:
 	std::vector<const BodyPart*> getAllParts() const;
 	std::vector<BodyPart*> getAllPartsWithSlot(const std::string& slot);
 	std::vector<const BodyPart*> getAllPartsWithSlot(const std::string& slot) const;
+	const BodyPart::Slot* getSlot(const std::string& slot) const;
+	BodyPart::Slot* getSlot(const std::string& slot);
 
-	unsigned long swapItem(unsigned long item, const std::string& slot, int uid);
-	bool equipItem(unsigned long item, const std::string& slot, int uid);
-	unsigned long unequipItem(const std::string& slot, int uid);
+	std::vector<BodyPart*> getAllPartsWithSlotType(BodyPart::Slot::Type type);
+	std::vector<const BodyPart*> getAllPartsWithSlotType(BodyPart::Slot::Type type) const;
+
+	BodyPart* getPartWithSlotType(BodyPart::Slot::Type type, const std::string& uniqueSlotTypeModifier);
+
+	unsigned long swapItem(unsigned long item, const std::string& slot);
+	bool equipItem(unsigned long item, const std::string& slot);
+	unsigned long unequipItem(const std::string& slot);
 	bool removeItem(unsigned long item);
 
 	std::vector<unsigned long> getAllEquipped() const;
-	std::vector<unsigned long> getEquipped(const std::string& slot) const;
-	unsigned long getEquipped(const std::string& slot, int uid) const;
+	unsigned long getEquipped(const std::string& slot) const;
+	unsigned long getEquipped(BodyPart::Slot::Type type, const std::string& uniqueSlotTypeModifier) const;
 
 private:
 	static BodyPart* searchForPart(BodyPart& root, const std::string& partName);
@@ -74,11 +89,11 @@ private:
 	static std::vector<const BodyPart*> getAllParts(const BodyPart& root);
 	static std::vector<BodyPart*> getAllPartsWithSlot(BodyPart& root, const std::string& slot);
 	static std::vector<const BodyPart*> getAllPartsWithSlot(const BodyPart& root, const std::string& slot);
+	static std::vector<BodyPart*> getAllPartsWithSlotType(BodyPart& root, BodyPart::Slot::Type type);
+	static std::vector<const BodyPart*> getAllPartsWithSlotType(const BodyPart& root, BodyPart::Slot::Type type);
 
-	static BodyPart::Slot* searchForSlot(BodyPart& root, const std::string& slot, int uid);
-	static const BodyPart::Slot* searchForSlot(const BodyPart& root, const std::string& slot, int uid);
-	static std::vector<BodyPart::Slot*> searchForSlot(BodyPart& root, const std::string& slot);
-	static std::vector<const BodyPart::Slot*> searchForSlot(const BodyPart& root, const std::string& slot);
+	static BodyPart::Slot* searchForSlot(BodyPart& root, const std::string& slot);
+	static const BodyPart::Slot* searchForSlot(const BodyPart& root, const std::string& slot);
 	static std::vector<BodyPart::Slot*> searchForSlotWithItem(BodyPart& root, unsigned long item);
 
 	static std::vector<BodyPart::Slot*> getAllSlots(BodyPart& root);

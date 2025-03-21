@@ -3,24 +3,16 @@
 #include <Utility/StringManipulation.h>
 #include <Utility/StandardLogger.h>
 
-BodyPart::Slot::Slot(const char* str)
-	: item(0)
+const std::unordered_map<std::string, BodyPart::Slot::Type> String2SlotType =
 {
-	auto splitStrings = drft::util::split(str, ":");
-	if (splitStrings.size() == 2)
-	{
-		id = splitStrings[0];
-		uid = std::stoi(splitStrings[1]);
-	}
-	else if (splitStrings.size() == 1)
-	{
-		id = splitStrings[0];
-	}
-	else
-	{
-		error_logger << "Error: Could not parse slot " << str << " - improper number of tokens" << std::endl;
-	}
-}
+	{"torso", BodyPart::Slot::Type::Torso},
+	{"head", BodyPart::Slot::Type::Head},
+	{"upper_limb", BodyPart::Slot::Type::UpperLimb},
+	{"hand", BodyPart::Slot::Type::Hand},
+	{"held", BodyPart::Slot::Type::Held},
+	{"lower_limb", BodyPart::Slot::Type::LowerLimb},
+	{"feet", BodyPart::Slot::Type::Feet},
+};
 
 BodyPart::BodyPart(const std::string& partName)
 	: _name(partName)
@@ -32,7 +24,14 @@ void BodyPart::createFromJson(const rapidjson::Value& json)
 	{
 		for (auto&& val : json["slots"].GetArray())
 		{
-			_slots.emplace_back(Slot{ val.GetString() });
+			auto slotObj = val.GetObject();
+			std::string name = slotObj["name"].GetString();
+
+			Slot newSlot;
+			std::string typeStr = slotObj["type"].GetString();
+			newSlot.type = String2SlotType.at(typeStr);
+			
+			_slots.emplace(name, std::move(newSlot));
 		}
 	}
 	if (json.HasMember("size"))
@@ -56,19 +55,24 @@ const std::string& BodyPart::getName() const
 	return _name;
 }
 
-const std::vector<BodyPart::Slot>& BodyPart::getSlots() const
+const std::unordered_map<std::string, BodyPart::Slot>& BodyPart::getSlots() const
 {
 	return _slots;
 }
 
 BodyPart::Slot* BodyPart::getSlot(const std::string& slotName)
 {
-	for (auto&& slot : _slots)
+	if (!_slots.contains(slotName)) return nullptr;
+
+	return &_slots.at(slotName);
+}
+
+BodyPart::Slot* BodyPart::getSlotType(Slot::Type type)
+{
+	for (auto&& [name, slot] : _slots)
 	{
-		if (slot.id == slotName)
-		{
-			return &slot;
-		}
+		if (slot.type != type) continue;
+		return &slot;
 	}
 	return nullptr;
 }
@@ -100,9 +104,47 @@ std::vector<const BodyPart*> BodyPartTree::getAllPartsWithSlot(const std::string
 	return getAllPartsWithSlot(_root, slot);
 }
 
-unsigned long BodyPartTree::swapItem(unsigned long item, const std::string& slotName, int uid)
+const BodyPart::Slot* BodyPartTree::getSlot(const std::string& slot) const
 {
-	if (auto slot = searchForSlot(_root, slotName, uid))
+	return searchForSlot(_root, slot);
+}
+
+BodyPart::Slot* BodyPartTree::getSlot(const std::string& slot)
+{
+	return searchForSlot(_root, slot);
+}
+
+std::vector<BodyPart*> BodyPartTree::getAllPartsWithSlotType(BodyPart::Slot::Type type)
+{
+	return getAllPartsWithSlotType(_root, type);
+}
+
+std::vector<const BodyPart*> BodyPartTree::getAllPartsWithSlotType(BodyPart::Slot::Type type) const
+{
+	return getAllPartsWithSlotType(_root, type);
+}
+
+BodyPart* BodyPartTree::getPartWithSlotType(BodyPart::Slot::Type type, const std::string& uniqueSlotTypeModifier)
+{
+	auto parts = getAllPartsWithSlotType(type);
+	for (auto&& part : parts)
+	{
+		if (!part) continue;
+
+		for (auto&& [name, slot] : part->getSlots())
+		{
+			if (drft::util::stringContains(name, uniqueSlotTypeModifier))
+			{
+				return part;
+			}
+		}
+	}
+	return nullptr;
+}
+
+unsigned long BodyPartTree::swapItem(unsigned long item, const std::string& slotName)
+{
+	if (auto slot = searchForSlot(_root, slotName))
 	{
 		unsigned int existingItem = slot->item;
 		slot->item = item;
@@ -111,9 +153,9 @@ unsigned long BodyPartTree::swapItem(unsigned long item, const std::string& slot
 	return 0u;
 }
 
-bool BodyPartTree::equipItem(unsigned long item, const std::string& slotName, int uid)
+bool BodyPartTree::equipItem(unsigned long item, const std::string& slotName)
 {
-	if (auto slot = searchForSlot(_root, slotName, uid))
+	if (auto slot = searchForSlot(_root, slotName))
 	{
 		slot->item = item;
 		return true;
@@ -121,9 +163,9 @@ bool BodyPartTree::equipItem(unsigned long item, const std::string& slotName, in
 	return false;
 }
 
-unsigned long BodyPartTree::unequipItem(const std::string& slotName, int uid)
+unsigned long BodyPartTree::unequipItem(const std::string& slotName)
 {
-	if (auto slot = searchForSlot(_root, slotName, uid))
+	if (auto slot = searchForSlot(_root, slotName))
 	{
 		unsigned int existingItem = slot->item;
 		slot->item = 0u;
@@ -154,24 +196,34 @@ std::vector<unsigned long> BodyPartTree::getAllEquipped() const
 	return result;
 }
 
-std::vector<unsigned long> BodyPartTree::getEquipped(const std::string& slotName) const
-{
-	std::vector<unsigned long> result;
-	auto slots = searchForSlot(_root, slotName);
-	for (auto&& slot : slots)
-	{
-		result.push_back(slot->item);
-	}
-	return result;
-}
 
-unsigned long BodyPartTree::getEquipped(const std::string& slotName, int uid) const
+unsigned long BodyPartTree::getEquipped(const std::string& slotName) const
 {
-	if (auto slot = searchForSlot(_root, slotName, uid))
+	if (auto slot = searchForSlot(_root, slotName))
 	{
 		return slot->item;
 	}
 	return 0u;
+}
+
+unsigned long BodyPartTree::getEquipped(BodyPart::Slot::Type type, const std::string& uniqueSlotNameToken) const
+{
+	auto parts = getAllPartsWithSlotType(type);
+	for (auto&& part : parts)
+	{
+		if (!part) continue;
+
+		for (auto&& [name, slot] : part->getSlots())
+		{
+			if (slot.type != type) continue;
+
+			if (drft::util::stringContains(name, uniqueSlotNameToken))
+			{
+				return slot.item;
+			}
+		}
+	}
+	return 0ul;
 }
 
 BodyPart* BodyPartTree::searchForPart(BodyPart& root, const std::string& partName)
@@ -227,12 +279,9 @@ std::vector<const BodyPart*> BodyPartTree::getAllParts(const BodyPart& root)
 std::vector<BodyPart*> BodyPartTree::getAllPartsWithSlot(BodyPart& root, const std::string& slotName)
 {
 	std::vector<BodyPart*> result;
-	for (auto&& slot : root.getSlots())
+	if (root._slots.contains(slotName))
 	{
-		if (slot.id == slotName)
-		{
-			result.push_back(&root);
-		}
+		result.push_back(&root);
 	}
 	for (auto&& part : root._children)
 	{
@@ -245,12 +294,9 @@ std::vector<BodyPart*> BodyPartTree::getAllPartsWithSlot(BodyPart& root, const s
 std::vector<const BodyPart*> BodyPartTree::getAllPartsWithSlot(const BodyPart& root, const std::string& slotName)
 {
 	std::vector<const BodyPart*> result;
-	for (auto&& slot : root.getSlots())
+	if (root._slots.contains(slotName))
 	{
-		if (slot.id == slotName)
-		{
-			result.push_back(&root);
-		}
+		result.push_back(&root);
 	}
 	for (auto&& part : root._children)
 	{
@@ -260,15 +306,51 @@ std::vector<const BodyPart*> BodyPartTree::getAllPartsWithSlot(const BodyPart& r
 	return result;
 }
 
-BodyPart::Slot* BodyPartTree::searchForSlot(BodyPart& root, const std::string& slotName, int uid)
+std::vector<BodyPart*> BodyPartTree::getAllPartsWithSlotType(BodyPart& root, BodyPart::Slot::Type type)
 {
-	for (auto&& slot : root._slots)
+	std::vector<BodyPart*> result;
+	for (auto&& [name, slot] : root._slots)
 	{
-		if (slot.id == slotName && slot.uid == uid) return &slot;
+		if (slot.type == type)
+		{
+			result.push_back(&root);
+		}
 	}
 	for (auto&& part : root._children)
 	{
-		if (auto result = searchForSlot(part, slotName, uid))
+		auto parts = getAllPartsWithSlotType(part, type);
+		result.insert(result.end(), parts.begin(), parts.end());
+	}
+	return result;
+}
+
+std::vector<const BodyPart*> BodyPartTree::getAllPartsWithSlotType(const BodyPart& root, BodyPart::Slot::Type type)
+{
+	std::vector<const BodyPart*> result;
+	for (auto&& [name, slot] : root._slots)
+	{
+		if (slot.type == type)
+		{
+			result.push_back(&root);
+		}
+	}
+	for (auto&& part : root._children)
+	{
+		auto parts = getAllPartsWithSlotType(part, type);
+		result.insert(result.end(), parts.begin(), parts.end());
+	}
+	return result;
+}
+
+BodyPart::Slot* BodyPartTree::searchForSlot(BodyPart& root, const std::string& slotName)
+{
+	if (root._slots.contains(slotName))
+	{
+		return &root._slots.at(slotName);
+	}
+	for (auto&& part : root._children)
+	{
+		if (auto result = searchForSlot(part, slotName))
 		{
 			return result;
 		}
@@ -276,64 +358,26 @@ BodyPart::Slot* BodyPartTree::searchForSlot(BodyPart& root, const std::string& s
 	return nullptr;
 }
 
-const BodyPart::Slot* BodyPartTree::searchForSlot(const BodyPart& root, const std::string& slotName, int uid)
+const BodyPart::Slot* BodyPartTree::searchForSlot(const BodyPart& root, const std::string& slotName)
 {
-	for (auto&& slot : root._slots)
+	if (root._slots.contains(slotName))
 	{
-		if (slot.id == slotName && slot.uid == uid) return &slot;
+		return &root._slots.at(slotName);
 	}
 	for (auto&& part : root._children)
 	{
-		if (auto result = searchForSlot(part, slotName, uid))
+		if (auto result = searchForSlot(part, slotName))
 		{
 			return result;
 		}
 	}
 	return nullptr;
-}
-
-std::vector<BodyPart::Slot*> BodyPartTree::searchForSlot(BodyPart& root, const std::string& slotName)
-{
-	std::vector<BodyPart::Slot*> result;
-	for (auto&& slot : root._slots)
-	{
-		if (slot.id == slotName)
-		{
-			result.push_back(&slot);
-			break;
-		}
-	}
-	for (auto&& part : root._children)
-	{
-		auto parts = searchForSlot(part, slotName);
-		result.insert(result.end(), parts.begin(), parts.end());
-	}
-	return result;
-}
-
-std::vector<const BodyPart::Slot*> BodyPartTree::searchForSlot(const BodyPart& root, const std::string& slotName)
-{
-	std::vector<const BodyPart::Slot*> result;
-	for (auto&& slot : root._slots)
-	{
-		if (slot.id == slotName)
-		{
-			result.push_back(&slot);
-			break;
-		}
-	}
-	for (auto&& part : root._children)
-	{
-		auto parts = searchForSlot(part, slotName);
-		result.insert(result.end(), parts.begin(), parts.end());
-	}
-	return result;
 }
 
 std::vector<BodyPart::Slot*> BodyPartTree::searchForSlotWithItem(BodyPart& root, unsigned long item)
 {
 	std::vector<BodyPart::Slot*> result;
-	for (auto&& slot : root._slots)
+	for (auto&& [name, slot] : root._slots)
 	{
 		if (slot.item == item)
 		{
@@ -351,7 +395,7 @@ std::vector<BodyPart::Slot*> BodyPartTree::searchForSlotWithItem(BodyPart& root,
 std::vector<BodyPart::Slot*> BodyPartTree::getAllSlots(BodyPart& root)
 {
 	std::vector<BodyPart::Slot*> result;
-	for (auto&& slot : root._slots)
+	for (auto&& [name, slot] : root._slots)
 	{
 		result.push_back(&slot);
 	}
@@ -367,7 +411,7 @@ std::vector<BodyPart::Slot*> BodyPartTree::getAllSlots(BodyPart& root)
 std::vector<const BodyPart::Slot*> BodyPartTree::getAllSlots(const BodyPart& root)
 {
 	std::vector<const BodyPart::Slot*> result;
-	for (auto&& slot : root._slots)
+	for (auto&& [name, slot] : root._slots)
 	{
 		result.push_back(&slot);
 	}

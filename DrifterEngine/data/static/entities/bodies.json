@@ -5,51 +5,109 @@
         "Object"
       ],
       "Components": {
-        "Body": {
+        "body": {
           "Torso": {
-            "slots": [ "torso" ],
+            "slots": [
+                {
+                    "name": "torso",
+                    "type": "torso"
+                }
+            ],
             "size": 36,
             "attached_parts": {
               "Head": {
-                "slots": [ "head" ],
+                "slots": [
+                    {
+                        "name": "head",
+                        "type": "head"
+                    }
+                ],
                 "size": 9
               },
               "Right Arm": {
-                "slots": [ "upper_limb:0" ],
+                "slots": [
+                    {
+                        "name": "right_arm",
+                        "type": "upper_limb"
+                    }
+                ],
                 "size": 7,
                 "attached_parts": {
                   "Right Hand": {
-                    "slots": [ "hand:0", "held:0" ],
+                    "slots": [
+                        {
+                            "name": "right_hand",
+                            "type": "hand"
+                        },
+                        {
+                            "name": "right_held",
+                            "type": "held"
+                        }
+                    ],
                     "size": 2
                   }
                 }
               },
               "Left Arm": {
-                "slots": [ "upper_limb:1" ],
+                "slots": [
+                    {
+                        "name": "left_arm",
+                        "type": "upper_limb"
+                    }
+                ],
                 "size": 7,
                 "attached_parts": {
                   "Left Hand": {
-                    "slots": [ "hand:1", "held:1" ],
+                    "slots": [
+                        {
+                            "name": "left_hand",
+                            "type": "hand"
+                        },
+                        {
+                            "name": "left_held",
+                            "type": "held"
+                        }
+                    ],
                     "size": 2
                   }
                 }
               },
               "Right Leg": {
-                "slots": [ "lower_limb" ],
+                "slots": [
+                    {
+                        "name": "legs",
+                        "type": "lower_limb"
+                    }
+                ],
                 "size": 15,
                 "attached_parts": {
                   "Right Foot": {
-                    "slots": [ "feet" ],
+                    "slots": [
+                        {
+                            "name": "feet",
+                            "type": "feet"
+                        }
+                    ],
                     "size": 3
                   }
                 }
               },
               "Left Leg": {
-                "slots": [ "lower_limb" ],
+                "slots": [
+                    {
+                        "name": "legs",
+                        "type": "lower_limb"
+                    }
+                ],
                 "size": 15,
                 "attached_parts": {
                   "Left Foot": {
-                    "slots": [ "feet" ],
+                    "slots": [
+                        {
+                            "name": "feet",
+                            "type": "feet"
+                        }
+                    ],
                     "size": 3
                   }
                 }
@@ -57,8 +115,29 @@
             }
           }
         },
-        "DominantHand": {
-          "held_uid": 0
+        "dominant_side": {
+            "side": "right"
+        },
+        "paperdoll_layout": {
+            "keys": {
+                "head": 1,
+                "torso": 2,
+                "right_arm": 3,
+                "right_hand": 4,
+                "right_held": 5,
+                "left_arm": 6,
+                "left_hand": 7,
+                "left_held": 8,
+                "legs": 9,
+                "feet": 10
+            },
+            "layout": [
+                [ 0, 0, 0, 1, 0, 0, 0 ],
+                [ 0, 4, 3, 2, 6, 7, 0 ],
+                [ 5, 0, 0, 9, 0, 0, 8 ],
+                [ 0, 0, 0, 10, 0, 0, 0 ],
+                [ 0, 0, 0, 0, 0, 0, 0 ]
+            ]
         }
       }
     }
