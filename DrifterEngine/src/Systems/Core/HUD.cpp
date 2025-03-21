@@ -25,7 +25,7 @@
 
 #include <Systems/Core/MouseVisualizationSystem.h>
 #include <Events/HUDHotbarPressedEvent.h>
-#include <Events/ChangeHUDVisibilityEvent.h>
+#include <Events/ChangeHUDEnabledEvent.h>
 
 #include "Ability/AbilityRegistry.h"
 
@@ -41,6 +41,16 @@ namespace
 		auto overlay = group->get<tgui::Panel>("overlay");
 		overlay->getRenderer()->setBackgroundColor(color);
 	}
+}
+
+void drft::system::HUD::setVisible(entt::registry& registry, bool shouldBeVisible)
+{
+	registry.ctx().get<entt::dispatcher>().trigger(events::ChangeHUDEnabledEvent{ .shouldShow = shouldBeVisible });
+}
+
+void drft::system::HUD::setEnabled(entt::registry& registry, bool shouldBeEnabled)
+{
+	registry.ctx().get<entt::dispatcher>().trigger(events::ChangeHUDEnabledEvent{ .shouldEnable = shouldBeEnabled });
 }
 
 void drft::system::HUD::init()
@@ -62,6 +72,8 @@ void drft::system::HUD::init()
 	_registry.on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	_registry.on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
 	_registry.on_construct<HotbarAction>().connect<&HUD::onHotbarPressed>(this);
+
+	_dispatcher.sink<events::ChangeHUDEnabledEvent>().connect<&HUD::onChangeHUDEnabledEvent>(this);
 }
 
 void drft::system::HUD::update()
@@ -317,4 +329,10 @@ void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity 
 {
 	if (!registry.all_of<PlayerInputComponent>(entity)) return;
 
+}
+
+void drft::system::HUD::onChangeHUDEnabledEvent(const events::ChangeHUDEnabledEvent& ev)
+{
+	_gui->setEnabled(ev.shouldEnable.value_or(_gui->isEnabled()));
+	_gui->setVisible(ev.shouldShow.value_or(_gui->isVisible()));
 }

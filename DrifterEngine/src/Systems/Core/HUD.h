@@ -2,6 +2,11 @@
 #include "Systems/System.h"
 #include "Events/SendFloatingMessageEvent.h"
 
+namespace drft::events
+{
+	struct ChangeHUDEnabledEvent;
+}
+
 namespace drft::system
 {
 	class HUD : public System
@@ -9,11 +14,14 @@ namespace drft::system
 	public:
 		using System::System;
 
+		static void setVisible(entt::registry& registry, bool shouldBeVisible);
+		static void setEnabled(entt::registry& registry, bool shouldBeEnabled);
+
+	private:
 		void init() override;
 		void update() override;
 		void shutdown() override;
 
-	private:
 		void createLevelInfo();
 		void createHealthBar();
 		void createStaminaBar();
@@ -33,6 +41,8 @@ namespace drft::system
 		void onHotbarPressed(entt::registry& registry, entt::entity entity);
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
 		void onConsumeStamina(entt::registry& registry, entt::entity entity);
+
+		void onChangeHUDEnabledEvent(const events::ChangeHUDEnabledEvent& ev);
 
 	private:
 		struct FlashEffect
