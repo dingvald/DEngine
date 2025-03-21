@@ -32,9 +32,14 @@ namespace drft
 
 			entt::const_handle getItem() const;
 			void undo();
+			void setClickHandled();
+			bool isClickHandled() const;
 
 			tgui::Group::Ptr display;
 			DraggingContext context;
+
+		private:
+			bool _isClickHandled = false;
 		};
 
 	public:
@@ -43,10 +48,8 @@ namespace drft
 		bool handleEvent(const sf::Event& ev) override;
 		bool update() override;
 
-		void onEnter() override;
-		void onExit() override;
-
 	private:
+
 		void determineSessionEntities();
 
 		void setupInventoryEntryTemplate(tgui::Panel::Ptr templatePanel);
@@ -62,6 +65,7 @@ namespace drft
 
 		void onLeftMousePressInventoryItem(size_t index, entt::const_handle item);
 		void onLeftMousePressEquipmentItem(entt::const_handle item);
+		void onLeftMousePressInventoryWindow(tgui::Vector2f position);
 
 	private:
 		ContainerWrapper _container;

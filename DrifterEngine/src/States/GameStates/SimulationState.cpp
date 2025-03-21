@@ -114,6 +114,16 @@ void drft::SimulationState::onPop()
 	saveRegistry();
 }
 
+void drft::SimulationState::onEnter()
+{
+	system::MouseVisualizationSystem::changeMouseVisibility(getContext().registry, { true, true });
+}
+
+void drft::SimulationState::onExit()
+{
+	system::MouseVisualizationSystem::changeMouseVisibility(getContext().registry, { false, false });
+}
+
 void drft::SimulationState::setupRegistryContext()
 {
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(_world);

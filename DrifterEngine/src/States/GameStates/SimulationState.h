@@ -24,6 +24,9 @@ namespace drft
 		void render(sf::RenderTarget& target) override;
 		void onPop() override;
 
+		void onEnter() override;
+		void onExit() override;
+
 	private:
 		void setupRegistryContext();
 		void importSystems();

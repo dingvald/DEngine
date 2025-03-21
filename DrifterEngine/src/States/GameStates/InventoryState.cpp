@@ -16,6 +16,7 @@
 
 #include "Utility/EntityHelpers.h"
 #include "Systems/Helpers/ItemDatabase.h"
+#include <Systems/Core/MouseVisualizationSystem.h>
 #include <Utility/StandardLogger.h>
 #include "Utility/StringManipulation.h"
 #include "Utility/TextureAtlas.h"
@@ -33,12 +34,12 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 {
 	determineSessionEntities();
 
-
 	auto inventory = tgui::PanelListBox::create();
 	inventory->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
 	inventory->setOrigin(0.5f, 0.5f);
 	inventory->setPosition("75%", "50%");
 	inventory->setItemsHeight(32.f);
+	inventory->onMousePress([this](tgui::Vector2f position) { onLeftMousePressInventoryWindow(position); });
 	_guiGroup->add(inventory, w_InventoryList);
 
 	auto inventoryTemplate = inventory->getPanelTemplate();
@@ -92,18 +93,12 @@ bool drft::InventoryState::update()
 	{
 		sf::Vector2i mousePosition = sf::Mouse::getPosition(getContext().window);
 		_draggingItem->display->setPosition({ mousePosition.x, mousePosition.y });
+		if (_draggingItem->isClickHandled())
+		{
+			_draggingItem.reset();
+		}
 	}
 	return false;
-}
-
-void drft::InventoryState::onEnter()
-{
-	getContext().registry.ctx().get<entt::dispatcher>().trigger(events::ChangeMouseVisibilityEvent{ false });
-}
-
-void drft::InventoryState::onExit()
-{
-	getContext().registry.ctx().get<entt::dispatcher>().trigger(events::ChangeMouseVisibilityEvent{ true });
 }
 
 void drft::InventoryState::determineSessionEntities()
@@ -224,7 +219,7 @@ void drft::InventoryState::addItemToInventoryUI(size_t index, entt::const_handle
 	auto text = panel->get<tgui::Label>(w_EntryName);
 	text->setText(name);
 	text->setIgnoreMouseEvents(true);
-
+	
 	auto button = GuiHelpers::buttonizePanel(panel);
 	button->onMousePress([this, index, item]() { onLeftMousePressInventoryItem(index, item); });
 }
@@ -267,9 +262,11 @@ void drft::InventoryState::onLeftMousePressInventoryItem(size_t index, entt::con
 {
 	if (_draggingItem.has_value())
 	{
+		if (_draggingItem->isClickHandled()) return;
+
 		_container.addBefore(_draggingItem.value().getItem().entity(), index);
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
-		_draggingItem.reset();
+		_draggingItem->setClickHandled();
 	}
 	else
 	{
@@ -290,6 +287,23 @@ void drft::InventoryState::onLeftMousePressEquipmentItem(entt::const_handle item
 
 	}
 }
+
+void drft::InventoryState::onLeftMousePressInventoryWindow(tgui::Vector2f position)
+{
+	if (!_draggingItem.has_value()) return;
+	if (_draggingItem->isClickHandled()) return;
+
+	auto inventory = _guiGroup->get<tgui::PanelListBox>(w_InventoryList);
+	auto hit = inventory->getWidgetAtPos(position, true);
+
+	if (hit) return;
+
+	_container.add(_draggingItem->getItem().entity());
+	refreshInventoryUI(inventory, false);
+	_draggingItem->setClickHandled();
+}
+
+
 
 drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx, tgui::Group::Ptr gui)
 	: context(ctx)
@@ -355,4 +369,14 @@ void drft::InventoryState::DraggingItem::undo()
 	{
 		fromEquipment->body->parts.equipItem(fromEquipment->itemID, fromEquipment->slot);
 	}
+}
+
+void drft::InventoryState::DraggingItem::setClickHandled()
+{
+	_isClickHandled = true;
+}
+
+bool drft::InventoryState::DraggingItem::isClickHandled() const
+{
+	return _isClickHandled;
 }

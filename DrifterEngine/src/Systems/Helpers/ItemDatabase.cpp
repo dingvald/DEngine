@@ -12,3 +12,12 @@ entt::entity ItemDatabase::getEntityFromItemID(unsigned long itemID)
 	}
 	return entt::null;
 }
+
+unsigned long ItemDatabase::getItemIDFromEntity(entt::const_handle entity)
+{
+	if (auto itemComp = entity.try_get<ItemComponent>())
+	{
+		return itemComp->id;
+	}
+	return ItemComponent::NONE;
+}
