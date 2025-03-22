@@ -77,6 +77,7 @@ void drft::Engine::initialize()
 	registerStates();
 
 	_gui.setKeyboardNavigationEnabled(true);
+	_window.setMouseCursor(sf::Cursor{ sf::Cursor::Type::Cross });
 
 	_stateStack.pushState(States::Title);
 }
@@ -252,10 +253,6 @@ bool drft::Engine::onKeyboardPressed(sf::Keyboard::Scancode scancode)
 
 bool drft::Engine::passEventToGui(sf::Event event)
 {
-	if (event.is<sf::Event::MouseButtonPressed>())
-	{
-		std::cout << "mouse" << std::endl;
-	}
 	return _gui.handleEvent(event);
 }
 
@@ -268,7 +265,6 @@ void drft::Engine::swapToMouse()
 {
 	_window.setMouseCursorVisible(true);
 
-	_gui.handleEvent(sf::Event::MouseEntered{});
 	_gui.unfocusAllWidgets();
 	_controlsContext.navigation = NavigationType::Mouse;
 }
