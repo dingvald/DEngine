@@ -35,6 +35,11 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 {
 	determineSessionEntities();
 
+	_guiBitsNBobs = tgui::Group::create();
+	_guiBitsNBobs->setIgnoreMouseEvents(true);
+	_guiBitsNBobs->setFocusable(false);
+	_guiGroup->add(_guiBitsNBobs);
+
 	auto inventory = tgui::PanelListBox::create();
 	inventory->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
 	inventory->setOrigin(0.5f, 0.5f);
@@ -89,13 +94,8 @@ bool drft::InventoryState::handleEvent(const sf::Event& ev)
 	{
 		if (mousePressed->button == sf::Mouse::Button::Left)
 		{
-			tgui::Vector2f mousePos = { static_cast<float>(mousePressed->position.x), static_cast<float>(mousePressed->position.y) };
-			auto widget = _guiGroup->getWidgetAtPos(mousePos, false);
-			if (!widget)
-			{
-				onLeftMousePressOutsideAllWindows();
-				return true;
-			}
+			onLeftMousePressOutsideAllWindows();
+			return true;
 		}
 	}
 
@@ -323,7 +323,7 @@ void drft::InventoryState::onLeftMousePressInventoryItem(size_t index, entt::con
 	else
 	{
 		_container.remove(item.entity());
-		_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = index }, _guiGroup);
+		_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = index }, _guiBitsNBobs);
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 		refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
 	}
@@ -341,7 +341,7 @@ void drft::InventoryState::onLeftMousePressEquipmentItem(const std::string& slot
 		_draggingItem.reset();
 		if (item)
 		{
-			_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = _container.getItems().size() }, _guiGroup);
+			_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = _container.getItems().size() }, _guiBitsNBobs);
 		}
 
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
@@ -350,7 +350,7 @@ void drft::InventoryState::onLeftMousePressEquipmentItem(const std::string& slot
 	else if (item)
 	{
 		_body.unequip(slotName);
-		_draggingItem.emplace(DraggingFromEquipmentContext{ .item = item, .body = &_body, .slot = slotName }, _guiGroup);
+		_draggingItem.emplace(DraggingFromEquipmentContext{ .item = item, .body = &_body, .slot = slotName }, _guiBitsNBobs);
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 		refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
 	}
@@ -375,7 +375,6 @@ void drft::InventoryState::onLeftMousePressInventoryWindow(tgui::Vector2f positi
 
 void drft::InventoryState::onLeftMousePressOutsideAllWindows()
 {
-	std::cout << "Pressed" << std::endl;
 	if (!_draggingItem.has_value()) return;
 
 	if (_sessionEntity.all_of<component::action::Drop>())
@@ -392,7 +391,6 @@ void drft::InventoryState::onLeftMousePressOutsideAllWindows()
 		_sessionEntity.emplace<component::action::Drop>(std::move(toDrop));
 	}
 
-
 	_draggingItem->setClickHandled();
 
 	refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
@@ -408,12 +406,12 @@ drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx, tgui::Grou
 
 	display = tgui::Group::create();
 	display->setSize({ 32, 48 });
+	display->setOrigin(0.5f, 0.5f);
 	gui->add(display);
 
 	auto background = tgui::Panel::create();
 	background->setSize(tgui::bindSize(display));
 	background->getRenderer()->setBackgroundColor(tgui::Color{ 0, 0, 0, 200 });
-	background->setEnabled(false);
 	display->add(background);
 
 	auto icon = tgui::Picture::create();
@@ -425,10 +423,9 @@ drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx, tgui::Grou
 
 	icon->getRenderer()->setTexture(texture);
 	icon->setSize(tgui::bindSize(display));
-	icon->setEnabled(false);
 	display->add(icon);
 
-	display->setEnabled(false);
+	display->setIgnoreMouseEvents(true);
 }
 
 drft::InventoryState::DraggingItem::~DraggingItem()

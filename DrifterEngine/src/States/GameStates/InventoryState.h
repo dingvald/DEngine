@@ -71,6 +71,8 @@ namespace drft
 		ContainerWrapper _container;
 		BodyWrapper _body;
 
+		tgui::Group::Ptr _guiBitsNBobs;
+
 		entt::handle _sessionEntity;
 		tgui::Panel::Ptr _paperdollNodeTemplate;
 		std::optional<DraggingItem> _draggingItem;
