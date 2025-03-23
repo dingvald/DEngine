@@ -67,6 +67,16 @@ std::vector<sf::Vector3i> drft::spatial::getIntCircleInRadius(sf::Vector3i cente
 	std::vector<sf::Vector3i> result;
 	size_t approxSquares = static_cast<size_t>(std::ceil(4 * radius * radius)); // Close enough to pi for reserve
 	result.reserve(approxSquares);
+	std::unordered_set<sf::Vector3i> visited;
+
+	auto tryAdd = [&](int x, int y)
+		{
+			sf::Vector3i addedPos = sf::Vector3i{x, y, 0} + centerPosition;
+			if (visited.contains(addedPos)) return;
+
+			visited.insert(addedPos);
+			result.emplace_back(std::move(addedPos));
+		};
 
 	for (int i = 0; i <= radius; i++)
 	{
@@ -74,14 +84,14 @@ std::vector<sf::Vector3i> drft::spatial::getIntCircleInRadius(sf::Vector3i cente
 		{
 			if (!isWithinRadius2d({ i, j }, radius)) continue;
 
-			result.push_back(centerPosition + sf::Vector3i{ i,j,0 });
-			result.push_back(centerPosition + sf::Vector3i{ -i,j,0 });
-			result.push_back(centerPosition + sf::Vector3i{ i,-j,0 });
-			result.push_back(centerPosition + sf::Vector3i{ -i,-j,0 });
-			result.push_back(centerPosition + sf::Vector3i{ j,i,0 });
-			result.push_back(centerPosition + sf::Vector3i{ -j,i,0 });
-			result.push_back(centerPosition + sf::Vector3i{ j,-i,0 });
-			result.push_back(centerPosition + sf::Vector3i{ -j,-i,0 });
+			tryAdd(i, j);
+			tryAdd(-i, j);
+			tryAdd(i, -j);
+			tryAdd(-i, -j);
+			tryAdd(j, i);
+			tryAdd(-j, i);
+			tryAdd(j, -i);
+			tryAdd(-j, -i);
 		}
 	}
 
