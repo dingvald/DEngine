@@ -212,6 +212,7 @@ void drft::Engine::render(const float)
 	_window.clear();
 	_stateStack.render(_window);
 	_gui.draw();
+	_stateStack.guiRender(_window);
 
 	if (_showDebug)
 	{

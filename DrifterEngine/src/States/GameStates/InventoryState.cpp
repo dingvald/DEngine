@@ -45,6 +45,8 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 	inventory->setOrigin(0.5f, 0.5f);
 	inventory->setPosition("75%", "50%");
 	inventory->setItemsHeight(32.f);
+	inventory->getRenderer()->setBorderColor(tgui::Color{100,100,100,100});
+	inventory->getRenderer()->setBorders({ 1, 1 });
 	inventory->onMousePress([this](tgui::Vector2f position) { onLeftMousePressInventoryWindow(position); });
 	_guiGroup->add(inventory, w_InventoryList);
 
@@ -55,11 +57,14 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 	equipmentBackground->setOrigin(0.5f, 0.5f);
 	equipmentBackground->setPosition("25%", "50%");
 	equipmentBackground->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
+	equipmentBackground->getRenderer()->setBorderColor(tgui::Color{ 100,100,100,100 });
+	equipmentBackground->getRenderer()->setBorders({ 1, 1 });
 
 	auto equipment = tgui::Grid::create();
 	equipment->setOrigin(0.5f, 0.5f);
 	equipment->setPosition("25%", "50%");
 	equipment->setTextSize(16);
+
 	
 	_guiGroup->add(equipmentBackground);
 	_guiGroup->add(equipment, w_EquipmentGrid);
@@ -102,12 +107,20 @@ bool drft::InventoryState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
+void drft::InventoryState::guiRender(sf::RenderTarget& target)
+{
+	if (_draggingItem)
+	{
+		_draggingItem->render(target);
+	}
+}
+
 bool drft::InventoryState::update()
 {
 	if (_draggingItem.has_value())
 	{
 		sf::Vector2i mousePosition = sf::Mouse::getPosition(getContext().window);
-		_draggingItem->display->setPosition({ mousePosition.x, mousePosition.y });
+		_draggingItem->setPosition(mousePosition);
 		if (_draggingItem->isClickHandled())
 		{
 			_draggingItem.reset();
@@ -404,38 +417,29 @@ drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx, tgui::Grou
 
 	entt::const_handle item = getItem();
 
-	display = tgui::Group::create();
-	display->setSize({ 32, 48 });
-	display->setOrigin(0.5f, 0.5f);
-	gui->add(display);
+	_background.setFillColor(sf::Color{ 10,10,10,180 });
+	_background.setSize({ 32, 48 });
 
-	auto background = tgui::Panel::create();
-	background->setSize(tgui::bindSize(display));
-	background->getRenderer()->setBackgroundColor(tgui::Color{ 0, 0, 0, 200 });
-	display->add(background);
-
-	auto icon = tgui::Picture::create();
-	auto name = util::getEntityName(item);
 	auto render = util::getRenderData(item);
-	auto rect = item.registry()->ctx().get<TextureAtlas>().getUV(render.texture, render.uvSize, render.uvCoords);
-	auto texture = GuiHelpers::createTGUITextureFromUV(name, rect);
-	texture.setColor(render.color);
+	_icon = std::make_unique<sf::Sprite>(item.registry()->ctx().get<TextureAtlas>().getSprite(render.texture, render.uvSize, render.uvCoords));
+	_icon->setColor(render.color);
+	_icon->setScale({ 2.f, 2.f });
 
-	icon->getRenderer()->setTexture(texture);
-	icon->setSize(tgui::bindSize(display));
-	display->add(icon);
-
-	display->setIgnoreMouseEvents(true);
+	sf::Vector2i mousePosition = sf::Mouse::getPosition(item.registry()->ctx().get<sf::RenderWindow>());
+	setPosition(mousePosition);
 }
 
-drft::InventoryState::DraggingItem::~DraggingItem()
+void drft::InventoryState::DraggingItem::render(sf::RenderTarget& target)
 {
-	if (!display) return;
+	target.draw(_background);
+	target.draw(*_icon);
+}
 
-	if (auto parent = display->getParent())
-	{
-		parent->remove(display);
-	}
+void drft::InventoryState::DraggingItem::setPosition(sf::Vector2i position)
+{
+	sf::Vector2f floatPos = { static_cast<float>(position.x), static_cast<float>(position.y) };
+	_icon->setPosition(floatPos);
+	_background.setPosition(floatPos);
 }
 
 

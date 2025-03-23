@@ -19,6 +19,7 @@ namespace drft
 		virtual bool handleEvent(const sf::Event& ev);
 		virtual bool update();
 		virtual void render(sf::RenderTarget& target) {};
+		virtual void guiRender(sf::RenderTarget& target) {};
 
 		virtual void onEnter();
 		virtual void onExit();

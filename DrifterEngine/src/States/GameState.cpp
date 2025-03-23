@@ -174,6 +174,11 @@ void drft::GameState::render(sf::RenderTarget& target)
 	_gameStateStack.render(target);
 }
 
+void drft::GameState::guiRender(sf::RenderTarget& target)
+{
+	_gameStateStack.guiRender(target);
+}
+
 void drft::GameState::onPop()
 {	
 	_gameStateStack.clearStatesNow();

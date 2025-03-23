@@ -28,6 +28,7 @@ namespace drft
 
 		void update();
 		void render(sf::RenderTarget& target);
+		void guiRender(sf::RenderTarget& target);
 		bool handleEvent(const sf::Event& event);
 
 		void pushState(States stateID);

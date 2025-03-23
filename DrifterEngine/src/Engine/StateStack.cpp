@@ -25,6 +25,15 @@ void StateStack::render(sf::RenderTarget& target)
 	applyPendingChanges();
 }
 
+void drft::StateStack::guiRender(sf::RenderTarget& target)
+{
+	for (auto& state : _stack)
+	{
+		state->guiRender(target);
+	}
+	applyPendingChanges();
+}
+
 bool StateStack::handleEvent(const sf::Event& event)
 {
 	bool handled = false;

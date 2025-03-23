@@ -27,14 +27,18 @@ namespace drft
 		{
 			DraggingItem() = default;
 			DraggingItem(DraggingContext ctx, tgui::Group::Ptr gui);
-			~DraggingItem();
+
+			void render(sf::RenderTarget& target);
+			void setPosition(sf::Vector2i position);
 
 			entt::const_handle getItem() const;
 			void undo();
 			void setClickHandled();
 			bool isClickHandled() const;
 
-			tgui::Group::Ptr display;
+		private:
+			std::unique_ptr<sf::Sprite> _icon;
+			sf::RectangleShape _background;
 			DraggingContext context;
 
 		private:
@@ -45,6 +49,7 @@ namespace drft
 		InventoryState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
+		void guiRender(sf::RenderTarget& target) override;
 		bool update() override;
 
 	private:
