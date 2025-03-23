@@ -26,7 +26,7 @@ namespace drft
 		struct DraggingItem
 		{
 			DraggingItem() = default;
-			DraggingItem(DraggingContext ctx, tgui::Group::Ptr gui);
+			DraggingItem(DraggingContext ctx);
 
 			void render(sf::RenderTarget& target);
 			void setPosition(sf::Vector2i position);
@@ -75,8 +75,6 @@ namespace drft
 	private:
 		ContainerWrapper _container;
 		BodyWrapper _body;
-
-		tgui::Group::Ptr _guiBitsNBobs;
 
 		entt::handle _sessionEntity;
 		tgui::Panel::Ptr _paperdollNodeTemplate;

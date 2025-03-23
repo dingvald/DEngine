@@ -35,20 +35,28 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 {
 	determineSessionEntities();
 
-	_guiBitsNBobs = tgui::Group::create();
-	_guiBitsNBobs->setIgnoreMouseEvents(true);
-	_guiBitsNBobs->setFocusable(false);
-	_guiGroup->add(_guiBitsNBobs);
-
 	auto inventory = tgui::PanelListBox::create();
 	inventory->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
 	inventory->setOrigin(0.5f, 0.5f);
 	inventory->setPosition("75%", "50%");
 	inventory->setItemsHeight(32.f);
-	inventory->getRenderer()->setBorderColor(tgui::Color{100,100,100,100});
+	inventory->getRenderer()->setBorderColor(tgui::Color{100,100,100,255});
 	inventory->getRenderer()->setBorders({ 1, 1 });
 	inventory->onMousePress([this](tgui::Vector2f position) { onLeftMousePressInventoryWindow(position); });
 	_guiGroup->add(inventory, w_InventoryList);
+
+	auto inventoryTitle = tgui::Label::create();
+	inventoryTitle->setSize({ tgui::bindWidth(inventory), 34 });
+	inventoryTitle->setOrigin(0.5f, 1.f);
+	inventoryTitle->setPosition(tgui::bindPosX(inventory), tgui::bindTop(inventory));
+	inventoryTitle->setText("Inventory");
+	inventoryTitle->setTextSize(24);
+	inventoryTitle->setVerticalAlignment(tgui::VerticalAlignment::Bottom);
+	inventoryTitle->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+	inventoryTitle->getRenderer()->setBackgroundColor(tgui::Color::Black);
+	inventoryTitle->getRenderer()->setBorderColor(tgui::Color{ 100,100,100,255 });
+	inventoryTitle->getRenderer()->setBorders({ 1, 1 });
+	_guiGroup->add(inventoryTitle);
 
 	auto inventoryTemplate = inventory->getPanelTemplate();
 	setupInventoryEntryTemplate(inventoryTemplate);
@@ -57,7 +65,7 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 	equipmentBackground->setOrigin(0.5f, 0.5f);
 	equipmentBackground->setPosition("25%", "50%");
 	equipmentBackground->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
-	equipmentBackground->getRenderer()->setBorderColor(tgui::Color{ 100,100,100,100 });
+	equipmentBackground->getRenderer()->setBorderColor(tgui::Color{ 100,100,100,255 });
 	equipmentBackground->getRenderer()->setBorders({ 1, 1 });
 
 	auto equipment = tgui::Grid::create();
@@ -155,14 +163,14 @@ void drft::InventoryState::setupInventoryEntryTemplate(tgui::Panel::Ptr template
 	templatePanel->add(icon, w_EntryIcon);
 	icon->setSize(16, 24);
 	icon->setOrigin(0.f, 0.5f);
-	icon->setPosition(4, "50%");
+	icon->setPosition(8, "50%");
 
 	auto text = tgui::Label::create();
 	templatePanel->add(text, w_EntryName);
 	text->setVerticalAlignment(tgui::VerticalAlignment::Center);
 	text->setTextSize(16);
 	text->setOrigin(0.f, 0.5f);
-	text->setPosition(icon->getSize().x + 8, "50%");
+	text->setPosition(icon->getSize().x + 12, "50%");
 }
 
 void drft::InventoryState::setupPaperdollNodeTemplate()
@@ -336,7 +344,7 @@ void drft::InventoryState::onLeftMousePressInventoryItem(size_t index, entt::con
 	else
 	{
 		_container.remove(item.entity());
-		_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = index }, _guiBitsNBobs);
+		_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = index });
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 		refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
 	}
@@ -354,7 +362,7 @@ void drft::InventoryState::onLeftMousePressEquipmentItem(const std::string& slot
 		_draggingItem.reset();
 		if (item)
 		{
-			_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = _container.getItems().size() }, _guiBitsNBobs);
+			_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = _container.getItems().size() });
 		}
 
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
@@ -363,7 +371,7 @@ void drft::InventoryState::onLeftMousePressEquipmentItem(const std::string& slot
 	else if (item)
 	{
 		_body.unequip(slotName);
-		_draggingItem.emplace(DraggingFromEquipmentContext{ .item = item, .body = &_body, .slot = slotName }, _guiBitsNBobs);
+		_draggingItem.emplace(DraggingFromEquipmentContext{ .item = item, .body = &_body, .slot = slotName });
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 		refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
 	}
@@ -410,7 +418,7 @@ void drft::InventoryState::onLeftMousePressOutsideAllWindows()
 	refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
 }
 
-drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx, tgui::Group::Ptr gui)
+drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx)
 	: context(ctx)
 {
 	if (std::holds_alternative<std::monostate>(context)) return;
@@ -418,12 +426,14 @@ drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx, tgui::Grou
 	entt::const_handle item = getItem();
 
 	_background.setFillColor(sf::Color{ 10,10,10,180 });
-	_background.setSize({ 32, 48 });
+	_background.setSize({ 48, 64 });
+	_background.setOrigin(_background.getLocalBounds().size / 2.f);
 
 	auto render = util::getRenderData(item);
 	_icon = std::make_unique<sf::Sprite>(item.registry()->ctx().get<TextureAtlas>().getSprite(render.texture, render.uvSize, render.uvCoords));
 	_icon->setColor(render.color);
-	_icon->setScale({ 2.f, 2.f });
+	_icon->setScale({ 3.f, 3.f });
+	_icon->setOrigin(_icon->getLocalBounds().size / 2.f);
 
 	sf::Vector2i mousePosition = sf::Mouse::getPosition(item.registry()->ctx().get<sf::RenderWindow>());
 	setPosition(mousePosition);
