@@ -7,6 +7,7 @@
 #include "Components/Components.h"
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/AttackerComponent.h"
+#include <Components/CurrentActorComponent.h>
 #include <Components/PhysicalBlockingComponent.h>
 #include "Components/PositionComponent.h"
 #include "Components/ProjectileComponent.h"
@@ -37,9 +38,11 @@ void drft::system::MeleeAttackActionSystem::init()
 
 void drft::system::MeleeAttackActionSystem::update()
 {
-	auto view = _registry.view<MeleeAttackAction>();
-	for (auto&& [entity, meleeAttackAction] : view.each())
+	auto view = _registry.view<MeleeAttackAction, CurrentActorComponent>();
+	for (auto&& [entity, meleeAttackAction, currentActor] : view.each())
 	{
+		if (currentActor.state == CurrentActorState::InProgress) continue;
+
 		Tween moveToTween = {
 			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.4f,
 			.time = 0.12f,

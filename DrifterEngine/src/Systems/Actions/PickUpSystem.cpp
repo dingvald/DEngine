@@ -3,6 +3,7 @@
 
 #include "Components/Components.h"
 #include "Components/ContainerComponent.h"
+#include <Components/CurrentActorComponent.h>
 #include "Components/PositionComponent.h"
 #include "Components/ItemComponent.h"
 #include "Components/BodyComponent.h"
@@ -17,9 +18,11 @@
 
 void drft::system::PickUpSystem::update()
 {
-	auto view = _registry.view<component::action::PickUp, PositionComponent, ContainerComponent>();
-	for (auto&& [entity, position, container] : view.each())
+	auto view = _registry.view<component::action::PickUp, PositionComponent, ContainerComponent, CurrentActorComponent>();
+	for (auto&& [entity, position, container, currentActor] : view.each())
 	{
+		if (currentActor.state == CurrentActorState::InProgress) continue;
+
 		if (container.contents.size() >= container.capacity) continue;
 
 		auto& grid = _registry.ctx().get<spatial::WorldGrid&>();

@@ -40,6 +40,8 @@ void drft::system::HotbarActionSystem::update()
 	auto view = _registry.view<HotbarComponent, HotbarAction, CurrentActorComponent>();
 	for (auto&& [entity, hotbar, hotbarSlot, currentActor] : view.each())
 	{
+		if (currentActor.state == CurrentActorState::InProgress) continue;
+
 		entt::handle handle = { _registry, entity };
 		AbilityType abilityType = hotbar.abilities[hotbarSlot.index];
 

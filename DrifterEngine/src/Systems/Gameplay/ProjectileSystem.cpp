@@ -15,6 +15,7 @@
 
 #include <Spatial/Helpers.h>
 #include "Systems/Helpers/SpawnEffect.h"
+#include <Systems/Core/ActorSystem.h>
 #include "Utility/SpriteOptions.h"
 
 void drft::system::ProjectileSystem::init()
@@ -29,9 +30,11 @@ void drft::system::ProjectileSystem::update()
 	auto view = _registry.view<PositionComponent, ProjectileComponent, CurrentActorComponent>();
 	for (auto [entity, pos, proj, currentActor] : view.each())
 	{
+		if (currentActor.state == CurrentActorState::InProgress) continue;
+
 		if (proj.progress >= proj.line.size())
 		{
-			_registry.emplace_or_replace<MoveAction>(entity, sf::Vector2i{0,0}); // HACKZ: Needed so the projectile actor completes it's action
+			ActorSystem::setActionComplete({ _registry, entity }, ActionCategory::Move, 100);
 			_registry.remove<ProjectileComponent>(entity);
 			continue;
 		}

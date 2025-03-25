@@ -7,6 +7,7 @@
 #include <Components/Components.h>
 #include <Components/PlayerInputComponent.h>
 #include <Components/PositionComponent.h>
+#include <Components/CurrentActorComponent.h>
 
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
@@ -22,9 +23,11 @@ void drft::system::AbilityActionSystem::init()
 
 void drft::system::AbilityActionSystem::update()
 {
-	auto playerView = _registry.view<AbilityAction, PlayerInputComponent>();
-	for (auto&& [entity, action, player] : playerView.each())
+	auto playerView = _registry.view<AbilityAction, PlayerInputComponent, CurrentActorComponent>();
+	for (auto&& [entity, action, player, currentActor] : playerView.each())
 	{
+		if (currentActor.state == CurrentActorState::InProgress) continue;
+
 		const auto& ability = AbilityRegistry::get(action.ability);
 		entt::handle handle = { _registry, entity };
 		if (ability.isValid(handle))
@@ -49,9 +52,11 @@ void drft::system::AbilityActionSystem::update()
 		handle.remove<AbilityAction>();
 	}
 
-	auto nonPlayerView = _registry.view<AbilityAction>(entt::exclude<PlayerInputComponent>);
-	for (auto&& [entity, action] : nonPlayerView.each())
+	auto nonPlayerView = _registry.view<AbilityAction, CurrentActorComponent>(entt::exclude<PlayerInputComponent>);
+	for (auto&& [entity, action, currentActor] : nonPlayerView.each())
 	{
+		if (currentActor.state == CurrentActorState::InProgress) continue;
+
 		const auto& ability = AbilityRegistry::get(action.ability);
 		entt::handle handle = { _registry, entity };
 		if (ability.isValid(handle))
