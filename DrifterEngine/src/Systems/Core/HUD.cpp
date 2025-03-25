@@ -23,6 +23,8 @@
 
 #include <Components/Components.h>
 
+#include <Defines/CommonGuiColors.h>
+
 #include <Systems/Core/MouseVisualizationSystem.h>
 #include <Events/HUDHotbarPressedEvent.h>
 #include <Events/ChangeHUDEnabledEvent.h>
@@ -33,6 +35,12 @@
 #include <Utility/TGUIHelpers.h>
 
 static const char* HotbarWidgetId = "hotbar";
+
+static const char* HealthBarFillWidgetId = "health bar fill";
+static const char* HealthBarContainerWidgetId = "health bar container";
+
+static const char* StaminaBarFillWidgetId = "stamina bar fill";
+static const char* StaminaBarContainerWidgetId = "stamina bar container";
 
 namespace
 {
@@ -104,12 +112,56 @@ void drft::system::HUD::createLevelInfo()
 
 void drft::system::HUD::createHealthBar()
 {
+	auto label = tgui::Label::create();
+	label->setPosition(16, 24);
+	label->setText("HP");
+	label->setTextSize(14);
+	label->setOrigin(0.f, 0.5f);
+	label->setWidth(32);
+	label->setVerticalAlignment(tgui::VerticalAlignment::Center);
+	label->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+	_gui->add(label);
 
+	auto container = tgui::Panel::create();
+	container->setSize({ 1, 10 });
+	container->setPosition(tgui::bindRight(label), tgui::bindPosY(label));
+	container->setOrigin(0.f, 0.5f);
+	container->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+	_gui->add(container, HealthBarContainerWidgetId);
+
+	auto fill = tgui::Panel::create();
+	fill->setPosition(tgui::bindPosition(container) + tgui::Layout2d{1, 0});
+	fill->setOrigin(0.f, 0.5f);
+	fill->setSize({tgui::bindWidth(container) - 2, tgui::bindHeight(container) - 2});
+	fill->getRenderer()->setBackgroundColor(guiColor::MGSHudBlue);
+	_gui->add(fill, HealthBarFillWidgetId);
 }
 
 void drft::system::HUD::createStaminaBar()
 {
+	auto label = tgui::Label::create();
+	label->setPosition(16, 42);
+	label->setText("ST");
+	label->setTextSize(14);
+	label->setOrigin(0.f, 0.5f);
+	label->setWidth(32);
+	label->setVerticalAlignment(tgui::VerticalAlignment::Center);
+	label->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+	_gui->add(label);
 
+	auto container = tgui::Panel::create();
+	container->setSize({ 1, 10 });
+	container->setPosition(tgui::bindRight(label), tgui::bindPosY(label));
+	container->setOrigin(0.f, 0.5f);
+	container->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+	_gui->add(container, StaminaBarContainerWidgetId);
+
+	auto fill = tgui::Panel::create();
+	fill->setPosition(tgui::bindPosition(container) + tgui::Layout2d{ 1, 0 });
+	fill->setOrigin(0.f, 0.5f);
+	fill->setSize({ tgui::bindWidth(container) - 2, tgui::bindHeight(container) - 2 });
+	fill->getRenderer()->setBackgroundColor(guiColor::StaminaGreen);
+	_gui->add(fill, StaminaBarFillWidgetId);
 }
 
 void drft::system::HUD::createInHandsDisplay()
@@ -130,7 +182,7 @@ void drft::system::HUD::createHotbar()
 
 	auto button = tgui::Button::create();
 	button->setSize(tgui::bindSize(_templateHotbarIcon));
-	button->getRenderer()->setBorderColor(tgui::Color{ 100, 100, 100, 100 });
+	button->getRenderer()->setBorderColor(guiColor::TranslucentAsh);
 	button->getRenderer()->setBorders({ 2, 2 });
 	button->getRenderer()->setBorderColorHover(tgui::Color{ 255, 255, 255, 100 });
 	button->getRenderer()->setTextColorFocused(button->getRenderer()->getTextColor());
@@ -155,7 +207,7 @@ void drft::system::HUD::createHotbar()
 	hotbarBackground->setOrigin(0.5f, 0.5f);
 	hotbarBackground->setSize(tgui::bindSize(hotbar));
 	hotbarBackground->setPosition(tgui::bindPosition(hotbar));
-	hotbarBackground->getRenderer()->setBackgroundColor(tgui::Color::Black);
+	hotbarBackground->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
 
 	_gui->add(hotbarBackground);
 	_gui->add(hotbar, HotbarWidgetId);
@@ -188,7 +240,13 @@ void drft::system::HUD::updateHealthBar(entt::const_handle player)
 {
 	if (auto health = player.try_get<HealthComponent>())
 	{
+		auto container = _gui->get<tgui::Panel>(HealthBarContainerWidgetId);
+		container->setSize({ 16 * health->max, 10 });
 
+		const float ratio = health->current / health->max;
+
+		auto fill = _gui->get<tgui::Panel>(HealthBarFillWidgetId);
+		fill->setSize({ (tgui::bindWidth(container) - 2) * ratio, tgui::bindHeight(container) - 2 });
 	}
 	else
 	{
@@ -200,7 +258,13 @@ void drft::system::HUD::updateStaminaBar(entt::const_handle player)
 {
 	if (auto stamina = player.try_get<StaminaComponent>())
 	{
+		auto container = _gui->get<tgui::Panel>(StaminaBarContainerWidgetId);
+		container->setSize({ 16 * stamina->max, 10 });
 
+		const float ratio = stamina->current / stamina->max;
+
+		auto fill = _gui->get<tgui::Panel>(StaminaBarFillWidgetId);
+		fill->setSize({ (tgui::bindWidth(container) - 2) * ratio, tgui::bindHeight(container) - 2 });
 	}
 	else
 	{
