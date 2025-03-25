@@ -45,9 +45,7 @@ tgui::Button::Ptr drft::GuiHelpers::buttonizePanel(tgui::Panel::Ptr panel)
 {
 	auto button = tgui::Button::create();
 	panel->add(button, "buttonized_panel");
-	panel->onFocus([button]() { button->setFocused(true); });
-	panel->onUnfocus([button]() {button->setFocused(false); });
-	button->setSize("100%, 100%");
+	button->setSize(tgui::bindSize(panel));
 	button->moveToBack();
 
 	return button;
