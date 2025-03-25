@@ -66,8 +66,8 @@ void drft::Engine::run()
 
 void drft::Engine::initialize()
 {
-	std::cout << "Initializing Engine..." << std::endl;
-	std::cout << "Working Directory: " << WORKING_DIRECTORY << std::endl;
+	LOG_MSG("Initializing Engine...");
+	LOG_MSG(std::format("Working Directory: {}", WORKING_DIRECTORY.string()));
 
 	setWindowIcon();
 	loadResources();
@@ -92,8 +92,8 @@ void drft::Engine::setWindowIcon()
 	}
 	else
 	{
-		warning_logger << "Warning: Could not set window icon:" << std::endl;
-		warning_logger << "File " << iconPath << " not found." << std::endl;
+		LOG_WARNING("Could not set window icon : ");
+		LOG_WARNING(std::format("File {} not found", iconPath.string()));
 	}
 }
 
@@ -121,13 +121,13 @@ void drft::Engine::loadResources()
 
 void drft::Engine::loadSavedKeybindings()
 {
-	std::cout << "Loading player saved keybindings..." << std::endl;
+	LOG_MSG("Loading player saved keybindings...");
 	std::filesystem::path keybindingPath = SAVED_SETTINGS_DIRECTORY / "keybindings.json";
 	json::JsonFileWrapper json{ keybindingPath, "keybindings" };
 	if (!json.load())
 	{
-		std::cout << "Could not load " << keybindingPath << std::endl;
-		std::cout << "--- Using default settings" << std::endl;
+		LOG_WARNING(std::format("Could not load {}", keybindingPath.string()));
+		LOG_WARNING("Using default settings");
 		_keybindings.restoreDefaultKeybindings();
 	}
 	else
@@ -138,12 +138,12 @@ void drft::Engine::loadSavedKeybindings()
 
 void drft::Engine::loadDefaultKeybindings()
 {
-	std::cout << "Loading default keybindings..." << std::endl;
+	LOG_MSG("Loading default keybindings...");
 	std::filesystem::path keybindingPath = DEFAULT_SETTINGS_DIRECTORY / "_default_keybindings.json";
 	json::JsonFileWrapper json{ keybindingPath, "keybindings" };
 	if (!json.load())
 	{
-		error_logger << "Error: " << keybindingPath << " could not be loaded." << std::endl;
+		LOG_ERROR(std::format("{} could not be loaded", keybindingPath.string()));
 	}
 	else
 	{
@@ -224,7 +224,7 @@ void drft::Engine::render(const float)
 
 void drft::Engine::shutDown()
 {
-	std::cout << "Closing Engine" << std::endl;
+	LOG_MSG("Closing Engine");
 
 	_stateStack.clearStatesNow();
 
@@ -291,15 +291,17 @@ void drft::Engine::toggleFullscreen()
 	{
 		_window.create(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine");
 		_window.setVerticalSyncEnabled(false);
+		_window.setMouseCursor(sf::Cursor{ sf::Cursor::Type::Cross });
 		_isFullScreen = false;
-		std::cout << "Window set to windowed mode" << std::endl;
+		LOG_MSG("Window set to windowed mode");
 	}
 	else
 	{
 		_window.create(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine", sf::State::Fullscreen);
 		_window.setVerticalSyncEnabled(true);
+		_window.setMouseCursor(sf::Cursor{ sf::Cursor::Type::Cross });
 		_isFullScreen = true;
-		std::cout << "Window set to fullscreen mode" << std::endl;
+		LOG_MSG("Window set to fullscreen mode");
 	}
 }
 
@@ -310,7 +312,7 @@ void drft::Engine::toggleDebug()
 
 void drft::Engine::saveKeybindings()
 {
-	std::cout << "Saving keybindings..." << std::endl;
+	LOG_MSG("Saving keybindings...");
 	std::filesystem::path keybindingPath = SAVED_SETTINGS_DIRECTORY / "keybindings.json";
 	
 	json::JsonFileWrapper keybindingFile{ keybindingPath, "keybindings"};
