@@ -9,6 +9,8 @@
 #include "Components/RenderComponent.h"
 #include "Components/ContainerComponent.h"
 
+#include <Defines/CommonGuiColors.h>
+
 #include <Systems/Actions/CraftItemSystem.h>
 
 #include "Factory/EntityFactory.h"
@@ -36,11 +38,23 @@ drft::CraftingState::CraftingState(StateStack& stack, StateContext& context)
 	determineSessionEntities();
 
 	auto list = tgui::PanelListBox::create();
-	_guiGroup->add(list, w_CraftablesList);
 	list->setOrigin(0.5f, 0.5f);
 	list->setPosition("50%, 50%");
-	list->setSize(tgui::bindWidth(_guiGroup) * 0.5f, tgui::bindHeight(_guiGroup) * 0.5f);
+	list->setSize(tgui::bindSize(_guiGroup) * 0.5f);
 	list->setItemsHeight(48.f);
+	list->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+	_guiGroup->add(list, w_CraftablesList);
+
+	auto craftingTitle = tgui::Label::create();
+	craftingTitle->setSize({ tgui::bindWidth(list), 32 });
+	craftingTitle->setOrigin(0.5f, 1.f);
+	craftingTitle->setPosition(tgui::bindPosX(list), tgui::bindTop(list) - 8);
+	craftingTitle->setText("Crafting");
+	craftingTitle->setTextSize(20);
+	craftingTitle->setVerticalAlignment(tgui::VerticalAlignment::Bottom);
+	craftingTitle->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+	craftingTitle->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+	_guiGroup->add(craftingTitle);
 
 	auto templatePanel = list->getPanelTemplate();
 	setupPanelTemplate(templatePanel);
@@ -109,19 +123,6 @@ void drft::CraftingState::refreshCraftingList(tgui::PanelListBox::Ptr list)
 			auto panel = list->addItem();
 			addItemToCraftingList({ prototypeReg, partial }, panel, true);
 		}
-	}
-
-	GuiHelpers::setupNavigationGraph(list);
-	list->onFocus([this, index, list]() {
-		if (getContext().controls.navigation == NavigationType::Keyboard)
-		{
-			GuiHelpers::tryFocusItem(list, std::max(0, index));
-		}
-		});
-
-	if (getContext().controls.navigation == NavigationType::Keyboard)
-	{
-		GuiHelpers::tryFocusItem(list, std::max(0, index));
 	}
 
 	if (list->getItemCount() == 0)
@@ -238,7 +239,7 @@ void drft::CraftingState::onCraft(const std::string& name)
 {
 	if (system::CraftItemSystem::craftItem(_sessionEntity, name))
 	{
-		refreshCraftingList(getContext().gui.get<tgui::PanelListBox>(w_CraftablesList));
+		refreshCraftingList(_guiGroup->get<tgui::PanelListBox>(w_CraftablesList));
 	}
 }
 
