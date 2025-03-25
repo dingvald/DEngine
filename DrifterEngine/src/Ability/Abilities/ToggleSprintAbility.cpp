@@ -4,6 +4,8 @@
 #include "Components/SprintingComponent.h"
 #include "Events/SendFloatingMessageEvent.h"
 
+#include <Defines/CommonGuiColors.h>
+
 
 drft::AbilityTargetingType drft::ToggleSprintAbility::getTargetingType() const
 {
@@ -49,7 +51,7 @@ drft::AbilityIconData drft::ToggleSprintAbility::getIconData() const
 {
 	return AbilityIconData{
 		.textureId = entt::hashed_string{"icons"},
-		.color = sf::Color(101,122,98),
+		.color = guiColor::StaminaGreen,
 		.uv = {1,0},
 		.uvSize = {16, 16}
 	};

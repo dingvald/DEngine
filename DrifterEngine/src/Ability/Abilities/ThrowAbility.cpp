@@ -7,6 +7,8 @@
 #include "Components/ProjectileComponent.h"
 #include "Components/MaterialComponent.h"
 
+#include <Defines/CommonGuiColors.h>
+
 #include "Systems/Helpers/ItemDatabase.h"
 #include <Systems/Helpers/GetDominantSide.h>
 
@@ -83,7 +85,7 @@ drft::AbilityIconData drft::ThrowAbility::getIconData() const
 {
 	return AbilityIconData{
 		.textureId = entt::hashed_string{"icons"},
-		.color = sf::Color::Magenta,
+		.color = guiColor::MGSHudBlue,
 		.uv = {2,0},
 		.uvSize = {16, 16}
 	};
