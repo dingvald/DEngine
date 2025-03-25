@@ -450,6 +450,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\PaperdollLayoutComponent.h" />
     <ClInclude Include="src\Components\Wrappers\BodyWrapper.h" />
     <ClInclude Include="src\Components\Wrappers\ComponentWrapper.h" />
+    <ClInclude Include="src\Defines\CommonGuiColors.h" />
     <ClInclude Include="src\Events\ChangeHUDEnabledEvent.h" />
     <ClInclude Include="src\Events\ChangeMouseVisibilityEvent.h" />
     <ClInclude Include="src\Events\HUDHotbarPressedEvent.h" />
