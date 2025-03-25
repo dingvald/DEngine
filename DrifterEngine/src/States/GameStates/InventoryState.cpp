@@ -65,8 +65,18 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 	equipmentBackground->setOrigin(0.5f, 0.5f);
 	equipmentBackground->setPosition("25%", "50%");
 	equipmentBackground->setSize(tgui::bindWidth(_guiGroup) * 0.25f, tgui::bindHeight(_guiGroup) * 0.5f);
-	equipmentBackground->getRenderer()->setBorderColor(tgui::Color{ 100,100,100,255 });
-	equipmentBackground->getRenderer()->setBorders({ 1, 1 });
+	equipmentBackground->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+
+	auto equipmentTitle = tgui::Label::create();
+	equipmentTitle->setSize({ tgui::bindWidth(equipmentBackground), 32 });
+	equipmentTitle->setOrigin(0.5f, 1.f);
+	equipmentTitle->setPosition(tgui::bindPosX(equipmentBackground), tgui::bindTop(equipmentBackground) - 8);
+	equipmentTitle->setText("Equipment");
+	equipmentTitle->setTextSize(20);
+	equipmentTitle->setVerticalAlignment(tgui::VerticalAlignment::Bottom);
+	equipmentTitle->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+	equipmentTitle->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+	_guiGroup->add(equipmentTitle);
 
 	auto equipment = tgui::Grid::create();
 	equipment->setOrigin(0.5f, 0.5f);
