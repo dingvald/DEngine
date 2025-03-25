@@ -13,15 +13,16 @@ const std::unordered_set<std::string_view> SupportedImageTypes =
 
 bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 {
-	std::cout << "Creating Texture Atlas from " << directoryPath << "..." << std::endl;
+	LOG_MSG(std::format("Creating Texture Atlas from {}...", directoryPath.string()));
 
 	std::unordered_map<int, sf::Image> imageData;
 	std::unordered_map<int, entt::hashed_string> imageNames;
 	std::vector<PackingRect> rects;
 	int currentId = 0;
 	const unsigned int maxSizeInPixels = sf::Texture::getMaximumSize();
+	unsigned int runningSizeInPixels = 0;
 
-	std::cout << "Maximum texture size for GPU: " << maxSizeInPixels << std::endl;
+	LOG_MSG(std::format("Maximum texture size for GPU: {}", maxSizeInPixels));
 
 	// Collect all images from directory + subdirectories
 	for (const auto& entry : std::filesystem::recursive_directory_iterator(directoryPath))
@@ -31,11 +32,11 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 		const std::string& extension = entry.path().extension().string();
 		if (!SupportedImageTypes.contains(extension))
 		{
-			warning_logger << "WARNING: " << entry.path().filename() << " could not be added to the texture atlas." << std::endl;
-			warning_logger << "All files in " << directoryPath << " must be the following types:" << std::endl;
+			LOG_WARNING(std::format("{} could not be added to the texture atlas.", entry.path().filename().string()));
+			LOG_WARNING(std::format("all files in {} must be the following types:", directoryPath.string()));
 			for (auto&& ext : SupportedImageTypes)
 			{
-				warning_logger << ext << "\n";
+				LOG_WARNING(ext);
 			}
 			continue;
 		}
@@ -44,7 +45,7 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 		if (subImage.loadFromFile(entry.path().string()))
 		{
 			const std::string imageName = entry.path().filename().replace_extension().string();
-			std::cout << "Adding " << imageName << extension << std::endl;
+			LOG_MSG(std::format("Adding {}{}", imageName, extension));
 			PackingRect rect = {};
 			rect.id = currentId;
 			rect.w = subImage.getSize().x;
@@ -66,30 +67,45 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 		for (auto&& rect : rects)
 		{
 			if (!rect.was_packed) continue;
+
 			const auto& subImage = imageData.at(rect.id);
 			const auto& imageName = imageNames.at(rect.id);
 
 			if (!image.copy(subImage, { static_cast<unsigned int>(rect.x), static_cast<unsigned int>(rect.y) }))
 			{
-				warning_logger << "Warning: Image could not be copied." << std::endl;
+				LOG_WARNING("image could not be copied");
+				continue;
 			}
 
 			sf::IntRect intRect = { {rect.x, rect.y}, {rect.w, rect.h} };
 			_subTextures.emplace(imageName.value(), std::move(intRect));
+			runningSizeInPixels += rect.w * rect.h;
 		}
 
 		if (!_texture.loadFromImage(image))
 		{
-			warning_logger << "Warning: Image could not be loaded into the texture atlas." << std::endl;
+			LOG_WARNING("image could not be loaded into the texture atlas");
 		}
 	}
 	else
 	{
-		warning_logger << "Warning: Could not pack all textures into max texture size." << std::endl;
+		LOG_ERROR("could not pack all textures into max texture size");
 		return false;
 	}
 
-	std::cout << "SUCCESS: All supported images added to atlas." << std::endl;
+	LOG_MSG(std::format("Texture size used: {}", runningSizeInPixels));
+	float ratio = static_cast<float>(runningSizeInPixels) / static_cast<float>(maxSizeInPixels);
+	LOG_MSG(std::format("Percentage of atlas used: {:3.1f}%", ratio * 100.f));
+	if (ratio > 1.0f)
+	{
+		LOG_ERROR("loaded textures exceed maximum size of atlas space");
+	}
+	else if (ratio > 0.8)
+	{
+		LOG_WARNING("loaded textures exceed 80% of atlas space");
+	}
+	
+	LOG_MSG("SUCCESS: All supported images added to atlas")
 	return true;
 }
 
