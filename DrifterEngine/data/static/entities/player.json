@@ -14,7 +14,7 @@
             "default": {
               "frames": [
                 {
-                  "texture": "human_male_tunic_idle",
+                  "texture": "human_male_poncho_idle",
                   "uv_size": [ 16, 24 ],
                   "uv_coords": [ 0, 0 ],
                   "layer": 2,
