@@ -13,6 +13,6 @@ namespace drft
 		entt::entity swap(const std::string& slot, entt::entity item);
 
 		bool hasSlot(const std::string& slot) const;
-		BodyPart::Slot* getSlot(const std::string& slot);
+		const BodyPart::Slot* getSlot(const std::string& slot) const;
 	};
 }

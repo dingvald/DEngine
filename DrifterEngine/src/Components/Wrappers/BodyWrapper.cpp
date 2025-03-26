@@ -7,7 +7,7 @@ bool drft::BodyWrapper::canEquip(const std::string& slotName, entt::entity item)
 {
     if (!isValid()) return false;
 
-    auto slot = _component->parts.getSlot(slotName);
+    auto slot = tryGetUnderlyingConst()->parts.getSlot(slotName);
     if (!slot) return false;
 
     if (slot->type == BodyPart::Slot::Type::Held)
@@ -15,7 +15,7 @@ bool drft::BodyWrapper::canEquip(const std::string& slotName, entt::entity item)
         return true;
     }
 
-    if (auto wearable = _registry->try_get<WearableComponent>(item))
+    if (auto wearable = tryGetRegistry()->try_get<WearableComponent>(item))
     {
         for (auto&& slotName : wearable->slots)
         {
@@ -33,43 +33,48 @@ bool drft::BodyWrapper::equip(const std::string& slot, entt::entity item)
 {
     if (!isValid()) return false;
 
-    auto itemID = ItemDatabase::getItemIDFromEntity({ *_registry, item });
-    if (itemID == 0ul) return false;
+    auto itemID = ItemDatabase::getItemIDFromEntity({ *tryGetRegistry(), item});
+    if (itemID == 0u) return false;
 
-    return _component->parts.equipItem(itemID, slot);
+    bool result = false;
+    modify([itemID, &slot, &result](auto& comp) {result = comp.parts.equipItem(itemID, slot);});
+
+    return result;
 }
 
 bool drft::BodyWrapper::unequip(const std::string& slot)
 {
     if (!isValid()) return false;
 
-    auto val = _component->parts.unequipItem(slot);
+    unsigned long itemRemoved = 0;
+    modify([&slot, &itemRemoved](auto& comp) {itemRemoved = comp.parts.unequipItem(slot);});
 
-    return val == 0u ? false : true;
+    return itemRemoved == 0u ? false : true;
 }
 
 entt::entity drft::BodyWrapper::swap(const std::string& slot, entt::entity item)
 {
     if (!isValid()) return entt::null;
 
-    auto oldItem = _component->parts.unequipItem(slot);
+    unsigned long itemRemoved = 0;
+    modify([&slot, &itemRemoved](auto& comp) {itemRemoved = comp.parts.unequipItem(slot);});
     this->equip(slot, item);
 
-    return ItemDatabase::getEntityFromItemID(oldItem);
+    return ItemDatabase::getEntityFromItemID(itemRemoved);
 }
 
 bool drft::BodyWrapper::hasSlot(const std::string& slot) const
 {
     if (!isValid()) return false;
 
-    auto slotPtr = _component->parts.getSlot(slot);
+    auto slotPtr = tryGetUnderlyingConst()->parts.getSlot(slot);
 
     return slotPtr != nullptr;
 }
 
-BodyPart::Slot* drft::BodyWrapper::getSlot(const std::string& slot)
+const BodyPart::Slot* drft::BodyWrapper::getSlot(const std::string& slot) const
 {
     if (!isValid()) return nullptr;
 
-    return _component->parts.getSlot(slot);
+    return tryGetUnderlyingConst()->parts.getSlot(slot);
 }

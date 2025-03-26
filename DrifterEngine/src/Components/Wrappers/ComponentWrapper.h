@@ -5,26 +5,63 @@ template<typename ComponentType>
 class ComponentWrapper
 {
 public:
-	void set(entt::handle entity);
+	ComponentWrapper() = default;
+	ComponentWrapper(entt::handle entity);
+
 	bool isValid() const;
 
 protected:
-	ComponentType* _component;
-	entt::registry* _registry;
+	const ComponentType* tryGetUnderlyingConst() const;
+	ComponentType* tryGetUnderlying();
+	void modify(std::function<void(ComponentType& comp)> func);
+	/// <summary>
+	/// Attempts to grab the registry
+	/// - Successful calls to `isValid` guarentees the registry exists
+	/// </summary>
+	/// <returns></returns>
+	const entt::registry* tryGetRegistry() const;
+
+private:
+	entt::handle _handle;
 };
 
 template<typename ComponentType>
-inline void ComponentWrapper<ComponentType>::set(entt::handle entity)
-{
-	if (auto comp = entity.try_get<ComponentType>())
-	{
-		_component = comp;
-		_registry = entity.registry();
-	}
-}
+inline ComponentWrapper<ComponentType>::ComponentWrapper(entt::handle entity)
+	: _handle(entity)
+{}
 
 template<typename ComponentType>
 inline bool ComponentWrapper<ComponentType>::isValid() const
 {
-	return _component != nullptr && _registry != nullptr;
+	return _handle.registry() && _handle.valid() && _handle.all_of<ComponentType>();
+}
+
+
+template<typename ComponentType>
+inline const ComponentType* ComponentWrapper<ComponentType>::tryGetUnderlyingConst() const
+{
+	if (!isValid()) return nullptr;
+	return _handle.try_get<ComponentType>();
+}
+
+template<typename ComponentType>
+inline ComponentType* ComponentWrapper<ComponentType>::tryGetUnderlying()
+{
+	if (!isValid()) return nullptr;
+	return _handle.try_get<ComponentType>();
+}
+
+template<typename ComponentType>
+inline void ComponentWrapper<ComponentType>::modify(std::function<void(ComponentType& comp)> func)
+{
+	if (!isValid()) return;
+
+	_handle.patch<ComponentType>(func);
+}
+
+template<typename ComponentType>
+inline const entt::registry* ComponentWrapper<ComponentType>::tryGetRegistry() const
+{
+	if (!isValid()) return nullptr;
+	return _handle.registry();
 }

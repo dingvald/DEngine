@@ -5,6 +5,8 @@
 #include <Utility/EntityHelpers.h>
 #include <Utility/StringManipulation.h>
 
+static const std::vector<ItemComponent::ID> EmptyContainer = {};
+
 void drft::ContainerWrapper::sort(SortType sortType)
 {
 	if (!isValid()) return;
@@ -12,12 +14,15 @@ void drft::ContainerWrapper::sort(SortType sortType)
 	switch (sortType)
 	{
 	case drft::SortType::Alphabetic:
-		std::sort(_component->contents.begin(), _component->contents.end(),
-			[this](ItemComponent::ID first, ItemComponent::ID second) {
+	{
+		auto comp = tryGetUnderlying();
+		auto registry = tryGetRegistry();
+		std::sort(comp->contents.begin(), comp->contents.end(),
+			[this, registry](ItemComponent::ID first, ItemComponent::ID second) {
 				auto e1 = ItemDatabase::getEntityFromItemID(first);
 				auto e2 = ItemDatabase::getEntityFromItemID(second);
-				auto name1 = util::getEntityName({ *_registry, e1 });
-				auto name2 = util::getEntityName({ *_registry, e2 });
+				auto name1 = util::getEntityName({ *registry, e1 });
+				auto name2 = util::getEntityName({ *registry, e2 });
 
 				size_t i = 0;
 				while (i < name1.length() && i < name2.length())
@@ -29,6 +34,7 @@ void drft::ContainerWrapper::sort(SortType sortType)
 				if (name1.length() < name2.length()) return true;
 				return false;
 			});
+	}
 		break;
 	default:
 		break;
@@ -39,22 +45,22 @@ bool drft::ContainerWrapper::remove(entt::entity item)
 {
 	if (!isValid()) return false;
 
-	if (auto itemComp = _registry->try_get<ItemComponent>(item))
+	size_t result = 0;
+	if (auto itemComp = tryGetRegistry()->try_get<ItemComponent>(item))
 	{
-		size_t num = std::erase(_component->contents, itemComp->id);
-		if (num > 0) return true;
+		modify([&result, itemComp](ContainerComponent& comp) {result = std::erase(comp.contents, itemComp->id);});
 	}
-	return false;
+	return result > 0 ? true : false;
 }
 
 bool drft::ContainerWrapper::add(entt::entity item)
 {
 	if (!isValid()) return false;
-	if (_component->contents.size() >= _component->capacity) return false;
+	if (tryGetUnderlyingConst()->contents.size() >= tryGetUnderlyingConst()->capacity) return false;
 
-	if (auto itemComp = _registry->try_get<ItemComponent>(item))
+	if (auto itemComp = tryGetRegistry()->try_get<ItemComponent>(item))
 	{
-		_component->contents.push_back(itemComp->id);
+		modify([id = itemComp->id](ContainerComponent& comp) {comp.contents.push_back(id);});
 		return true;
 	}
 	return false;
@@ -63,31 +69,35 @@ bool drft::ContainerWrapper::add(entt::entity item)
 bool drft::ContainerWrapper::addBefore(entt::entity itemToAdd, size_t index)
 {
 	if (!isValid()) return false;
-	if (_component->contents.size() >= _component->capacity) return false;
-	if (index > _component->contents.size()) return add(itemToAdd);
+	if (tryGetUnderlyingConst()->contents.size() >= tryGetUnderlyingConst()->capacity) return false;
+	if (index > tryGetUnderlyingConst()->contents.size()) return add(itemToAdd);
 
-	auto itemToAddComp = _registry->try_get<ItemComponent>(itemToAdd);
+	if (auto itemComp = tryGetRegistry()->try_get<ItemComponent>(itemToAdd))
+	{
+		modify([index, id = itemComp->id](ContainerComponent& comp) {comp.contents.insert(comp.contents.begin() + index, id);});
+		return true;
+	}
 
-	if (!itemToAddComp) return false;
-
-	_component->contents.insert(_component->contents.begin() + index, itemToAddComp->id);
-
-	return true;
+	return false;
 }
 
 bool drft::ContainerWrapper::addAfter(entt::entity itemToAdd, size_t index)
 {
 	if (!isValid()) return false;
-	if (_component->contents.size() >= _component->capacity) return false;
+	const size_t indexAfter = index + 1;
+	if (indexAfter > tryGetUnderlyingConst()->contents.size()) return add(itemToAdd);
+
+	if (auto itemComp = tryGetRegistry()->try_get<ItemComponent>(itemToAdd))
+	{
+		modify([indexAfter, id = itemComp->id](ContainerComponent& comp) {comp.contents.insert(comp.contents.begin() + indexAfter, id);});
+		return true;
+	}
 
 	return false;
 }
 
 const std::vector<ItemComponent::ID>& drft::ContainerWrapper::getItems() const
 {
-	if (!isValid())
-	{
-		throw std::exception("Underlying container is invalid");
-	}
-	return _component->contents;
+	if (!isValid()) return EmptyContainer;
+	return tryGetUnderlyingConst()->contents;
 }
