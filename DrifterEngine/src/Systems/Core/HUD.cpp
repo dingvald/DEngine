@@ -115,7 +115,7 @@ void drft::system::HUD::createHealthBar()
 	auto label = tgui::Label::create();
 	label->setPosition(16, 24);
 	label->setText("HP");
-	label->setTextSize(14);
+	label->setTextSize(20);
 	label->setOrigin(0.f, 0.5f);
 	label->setWidth(32);
 	label->setVerticalAlignment(tgui::VerticalAlignment::Center);
@@ -123,7 +123,7 @@ void drft::system::HUD::createHealthBar()
 	_gui->add(label);
 
 	auto container = tgui::Panel::create();
-	container->setSize({ 1, 10 });
+	container->setSize({ 1, 14 });
 	container->setPosition(tgui::bindRight(label), tgui::bindPosY(label));
 	container->setOrigin(0.f, 0.5f);
 	container->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
@@ -140,9 +140,9 @@ void drft::system::HUD::createHealthBar()
 void drft::system::HUD::createStaminaBar()
 {
 	auto label = tgui::Label::create();
-	label->setPosition(16, 42);
+	label->setPosition(16, 48);
 	label->setText("ST");
-	label->setTextSize(14);
+	label->setTextSize(20);
 	label->setOrigin(0.f, 0.5f);
 	label->setWidth(32);
 	label->setVerticalAlignment(tgui::VerticalAlignment::Center);
@@ -150,7 +150,7 @@ void drft::system::HUD::createStaminaBar()
 	_gui->add(label);
 
 	auto container = tgui::Panel::create();
-	container->setSize({ 1, 10 });
+	container->setSize({ 1, 14 });
 	container->setPosition(tgui::bindRight(label), tgui::bindPosY(label));
 	container->setOrigin(0.f, 0.5f);
 	container->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
@@ -241,7 +241,7 @@ void drft::system::HUD::updateHealthBar(entt::const_handle player)
 	if (auto health = player.try_get<HealthComponent>())
 	{
 		auto container = _gui->get<tgui::Panel>(HealthBarContainerWidgetId);
-		container->setSize({ 16 * health->max, 10 });
+		container->setWidth(24 * health->max);
 
 		const float ratio = health->current / health->max;
 
@@ -259,7 +259,7 @@ void drft::system::HUD::updateStaminaBar(entt::const_handle player)
 	if (auto stamina = player.try_get<StaminaComponent>())
 	{
 		auto container = _gui->get<tgui::Panel>(StaminaBarContainerWidgetId);
-		container->setSize({ 16 * stamina->max, 10 });
+		container->setWidth(24 * stamina->max);
 
 		const float ratio = stamina->current / stamina->max;
 
