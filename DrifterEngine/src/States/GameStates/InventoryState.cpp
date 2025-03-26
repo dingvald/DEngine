@@ -32,6 +32,7 @@ static const char* w_EquipmentGrid			= "Equipment Grid";
 static const char* w_GridEntrySlotName		= "Slot Name";
 static const char* w_GridEntryOverlay		= "Grid Overlay";
 
+
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
     : State(stack, context)
 {
@@ -166,6 +167,7 @@ void drft::InventoryState::determineSessionEntities()
 	}
 }
 
+
 void drft::InventoryState::setupInventoryEntryTemplate(tgui::Panel::Ptr templatePanel)
 {
 	auto icon = tgui::Picture::create();
@@ -288,7 +290,9 @@ void drft::InventoryState::addItemToInventoryUI(size_t index, entt::const_handle
 	
 	auto button = GuiHelpers::buttonizePanel(panel);
 	button->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+
 	button->onMousePress([this, index, item]() { onLeftMousePressInventoryItem(index, item); });
+	button->onRightMousePress([this, index, item]() { onRightMousePressInventoryItem(index, item); });
 }
 
 void drft::InventoryState::addItemToEquipmentUI(const std::string& slotName, tgui::Panel::Ptr layout)
@@ -321,7 +325,11 @@ void drft::InventoryState::addItemToEquipmentUI(const std::string& slotName, tgu
 		icon->getRenderer()->setTexture(texture);
 
 		layout->onMousePress([this, slotName, item_handle]() { onLeftMousePressEquipmentItem(slotName, item_handle); });
-		if (!_draggingItem.has_value() ^ _draggingItem->isClickHandled())
+		layout->onRightMousePress([this, slotName, item_handle]() { onRightMousePressEquipmentItem(slotName, item_handle); });
+
+		const bool isDraggingItem = _draggingItem.has_value();
+		const bool hasDraggingItemBeenHandled = isDraggingItem ? _draggingItem->isClickHandled() : true;
+		if (!isDraggingItem || hasDraggingItemBeenHandled)
 		{
 			layout->onMouseEnter([overlay]() { overlay->getRenderer()->setBackgroundColor(guiColor::HoverWhite); });
 			layout->onMouseLeave([overlay]() { overlay->getRenderer()->setBackgroundColor(tgui::Color::Transparent); });
@@ -435,6 +443,20 @@ void drft::InventoryState::onLeftMousePressOutsideAllWindows()
 
 	refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 	refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
+}
+
+void drft::InventoryState::onRightMousePressInventoryItem(size_t index, entt::const_handle item)
+{
+	if (_draggingItem.has_value()) return;
+
+	LOG_MSG("Right click inventory item");
+}
+
+void drft::InventoryState::onRightMousePressEquipmentItem(const std::string& slotName, entt::const_handle item)
+{
+	if (_draggingItem.has_value()) return;
+
+	LOG_MSG("Right click equipment item");
 }
 
 drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx)

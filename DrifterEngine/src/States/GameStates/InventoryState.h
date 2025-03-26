@@ -72,6 +72,9 @@ namespace drft
 		void onLeftMousePressInventoryWindow(tgui::Vector2f position);
 		void onLeftMousePressOutsideAllWindows();
 
+		void onRightMousePressInventoryItem(size_t index, entt::const_handle item);
+		void onRightMousePressEquipmentItem(const std::string& slotName, entt::const_handle item);
+
 	private:
 		ContainerWrapper _container;
 		BodyWrapper _body;
