@@ -321,7 +321,7 @@ void drft::InventoryState::addItemToEquipmentUI(const std::string& slotName, tgu
 		icon->getRenderer()->setTexture(texture);
 
 		layout->onMousePress([this, slotName, item_handle]() { onLeftMousePressEquipmentItem(slotName, item_handle); });
-		if (!_draggingItem.has_value())
+		if (!_draggingItem.has_value() ^ _draggingItem->isClickHandled())
 		{
 			layout->onMouseEnter([overlay]() { overlay->getRenderer()->setBackgroundColor(guiColor::HoverWhite); });
 			layout->onMouseLeave([overlay]() { overlay->getRenderer()->setBackgroundColor(tgui::Color::Transparent); });
