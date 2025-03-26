@@ -148,11 +148,12 @@ bool drft::InventoryState::update()
 void drft::InventoryState::determineSessionEntities()
 {
 	auto equipView = getContext().registry.view<component::action::OpenEquipment>();
+
 	_sessionEntity = { getContext().registry, equipView.front() };
 	_sessionEntity.remove<component::action::OpenEquipment>();
 
-	_container.set(_sessionEntity);
-	_body.set(_sessionEntity);
+	_container = ContainerWrapper{ _sessionEntity };
+	_body = BodyWrapper{ _sessionEntity };
 
 	if (!_container.isValid())
 	{
@@ -320,6 +321,11 @@ void drft::InventoryState::addItemToEquipmentUI(const std::string& slotName, tgu
 		icon->getRenderer()->setTexture(texture);
 
 		layout->onMousePress([this, slotName, item_handle]() { onLeftMousePressEquipmentItem(slotName, item_handle); });
+		if (!_draggingItem.has_value())
+		{
+			layout->onMouseEnter([overlay]() { overlay->getRenderer()->setBackgroundColor(guiColor::HoverWhite); });
+			layout->onMouseLeave([overlay]() { overlay->getRenderer()->setBackgroundColor(tgui::Color::Transparent); });
+		}
 	}
 	else
 	{
