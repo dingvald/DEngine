@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TGUIHelpers.h"
+#include <Utility/ColorToHexString.h>
 
 namespace
 {
@@ -82,4 +83,9 @@ int drft::GuiHelpers::getFocusedIndex(tgui::PanelListBox::Ptr list)
 		}
 	}
 	return -1;
+}
+
+std::string drft::GuiHelpers::colorizedString(const std::string& str, const sf::Color& color)
+{
+	return std::format("<color={}>{}</color>", drft::util::colorToHexString(color), str);
 }

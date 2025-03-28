@@ -13,4 +13,6 @@ namespace drft::GuiHelpers
 	tgui::Button::Ptr buttonizePanel(tgui::Panel::Ptr panel, tgui::Label::Ptr text);
 
 	int getFocusedIndex(tgui::PanelListBox::Ptr list);
+
+	std::string colorizedString(const std::string& str, const sf::Color& color);
 }

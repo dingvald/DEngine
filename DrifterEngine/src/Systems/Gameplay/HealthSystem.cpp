@@ -11,7 +11,7 @@
 #include "Systems/Helpers/GetExperienceFromKilling.h"
 #include "Events/SendFloatingMessageEvent.h"
 #include "Systems/Helpers/SpawnEffect.h"
-#include "Systems/Helpers/GetPrimaryMaterial.h"
+#include <Utility/EntityAccessors/GetEntityMaterials.h>
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
 
@@ -64,7 +64,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 	if (auto posComp = handle.try_get<PositionComponent>())
 	{
 		sf::Color materialColor = sf::Color::White;
-		auto optionalMaterial = getPrimaryMaterial(handle);
+		auto optionalMaterial = util::getEntityPrimaryMaterial(handle);
 		if (optionalMaterial.has_value())
 		{
 			const RenderComponent& materialRender = optionalMaterial.value().get<RenderComponent>();

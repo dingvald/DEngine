@@ -393,7 +393,7 @@
     <ClCompile Include="src\Systems\Rendering\AnimationSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Helpers\GetPrimaryMaterial.cpp">
+    <ClCompile Include="src\Utility\EntityAccessors\GetEntityMaterials.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\PlayerSpecific\TargetSelectSystem.cpp">
@@ -634,6 +634,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Components\Wrappers\BodyWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\ItemTooltip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\EntityAccessors\GetEntityDescription.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\ColorToHexString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1556,7 +1565,7 @@
     <ClInclude Include="src\Engine\EngineConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Helpers\GetPrimaryMaterial.h">
+    <ClInclude Include="src\Utility\EntityAccessors\GetEntityMaterials.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\PlayerSpecific\TargetSelectSystem.h">
@@ -3101,6 +3110,15 @@
     <ClInclude Include="src\Defines\CommonGuiColors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\ItemTooltip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\EntityAccessors\GetEntityDescription.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\ColorToHexString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -3170,6 +3188,7 @@
     <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
     <None Include="data\settings\default\_default_keybindings.json" />
+    <None Include="data\static\entities\weapons.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">
@@ -3230,6 +3249,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\Human\human_male_tunic_idle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Weapons\Swords\katana.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -200,6 +200,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GUI\ItemTooltip.cpp" />
     <ClCompile Include="src\Actions\ActionMap.cpp" />
     <ClCompile Include="src\Components\Wrappers\BodyWrapper.cpp" />
     <ClCompile Include="src\Keybindings\Keybindings.cpp" />
@@ -213,6 +214,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Helpers\GetDominantSide.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetMouseHandle.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetPlayerHandle.cpp" />
+    <ClCompile Include="src\Utility\ColorToHexString.cpp" />
+    <ClCompile Include="src\Utility\EntityAccessors\GetEntityDescription.cpp" />
     <ClCompile Include="src\Utility\HashedString.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
     <ClCompile Include="src\AI\AiActions\IAiAction.cpp" />
@@ -262,7 +265,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
     <ClCompile Include="src\States\GameStates\SelectTargetState.cpp" />
     <ClCompile Include="src\Systems\PlayerSpecific\TargetSelectSystem.cpp" />
-    <ClCompile Include="src\Systems\Helpers\GetPrimaryMaterial.cpp" />
+    <ClCompile Include="src\Utility\EntityAccessors\GetEntityMaterials.cpp" />
     <ClCompile Include="src\Systems\Rendering\AnimationSystem.cpp" />
     <ClCompile Include="src\Systems\Core\VisualEffectSystem.cpp" />
     <ClCompile Include="src\Ability\Abilities\NullAbility.cpp" />
@@ -442,6 +445,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GUI\ItemTooltip.h" />
     <ClInclude Include="src\Actions\ActionMap.h" />
     <ClInclude Include="src\Components\Actions\HotbarAction.h" />
     <ClInclude Include="src\Components\Actions\InspectAction.h" />
@@ -468,6 +472,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Helpers\GetDominantSide.h" />
     <ClInclude Include="src\Systems\Helpers\GetMouseHandle.h" />
     <ClInclude Include="src\Systems\Helpers\GetPlayerHandle.h" />
+    <ClInclude Include="src\Utility\ColorToHexString.h" />
+    <ClInclude Include="src\Utility\EntityAccessors\GetEntityDescription.h" />
     <ClInclude Include="src\Utility\HashedString.h" />
     <ClInclude Include="deps\zlib\include\crc32.h" />
     <ClInclude Include="deps\zlib\include\deflate.h" />
@@ -934,7 +940,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Engine\EngineConstants.h" />
     <ClInclude Include="src\States\GameStates\SelectTargetState.h" />
     <ClInclude Include="src\Systems\PlayerSpecific\TargetSelectSystem.h" />
-    <ClInclude Include="src\Systems\Helpers\GetPrimaryMaterial.h" />
+    <ClInclude Include="src\Utility\EntityAccessors\GetEntityMaterials.h" />
     <ClInclude Include="src\Systems\Rendering\AnimationSystem.h" />
     <ClInclude Include="src\Events\SpawnEffectEvent.h" />
     <ClInclude Include="src\Systems\Core\VisualEffectSystem.h" />
@@ -1267,6 +1273,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   <ItemGroup>
     <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\bodies.json" />
+    <None Include="data\static\entities\weapons.json" />
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
     <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />
     <None Include="data\static\world_generation.json" />
@@ -1324,6 +1331,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <Image Include="resources\Textures\Environmentals\short_grass.png" />
     <Image Include="resources\Textures\simple_tileset.png" />
     <Image Include="resources\Textures\Environmentals\tree.png" />
+    <Image Include="resources\Textures\Weapons\Swords\katana.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />
