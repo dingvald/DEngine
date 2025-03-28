@@ -70,11 +70,11 @@ void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 
 		if (it->isScreenSpace)
 		{
-			it->text.setPosition(Vector3Utils::floor(it->position + it->distanceTraveled + offset));
+			it->text.setPosition(it->position + it->distanceTraveled + offset);
 		}
 		else
 		{
-			it->text.setPosition(Vector3Utils::floor(toScreenSpace(it->position, camera) + it->distanceTraveled + offset));
+			it->text.setPosition(toScreenSpace(it->position, camera) + it->distanceTraveled + offset);
 		}
 
 		if (it->fades)
