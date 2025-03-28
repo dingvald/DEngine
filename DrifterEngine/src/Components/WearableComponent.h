@@ -10,7 +10,6 @@
 struct WearableComponent
 {
 	std::vector<std::string> slots;
-	int layer = 0;
 	std::unordered_map<std::string, int> protections;
 private:
 	friend class ComponentMetaBinder;
@@ -21,7 +20,6 @@ private:
 		snapshot::reflectComponent<WearableComponent, NAME>()
 			.prop("serialize"_hs)
 			.data<&WearableComponent::slots>("slots"_hs)
-			.data<&WearableComponent::layer>("layer"_hs)
 			.data<&WearableComponent::protections>("protections"_hs);
 	}
 };
@@ -31,7 +29,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, WearableComponent& wearable)
 	{
-		archive(wearable.slots, wearable.layer, wearable.protections);
+		archive(wearable.slots, wearable.protections);
 	}
 }
 
