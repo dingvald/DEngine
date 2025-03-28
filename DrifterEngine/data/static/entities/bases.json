@@ -7,7 +7,7 @@
         }
       }
     },
-    "BaseItem": {
+    "Item": {
       "Inherits": [
         "Object"
       ],
@@ -15,13 +15,17 @@
         "Item": {}
       }
     },
-    "BaseMaterial": {
+    "Material": {
       "Inherits": [
-        "BaseItem"
+        "Item"
       ],
       "Components": {
         "Health": {
-          "max": 10
+            "max": 10
+        },
+        "Material": {
+          "weight": 0.0,
+          "materials": [ "Material" ]
         }
       }
     }

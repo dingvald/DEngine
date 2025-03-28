@@ -1,0 +1,35 @@
+{
+    "Prototypes": {
+        "Training Sword": {
+            "Inherits": [
+                "Item"
+            ],
+            "Components": {
+                "Description": {
+                    "name": "Training Sword",
+                    "description": "A wooden sword used to train technique with a blade."
+                },
+                "Render": {
+                    "texture": "katana",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 68, 48, 40 ]
+                },
+                "Material": {
+                    "weight": 2.0,
+                    "materials": [ "Wood", "Twine" ]
+                },
+                "Craftable": {
+                    "recipe": {
+                        "Wood": 2,
+                        "Twine": 2,
+                        "Sharpened Stone": 1
+                    }
+                },
+                "Sharp": {
+                    "sharpness": 5
+                }
+            }
+        }
+    }
+}

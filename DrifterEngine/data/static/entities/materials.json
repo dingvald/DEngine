@@ -2,7 +2,7 @@
   "Prototypes": {
     "Corpse": {
       "Inherits": [
-        "BaseMaterial"
+        "Material"
       ],
       "Components": {
         "Description": {
@@ -24,7 +24,7 @@
     },
     "Wood": {
       "Inherits": [
-        "BaseMaterial"
+        "Material"
       ],
       "Components": {
         "Description": {
@@ -46,7 +46,7 @@
     },
     "Stone": {
       "Inherits": [
-        "BaseMaterial"
+        "Material"
       ],
       "Components": {
         "Description": {
@@ -68,7 +68,7 @@
     },
     "Iron": {
       "Inherits": [
-        "BaseMaterial"
+        "Material"
       ],
       "Components": {
         "Description": {
@@ -90,7 +90,7 @@
     },
     "Plant Fibre": {
       "Inherits": [
-        "BaseMaterial"
+        "Material"
       ],
       "Components": {
         "Description": {
@@ -112,7 +112,7 @@
     },
     "Twine": {
       "Inherits": [
-        "BaseMaterial"
+        "Material"
       ],
       "Components": {
         "Description": {
@@ -139,7 +139,7 @@
     },
     "Leather": {
       "Inherits": [
-        "BaseMaterial"
+        "Material"
       ],
       "Components": {
         "Description": {
@@ -161,7 +161,7 @@
     },
     "Sharpened Stone": {
       "Inherits": [
-        "BaseMaterial"
+        "Material"
       ],
       "Components": {
         "Description": {
