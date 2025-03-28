@@ -9,7 +9,6 @@
 #include "ConsumableComponent.h"
 #include "ContainerComponent.h"
 #include "CraftableComponent.h"
-#include "CurrentActorComponent.h"
 #include "DateAndTimeTrackerComponent.h"
 #include "DescriptionComponent.h"
 #include "DominantSideComponent.h"
@@ -58,7 +57,6 @@ void ComponentMetaBinder::bindComponents()
 	ContainerComponent::bind();
 	ConsumableComponent::bind();
 	CraftableComponent::bind();
-	CurrentActorComponent::bind();
 	DateAndTimeTrackerComponent::bind();
 	DescriptionComponent::bind();
 	DominantSideComponent::bind();
