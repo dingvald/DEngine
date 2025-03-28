@@ -8,6 +8,9 @@
 #include <Components/PositionComponent.h>
 #include <Components/TweeningComponent.h>
 
+const float STANDARD_MULTIPLIER = 1.0f;
+const float FAST_MULTIPLIER = 1.5f;
+
 
 void drft::system::TweeningSystem::tween(entt::handle entity, Tween tween)
 {
@@ -19,12 +22,12 @@ void drft::system::TweeningSystem::update()
 {
 	const auto& inputBuffer = _registry.ctx().get<const InputBuffer&>();
 	const bool isInputWaiting = !inputBuffer.isEmpty();
-	const float timeInc = isInputWaiting ? 1.5f : 1.f;
+	const float timeMultiplier = isInputWaiting ? FAST_MULTIPLIER : STANDARD_MULTIPLIER;
 
 	auto view = _registry.view<PositionComponent, TweeningComponent>();
 	for (auto&& [entity, position, tweening] : view.each())
 	{
-		tweening.elapsed += timeInc * SECONDS_PER_FRAME;
+		tweening.elapsed += timeMultiplier * SECONDS_PER_FRAME;
 
 		const Tween& tween = tweening.tweens.at(tweening.index);
 		const sf::Vector3f start = tweening.index > 0 ? tweening.tweens.at(tweening.index - 1).targetOffset : sf::Vector3f{0, 0, 0};
