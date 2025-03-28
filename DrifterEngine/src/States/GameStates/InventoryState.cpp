@@ -24,13 +24,13 @@
 #include "Utility/TextureAtlas.h"
 #include <Utility/TGUIHelpers.h>
 
-static const char* w_InventoryList			= "Inventory List";
-static const char* w_EntryIcon				= "Icon";
-static const char* w_EntryName				= "Name";
+static const char* w_InventoryList			= "inventory_list";
+static const char* w_EntryIcon				= "icon";
+static const char* w_EntryName				= "name";
 
-static const char* w_EquipmentGrid			= "Equipment Grid";
-static const char* w_GridEntrySlotName		= "Slot Name";
-static const char* w_GridEntryOverlay		= "Grid Overlay";
+static const char* w_EquipmentGrid			= "equipment_grid";
+static const char* w_GridEntrySlotName		= "slot_name";
+static const char* w_GridEntryOverlay		= "grid_overlay";
 
 
 drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
@@ -126,14 +126,18 @@ bool drft::InventoryState::handleEvent(const sf::Event& ev)
 
 void drft::InventoryState::guiRender(sf::RenderTarget& target)
 {
-	if (_draggingItem)
-	{
-		_draggingItem->render(target);
-	}
+	if (_draggingItem) _draggingItem->render(target);
 }
 
 bool drft::InventoryState::update()
 {
+	if (_tooltip.has_value())
+	{
+		sf::Vector2i mousePosition = sf::Mouse::getPosition(getContext().window);
+		_tooltip->setPosition(mousePosition);
+		_tooltip->update();
+	}
+
 	if (_draggingItem.has_value())
 	{
 		sf::Vector2i mousePosition = sf::Mouse::getPosition(getContext().window);
@@ -143,6 +147,7 @@ bool drft::InventoryState::update()
 			_draggingItem.reset();
 		}
 	}
+
 	return false;
 }
 
@@ -166,7 +171,6 @@ void drft::InventoryState::determineSessionEntities()
 		error_logger << "Error: trying to open inventory of an entity with no body component" << std::endl;
 	}
 }
-
 
 void drft::InventoryState::setupInventoryEntryTemplate(tgui::Panel::Ptr templatePanel)
 {
@@ -293,6 +297,9 @@ void drft::InventoryState::addItemToInventoryUI(size_t index, entt::const_handle
 
 	button->onMousePress([this, index, item]() { onLeftMousePressInventoryItem(index, item); });
 	button->onRightMousePress([this, index, item]() { onRightMousePressInventoryItem(index, item); });
+
+	button->onMouseEnter([item, this]() { onEnterItemContainingWidget(item); });
+	button->onMouseLeave([this]() { onLeaveItemContainingWidget(); });
 }
 
 void drft::InventoryState::addItemToEquipmentUI(const std::string& slotName, tgui::Panel::Ptr layout)
@@ -334,6 +341,8 @@ void drft::InventoryState::addItemToEquipmentUI(const std::string& slotName, tgu
 			layout->onMouseEnter([overlay]() { overlay->getRenderer()->setBackgroundColor(guiColor::HoverWhite); });
 			layout->onMouseLeave([overlay]() { overlay->getRenderer()->setBackgroundColor(tgui::Color::Transparent); });
 		}
+		layout->onMouseEnter([item_handle, this]() { onEnterItemContainingWidget(item_handle); });
+		layout->onMouseLeave([this]() { onLeaveItemContainingWidget(); });
 	}
 	else
 	{
@@ -372,6 +381,7 @@ void drft::InventoryState::onLeftMousePressInventoryItem(size_t index, entt::con
 	{
 		_container.remove(item.entity());
 		_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = index });
+		_tooltip.reset();
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 		refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
 	}
@@ -399,6 +409,7 @@ void drft::InventoryState::onLeftMousePressEquipmentItem(const std::string& slot
 	{
 		_body.unequip(slotName);
 		_draggingItem.emplace(DraggingFromEquipmentContext{ .item = item, .body = &_body, .slot = slotName });
+		_tooltip.reset();
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 		refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
 	}
@@ -459,6 +470,23 @@ void drft::InventoryState::onRightMousePressEquipmentItem(const std::string& slo
 	LOG_MSG("Right click equipment item");
 }
 
+void drft::InventoryState::onEnterItemContainingWidget(entt::const_handle item)
+{
+	if (_tooltip.has_value()) return;
+
+	_tooltip.emplace(item, _guiGroup);
+	_tooltip->setDelayTime(30);
+}
+
+void drft::InventoryState::onLeaveItemContainingWidget()
+{
+	_tooltip.reset();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///    DraggingItem    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx)
 	: context(ctx)
 {
@@ -492,7 +520,6 @@ void drft::InventoryState::DraggingItem::setPosition(sf::Vector2i position)
 	_icon->setPosition(floatPos);
 	_background.setPosition(floatPos);
 }
-
 
 entt::const_handle drft::InventoryState::DraggingItem::getItem() const
 {
@@ -532,3 +559,5 @@ bool drft::InventoryState::DraggingItem::isClickHandled() const
 {
 	return _isClickHandled;
 }
+
+

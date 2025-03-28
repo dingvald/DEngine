@@ -2,6 +2,7 @@
 #include <States/State.h>
 #include <Components/Wrappers/ContainerWrapper.h>
 #include <Components/Wrappers/BodyWrapper.h>
+#include <GUI/ItemTooltip.h>
 
 namespace drft
 {
@@ -75,6 +76,9 @@ namespace drft
 		void onRightMousePressInventoryItem(size_t index, entt::const_handle item);
 		void onRightMousePressEquipmentItem(const std::string& slotName, entt::const_handle item);
 
+		void onEnterItemContainingWidget(entt::const_handle item);
+		void onLeaveItemContainingWidget();
+
 	private:
 		ContainerWrapper _container;
 		BodyWrapper _body;
@@ -82,6 +86,7 @@ namespace drft
 		entt::handle _sessionEntity;
 		tgui::Panel::Ptr _paperdollNodeTemplate;
 		std::optional<DraggingItem> _draggingItem;
+		std::optional<ItemTooltip> _tooltip;
 	};
 }
 
