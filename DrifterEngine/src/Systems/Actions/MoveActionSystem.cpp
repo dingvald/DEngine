@@ -4,6 +4,7 @@
 #include "Spatial/Conversions.h"
 #include <Spatial/Helpers.h>
 
+#include <Components/ActorComponent.h>
 #include "Components/Components.h"
 #include "Components/CollisionComponent.h"
 #include "Components/CurrentActorComponent.h"
@@ -17,6 +18,8 @@
 #include <Systems/Core/ActorSystem.h>
 #include "Utility/EntityHelpers.h"
 
+const float DEFAULT_MOVE_TWEEN_TIME = 0.1f;
+
 void drft::system::MoveActionSystem::init()
 {
 	_registry.on_construct<MoveAction>().connect<&MoveActionSystem::onMoveActionAdded>(this);
@@ -27,16 +30,23 @@ void drft::system::MoveActionSystem::update()
 	auto view = _registry.view<PositionComponent, MoveAction>();
 	for (auto&& [entity, position, move] : view.each())
 	{
+		entt::handle handle = { _registry, entity };
+		float tweenTime = DEFAULT_MOVE_TWEEN_TIME;
+		if (auto actor = handle.try_get<ActorComponent>())
+		{
+			tweenTime *= (1.0f / actor->moveSpeed);
+		}
+
 		Tween moveToTween = {
 			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(move.direction)) * 1.0f,
-			.time = 0.05f,
+			.time = tweenTime,
 			.easing = Easing::linear,
 			.onFinish = [this, action = move](entt::handle entity) {
 				processMoveAction(entity, std::move(action));
 			}
 		};
 
-		entt::handle handle = { _registry, entity };
+		
 		TweeningSystem::tween(handle, moveToTween);
 
 		ActorSystem::setActionInProgress(handle);
