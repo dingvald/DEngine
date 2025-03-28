@@ -100,6 +100,7 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
             {
                 auto dep = generateDependency<IGetValueAt>(layerID, volume);
                 if (!dep.isReady()) return dep.getState();
+
                 dependencies.emplace(layerID, &dep.unwrap());
             }
         }

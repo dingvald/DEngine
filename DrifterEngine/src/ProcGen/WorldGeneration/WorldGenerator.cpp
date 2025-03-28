@@ -131,11 +131,11 @@ drft::GenerationState drft::gen::WorldGenerator::generateChunk(ChunkPosition coo
 	{
 		if (auto* entityPack = biome->getEntityPack(slot))
 		{
-			auto optionalSelection = random.weightedSelection(*entityPack);
-			if (!optionalSelection.has_value()) continue;
-
-			auto&& [entity, _] = entityPack->at(optionalSelection.value());
-			placeSingle(entity, spatial::asTileSpace(sf::Vector3i{point.x, point.y, volume.min.z}), registry, factory);
+			if (auto optionalSelection = random.weightedSelection(*entityPack))
+			{
+				auto&& [entity, _] = entityPack->at(optionalSelection.value());
+				placeSingle(entity, spatial::asTileSpace(sf::Vector3i{ point.x, point.y, volume.min.z }), registry, factory);
+			}
 		}
 	}
 
