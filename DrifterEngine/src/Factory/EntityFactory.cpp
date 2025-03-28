@@ -66,7 +66,7 @@ const std::string& drft::EntityFactory::getName(entt::entity prototype) const
 	return _prototypeNames.at(prototype);
 }
 
-const std::unordered_set<std::string> drft::EntityFactory::getFlattenedInheritance(entt::const_handle entity) const
+std::unordered_set<std::string> drft::EntityFactory::getFlattenedInheritance(entt::const_handle entity) const
 {
 	std::unordered_set<std::string> result;
 	if (auto inheritance = entity.try_get<InheritanceComponent>())

@@ -19,7 +19,7 @@ namespace drft
 
 		const std::string& getName(entt::entity prototype) const;
 
-		const std::unordered_set<std::string> getFlattenedInheritance(entt::const_handle entity) const;
+		std::unordered_set<std::string> getFlattenedInheritance(entt::const_handle entity) const;
 
 		// Access the prototype registry (read-only).
 		const entt::registry& prototypes() const;
