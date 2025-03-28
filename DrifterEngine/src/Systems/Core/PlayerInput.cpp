@@ -112,7 +112,7 @@ void drft::system::PlayerInput::init()
 	for (int i = 0; i < HOTBAR_SIZE; ++i)
 	{
 		actions.bind("player_input", "gameplay", std::format("hotbar_{}", i), [i](entt::handle entity) {
-			entity.emplace<HotbarAction>(fromHotbarIndex(i));
+			entity.emplace_or_replace<HotbarAction>(fromHotbarIndex(i));
 		});
 	}
 }
@@ -126,6 +126,7 @@ void drft::system::PlayerInput::update()
 	for (auto&& [entity, player, currentActor] : currentPlayerView.each())
 	{
 		if (currentActor.state != CurrentActorState::Pending) continue;
+		if (inputBuffer.isEmpty()) continue;
 
 		entt::handle playerHandle = { _registry, entity };
 
