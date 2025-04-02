@@ -23,8 +23,8 @@ namespace drft::system
 		void render(sf::RenderTarget& target) override;
 		void shutdown() override;
 
-		void smoothCameraToTarget(const TilePosition& targetPosition, CameraHandle& cam) const;
-		void snapCameraToTarget(const TilePosition& targetPosition, CameraHandle& cam) const;
+		void smoothCameraToTarget(sf::Vector2f targetPosition, CameraHandle& cam) const;
+		void snapCameraToTarget(TilePosition targetPosition, CameraHandle& cam) const;
 
 		entt::entity tryFindTarget() const;
 

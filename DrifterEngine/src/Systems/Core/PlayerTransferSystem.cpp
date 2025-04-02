@@ -32,6 +32,7 @@ void drft::system::PlayerTransferSystem::onChunkSourceTransferStartedEvent(event
 {
 	if (!_pendingTransfer) return;
 
+	// Remove position component or player will be sucked away by chunk saving
 	_pendingTransfer->player.remove<PositionComponent>();
 }
 

@@ -41,8 +41,17 @@ void drft::spatial::ChunkSource::shutdown(entt::registry& registry)
 	cleanUpAllChunks(registry);
 }
 
-bool drft::spatial::ChunkSource::isReady() const
+bool drft::spatial::ChunkSource::isLoadedAroundPosition(TilePosition position) const
 {
+	ChunkPosition chunkPosition = spatial::toChunkSpace(position);
+	auto activeCoords = spatial::getIntCircleInRadius(chunkPosition, ACTIVE_CHUNK_RADIUS_XY);
+	for (auto&& coord : activeCoords)
+	{
+		const ChunkPosition chunkPosition = spatial::asChunkSpace(coord);
+		if (!_chunks.contains(chunkPosition)) return false;
+		if (_chunks.at(chunkPosition).getState() != spatial::ChunkState::Active) return false;
+	}
+
 	return true;
 }
 
@@ -51,13 +60,13 @@ entt::id_type drft::spatial::ChunkSource::id() const
 	return _sourceId;
 }
 
-void drft::spatial::ChunkSource::updateChunkStates(TilePosition cameraPosition)
+void drft::spatial::ChunkSource::updateChunkStates(TilePosition position)
 {
 	if (_isShuttingDown) return;
 
-	ChunkPosition cameraChunkPosition = spatial::toChunkSpace(cameraPosition);
+	ChunkPosition chunkPosition = spatial::toChunkSpace(position);
 
-	auto activeCoords = spatial::getIntCircleInRadius(cameraChunkPosition, ACTIVE_CHUNK_RADIUS_XY);
+	auto activeCoords = spatial::getIntCircleInRadius(chunkPosition, ACTIVE_CHUNK_RADIUS_XY);
 
 	// Ensure active chunks are active or will be built
 	for (auto&& coord : activeCoords)
@@ -93,7 +102,7 @@ void drft::spatial::ChunkSource::updateChunkStates(TilePosition cameraPosition)
 	{
 		if (chunk.getState() != spatial::ChunkState::Active) continue;
 
-		if (isWithinChunkSaveArea(coord, cameraChunkPosition)) continue;
+		if (isWithinChunkSaveArea(coord, chunkPosition)) continue;
 
 		_toSave.push_back(coord);
 		chunk.setState(spatial::ChunkState::ToSave);

@@ -55,6 +55,7 @@ namespace drft::system
 		{
 			entt::id_type oldSourceId;
 			entt::id_type newSourceId;
+			TilePosition position;
 		};
 
 	private:

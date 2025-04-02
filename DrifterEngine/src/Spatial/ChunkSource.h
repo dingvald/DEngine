@@ -2,11 +2,6 @@
 #include "Spatial/VirtualChunk.h"
 #include <Utility/ChunkSerializer.h>
 
-namespace drft::system
-{
-	struct CameraHandle;
-}
-
 class IChunkGenerator;
 
 namespace drft::spatial
@@ -18,13 +13,13 @@ namespace drft::spatial
 	public:
 		ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer, IChunkGenerator& generatorProvider);
 
-		void update(TilePosition cameraPosition, entt::registry& registry);
+		void update(TilePosition position, entt::registry& registry);
 		void shutdown(entt::registry& registry);
-		bool isReady() const;
+		bool isLoadedAroundPosition(TilePosition position) const;
 		entt::id_type id() const;
 
 	private:
-		void updateChunkStates(TilePosition cameraPosition);
+		void updateChunkStates(TilePosition position);
 		void cleanUpSavedChunks(entt::registry& registry);
 		void cleanUpAllChunks(entt::registry& registry);
 

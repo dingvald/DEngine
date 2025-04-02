@@ -88,13 +88,12 @@ void drft::system::ChunkManager::onTransfer()
 		if (!doesChunkSourceExist(_pendingTransfer->newSourceId))
 		{
 			notifyTransferFailed(_pendingTransfer->newSourceId);
-			setState(State::SourceReady);
+			setState(State::SourceReady); // just stay using current source
 			_pendingTransfer.reset();
 			return;
 		}
 
 		_activeSource->shutdown(_registry);
-		_activeSource.reset();
 		_activeSource = tryCreateNewChunkSource(_pendingTransfer->newSourceId);
 
 		if (!_activeSource) throw std::exception("Something went terribly wrong during source transfer");
@@ -103,7 +102,9 @@ void drft::system::ChunkManager::onTransfer()
 	if (_activeSource->id() == _pendingTransfer->newSourceId)
 	{
 		LOG_MSG(std::format("Transfering to source {}", _pendingTransfer->newSourceId));
-		if (_activeSource->isReady())
+
+		_activeSource->update(_pendingTransfer->position, _registry);
+		if (_activeSource->isLoadedAroundPosition(_pendingTransfer->position))
 		{
 			LOG_MSG("Transfer complete");
 			setState(State::SourceReady);
@@ -175,7 +176,7 @@ void drft::system::ChunkManager::onChunkSourceTransferRequestEvent(events::Chunk
 	if (_pendingTransfer.has_value()) return; // TODO: should new transfer requests be ignored?
 
 	entt::id_type oldSourceId = _activeSource ? _activeSource->id() : NULL_SOURCE_ID;
-	_pendingTransfer.emplace(oldSourceId, ev.sourceId);
+	_pendingTransfer.emplace(oldSourceId, ev.sourceId, ev.position);
 
 	setState(State::Transferring);
 }

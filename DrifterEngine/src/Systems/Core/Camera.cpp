@@ -5,12 +5,9 @@
 #include "Components/PositionComponent.h"
 #include "Components/CameraTargetComponent.h"
 
-#include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
 
 #include <Systems/Helpers/GetCurrentCamera.h>
-#include <Systems/Helpers/EasingFunctions.h>
-#include <Utility/Math.h>
 
 static const float CAMERA_SPEED = 7.0f;
 
@@ -36,10 +33,22 @@ void drft::system::Camera::updateEnd()
 	CameraHandle camera = getCurrentCamera(_registry);
 	camera.camera.target = tryFindTarget();
 
-	const auto& target = _registry.try_get<const PositionComponent>(camera.camera.target);
+	const auto target = _registry.try_get<const PositionComponent>(camera.camera.target);
 	if (!target) return;
 
-	smoothCameraToTarget(target->tile, camera);
+	sf::Vector2f targetScreenPosition = toScreenSpace(target->tile, camera);
+	targetScreenPosition.x += TileDimensions.x / 2.f;
+	targetScreenPosition.y += TileDimensions.y / 2.f;
+
+	if (camera.getViewRect().contains(targetScreenPosition))
+	{
+		smoothCameraToTarget(targetScreenPosition, camera);
+	}
+	else
+	{
+		snapCameraToTarget(target->tile, camera);
+	}
+	
 }
 
 void drft::system::Camera::render(sf::RenderTarget& target)
@@ -53,21 +62,11 @@ void drft::system::Camera::shutdown()
 	_registry.destroy(_camera);
 }
 
-void drft::system::Camera::smoothCameraToTarget(const TilePosition& targetPosition, CameraHandle& cam) const
+void drft::system::Camera::smoothCameraToTarget(sf::Vector2f targetPosition, CameraHandle& cam) const
 {
-	sf::Vector2f target = toScreenSpace(targetPosition, cam);
-	sf::Vector2f camera = toScreenSpace(cam.position.tile, cam) + spatial::toXY(cam.camera.lag);
+	sf::Vector2f cameraPosition = toScreenSpace(cam.position.tile, cam) + spatial::toXY(cam.camera.lag);
 
-	target.x += TileDimensions.x / 2.f;
-	target.y += TileDimensions.y / 2.f;
-
-	if (!cam.getViewRect().contains(target))
-	{
-		snapCameraToTarget(targetPosition, cam);
-		return;
-	}
-
-	sf::Vector2f delta = target - camera;
+	sf::Vector2f delta = targetPosition - cameraPosition;
 
 	sf::Vector3f moveDistance = sf::Vector3f{ delta.x, delta.y, 0 } * 0.08f;
 
@@ -79,7 +78,7 @@ void drft::system::Camera::smoothCameraToTarget(const TilePosition& targetPositi
 	cam.camera.lag = collapsed.offset;
 }
 
-void drft::system::Camera::snapCameraToTarget(const TilePosition& targetPosition, CameraHandle& cam) const
+void drft::system::Camera::snapCameraToTarget(TilePosition targetPosition, CameraHandle& cam) const
 {
 	cam.position.tile = targetPosition;
 	cam.camera.lag = { 0, 0, 0 };
