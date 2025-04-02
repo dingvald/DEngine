@@ -2,79 +2,94 @@
 #include "SimulationState.h"
 
 #include <Engine/CommonEngineDirectories.h>
+#include <Events/PlayerTransferRequestEvent.h>
 
-#include <Factory/EntityFactory.h>
-#include <Components/PositionComponent.h>
 #include <Components/CameraTargetComponent.h>
+#include <Components/PositionComponent.h>
+#include <Factory/EntityFactory.h>
 #include <Keybindings/Keybindings.h>
 #include <Spatial/WorldGrid.h>
 
 #include "Systems/SystemScheduler.h"
 
 #include <Systems/Actions/AbilityActionSystem.h>
-#include "Systems/Actions/SprintingSystem.h"
+#include <Systems/Actions/MouseActionSystem.h>
+#include "Systems/Actions/CraftItemSystem.h"
 #include "Systems/Actions/DropItemSystem.h"
 #include "Systems/Actions/EquipItemSystem.h"
-#include "Systems/Actions/CraftItemSystem.h"
 #include "Systems/Actions/HotbarActionSystem.h"
-#include <Systems/Actions/MouseActionSystem.h>
-#include "Systems/Actions/MoveActionSystem.h"
-#include "Systems/Actions/WaitActionSystem.h"
-#include "Systems/Actions/PickUpSystem.h"
 #include "Systems/Actions/InteractionSystem.h"
 #include "Systems/Actions/MeleeAttackActionSystem.h"
+#include "Systems/Actions/MoveActionSystem.h"
+#include "Systems/Actions/PickUpSystem.h"
+#include "Systems/Actions/SprintingSystem.h"
+#include "Systems/Actions/WaitActionSystem.h"
 
-#include "Systems/Core/HUD.h"
-#include "Systems/Core/RealityBubble.h"
-#include "Systems/Core/PlayerInput.h"
-#include "Systems/Core/ArtificialInput.h"
 #include <Systems/Core/AiSystem.h>
-#include "Systems/Core/Camera.h"
 #include <Systems/Core/MouseStateSystem.h>
 #include <Systems/Core/MouseVisualizationSystem.h>
-#include "Systems/Core/ChunkManager.h"
-#include "Systems/Core/ItemUniqueIDGenerator.h"
-#include "Systems/Core/ActorSystem.h"
 #include <Systems/Core/TweeningSystem.h>
-#include "Systems/Core/WorldGridResolver.h"
+#include "Systems/Core/ActorSystem.h"
+#include "Systems/Core/ArtificialInput.h"
+#include "Systems/Core/Camera.h"
+#include "Systems/Core/ChunkManager.h"
 #include "Systems/Core/FloatingTextSystem.h"
+#include "Systems/Core/HUD.h"
+#include "Systems/Core/ItemUniqueIDGenerator.h"
+#include "Systems/Core/PlayerInput.h"
+#include <Systems/Core/PlayerTransferSystem.h>
+#include "Systems/Core/RealityBubble.h"
 #include "Systems/Core/VisualEffectSystem.h"
+#include "Systems/Core/WorldGridResolver.h"
 
-#include "Systems/Rendering/CullingSystem.h"
 #include "Systems/Rendering/AnimationSystem.h"
-#include "Systems/Rendering/SyncedAnimationSystem.h"
-#include "Systems/Rendering/PlayerFOVSystem.h"
+#include "Systems/Rendering/CullingSystem.h"
 #include "Systems/Rendering/EntityRenderer.h"
 #include "Systems/Rendering/LightingSystem.h"
+#include "Systems/Rendering/PlayerFOVSystem.h"
 #include "Systems/Rendering/SpriteControllerSystem.h"
+#include "Systems/Rendering/SyncedAnimationSystem.h"
 
 #include "Systems/Gameplay/BodyPartSystem.h"
 #include "Systems/Gameplay/CollisionSystem.h"
-#include "Systems/Gameplay/HealthSystem.h"
-#include "Systems/Gameplay/StaminaSystem.h"
+#include "Systems/Gameplay/ConsumableSystem.h"
 #include "Systems/Gameplay/DayNightCycleSystem.h"
 #include "Systems/Gameplay/DeathSystem.h"
-#include "Systems/Gameplay/ProjectileSystem.h"
-#include "Systems/Gameplay/PathNavSystem.h"
+#include "Systems/Gameplay/DetermineCraftableItemsSystem.h"
+#include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/HealingSystem.h"
-#include "Systems/Gameplay/OpenableSystem.h"
-#include "Systems/Gameplay/ConsumableSystem.h"
+#include "Systems/Gameplay/HealthSystem.h"
+#include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
-#include "Systems/Gameplay/FactionSystem.h"
-#include "Systems/Gameplay/LevelingSystem.h"
+#include "Systems/Gameplay/OpenableSystem.h"
+#include "Systems/Gameplay/PathNavSystem.h"
+#include "Systems/Gameplay/ProjectileSystem.h"
+#include "Systems/Gameplay/StaminaSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
-#include "Systems/Gameplay/DetermineCraftableItemsSystem.h"
 
-#include "Systems/PlayerSpecific/OpenEquipmentSystem.h"
 #include "Systems/PlayerSpecific/OpenCraftingSystem.h"
+#include "Systems/PlayerSpecific/OpenEquipmentSystem.h"
 #include "Systems/PlayerSpecific/SelectDirectionSystem.h"
 #include "Systems/PlayerSpecific/TargetSelectSystem.h"
 
-#include "Utility/SaveEntity.h"
 #include "Utility/LoadEntity.h"
-#include "Utility/SaveRegistry.h"
 #include "Utility/LoadRegistry.h"
+#include "Utility/SaveEntity.h"
+#include "Utility/SaveRegistry.h"
+#include <EnTT/entt.h>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Window/Event.hpp>
+#include <Engine/StateStack.h>
+#include <States/State.h>
+#include <States/StateContext.h>
+#include <cassert>
+#include <filesystem>
+#include <iostream>
+#include <memory>
+#include <ostream>
+
+using namespace entt::literals;
 
 drft::SimulationState::SimulationState(StateStack& stack, StateContext& context)
 	: State(stack, context)
@@ -138,8 +153,10 @@ void drft::SimulationState::importSystems()
 
 	using namespace system;
 
+	_systems->add<ChunkManager>();
 	_systems->add<RealityBubble>();
 	_systems->add<ActorSystem>();
+	_systems->add<PlayerTransferSystem>();
 
 	_systems->add<MouseStateSystem>();
 	_systems->add<MouseVisualizationSystem>();
@@ -161,7 +178,6 @@ void drft::SimulationState::importSystems()
 	_systems->add<HealthSystem>();
 	_systems->add<DeathSystem>();
 	_systems->add<LevelingSystem>();
-	_systems->add<ChunkManager>();
 	_systems->add<TweeningSystem>();
 
 	_systems->add<DayNightCycleSystem>();
@@ -221,6 +237,9 @@ void drft::SimulationState::loadPlayer()
 			{
 				pos.tile = { 1024, 1024, 0 };
 			});
+
+		auto& dispatcher = getContext().registry.ctx().get<entt::dispatcher>();
+		dispatcher.trigger(events::PlayerTransferRequestEvent{"arid_planet"_hs, TilePosition{1024, 1024, 0}});
 	}
 
 	_player.emplace<CameraTargetComponent>();

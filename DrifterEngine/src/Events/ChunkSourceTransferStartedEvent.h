@@ -3,7 +3,7 @@
 
 namespace drft::events
 {
-	struct ChunkSourceTransferInProgressEvent
+	struct ChunkSourceTransferStartedEvent
 	{
 		entt::id_type oldSourceId;
 		entt::id_type newSourceId;

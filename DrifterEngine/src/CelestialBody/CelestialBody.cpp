@@ -1,29 +1,22 @@
 #include "pch.h"
 #include "CelestialBody.h"
 
-#include <ProcGen/LayeredProcGen/LayeredProcGen.h>
-#include "Algorithms/FloodFill.h"
+#include <Random/Random.h>
 #include "Factory/EntityFactory.h"
-#include <Factory/Factory.h>
+#include "ProcGen/PlaceEntities.h"
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
-#include "Structures/StructureInstance.h"
-#include "Random/RandomNoise.h"
-#include <Random/Random.h>
-#include "Random/PercentChance.h"
-#include "ProcGen/PlaceEntities.h"
-#include "Systems/Helpers/GetCurrentCamera.h"
-#include "Utility/ContainerHelpers.h"
-#include "Utility/stdHashing.h"
-#include "Utility/Math.h"
 
-#include <ProcGen/Layers/PerlinNoiseLayer.h>
+#include <Cereal/external/rapidjson/document.h>
+#include <Components/RenderComponent.h>
+#include <EnTT/entt.h>
+#include <ProcGen/GenerationState.h>
 #include <ProcGen/Layers/BiomeLayer.h>
-#include <ProcGen/Layers/JitteredGridLayer.h>
-#include <ProcGen/Layers/LloydRelaxedLayer.h>
-#include <ProcGen/Layers/RandomLayer.h>
-#include <ProcGen/Layers/VoronoiLayer.h>
-#include <ProcGen/Layers/FillLayer.h>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/System/Vector3.hpp>
+#include <Spatial/AABB.h>
+#include <Spatial/ChunkPosition.h>
 
 using namespace drft;
 
@@ -79,4 +72,5 @@ void CelestialBody::tick()
 
 void CelestialBody::createFromJson(const rapidjson::Value& json)
 {
+	
 }

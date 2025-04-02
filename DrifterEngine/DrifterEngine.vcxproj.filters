@@ -651,6 +651,9 @@
     <ClCompile Include="src\CelestialBody\CelestialBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Core\PlayerTransferSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3134,7 +3137,7 @@
     <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\ChunkSourceTransferInProgressEvent.h">
+    <ClInclude Include="src\Events\ChunkSourceTransferStartedEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h">
@@ -3147,6 +3150,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\CelestialBody\CelestialBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Core\PlayerTransferSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\PlayerTransferRequestEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\ChunkSourceTransferFailedEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

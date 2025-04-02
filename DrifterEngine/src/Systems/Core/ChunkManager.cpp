@@ -1,38 +1,43 @@
 #include "pch.h"
-#include "ChunkManager.h"
-#include <Engine/CommonEngineDirectories.h>
-
 #include <Events/ChunkSourceTransferCompleteEvent.h>
+#include <Events/ChunkSourceTransferFailedEvent.h>
+#include <Events/ChunkSourceTransferStartedEvent.h>
 #include <Events/ChunkSourceTransferRequestEvent.h>
-#include <Events/ChunkSourceTransferInProgressEvent.h>
+#include "ChunkManager.h"
 
-#include "Spatial/WorldGrid.h"
-#include "Spatial/Conversions.h"
-#include "Spatial/Helpers.h"
-#include "Components/CameraComponent.h"
 #include "Components/PositionComponent.h"
 
-#include "Systems/Helpers/GetCurrentCamera.h"
+#include <EnTT/entt.h>
+#include <exception>
+#include <memory>
+#include <Spatial/ChunkSource.h>
 #include <Utility/StandardLogger.h>
+#include "Systems/Helpers/GetCurrentCamera.h"
+#include <SolarSystem/SolarSystem.h>
 
-const entt::id_type NULL_SOURCE_ID = entt::hashed_string{"NULL_ID"};
+using namespace entt::literals;
+
+const entt::id_type NULL_SOURCE_ID = "NULL_ID"_hs;
 
 void drft::system::ChunkManager::init()
 {
-	_dispatcher.sink<events::ChunkSourceTransferRequestEvent>().connect<&ChunkManager::onRequestChunkSourceChangeEvent>(this);
+	_dispatcher.sink<events::ChunkSourceTransferRequestEvent>().connect<&ChunkManager::onChunkSourceTransferRequestEvent>(this);
 }
 
 void drft::system::ChunkManager::update()
 {
 	switch (_state)
 	{
-	case drft::system::ChunkManager::State::NoSource:
+	case State::FirstUpdate:
+		onFirstUpdate();
+		break;
+	case State::NoSource:
 		onNoSource();
 		break;
-	case drft::system::ChunkManager::State::Transferring:
+	case State::Transferring:
 		onTransfer();
 		break;
-	case drft::system::ChunkManager::State::SourceReady:
+	case State::SourceReady:
 		onUpdateSource();
 		break;
 	default:
@@ -47,33 +52,73 @@ void drft::system::ChunkManager::shutdown()
 	_activeSource->shutdown(_registry);
 }
 
+void drft::system::ChunkManager::onFirstUpdate()
+{
+	LOG_MSG("<<< First Chunk Manager Update >>>")
+	if (!_activeSource && !_pendingTransfer)
+	{
+		setState(State::NoSource);
+	}
+}
+
 void drft::system::ChunkManager::onNoSource()
 {
-	
 }
 
 void drft::system::ChunkManager::onTransfer()
 {
+	if (!_pendingTransfer) throw std::exception("Called onTransfer without a pending transfer");
+
 	if (!_activeSource)
 	{
-		_activeSource = std::make_unique<spatial::ChunkSource>(_pendingTransfer->newSourceId, _serializer);
+		_activeSource = tryCreateNewChunkSource(_pendingTransfer->newSourceId);
+		if (!_activeSource)
+		{
+			notifyTransferFailed(_pendingTransfer->newSourceId);
+			setState(State::NoSource);
+			return;
+		}
 	}
 
 	if (_activeSource->id() == _pendingTransfer->oldSourceId)
 	{
+		LOG_MSG(std::format("Transfering from source {}", _pendingTransfer->oldSourceId));
+
+		// Check if the new souce even exists before transferring
+		if (!doesChunkSourceExist(_pendingTransfer->newSourceId))
+		{
+			notifyTransferFailed(_pendingTransfer->newSourceId);
+			setState(State::SourceReady);
+			_pendingTransfer.reset();
+			return;
+		}
+
 		_activeSource->shutdown(_registry);
 		_activeSource.reset();
-		_activeSource = std::make_unique<spatial::ChunkSource>(_pendingTransfer->newSourceId, _serializer);
+		_activeSource = tryCreateNewChunkSource(_pendingTransfer->newSourceId);
+
+		if (!_activeSource) throw std::exception("Something went terribly wrong during source transfer");
 	}
 
 	if (_activeSource->id() == _pendingTransfer->newSourceId)
 	{
+		LOG_MSG(std::format("Transfering to source {}", _pendingTransfer->newSourceId));
 		if (_activeSource->isReady())
 		{
+			LOG_MSG("Transfer complete");
 			setState(State::SourceReady);
 			_pendingTransfer.reset();
+			return;
+		}
+		else
+		{
+			LOG_MSG("Transfer ongoing...");
+			return;
 		}
 	}
+
+	setState(State::NoSource);
+	_pendingTransfer.reset();
 }
 
 void drft::system::ChunkManager::onUpdateSource()
@@ -100,13 +145,17 @@ void drft::system::ChunkManager::onStateChange(State newState)
 {
 	switch (newState)
 	{
-	case drft::system::ChunkManager::State::NoSource:
+	case State::FirstUpdate:
+		// should not change into this state
+		break;
+	case State::NoSource:
 		LOG_WARNING("No chunk source found");
 		break;
-	case drft::system::ChunkManager::State::Transferring:
-		_dispatcher.trigger(events::ChunkSourceTransferInProgressEvent{ _pendingTransfer->oldSourceId, _pendingTransfer->newSourceId });
+	case State::Transferring:
+		LOG_MSG(std::format("Requesting transfer to source id {}", _pendingTransfer->newSourceId));
+		_dispatcher.trigger(events::ChunkSourceTransferStartedEvent{ _pendingTransfer->oldSourceId, _pendingTransfer->newSourceId });
 		break;
-	case drft::system::ChunkManager::State::SourceReady:
+	case State::SourceReady:
 		_dispatcher.trigger(events::ChunkSourceTransferCompleteEvent{ _pendingTransfer->newSourceId });
 		break;
 	default:
@@ -114,7 +163,14 @@ void drft::system::ChunkManager::onStateChange(State newState)
 	}
 }
 
-void drft::system::ChunkManager::onRequestChunkSourceChangeEvent(events::ChunkSourceTransferRequestEvent& ev)
+void drft::system::ChunkManager::notifyTransferFailed(entt::id_type sourceId)
+{
+	LOG_ERROR(std::format("Could not find chunk source with id {}", _pendingTransfer->newSourceId));
+	LOG_ERROR("Transfer failed");
+	_dispatcher.trigger(events::ChunkSourceTransferFailedEvent{ _pendingTransfer->newSourceId });
+}
+
+void drft::system::ChunkManager::onChunkSourceTransferRequestEvent(events::ChunkSourceTransferRequestEvent& ev)
 {
 	if (_pendingTransfer.has_value()) return; // TODO: should new transfer requests be ignored?
 
@@ -122,4 +178,24 @@ void drft::system::ChunkManager::onRequestChunkSourceChangeEvent(events::ChunkSo
 	_pendingTransfer.emplace(oldSourceId, ev.sourceId);
 
 	setState(State::Transferring);
+}
+
+drft::system::ChunkManager::SourcePtr drft::system::ChunkManager::tryCreateNewChunkSource(entt::id_type sourceId)
+{
+	auto& solarSytem = _registry.ctx().get<SolarSystem>("solar_system"_hs);
+	if (auto generator = solarSytem.tryGetGenerator(sourceId))
+	{
+		return std::make_unique<spatial::ChunkSource>(_pendingTransfer->newSourceId, _serializer, *generator);
+	}
+	return nullptr;
+}
+
+bool drft::system::ChunkManager::doesChunkSourceExist(entt::id_type sourceId) const
+{
+	auto& solarSytem = _registry.ctx().get<SolarSystem>("solar_system"_hs);
+	if (auto generator = solarSytem.tryGetGenerator(sourceId))
+	{
+		return true;
+	}
+	return false;
 }

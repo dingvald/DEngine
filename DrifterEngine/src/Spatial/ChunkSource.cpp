@@ -4,13 +4,15 @@
 #include <Spatial/Helpers.h>
 #include <Spatial/Conversions.h>
 #include <Spatial/WorldGrid.h>
+#include <ProcGen/IChunkGenerator.h>
 
 static constexpr int ACTIVE_CHUNK_RADIUS_XY = 10;
 static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 2;
 
-drft::spatial::ChunkSource::ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer)
+drft::spatial::ChunkSource::ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer, IChunkGenerator& generator)
 	: _sourceId(sourceId)
 	, _serializer(serializer)
+	, _generator(generator)
 {
 }
 
@@ -41,7 +43,7 @@ void drft::spatial::ChunkSource::shutdown(entt::registry& registry)
 
 bool drft::spatial::ChunkSource::isReady() const
 {
-	return false;
+	return true;
 }
 
 entt::id_type drft::spatial::ChunkSource::id() const
@@ -133,7 +135,7 @@ bool drft::spatial::ChunkSource::processBuildQueue(entt::registry& registry)
 	{
 		spatial::VirtualChunk& chunk = _chunks.at(coord);
 
-		spatial::ioStatus status = chunk.build(registry);
+		spatial::ioStatus status = chunk.build(registry, _generator);
 		if (status == spatial::ioStatus::Done)
 		{
 			toRemove.push_back(coord);

@@ -1,15 +1,14 @@
 #pragma once
-#include <EnTT/core/fwd.hpp>
-#include <vector>
 #include <functional>
-#include <unordered_map>
 #include <memory>
-#include <Spatial/Helpers.h>
-#include <Spatial/AABB.h>
 #include <ProcGen/GenerationState.h>
+#include <Spatial/AABB.h>
+#include <Spatial/Helpers.h>
+#include <unordered_map>
+#include <vector>
 
-#include <Utility/stdHashing.h>
 #include <Utility/StandardLogger.h>
+#include <Utility/stdHashing.h>
 
 namespace drft
 {
@@ -26,12 +25,6 @@ namespace drft
 	}
 
 	class GenerationLayerManager;
-
-	class IGetValueAt
-	{
-	public:
-		virtual double getValueAt(sf::Vector3i position) = 0;
-	};
 
 	namespace details
 	{
@@ -60,9 +53,18 @@ namespace drft
 		{
 			virtual GenerationState generate(GenerationContext&& context) = 0;
 		};
+
+		class IGetValueAt
+		{
+		public:
+			virtual double getValueAt(sf::Vector3i position) = 0;
+		};
 	}
 
 	template<typename T>
+	concept DerivedLayer = std::is_base_of<details::AbstractLayer, T>::value;
+
+	template<DerivedLayer T>
 	struct FutureLayer
 	{
 	public:
@@ -76,7 +78,7 @@ namespace drft
 			{
 				if (!_instance)
 				{
-					error_logger << "Layer id cannot be converted to " << typeid(T).name() << std::endl;
+					LOG_ERROR(std::format("Layer id cannot be converted to {}", typeid(T).name()));
 					return GenerationState::Failed;
 				}
 			}
@@ -97,58 +99,58 @@ namespace drft
 	class GenerationLayerManager
 	{
 	public:
+		GenerationLayerManager() = default;
+		~GenerationLayerManager() = default;
+		GenerationLayerManager(const GenerationLayerManager&) = delete;
+		GenerationLayerManager& operator= (const GenerationLayerManager&) = delete;
+
 		void setSeed(unsigned int seed)
 		{
 			_globalSeed = seed;
 		}
 
-		template<typename T>
+		template<DerivedLayer T>
 		FutureLayer<T> generate(spatial::AABB<int> volume, int level = 0)
 		{
-			static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
 			entt::id_type type = entt::type_index<T>::value();
 			FutureLayer<T> result;
 			result._instance = nullptr;
-			result._state = _typedLayers.at(type)->generate({ .volume = volume, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
+			//result._state = _layers.at(type)->generate({ .volume = volume, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
 			if (result._state == GenerationState::Complete)
 			{
-				result._instance = static_cast<T*>(_typedLayers.at(type).get());
+				//result._instance = static_cast<T*>(_layers.at(type).get());
 			}
 			return result;
 		}
-		template<typename T>
+		template<DerivedLayer T>
 		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, int level = 0)
 		{
 			FutureLayer<T> result;
 			result._instance = nullptr;
-			result._state = _namedLayers.at(id)->generate({ .volume = volume, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
+			//result._state = _layers.at(id)->generate({ .volume = volume, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
 			if (result._state == GenerationState::Complete)
 			{
-				result._instance = dynamic_cast<T*>(_namedLayers.at(id).get());
+				//result._instance = dynamic_cast<T*>(_layers.at(id).get());
 			}
 			return result;
 		}
 
-		template<typename T>
+		template<DerivedLayer T>
 		void add(std::unique_ptr<T> layer)
 		{
-			static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
 			entt::id_type type = entt::type_index<T>::value();
-			_typedLayers.emplace(type, std::move(layer));
+			//_layers.emplace(type, std::move(layer));
 		}
-
-		template<typename T>
+		template<DerivedLayer T>
 		void add(std::unique_ptr<T> layer, entt::id_type id)
 		{
-			static_assert(std::is_convertible<T*, details::AbstractLayer*>::value, "Type must inherit from AbstractLayer");
-			_namedLayers.emplace(id, std::move(layer));
+			//_layers.emplace(id, std::move(layer));
 		}
 
 	private:
 		using AbstractLayerPtr = std::unique_ptr<details::AbstractLayer>;
 		using LayerIdMap = std::unordered_map<entt::id_type, AbstractLayerPtr>;
-		LayerIdMap _typedLayers;
-		LayerIdMap _namedLayers;
+		LayerIdMap _layers;
 		unsigned int _globalSeed;
 	};
 
@@ -191,12 +193,12 @@ namespace drft
 	protected:
 		virtual GenerationState generate(int level) { return GenerationState::Complete; }
 		virtual int numLevels() const { return 1; }
-		template<typename T>
+		template<DerivedLayer T>
 		FutureLayer<T> generateDependency(entt::id_type id, spatial::AABB<int> volume, int level = 0)
 		{
 			return _layerManager.generate<T>(id, volume, level);
 		}
-		template<typename T>
+		template<DerivedLayer T>
 		FutureLayer<T> generateDependency(spatial::AABB<int> volume, int level = 0)
 		{
 			return _layerManager.generate<T>(volume, level);
@@ -428,7 +430,7 @@ namespace drft
 		sf::Vector3i _chunkDimensions;
 	};
 
-	class OnDemandLayer : public details::AbstractOnDemandLayer, public IGetValueAt
+	class OnDemandLayer : public details::AbstractOnDemandLayer, public details::IGetValueAt
 	{
 	public:
 		virtual double getValueAt(sf::Vector3i tilePosition) = 0;

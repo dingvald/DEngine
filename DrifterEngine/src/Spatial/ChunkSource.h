@@ -7,6 +7,8 @@ namespace drft::system
 	struct CameraHandle;
 }
 
+class IChunkGenerator;
+
 namespace drft::spatial
 {
 	class WorldGrid;
@@ -14,7 +16,7 @@ namespace drft::spatial
 	class ChunkSource
 	{
 	public:
-		ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer);
+		ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer, IChunkGenerator& generatorProvider);
 
 		void update(TilePosition cameraPosition, entt::registry& registry);
 		void shutdown(entt::registry& registry);
@@ -41,6 +43,7 @@ namespace drft::spatial
 		bool _isFlushed = true; // has nothing in any queue
 		bool _isShuttingDown = false;
 		ChunkSerializer& _serializer;
+		IChunkGenerator& _generator;
 		std::unordered_map<ChunkPosition, spatial::VirtualChunk> _chunks;
 
 		std::vector<ChunkPosition> _toBuild;

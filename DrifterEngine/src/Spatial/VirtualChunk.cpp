@@ -1,15 +1,9 @@
 #include "pch.h"
 #include "VirtualChunk.h"
-#include "ProcGen/IChunkGeneratorProvider.h"
 #include "ProcGen/IChunkGenerator.h"
 #include "Utility/CopyEntity.h"
-#include "Utility/SaveRegistry.h"
-#include "Utility/LoadRegistry.h"
-#include "Conversions.h"
 #include "WorldGrid.h"
 #include <Utility/ChunkSerializer.h>
-#include <Utility/StandardLogger.h>
-
 
 using namespace drft::spatial;
 using namespace entt::literals;
@@ -32,21 +26,14 @@ drft::ChunkPosition drft::spatial::VirtualChunk::getPosition() const
 	return _coordinate;
 }
 
-ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
+ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg, IChunkGenerator& generator)
 {
 	if (getState() == ChunkState::ToBuild)
 	{
 		setState(ChunkState::Building);
 	}
 
-	auto& generatorProvider = reg.ctx().get<IChunkGeneratorProvider&>("solar_system"_hs);
-	IChunkGenerator* chunkGenerator = generatorProvider.get(_sourceId);
-	if (!chunkGenerator)
-	{
-		LOG_ERROR("Could not get requested chunk source id");
-		return ioStatus::Done;
-	}
-	else if (chunkGenerator->generateChunk(_coordinate, reg) != GenerationState::Complete)
+	if (generator.generateChunk(_coordinate, reg) != GenerationState::Complete)
 	{
 		setState(ChunkState::Building);
 		return ioStatus::Busy;

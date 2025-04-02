@@ -213,6 +213,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\States\SettingsState.cpp" />
     <ClCompile Include="src\Systems\Actions\MouseActionSystem.cpp" />
     <ClCompile Include="src\Systems\Core\MouseStateSystem.cpp" />
+    <ClCompile Include="src\Systems\Core\PlayerTransferSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\EmplacePathNavToPosition.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetDominantSide.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetMouseHandle.cpp" />
@@ -449,8 +450,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   <ItemGroup>
     <ClInclude Include="src\CelestialBody\CelestialBody.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h" />
-    <ClInclude Include="src\Events\ChunkSourceTransferInProgressEvent.h" />
+    <ClInclude Include="src\Events\ChunkSourceTransferFailedEvent.h" />
+    <ClInclude Include="src\Events\ChunkSourceTransferStartedEvent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferRequestEvent.h" />
+    <ClInclude Include="src\Events\PlayerTransferRequestEvent.h" />
     <ClInclude Include="src\GUI\ItemTooltip.h" />
     <ClInclude Include="src\Actions\ActionMap.h" />
     <ClInclude Include="src\Components\Actions\HotbarAction.h" />
@@ -479,6 +482,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\States\SettingsState.h" />
     <ClInclude Include="src\Systems\Actions\MouseActionSystem.h" />
     <ClInclude Include="src\Systems\Core\MouseStateSystem.h" />
+    <ClInclude Include="src\Systems\Core\PlayerTransferSystem.h" />
     <ClInclude Include="src\Systems\Helpers\EmplacePathNavToPosition.h" />
     <ClInclude Include="src\Systems\Helpers\GetDominantSide.h" />
     <ClInclude Include="src\Systems\Helpers\GetMouseHandle.h" />

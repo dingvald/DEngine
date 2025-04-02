@@ -1,12 +1,16 @@
 #pragma once
 #include <ProcGen/IChunkGenerator.h>
-#include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 #include <JSON/ICreateFromJson.h>
-
+#include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 
 class CelestialBody : public IChunkGenerator, public ICreateFromJson
 {
 public:
+	CelestialBody() = default;
+	~CelestialBody() = default;
+	CelestialBody(const CelestialBody&) = delete;
+	CelestialBody& operator=(const CelestialBody&) = delete;
+
 	void createFromJson(const rapidjson::Value& json) override;
 
 	GenerationState generateChunk(drft::ChunkPosition position, entt::registry& registry) override;

@@ -1,10 +1,7 @@
 #pragma once
 #include <Spatial/ChunkPosition.h>
 
-namespace drft::gen
-{
-	class WorldGenerator;
-}
+class IChunkGenerator;
 
 namespace drft
 {
@@ -46,7 +43,7 @@ namespace drft::spatial
 		ChunkState getState() const;
 		ChunkPosition getPosition() const;
 
-		ioStatus build(entt::registry& reg);
+		ioStatus build(entt::registry& reg, IChunkGenerator& generator);
 
 		ioStatus asyncLoad(entt::registry& reg, ChunkSerializer& serializer);
 		ioStatus asyncSave(entt::registry& reg, ChunkSerializer& serializer);

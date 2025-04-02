@@ -1,10 +1,11 @@
 #pragma once
 #include "Systems/System.h"
 
-#include <Spatial/ChunkPosition.h>
 #include <Spatial/ChunkSource.h>
-#include "Utility/stdHashing.h"
 #include <Utility/ChunkSerializer.h>
+#include <EnTT/entt.h>
+#include <memory>
+#include <optional>
 
 namespace drft::events
 {
@@ -20,10 +21,12 @@ namespace drft::system
 	private:
 		enum class State
 		{
+			FirstUpdate,
 			NoSource,
 			Transferring,
 			SourceReady
 		};
+		using SourcePtr = std::unique_ptr<spatial::ChunkSource>;
 	public:
 		using System::System;
 
@@ -32,6 +35,7 @@ namespace drft::system
 		virtual void shutdown() override;
 
 	private:
+		void onFirstUpdate();
 		void onNoSource();
 		void onTransfer();
 		void onUpdateSource();
@@ -39,7 +43,12 @@ namespace drft::system
 		void setState(State newState);
 		void onStateChange(State newState);
 
-		void onRequestChunkSourceChangeEvent(events::ChunkSourceTransferRequestEvent& ev);
+		void notifyTransferFailed(entt::id_type sourceId);
+
+		void onChunkSourceTransferRequestEvent(events::ChunkSourceTransferRequestEvent& ev);
+
+		SourcePtr tryCreateNewChunkSource(entt::id_type sourceId);
+		bool doesChunkSourceExist(entt::id_type sourceId) const;
 
 	private:
 		struct PendingTransfer
@@ -49,9 +58,8 @@ namespace drft::system
 		};
 
 	private:
-		using SourcePtr = std::unique_ptr<spatial::ChunkSource>;
 		ChunkSerializer _serializer;
-		State _state = State::NoSource;
+		State _state = State::FirstUpdate;
 		SourcePtr _activeSource;
 		std::optional<PendingTransfer> _pendingTransfer = std::nullopt;
 	};
