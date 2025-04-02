@@ -23,12 +23,12 @@ drft::ChunkSerializer::~ChunkSerializer()
 	saveSerializedChunkList();
 }
 
-bool drft::ChunkSerializer::isSerialized(ChunkPosition position) const
+bool drft::ChunkSerializer::isSerialized(SourceChunkPositionPair position) const
 {
 	return _serializedChunks.contains(position);
 }
 
-std::future<void> drft::ChunkSerializer::queueForSave(ChunkPosition position, entt::registry& registry)
+std::future<void> drft::ChunkSerializer::queueForSave(SourceChunkPositionPair position, entt::registry& registry)
 {
 	{
 		std::lock_guard<std::mutex> lock(_saveQueueLock);
@@ -42,7 +42,7 @@ std::future<void> drft::ChunkSerializer::queueForSave(ChunkPosition position, en
 	return _savePromises.at(position).get_future();
 }
 
-std::future<void> drft::ChunkSerializer::queueForLoad(ChunkPosition position, entt::registry& registry)
+std::future<void> drft::ChunkSerializer::queueForLoad(SourceChunkPositionPair position, entt::registry& registry)
 {
 	{
 		std::lock_guard<std::mutex> lock(_loadQueueLock);
@@ -118,7 +118,7 @@ void drft::ChunkSerializer::syncLoadList()
 
 void drft::ChunkSerializer::processSaveList()
 {
-	std::vector<ChunkPosition> promisesToComplete;
+	std::vector<SourceChunkPositionPair> promisesToComplete;
 	for (auto&& [region, list] : _saveList)
 	{
 		if (!_regionFiles.contains(region))
@@ -129,11 +129,11 @@ void drft::ChunkSerializer::processSaveList()
 		RegionFile& regionFile = _regionFiles.at(region);
 		if (regionFile.open())
 		{
-			for (auto&& [position, registry] : list)
+			for (auto&& [sourcePositionPair, registry] : list)
 			{
 				auto compressed = serializeAndCompressRegistry(registry);
-				regionFile.writeChunk(position, compressed);
-				promisesToComplete.push_back(position);
+				regionFile.writeChunk(sourcePositionPair.position, compressed);
+				promisesToComplete.push_back(sourcePositionPair);
 			}
 		}
 		regionFile.close();
@@ -151,7 +151,7 @@ void drft::ChunkSerializer::processSaveList()
 
 void drft::ChunkSerializer::processLoadList()
 {
-	std::vector<ChunkPosition> promisesToComplete;
+	std::vector<SourceChunkPositionPair> promisesToComplete;
 	for (auto&& [region, list] : _loadList)
 	{
 		if (!_regionFiles.contains(region))
@@ -162,11 +162,11 @@ void drft::ChunkSerializer::processLoadList()
 		RegionFile& regionFile = _regionFiles.at(region);
 		if (regionFile.open())
 		{
-			for (auto&& [position, registry] : list)
+			for (auto&& [sourcePositionPair, registry] : list)
 			{
-				auto compressed = regionFile.readChunk(position);
+				auto compressed = regionFile.readChunk(sourcePositionPair.position);
 				decompressAndDeserializeRegistry(compressed, registry);
-				promisesToComplete.push_back(position);
+				promisesToComplete.push_back(sourcePositionPair);
 			}
 		}
 		regionFile.close();
@@ -198,14 +198,14 @@ void drft::ChunkSerializer::loadSerializedChunkList()
 	archive(_serializedChunks);
 }
 
-std::filesystem::path drft::ChunkSerializer::getRegionFilePath(ChunkPosition position) const
+std::filesystem::path drft::ChunkSerializer::getRegionFilePath(SourceChunkPositionPair sourcePositionPair) const
 {
 	std::string filename = "r_"
-		+ std::to_string(position.x / REGION_DIMENSIONS)
+		+ std::to_string(sourcePositionPair.position.x / REGION_DIMENSIONS)
 		+ "_"
-		+ std::to_string(position.y / REGION_DIMENSIONS)
+		+ std::to_string(sourcePositionPair.position.y / REGION_DIMENSIONS)
 		+ "_"
-		+ std::to_string(position.z)
+		+ std::to_string(sourcePositionPair.position.z)
 		+ ".dat";
-	return REGION_DIRECTORY / filename;
+	return REGION_DIRECTORY / std::to_string(sourcePositionPair.sourceId) / filename;
 }

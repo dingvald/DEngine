@@ -1,6 +1,42 @@
 #pragma once
 #include <Spatial/ChunkPosition.h>
 #include <Utility/RegionFile.h>
+#include <Utility/stdHashing.h> 
+
+namespace drft
+{
+	struct SourceChunkPositionPair
+	{
+		entt::id_type sourceId;
+		ChunkPosition position;
+
+		bool operator==(const SourceChunkPositionPair& other) const
+		{
+			return (sourceId == other.sourceId)
+				&& (position == other.position);
+		}
+
+		template<class Archive>
+		void serialize(Archive& ar)
+		{
+			ar(sourceId, position);
+		}
+	};
+}
+
+
+
+template<>
+struct std::hash<drft::SourceChunkPositionPair>
+{
+	size_t operator() (const drft::SourceChunkPositionPair& pos) const noexcept
+	{
+		size_t seed = pos.sourceId;
+		drft::ChunkPosition positionCopy = pos.position;
+		hash_combine<drft::ChunkPosition>(seed, positionCopy);
+		return seed;
+	}
+};
 
 namespace drft
 {
@@ -10,13 +46,10 @@ namespace drft
 		ChunkSerializer();
 		~ChunkSerializer();
 
-		bool isSerialized(ChunkPosition position) const;
+		bool isSerialized(SourceChunkPositionPair position) const;
 
-		std::future<void> queueForSave(ChunkPosition position, entt::registry& registry);
-		std::future<void> queueForLoad(ChunkPosition position, entt::registry& registry);
-
-		static std::vector<char> serializeAndCompressRegistry(const entt::registry& registry);
-		static void decompressAndDeserializeRegistry(const std::vector<char>& compressed, entt::registry& registry);
+		std::future<void> queueForSave(SourceChunkPositionPair sourcePositionPair, entt::registry& registry);
+		std::future<void> queueForLoad(SourceChunkPositionPair sourcePositionPair, entt::registry& registry);
 
 	private:
 		void serializationThread();
@@ -30,15 +63,18 @@ namespace drft
 		void saveSerializedChunkList();
 		void loadSerializedChunkList();
 
-		std::filesystem::path getRegionFilePath(ChunkPosition position) const;
+		std::filesystem::path getRegionFilePath(SourceChunkPositionPair sourcePositionPair) const;
+
+		static std::vector<char> serializeAndCompressRegistry(const entt::registry& registry);
+		static void decompressAndDeserializeRegistry(const std::vector<char>& compressed, entt::registry& registry);
 
 	private:
 		struct ChunkRegistryPair
 		{
-			ChunkPosition position;
+			SourceChunkPositionPair position;
 			entt::registry& registry;
 		};
-		std::unordered_set<ChunkPosition> _serializedChunks;
+		std::unordered_set<SourceChunkPositionPair> _serializedChunks;
 
 		std::unordered_map<std::filesystem::path, RegionFile> _regionFiles;
 
@@ -52,8 +88,8 @@ namespace drft
 
 		std::mutex _savePromiseLock;
 		std::mutex _loadPromiseLock;
-		std::unordered_map<ChunkPosition, std::promise<void>> _savePromises;
-		std::unordered_map<ChunkPosition, std::promise<void>> _loadPromises;
+		std::unordered_map<SourceChunkPositionPair, std::promise<void>> _savePromises;
+		std::unordered_map<SourceChunkPositionPair, std::promise<void>> _loadPromises;
 
 		std::unordered_map<std::filesystem::path, std::vector<ChunkRegistryPair>> _saveList;
 		std::unordered_map<std::filesystem::path, std::vector<ChunkRegistryPair>> _loadList;

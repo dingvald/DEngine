@@ -5,9 +5,10 @@
 #include <Actions/ActionMap.h>
 
 #include "Events/RequestStateChange.h"
-#include "ProcGen/WorldGeneration/WorldGenerator.h"
 #include <Keybindings/KeybindingsUtils.h>
 #include <Keybindings/Keybindings.h>
+
+#include <SolarSystem/SolarSystem.h>
 
 #include <States/GameStates/CraftingState.h>
 #include <States/GameStates/GameOverState.h>
@@ -29,7 +30,7 @@ drft::GameState::GameState(StateStack& stack, StateContext& context)
 {
 	std::cout << "Initializing GameState..." << std::endl;
 
-	_worldGenerator = std::make_unique<gen::WorldGenerator>();
+	_solarSystem = std::make_unique<SolarSystem>();
 	_factory = std::make_unique<EntityFactory>();
 	_dispatcher = std::make_unique<entt::dispatcher>();
 
@@ -38,7 +39,7 @@ drft::GameState::GameState(StateStack& stack, StateContext& context)
 	setupRegistryContext();
 	setupActionMap();
 
-	loadOrCreateWorldGenerator();
+	loadOrCreateUniverseGenerator();
 	loadEntityPrototypes();
 
 	_gameStateStack.pushState(drft::States::Simulation);
@@ -59,32 +60,22 @@ void drft::GameState::connectEventHandlers()
 	_dispatcher->sink<events::RequestStateStackPush>().connect<&GameState::onRequestStatePush>(this);
 }
 
-void drft::GameState::loadOrCreateWorldGenerator()
+void drft::GameState::loadOrCreateUniverseGenerator()
 {
-	if (std::filesystem::exists(GAMESTATE_SAVE_FILE_PATH))
+	LOG_MSG("Generating Universe...");
+
+	json::JsonFileWrapper json{ SOLAR_SYSTEM_FILE_PATH, "solar_system" };
+	if (!json.load())
 	{
-		std::ifstream ifs(GAMESTATE_SAVE_FILE_PATH);
-		{
-			cereal::JSONInputArchive iarchive(ifs);
-			_worldGenerator->load(iarchive);
-		}
+		error_logger << "Error: " << SOLAR_SYSTEM_FILE_PATH << " could not be loaded." << std::endl;
+		return;
 	}
 	else
 	{
-		json::JsonFileWrapper json{ WORLD_GENERATION_FILE_PATH, "world_generation" };
-		if (!json.load())
-		{
-			error_logger << "Error: " << WORLD_GENERATION_FILE_PATH << " could not be loaded." << std::endl;
-			return;
-		}
-		else
-		{
-			_worldGenerator->createFromJson(json.getRoot());
-		}
+		_solarSystem->createFromJson(json.getRoot());
 	}
-
-	_worldGenerator->init();
-	_worldGenerator->generate();
+	
+	LOG_MSG("Universe generated.");
 }
 
 void drft::GameState::loadEntityPrototypes()
@@ -97,7 +88,7 @@ void drft::GameState::setupRegistryContext()
 	using namespace entt::literals;
 
 	getContext().registry.ctx().emplace<system::InputBuffer&>(_inputBuffer);
-	getContext().registry.ctx().emplace<gen::WorldGenerator&>(*_worldGenerator);
+	getContext().registry.ctx().emplace_as<SolarSystem&>("solar_system"_hs, * _solarSystem);
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace<TextureAtlas&>(getContext().textures);
 	getContext().registry.ctx().emplace<const ControlsContext&>(getContext().controls);

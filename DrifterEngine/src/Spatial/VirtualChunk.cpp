@@ -1,15 +1,18 @@
 #include "pch.h"
 #include "VirtualChunk.h"
-#include "ProcGen/WorldGeneration/WorldGenerator.h"
+#include "ProcGen/IChunkGeneratorProvider.h"
+#include "ProcGen/IChunkGenerator.h"
 #include "Utility/CopyEntity.h"
 #include "Utility/SaveRegistry.h"
 #include "Utility/LoadRegistry.h"
 #include "Conversions.h"
 #include "WorldGrid.h"
 #include <Utility/ChunkSerializer.h>
+#include <Utility/StandardLogger.h>
 
 
 using namespace drft::spatial;
+using namespace entt::literals;
 using namespace std::chrono_literals;
 
 static constexpr auto WAIT_TIME = 0.0ms; // How long to wait for async operations
@@ -34,18 +37,22 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg)
 	if (getState() == ChunkState::ToBuild)
 	{
 		setState(ChunkState::Building);
-		//std::cout << "Building chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	}
 
-	auto& worldGenerator = reg.ctx().get<gen::WorldGenerator&>();
-	if (worldGenerator.generateChunk(_coordinate, reg) != GenerationState::Complete)
+	auto& generatorProvider = reg.ctx().get<IChunkGeneratorProvider&>("solar_system"_hs);
+	IChunkGenerator* chunkGenerator = generatorProvider.get(_sourceId);
+	if (!chunkGenerator)
+	{
+		LOG_ERROR("Could not get requested chunk source id");
+		return ioStatus::Done;
+	}
+	else if (chunkGenerator->generateChunk(_coordinate, reg) != GenerationState::Complete)
 	{
 		setState(ChunkState::Building);
 		return ioStatus::Busy;
 	}
 
 	setState(ChunkState::Built);
-	//std::cout << "Finished building chunk " << ChunkPosition::toString(_coordinate) << std::endl;
 	return ioStatus::Done;
 }
 
@@ -53,7 +60,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, ChunkSerial
 {
 	if (getState() == ChunkState::ToLoad)
 	{
-		setFuture(serializer.queueForLoad(_coordinate, _asyncRegistry));
+		setFuture(serializer.queueForLoad({ _sourceId, _coordinate }, _asyncRegistry));
 		setState(ChunkState::Loading);
 	}
 
@@ -90,7 +97,7 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, ChunkSerial
 
 		reg.compact();
 		
-		setFuture(serializer.queueForSave(_coordinate, _asyncRegistry));
+		setFuture(serializer.queueForSave({ _sourceId, _coordinate }, _asyncRegistry));
 		setState(ChunkState::Saving);
 	}
 

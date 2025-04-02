@@ -2,49 +2,58 @@
 #include "Systems/System.h"
 
 #include <Spatial/ChunkPosition.h>
-#include "Spatial/VirtualChunk.h"
+#include <Spatial/ChunkSource.h>
 #include "Utility/stdHashing.h"
 #include <Utility/ChunkSerializer.h>
+
+namespace drft::events
+{
+	struct ChunkSourceTransferRequestEvent;
+}
 
 namespace drft::system
 {
 	struct CameraHandle;
-	namespace
-	{
-		enum ProcessType
-		{
-			BUILD,
-			SAVE,
-			LOAD
-		};
-	}
 	
 	class ChunkManager : public System
 	{
+	private:
+		enum class State
+		{
+			NoSource,
+			Transferring,
+			SourceReady
+		};
 	public:
 		using System::System;
 
+		virtual void init() override;
 		virtual void update() override;
 		virtual void shutdown() override;
 
 	private:
-		void updateChunkStates(const CameraHandle& camera);
-		void cleanUpChunks();
-		void processBuildQueue();
-		void processLoadQueue();
-		void processSaveQueue();
-		void loadOrBuildChunk(ChunkPosition position, spatial::VirtualChunk& chunk);
+		void onNoSource();
+		void onTransfer();
+		void onUpdateSource();
 
-		bool isWithinChunkSaveDisk(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const;
+		void setState(State newState);
+		void onStateChange(State newState);
+
+		void onRequestChunkSourceChangeEvent(events::ChunkSourceTransferRequestEvent& ev);
 
 	private:
-		std::unordered_map<ChunkPosition, spatial::VirtualChunk> _chunks;
-		ChunkSerializer _serializer;
+		struct PendingTransfer
+		{
+			entt::id_type oldSourceId;
+			entt::id_type newSourceId;
+		};
 
-		std::vector<ChunkPosition> _toBuild;
-		std::vector<ChunkPosition> _toLoad;
-		std::vector<ChunkPosition> _toSave;
-		std::vector<ChunkPosition> _toDelete;
+	private:
+		using SourcePtr = std::unique_ptr<spatial::ChunkSource>;
+		ChunkSerializer _serializer;
+		State _state = State::NoSource;
+		SourcePtr _activeSource;
+		std::optional<PendingTransfer> _pendingTransfer = std::nullopt;
 	};
 }
 

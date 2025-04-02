@@ -11,8 +11,6 @@
 using namespace entt::literals;
 using namespace drft;
 
-static const std::filesystem::path BIOME_FOLDER_PATH = "./data/static/biomes";
-
 GenerationState BiomeLayerChunk::generate(int level)
 {
     const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x, _volume.dimensions().y, 0 });
@@ -132,8 +130,11 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
 
 BiomeLayer::BiomeLayer()
     : GenerationLayer({8, 8, 8})
+{}
+
+void drft::BiomeLayer::createFromJson(const rapidjson::Value& json)
 {
-    _biomes.createBiomesFromJSON(BIOME_FOLDER_PATH);
+    _biomes.createFromJson(json);
     _biomes.forEachBiome([this](const std::string& name, const Biome& biome)
         {
             for (auto&& [id, _] : biome.getClimateRanges())

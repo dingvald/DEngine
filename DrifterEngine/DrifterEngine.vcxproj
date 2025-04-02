@@ -200,12 +200,15 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CelestialBody\CelestialBody.cpp" />
     <ClCompile Include="src\GUI\ItemTooltip.cpp" />
     <ClCompile Include="src\Actions\ActionMap.cpp" />
     <ClCompile Include="src\Components\Wrappers\BodyWrapper.cpp" />
     <ClCompile Include="src\Keybindings\Keybindings.cpp" />
     <ClCompile Include="src\Keybindings\KeybindingsUtils.cpp" />
     <ClCompile Include="src\Keybindings\StateKeybindings.cpp" />
+    <ClCompile Include="src\SolarSystem\SolarSystem.cpp" />
+    <ClCompile Include="src\Spatial\ChunkSource.cpp" />
     <ClCompile Include="src\States\Settings\KeybindingState.cpp" />
     <ClCompile Include="src\States\SettingsState.cpp" />
     <ClCompile Include="src\Systems\Actions\MouseActionSystem.cpp" />
@@ -419,7 +422,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Engine\StateStack.cpp" />
     <ClCompile Include="src\States\TitleScreenState.cpp" />
     <ClCompile Include="src\States\StateContext.cpp" />
-    <ClCompile Include="src\ProcGen\WorldGeneration\WorldGenerator.cpp" />
     <ClCompile Include="src\Utility\stdHashing.cpp" />
     <ClCompile Include="src\Utility\TGUIHelpers.cpp" />
     <ClCompile Include="src\Utility\Vector3Utils.cpp" />
@@ -445,6 +447,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CelestialBody\CelestialBody.h" />
+    <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h" />
+    <ClInclude Include="src\Events\ChunkSourceTransferInProgressEvent.h" />
+    <ClInclude Include="src\Events\ChunkSourceTransferRequestEvent.h" />
     <ClInclude Include="src\GUI\ItemTooltip.h" />
     <ClInclude Include="src\Actions\ActionMap.h" />
     <ClInclude Include="src\Components\Actions\HotbarAction.h" />
@@ -464,6 +470,11 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Keybindings\StateKeybindings.h" />
     <ClInclude Include="src\Components\ArtificalInputComponent.h" />
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h" />
+    <ClInclude Include="src\ProcGen\GenerationState.h" />
+    <ClInclude Include="src\ProcGen\IChunkGenerator.h" />
+    <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h" />
+    <ClInclude Include="src\SolarSystem\SolarSystem.h" />
+    <ClInclude Include="src\Spatial\ChunkSource.h" />
     <ClInclude Include="src\States\Settings\KeybindingState.h" />
     <ClInclude Include="src\States\SettingsState.h" />
     <ClInclude Include="src\Systems\Actions\MouseActionSystem.h" />
@@ -1242,7 +1253,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Engine\StateStack.h" />
     <ClInclude Include="src\States\TitleScreenState.h" />
     <ClInclude Include="src\States\StateContext.h" />
-    <ClInclude Include="src\ProcGen\WorldGeneration\WorldGenerator.h" />
     <ClInclude Include="src\Utility\stdHashing.h" />
     <ClInclude Include="src\Utility\TGUIHelpers.h" />
     <ClInclude Include="src\Utility\Vector2Serialization.h" />
@@ -1274,6 +1284,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\bodies.json" />
     <None Include="data\static\entities\weapons.json" />
+    <None Include="data\static\universe\solar_system.json" />
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
     <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />
     <None Include="data\static\world_generation.json" />

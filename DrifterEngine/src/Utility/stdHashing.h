@@ -1,15 +1,14 @@
 #pragma once
 #include <memory> // For std::hash definition
 
-namespace
+
+template <typename T>
+inline void hash_combine(std::size_t& seed, T const& v)
 {
-	template <typename T>
-	inline void hash_combine(std::size_t& seed, T const& v)
-	{
-		std::hash<T> hasher;
-		seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-	}
+	std::hash<T> hasher;
+	seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
+
 
 template<>
 struct std::hash<sf::Vector2i>

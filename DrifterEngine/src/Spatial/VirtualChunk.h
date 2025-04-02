@@ -37,8 +37,9 @@ namespace drft::spatial
 	struct VirtualChunk
 	{
 	public:
-		VirtualChunk(ChunkPosition coordinate)
-			: _coordinate(coordinate)
+		VirtualChunk(entt::id_type sourceId, ChunkPosition coordinate)
+			: _sourceId(sourceId)
+			, _coordinate(coordinate)
 			, _state(ChunkState::None) {}
 
 		void setState(ChunkState state);
@@ -57,6 +58,7 @@ namespace drft::spatial
 		const std::future<void>& getFuture() const;
 
 	private:
+		entt::id_type _sourceId;
 		ChunkPosition _coordinate;
 		ChunkState _state = ChunkState::None;
 		std::future<void> _future;

@@ -42,10 +42,12 @@ namespace drft
 
 
 
-	class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>
+	class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>, public ICreateFromJson
 	{
 	public:
 		BiomeLayer();
+
+		void createFromJson(const rapidjson::Value& json) override;
 
 		const BiomeRegistry& getBiomeRegistry() const;
 		const std::unordered_set<entt::id_type>& getClimateDependencies() const;
@@ -55,9 +57,6 @@ namespace drft
 		// Gets the Biome at a given tile positions
 		// Requires level 1 generation
 		const Biome* getBiomeAt(sf::Vector3i tilePosition) const;
-
-	private:
-
 
 	private:
 		BiomeRegistry _biomes;

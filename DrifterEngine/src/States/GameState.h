@@ -3,15 +3,12 @@
 #include "Systems/HelperClasses/InputBuffer.h"
 #include <Engine/StateStack.h>
 
+class SolarSystem;
+
 namespace drft
 {
 	class EntityFactory;
 
-	namespace gen
-	{
-		class WorldGenerator;
-	}
-	
 	namespace events
 	{
 		struct RequestStateStackPush;
@@ -41,7 +38,7 @@ namespace drft
 	private:
 		void registerGameStates();
 		void connectEventHandlers();
-		void loadOrCreateWorldGenerator();
+		void loadOrCreateUniverseGenerator();
 		void loadEntityPrototypes();
 		void setupRegistryContext();
 		void setupActionMap();
@@ -51,7 +48,7 @@ namespace drft
 		StateStack _gameStateStack;
 		system::InputBuffer _inputBuffer{ 3 };
 
-		std::unique_ptr<gen::WorldGenerator> _worldGenerator;
+		std::unique_ptr<SolarSystem> _solarSystem;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
 	};

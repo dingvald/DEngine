@@ -180,9 +180,6 @@
     <ClCompile Include="src\Random\PerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\WorldGeneration\WorldGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Random\RandomNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -643,6 +640,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\ColorToHexString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SolarSystem\SolarSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spatial\ChunkSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CelestialBody\CelestialBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1299,9 +1305,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\PerlinNoise.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ProcGen\WorldGeneration\WorldGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\RandomNoise.h">
@@ -3119,6 +3122,33 @@
     <ClInclude Include="src\Utility\ColorToHexString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\SolarSystem\SolarSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spatial\ChunkSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\ChunkSourceTransferRequestEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\ChunkSourceTransferInProgressEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\GenerationState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\IChunkGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CelestialBody\CelestialBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -3189,6 +3219,7 @@
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
     <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\weapons.json" />
+    <None Include="data\static\universe\solar_system.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

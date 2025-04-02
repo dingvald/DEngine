@@ -9,10 +9,6 @@ namespace drft
 	{
 		class SystemScheduler;
 	}
-	namespace spatial
-	{
-		class WorldGrid;
-	}
 
 	class SimulationState : public State
 	{

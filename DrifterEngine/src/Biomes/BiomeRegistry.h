@@ -1,12 +1,13 @@
 #pragma once
 #include "Biome.h"
+#include <JSON/ICreateFromJson.h>
 
-class BiomeRegistry
+class BiomeRegistry : public ICreateFromJson
 {
 public:
 	BiomeRegistry();
 
-	void createBiomesFromJSON(const std::filesystem::path& directoryPath);
+	void createFromJson(const rapidjson::Value& json) override;
 	const Biome& get(const std::string& name) const;
 	void forEachBiome(std::function<void(const std::string&, const Biome&)> callback) const;
 

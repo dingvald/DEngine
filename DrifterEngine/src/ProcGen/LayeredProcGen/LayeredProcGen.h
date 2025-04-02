@@ -1,5 +1,4 @@
 #pragma once
-#include <SFML/Graphics/Rect.hpp>
 #include <EnTT/core/fwd.hpp>
 #include <vector>
 #include <functional>
@@ -7,19 +6,13 @@
 #include <memory>
 #include <Spatial/Helpers.h>
 #include <Spatial/AABB.h>
+#include <ProcGen/GenerationState.h>
 
 #include <Utility/stdHashing.h>
 #include <Utility/StandardLogger.h>
 
 namespace drft
 {
-	enum class GenerationState
-	{
-		Generating,
-		Complete,
-		Failed
-	};
-
 	inline GenerationState combinedState(std::vector<GenerationState> states)
 	{
 		for (auto&& state : states)
@@ -104,9 +97,10 @@ namespace drft
 	class GenerationLayerManager
 	{
 	public:
-		GenerationLayerManager(unsigned int seed)
-			: _globalSeed(seed)
-		{}
+		void setSeed(unsigned int seed)
+		{
+			_globalSeed = seed;
+		}
 
 		template<typename T>
 		FutureLayer<T> generate(spatial::AABB<int> volume, int level = 0)
