@@ -5,6 +5,14 @@
 
 void SolarSystem::createFromJson(const rapidjson::Value& json)
 {
+	if (!json.HasMember("bodies")) return;
+
+	for (auto&& body : json["bodies"].GetArray())
+	{
+		CelestialBody newBody;
+		newBody.createFromJson(body);
+		_celestialBodies.emplace_back(std::move(newBody));
+	}
 }
 
 void SolarSystem::tick()
@@ -17,9 +25,13 @@ void SolarSystem::tick()
 
 IChunkGenerator* SolarSystem::tryGetGenerator(entt::id_type sourceId)
 {
-	for (auto&& celestialBodies : _celestialBodies)
+	for (auto&& celestialBody : _celestialBodies)
 	{
-		if (celestialBodies.getSourceId() == sourceId) return &celestialBodies;
+		if (celestialBody.getSourceId() == sourceId) return &celestialBody;
+		if (auto generator = celestialBody.tryGetGenerator(sourceId))
+		{
+			return generator;
+		}
 	}
 	return nullptr;
 }

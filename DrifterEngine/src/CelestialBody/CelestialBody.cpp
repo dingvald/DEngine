@@ -63,14 +63,69 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 
 entt::id_type CelestialBody::getSourceId()
 {
-    return entt::id_type();
+	return entt::hashed_string{_name.c_str()};
 }
 
 void CelestialBody::tick()
 {
 }
 
+IChunkGenerator* CelestialBody::tryGetGenerator(entt::id_type sourceId)
+{
+	for (auto&& child : _celestialBodies)
+	{
+		if (child.getSourceId() == sourceId) return &child;
+		if (auto generator = child.tryGetGenerator(sourceId))
+		{
+			return generator;
+		}
+	}
+	return nullptr;
+}
+
 void CelestialBody::createFromJson(const rapidjson::Value& json)
 {
-	
+	if (json.HasMember("name"))
+	{
+		_name = json["name"].GetString();
+	}
+	if (json.HasMember("generator"))
+	{
+		_generator = entt::hashed_string{ json["generator"].GetString() };
+	}
+	if (json.HasMember("size"))
+	{
+		if (json["size"].IsArray())
+		{
+			_sizeRange.setMin(json["size"].GetArray()[0].GetInt());
+			_sizeRange.setMax(json["size"].GetArray()[1].GetInt());
+		}
+		else
+		{
+			_sizeRange.setMin(json["size"].GetInt());
+			_sizeRange.setMax(json["size"].GetInt());
+		}
+	}
+	if (json.HasMember("distance"))
+	{
+		if (json["distance"].IsArray())
+		{
+			_distanceRange.setMin(json["distance"].GetArray()[0].GetFloat());
+			_distanceRange.setMax(json["distance"].GetArray()[1].GetFloat());
+		}
+		else
+		{
+			_distanceRange.setMin(json["distance"].GetFloat());
+			_distanceRange.setMax(json["distance"].GetFloat());
+		}
+	}
+	if (json.HasMember("bodies"))
+	{
+		for (auto&& body : json["bodies"].GetArray())
+		{
+			CelestialBody newBody;
+			newBody.createFromJson(body);
+			_celestialBodies.emplace_back(std::move(newBody));
+		}
+	}
 }

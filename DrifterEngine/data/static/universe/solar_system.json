@@ -1,5 +1,33 @@
 {
     "solar_system": {
-
+        "bodies": [
+            {
+                "name": "Sun",
+                "generator": "star_generator",
+                "size": [ 1000, 1500 ],
+                "bodies": [
+                    {
+                        "name": "Arakooine",
+                        "generator": "desert_generator",
+                        "size": [ 100, 150 ],
+                        "distance": 150
+                    },
+                    {
+                        "name": "Earth",
+                        "generator": "diverse_biome_generator",
+                        "size": [ 75, 125 ],
+                        "distance": 250,
+                        "bodies": [
+                            {
+                                "name": "Luna",
+                                "generator": "moon_generator",
+                                "size": [ 20, 30 ],
+                                "distance": 0.3
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
 }

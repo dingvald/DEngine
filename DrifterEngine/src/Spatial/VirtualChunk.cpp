@@ -4,6 +4,7 @@
 #include "Utility/CopyEntity.h"
 #include "WorldGrid.h"
 #include <Utility/ChunkSerializer.h>
+#include <Utility/StandardLogger.h>
 
 using namespace drft::spatial;
 using namespace entt::literals;
@@ -33,7 +34,14 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg, IChunkGenerator
 		setState(ChunkState::Building);
 	}
 
-	if (generator.generateChunk(_coordinate, reg) != GenerationState::Complete)
+	GenerationState result = generator.generateChunk(_coordinate, reg);
+	if (result == GenerationState::Failed)
+	{
+		LOG_ERROR(std::format("Could not load source {} at position {} {} {}", _sourceId, _coordinate.x, _coordinate.y, _coordinate.z));
+		setState(ChunkState::Built);
+		return ioStatus::Done;
+	}
+	if (result == GenerationState::Generating)
 	{
 		setState(ChunkState::Building);
 		return ioStatus::Busy;

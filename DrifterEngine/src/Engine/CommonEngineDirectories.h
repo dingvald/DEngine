@@ -23,4 +23,4 @@ static const std::filesystem::path REGION_DIRECTORY = SAVE_DIRECTORY / "regions"
 
 static const std::filesystem::path ENTITIES_DIRECTORY = STATIC_DATA_DIRECTORY / "entities";
 static const std::filesystem::path UNIVERSE_DIRECTORY = STATIC_DATA_DIRECTORY / "universe";
-static const std::filesystem::path SOLAR_SYSTEM_FILE_PATH = STATIC_DATA_DIRECTORY / "solar_system.json";
+static const std::filesystem::path SOLAR_SYSTEM_FILE_PATH = UNIVERSE_DIRECTORY / "solar_system.json";

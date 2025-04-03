@@ -239,7 +239,7 @@ void drft::SimulationState::loadPlayer()
 			});
 
 		auto& dispatcher = getContext().registry.ctx().get<entt::dispatcher>();
-		dispatcher.trigger(events::PlayerTransferRequestEvent{"arid_planet"_hs, TilePosition{1024, 1024, 0}});
+		dispatcher.trigger(events::PlayerTransferRequestEvent{"Arakooine"_hs, TilePosition{1024, 1024, 0}});
 	}
 
 	_player.emplace<CameraTargetComponent>();

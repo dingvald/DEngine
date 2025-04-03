@@ -11,6 +11,8 @@ bool drft::RegionFile::open()
 {
 	if (!std::filesystem::exists(_filepath))
 	{
+		std::filesystem::create_directory(_filepath.parent_path());
+
 		_filestream.open(_filepath, std::ios::binary | std::ios::trunc | std::ios::in | std::ios::out);
 		_filestream.seekp(0);
 		_filestream.write(_lookupTable.data(), LOOKUP_TABLE_BYTE_SIZE);
@@ -30,7 +32,7 @@ bool drft::RegionFile::open()
 
 	if (!_filestream || !_filestream.is_open())
 	{
-		error_logger << "Error in RegionFile: " << _filepath.filename() << " could not be opened." << std::endl;
+		error_logger << "Error in RegionFile: " << _filepath << " could not be opened." << std::endl;
 		return false;
 	}
 	return true;

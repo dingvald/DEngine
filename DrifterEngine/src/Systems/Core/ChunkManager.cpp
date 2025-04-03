@@ -15,6 +15,8 @@
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include <SolarSystem/SolarSystem.h>
 
+#pragma optimize("", off)
+
 using namespace entt::literals;
 
 const entt::id_type NULL_SOURCE_ID = "NULL_ID"_hs;

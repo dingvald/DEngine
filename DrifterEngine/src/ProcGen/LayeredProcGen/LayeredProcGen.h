@@ -101,8 +101,12 @@ namespace drft
 	public:
 		GenerationLayerManager() = default;
 		~GenerationLayerManager() = default;
+
 		GenerationLayerManager(const GenerationLayerManager&) = delete;
 		GenerationLayerManager& operator= (const GenerationLayerManager&) = delete;
+
+		GenerationLayerManager(GenerationLayerManager&&) = default;
+		GenerationLayerManager& operator= (GenerationLayerManager&&) = default;
 
 		void setSeed(unsigned int seed)
 		{
@@ -113,24 +117,25 @@ namespace drft
 		FutureLayer<T> generate(spatial::AABB<int> volume, int level = 0)
 		{
 			entt::id_type type = entt::type_index<T>::value();
-			FutureLayer<T> result;
-			result._instance = nullptr;
-			//result._state = _layers.at(type)->generate({ .volume = volume, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
-			if (result._state == GenerationState::Complete)
-			{
-				//result._instance = static_cast<T*>(_layers.at(type).get());
-			}
-			return result;
+			return generate<T>(type, volume, level);
 		}
 		template<DerivedLayer T>
 		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, int level = 0)
 		{
 			FutureLayer<T> result;
 			result._instance = nullptr;
-			//result._state = _layers.at(id)->generate({ .volume = volume, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
+			if (!_layers.contains(id))
+			{
+				result._state = GenerationState::Failed;
+			}
+			else
+			{
+				result._state = _layers.at(id)->generate({ .volume = volume, .layers = *this, .desiredLevel = level, .seed = _globalSeed });
+			}
+
 			if (result._state == GenerationState::Complete)
 			{
-				//result._instance = dynamic_cast<T*>(_layers.at(id).get());
+				result._instance = dynamic_cast<T*>(_layers.at(id).get());
 			}
 			return result;
 		}
@@ -139,12 +144,12 @@ namespace drft
 		void add(std::unique_ptr<T> layer)
 		{
 			entt::id_type type = entt::type_index<T>::value();
-			//_layers.emplace(type, std::move(layer));
+			add<T>(layer, type);
 		}
 		template<DerivedLayer T>
 		void add(std::unique_ptr<T> layer, entt::id_type id)
 		{
-			//_layers.emplace(id, std::move(layer));
+			_layers.emplace(id, std::move(layer));
 		}
 
 	private:
