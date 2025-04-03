@@ -84,7 +84,7 @@ void drft::system::ChunkManager::onTransfer()
 
 	if (_activeSource->id() == _pendingTransfer->oldSourceId)
 	{
-		LOG_MSG(std::format("Transfering from source {}", _pendingTransfer->oldSourceId));
+		LOG_MSG("Transfering from source {}", _pendingTransfer->oldSourceId);
 
 		// Check if the new souce even exists before transferring
 		if (!doesChunkSourceExist(_pendingTransfer->newSourceId))
@@ -103,7 +103,7 @@ void drft::system::ChunkManager::onTransfer()
 
 	if (_activeSource->id() == _pendingTransfer->newSourceId)
 	{
-		LOG_MSG(std::format("Transfering to source {}", _pendingTransfer->newSourceId));
+		LOG_MSG("Transfering to source {}", _pendingTransfer->newSourceId);
 
 		_activeSource->update(_pendingTransfer->position, _registry);
 		if (_activeSource->isLoadedAroundPosition(_pendingTransfer->position))
@@ -155,7 +155,7 @@ void drft::system::ChunkManager::onStateChange(State newState)
 		LOG_WARNING("No chunk source found");
 		break;
 	case State::Transferring:
-		LOG_MSG(std::format("Requesting transfer to source id {}", _pendingTransfer->newSourceId));
+		LOG_MSG("Requesting transfer to source id {}", _pendingTransfer->newSourceId);
 		_dispatcher.trigger(events::ChunkSourceTransferStartedEvent{ _pendingTransfer->oldSourceId, _pendingTransfer->newSourceId });
 		break;
 	case State::SourceReady:
@@ -168,7 +168,7 @@ void drft::system::ChunkManager::onStateChange(State newState)
 
 void drft::system::ChunkManager::notifyTransferFailed(entt::id_type sourceId)
 {
-	LOG_ERROR(std::format("Could not find chunk source with id {}", _pendingTransfer->newSourceId));
+	LOG_ERROR("Could not find chunk source with id {}", _pendingTransfer->newSourceId);
 	LOG_ERROR("Transfer failed");
 	_dispatcher.trigger(events::ChunkSourceTransferFailedEvent{ _pendingTransfer->newSourceId });
 }

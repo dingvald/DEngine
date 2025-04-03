@@ -67,7 +67,7 @@ void drft::Engine::run()
 void drft::Engine::initialize()
 {
 	LOG_MSG("Initializing Engine...");
-	LOG_MSG(std::format("Working Directory: {}", WORKING_DIRECTORY.string()));
+	LOG_MSG("Working Directory: {}", WORKING_DIRECTORY.string());
 
 	setWindowIcon();
 	loadResources();
@@ -93,7 +93,7 @@ void drft::Engine::setWindowIcon()
 	else
 	{
 		LOG_WARNING("Could not set window icon : ");
-		LOG_WARNING(std::format("File {} not found", iconPath.string()));
+		LOG_WARNING("File {} not found", iconPath.string());
 	}
 }
 
@@ -126,7 +126,7 @@ void drft::Engine::loadSavedKeybindings()
 	json::JsonFileWrapper json{ keybindingPath, "keybindings" };
 	if (!json.load())
 	{
-		LOG_WARNING(std::format("Could not load {}", keybindingPath.string()));
+		LOG_WARNING("Could not load {}", keybindingPath.string());
 		LOG_WARNING("Using default settings");
 		_keybindings.restoreDefaultKeybindings();
 	}
@@ -143,7 +143,7 @@ void drft::Engine::loadDefaultKeybindings()
 	json::JsonFileWrapper json{ keybindingPath, "keybindings" };
 	if (!json.load())
 	{
-		LOG_ERROR(std::format("{} could not be loaded", keybindingPath.string()));
+		LOG_ERROR("{} could not be loaded", keybindingPath.string());
 	}
 	else
 	{

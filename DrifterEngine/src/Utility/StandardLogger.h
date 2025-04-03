@@ -56,6 +56,6 @@ inline WarningLogger& operator<< (WarningLogger& el, std::ostream& (*f)(std::ios
 	return el << DefaultText;
 }
 
-#define LOG_MSG(msg) std::cout << msg << std::endl;
-#define LOG_ERROR(msg) error_logger << "Error: " << msg << std::endl;
-#define LOG_WARNING(msg) warning_logger << "Warning: " << msg << std::endl;
+#define LOG_MSG(...) std::cout << std::format(__VA_ARGS__) << std::endl;
+#define LOG_ERROR(...) error_logger << "Error: " << std::format(__VA_ARGS__) << std::endl;
+#define LOG_WARNING(...) warning_logger << "Warning: " << std::format(__VA_ARGS__) << std::endl;

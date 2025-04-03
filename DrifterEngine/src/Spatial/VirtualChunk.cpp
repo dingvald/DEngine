@@ -37,7 +37,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg, IChunkGenerator
 	GenerationState result = generator.generateChunk(_coordinate, reg);
 	if (result == GenerationState::Failed)
 	{
-		LOG_ERROR(std::format("Could not load source {} at position {} {} {}", _sourceId, _coordinate.x, _coordinate.y, _coordinate.z));
+		LOG_ERROR("Could not load source {} at position {} {} {}", _sourceId, _coordinate.x, _coordinate.y, _coordinate.z);
 		setState(ChunkState::Built);
 		return ioStatus::Done;
 	}

@@ -78,7 +78,7 @@ namespace drft
 			{
 				if (!_instance)
 				{
-					LOG_ERROR(std::format("Layer id cannot be converted to {}", typeid(T).name()));
+					LOG_ERROR("Layer id cannot be converted to {}", typeid(T).name());
 					return GenerationState::Failed;
 				}
 			}
@@ -126,6 +126,7 @@ namespace drft
 			result._instance = nullptr;
 			if (!_layers.contains(id))
 			{
+				LOG_ERROR("Layer manager does not contain type {} with id {}", typeid(T).name(), id);
 				result._state = GenerationState::Failed;
 			}
 			else
