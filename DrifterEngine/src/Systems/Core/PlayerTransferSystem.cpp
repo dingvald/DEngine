@@ -25,7 +25,7 @@ void drft::system::PlayerTransferSystem::onPlayerTransferRequestEvent(events::Pl
 {
 	auto player = getPlayerHandle(_registry);
 	_pendingTransfer = PendingPlayerTransfer{ ev.sourceId, ev.position, player.get<PositionComponent>(), player};
-	_dispatcher.trigger(events::ChunkSourceTransferRequestEvent{ ev.sourceId });
+	_dispatcher.trigger(events::ChunkSourceTransferRequestEvent{ ev.sourceId, ev.position });
 }
 
 void drft::system::PlayerTransferSystem::onChunkSourceTransferStartedEvent(events::ChunkSourceTransferStartedEvent& ev)
