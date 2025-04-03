@@ -16,7 +16,7 @@ entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& 
 
 	entt::handle effectHandle = { registry, registry.create() };
 	
-	effectHandle.emplace<PositionComponent>(effect.position);
+	
 	
 	int ttl = effect.ttl;
 	if (effect.frames.size() == 1)
@@ -32,5 +32,7 @@ entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& 
 	}
 
 	effectHandle.emplace<VisualEffectComponent>(ttl, effect.fadeRate, effect.requiresInFOV);
+	effectHandle.emplace<PositionComponent>(effect.position);
+
 	return effectHandle.entity();
 }
