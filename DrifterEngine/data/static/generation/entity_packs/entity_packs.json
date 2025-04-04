@@ -1,0 +1,25 @@
+{
+    "entity_pack": {
+        "basic": {
+            "slots": {
+                "water": [
+                    [ "Water", 1 ]
+                ],
+                "shallow_water": [
+                    [ "Shallow Water", 1 ]
+                ],
+                "sand": [
+                    [ "Sand", 50 ],
+                    [ "Stone", 1 ]
+                ],
+                "trees": [
+                    [ "Tree", 1 ]
+                ],
+                "rock_formations": [
+                    [ "Boulder", 20 ],
+                    [ "Iron Deposit", 1]
+                ]
+            }
+        } 
+    }
+}

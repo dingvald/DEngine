@@ -18,10 +18,10 @@ namespace drft::rng
 		std::vector<sf::Vector2i> shuffleRect(sf::IntRect rect);
 
 		template<typename T>
-		std::optional<size_t> weightedSelection(const std::vector<std::pair<T, int>>& weightedElements)
+		const T* weightedSelection(const std::vector<std::pair<T, int>>& weightedElements)
 		{
-			if (weightedElements.size() == 0) return std::nullopt;
-			if (weightedElements.size() == 1) return 0;
+			if (weightedElements.size() == 0) return nullptr;
+			if (weightedElements.size() == 1) return &weightedElements[0];
 
 			int totalWeight = 0;
 			for (auto&& [_, weight] : weightedElements)
@@ -30,17 +30,40 @@ namespace drft::rng
 			}
 			int selection = intInRange(1, totalWeight);
 			int cursor = 0;
-			size_t index = 0;
-			for (auto&& [_, weight] : weightedElements)
+			for (auto&& [val, weight] : weightedElements)
 			{
 				cursor += weight;
 				if (cursor >= selection)
 				{
-					return index;
+					return &val;
 				}
-				index++;
 			}
-			return std::nullopt;
+			return nullptr;
+		}
+
+		template<typename T>
+		const T* weightedSelection(const std::unordered_map<T, int>& weightedElements)
+		{
+			if (weightedElements.size() == 0) return nullptr;
+			if (weightedElements.size() == 1) return &(weightedElements.begin()->first);
+
+			int totalWeight = 0;
+			for (auto&& [_, weight] : weightedElements)
+			{
+				totalWeight += weight;
+			}
+			int selection = intInRange(1, totalWeight);
+			int cursor = 0;
+			for (auto&& it = weightedElements.begin(); it != weightedElements.end(); ++it)
+			{
+				cursor += it->second;
+				if (cursor >= selection)
+				{
+					return &(it->first);
+				}
+			}
+
+			return nullptr;
 		}
 
 	private:

@@ -9,13 +9,13 @@ static const int Z_NORMALIZATION_FACTOR = 1024;
 
 using namespace drft;
 
-PerlinNoiseLayer::PerlinNoiseLayer(sf::Vector2i dimensions, unsigned int seed)
-    : _dimensions(dimensions)
-    , _seed(seed)
-{}
-
 double PerlinNoiseLayer::getValueAt(sf::Vector3i tilePosition)
 {
+    if (!_isNoiseInitialized)
+    {
+        _noise = drft::rng::PerlinNoise{ getGlobalSeed(), _octaves, _lacunarity, _gain };
+        _isNoiseInitialized = true;
+    }
     double val = _getValueAt(tilePosition);
     val = drft::math::remap(EXPERIMENTALLY_DETERMINED_MIN, EXPERIMENTALLY_DETERMINED_MAX, -1.0, 1.0, val);
     return val;
@@ -44,8 +44,6 @@ void PerlinNoiseLayer::createFromJson(const rapidjson::Value& json)
     {
         _gain = json["gain"].GetFloat();
     }
-
-    _noise = drft::rng::PerlinNoise{ _seed, _octaves, _lacunarity, _gain};
 }
 
 double PerlinNoiseLayer::_getValueAt(sf::Vector3i tilePosition) const

@@ -7,7 +7,6 @@
 
 
 using BiomeIcon = RenderComponent;
-using EntityPack = std::vector<std::pair<std::string, int>>;
 
 struct SlotDependency : public ICreateFromJson
 {
@@ -30,9 +29,9 @@ public:
 	void createFromJSON(const rapidjson::Value& json);
 	
 	bool satisfiesClimate(const std::unordered_map<entt::id_type, float>& values) const;
+	float closenessToClimate(const std::unordered_map<entt::id_type, float>& values) const;
 	const std::unordered_map<entt::id_type, drft::math::Range<float>>& getClimateRanges() const;
 	const std::unordered_map<entt::id_type, SlotDeterminer>& getSlotDeterminers() const;
-	const EntityPack* getEntityPack(entt::id_type slotID) const;
 
 	BiomeIcon getIcon() const;
 	sf::Color getBaseTileColor() const;
@@ -48,7 +47,6 @@ private:
 	sf::Color _baseTileColor = sf::Color::Black;
 	std::unordered_map<entt::id_type, drft::math::Range<float>> _ranges;
 	std::unordered_map<entt::id_type, SlotDeterminer> _entitySlotDeterminers;
-	std::unordered_map<entt::id_type, EntityPack> _entityPacks;
 };
 
  

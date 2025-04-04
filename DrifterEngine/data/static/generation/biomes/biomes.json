@@ -30,15 +30,6 @@
           }
         }
       },
-      "entity_packs": {
-        "trees": [
-          [ "Tree", 1 ]
-        ],
-        "grass": [
-          [ "Grass", 4 ],
-          ["Tall Grass", 1]
-        ]
-      },
       "features": {
 
       }
@@ -79,18 +70,6 @@
           },
           "expression": "height & random_scatter"
         }
-      },
-      "entity_packs": {
-        "water": [
-          [ "Water", 1 ]
-        ],
-        "shallow_water": [
-          [ "Shallow Water", 1 ]
-        ],
-        "sand": [
-          [ "Sand", 20 ],
-          [ "Stone", 1 ]
-        ]
       }
     },
     "ocean": {
@@ -129,17 +108,6 @@
                 },
                 "expression": "height & random_scatter"
             }
-        },
-        "entity_packs": {
-            "water": [
-                [ "Water", 1 ]
-            ],
-            "shallow_water": [
-                [ "Shallow Water", 1 ]
-            ],
-            "sand": [
-                [ "Sand", 1 ]
-            ]
         }
     },
     "desert": {
@@ -150,25 +118,28 @@
             "color": [ 174, 155, 125 ]
         },
         "climate": {
-            "height": [ -1.0, 1.0 ]
+            "height": [ 0.1, 0.5 ]
         },
         "entity_slots": {
             "sand": {
                 "layers": {
                     "height": {
-                        "threshold": [ ">", -1.0, 1.0 ]
+                        "threshold": [ "<", -1.0, 1.0 ]
                     },
                     "random_scatter": {
-                        "threshold": [ ">", 0.25 ]
+                        "threshold": [ "<", 0.15 ]
                     }
                 },
                 "expression": "height & random_scatter"
+            },
+            "rock_formations": {
+                "layers": {
+                    "height": {
+                        "threshold": [ ">", -1.0 ]
+                    }
+                },
+                "expression": "height"
             }
-        },
-        "entity_packs": {
-            "sand": [
-                [ "Sand", 1 ]
-            ]
         }
     }
   }

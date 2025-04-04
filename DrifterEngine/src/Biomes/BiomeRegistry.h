@@ -1,6 +1,5 @@
 #pragma once
 #include "Biome.h"
-#include <JSON/ICreateFromJson.h>
 
 class BiomeRegistry
 {
@@ -9,6 +8,7 @@ public:
 
 	void loadBiomes(const std::filesystem::path& biomesDirectory);
 	const Biome& get(const std::string& name) const;
+
 	void forEachBiome(std::function<void(const std::string&, const Biome&)> callback) const;
 
 private:

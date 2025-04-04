@@ -2,9 +2,9 @@
 #include "SolarSystem.h"
 #include <EnTT/entt.h>
 #include <ProcGen/IChunkGenerator.h>
-#include <Utility/RegistriesProvider.h>
+#include <ProcGen/GenerationRegistries.h>
 
-SolarSystem::SolarSystem(const RegistriesProvider& registries)
+SolarSystem::SolarSystem(const GenerationRegistries& registries)
 	: _registries(registries)
 {
 }

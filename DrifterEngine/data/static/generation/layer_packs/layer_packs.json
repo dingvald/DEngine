@@ -1,0 +1,55 @@
+{
+    "layer_pack": {
+        "standard": {
+            "layers": {
+                "height": {
+                    "type": "perlin",
+                    "params": {
+                        "resolution": 4,
+                        "octaves": 6,
+                        "lacunarity": 2.4,
+                        "gain": 0.5
+                    }
+                },
+                "temperature": {
+                    "type": "perlin",
+                    "params": {
+                        "resolution": 4.0,
+                        "octaves": 4,
+                        "lacunarity": 2.0,
+                        "gain": 2.0
+                    }
+                },
+                "humidity": {
+                    "type": "perlin",
+                    "params": {
+                        "resolution": 4.0,
+                        "octaves": 4,
+                        "lacunarity": 2.0,
+                        "gain": 2.0
+                    }
+                },
+                "trees": {
+                    "type": "relaxed_points",
+                    "params": {
+                        "density": 0.15,
+                        "passes": 2
+                    }
+                },
+                "relaxed_scatter": {
+                    "type": "relaxed_points",
+                    "params": {
+                        "density": 0.10,
+                        "passes": 2
+                    }
+                },
+                "random_scatter": {
+                    "type": "random",
+                    "params": {
+                        "seed": 1
+                    }
+                }
+            }
+        }  
+    }
+}

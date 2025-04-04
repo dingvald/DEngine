@@ -136,21 +136,6 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 			_entitySlotDeterminers.emplace(entt::hashed_string{ name.GetString() }, std::move(newDeterminer));
 		}
 	}
-	if (json.HasMember("entity_packs"))
-	{
-		for (auto&& [name, value] : json["entity_packs"].GetObject())
-		{
-			EntityPack entityPack;
-			for (auto&& val : value.GetArray())
-			{
-				auto pair = val.GetArray();
-				std::string entityName = pair[0].GetString();
-				int entityWeight = pair[1].GetInt();
-				entityPack.emplace_back(std::make_pair(std::move(entityName), entityWeight));
-			}
-			_entityPacks.emplace(entt::hashed_string{ name.GetString() }, std::move(entityPack));
-		}
-	}
 }
 
 bool Biome::satisfiesClimate(const std::unordered_map<entt::id_type, float>& values) const
@@ -163,6 +148,21 @@ bool Biome::satisfiesClimate(const std::unordered_map<entt::id_type, float>& val
 	return true;
 }
 
+float Biome::closenessToClimate(const std::unordered_map<entt::id_type, float>& values) const
+{
+	float result = 0.f;
+	for (auto&& [id, val] : values)
+	{
+		if (!_ranges.contains(id))
+		{
+			result += 1.0f;
+			continue;
+		}
+		result += _ranges.at(id).distance(val);
+	}
+	return result;
+}
+
 const std::unordered_map<entt::id_type, drft::math::Range<float>>& Biome::getClimateRanges() const
 {
 	return _ranges;
@@ -171,16 +171,6 @@ const std::unordered_map<entt::id_type, drft::math::Range<float>>& Biome::getCli
 const std::unordered_map<entt::id_type, SlotDeterminer>& Biome::getSlotDeterminers() const
 {
 	return _entitySlotDeterminers;
-}
-
-const EntityPack* Biome::getEntityPack(entt::id_type slotID) const
-{
-	if (!_entityPacks.contains(slotID))
-	{
-		warning_logger << "Warning: Biome " << _name << " does not have a pack that corresponds to this slot id." << std::endl;
-		return nullptr;
-	}
-	return &_entityPacks.at(slotID);
 }
 
 BiomeIcon Biome::getIcon() const

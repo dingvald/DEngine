@@ -654,7 +654,22 @@
     <ClCompile Include="src\Systems\Core\PlayerTransferSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Generators\Generator.cpp">
+    <ClCompile Include="src\ProcGen\EntityPack\EntityPack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\EntityPack\EntityPackRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\LayerFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\LayerPack\LayerPack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\LayerPack\LayerPackRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1605,9 +1620,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\JSON\JSONHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Biomes\BiomeZone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Structures\StructureBlueprint.h">
@@ -3164,10 +3176,22 @@
     <ClInclude Include="src\Events\ChunkSourceTransferFailedEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Generators\Generator.h">
+    <ClInclude Include="src\ProcGen\GenerationRegistries.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\RegistriesProvider.h">
+    <ClInclude Include="src\ProcGen\EntityPack\EntityPack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\EntityPack\EntityPackRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\LayerFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\LayerPack\LayerPack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\LayerPack\LayerPackRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -3183,7 +3207,7 @@
     <None Include="data\static\entities\player.json" />
     <None Include="data\static\entities\materials.json" />
     <None Include="packages.config" />
-    <None Include="data\static\biomes\biomes.json" />
+    <None Include="data\static\generation\biomes\biomes.json" />
     <None Include="data\static\entities\bases.json" />
     <None Include="data\static\structures\wooden_house.json" />
     <None Include="src\Spatial\AutoGrid.inl">
@@ -3241,6 +3265,8 @@
     <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\weapons.json" />
     <None Include="data\static\universe\solar_system.json" />
+    <None Include="data\static\generation\layer_packs\layer_packs.json" />
+    <None Include="data\static\generation\entity_packs\entity_packs.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

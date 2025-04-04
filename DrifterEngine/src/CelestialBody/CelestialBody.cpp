@@ -21,12 +21,17 @@
 #include <ProcGen/Layers/VoronoiLayer.h>
 #include <ProcGen/Layers/JitteredGridLayer.h>
 #include <ProcGen/Layers/RandomLayer.h>
+#include <ProcGen/Layers/LayerFactory.h>
 
-#include <Utility/RegistriesProvider.h>
+#include <ProcGen/GenerationRegistries.h>
+#include <ProcGen/EntityPack/EntityPack.h>
+#include <ProcGen/LayerPack/LayerPack.h>
+
+#include <Utility/StandardLogger.h>
 
 using namespace drft;
 
-CelestialBody::CelestialBody(const RegistriesProvider& registries)
+CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	: _registries(registries)
 {
 	// Add generic layers that all generators can use
@@ -64,13 +69,9 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInArea(volume.flatten(), volume.min);
 	for (auto&& [biome, slot, point] : bsps)
 	{
-		if (auto* entityPack = biome->getEntityPack(slot))
+		if (auto entity = _entityPacks.selectEntity(slot, random))
 		{
-			if (auto optionalSelection = random.weightedSelection(*entityPack))
-			{
-				auto&& [entity, _] = entityPack->at(optionalSelection.value());
-				gen::placeSingle(entity, spatial::asTileSpace(sf::Vector3i{ point.x, point.y, volume.min.z }), registry, factory);
-			}
+			gen::placeSingle(entity.value(), spatial::asTileSpace(sf::Vector3i{point.x, point.y, volume.min.z}), registry, factory);
 		}
 	}
 
@@ -105,9 +106,33 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 	{
 		_name = json["name"].GetString();
 	}
-	if (json.HasMember("generator"))
+	if (json.HasMember("layer_packs"))
 	{
-		_generator = entt::hashed_string{ json["generator"].GetString() };
+		for (auto&& val : json["layer_packs"].GetArray())
+		{
+			entt::id_type packId = entt::hashed_string{ val.GetString() };
+			auto& pack = _registries.layerPacks.get(packId);
+			for (auto&& [layerId, typeAndparams] : pack.getLayers())
+			{
+				auto packInstance = _registries.layerFactory.build(typeAndparams.layerTypeId, typeAndparams.json);
+				if (!packInstance)
+				{
+					LOG_WARNING("Could not find layer with id {} in layer factory", typeAndparams.layerTypeId);
+					continue;
+				}
+
+				_layerManager.add(std::move(packInstance), layerId);
+			}
+		}
+	}
+	if (json.HasMember("entity_packs"))
+	{
+		for (auto&& val : json["entity_packs"].GetArray())
+		{
+			entt::id_type packId = entt::hashed_string{ val.GetString() };
+			auto& pack = _registries.entityPacks.get(packId);
+			_entityPacks.add(pack);
+		}
 	}
 	if (json.HasMember("size"))
 	{

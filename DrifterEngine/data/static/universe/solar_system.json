@@ -3,14 +3,14 @@
         "bodies": [
             {
                 "name": "Sun",
-                "generator": "star_generator",
                 "size": [ 1000, 1500 ],
                 "bodies": [
                     {
                         "name": "Arakooine",
                         "size": [ 100, 150 ],
                         "distance": 150,
-                        "generator": "desert_generator",
+                        "layer_packs": [ "standard" ],
+                        "entity_packs": [ "basic" ],
                         "biomes": [
                             "desert"
                         ]
@@ -19,7 +19,8 @@
                         "name": "Earth",
                         "size": [ 75, 125 ],
                         "distance": 250,
-                        "generator": "diverse_biome_generator",
+                        "layer_packs": [ "standard" ],
+                        "entity_packs": [ "something" ],
                         "biomes": [
                             "forest",
                             "ocean",
@@ -28,7 +29,7 @@
                         "bodies": [
                             {
                                 "name": "Luna",
-                                "generator": "moon_generator",
+                                "layer_packs": [ "moon" ],
                                 "size": [ 20, 30 ],
                                 "distance": 0.3
                             }

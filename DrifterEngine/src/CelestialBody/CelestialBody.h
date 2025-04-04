@@ -4,13 +4,14 @@
 #include <JSON/ICreateFromJson.h>
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 #include <Utility/Math.h>
+#include <ProcGen/EntityPack/EntityPack.h>
 
-struct RegistriesProvider;
+struct GenerationRegistries;
 
 class CelestialBody : public IChunkGenerator, public IChunkGeneratorProvider, public ICreateFromJson
 {
 public:
-	CelestialBody(const RegistriesProvider& registries);
+	CelestialBody(const GenerationRegistries& registries);
 	~CelestialBody() = default;
 
 	CelestialBody(const CelestialBody&) = delete;
@@ -29,11 +30,11 @@ public:
 
 private:
 	std::string _name;
-	entt::id_type _generator;
 	drft::math::Range<int> _sizeRange;
 	drft::math::Range<float> _distanceRange;
 	sf::Vector2f _position;
 	drft::GenerationLayerManager _layerManager;
 	std::vector<CelestialBody> _celestialBodies;
-	const RegistriesProvider& _registries;
+	EntityPack _entityPacks;
+	const GenerationRegistries& _registries;
 };

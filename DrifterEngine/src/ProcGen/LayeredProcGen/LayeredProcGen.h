@@ -9,6 +9,7 @@
 
 #include <Utility/StandardLogger.h>
 #include <Utility/stdHashing.h>
+#include <JSON/ICreateFromJson.h>
 
 namespace drft
 {
@@ -39,19 +40,16 @@ namespace drft
 		class AbstractLayer
 		{
 		public:
+			virtual ~AbstractLayer() {};
 			virtual GenerationState generate(GenerationContext&& context) = 0;
 		};
 
 		class AbstractChunk
 		{
 		public:
+			virtual ~AbstractChunk() {};
 			virtual GenerationState doGenerate(int level) = 0;
 			virtual bool isGenerated() const = 0;
-		};
-
-		class AbstractOnDemandLayer : public AbstractLayer
-		{
-			virtual GenerationState generate(GenerationContext&& context) = 0;
 		};
 
 		class IGetValueAt
@@ -60,6 +58,27 @@ namespace drft
 			virtual double getValueAt(sf::Vector3i position) = 0;
 		};
 	}
+
+	class OnDemandLayer : public details::AbstractLayer, public details::IGetValueAt, public ICreateFromJson
+	{
+	public:
+		virtual void createFromJson(const rapidjson::Value& json) = 0;
+		virtual double getValueAt(sf::Vector3i tilePosition) = 0;
+		virtual GenerationState generate(details::GenerationContext&& context) override final
+		{
+			return GenerationState::Complete;
+		}
+
+	protected:
+		unsigned int getGlobalSeed() const
+		{
+			return _globalSeed;
+		}
+
+	private:
+		friend class GenerationLayerManager;
+		unsigned int _globalSeed;
+	};
 
 	template<typename T>
 	concept DerivedLayer = std::is_base_of<details::AbstractLayer, T>::value;
@@ -150,6 +169,12 @@ namespace drft
 		template<DerivedLayer T>
 		void add(std::unique_ptr<T> layer, entt::id_type id)
 		{
+			_layers.emplace(id, std::move(layer));
+		}
+		template<>
+		void add(std::unique_ptr<OnDemandLayer> layer, entt::id_type id)
+		{
+			layer->_globalSeed = _globalSeed;
 			_layers.emplace(id, std::move(layer));
 		}
 
@@ -434,25 +459,5 @@ namespace drft
 	private:
 		std::unordered_map<sf::Vector3i, ChunkType> _chunks;
 		sf::Vector3i _chunkDimensions;
-	};
-
-	class OnDemandLayer : public details::AbstractOnDemandLayer, public details::IGetValueAt
-	{
-	public:
-		virtual double getValueAt(sf::Vector3i tilePosition) = 0;
-		virtual GenerationState generate(details::GenerationContext&& context) override final
-		{
-			_globalSeed = context.seed;
-			return GenerationState::Complete;
-		}
-
-	protected:
-		unsigned int getGlobalSeed() const
-		{
-			return _globalSeed;
-		}
-
-	private:
-		unsigned int _globalSeed;
 	};
 }

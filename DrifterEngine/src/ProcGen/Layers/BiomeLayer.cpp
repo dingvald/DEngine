@@ -31,12 +31,15 @@ GenerationState BiomeLayerChunk::generate(int level)
 void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, BiomeCentroids& biomeCentroids, const ClimateValues& climateValues)
 {
     std::vector<const Biome*> potentialBiomes;
+    std::map<float, const Biome*> rankings;
     for (auto&& biome : _layer.getBiomes())
     {
-        if (biome && biome->satisfiesClimate(climateValues))
+        if (!biome) continue;
+        if (biome->satisfiesClimate(climateValues))
         {
             potentialBiomes.push_back(biome);
         }
+        rankings.emplace(biome->closenessToClimate(climateValues), biome);
     }
 
     if (potentialBiomes.size() == 1)
@@ -48,6 +51,10 @@ void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, BiomeCentr
         drft::rng::Random random{ getGlobalSeed() + std::hash<sf::Vector3i>()(centroid)};
         size_t index = random.intInRange(0, potentialBiomes.size());
         biomeCentroids.emplace(spatial::toXY(centroid), potentialBiomes.at(index));
+    }
+    else if (!rankings.empty())
+    {
+        biomeCentroids.emplace(spatial::toXY(centroid), rankings.begin()->second);
     }
 }
 
@@ -108,6 +115,8 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
     drft::spatial::forEachPointInRect(_volume.flatten(), [this, &dependencies, z = _volume.min.z](sf::Vector2i point)
         {
             auto closestPoint = drft::spatial::findClosestPoint2d(point, biomePositions);
+            if (!biomePoints.contains(closestPoint)) return;
+
             const Biome* biome = biomePoints.at(closestPoint);
 
             for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
