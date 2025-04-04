@@ -5,10 +5,12 @@
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 #include <Utility/Math.h>
 
+struct RegistriesProvider;
+
 class CelestialBody : public IChunkGenerator, public IChunkGeneratorProvider, public ICreateFromJson
 {
 public:
-	CelestialBody() = default;
+	CelestialBody(const RegistriesProvider& registries);
 	~CelestialBody() = default;
 
 	CelestialBody(const CelestialBody&) = delete;
@@ -33,4 +35,5 @@ private:
 	sf::Vector2f _position;
 	drft::GenerationLayerManager _layerManager;
 	std::vector<CelestialBody> _celestialBodies;
+	const RegistriesProvider& _registries;
 };

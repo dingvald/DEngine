@@ -1,6 +1,6 @@
 {
-  "Biomes": {
-    "Forest": {
+  "biomes": {
+    "forest": {
       "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
@@ -41,15 +41,9 @@
       },
       "features": {
 
-      },
-      "structures": {
-        "Wooden House": 0.1
-      },
-      "encounters": {
-
       }
     },
-    "Beach": {
+    "beach": {
       "icon": {
         "texture": "simple_tileset",
         "uv_size": [ 16, 16 ],
@@ -99,54 +93,83 @@
         ]
       }
     },
-    "Ocean": {
-      "icon": {
-        "texture": "simple_tileset",
-        "uv_size": [ 16, 16 ],
-        "uv_coords": [ 5, 2 ],
-        "color": [ 27, 149, 224 ]
-      },
-      "climate": {
-        "height": [ -1.0, -0.1 ]
-      },
-      "entity_slots": {
-        "water": {
-          "layers": {
-            "height": {
-              "threshold": [ "<", -0.05 ]
-            }
-          }
+    "ocean": {
+        "icon": {
+            "texture": "simple_tileset",
+            "uv_size": [ 16, 16 ],
+            "uv_coords": [ 5, 2 ],
+            "color": [ 27, 149, 224 ]
         },
-        "shallow_water": {
-          "layers": {
-            "height": {
-              "threshold": [ "<", -0.05, 0.0 ]
-            }
-          }
+        "climate": {
+            "height": [ -1.0, -0.1 ]
         },
-        "sand": {
-          "layers": {
-            "height": {
-              "threshold": [ ">", 0.0 ]
+        "entity_slots": {
+            "water": {
+                "layers": {
+                    "height": {
+                        "threshold": [ "<", -0.05 ]
+                    }
+                }
             },
-            "random_scatter": {
-              "threshold": [ ">", 0.25 ]
+            "shallow_water": {
+                "layers": {
+                    "height": {
+                        "threshold": [ "<", -0.05, 0.0 ]
+                    }
+                }
+            },
+            "sand": {
+                "layers": {
+                    "height": {
+                        "threshold": [ ">", 0.0 ]
+                    },
+                    "random_scatter": {
+                        "threshold": [ ">", 0.25 ]
+                    }
+                },
+                "expression": "height & random_scatter"
             }
-          },
-          "expression": "height & random_scatter"
+        },
+        "entity_packs": {
+            "water": [
+                [ "Water", 1 ]
+            ],
+            "shallow_water": [
+                [ "Shallow Water", 1 ]
+            ],
+            "sand": [
+                [ "Sand", 1 ]
+            ]
         }
-      },
-      "entity_packs": {
-        "water": [
-          [ "Water", 1 ]
-        ],
-        "shallow_water": [
-          [ "Shallow Water", 1 ]
-        ],
-        "sand": [
-          [ "Sand", 1 ]
-        ]
-      }
+    },
+    "desert": {
+        "icon": {
+            "texture": "simple_tileset",
+            "uv_size": [ 16, 16 ],
+            "uv_coords": [ 5, 2 ],
+            "color": [ 174, 155, 125 ]
+        },
+        "climate": {
+            "height": [ -1.0, 1.0 ]
+        },
+        "entity_slots": {
+            "sand": {
+                "layers": {
+                    "height": {
+                        "threshold": [ ">", -1.0, 1.0 ]
+                    },
+                    "random_scatter": {
+                        "threshold": [ ">", 0.25 ]
+                    }
+                },
+                "expression": "height & random_scatter"
+            }
+        },
+        "entity_packs": {
+            "sand": [
+                [ "Sand", 1 ]
+            ]
+        }
     }
   }
 }

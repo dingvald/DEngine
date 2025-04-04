@@ -11,10 +11,12 @@
 
 #include <vector>
 
+struct RegistriesProvider;
+
 class SolarSystem : public ICreateFromJson, public IChunkGeneratorProvider
 {
 public:
-	SolarSystem() = default;
+	SolarSystem(const RegistriesProvider& registries);
 	SolarSystem(const SolarSystem&) = delete;
 	SolarSystem& operator=(const SolarSystem&) = delete;
 
@@ -26,4 +28,5 @@ public:
 
 private:
 	std::vector<CelestialBody> _celestialBodies;
+	const RegistriesProvider& _registries;
 };

@@ -14,7 +14,7 @@ namespace drft::spatial
 		ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer, IChunkGenerator& generatorProvider);
 
 		void update(TilePosition position, entt::registry& registry);
-		void shutdown(entt::registry& registry);
+		void shutdown(entt::registry& registry, bool isAsync);
 		bool isLoadedAroundPosition(TilePosition position) const;
 		entt::id_type id() const;
 

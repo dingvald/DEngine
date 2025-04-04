@@ -2,6 +2,12 @@
 #include "SolarSystem.h"
 #include <EnTT/entt.h>
 #include <ProcGen/IChunkGenerator.h>
+#include <Utility/RegistriesProvider.h>
+
+SolarSystem::SolarSystem(const RegistriesProvider& registries)
+	: _registries(registries)
+{
+}
 
 void SolarSystem::createFromJson(const rapidjson::Value& json)
 {
@@ -9,7 +15,7 @@ void SolarSystem::createFromJson(const rapidjson::Value& json)
 
 	for (auto&& body : json["bodies"].GetArray())
 	{
-		CelestialBody newBody;
+		CelestialBody newBody{_registries};
 		newBody.createFromJson(body);
 		_celestialBodies.emplace_back(std::move(newBody));
 	}

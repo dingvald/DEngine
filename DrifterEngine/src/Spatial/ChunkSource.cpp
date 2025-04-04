@@ -28,15 +28,21 @@ void drft::spatial::ChunkSource::update(TilePosition cameraPosition, entt::regis
 	cleanUpSavedChunks(registry);
 }
 
-void drft::spatial::ChunkSource::shutdown(entt::registry& registry)
+void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync)
 {
 	for (auto&& [coord, chunk] : _chunks)
 	{
 		_toSave.push_back(coord);
 		chunk.setState(spatial::ChunkState::ToSave);
 	}
+
+	bool isDone = false;
+	do
+	{
+		isDone = processSaveQueue(registry);
+	} 
+	while (!isDone && !isAsync);
 	
-	processSaveQueue(registry);
 	
 	cleanUpAllChunks(registry);
 }

@@ -2,12 +2,12 @@
 #include "Biome.h"
 #include <JSON/ICreateFromJson.h>
 
-class BiomeRegistry : public ICreateFromJson
+class BiomeRegistry
 {
 public:
 	BiomeRegistry();
 
-	void createFromJson(const rapidjson::Value& json) override;
+	void loadBiomes(const std::filesystem::path& biomesDirectory);
 	const Biome& get(const std::string& name) const;
 	void forEachBiome(std::function<void(const std::string&, const Biome&)> callback) const;
 

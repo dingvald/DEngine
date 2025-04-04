@@ -40,16 +40,14 @@ namespace drft
 		std::vector<BiomeSlotPoint> biomeSlotPoints;
 	};
 
-
-
 	class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>, public ICreateFromJson
 	{
 	public:
-		BiomeLayer();
+		BiomeLayer(const BiomeRegistry& biomeRegistry);
 
 		void createFromJson(const rapidjson::Value& json) override;
 
-		const BiomeRegistry& getBiomeRegistry() const;
+		const std::vector<const Biome*>& getBiomes() const;
 		const std::unordered_set<entt::id_type>& getClimateDependencies() const;
 		// Gets the Biome Entity Slot Points within a given area and origin (z-level)
 		// Requires level 2 generation
@@ -59,7 +57,8 @@ namespace drft
 		const Biome* getBiomeAt(sf::Vector3i tilePosition) const;
 
 	private:
-		BiomeRegistry _biomes;
+		const BiomeRegistry& _biomeRegistry;
+		std::vector<const Biome*> _biomes;
 		std::unordered_set<entt::id_type> _climateDependencies;
 	};
 }

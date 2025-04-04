@@ -2,6 +2,7 @@
 #include "State.h"
 #include "Systems/HelperClasses/InputBuffer.h"
 #include <Engine/StateStack.h>
+#include <Biomes/BiomeRegistry.h>
 
 class SolarSystem;
 
@@ -39,6 +40,7 @@ namespace drft
 		void registerGameStates();
 		void connectEventHandlers();
 		void loadOrCreateUniverseGenerator();
+		void loadGameRegistries();
 		void loadEntityPrototypes();
 		void setupRegistryContext();
 		void setupActionMap();
@@ -51,6 +53,8 @@ namespace drft
 		std::unique_ptr<SolarSystem> _solarSystem;
 		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
+
+		BiomeRegistry _biomeRegistry;
 	};
 
 } // namespace drft

@@ -20,6 +20,7 @@
 
 #include <JSON/JSONHelpers.h>
 #include "Utility/StandardLogger.h"
+#include <Utility/RegistriesProvider.h>
 #include "Factory/EntityFactory.h"
 
 
@@ -29,7 +30,13 @@ drft::GameState::GameState(StateStack& stack, StateContext& context)
 {
 	std::cout << "Initializing GameState..." << std::endl;
 
-	_solarSystem = std::make_unique<SolarSystem>();
+	loadGameRegistries();
+
+	RegistriesProvider registries = {
+		.biomes = _biomeRegistry
+	};
+
+	_solarSystem = std::make_unique<SolarSystem>(registries);
 	_factory = std::make_unique<EntityFactory>();
 	_dispatcher = std::make_unique<entt::dispatcher>();
 
@@ -75,6 +82,11 @@ void drft::GameState::loadOrCreateUniverseGenerator()
 	}
 	
 	LOG_MSG("Universe generated.");
+}
+
+void drft::GameState::loadGameRegistries()
+{
+	_biomeRegistry.loadBiomes(BIOMES_DIRECTORY);
 }
 
 void drft::GameState::loadEntityPrototypes()

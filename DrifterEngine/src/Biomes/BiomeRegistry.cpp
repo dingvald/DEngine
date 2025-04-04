@@ -1,20 +1,33 @@
 #include "pch.h"
 #include "BiomeRegistry.h"
 #include "JSON/JSONHelpers.h"
+#include <Utility/StandardLogger.h>
 
+using namespace drft;
 
 BiomeRegistry::BiomeRegistry()
 {
 }
 
-void BiomeRegistry::createFromJson(const rapidjson::Value& json)
+void BiomeRegistry::loadBiomes(const std::filesystem::path& biomesDirectory)
 {
-	for (auto&& biomeObj : json.GetObject())
+	for (const auto& entry : std::filesystem::recursive_directory_iterator(biomesDirectory))
 	{
-		std::string name = biomeObj.name.GetString();
-		Biome biome{ name };
-		biome.createFromJSON(biomeObj.value);
-		_biomes.emplace(std::move(name), std::move(biome));
+		if (entry.is_directory()) continue;
+
+		json::JsonFileWrapper json{ entry.path(), "biomes" };
+		if (!json.load())
+		{
+			//LOG_WARNING("{} could not be loaded", entry);
+			continue;
+		}
+		for (auto&& biomeObj : json.getRoot().GetObject())
+		{
+			std::string name = biomeObj.name.GetString();
+			Biome biome{ name };
+			biome.createFromJSON(biomeObj.value);
+			_biomes.emplace(std::move(name), std::move(biome));
+		}
 	}
 }
 

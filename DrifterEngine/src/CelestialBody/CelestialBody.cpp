@@ -18,7 +18,22 @@
 #include <Spatial/AABB.h>
 #include <Spatial/ChunkPosition.h>
 
+#include <ProcGen/Layers/VoronoiLayer.h>
+#include <ProcGen/Layers/JitteredGridLayer.h>
+#include <ProcGen/Layers/RandomLayer.h>
+
+#include <Utility/RegistriesProvider.h>
+
 using namespace drft;
+
+CelestialBody::CelestialBody(const RegistriesProvider& registries)
+	: _registries(registries)
+{
+	// Add generic layers that all generators can use
+	_layerManager.add(std::make_unique<RandomLayer>());
+	_layerManager.add(std::make_unique<JitteredGridLayer>());
+	_layerManager.add(std::make_unique<VoronoiLayer>());
+}
 
 GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt::registry& registry)
 {
@@ -29,7 +44,7 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	auto layer = _layerManager.generate<BiomeLayer>(volume);
 	if (!layer.isReady()) return layer.getState();
 
-	rng::Random random{ +std::hash<ChunkPosition>()(position) };
+	rng::Random random{ std::hash<ChunkPosition>()(position) };
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
 
 	// Place tiles
@@ -45,6 +60,7 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 			tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
 		});
 
+	// Place Entities from Biomes
 	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInArea(volume.flatten(), volume.min);
 	for (auto&& [biome, slot, point] : bsps)
 	{
@@ -119,11 +135,17 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 			_distanceRange.setMax(json["distance"].GetFloat());
 		}
 	}
+	if (json.HasMember("biomes"))
+	{
+		auto biomeLayer = std::make_unique<BiomeLayer>(_registries.biomes);
+		biomeLayer->createFromJson(json);
+		_layerManager.add(std::move(biomeLayer));
+	}
 	if (json.HasMember("bodies"))
 	{
 		for (auto&& body : json["bodies"].GetArray())
 		{
-			CelestialBody newBody;
+			CelestialBody newBody{_registries};
 			newBody.createFromJson(body);
 			_celestialBodies.emplace_back(std::move(newBody));
 		}

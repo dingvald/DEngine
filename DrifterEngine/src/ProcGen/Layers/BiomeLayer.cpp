@@ -30,13 +30,14 @@ GenerationState BiomeLayerChunk::generate(int level)
 
 void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, BiomeCentroids& biomeCentroids, const ClimateValues& climateValues)
 {
-    auto& biomes = _layer.getBiomeRegistry();
     std::vector<const Biome*> potentialBiomes;
-    biomes.forEachBiome([&climateValues, &potentialBiomes](const std::string& name, const Biome& biome)
+    for (auto&& biome : _layer.getBiomes())
+    {
+        if (biome && biome->satisfiesClimate(climateValues))
         {
-            if (!biome.satisfiesClimate(climateValues)) return;
-            potentialBiomes.push_back(&biome);
-        });
+            potentialBiomes.push_back(biome);
+        }
+    }
 
     if (potentialBiomes.size() == 1)
     {
@@ -66,19 +67,19 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> v
     auto voronoiLayer = generateDependency<VoronoiLayer>(volume);
     if (!voronoiLayer.isReady()) return voronoiLayer.getState();
 
-    std::unordered_map<entt::id_type, OnDemandLayer*> climateDependencies;
+    std::unordered_map<entt::id_type, OnDemandLayer*> generatedDependencies;
     for (auto&& dependencyID : _layer.getClimateDependencies())
     {
         auto depLayer = generateDependency<OnDemandLayer>(dependencyID, volume);
         if (!depLayer.isReady()) return depLayer.getState();
 
-        climateDependencies.emplace(dependencyID, &depLayer.unwrap());
+        generatedDependencies.emplace(dependencyID, &depLayer.unwrap());
     }
 
     const auto centroids = voronoiLayer.unwrap().getCentroidsInArea(volume.flatten(), volume.center());
     for (auto&& point : centroids)
     {
-        const auto values = getClimateValuesAtPoint(point, climateDependencies);
+        const auto values = getClimateValuesAtPoint(point, generatedDependencies);
         assignBiomeToVoronoiCell(point, biomePoints, values);
     }
 
@@ -128,23 +129,31 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
     return GenerationState::Complete;
 }
 
-BiomeLayer::BiomeLayer()
+BiomeLayer::BiomeLayer(const BiomeRegistry& biomeRegistry)
     : GenerationLayer({8, 8, 8})
-{}
+    , _biomeRegistry(biomeRegistry)
+{
+   
+}
 
 void drft::BiomeLayer::createFromJson(const rapidjson::Value& json)
 {
-    _biomes.createFromJson(json);
-    _biomes.forEachBiome([this](const std::string& name, const Biome& biome)
+    if (json.HasMember("biomes"))
+    {
+        for (auto&& val : json["biomes"].GetArray())
         {
-            for (auto&& [id, _] : biome.getClimateRanges())
+            std::string biomeName = val.GetString();
+            const Biome& biome = _biomeRegistry.get(biomeName);
+            for (auto&& [id, range] : biome.getClimateRanges())
             {
                 _climateDependencies.insert(id);
             }
-        });
+            _biomes.push_back(&biome);
+        }
+    }
 }
 
-const BiomeRegistry& BiomeLayer::getBiomeRegistry() const
+const std::vector<const Biome*>& drft::BiomeLayer::getBiomes() const
 {
     return _biomes;
 }

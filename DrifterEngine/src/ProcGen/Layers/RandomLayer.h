@@ -4,15 +4,9 @@
 
 namespace drft
 {
-	class RandomLayer : public OnDemandLayer, public ICreateFromJson
+	class RandomLayer : public OnDemandLayer
 	{
 	public:
 		double getValueAt(sf::Vector3i tilePosition) override;
-
-		// Inherited via ICreateFromJson
-		void createFromJson(const rapidjson::Value& json) override;
-
-	private:
-		unsigned int _seed;
 	};
 }

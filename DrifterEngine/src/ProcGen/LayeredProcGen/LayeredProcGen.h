@@ -126,7 +126,7 @@ namespace drft
 			result._instance = nullptr;
 			if (!_layers.contains(id))
 			{
-				LOG_ERROR("Layer manager does not contain type {} with id {}", typeid(T).name(), id);
+				LOG_ERROR("Could not find layer {} with id {}", typeid(T).name(), id);
 				result._state = GenerationState::Failed;
 			}
 			else
@@ -145,7 +145,7 @@ namespace drft
 		void add(std::unique_ptr<T> layer)
 		{
 			entt::id_type type = entt::type_index<T>::value();
-			add<T>(layer, type);
+			add<T>(std::move(layer), type);
 		}
 		template<DerivedLayer T>
 		void add(std::unique_ptr<T> layer, entt::id_type id)
