@@ -91,6 +91,9 @@ namespace drft
 	template<typename T>
 	concept DerivedOrGetValueLayer = DerivedLayer<T> || GetValueAtLayer<T>;
 
+	template<typename T>
+	concept OnDemandLayerType = DerivedLayer<T> && std::is_base_of<OnDemandLayer, T>::value;
+
 	template<DerivedOrGetValueLayer T>
 	struct FutureLayer
 	{
@@ -146,7 +149,7 @@ namespace drft
 			entt::id_type type = entt::type_index<T>::value();
 			return generate<T>(type, volume, level);
 		}
-		template<DerivedLayer T>
+		template<DerivedOrGetValueLayer T>
 		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, int level = 0)
 		{
 			FutureLayer<T> result;
@@ -167,7 +170,7 @@ namespace drft
 			}
 			return result;
 		}
-		template<GetValueAtLayer T>
+		template<OnDemandLayerType T>
 		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, int level = 0)
 		{
 			FutureLayer<T> result;
