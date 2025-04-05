@@ -15,7 +15,7 @@ void LayerFactory::bind()
 	registerLayer<drft::FillLayer>("fill"_hs);
 }
 
-std::unique_ptr<drft::OnDemandLayer> LayerFactory::build(entt::id_type id, const rapidjson::Value& json) const
+std::unique_ptr<drft::IGetValueAtLayer> LayerFactory::build(entt::id_type id, const rapidjson::Value& json) const
 {
 	if (!_factories.contains(id))
 	{

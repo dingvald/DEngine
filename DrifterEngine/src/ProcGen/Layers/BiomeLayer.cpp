@@ -58,7 +58,7 @@ void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, BiomeCentr
     }
 }
 
-std::unordered_map<entt::id_type, float> BiomeLayerChunk::getClimateValuesAtPoint(sf::Vector3i point, const std::unordered_map<entt::id_type, OnDemandLayer*>& generatedDependencies) const
+std::unordered_map<entt::id_type, float> BiomeLayerChunk::getClimateValuesAtPoint(sf::Vector3i point, const std::unordered_map<entt::id_type, IGetValueAtLayer*>& generatedDependencies) const
 {
     std::unordered_map<entt::id_type, float> result;
     for (auto&& [name, layerPtr] : generatedDependencies)
@@ -74,10 +74,10 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> v
     auto voronoiLayer = generateDependency<VoronoiLayer>(volume);
     if (!voronoiLayer.isReady()) return voronoiLayer.getState();
 
-    std::unordered_map<entt::id_type, OnDemandLayer*> generatedDependencies;
+    std::unordered_map<entt::id_type, IGetValueAtLayer*> generatedDependencies;
     for (auto&& dependencyID : _layer.getClimateDependencies())
     {
-        auto depLayer = generateDependency<OnDemandLayer>(dependencyID, volume);
+        auto depLayer = generateDependency<IGetValueAtLayer>(dependencyID, volume);
         if (!depLayer.isReady()) return depLayer.getState();
 
         generatedDependencies.emplace(dependencyID, &depLayer.unwrap());
@@ -97,14 +97,14 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> v
 
 GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
 {
-    std::unordered_map<entt::id_type, OnDemandLayer*> dependencies;
+    std::unordered_map<entt::id_type, IGetValueAtLayer*> dependencies;
     for (auto&& [_, biome] : biomePoints)
     {
         for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
         {
             for (auto&& [layerID, _] : slotDeterminer.dependencies)
             {
-                auto dep = generateDependency<OnDemandLayer>(layerID, volume);
+                auto dep = generateDependency<IGetValueAtLayer>(layerID, volume);
                 if (!dep.isReady()) return dep.getState();
 
                 dependencies.emplace(layerID, &dep.unwrap());

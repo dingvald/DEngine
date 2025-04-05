@@ -134,11 +134,10 @@
             },
             "rock_formations": {
                 "layers": {
-                    "height": {
-                        "threshold": [ ">", -1.0 ]
+                    "random_scatter": {
+                        "threshold": [ "<", 0.01 ]
                     }
-                },
-                "expression": "height"
+                }
             }
         }
     }

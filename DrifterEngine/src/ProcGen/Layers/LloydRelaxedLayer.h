@@ -24,7 +24,7 @@ namespace drft
 		std::unordered_set<sf::Vector2i> distributedPoints;
 	};
 
-	class LloydRelaxedLayer : public GenerationLayer<LloydRelaxedLayer, LloydRelaxedLayerChunk>, public OnDemandLayer
+	class LloydRelaxedLayer : public GenerationLayer<LloydRelaxedLayer, LloydRelaxedLayerChunk>, public IGetValueAtLayer
 	{
 	public:
 		LloydRelaxedLayer();

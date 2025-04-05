@@ -28,7 +28,7 @@ namespace drft
 
 	private:
 		void assignBiomeToVoronoiCell(sf::Vector3i centroid, BiomeCentroids& biomeCentroids, const ClimateValues& climateValues);
-		ClimateValues getClimateValuesAtPoint(sf::Vector3i point, const std::unordered_map<entt::id_type, OnDemandLayer*>& generatedDependencies) const;
+		ClimateValues getClimateValuesAtPoint(sf::Vector3i point, const std::unordered_map<entt::id_type, IGetValueAtLayer*>& generatedDependencies) const;
 		virtual int numLevels() const override { return 2; }
 
 		GenerationState assignBiomesToVoronoiCells(spatial::AABB<int> volume);

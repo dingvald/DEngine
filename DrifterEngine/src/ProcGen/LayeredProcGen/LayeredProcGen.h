@@ -9,6 +9,7 @@
 
 #include <Utility/StandardLogger.h>
 #include <Utility/stdHashing.h>
+#include <Utility/DynamicPointerCast.h>
 #include <JSON/ICreateFromJson.h>
 
 namespace drft
@@ -51,20 +52,21 @@ namespace drft
 			virtual GenerationState doGenerate(int level) = 0;
 			virtual bool isGenerated() const = 0;
 		};
-
-		class IGetValueAt
-		{
-		public:
-			virtual double getValueAt(sf::Vector3i position) = 0;
-		};
 	}
 
-	class OnDemandLayer : public details::AbstractLayer, public details::IGetValueAt, public ICreateFromJson
+	class IGetValueAtLayer : public ICreateFromJson
+	{
+	public:
+		virtual double getValueAt(sf::Vector3i position) = 0;
+		virtual void createFromJson(const rapidjson::Value& json) = 0;
+	};
+
+	class OnDemandLayer : public details::AbstractLayer, public IGetValueAtLayer
 	{
 	public:
 		virtual void createFromJson(const rapidjson::Value& json) = 0;
 		virtual double getValueAt(sf::Vector3i tilePosition) = 0;
-		virtual GenerationState generate(details::GenerationContext&& context) override final
+		virtual GenerationState generate(details::GenerationContext&& context) override
 		{
 			return GenerationState::Complete;
 		}
@@ -83,7 +85,13 @@ namespace drft
 	template<typename T>
 	concept DerivedLayer = std::is_base_of<details::AbstractLayer, T>::value;
 
-	template<DerivedLayer T>
+	template<typename T>
+	concept GetValueAtLayer = std::is_base_of<drft::IGetValueAtLayer, T>::value;
+
+	template<typename T>
+	concept DerivedOrGetValueLayer = DerivedLayer<T> || GetValueAtLayer<T>;
+
+	template<DerivedOrGetValueLayer T>
 	struct FutureLayer
 	{
 	public:
@@ -159,17 +167,41 @@ namespace drft
 			}
 			return result;
 		}
-
+		template<GetValueAtLayer T>
+		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, int level = 0)
+		{
+			FutureLayer<T> result;
+			result._instance = nullptr;
+			if (!_layers.contains(id))
+			{
+				LOG_ERROR("Could not find layer {} with id {}", typeid(T).name(), id);
+				result._state = GenerationState::Failed;
+			}
+			else
+			{
+				result._state = GenerationState::Complete;
+				result._instance = dynamic_cast<T*>(_layers.at(id).get());
+			}
+			return result;
+		}
+		
 		template<DerivedLayer T>
 		void add(std::unique_ptr<T> layer)
 		{
 			entt::id_type type = entt::type_index<T>::value();
-			add<T>(std::move(layer), type);
+			_layers.emplace(type, std::move(layer));
 		}
-		template<DerivedLayer T>
+		template<DerivedOrGetValueLayer T>
 		void add(std::unique_ptr<T> layer, entt::id_type id)
 		{
-			_layers.emplace(id, std::move(layer));
+			if (auto casted = dynamic_unique_cast<details::AbstractLayer>(std::move(layer)))
+			{
+				_layers.emplace(id, std::move(casted));
+			}
+			else
+			{
+				LOG_WARNING("Failed to convert layer id {}", id);
+			}
 		}
 		template<>
 		void add(std::unique_ptr<OnDemandLayer> layer, entt::id_type id)
@@ -179,10 +211,10 @@ namespace drft
 		}
 
 	private:
-		using AbstractLayerPtr = std::unique_ptr<details::AbstractLayer>;
-		using LayerIdMap = std::unordered_map<entt::id_type, AbstractLayerPtr>;
+		using LayerPtr = std::unique_ptr<details::AbstractLayer>;
+		using LayerIdMap = std::unordered_map<entt::id_type, LayerPtr>;
 		LayerIdMap _layers;
-		unsigned int _globalSeed;
+		unsigned int _globalSeed = 0;
 	};
 
 	template<typename LayerType, typename ChunkType>
@@ -224,11 +256,13 @@ namespace drft
 	protected:
 		virtual GenerationState generate(int level) { return GenerationState::Complete; }
 		virtual int numLevels() const { return 1; }
-		template<DerivedLayer T>
+
+		template<DerivedOrGetValueLayer T>
 		FutureLayer<T> generateDependency(entt::id_type id, spatial::AABB<int> volume, int level = 0)
 		{
 			return _layerManager.generate<T>(id, volume, level);
 		}
+
 		template<DerivedLayer T>
 		FutureLayer<T> generateDependency(spatial::AABB<int> volume, int level = 0)
 		{
@@ -318,6 +352,7 @@ namespace drft
 		}
 
 	protected:
+		friend class ChunkType;
 		sf::Vector3i getChunkDimensions() const
 		{
 			return _chunkDimensions;

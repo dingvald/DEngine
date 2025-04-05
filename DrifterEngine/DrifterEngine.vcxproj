@@ -499,6 +499,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Helpers\GetMouseHandle.h" />
     <ClInclude Include="src\Systems\Helpers\GetPlayerHandle.h" />
     <ClInclude Include="src\Utility\ColorToHexString.h" />
+    <ClInclude Include="src\Utility\DynamicPointerCast.h" />
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityDescription.h" />
     <ClInclude Include="src\Utility\HashedString.h" />
     <ClInclude Include="deps\zlib\include\crc32.h" />
