@@ -352,7 +352,6 @@ namespace drft
 		}
 
 	protected:
-		friend class ChunkType;
 		sf::Vector3i getChunkDimensions() const
 		{
 			return _chunkDimensions;

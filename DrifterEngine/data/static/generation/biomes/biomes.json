@@ -134,8 +134,8 @@
             },
             "rock_formations": {
                 "layers": {
-                    "random_scatter": {
-                        "threshold": [ "<", 0.01 ]
+                    "relaxed_scatter": {
+                        "threshold": [ ">", 0.5 ]
                     }
                 }
             }

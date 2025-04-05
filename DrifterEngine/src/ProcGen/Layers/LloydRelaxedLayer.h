@@ -1,5 +1,4 @@
 #pragma once
-#include <JSON/ICreateFromJson.h>
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 
 namespace drft
