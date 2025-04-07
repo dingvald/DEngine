@@ -7,16 +7,12 @@
 #include "Components/VisualEffectComponent.h"
 
 #include "Engine/EngineConstants.h"
-#include <Spatial/Conversions.h>
-#include "Systems/Rendering/RenderLayers.h"
 
 entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& effect)
 {
 	if (effect.frames.empty()) throw std::exception("Cannot spawn effect with no sprites.");
 
 	entt::handle effectHandle = { registry, registry.create() };
-	
-	
 	
 	int ttl = effect.ttl;
 	if (effect.frames.size() == 1)
