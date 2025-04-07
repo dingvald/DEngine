@@ -4,6 +4,7 @@
 
 #include <Utility/Math.h>
 #include <Utility/StandardLogger.h>
+#include <Utility/ContainerHelpers.h>
 
 
 namespace evaluation_functions
@@ -163,14 +164,39 @@ float Biome::closenessToClimate(const std::unordered_map<entt::id_type, float>& 
 	return result;
 }
 
-const std::unordered_map<entt::id_type, drft::math::Range<float>>& Biome::getClimateRanges() const
+std::vector<entt::id_type> Biome::getClimateDependencyIds() const
 {
-	return _ranges;
+	return drft::util::extractKeys(_ranges);
 }
 
-const std::unordered_map<entt::id_type, SlotDeterminer>& Biome::getSlotDeterminers() const
+std::vector<entt::id_type> Biome::getEntitySlotDependencyIds() const
 {
-	return _entitySlotDeterminers;
+	std::vector<entt::id_type> result;
+	for (auto&& [slotID, determiner] : _entitySlotDeterminers)
+	{
+		auto ids = drft::util::extractKeys(determiner.dependencies);
+		result.insert(result.end(), std::make_move_iterator(ids.begin()), std::make_move_iterator(ids.end()));
+	}
+	return result;
+}
+
+std::vector<entt::id_type> Biome::determineValidSlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const
+{
+	std::vector<entt::id_type> result;
+	for (auto&& [slotId, slotDeterminer] : _entitySlotDeterminers)
+	{
+		TokenValues values;
+		for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
+		{
+			if (!dependencyValues.contains(layerID)) continue;
+			values.emplace(layerID, slotDependency.satisfiesValue(dependencyValues.at(layerID), slotDependency.range));
+		}
+		if (slotDeterminer.expression.evaluate(values))
+		{
+			result.emplace_back(slotId);
+		}
+	}
+	return result;
 }
 
 BiomeIcon Biome::getIcon() const

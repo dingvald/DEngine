@@ -30,8 +30,10 @@ public:
 	
 	bool satisfiesClimate(const std::unordered_map<entt::id_type, float>& values) const;
 	float closenessToClimate(const std::unordered_map<entt::id_type, float>& values) const;
-	const std::unordered_map<entt::id_type, drft::math::Range<float>>& getClimateRanges() const;
-	const std::unordered_map<entt::id_type, SlotDeterminer>& getSlotDeterminers() const;
+	std::vector<entt::id_type> getClimateDependencyIds() const;
+
+	std::vector<entt::id_type> getEntitySlotDependencyIds() const;
+	std::vector<entt::id_type> determineValidSlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
 
 	BiomeIcon getIcon() const;
 	sf::Color getBaseTileColor() const;
@@ -46,6 +48,7 @@ private:
 
 	sf::Color _baseTileColor = sf::Color::Black;
 	std::unordered_map<entt::id_type, drft::math::Range<float>> _ranges;
+	SlotDeterminer _biomeSlotDeterminer;
 	std::unordered_map<entt::id_type, SlotDeterminer> _entitySlotDeterminers;
 };
 

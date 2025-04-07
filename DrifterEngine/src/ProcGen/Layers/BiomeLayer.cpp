@@ -100,15 +100,12 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
     std::unordered_map<entt::id_type, IGetValueAtLayer*> dependencies;
     for (auto&& [_, biome] : biomePoints)
     {
-        for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
+        for (auto dependency : biome->getEntitySlotDependencyIds())
         {
-            for (auto&& [layerID, _] : slotDeterminer.dependencies)
-            {
-                auto dep = generateDependency<IGetValueAtLayer>(layerID, volume);
-                if (!dep.isReady()) return dep.getState();
+            auto dep = generateDependency<IGetValueAtLayer>(dependency, volume);
+            if (!dep.isReady()) return dep.getState();
 
-                dependencies.emplace(layerID, &dep.unwrap());
-            }
+            dependencies.emplace(dependency, &dep.unwrap());
         }
     }
 
@@ -118,20 +115,18 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
             if (!biomePoints.contains(closestPoint)) return;
 
             const Biome* biome = biomePoints.at(closestPoint);
+            if (!biome) return;
 
-            for (auto&& [slotID, slotDeterminer] : biome->getSlotDeterminers())
+            std::unordered_map<entt::id_type, float> layerValues;
+            for (auto&& [id, layer] : dependencies)
             {
-                TokenValues values;
-                for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
-                {
-                    auto layer = dependencies.at(layerID);
-                    float val = layer->getValueAt({point.x, point.y, z});
-                    values.emplace(layerID, slotDependency.satisfiesValue(val, slotDependency.range));
-                }
-                if (slotDeterminer.expression.evaluate(values))
-                {
-                    biomeSlotPoints.emplace_back( biome, slotID, point );
-                }
+                layerValues.emplace(id, layer->getValueAt({ point.x, point.y, z }));
+            }
+
+            auto slots = biome->determineValidSlots(layerValues);
+            for (auto&& slot : slots)
+            {
+                biomeSlotPoints.emplace_back(biome, slot, point);
             }
         });
 
@@ -153,10 +148,10 @@ void drft::BiomeLayer::createFromJson(const rapidjson::Value& json)
         {
             std::string biomeName = val.GetString();
             const Biome& biome = _biomeRegistry.get(biomeName);
-            for (auto&& [id, range] : biome.getClimateRanges())
-            {
-                _climateDependencies.insert(id);
-            }
+            
+            auto climateDependencies = biome.getClimateDependencyIds();
+            _climateDependencies.insert(climateDependencies.begin(), climateDependencies.end());
+
             _biomes.push_back(&biome);
         }
     }
