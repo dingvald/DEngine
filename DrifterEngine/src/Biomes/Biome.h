@@ -1,7 +1,6 @@
 #pragma once
 #include "Utility/Math.h"
 #include "Components/RenderComponent.h"
-#include <Factory/Factory.h>
 #include <JSON/ICreateFromJson.h>
 #include <JSON/StringExpressions.h>
 
@@ -10,9 +9,20 @@ using BiomeIcon = RenderComponent;
 
 struct SlotDependency : public ICreateFromJson
 {
-	std::function<bool(float, drft::math::Range<float>)> satisfiesValue;
-	drft::math::Range<float> range;
+	enum class CompareType
+	{
+		Less,
+		Greater,
+		Inside,
+		Outside,
+	};
 	void createFromJson(const rapidjson::Value& json) override;
+	bool satisfiesValue(float val) const;
+	float distanceFromValue(float val) const;
+
+private:
+	CompareType _compareType;
+	drft::math::Range<float> _range;
 };
 
 struct SlotDeterminer : public ICreateFromJson
@@ -22,22 +32,25 @@ struct SlotDeterminer : public ICreateFromJson
 	void createFromJson(const rapidjson::Value& json) override;
 };
 
-class Biome
+class Biome : public ICreateFromJson
 {
 public:
 	Biome(std::string name);
-	void createFromJSON(const rapidjson::Value& json);
-	
-	bool satisfiesClimate(const std::unordered_map<entt::id_type, float>& values) const;
-	float closenessToClimate(const std::unordered_map<entt::id_type, float>& values) const;
-	std::vector<entt::id_type> getClimateDependencyIds() const;
-
-	std::vector<entt::id_type> getEntitySlotDependencyIds() const;
-	std::vector<entt::id_type> determineValidSlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
+	void createFromJson(const rapidjson::Value& json) override;
 
 	BiomeIcon getIcon() const;
 	sf::Color getBaseTileColor() const;
 	const std::string& getName() const;
+	
+	std::vector<entt::id_type> getClimateDependencyIds() const;
+	bool satisfiesClimate(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
+	float closenessToClimate(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
+
+	std::vector<entt::id_type> getEntitySlotDependencyIds() const;
+	std::vector<entt::id_type> determineValidEntitySlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
+
+	std::vector<entt::id_type> getFeatureDependencyIds() const;
+	std::vector<entt::id_type> determineValidFeature(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
 
 private:
 	void setBaseTileColor(sf::Color iconColor);
@@ -47,9 +60,9 @@ private:
 	BiomeIcon _icon;
 
 	sf::Color _baseTileColor = sf::Color::Black;
-	std::unordered_map<entt::id_type, drft::math::Range<float>> _ranges;
-	SlotDeterminer _biomeSlotDeterminer;
+	SlotDeterminer _climateDeterminer;
 	std::unordered_map<entt::id_type, SlotDeterminer> _entitySlotDeterminers;
+	std::unordered_map<entt::id_type, SlotDeterminer> _featureDeterminers;
 };
 
  

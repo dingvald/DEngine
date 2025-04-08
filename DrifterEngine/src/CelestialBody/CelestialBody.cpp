@@ -106,6 +106,7 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 	{
 		_name = json["name"].GetString();
 	}
+	LOG_MSG("Creating celestial body {}", _name);
 	if (json.HasMember("layer_packs"))
 	{
 		for (auto&& val : json["layer_packs"].GetArray())

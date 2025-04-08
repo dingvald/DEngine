@@ -7,7 +7,7 @@ public:
 	BiomeRegistry();
 
 	void loadBiomes(const std::filesystem::path& biomesDirectory);
-	const Biome& get(const std::string& name) const;
+	const Biome* get(const std::string& name) const;
 
 	void forEachBiome(std::function<void(const std::string&, const Biome&)> callback) const;
 

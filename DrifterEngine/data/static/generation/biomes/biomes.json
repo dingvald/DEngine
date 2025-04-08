@@ -1,115 +1,5 @@
 {
   "biomes": {
-    "forest": {
-      "icon": {
-        "texture": "simple_tileset",
-        "uv_size": [ 16, 16 ],
-        "uv_coords": [ 5, 0 ],
-        "color": [ 65, 97, 63 ]
-      },
-      "climate": {
-        "height": [ 0.1, 1.0 ]
-      },
-      "entity_slots": {
-        "trees": {
-          "layers": {
-            "height": {
-              "threshold": [ ">", 0.1 ]
-            },
-            "trees": {
-              "threshold": [ ">", 0.5 ]
-            }
-          },
-          "expression": "height & trees"
-        },
-        "grass": {
-          "layers": {
-            "random_scatter": {
-              "threshold": [ ">", 0.80 ]
-            }
-          }
-        }
-      },
-      "features": {
-
-      }
-    },
-    "beach": {
-      "icon": {
-        "texture": "simple_tileset",
-        "uv_size": [ 16, 16 ],
-        "uv_coords": [ 5, 2 ],
-        "color": [ 174, 155, 125 ]
-      },
-      "climate": {
-        "height": [ -0.1, 0.1 ]
-      },
-      "entity_slots": {
-        "water": {
-          "layers": {
-            "height": {
-              "threshold": [ "<", -0.05 ]
-            }
-          }
-        },
-        "shallow_water": {
-          "layers": {
-            "height": {
-              "threshold": [ "<", -0.05, 0.0 ]
-            }
-          }
-        },
-        "sand": {
-          "layers": {
-            "height": {
-              "threshold": [ ">", 0.0 ]
-            },
-            "random_scatter": {
-              "threshold": [ ">", 0.50 ]
-            }
-          },
-          "expression": "height & random_scatter"
-        }
-      }
-    },
-    "ocean": {
-        "icon": {
-            "texture": "simple_tileset",
-            "uv_size": [ 16, 16 ],
-            "uv_coords": [ 5, 2 ],
-            "color": [ 27, 149, 224 ]
-        },
-        "climate": {
-            "height": [ -1.0, -0.1 ]
-        },
-        "entity_slots": {
-            "water": {
-                "layers": {
-                    "height": {
-                        "threshold": [ "<", -0.05 ]
-                    }
-                }
-            },
-            "shallow_water": {
-                "layers": {
-                    "height": {
-                        "threshold": [ "<", -0.05, 0.0 ]
-                    }
-                }
-            },
-            "sand": {
-                "layers": {
-                    "height": {
-                        "threshold": [ ">", 0.0 ]
-                    },
-                    "random_scatter": {
-                        "threshold": [ ">", 0.25 ]
-                    }
-                },
-                "expression": "height & random_scatter"
-            }
-        }
-    },
     "desert": {
         "icon": {
             "texture": "simple_tileset",
@@ -118,26 +8,19 @@
             "color": [ 174, 155, 125 ]
         },
         "climate": {
-            "height": [ 0.1, 0.5 ]
+            "height": [ "inside", 0.1, 0.5 ]
+        },
+        "features": {
+
         },
         "entity_slots": {
             "sand": {
-                "layers": {
-                    "height": {
-                        "threshold": [ "<", -1.0, 1.0 ]
-                    },
-                    "random_scatter": {
-                        "threshold": [ "<", 0.15 ]
-                    }
-                },
+                "height": [ "inside", -1.0, 1.0 ],
+                "random_scatter": [ "less", 0.15 ],
                 "expression": "height & random_scatter"
             },
             "rock_formations": {
-                "layers": {
-                    "relaxed_scatter": {
-                        "threshold": [ ">", 0.5 ]
-                    }
-                }
+                "relaxed_scatter": [ "greater", 0.5 ]
             }
         }
     }

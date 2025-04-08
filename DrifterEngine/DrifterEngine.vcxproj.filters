@@ -672,6 +672,12 @@
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Biomes\BiomeFeatureRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Biomes\BiomeFeature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3198,6 +3204,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Biomes\BiomeFeature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Biomes\BiomeFeatureRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -39,6 +39,7 @@ bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) c
     {
         return values.begin()->second;
     }
+
     // Validate input
     if (_parsedExpression.empty() && values.size() > 1)
     {

@@ -6,7 +6,6 @@
 #include <Spatial/Helpers.h>
 #include <Utility/ContainerHelpers.h>
 #include <Utility/stdHashing.h>
-#include <JSON/StringExpressions.h>
 
 using namespace entt::literals;
 using namespace drft;
@@ -123,7 +122,7 @@ GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
                 layerValues.emplace(id, layer->getValueAt({ point.x, point.y, z }));
             }
 
-            auto slots = biome->determineValidSlots(layerValues);
+            auto slots = biome->determineValidEntitySlots(layerValues);
             for (auto&& slot : slots)
             {
                 biomeSlotPoints.emplace_back(biome, slot, point);
@@ -147,12 +146,17 @@ void drft::BiomeLayer::createFromJson(const rapidjson::Value& json)
         for (auto&& val : json["biomes"].GetArray())
         {
             std::string biomeName = val.GetString();
-            const Biome& biome = _biomeRegistry.get(biomeName);
+            const Biome* biome = _biomeRegistry.get(biomeName);
+            if (!biome)
+            {
+                LOG_WARNING("Biome name {} does not exist in the biome registry", biomeName);
+                continue;
+            }
             
-            auto climateDependencies = biome.getClimateDependencyIds();
+            auto climateDependencies = biome->getClimateDependencyIds();
             _climateDependencies.insert(climateDependencies.begin(), climateDependencies.end());
 
-            _biomes.push_back(&biome);
+            _biomes.push_back(biome);
         }
     }
 }

@@ -200,6 +200,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Biomes\BiomeFeature.cpp" />
+    <ClCompile Include="src\Biomes\BiomeFeatureRegistry.cpp" />
     <ClCompile Include="src\CelestialBody\CelestialBody.cpp" />
     <ClCompile Include="src\GUI\ItemTooltip.cpp" />
     <ClCompile Include="src\Actions\ActionMap.cpp" />
@@ -454,6 +456,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Biomes\BiomeFeatureRegistry.h" />
+    <ClInclude Include="src\Biomes\BiomeFeature.h" />
     <ClInclude Include="src\CelestialBody\CelestialBody.h" />
     <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h" />

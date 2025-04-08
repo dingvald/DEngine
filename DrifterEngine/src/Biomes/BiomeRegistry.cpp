@@ -25,15 +25,16 @@ void BiomeRegistry::loadBiomes(const std::filesystem::path& biomesDirectory)
 		{
 			std::string name = biomeObj.name.GetString();
 			Biome biome{ name };
-			biome.createFromJSON(biomeObj.value);
+			biome.createFromJson(biomeObj.value);
 			_biomes.emplace(std::move(name), std::move(biome));
 		}
 	}
 }
 
-const Biome& BiomeRegistry::get(const std::string& name) const
+const Biome* BiomeRegistry::get(const std::string& name) const
 {
-	return _biomes.at(name);
+	if (!_biomes.contains(name)) return nullptr;
+	return &_biomes.at(name);
 }
 
 void BiomeRegistry::forEachBiome(std::function<void(const std::string&, const Biome&)> callback) const

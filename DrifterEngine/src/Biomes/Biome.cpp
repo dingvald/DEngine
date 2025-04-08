@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Biome.h"
-#include "Factory/Factory.h"
 
 #include <Utility/Math.h>
 #include <Utility/StandardLogger.h>
@@ -28,69 +27,140 @@ namespace evaluation_functions
 	{
 		return !range.isValueWithin(val);
 	}
+
+	static const std::unordered_map<SlotDependency::CompareType, bool(*)(float, drft::math::Range<float>)> EvalFunctionMap =
+	{
+		{SlotDependency::CompareType::Greater, isGreater},
+		{SlotDependency::CompareType::Less, isLess},
+		{SlotDependency::CompareType::Inside, isInside},
+		{SlotDependency::CompareType::Outside, isOutside},
+	};
+}
+
+namespace
+{
+	static const std::unordered_map<std::string, SlotDependency::CompareType> StringToCompareType =
+	{
+		{"greater", SlotDependency::CompareType::Greater},
+		{"less", SlotDependency::CompareType::Less},
+		{"inside", SlotDependency::CompareType::Inside},
+		{"outside", SlotDependency::CompareType::Outside},
+	};
 }
 
 void SlotDependency::createFromJson(const rapidjson::Value& json)
 {
-	if (json.HasMember("threshold"))
+	if (json.IsArray())
 	{
-		auto thresholdExpression = json["threshold"].GetArray();
-		std::string conditional = thresholdExpression[0].GetString();
-
-		if (thresholdExpression.Size() == 2)
+		auto thresholdExpression = json.GetArray();
+		if (thresholdExpression.Size() < 2)
 		{
-			float rangeJson = thresholdExpression[1].GetFloat();
-			range.setMin(rangeJson);
-			range.setMax(rangeJson);
-			if (conditional == ">")
+			LOG_ERROR("Malformed comparison expression - not enough arguments");
+			return;
+		}
+
+		std::string comparison = thresholdExpression[0].GetString();
+
+		if (!StringToCompareType.contains(comparison))
+		{
+			LOG_ERROR("Unknown compare type {} in comparison expression", comparison);
+			return;
+		}
+
+		_compareType = StringToCompareType.at(comparison);
+
+		if (_compareType == CompareType::Less || _compareType == CompareType::Greater)
+		{
+			if (thresholdExpression.Size() == 2)
 			{
-				satisfiesValue = evaluation_functions::isGreater;
+				float rangeJson = thresholdExpression[1].GetFloat();
+				_range.setMin(rangeJson);
+				_range.setMax(rangeJson);
 			}
-			else if (conditional == "<")
+			else
 			{
-				satisfiesValue = evaluation_functions::isLess;
+				LOG_ERROR("Incorrect number of arguments for comparison type {} - expected 1 but got {}", comparison, thresholdExpression.Size() - 1);
 			}
 		}
-		else if (thresholdExpression.Size() == 3)
+		else
 		{
-			float range_min = thresholdExpression[1].GetFloat();
-			float range_max = thresholdExpression[2].GetFloat();
-			range.setMin(range_min);
-			range.setMax(range_max);
-			if (conditional == ">")
+			if (thresholdExpression.Size() == 3)
 			{
-				satisfiesValue = evaluation_functions::isOutside;
+				float range_min = thresholdExpression[1].GetFloat();
+				float range_max = thresholdExpression[2].GetFloat();
+				_range.setMin(range_min);
+				_range.setMax(range_max);
 			}
-			else if (conditional == "<")
+			else
 			{
-				satisfiesValue = evaluation_functions::isInside;
+				LOG_ERROR("Incorrect number of arguments for comparison type {} - expected 2 but got {}", comparison, thresholdExpression.Size() - 1);
 			}
 		}
 	}
+}
+
+bool SlotDependency::satisfiesValue(float val) const
+{
+	return evaluation_functions::EvalFunctionMap.at(_compareType)(val, _range);
+}
+
+float SlotDependency::distanceFromValue(float val) const
+{
+	if (satisfiesValue(val)) return 0.f;
+
+	switch (_compareType)
+	{
+	case SlotDependency::CompareType::Less:
+		return std::abs(val - _range.getMax());
+		break;
+	case SlotDependency::CompareType::Greater:
+		return std::abs(val - _range.getMin());
+		break;
+	case SlotDependency::CompareType::Inside:
+		if (val < _range.getMin())
+		{
+			return std::abs(val - _range.getMin());
+		}
+		else
+		{
+			return std::abs(val - _range.getMax());
+		}
+		break;
+	case SlotDependency::CompareType::Outside:
+		return std::min(std::abs(val - _range.getMin()), std::abs(val - _range.getMax()));
+		break;
+	default:
+		break;
+	}
+
+	return _range.distance(val);
 }
 
 void SlotDeterminer::createFromJson(const rapidjson::Value& json)
 {
-	if (json.HasMember("layers"))
+	for (auto&& member : json.GetObject())
 	{
-		for (auto&& [name, value] : json["layers"].GetObject())
+		if (member.name == "expression")
 		{
-			SlotDependency newDependency;
-			newDependency.createFromJson(value);
-			dependencies.emplace(entt::hashed_string{ name.GetString() }, std::move(newDependency));
+			expression = drft::util::BooleanStringExpression{ json["expression"].GetString() };
+			continue;
 		}
-	}
-	if (json.HasMember("expression"))
-	{
-		expression = drft::util::BooleanStringExpression{ json["expression"].GetString() };
+
+		SlotDependency newDependency;
+		newDependency.createFromJson(member.value);
+		dependencies.emplace(entt::hashed_string{ member.name.GetString() }, std::move(newDependency));
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+////     BIOME      /////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Biome::Biome(std::string name)
 	:_name(name)
 {}
 
-void Biome::createFromJSON(const rapidjson::Value& json)
+void Biome::createFromJson(const rapidjson::Value& json)
 {
 	if (json.HasMember("icon"))
 	{
@@ -106,27 +176,8 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 	}
 	if (json.HasMember("climate"))
 	{
-		for (auto& climateRange : json["climate"].GetObject())
-		{
-			auto name = climateRange.name.GetString();
-			auto range = climateRange.value.GetArray();
-			if (range[0].IsString())
-			{
-				if (std::string(range[0].GetString()).compare("Any") == 0)
-				{
-					_ranges[entt::hashed_string{ name }].setInfinite();
-				}
-				else
-				{
-					throw std::invalid_argument("Unexpected parsed value.");
-				}
-			}
-			else
-			{
-				_ranges[entt::hashed_string{ name }].setMin(range[0].GetFloat());
-				_ranges[entt::hashed_string{ name }].setMax(range[1].GetFloat());
-			}
-		}
+		auto& val = json["climate"];
+		_climateDeterminer.createFromJson(val);
 	}
 	if (json.HasMember("entity_slots"))
 	{
@@ -137,66 +188,15 @@ void Biome::createFromJSON(const rapidjson::Value& json)
 			_entitySlotDeterminers.emplace(entt::hashed_string{ name.GetString() }, std::move(newDeterminer));
 		}
 	}
-}
-
-bool Biome::satisfiesClimate(const std::unordered_map<entt::id_type, float>& values) const
-{
-	for (auto&& [id, val] : values)
+	if (json.HasMember("features"))
 	{
-		if (!_ranges.contains(id)) continue;
-		if (!_ranges.at(id).isValueWithin(val)) return false;
-	}
-	return true;
-}
-
-float Biome::closenessToClimate(const std::unordered_map<entt::id_type, float>& values) const
-{
-	float result = 0.f;
-	for (auto&& [id, val] : values)
-	{
-		if (!_ranges.contains(id))
+		for (auto&& [name, value] : json["features"].GetObject())
 		{
-			result += 1.0f;
-			continue;
-		}
-		result += _ranges.at(id).distance(val);
-	}
-	return result;
-}
-
-std::vector<entt::id_type> Biome::getClimateDependencyIds() const
-{
-	return drft::util::extractKeys(_ranges);
-}
-
-std::vector<entt::id_type> Biome::getEntitySlotDependencyIds() const
-{
-	std::vector<entt::id_type> result;
-	for (auto&& [slotID, determiner] : _entitySlotDeterminers)
-	{
-		auto ids = drft::util::extractKeys(determiner.dependencies);
-		result.insert(result.end(), std::make_move_iterator(ids.begin()), std::make_move_iterator(ids.end()));
-	}
-	return result;
-}
-
-std::vector<entt::id_type> Biome::determineValidSlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const
-{
-	std::vector<entt::id_type> result;
-	for (auto&& [slotId, slotDeterminer] : _entitySlotDeterminers)
-	{
-		TokenValues values;
-		for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
-		{
-			if (!dependencyValues.contains(layerID)) continue;
-			values.emplace(layerID, slotDependency.satisfiesValue(dependencyValues.at(layerID), slotDependency.range));
-		}
-		if (slotDeterminer.expression.evaluate(values))
-		{
-			result.emplace_back(slotId);
+			SlotDeterminer newDeterminer;
+			newDeterminer.createFromJson(value);
+			_featureDeterminers.emplace(entt::hashed_string{ name.GetString() }, std::move(newDeterminer));
 		}
 	}
-	return result;
 }
 
 BiomeIcon Biome::getIcon() const
@@ -212,6 +212,97 @@ sf::Color Biome::getBaseTileColor() const
 const std::string& Biome::getName() const
 {
 	return _name;
+}
+
+bool Biome::satisfiesClimate(const std::unordered_map<entt::id_type, float>& dependencyValues) const
+{
+	TokenValues values;
+	for (auto&& [layerID, slotDependency] : _climateDeterminer.dependencies)
+	{
+		if (!dependencyValues.contains(layerID)) continue;
+		values.emplace(layerID, slotDependency.satisfiesValue(dependencyValues.at(layerID)));
+	}
+	return _climateDeterminer.expression.evaluate(values);
+}
+
+float Biome::closenessToClimate(const std::unordered_map<entt::id_type, float>& values) const
+{
+	float result = 0.f;
+	for (auto&& [id, val] : values)
+	{
+		if (!_climateDeterminer.dependencies.contains(id))
+		{
+			result += 1.0f;
+			continue;
+		}
+		result += _climateDeterminer.dependencies.at(id).distanceFromValue(val);
+	}
+	return result;
+}
+
+std::vector<entt::id_type> Biome::getClimateDependencyIds() const
+{
+	return drft::util::extractKeys(_climateDeterminer.dependencies);
+}
+
+std::vector<entt::id_type> Biome::getEntitySlotDependencyIds() const
+{
+	std::vector<entt::id_type> result;
+	for (auto&& [slotID, determiner] : _entitySlotDeterminers)
+	{
+		auto ids = drft::util::extractKeys(determiner.dependencies);
+		result.insert(result.end(), std::make_move_iterator(ids.begin()), std::make_move_iterator(ids.end()));
+	}
+	return result;
+}
+
+std::vector<entt::id_type> Biome::determineValidEntitySlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const
+{
+	std::vector<entt::id_type> result;
+	for (auto&& [slotId, slotDeterminer] : _entitySlotDeterminers)
+	{
+		TokenValues values;
+		for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
+		{
+			if (!dependencyValues.contains(layerID)) continue;
+			values.emplace(layerID, slotDependency.satisfiesValue(dependencyValues.at(layerID)));
+		}
+		if (slotDeterminer.expression.evaluate(values))
+		{
+			result.emplace_back(slotId);
+		}
+	}
+	return result;
+}
+
+std::vector<entt::id_type> Biome::getFeatureDependencyIds() const
+{
+	std::vector<entt::id_type> result;
+	for (auto&& [slotID, determiner] : _featureDeterminers)
+	{
+		auto ids = drft::util::extractKeys(determiner.dependencies);
+		result.insert(result.end(), std::make_move_iterator(ids.begin()), std::make_move_iterator(ids.end()));
+	}
+	return result;
+}
+
+std::vector<entt::id_type> Biome::determineValidFeature(const std::unordered_map<entt::id_type, float>& dependencyValues) const
+{
+	std::vector<entt::id_type> result;
+	for (auto&& [slotId, slotDeterminer] : _featureDeterminers)
+	{
+		TokenValues values;
+		for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
+		{
+			if (!dependencyValues.contains(layerID)) continue;
+			values.emplace(layerID, slotDependency.satisfiesValue(dependencyValues.at(layerID)));
+		}
+		if (slotDeterminer.expression.evaluate(values))
+		{
+			result.emplace_back(slotId);
+		}
+	}
+	return result;
 }
 
 void Biome::setBaseTileColor(sf::Color iconColor)
