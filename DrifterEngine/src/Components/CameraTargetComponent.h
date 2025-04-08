@@ -2,4 +2,5 @@
 
 struct CameraTargetComponent
 {
+	drft::TilePosition position;
 };

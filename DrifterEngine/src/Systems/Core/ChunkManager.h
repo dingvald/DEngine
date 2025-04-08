@@ -31,6 +31,7 @@ namespace drft::system
 		using System::System;
 
 		virtual void init() override;
+		virtual void start() override;
 		virtual void update() override;
 		virtual void shutdown() override;
 
@@ -46,6 +47,8 @@ namespace drft::system
 		void notifyTransferFailed(entt::id_type sourceId);
 
 		void onChunkSourceTransferRequestEvent(events::ChunkSourceTransferRequestEvent& ev);
+		void onConstructChunkSourceTracker(entt::registry& registry, entt::entity entity);
+		void onUpdateCameraTarget(entt::registry& registry, entt::entity entity);
 
 		SourcePtr tryCreateNewChunkSource(entt::id_type sourceId);
 		bool doesChunkSourceExist(entt::id_type sourceId) const;
@@ -62,6 +65,7 @@ namespace drft::system
 		ChunkSerializer _serializer;
 		State _state = State::FirstUpdate;
 		SourcePtr _activeSource;
+		entt::entity _chunkSourceTracker = entt::null;
 		std::optional<PendingTransfer> _pendingTransfer = std::nullopt;
 	};
 }

@@ -87,8 +87,11 @@ void drft::system::Camera::snapCameraToTarget(TilePosition targetPosition, Camer
 entt::entity drft::system::Camera::tryFindTarget() const
 {
 	auto view = _registry.view<CameraTargetComponent, PositionComponent>();
-	for (auto entity : view)
+	for (auto [entity, target, position] : view.each())
 	{
+		_registry.patch<CameraTargetComponent>(entity, 
+			[&](CameraTargetComponent& comp) {comp.position = position.tile;});
+
 		return entity;
 	}
 	return entt::null;

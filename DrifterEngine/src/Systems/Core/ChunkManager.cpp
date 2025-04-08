@@ -6,6 +6,8 @@
 #include "ChunkManager.h"
 
 #include "Components/PositionComponent.h"
+#include <Components/ChunkSourceTrackerComponent.h>
+#include <Components/CameraTargetComponent.h>
 
 #include <EnTT/entt.h>
 #include <exception>
@@ -15,15 +17,25 @@
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include <SolarSystem/SolarSystem.h>
 
-#pragma optimize("", off)
-
 using namespace entt::literals;
 
 const entt::id_type NULL_SOURCE_ID = "NULL_ID"_hs;
 
 void drft::system::ChunkManager::init()
 {
+	_registry.on_construct<ChunkSourceTrackerComponent>().connect<&ChunkManager::onConstructChunkSourceTracker>(this);
+	_registry.on_update<CameraTargetComponent>().connect<&ChunkManager::onUpdateCameraTarget>(this);
+
 	_dispatcher.sink<events::ChunkSourceTransferRequestEvent>().connect<&ChunkManager::onChunkSourceTransferRequestEvent>(this);
+}
+
+void drft::system::ChunkManager::start()
+{
+	if (_chunkSourceTracker == entt::null)
+	{
+		_chunkSourceTracker = _registry.create();
+		_registry.emplace<ChunkSourceTrackerComponent>(_chunkSourceTracker);
+	}
 }
 
 void drft::system::ChunkManager::update()
@@ -59,7 +71,16 @@ void drft::system::ChunkManager::onFirstUpdate()
 	LOG_MSG("<<< First Chunk Manager Update >>>")
 	if (!_activeSource && !_pendingTransfer)
 	{
-		setState(State::NoSource);
+		if (_chunkSourceTracker != entt::null)
+		{
+			auto& tracker = _registry.get<ChunkSourceTrackerComponent>(_chunkSourceTracker);
+			_pendingTransfer.emplace(NULL_SOURCE_ID, tracker.sourceId, tracker.position);
+			setState(State::Transferring);
+		}
+		else
+		{
+			setState(State::NoSource);
+		}
 	}
 }
 
@@ -106,6 +127,7 @@ void drft::system::ChunkManager::onTransfer()
 		{
 			LOG_MSG("Transfer complete");
 			setState(State::SourceReady);
+			_registry.emplace_or_replace<ChunkSourceTrackerComponent>(_chunkSourceTracker, _pendingTransfer->newSourceId, _pendingTransfer->position);
 			_pendingTransfer.reset();
 			return;
 		}
@@ -177,6 +199,22 @@ void drft::system::ChunkManager::onChunkSourceTransferRequestEvent(events::Chunk
 	_pendingTransfer.emplace(oldSourceId, ev.sourceId, ev.position);
 
 	setState(State::Transferring);
+}
+
+void drft::system::ChunkManager::onConstructChunkSourceTracker(entt::registry& registry, entt::entity entity)
+{
+	_chunkSourceTracker = entity;
+}
+
+void drft::system::ChunkManager::onUpdateCameraTarget(entt::registry& registry, entt::entity entity)
+{
+	if (_chunkSourceTracker == entt::null) return;
+
+	if (auto tracker = _registry.try_get<ChunkSourceTrackerComponent>(_chunkSourceTracker))
+	{
+		auto& cameraTarget = _registry.get<CameraTargetComponent>(entity);
+		tracker->position = cameraTarget.position;
+	}
 }
 
 drft::system::ChunkManager::SourcePtr drft::system::ChunkManager::tryCreateNewChunkSource(entt::id_type sourceId)

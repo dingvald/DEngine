@@ -6,6 +6,7 @@
 #include "AnimationComponent.h"
 #include "AttackerComponent.h"
 #include "BodyComponent.h"
+#include "ChunkSourceTrackerComponent.h"
 #include "ConsumableComponent.h"
 #include "ContainerComponent.h"
 #include "CraftableComponent.h"
@@ -54,6 +55,7 @@ void ComponentMetaBinder::bindComponents()
 	AnimationComponent::bind();
 	AttackerComponent::bind();
 	BodyComponent::bind();
+	ChunkSourceTrackerComponent::bind();
 	ContainerComponent::bind();
 	ConsumableComponent::bind();
 	CraftableComponent::bind();

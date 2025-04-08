@@ -30,7 +30,7 @@ void drft::system::PlayerTransferSystem::onPlayerTransferRequestEvent(events::Pl
 
 void drft::system::PlayerTransferSystem::onChunkSourceTransferStartedEvent(events::ChunkSourceTransferStartedEvent& ev)
 {
-	if (!_pendingTransfer) return;
+	if (!_pendingTransfer) return; // Transfer didn't originate from player
 
 	// Remove position component or player will be sucked away by chunk saving
 	_pendingTransfer->player.remove<PositionComponent>();
@@ -38,11 +38,15 @@ void drft::system::PlayerTransferSystem::onChunkSourceTransferStartedEvent(event
 
 void drft::system::PlayerTransferSystem::onChunkSourceTransferCompleteEvent(events::ChunkSourceTransferCompleteEvent& ev)
 {
+	if (!_pendingTransfer) return; // Transfer didn't originate from player
+
 	_pendingTransfer->positionComponent.tile = _pendingTransfer->targetPosition;
 	_pendingTransfer->player.emplace_or_replace<PositionComponent>(_pendingTransfer->positionComponent);
 }
 
 void drft::system::PlayerTransferSystem::onChunkSourceTransferFailedEvent(events::ChunkSourceTransferFailedEvent& ev)
 {
+	if (!_pendingTransfer) return; // Transfer didn't originate from player
+
 	_pendingTransfer->player.emplace_or_replace<PositionComponent>(_pendingTransfer->positionComponent);
 }

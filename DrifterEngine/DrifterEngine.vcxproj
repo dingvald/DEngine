@@ -455,6 +455,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CelestialBody\CelestialBody.h" />
+    <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferFailedEvent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferStartedEvent.h" />
