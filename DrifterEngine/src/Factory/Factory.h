@@ -5,7 +5,7 @@ class Factory
 {
 public:
 	template<typename U>
-	static void registerType(std::string name)
+	void registerType(std::string name)
 	{
 		static_assert(std::is_base_of<T, U>::value, "Type must be derived from type T");
 		static_assert(std::is_default_constructible<U>::value, "Type must be default contructable");
@@ -13,7 +13,7 @@ public:
 		_factoryMethods.emplace(std::move(name), []() {return std::make_unique<U>(); });
 	}
 
-	static std::unique_ptr<T> build(std::string name);
+	std::unique_ptr<T> build(std::string name);
 
 private:
 	using FactoryMethod = std::function<std::unique_ptr<T>()>;
@@ -30,7 +30,6 @@ inline std::unique_ptr<T> Factory<T>::build(std::string name)
 {
 	if (!_factoryMethods.contains(name))
 	{
-		std::cout << "Factory does not contain " << name << std::endl;
 		return nullptr;
 	}
 
