@@ -48,7 +48,7 @@ GenerationState LloydRelaxedLayerChunk::generateRandomPoints(spatial::AABB<int> 
 
 GenerationState LloydRelaxedLayerChunk::collectNeighborPoints(spatial::AABB<int> volume)
 {
-    auto state = _layer.generateNeighborChunks2d(_index, { .layers = _layerManager, .desiredLevel = Level1Gen, .seed = getGlobalSeed() });
+    auto state = _layer.generateNeighborChunks2d(_index, { .desiredLevel = Level1Gen, .seed = getGlobalSeed() });
     if (state != GenerationState::Complete) return state;
 
     neighborPoints.insert(randomPoints.begin(), randomPoints.end() );
@@ -62,7 +62,7 @@ GenerationState LloydRelaxedLayerChunk::collectNeighborPoints(spatial::AABB<int>
 
 GenerationState LloydRelaxedLayerChunk::applyRelaxationToPoints(spatial::AABB<int> volume)
 {
-    auto state = _layer.generateNeighborChunks2d(_index, { .layers = _layerManager, .desiredLevel = Level2Gen, .seed = getGlobalSeed() });
+    auto state = _layer.generateNeighborChunks2d(_index, { .desiredLevel = Level2Gen, .seed = getGlobalSeed() });
     if (state != GenerationState::Complete) return state;
 
     std::vector<sf::Vector2i> pointsToRelax{ neighborPoints.begin(), neighborPoints.end() };

@@ -14,4 +14,3 @@ public:
 private:
 	std::unordered_map<std::string, Biome> _biomes;
 };
-

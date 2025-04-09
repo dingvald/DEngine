@@ -163,7 +163,7 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 	}
 	if (json.HasMember("biomes"))
 	{
-		auto biomeLayer = std::make_unique<BiomeLayer>(_registries.biomes);
+		auto biomeLayer = std::make_unique<BiomeLayer>(_registries.biomes, _registries.features);
 		biomeLayer->createFromJson(json);
 		_layerManager.add(std::move(biomeLayer));
 	}

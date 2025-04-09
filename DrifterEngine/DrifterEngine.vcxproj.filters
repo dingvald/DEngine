@@ -672,10 +672,13 @@
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Biomes\BiomeFeatureRegistry.cpp">
+    <ClCompile Include="src\Biomes\Features\BiomeFeatureRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Biomes\BiomeFeature.cpp">
+    <ClCompile Include="src\Biomes\Features\IBiomeFeature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Biomes\Features\ClusterBiomeFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3206,10 +3209,13 @@
     <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Biomes\BiomeFeature.h">
+    <ClInclude Include="src\Biomes\Features\IBiomeFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Biomes\BiomeFeatureRegistry.h">
+    <ClInclude Include="src\Biomes\Features\BiomeFeatureRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Biomes\Features\ClusterBiomeFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -3285,6 +3291,7 @@
     <None Include="data\static\universe\solar_system.json" />
     <None Include="data\static\generation\layer_packs\layer_packs.json" />
     <None Include="data\static\generation\entity_packs\entity_packs.json" />
+    <None Include="data\static\generation\biome_features\biome_features.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

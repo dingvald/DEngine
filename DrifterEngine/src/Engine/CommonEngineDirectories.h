@@ -26,6 +26,7 @@ static const std::filesystem::path UNIVERSE_DIRECTORY = STATIC_DATA_DIRECTORY / 
 static const std::filesystem::path GENERATION_DIRECTORY = STATIC_DATA_DIRECTORY / "generation";
 
 static const std::filesystem::path BIOMES_DIRECTORY = GENERATION_DIRECTORY / "biomes";
+static const std::filesystem::path BIOME_FEATURES_DIRECTORY = GENERATION_DIRECTORY / "biome_features";
 static const std::filesystem::path ENTITY_PACKS_DIRECTORY = GENERATION_DIRECTORY / "entity_packs";
 static const std::filesystem::path LAYER_PACKS_DIRECTORY = GENERATION_DIRECTORY / "layer_packs";
 

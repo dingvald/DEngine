@@ -1,0 +1,10 @@
+{
+    "biome_features": {
+        "ore_vein": {
+            "type": "cluster",
+            "entity_slot": "ore",
+            "density": [0.3, 0.5],
+            "radius": [2.0, 4.0]
+        }
+    }
+}

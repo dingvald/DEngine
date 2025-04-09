@@ -68,7 +68,7 @@ void drft::GameState::loadOrCreateUniverseGenerator()
 	json::JsonFileWrapper json{ SOLAR_SYSTEM_FILE_PATH, "solar_system" };
 	if (!json.load())
 	{
-		error_logger << "Error: " << SOLAR_SYSTEM_FILE_PATH << " could not be loaded." << std::endl;
+		LOG_ERROR("{} could not be loaded", SOLAR_SYSTEM_FILE_PATH.string());
 		return;
 	}
 	else
@@ -82,6 +82,7 @@ void drft::GameState::loadOrCreateUniverseGenerator()
 void drft::GameState::loadGenerationRegistries()
 {
 	_generationRegistries.biomes.loadBiomes(BIOMES_DIRECTORY);
+	_generationRegistries.features.loadBiomeFeatures(BIOME_FEATURES_DIRECTORY);
 	_generationRegistries.entityPacks.loadEntityPacks(ENTITY_PACKS_DIRECTORY);
 	_generationRegistries.layerPacks.loadLayerPacks(LAYER_PACKS_DIRECTORY);
 

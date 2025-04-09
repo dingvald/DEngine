@@ -12,6 +12,35 @@ namespace drft::spatial
 
 	OffsetPosition collapseOffset(const TilePosition& position, const sf::Vector3f& offset);
 
+	template<typename T>
+	sf::Rect<T> expandToFit(const sf::Rect<T>& rect, const sf::Vector2<T>& point)
+	{
+		sf::Rect<T> result = rect;
+		if (rect.contains(point)) return result;
+
+		if (point.x < rect.position.x)
+		{
+			T left = rect.position.x + rect.size.x;
+			result.position.x = point.x;
+			result.size.x = left - result.position.x;
+		}
+		else if (point.x > rect.position.x + rect.size.x)
+		{
+			result.size.x = point.x - result.position.x;
+		}
+
+		if (point.y < rect.position.y)
+		{
+			T bottom = rect.position.y + rect.size.y;
+			result.position.y = point.y;
+			result.size.y = bottom - result.position.y;
+		}
+		else if (point.y > rect.position.y + rect.size.y)
+		{
+			result.size.y = point.y - result.position.y;
+		}
+	}
+
 	// Returns a sf::Vector3i that copies the XY plane and assigns 0 to the Z dimension
 	sf::Vector3i vec3FromPlanar(sf::Vector2i plane);
 	sf::Vector2i toXY(sf::Vector3i vec3);

@@ -10,11 +10,16 @@ drft::rng::Random::Random(unsigned int seed)
 	_gen.seed(seed);
 }
 
-double Random::realInRange(double min, double max)
+float Random::realInRange(float min, float max)
 {
-	using Dist = std::uniform_real_distribution<double>;
+	using Dist = std::uniform_real_distribution<float>;
 	Dist dist{};
 	return dist(_gen, Dist::param_type(min, max));
+}
+
+float drft::rng::Random::realInRange(math::Range<float> range)
+{
+	return realInRange(range.getMin(), range.getMax());
 }
 
 int drft::rng::Random::intInRange(int min, int max)

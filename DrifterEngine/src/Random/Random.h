@@ -1,5 +1,6 @@
 #pragma once
 #include <Random/XORshift.h>
+#include <Utility/Math.h>
 
 namespace drft::rng
 {
@@ -11,7 +12,8 @@ namespace drft::rng
 	public:
 		Random(unsigned int seed);
 
-		double realInRange(double min, double max);
+		float realInRange(float min, float max);
+		float realInRange(math::Range<float> range);
 		int intInRange(int min, int max);
 		sf::Vector2i positionInCircle(sf::Vector2i origin, int radius);
 		sf::Vector2i positionInRect(sf::IntRect rect);

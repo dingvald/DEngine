@@ -200,8 +200,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Biomes\BiomeFeature.cpp" />
-    <ClCompile Include="src\Biomes\BiomeFeatureRegistry.cpp" />
+    <ClCompile Include="src\Biomes\Features\ClusterBiomeFeature.cpp" />
+    <ClCompile Include="src\Biomes\Features\IBiomeFeature.cpp" />
+    <ClCompile Include="src\Biomes\Features\BiomeFeatureRegistry.cpp" />
     <ClCompile Include="src\CelestialBody\CelestialBody.cpp" />
     <ClCompile Include="src\GUI\ItemTooltip.cpp" />
     <ClCompile Include="src\Actions\ActionMap.cpp" />
@@ -456,8 +457,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Biomes\BiomeFeatureRegistry.h" />
-    <ClInclude Include="src\Biomes\BiomeFeature.h" />
+    <ClInclude Include="src\Biomes\Features\BiomeFeatureRegistry.h" />
+    <ClInclude Include="src\Biomes\Features\ClusterBiomeFeature.h" />
+    <ClInclude Include="src\Biomes\Features\IBiomeFeature.h" />
     <ClInclude Include="src\CelestialBody\CelestialBody.h" />
     <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h" />
@@ -1305,6 +1307,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\bodies.json" />
     <None Include="data\static\entities\weapons.json" />
+    <None Include="data\static\generation\biome_features\biome_features.json" />
     <None Include="data\static\generation\entity_packs\entity_packs.json" />
     <None Include="data\static\generation\layer_packs\layer_packs.json" />
     <None Include="data\static\universe\solar_system.json" />

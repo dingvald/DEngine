@@ -50,7 +50,7 @@ public:
 	std::vector<entt::id_type> determineValidEntitySlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
 
 	std::vector<entt::id_type> getFeatureDependencyIds() const;
-	std::vector<entt::id_type> determineValidFeature(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
+	std::optional<entt::id_type> determineValidFeature(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
 
 private:
 	void setBaseTileColor(sf::Color iconColor);

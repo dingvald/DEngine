@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <memory>
 #include "Grid2d.h"
-#include "Utility/stdHashing.h"
 
 namespace drft::spatial
 {

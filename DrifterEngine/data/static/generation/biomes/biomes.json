@@ -11,7 +11,9 @@
             "height": [ "inside", 0.1, 0.5 ]
         },
         "features": {
-
+            "ore_vein": {
+                "random_scatter": ["less", 0.01]
+            }
         },
         "entity_slots": {
             "sand": {
