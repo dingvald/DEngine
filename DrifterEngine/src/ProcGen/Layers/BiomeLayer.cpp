@@ -4,7 +4,6 @@
 
 #include <Random/Random.h>
 #include <Spatial/Helpers.h>
-#include <Utility/ContainerHelpers.h>
 #include <Utility/stdHashing.h>
 
 
@@ -12,18 +11,18 @@ using namespace entt::literals;
 using namespace drft;
 
 
-GenerationState BiomeLayerChunk::generate(int level)
+GenerationState BiomeLayerChunk::generate(GenerationLevel desiredLevel)
 {
     const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x, _volume.dimensions().y, 0 });
 
-    switch (level)
+    switch (desiredLevel)
     {
-    case 1:
-        return stage1_assignBiomesToVoronoiCells(paddedVolume);
-    case 2:
-        return stage2_generateBiomeFeatures(paddedVolume);
-    case 3:
-        return stage3_generateBiomeSlots(paddedVolume);
+    case GenerationLevel::One:
+        return assignBiomesToVoronoiCells(paddedVolume);
+    case GenerationLevel::Two:
+        return generateBiomeFeatures(paddedVolume);
+    case GenerationLevel::Three:
+        return generateBiomeSlots(paddedVolume);
     default:
         break;
     }
@@ -31,7 +30,7 @@ GenerationState BiomeLayerChunk::generate(int level)
     return GenerationState::Complete;
 }
 
-void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, const DependencyValues& climateValues)
+void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, const Biome::DependencyValues& climateValues)
 {
     std::vector<const Biome*> potentialBiomes;
     std::map<float, const Biome*> rankings;
@@ -64,9 +63,9 @@ void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, const Depe
     }
 }
 
-std::unordered_map<entt::id_type, float> BiomeLayerChunk::getClimateValuesAtPoint(sf::Vector3i point, const std::unordered_map<entt::id_type, IGetValueAtLayer*>& generatedDependencies) const
+Biome::DependencyValues BiomeLayerChunk::getClimateValuesAtPoint(sf::Vector3i point, const GeneratedDependencies& generatedDependencies) const
 {
-    std::unordered_map<entt::id_type, float> result;
+    Biome::DependencyValues result;
     for (auto&& [name, layerPtr] : generatedDependencies)
     {
         if (!layerPtr) continue; // TODO: Should maybe be an assert...?
@@ -75,12 +74,12 @@ std::unordered_map<entt::id_type, float> BiomeLayerChunk::getClimateValuesAtPoin
     return result;
 }
 
-GenerationState BiomeLayerChunk::stage1_assignBiomesToVoronoiCells(spatial::AABB<int> volume)
+GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> volume)
 {
     auto voronoiLayer = generateDependency<VoronoiLayer>(volume);
     if (!voronoiLayer.isReady()) return voronoiLayer.getState();
 
-    std::unordered_map<entt::id_type, IGetValueAtLayer*> generatedDependencies;
+    GeneratedDependencies generatedDependencies;
     for (auto&& dependencyID : _layer.getClimateDependencies())
     {
         auto depLayer = generateDependency<IGetValueAtLayer>(dependencyID, volume);
@@ -89,9 +88,14 @@ GenerationState BiomeLayerChunk::stage1_assignBiomesToVoronoiCells(spatial::AABB
         generatedDependencies.emplace(dependencyID, &depLayer.unwrap());
     }
 
+    auto& canvas = _layer.getLayerManager().getCanvas("something"_hs);
+
+    
+
     const auto centroids = voronoiLayer.unwrap().getCentroidsInArea(volume.flatten(), volume.center());
     for (auto&& point : centroids)
     {
+
         const auto values = getClimateValuesAtPoint(point, generatedDependencies);
         assignBiomeToVoronoiCell(point, values);
     }
@@ -99,45 +103,21 @@ GenerationState BiomeLayerChunk::stage1_assignBiomesToVoronoiCells(spatial::AABB
     return GenerationState::Complete;
 }
 
-GenerationState drft::BiomeLayerChunk::stage2_generateBiomeFeatures(spatial::AABB<int> volume)
+GenerationState drft::BiomeLayerChunk::generateBiomeFeatures(spatial::AABB<int> volume)
 {
     auto centerPoint = volume.flatten().getCenter();
     const auto closestBiomePosition = drft::spatial::findClosestPoint2d(centerPoint, biomePositions);
 
     const Biome* biome = biomePoints.at(closestBiomePosition);
     if (!biome) return GenerationState::Failed;
-
-    std::unordered_map<entt::id_type, IGetValueAtLayer*> dependencies;
-    for (auto dependency : biome->getFeatureDependencyIds())
-    {
-        auto dep = generateDependency<IGetValueAtLayer>(dependency, volume);
-        if (!dep.isReady()) return dep.getState();
-
-        dependencies.emplace(dependency, &dep.unwrap());
-    }
-
-    std::unordered_map<entt::id_type, float> layerValues;
-    for (auto&& [id, layer] : dependencies)
-    {
-        layerValues.emplace(id, layer->getValueAt({ centerPoint.x, centerPoint.y, volume.min.z }));
-    }
-
-    if (auto featureId = biome->determineValidFeature(layerValues))
-    {
-        if (auto feature = _layer.getFeatureRegistry().get(featureId.value()))
-        {
-            auto result = feature->generate(FeatureGenerationContext{ .seed = getLocalSeed() });
-            
-        }
-    }
     
 
     return GenerationState::Complete;
 }
 
-GenerationState BiomeLayerChunk::stage3_generateBiomeSlots(spatial::AABB<int> volume)
+GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
 {
-    std::unordered_map<entt::id_type, IGetValueAtLayer*> dependencies;
+    GeneratedDependencies dependencies;
     for (auto&& [_, biome] : biomePoints)
     {
         for (auto dependency : biome->getEntitySlotDependencyIds())
@@ -158,7 +138,7 @@ GenerationState BiomeLayerChunk::stage3_generateBiomeSlots(spatial::AABB<int> vo
             const Biome* biome = biomePoints.at(closestPoint);
             if (!biome) return;
 
-            std::unordered_map<entt::id_type, float> layerValues;
+            Biome::DependencyValues layerValues;
             for (auto&& [id, layer] : dependencies)
             {
                 layerValues.emplace(id, layer->getValueAt({ point.x, point.y, z }));
@@ -178,14 +158,6 @@ GenerationState BiomeLayerChunk::stage3_generateBiomeSlots(spatial::AABB<int> vo
 ///     BiomeLayer     //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-BiomeLayer::BiomeLayer(const BiomeRegistry& biomeRegistry, const BiomeFeatureRegistry& featureRegistry)
-    : GenerationLayer({8, 8, 8})
-    , _biomeRegistry(biomeRegistry)
-    , _featureRegistry(featureRegistry)
-{
-   
-}
-
 void drft::BiomeLayer::createFromJson(const rapidjson::Value& json)
 {
     if (json.HasMember("biomes"))
@@ -193,7 +165,7 @@ void drft::BiomeLayer::createFromJson(const rapidjson::Value& json)
         for (auto&& val : json["biomes"].GetArray())
         {
             std::string biomeName = val.GetString();
-            const Biome* biome = _biomeRegistry.get(biomeName);
+            const Biome* biome = getRegistries().biomes.get(biomeName);
             if (!biome)
             {
                 LOG_WARNING("Biome name {} does not exist in the biome registry", biomeName);
@@ -211,11 +183,6 @@ void drft::BiomeLayer::createFromJson(const rapidjson::Value& json)
 const std::vector<const Biome*>& drft::BiomeLayer::getBiomes() const
 {
     return _biomes;
-}
-
-const BiomeFeatureRegistry& drft::BiomeLayer::getFeatureRegistry() const
-{
-    return _featureRegistry;
 }
 
 const std::unordered_set<entt::id_type>& BiomeLayer::getClimateDependencies() const
@@ -248,4 +215,9 @@ const Biome* BiomeLayer::getBiomeAt(sf::Vector3i tilePosition) const
         }
     }
     return nullptr;
+}
+
+sf::Vector3i drft::BiomeLayer::getChunkDimensions() const
+{
+    return { 8, 8, 8 };
 }

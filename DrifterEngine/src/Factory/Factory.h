@@ -14,13 +14,13 @@ public:
 	}
 
 	template<typename... Args>
-	std::unique_ptr<T> build(std::string name, Args... args)
+	std::unique_ptr<T> build(std::string name)
 	{
 		if (!_factoryMethods.contains(name))
 		{
 			return nullptr;
 		}
-		return std::move(_factoryMethods.at(name)(args...));
+		return std::move(_factoryMethods.at(name)());
 	}
 
 private:

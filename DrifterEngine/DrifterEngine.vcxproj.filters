@@ -660,9 +660,6 @@
     <ClCompile Include="src\ProcGen\EntityPack\EntityPackRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\LayerFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ProcGen\LayerPack\LayerPack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -3194,9 +3191,6 @@
     <ClInclude Include="src\ProcGen\EntityPack\EntityPackRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\LayerFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ProcGen\LayerPack\LayerPack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -3216,6 +3210,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Biomes\Features\ClusterBiomeFeature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spatial\AutoGrid3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -3292,6 +3289,9 @@
     <None Include="data\static\generation\layer_packs\layer_packs.json" />
     <None Include="data\static\generation\entity_packs\entity_packs.json" />
     <None Include="data\static\generation\biome_features\biome_features.json" />
+    <None Include="src\Spatial\AutoGrid3d.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

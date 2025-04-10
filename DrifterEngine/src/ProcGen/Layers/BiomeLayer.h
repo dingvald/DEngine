@@ -10,7 +10,7 @@ namespace drft
 	class BiomeLayer;
 
 	using BiomeCentroids = std::unordered_map<sf::Vector2i, const Biome*>;
-	using DependencyValues = std::unordered_map<entt::id_type, float>;
+	using GeneratedDependencies = std::unordered_map<entt::id_type, IGetValueAtLayer*>;
 
 	struct BiomeSlotPoint
 	{
@@ -23,16 +23,16 @@ namespace drft
 	{
 	public:
 		using GenerationChunk::GenerationChunk;
-		virtual GenerationState generate(int level) override;
+		virtual GenerationState generate(GenerationLevel desiredLevel) override;
 
 	private:
-		void assignBiomeToVoronoiCell(sf::Vector3i centroid, const DependencyValues& climateValues);
-		DependencyValues getClimateValuesAtPoint(sf::Vector3i point, const std::unordered_map<entt::id_type, IGetValueAtLayer*>& generatedDependencies) const;
-		virtual int numLevels() const override { return 2; }
+		void assignBiomeToVoronoiCell(sf::Vector3i centroid, const Biome::DependencyValues& climateValues);
+		Biome::DependencyValues getClimateValuesAtPoint(sf::Vector3i point, const GeneratedDependencies& generatedDependencies) const;
+		virtual GenerationLevel numLevels() const override { return GenerationLevel::Three; }
 
-		GenerationState stage1_assignBiomesToVoronoiCells(spatial::AABB<int> volume);
-		GenerationState stage2_generateBiomeFeatures(spatial::AABB<int> volume);
-		GenerationState stage3_generateBiomeSlots(spatial::AABB<int> volume);
+		GenerationState assignBiomesToVoronoiCells(spatial::AABB<int> volume);
+		GenerationState generateBiomeFeatures(spatial::AABB<int> volume);
+		GenerationState generateBiomeSlots(spatial::AABB<int> volume);
 
 	public:
 		std::vector<sf::Vector2i> biomePositions;
@@ -43,12 +43,13 @@ namespace drft
 	class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>, public ICreateFromJson
 	{
 	public:
-		BiomeLayer(const BiomeRegistry& biomeRegistry, const BiomeFeatureRegistry& featureRegistry);
+		using GenerationLayer::GenerationLayer;
 
 		void createFromJson(const rapidjson::Value& json) override;
 
+		sf::Vector3i getChunkDimensions() const override;
+
 		const std::vector<const Biome*>& getBiomes() const;
-		const BiomeFeatureRegistry& getFeatureRegistry() const;
 		const std::unordered_set<entt::id_type>& getClimateDependencies() const;
 		// Gets the Biome Entity Slot Points within a given area and origin (z-level)
 		// Requires level 3 generation
@@ -58,8 +59,6 @@ namespace drft
 		const Biome* getBiomeAt(sf::Vector3i tilePosition) const;
 
 	private:
-		const BiomeRegistry& _biomeRegistry;
-		const BiomeFeatureRegistry& _featureRegistry;
 		std::vector<const Biome*> _biomes;
 		std::unordered_set<entt::id_type> _climateDependencies;
 	};

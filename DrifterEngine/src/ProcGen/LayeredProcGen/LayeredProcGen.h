@@ -9,8 +9,10 @@
 
 #include <Utility/StandardLogger.h>
 #include <Utility/stdHashing.h>
-#include <Utility/DynamicPointerCast.h>
 #include <JSON/ICreateFromJson.h>
+#include <ProcGen/GenerationRegistries.h>
+
+#include <Spatial/AutoGrid3d.h>
 
 namespace drft
 {
@@ -26,51 +28,99 @@ namespace drft
 		return GenerationState::Complete;
 	}
 
-	class GenerationLayerManager;
+	enum class GenerationLevel : unsigned int
+	{
+		All = 0,
+		One,
+		Two,
+		Three,
+		Four,
+		Five,
+		MAX
+		// If you need more than five, perhaps reconsider your design
+	};
 
 	struct GenerationContext
 	{
 		spatial::AABB<int> volume;
-		int desiredLevel;
+		GenerationLevel desiredLevel = GenerationLevel::All;
 		unsigned int seed;
 	};
+
+	class IGetValueAtLayer : public ICreateFromJson
+	{
+	public:
+		virtual void createFromJson(const rapidjson::Value& json) = 0;
+		virtual double getValueAt(sf::Vector3i tilePosition) = 0;
+	};
+
+	class GenerationLayerManager;
 
 	namespace details
 	{
 		class AbstractLayer
 		{
 		public:
-			virtual ~AbstractLayer() {};
-			virtual GenerationState generate(GenerationContext&& context) = 0;
+			AbstractLayer(GenerationLayerManager& generationLayerManager, const GenerationRegistries& registries)
+				: _manager(generationLayerManager)
+				, _registries(registries)
+			{
+			}
 
-		protected:
-			friend class GenerationLayerManager;
-			GenerationLayerManager* _layerManager;
+			virtual GenerationState generate(GenerationContext&& context) = 0;
+			const GenerationRegistries& getRegistries() const { return _registries; }
+			GenerationLayerManager& getLayerManager() { return _manager; }
+
+		private:
+			std::reference_wrapper<GenerationLayerManager> _manager;
+			std::reference_wrapper<const GenerationRegistries> _registries;		
 		};
 
 		class AbstractChunk
 		{
 		public:
 			virtual ~AbstractChunk() {};
-			virtual GenerationState doGenerate(int level) = 0;
+			virtual GenerationState doGenerate(GenerationLevel level) = 0;
 			virtual bool isGenerated() const = 0;
 		};
-	}
 
-	class IGetValueAtLayer : public ICreateFromJson
-	{
-	public:
-		virtual double getValueAt(sf::Vector3i position) = 0;
-		virtual void createFromJson(const rapidjson::Value& json) = 0;
-	};
+		template <typename T>
+		concept ConvertableLayer =
+			std::is_base_of_v<drft::details::AbstractLayer, T>
+			&& std::is_base_of_v<drft::IGetValueAtLayer, T>;
+
+		class LayerFactory
+		{
+		public:
+			using FactoryMethod = std::function<drft::details::AbstractLayer* (entt::id_type)>;
+		public:
+
+			template<ConvertableLayer T>
+			void registerLayer(entt::id_type typeId, FactoryMethod factoryMethod)
+			{
+				_factories.emplace(typeId, factoryMethod);
+			}
+
+			drft::details::AbstractLayer* build(entt::id_type typeId, entt::id_type id) const
+			{
+				if (!_factories.contains(typeId)) return nullptr;
+				return _factories.at(typeId)(id);
+			}
+
+		private:
+			std::unordered_map<entt::id_type, FactoryMethod> _factories;
+		};
+	}
 
 	class OnDemandLayer : public details::AbstractLayer, public IGetValueAtLayer
 	{
 	public:
+		using AbstractLayer::AbstractLayer;
 		virtual void createFromJson(const rapidjson::Value& json) = 0;
 		virtual double getValueAt(sf::Vector3i tilePosition) = 0;
 		virtual GenerationState generate(GenerationContext&& context) override
 		{
+			_globalSeed = context.seed;
 			return GenerationState::Complete;
 		}
 
@@ -81,23 +131,30 @@ namespace drft
 		}
 
 	private:
-		friend class GenerationLayerManager;
 		unsigned int _globalSeed;
+	};
+
+	
+
+	class CanvasLayer
+	{
+	public:
+		void set(std::any val, sf::Vector3i position)
+		{
+			_grid.at(position) = val;
+		}
+		std::any get(sf::Vector3i position) const
+		{
+			return _grid.at(position);
+		}
+	private:
+		spatial::AutoGrid3d<std::any> _grid{ sf::Vector3i{32, 32, 32} };
 	};
 
 	template<typename T>
 	concept DerivedLayer = std::is_base_of<details::AbstractLayer, T>::value;
 
 	template<typename T>
-	concept GetValueAtLayer = std::is_base_of<drft::IGetValueAtLayer, T>::value;
-
-	template<typename T>
-	concept DerivedOrGetValueLayer = DerivedLayer<T> || GetValueAtLayer<T>;
-
-	template<typename T>
-	concept OnDemandLayerType = DerivedLayer<T> && std::is_base_of<OnDemandLayer, T>::value;
-
-	template<DerivedOrGetValueLayer T>
 	struct FutureLayer
 	{
 	public:
@@ -109,11 +166,7 @@ namespace drft
 		{
 			if (_state == GenerationState::Complete)
 			{
-				if (!_instance)
-				{
-					LOG_ERROR("Layer id cannot be converted to {}", typeid(T).name());
-					return GenerationState::Failed;
-				}
+				if (!_instance) return GenerationState::Failed;
 			}
 			return _state;
 		}
@@ -132,7 +185,9 @@ namespace drft
 	class GenerationLayerManager
 	{
 	public:
-		GenerationLayerManager() = default;
+		GenerationLayerManager(const GenerationRegistries& generationRegistries)
+			: _generationRegistries(generationRegistries)
+		{};
 		~GenerationLayerManager() = default;
 
 		GenerationLayerManager(const GenerationLayerManager&) = delete;
@@ -150,14 +205,14 @@ namespace drft
 			return _globalSeed;
 		}
 
-		template<DerivedLayer T>
-		FutureLayer<T> generate(spatial::AABB<int> volume, int level = 0)
+		template<typename T>
+		FutureLayer<T> generate(spatial::AABB<int> volume, GenerationLevel level = GenerationLevel::All)
 		{
 			entt::id_type type = entt::type_index<T>::value();
 			return generate<T>(type, volume, level);
 		}
-		template<DerivedLayer T>
-		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, int level = 0)
+		template<typename T>
+		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, GenerationLevel level = GenerationLevel::All)
 		{
 			FutureLayer<T> result;
 			result._instance = nullptr;
@@ -168,86 +223,70 @@ namespace drft
 			}
 			else
 			{
-				result._state = _layers.at(id)->generate({ .volume = volume, .desiredLevel = level, .seed = _globalSeed });
+				result._state = _layers.at(id)->generate(
+					{ 
+					.volume = volume, 
+					.desiredLevel = level, 
+					.seed = _globalSeed
+					});
 			}
 
 			if (result._state == GenerationState::Complete)
 			{
 				result._instance = dynamic_cast<T*>(_layers.at(id).get());
-			}
-			return result;
-		}
-		template<GetValueAtLayer T>
-		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, int level = 0)
-		{
-			FutureLayer<T> result;
-			result._instance = nullptr;
-			if (!_layers.contains(id))
-			{
-				LOG_ERROR("Could not find layer {} with id {}", typeid(T).name(), id);
-				result._state = GenerationState::Failed;
-			}
-			else
-			{
-				result._state = _layers.at(id)->generate({ .volume = volume, .desiredLevel = level, .seed = _globalSeed });
-			}
-
-			if (result._state == GenerationState::Complete)
-			{
-				result._instance = dynamic_cast<T*>(_layers.at(id).get());
-			}
-			return result;
-		}
-		template<OnDemandLayerType T>
-		FutureLayer<T> generate(entt::id_type id, spatial::AABB<int> volume, int level = 0)
-		{
-			FutureLayer<T> result;
-			result._instance = nullptr;
-			if (!_layers.contains(id))
-			{
-				LOG_ERROR("Could not find layer {} with id {}", typeid(T).name(), id);
-				result._state = GenerationState::Failed;
-			}
-			else
-			{
-				result._state = GenerationState::Complete;
-				result._instance = dynamic_cast<T*>(_layers.at(id).get());
+				if (!result._instance)
+				{
+					LOG_ERROR("Could not convert layer id {} to {}", id, typeid(T).name());
+				}
 			}
 			return result;
 		}
 		
 		template<DerivedLayer T>
-		void add(std::unique_ptr<T> layer)
+		T* add()
 		{
 			entt::id_type type = entt::type_index<T>::value();
-			
-			_layers.emplace(type, std::move(layer));
+			return add<T>(type);
 		}
 		template<DerivedLayer T>
-		void add(std::unique_ptr<T> layer, entt::id_type id)
+		T* add(entt::id_type id)
 		{
-			layer->_layerManager = this;
-			_layers.emplace(id, std::move(layer));
+			_layers.emplace(id, std::make_unique<T>(*this, _generationRegistries));
+			return dynamic_cast<T*>(_layers.at(id).get());
 		}
-		template<GetValueAtLayer T>
-		void add(std::unique_ptr<T> layer, entt::id_type id)
+		template<typename T>
+		T* add(entt::id_type typeId, entt::id_type id)
 		{
-			layer->_layerManager = this;
-			_layers.emplace(id, std::move(layer));
+			auto layerPtr = _layerFactory.build(typeId, id);
+			if (!layerPtr) return nullptr;
+
+			return dynamic_cast<T*>(layerPtr);
 		}
-		template<>
-		void add(std::unique_ptr<OnDemandLayer> layer, entt::id_type id)
+
+		CanvasLayer& getCanvas(entt::id_type id)
 		{
-			layer->_globalSeed = _globalSeed;
-			layer->_layerManager = this;
-			_layers.emplace(id, std::move(layer));
+			if (!_canvasLayers.contains(id))
+			{
+				_canvasLayers.emplace(id, CanvasLayer{});
+			}
+			return _canvasLayers.at(id);
+		}
+
+		template<details::ConvertableLayer T>
+		void registerType(entt::id_type typeId)
+		{
+			_layerFactory.registerLayer<T>(typeId, [this](entt::id_type id) { return this->add<T>(id); });
 		}
 
 	private:
-		using LayerPtr = std::unique_ptr<details::AbstractLayer>;
-		using LayerIdMap = std::unordered_map<entt::id_type, LayerPtr>;
-		LayerIdMap _layers;
+		using GenLayerPtr = std::unique_ptr<details::AbstractLayer>;
+		using GenLayerIdMap = std::unordered_map<entt::id_type, GenLayerPtr>;
+		GenLayerIdMap _layers;
+		using CanvasLayerIdMap = std::unordered_map<entt::id_type, CanvasLayer>;
+		CanvasLayerIdMap _canvasLayers;
+		details::LayerFactory _layerFactory;
 		unsigned int _globalSeed = 0;
+		const GenerationRegistries& _generationRegistries;
 	};
 
 	template<typename LayerType, typename ChunkType>
@@ -263,20 +302,27 @@ namespace drft
 			_localSeed = _globalSeed + std::hash<sf::Vector3i>{}(_volume.min);
 		}
 
-		virtual GenerationState doGenerate(int level) override final
+		virtual GenerationState doGenerate(GenerationLevel desiredLevel) override final
 		{
 			if (_currentLevel > numLevels()) return GenerationState::Complete;
 
-			level = level == 0 ? numLevels() : level; // default level "0" generates all layers
-			level = std::min(level, numLevels());
+			desiredLevel = desiredLevel == GenerationLevel::All ? numLevels() : desiredLevel;
+			desiredLevel = std::min(desiredLevel, numLevels());
 
-			if (_currentLevel > level) return GenerationState::Complete;
+			if (_currentLevel > desiredLevel) return GenerationState::Complete;
 
 			GenerationState state = this->generate(_currentLevel);
 			if (state == GenerationState::Complete)
 			{
-				_currentLevel++;
-				if (_currentLevel <= level)
+				unsigned int intLevel = static_cast<unsigned int>(_currentLevel);
+				intLevel++;
+				if (intLevel >= static_cast<unsigned int>(GenerationLevel::MAX))
+				{
+					intLevel = static_cast<unsigned int>(GenerationLevel::Five);
+				}
+				_currentLevel = static_cast<GenerationLevel>(intLevel);
+
+				if (_currentLevel <= desiredLevel)
 				{
 					state = GenerationState::Generating;
 				}
@@ -286,20 +332,20 @@ namespace drft
 		virtual bool isGenerated() const override final { return _currentLevel > numLevels(); }
 
 	protected:
-		virtual GenerationState generate(int level) { return GenerationState::Complete; }
-		virtual int numLevels() const { return 1; }
+		virtual GenerationState generate(GenerationLevel desiredLevel) { return GenerationState::Complete; }
+		virtual GenerationLevel numLevels() const { return GenerationLevel::One; }
 
-		template<DerivedOrGetValueLayer T>
-		FutureLayer<T> generateDependency(entt::id_type id, spatial::AABB<int> volume, int level = 0)
+		template<typename T>
+		FutureLayer<T> generateDependency(entt::id_type id, spatial::AABB<int> volume, GenerationLevel level = GenerationLevel::All)
 		{
 			return _layer.getLayerManager().generate<T>(id, volume, level);
 		}
-
-		template<DerivedLayer T>
-		FutureLayer<T> generateDependency(spatial::AABB<int> volume, int level = 0)
+		template<typename T>
+		FutureLayer<T> generateDependency(spatial::AABB<int> volume, GenerationLevel level = GenerationLevel::All)
 		{
 			return _layer.getLayerManager().generate<T>(volume, level);
 		}
+
 		spatial::AABB<int> addPaddingToVolume(sf::Vector3i padding)
 		{
 			spatial::AABB<int> result = _volume;
@@ -337,17 +383,14 @@ namespace drft
 	private:
 		unsigned int _localSeed;
 		unsigned int _globalSeed;
-		int _currentLevel = 1;
+		GenerationLevel _currentLevel = GenerationLevel::One;
 	};
 
 	template<typename LayerType, typename ChunkType>
 	class GenerationLayer : public details::AbstractLayer
 	{
 	public:
-		GenerationLayer(sf::Vector3i chunkDimensions)
-			: _chunkDimensions(chunkDimensions)
-		{}
-
+		using AbstractLayer::AbstractLayer;
 		GenerationState generateNeighborChunks2d(sf::Vector3i chunkCoordinate, GenerationContext&& context)
 		{
 			auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
@@ -382,40 +425,16 @@ namespace drft
 			}
 		}
 
-		GenerationLayerManager& getLayerManager() const
-		{
-			return *_layerManager;
-		}
-
 	protected:
-		sf::Vector3i getChunkDimensions() const
-		{
-			return _chunkDimensions;
-		}
+		virtual sf::Vector3i getChunkDimensions() const = 0;
 
 		sf::Vector3i toChunkPosition(sf::Vector3i tilePosition) const
 		{
-			sf::Vector3i result;
-			result.x = tilePosition.x / _chunkDimensions.x;
-			result.y = tilePosition.y / _chunkDimensions.y;
-			result.z = tilePosition.z / _chunkDimensions.z;
-			return result;
-		}
-		sf::Vector3i toChunkLocalPosition(sf::Vector3i tilePosition) const
-		{
-			sf::Vector3i result;
-			result.x = tilePosition.x % _chunkDimensions.x;
-			result.y = tilePosition.y % _chunkDimensions.y;
-			result.z = tilePosition.z % _chunkDimensions.z;
-			return result;
+			return tilePosition.componentWiseDiv(getChunkDimensions());
 		}
 		sf::Vector3i toTilePosition(sf::Vector3i chunkPosition) const
 		{
-			sf::Vector3i result;
-			result.x = chunkPosition.x * _chunkDimensions.x;
-			result.y = chunkPosition.y * _chunkDimensions.y;
-			result.z = chunkPosition.z * _chunkDimensions.z;
-			return result;
+			return chunkPosition.componentWiseMul(getChunkDimensions());
 		}
 		std::vector<sf::Vector3i> getChunkPointsInsideVolume(drft::spatial::AABB<int> volume) const
 		{
@@ -509,7 +528,7 @@ namespace drft
 				{
 					ChunkType chunk = ChunkType{
 						point,
-						spatial::AABB<int>{toTilePosition(point), _chunkDimensions},
+						spatial::AABB<int>{ toTilePosition(point), getChunkDimensions() },
 						*static_cast<LayerType*>(this)
 					};
 					_chunks.emplace(point, std::move(chunk));
@@ -526,6 +545,5 @@ namespace drft
 
 	private:
 		std::unordered_map<sf::Vector3i, ChunkType> _chunks;
-		sf::Vector3i _chunkDimensions;
 	};
 }

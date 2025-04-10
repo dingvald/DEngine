@@ -8,6 +8,8 @@ namespace drft
 	class PerlinNoiseLayer : public OnDemandLayer
 	{
 	public:
+		using OnDemandLayer::OnDemandLayer;
+
 		double getValueAt(sf::Vector3i tilePosition) override;
 		void createFromJson(const rapidjson::Value& json) override;
 

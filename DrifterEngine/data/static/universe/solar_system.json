@@ -14,26 +14,6 @@
                         "biomes": [
                             "desert"
                         ]
-                    },
-                    {
-                        "name": "Earth",
-                        "size": [ 75, 125 ],
-                        "distance": 250,
-                        "layer_packs": [ "standard" ],
-                        "entity_packs": [ "something" ],
-                        "biomes": [
-                            "forest",
-                            "ocean",
-                            "beach"
-                        ],
-                        "bodies": [
-                            {
-                                "name": "Luna",
-                                "layer_packs": [ "moon" ],
-                                "size": [ 20, 30 ],
-                                "distance": 0.3
-                            }
-                        ]
                     }
                 ]
             }

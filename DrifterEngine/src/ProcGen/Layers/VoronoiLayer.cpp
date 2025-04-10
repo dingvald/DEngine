@@ -5,7 +5,7 @@
 
 using namespace drft;
 
-GenerationState VoronoiLayerChunk::generate(int level)
+GenerationState VoronoiLayerChunk::generate(GenerationLevel)
 {
     const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x / 2, _volume.dimensions().y / 2, 0 });
     auto jitterLayer = generateDependency<JitteredGridLayer>(paddedVolume);
@@ -28,11 +28,6 @@ GenerationState VoronoiLayerChunk::generate(int level)
         });
 
     return GenerationState::Complete;
-}
-
-VoronoiLayer::VoronoiLayer()
-    : GenerationLayer({128, 128, 8})
-{
 }
 
 std::vector<sf::Vector3i> VoronoiLayer::getCentroidsInArea(sf::IntRect area, sf::Vector3i origin)
@@ -64,4 +59,9 @@ std::vector<std::pair<sf::Vector3i, sf::Vector3i>> VoronoiLayer::getEdgesInArea(
             }
         });
     return result;
+}
+
+sf::Vector3i drft::VoronoiLayer::getChunkDimensions() const
+{
+    return { 128, 128, 8 };
 }

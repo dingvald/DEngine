@@ -10,7 +10,7 @@ namespace drft
 	{
 	public:
 		using GenerationChunk::GenerationChunk;
-		virtual GenerationState generate(int level) override;
+		virtual GenerationState generate(GenerationLevel desiredLevel) override;
 
 		std::vector<sf::Vector2i> centroids;
 		std::vector<std::pair<sf::Vector2i, sf::Vector2i>> edges;
@@ -19,9 +19,10 @@ namespace drft
 	class VoronoiLayer : public GenerationLayer<VoronoiLayer, VoronoiLayerChunk>
 	{
 	public:
-		VoronoiLayer();
-
+		using GenerationLayer::GenerationLayer;
 		std::vector<sf::Vector3i> getCentroidsInArea(sf::IntRect area, sf::Vector3i origin);
 		std::vector<std::pair<sf::Vector3i, sf::Vector3i>> getEdgesInArea(sf::IntRect area, sf::Vector3i origin);
+
+		sf::Vector3i getChunkDimensions() const override;
 	};
 }

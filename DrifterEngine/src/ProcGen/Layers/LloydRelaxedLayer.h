@@ -9,10 +9,10 @@ namespace drft
 	{
 	public:
 		using GenerationChunk::GenerationChunk;
-		virtual GenerationState generate(int level) override;
+		virtual GenerationState generate(GenerationLevel desiredLevel) override;
 
 	private:
-		virtual int numLevels() const override { return 3; }
+		virtual GenerationLevel numLevels() const override { return GenerationLevel::Three; }
 		GenerationState generateRandomPoints(spatial::AABB<int> volume);
 		GenerationState collectNeighborPoints(spatial::AABB<int> volume);
 		GenerationState applyRelaxationToPoints(spatial::AABB<int> volume);
@@ -26,13 +26,15 @@ namespace drft
 	class LloydRelaxedLayer : public GenerationLayer<LloydRelaxedLayer, LloydRelaxedLayerChunk>, public IGetValueAtLayer
 	{
 	public:
-		LloydRelaxedLayer();
+		using GenerationLayer::GenerationLayer;
 
 		double getValueAt(sf::Vector3i position) override;
 		void createFromJson(const rapidjson::Value& json) override;
 
 		float getDistributionDensity() const;
 		int getNumberOfRelaxationPasses() const;
+
+		sf::Vector3i getChunkDimensions() const override;
 
 	private:
 		float _density = 0.5;

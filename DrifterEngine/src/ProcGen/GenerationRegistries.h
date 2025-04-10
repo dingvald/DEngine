@@ -1,8 +1,8 @@
+#pragma once
 #include <Biomes/BiomeRegistry.h>
 #include <Biomes/Features/BiomeFeatureRegistry.h>
 #include <ProcGen/EntityPack/EntityPackRegistry.h>
 #include <ProcGen/LayerPack/LayerPackRegistry.h>
-#include <ProcGen/Layers/LayerFactory.h>
 
 struct GenerationRegistries
 {
@@ -10,6 +10,4 @@ struct GenerationRegistries
 	BiomeFeatureRegistry features;
 	EntityPackRegistry entityPacks;
 	LayerPackRegistry layerPacks;
-
-	LayerFactory layerFactory;
 };

@@ -32,8 +32,13 @@ struct SlotDeterminer : public ICreateFromJson
 	void createFromJson(const rapidjson::Value& json) override;
 };
 
+
+
 class Biome : public ICreateFromJson
 {
+public:
+	using DependencyValues = std::unordered_map<entt::id_type, double>;
+
 public:
 	Biome(std::string name);
 	void createFromJson(const rapidjson::Value& json) override;
@@ -43,14 +48,14 @@ public:
 	const std::string& getName() const;
 	
 	std::vector<entt::id_type> getClimateDependencyIds() const;
-	bool satisfiesClimate(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
-	float closenessToClimate(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
+	bool satisfiesClimate(const DependencyValues& dependencyValues) const;
+	float closenessToClimate(const DependencyValues& dependencyValues) const;
 
 	std::vector<entt::id_type> getEntitySlotDependencyIds() const;
-	std::vector<entt::id_type> determineValidEntitySlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
+	std::vector<entt::id_type> determineValidEntitySlots(const DependencyValues& dependencyValues) const;
 
 	std::vector<entt::id_type> getFeatureDependencyIds() const;
-	std::optional<entt::id_type> determineValidFeature(const std::unordered_map<entt::id_type, float>& dependencyValues) const;
+	std::optional<entt::id_type> determineValidFeature(const DependencyValues& dependencyValues) const;
 
 private:
 	void setBaseTileColor(sf::Color iconColor);

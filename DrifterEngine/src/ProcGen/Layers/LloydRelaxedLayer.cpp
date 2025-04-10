@@ -7,19 +7,15 @@ using namespace drft;
 
 constexpr float MaxDensity = 0.8f;
 
-constexpr int Level1Gen = 1;
-constexpr int Level2Gen = 2;
-constexpr int Level3Gen = 3;
-
-GenerationState LloydRelaxedLayerChunk::generate(int level)
+GenerationState LloydRelaxedLayerChunk::generate(GenerationLevel desiredLevel)
 {
-    switch (level)
+    switch (desiredLevel)
     {
-    case Level1Gen:
+    case GenerationLevel::One:
         return generateRandomPoints(_volume);
-    case Level2Gen:
+    case GenerationLevel::Two:
         return collectNeighborPoints(_volume);
-    case Level3Gen:
+    case GenerationLevel::Three:
         return applyRelaxationToPoints(_volume);
     default:
         break;
@@ -48,7 +44,7 @@ GenerationState LloydRelaxedLayerChunk::generateRandomPoints(spatial::AABB<int> 
 
 GenerationState LloydRelaxedLayerChunk::collectNeighborPoints(spatial::AABB<int> volume)
 {
-    auto state = _layer.generateNeighborChunks2d(_index, { .desiredLevel = Level1Gen, .seed = getGlobalSeed() });
+    auto state = _layer.generateNeighborChunks2d(_index, { .desiredLevel = GenerationLevel::One, .seed = getGlobalSeed() });
     if (state != GenerationState::Complete) return state;
 
     neighborPoints.insert(randomPoints.begin(), randomPoints.end() );
@@ -62,7 +58,7 @@ GenerationState LloydRelaxedLayerChunk::collectNeighborPoints(spatial::AABB<int>
 
 GenerationState LloydRelaxedLayerChunk::applyRelaxationToPoints(spatial::AABB<int> volume)
 {
-    auto state = _layer.generateNeighborChunks2d(_index, { .desiredLevel = Level2Gen, .seed = getGlobalSeed() });
+    auto state = _layer.generateNeighborChunks2d(_index, { .desiredLevel = GenerationLevel::Two, .seed = getGlobalSeed() });
     if (state != GenerationState::Complete) return state;
 
     std::vector<sf::Vector2i> pointsToRelax{ neighborPoints.begin(), neighborPoints.end() };
@@ -85,9 +81,6 @@ GenerationState LloydRelaxedLayerChunk::applyRelaxationToPoints(spatial::AABB<in
 
     return GenerationState::Complete;
 }
-LloydRelaxedLayer::LloydRelaxedLayer()
-    : GenerationLayer({8, 8, 8})
-{}
 
 double LloydRelaxedLayer::getValueAt(sf::Vector3i position)
 {
@@ -121,4 +114,9 @@ float LloydRelaxedLayer::getDistributionDensity() const
 int LloydRelaxedLayer::getNumberOfRelaxationPasses() const
 {
     return _passes;
+}
+
+sf::Vector3i drft::LloydRelaxedLayer::getChunkDimensions() const
+{
+    return { 8, 8, 8 };
 }

@@ -215,7 +215,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPack.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPackRegistry.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\LayerFactory.cpp" />
     <ClCompile Include="src\SolarSystem\SolarSystem.cpp" />
     <ClCompile Include="src\Spatial\ChunkSource.cpp" />
     <ClCompile Include="src\States\Settings\KeybindingState.cpp" />
@@ -493,8 +492,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h" />
     <ClInclude Include="src\ProcGen\LayerPack\LayerPack.h" />
     <ClInclude Include="src\ProcGen\LayerPack\LayerPackRegistry.h" />
-    <ClInclude Include="src\ProcGen\Layers\LayerFactory.h" />
     <ClInclude Include="src\SolarSystem\SolarSystem.h" />
+    <ClInclude Include="src\Spatial\AutoGrid3d.h" />
     <ClInclude Include="src\Spatial\ChunkSource.h" />
     <ClInclude Include="src\States\Settings\KeybindingState.h" />
     <ClInclude Include="src\States\SettingsState.h" />
@@ -1343,6 +1342,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <None Include="deps\TGUI-1.5\include\TGUI\extlibs\Aurora\Dispatch\Detail\SingleDispatcher.inl" />
     <None Include="packages.config" />
     <None Include="src\Spatial\AutoGrid.inl" />
+    <None Include="src\Spatial\AutoGrid3d.inl" />
     <None Include="src\Spatial\Grid2d.inl" />
     <None Include="src\Spatial\Grid3d.inl" />
     <None Include="src\Utility\ResourceHolder.inl" />

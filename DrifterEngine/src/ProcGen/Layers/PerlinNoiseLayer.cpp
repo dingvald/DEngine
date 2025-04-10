@@ -13,7 +13,7 @@ double PerlinNoiseLayer::getValueAt(sf::Vector3i tilePosition)
 {
     if (!_isNoiseInitialized)
     {
-        _noise = drft::rng::PerlinNoise{ getGlobalSeed(), _octaves, _lacunarity, _gain };
+        _noise = drft::rng::PerlinNoise{ getGlobalSeed(), _octaves, _lacunarity, _gain};
         _isNoiseInitialized = true;
     }
     double val = _getValueAt(tilePosition);

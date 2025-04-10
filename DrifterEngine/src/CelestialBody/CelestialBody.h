@@ -5,8 +5,7 @@
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 #include <Utility/Math.h>
 #include <ProcGen/EntityPack/EntityPack.h>
-
-struct GenerationRegistries;
+#include <ProcGen/GenerationRegistries.h>
 
 class CelestialBody : public IChunkGenerator, public IChunkGeneratorProvider, public ICreateFromJson
 {

@@ -21,7 +21,9 @@
 #include <ProcGen/Layers/VoronoiLayer.h>
 #include <ProcGen/Layers/JitteredGridLayer.h>
 #include <ProcGen/Layers/RandomLayer.h>
-#include <ProcGen/Layers/LayerFactory.h>
+#include <ProcGen/Layers/PerlinNoiseLayer.h>
+#include <ProcGen/Layers/LloydRelaxedLayer.h>
+#include <ProcGen/Layers/FillLayer.h>
 
 #include <ProcGen/GenerationRegistries.h>
 #include <ProcGen/EntityPack/EntityPack.h>
@@ -33,11 +35,19 @@ using namespace drft;
 
 CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	: _registries(registries)
+	, _layerManager(registries)
 {
+	using namespace entt::literals;
+	// register layer types that can have multiple instances created using add
+	_layerManager.registerType<drft::RandomLayer>("random"_hs);
+	_layerManager.registerType<drft::PerlinNoiseLayer>("perlin"_hs);
+	_layerManager.registerType<drft::LloydRelaxedLayer>("relaxed_points"_hs);
+	_layerManager.registerType<drft::FillLayer>("fill"_hs);
+
 	// Add generic layers that all generators can use
-	_layerManager.add(std::make_unique<RandomLayer>());
-	_layerManager.add(std::make_unique<JitteredGridLayer>());
-	_layerManager.add(std::make_unique<VoronoiLayer>());
+	_layerManager.add<RandomLayer>();
+	_layerManager.add<JitteredGridLayer>();
+	_layerManager.add<VoronoiLayer>();
 }
 
 GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt::registry& registry)
@@ -113,16 +123,12 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 		{
 			entt::id_type packId = entt::hashed_string{ val.GetString() };
 			auto& pack = _registries.layerPacks.get(packId);
-			for (auto&& [layerId, typeAndparams] : pack.getLayers())
+			for (auto&& [layerId, typeAndParams] : pack.getLayers())
 			{
-				auto packInstance = _registries.layerFactory.build(typeAndparams.layerTypeId, typeAndparams.json);
-				if (!packInstance)
+				if (auto layer = _layerManager.add<ICreateFromJson>(typeAndParams.layerTypeId, layerId))
 				{
-					LOG_WARNING("Could not find layer with id {} in layer factory", typeAndparams.layerTypeId);
-					continue;
+					layer->createFromJson(typeAndParams.json);
 				}
-
-				_layerManager.add(std::move(packInstance), layerId);
 			}
 		}
 	}
@@ -163,17 +169,15 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 	}
 	if (json.HasMember("biomes"))
 	{
-		auto biomeLayer = std::make_unique<BiomeLayer>(_registries.biomes, _registries.features);
-		biomeLayer->createFromJson(json);
-		_layerManager.add(std::move(biomeLayer));
+		_layerManager.add<BiomeLayer>()->createFromJson(json);
 	}
 	if (json.HasMember("bodies"))
 	{
+		_celestialBodies.reserve(json["bodies"].GetArray().Size());
 		for (auto&& body : json["bodies"].GetArray())
 		{
-			CelestialBody newBody{_registries};
-			newBody.createFromJson(body);
-			_celestialBodies.emplace_back(std::move(newBody));
+			_celestialBodies.emplace_back(_registries);
+			_celestialBodies.back().createFromJson(body);
 		}
 	}
 }

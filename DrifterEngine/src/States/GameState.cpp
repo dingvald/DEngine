@@ -85,8 +85,6 @@ void drft::GameState::loadGenerationRegistries()
 	_generationRegistries.features.loadBiomeFeatures(BIOME_FEATURES_DIRECTORY);
 	_generationRegistries.entityPacks.loadEntityPacks(ENTITY_PACKS_DIRECTORY);
 	_generationRegistries.layerPacks.loadLayerPacks(LAYER_PACKS_DIRECTORY);
-
-	_generationRegistries.layerFactory.bind();
 }
 
 void drft::GameState::loadEntityPrototypes()

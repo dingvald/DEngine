@@ -6,7 +6,7 @@ static const float JITTER_FACTOR = 0.25;
 
 using namespace drft;
 
-GenerationState JitteredGridLayerChunk::generate(int level)
+GenerationState JitteredGridLayerChunk::generate(GenerationLevel)
 {
 	drft::rng::Random random{ getLocalSeed() };
 	const sf::Vector3i centerPoint = _volume.center();
@@ -20,10 +20,6 @@ GenerationState JitteredGridLayerChunk::generate(int level)
 	return GenerationState::Complete;
 }
 
-JitteredGridLayer::JitteredGridLayer()
-	: GenerationLayer({8, 8, 8})
-{}
-
 std::vector<sf::Vector2i> JitteredGridLayer::getPointsInArea(sf::IntRect area, sf::Vector3i origin)
 {
 	std::vector<sf::Vector2i> result;
@@ -34,6 +30,11 @@ std::vector<sf::Vector2i> JitteredGridLayer::getPointsInArea(sf::IntRect area, s
 			result.emplace_back(chunk.jitteredPoint);
 		});
 	return result;
+}
+
+sf::Vector3i drft::JitteredGridLayer::getChunkDimensions() const
+{
+	return { 8, 8, 8 };
 }
 
 

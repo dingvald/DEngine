@@ -214,7 +214,7 @@ const std::string& Biome::getName() const
 	return _name;
 }
 
-bool Biome::satisfiesClimate(const std::unordered_map<entt::id_type, float>& dependencyValues) const
+bool Biome::satisfiesClimate(const DependencyValues& dependencyValues) const
 {
 	TokenValues values;
 	for (auto&& [layerID, slotDependency] : _climateDeterminer.dependencies)
@@ -225,7 +225,7 @@ bool Biome::satisfiesClimate(const std::unordered_map<entt::id_type, float>& dep
 	return _climateDeterminer.expression.evaluate(values);
 }
 
-float Biome::closenessToClimate(const std::unordered_map<entt::id_type, float>& values) const
+float Biome::closenessToClimate(const DependencyValues& values) const
 {
 	float result = 0.f;
 	for (auto&& [id, val] : values)
@@ -256,7 +256,7 @@ std::vector<entt::id_type> Biome::getEntitySlotDependencyIds() const
 	return result;
 }
 
-std::vector<entt::id_type> Biome::determineValidEntitySlots(const std::unordered_map<entt::id_type, float>& dependencyValues) const
+std::vector<entt::id_type> Biome::determineValidEntitySlots(const DependencyValues& dependencyValues) const
 {
 	std::vector<entt::id_type> result;
 	for (auto&& [slotId, slotDeterminer] : _entitySlotDeterminers)
@@ -286,7 +286,7 @@ std::vector<entt::id_type> Biome::getFeatureDependencyIds() const
 	return result;
 }
 
-std::optional<entt::id_type> Biome::determineValidFeature(const std::unordered_map<entt::id_type, float>& dependencyValues) const
+std::optional<entt::id_type> Biome::determineValidFeature(const DependencyValues& dependencyValues) const
 {
 	for (auto&& [slotId, slotDeterminer] : _featureDeterminers)
 	{
