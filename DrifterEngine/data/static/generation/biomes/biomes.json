@@ -12,7 +12,7 @@
         },
         "features": {
             "ore_vein": {
-                "random_scatter": ["less", 0.01]
+                "random_scatter": ["less", 0.5]
             }
         },
         "entity_slots": {

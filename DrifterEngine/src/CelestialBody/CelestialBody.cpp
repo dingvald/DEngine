@@ -24,6 +24,8 @@
 #include <ProcGen/Layers/PerlinNoiseLayer.h>
 #include <ProcGen/Layers/LloydRelaxedLayer.h>
 #include <ProcGen/Layers/FillLayer.h>
+#include <ProcGen/Layers/FeatureLayer.h>
+#include <ProcGen/Layers/EntityLayer.h>
 
 #include <ProcGen/GenerationRegistries.h>
 #include <ProcGen/EntityPack/EntityPack.h>
@@ -32,6 +34,7 @@
 #include <Utility/StandardLogger.h>
 
 using namespace drft;
+using namespace entt::literals;
 
 CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	: _registries(registries)
@@ -48,6 +51,8 @@ CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	_layerManager.add<RandomLayer>();
 	_layerManager.add<JitteredGridLayer>();
 	_layerManager.add<VoronoiLayer>();
+	_layerManager.add<FeatureLayer>();
+	_layerManager.add<EntityLayer>();
 }
 
 GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt::registry& registry)
@@ -56,34 +61,42 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	const sf::Vector3i dimensions = spatial::asTileSpace(ChunkDimensions);
 	spatial::AABB<int> volume = { origin, dimensions };
 
-	auto layer = _layerManager.generate<BiomeLayer>(volume);
-	if (!layer.isReady()) return layer.getState();
+	auto biomeLayer = _layerManager.generate<BiomeLayer>(volume);
+	if (!biomeLayer.isReady()) return biomeLayer.getState();
 
-	rng::Random random{ std::hash<ChunkPosition>()(position) };
+	auto featureLayer = _layerManager.generate<FeatureLayer>(volume);
+	if (!featureLayer.isReady()) return featureLayer.getState();
+
+	auto entityLayer = _layerManager.generate<EntityLayer>(volume);
+	if (!entityLayer.isReady()) return entityLayer.getState();
+
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
+	auto& entityCanvas = _layerManager.getCanvas("entity_canvas"_hs);
 
-	// Place tiles
-	spatial::forEachPointInRect(volume.flatten(), [&registry, &factory, &layer, z = volume.min.z](sf::Vector2i point)
+	rng::Random random = { std::hash<ChunkPosition>()(position) };
+
+	// Place Tiles + Entities
+	spatial::forEachPointInRect(volume.flatten(), [&](sf::Vector2i point)
 		{
-			const sf::Vector3i point3d = { point.x, point.y, z };
+			const sf::Vector3i point3d = { point.x, point.y, volume.min.z };
+			// Place tile
 			sf::Color tileColor = { 10,10,10 };
-			if (auto biome = layer.unwrap().getBiomeAt(point3d))
+			if (auto biome = biomeLayer.unwrap().getBiomeAt(point3d))
 			{
 				tileColor = biome->getBaseTileColor();
 			}
 			auto tileHandle = gen::placeSingle("Tile", spatial::asTileSpace(point3d), registry, factory);
 			tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
-		});
 
-	// Place Entities from Biomes
-	auto bsps = layer.unwrap().getBiomeEntitySlotPointsInArea(volume.flatten(), volume.min);
-	for (auto&& [biome, slot, point] : bsps)
-	{
-		if (auto entity = _entityPacks.selectEntity(slot, random))
-		{
-			gen::placeSingle(entity.value(), spatial::asTileSpace(sf::Vector3i{point.x, point.y, volume.min.z}), registry, factory);
-		}
-	}
+			// Place entity
+			auto slotId = entityCanvas.get(point3d);
+			if (!slotId.has_value()) return;
+
+			if (auto entityName = _entityPacks.selectEntity(std::any_cast<entt::id_type>(slotId), random))
+			{
+				auto tileHandle = gen::placeSingle(entityName.value(), spatial::asTileSpace(point3d), registry, factory);
+			}	
+		});
 
 	return GenerationState::Complete;
 }
@@ -128,6 +141,10 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 				if (auto layer = _layerManager.add<ICreateFromJson>(typeAndParams.layerTypeId, layerId))
 				{
 					layer->createFromJson(typeAndParams.json);
+				}
+				else
+				{
+					LOG_ERROR("Layer {} could not be converted to a ICreateFromJson layer", layerId);
 				}
 			}
 		}

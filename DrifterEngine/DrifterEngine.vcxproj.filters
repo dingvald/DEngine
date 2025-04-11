@@ -678,6 +678,12 @@
     <ClCompile Include="src\Biomes\Features\ClusterBiomeFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\FeatureLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3213,6 +3219,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\AutoGrid3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\FeatureLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\EntityLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

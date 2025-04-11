@@ -141,11 +141,17 @@ namespace drft
 	public:
 		void set(std::any val, sf::Vector3i position)
 		{
-			_grid.at(position) = val;
+			auto& exsistingVal = _grid.at(position);
+			if (exsistingVal.has_value()) return;
+			exsistingVal = val;
 		}
 		std::any get(sf::Vector3i position) const
 		{
 			return _grid.at(position);
+		}
+		void forceSet(std::any val, sf::Vector3i position)
+		{
+			_grid.at(position) = val;
 		}
 	private:
 		spatial::AutoGrid3d<std::any> _grid{ sf::Vector3i{32, 32, 32} };

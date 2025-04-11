@@ -11,23 +11,11 @@ using namespace entt::literals;
 using namespace drft;
 
 
-GenerationState BiomeLayerChunk::generate(GenerationLevel desiredLevel)
+GenerationState BiomeLayerChunk::generate(GenerationLevel)
 {
     const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x, _volume.dimensions().y, 0 });
 
-    switch (desiredLevel)
-    {
-    case GenerationLevel::One:
-        return assignBiomesToVoronoiCells(paddedVolume);
-    case GenerationLevel::Two:
-        return generateBiomeFeatures(paddedVolume);
-    case GenerationLevel::Three:
-        return generateBiomeSlots(paddedVolume);
-    default:
-        break;
-    }
-
-    return GenerationState::Complete;
+    return assignBiomesToVoronoiCells(paddedVolume);
 }
 
 void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, const Biome::DependencyValues& climateValues)
@@ -88,14 +76,9 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> v
         generatedDependencies.emplace(dependencyID, &depLayer.unwrap());
     }
 
-    auto& canvas = _layer.getLayerManager().getCanvas("something"_hs);
-
-    
-
     const auto centroids = voronoiLayer.unwrap().getCentroidsInArea(volume.flatten(), volume.center());
     for (auto&& point : centroids)
     {
-
         const auto values = getClimateValuesAtPoint(point, generatedDependencies);
         assignBiomeToVoronoiCell(point, values);
     }
@@ -103,56 +86,6 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> v
     return GenerationState::Complete;
 }
 
-GenerationState drft::BiomeLayerChunk::generateBiomeFeatures(spatial::AABB<int> volume)
-{
-    auto centerPoint = volume.flatten().getCenter();
-    const auto closestBiomePosition = drft::spatial::findClosestPoint2d(centerPoint, biomePositions);
-
-    const Biome* biome = biomePoints.at(closestBiomePosition);
-    if (!biome) return GenerationState::Failed;
-    
-
-    return GenerationState::Complete;
-}
-
-GenerationState BiomeLayerChunk::generateBiomeSlots(spatial::AABB<int> volume)
-{
-    GeneratedDependencies dependencies;
-    for (auto&& [_, biome] : biomePoints)
-    {
-        for (auto dependency : biome->getEntitySlotDependencyIds())
-        {
-            auto dep = generateDependency<IGetValueAtLayer>(dependency, volume);
-            if (!dep.isReady()) return dep.getState();
-
-            dependencies.emplace(dependency, &dep.unwrap());
-        }
-    }
-
-    // Individual entities
-    drft::spatial::forEachPointInRect(_volume.flatten(), [this, &dependencies, z = _volume.min.z](sf::Vector2i point)
-        {
-            auto closestPoint = drft::spatial::findClosestPoint2d(point, biomePositions);
-            if (!biomePoints.contains(closestPoint)) return;
-
-            const Biome* biome = biomePoints.at(closestPoint);
-            if (!biome) return;
-
-            Biome::DependencyValues layerValues;
-            for (auto&& [id, layer] : dependencies)
-            {
-                layerValues.emplace(id, layer->getValueAt({ point.x, point.y, z }));
-            }
-
-            auto slots = biome->determineValidEntitySlots(layerValues);
-            for (auto&& slot : slots)
-            {
-                biomeSlotPoints.emplace_back(biome, slot, point);
-            }
-        });
-
-    return GenerationState::Complete;
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///     BiomeLayer     //////////////////////////////////////////////////////////////////////////////////////
@@ -190,20 +123,6 @@ const std::unordered_set<entt::id_type>& BiomeLayer::getClimateDependencies() co
     return _climateDependencies;
 }
 
-std::vector<BiomeSlotPoint> BiomeLayer::getBiomeEntitySlotPointsInArea(sf::IntRect area, sf::Vector3i origin)
-{
-    std::vector<BiomeSlotPoint> result;
-    forEachLoadedChunkInArea(area, origin, [&area, &result](BiomeLayerChunk& chunk)
-        {
-            for (auto&& bsp : chunk.biomeSlotPoints)
-            {
-                if (!area.contains(bsp.point)) continue;
-                result.emplace_back(bsp);
-            }
-        });
-    return result;
-}
-
 const Biome* BiomeLayer::getBiomeAt(sf::Vector3i tilePosition) const
 {
     if (const auto chunk = tryGetChunk(tilePosition))
@@ -215,6 +134,11 @@ const Biome* BiomeLayer::getBiomeAt(sf::Vector3i tilePosition) const
         }
     }
     return nullptr;
+}
+
+void drft::BiomeLayer::forEachBiomeInArea(sf::IntRect area, std::function<void(const Biome* biome)> func)
+{
+    auto chunks = getChunkPointsInsideArea(area)
 }
 
 sf::Vector3i drft::BiomeLayer::getChunkDimensions() const

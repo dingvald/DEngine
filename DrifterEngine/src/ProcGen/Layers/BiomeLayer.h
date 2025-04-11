@@ -1,7 +1,6 @@
 #pragma once
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 #include <Biomes/BiomeRegistry.h>
-#include <Biomes/Features/BiomeFeatureRegistry.h>
 
 #include <JSON/ICreateFromJson.h>
 
@@ -26,13 +25,10 @@ namespace drft
 		virtual GenerationState generate(GenerationLevel desiredLevel) override;
 
 	private:
+		GenerationState assignBiomesToVoronoiCells(spatial::AABB<int> volume);
 		void assignBiomeToVoronoiCell(sf::Vector3i centroid, const Biome::DependencyValues& climateValues);
 		Biome::DependencyValues getClimateValuesAtPoint(sf::Vector3i point, const GeneratedDependencies& generatedDependencies) const;
-		virtual GenerationLevel numLevels() const override { return GenerationLevel::Three; }
-
-		GenerationState assignBiomesToVoronoiCells(spatial::AABB<int> volume);
-		GenerationState generateBiomeFeatures(spatial::AABB<int> volume);
-		GenerationState generateBiomeSlots(spatial::AABB<int> volume);
+		virtual GenerationLevel numLevels() const override { return GenerationLevel::One; }
 
 	public:
 		std::vector<sf::Vector2i> biomePositions;
@@ -51,12 +47,9 @@ namespace drft
 
 		const std::vector<const Biome*>& getBiomes() const;
 		const std::unordered_set<entt::id_type>& getClimateDependencies() const;
-		// Gets the Biome Entity Slot Points within a given area and origin (z-level)
-		// Requires level 3 generation
-		std::vector<BiomeSlotPoint> getBiomeEntitySlotPointsInArea(sf::IntRect area, sf::Vector3i origin);
 		// Gets the Biome at a given tile positions
-		// Requires level 1 generation
 		const Biome* getBiomeAt(sf::Vector3i tilePosition) const;
+		void forEachBiomeInArea(sf::IntRect area, std::function<void(const Biome* biome)> func);
 
 	private:
 		std::vector<const Biome*> _biomes;

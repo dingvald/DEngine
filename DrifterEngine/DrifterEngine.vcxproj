@@ -215,6 +215,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPack.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPackRegistry.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\FeatureLayer.cpp" />
     <ClCompile Include="src\SolarSystem\SolarSystem.cpp" />
     <ClCompile Include="src\Spatial\ChunkSource.cpp" />
     <ClCompile Include="src\States\Settings\KeybindingState.cpp" />
@@ -492,6 +494,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h" />
     <ClInclude Include="src\ProcGen\LayerPack\LayerPack.h" />
     <ClInclude Include="src\ProcGen\LayerPack\LayerPackRegistry.h" />
+    <ClInclude Include="src\ProcGen\Layers\EntityLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\FeatureLayer.h" />
     <ClInclude Include="src\SolarSystem\SolarSystem.h" />
     <ClInclude Include="src\Spatial\AutoGrid3d.h" />
     <ClInclude Include="src\Spatial\ChunkSource.h" />
