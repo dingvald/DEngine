@@ -22,6 +22,10 @@ namespace drft::spatial
 		T& at(int x, int y);
 		const T& at(int x, int y) const;
 
+		// Iterates through the grid and performs the given function
+		// The function provides the x and y positions and the value
+		void forEach(std::function<void(int, int, T)> func) const;
+
 		int width() const;
 		int height() const;
 

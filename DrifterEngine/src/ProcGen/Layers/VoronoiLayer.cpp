@@ -7,7 +7,7 @@ using namespace drft;
 
 GenerationState VoronoiLayerChunk::generate(GenerationLevel)
 {
-    const auto paddedVolume = addPaddingToVolume({ _volume.dimensions().x / 2, _volume.dimensions().y / 2, 0 });
+    const auto paddedVolume = _volume.expand({1.5f, 1.5f, 1.0f});
     auto jitterLayer = generateDependency<JitteredGridLayer>(paddedVolume);
     if (!jitterLayer.isReady()) return jitterLayer.getState();
 
@@ -30,31 +30,31 @@ GenerationState VoronoiLayerChunk::generate(GenerationLevel)
     return GenerationState::Complete;
 }
 
-std::vector<sf::Vector3i> VoronoiLayer::getCentroidsInArea(sf::IntRect area, sf::Vector3i origin)
+std::vector<sf::Vector3i> VoronoiLayer::getCentroidsInArea(sf::IntRect area, int z)
 {
     std::vector<sf::Vector3i> result;
 
-    forEachLoadedChunkInArea(area, origin, [&origin, &area, &result](VoronoiLayerChunk& chunk)
+    forEachLoadedChunkInArea(area, z, [z, &area, &result](VoronoiLayerChunk& chunk)
         {
             for (auto&& centroid : chunk.centroids)
             {
                 if (!area.contains(centroid)) continue;
-                result.emplace_back(centroid.x, centroid.y, origin.z);
+                result.emplace_back(centroid.x, centroid.y, z);
             }
         });
     return result;
 }
 
-std::vector<std::pair<sf::Vector3i, sf::Vector3i>> VoronoiLayer::getEdgesInArea(sf::IntRect area, sf::Vector3i origin)
+std::vector<std::pair<sf::Vector3i, sf::Vector3i>> VoronoiLayer::getEdgesInArea(sf::IntRect area, int z)
 {
     std::vector<std::pair<sf::Vector3i, sf::Vector3i>> result;
-    forEachLoadedChunkInArea(area, origin, [&origin, &area, &result](VoronoiLayerChunk& chunk)
+    forEachLoadedChunkInArea(area, z, [z, &area, &result](VoronoiLayerChunk& chunk)
         {
             for (auto&& edge : chunk.edges)
             {
                 if (!area.contains(edge.first)) continue;
-                sf::Vector3i pt1 = { edge.first.x, edge.first.y, origin.z };
-                sf::Vector3i pt2 = { edge.second.x, edge.second.y, origin.z };
+                sf::Vector3i pt1 = { edge.first.x, edge.first.y, z };
+                sf::Vector3i pt2 = { edge.second.x, edge.second.y, z };
                 result.emplace_back(pt1, pt2);
             }
         });

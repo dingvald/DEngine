@@ -200,6 +200,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Biomes\Features\CaveBiomeFeature.cpp" />
     <ClCompile Include="src\Biomes\Features\ClusterBiomeFeature.cpp" />
     <ClCompile Include="src\Biomes\Features\IBiomeFeature.cpp" />
     <ClCompile Include="src\Biomes\Features\BiomeFeatureRegistry.cpp" />
@@ -459,6 +460,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Biomes\Features\BiomeFeatureRegistry.h" />
+    <ClInclude Include="src\Biomes\Features\CaveBiomeFeature.h" />
     <ClInclude Include="src\Biomes\Features\ClusterBiomeFeature.h" />
     <ClInclude Include="src\Biomes\Features\IBiomeFeature.h" />
     <ClInclude Include="src\CelestialBody\CelestialBody.h" />

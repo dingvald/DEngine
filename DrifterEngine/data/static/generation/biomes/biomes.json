@@ -12,7 +12,7 @@
         },
         "features": {
             "ore_vein": {
-                "random_scatter": ["less", 0.5]
+                "random_scatter": [ "less", 0.01 ]
             }
         },
         "entity_slots": {
@@ -23,6 +23,37 @@
             },
             "rock_formations": {
                 "relaxed_scatter": [ "greater", 0.5 ]
+            }
+        }
+    },
+    "caves": {
+        "icon": {
+            "texture": "simple_tileset",
+            "uv_size": [ 16, 16 ],
+            "uv_coords": [ 5, 2 ],
+            "color": [ 174, 155, 125 ]
+        },
+        "climate": {
+            "height": [ "less", 0.1 ]
+        },
+        "features": {
+            "ore_vein": {
+                "random_scatter": [ "less", 0.1 ]
+            },
+            "cavern": {
+                "random_scatter": [ "less", 0.5 ]
+            }
+        },
+        "entity_slots": {
+            "sand": {
+                "height": [ "inside", 0.0, 0.1 ],
+                "random_scatter": [ "less", 0.15 ],
+                "expression": "height & random_scatter"
+            },
+            "rock_formations": {
+                "height": [ "less", 0.0 ],
+                "fill": [ "greater", 0.0 ],
+                "expression": "height & fill"
             }
         }
     }

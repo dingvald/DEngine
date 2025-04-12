@@ -50,7 +50,7 @@
           "sight_range": 60
         },
         "Health": {
-          "max": 25.0,
+          "max": 15.0,
           "recovery": 0.05
         },
         "Stamina": {

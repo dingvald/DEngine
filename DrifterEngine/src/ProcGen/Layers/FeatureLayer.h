@@ -11,6 +11,13 @@ namespace drft
 	public:
 		using GenerationChunk::GenerationChunk;
 		virtual GenerationState generate(GenerationLevel desiredLevel) override;
+		
+		std::optional<FeatureGenerationResult> optionalGeneratedFeature;
+	private:
+		GenerationState selectFeature();
+		GenerationState checkNeighbors();
+		GenerationState placeFeature();
+		virtual GenerationLevel numLevels() const override { return GenerationLevel::Three; }
 	};
 
 	class FeatureLayer : public GenerationLayer<FeatureLayer, FeatureLayerChunk>

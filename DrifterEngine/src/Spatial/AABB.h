@@ -17,6 +17,34 @@ namespace drft::spatial
 		sf::Vector3<T> center() const;
 		// Flattens the AABB returning a rectangle without the Z dimension
 		sf::Rect<T> flatten() const;
+		// Expand the size of the AABB retaining the same center point
+		AABB<T> expand(sf::Vector3f factors) const
+		{
+			AABB<T> result;
+			auto center = this->center();
+			
+			float minx = static_cast<float>(min.x);
+			float miny = static_cast<float>(min.y);
+			float minz = static_cast<float>(min.z);
+			float maxx = static_cast<float>(max.x);
+			float maxy = static_cast<float>(max.y);
+			float maxz = static_cast<float>(max.z);
+
+			float sizex = maxx - minx;
+			float sizey = maxy - miny;
+			float sizez = maxz - minz;
+
+			sizex *= factors.x;
+			sizey *= factors.y;
+			sizez *= factors.z;
+
+			sf::Vector3<T> halfSize = { static_cast<T>(sizex * 0.5f), static_cast<T>(sizey * 0.5f), static_cast<T>(sizez * 0.5f) };
+
+			result.min = center - halfSize;
+			result.max = center + halfSize;
+
+			return result;
+		}
 
 		sf::Vector3<T> min; // top-back-left corner
 		sf::Vector3<T> max; // bottom-front-right corner

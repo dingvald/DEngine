@@ -20,8 +20,8 @@ namespace drft
 	{
 	public:
 		using GenerationLayer::GenerationLayer;
-		std::vector<sf::Vector3i> getCentroidsInArea(sf::IntRect area, sf::Vector3i origin);
-		std::vector<std::pair<sf::Vector3i, sf::Vector3i>> getEdgesInArea(sf::IntRect area, sf::Vector3i origin);
+		std::vector<sf::Vector3i> getCentroidsInArea(sf::IntRect area, int z);
+		std::vector<std::pair<sf::Vector3i, sf::Vector3i>> getEdgesInArea(sf::IntRect area, int z);
 
 		sf::Vector3i getChunkDimensions() const override;
 	};

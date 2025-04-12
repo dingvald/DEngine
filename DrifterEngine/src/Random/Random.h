@@ -20,6 +20,14 @@ namespace drft::rng
 		std::vector<sf::Vector2i> shuffleRect(sf::IntRect rect);
 
 		template<typename T>
+		const T* randomSelection(const std::vector<T>& elements)
+		{
+			if (elements.empty()) return nullptr;
+			auto choice = intInRange(0, elements.size() - 1);
+			return &elements.at(choice);
+		}
+
+		template<typename T>
 		const T* weightedSelection(const std::vector<std::pair<T, int>>& weightedElements)
 		{
 			if (weightedElements.size() == 0) return nullptr;

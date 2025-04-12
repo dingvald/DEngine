@@ -36,6 +36,20 @@
 using namespace drft;
 using namespace entt::literals;
 
+namespace
+{
+	void placeTile(sf::Vector3i position, const Biome* biome, entt::registry& registry, const drft::EntityFactory& factory)
+	{
+		sf::Color tileColor = { 10,10,10 };
+		if (biome)
+		{
+			tileColor = biome->getBaseTileColor();
+		}
+		auto tileHandle = gen::placeSingle("Tile", spatial::asTileSpace(position), registry, factory);
+		tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
+	}
+}
+
 CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	: _registries(registries)
 	, _layerManager(registries)
@@ -64,11 +78,11 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	auto biomeLayer = _layerManager.generate<BiomeLayer>(volume);
 	if (!biomeLayer.isReady()) return biomeLayer.getState();
 
-	auto featureLayer = _layerManager.generate<FeatureLayer>(volume);
-	if (!featureLayer.isReady()) return featureLayer.getState();
-
 	auto entityLayer = _layerManager.generate<EntityLayer>(volume);
 	if (!entityLayer.isReady()) return entityLayer.getState();
+
+	auto featureLayer = _layerManager.generate<FeatureLayer>(volume.expand({3.f, 3.f, 1.f}));
+	if (!featureLayer.isReady()) return featureLayer.getState();
 
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
 	auto& entityCanvas = _layerManager.getCanvas("entity_canvas"_hs);
@@ -79,15 +93,9 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	spatial::forEachPointInRect(volume.flatten(), [&](sf::Vector2i point)
 		{
 			const sf::Vector3i point3d = { point.x, point.y, volume.min.z };
-			// Place tile
-			sf::Color tileColor = { 10,10,10 };
-			if (auto biome = biomeLayer.unwrap().getBiomeAt(point3d))
-			{
-				tileColor = biome->getBaseTileColor();
-			}
-			auto tileHandle = gen::placeSingle("Tile", spatial::asTileSpace(point3d), registry, factory);
-			tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
 
+			::placeTile(point3d, biomeLayer.unwrap().getBiomeAt(point3d), registry, factory);
+			
 			// Place entity
 			auto slotId = entityCanvas.get(point3d);
 			if (!slotId.has_value()) return;

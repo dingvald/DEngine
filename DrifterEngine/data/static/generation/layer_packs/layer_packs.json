@@ -39,7 +39,7 @@
                 "relaxed_scatter": {
                     "type": "relaxed_points",
                     "params": {
-                        "density": 0.075,
+                        "density": 0.03,
                         "passes": 2
                     }
                 },
@@ -48,6 +48,9 @@
                     "params": {
                         "seed": 1
                     }
+                },
+                "fill": {
+                    "type": "fill"
                 }
             }
         }  

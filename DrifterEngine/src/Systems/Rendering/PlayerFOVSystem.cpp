@@ -37,7 +37,7 @@ void drft::system::PlayerFOVSystem::render(sf::RenderTarget& target)
 {
 	_registry.clear<component::tag::InPlayerFOV>();
 
-	auto lightBlockingPositions = _registry.view<const PositionComponent, LightBlockingComponent, component::tag::InViewport>();
+	auto lightBlockingPositions = _registry.view<const PositionComponent, LightBlockingComponent>();
 	_lightBlockingPositions.reserve(lightBlockingPositions.size_hint());
 	for (auto&& [entity, pos, lightBlocking] : lightBlockingPositions.each())
 	{

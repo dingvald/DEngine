@@ -3,8 +3,12 @@
         "ore_vein": {
             "type": "cluster_feature",
             "entity_slot": "ore",
-            "density": [0.3, 0.5],
-            "radius": [2.0, 4.0]
+            "density": [ 0.3, 0.5 ],
+            "radius": [ 2.0, 4.0 ]
+        },
+        "cavern": {
+            "type": "cave_feature",
+            "radius": [20.0, 100.0]
         }
     }
 }

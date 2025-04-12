@@ -31,9 +31,7 @@ namespace drft
 		virtual GenerationLevel numLevels() const override { return GenerationLevel::One; }
 
 	public:
-		std::vector<sf::Vector2i> biomePositions;
 		BiomeCentroids biomePoints;
-		std::vector<BiomeSlotPoint> biomeSlotPoints;
 	};
 
 	class BiomeLayer : public GenerationLayer<BiomeLayer, BiomeLayerChunk>, public ICreateFromJson
@@ -49,7 +47,7 @@ namespace drft
 		const std::unordered_set<entt::id_type>& getClimateDependencies() const;
 		// Gets the Biome at a given tile positions
 		const Biome* getBiomeAt(sf::Vector3i tilePosition) const;
-		void forEachBiomeInArea(sf::IntRect area, std::function<void(const Biome* biome)> func);
+		void forEachBiomeInArea(sf::IntRect area, int z, std::function<void(const Biome* biome)> func);
 
 	private:
 		std::vector<const Biome*> _biomes;

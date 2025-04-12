@@ -6,8 +6,7 @@ class ClusterBiomeFeature : public IBiomeFeature
 {
 public:
 	void createFromJson(const rapidjson::Value& json) override;
-
-	FeatureGenerationResult generate(const FeatureGenerationContext& context) const override;
+	FeatureGenerationResult doGenerate(const FeatureGenerationContext& context) const override;
 
 private:
 	entt::id_type _entitySlot;

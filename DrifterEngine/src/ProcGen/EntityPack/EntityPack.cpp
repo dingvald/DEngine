@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EntityPack.h"
 #include <Random/Random.h>
-
+#include <Utility/StandardLogger.h>
 
 void EntityPack::createFromJson(const rapidjson::Value& json)
 {
@@ -10,6 +10,11 @@ void EntityPack::createFromJson(const rapidjson::Value& json)
 		for (auto&& slotObj : json["slots"].GetObject())
 		{
 			auto slotId = entt::hashed_string{ slotObj.name.GetString() };
+			if (slotId == EMPTY_ENTITY_SLOT)
+			{
+				LOG_ERROR("Entity slot {} clashes with reserved slot", slotId.data());
+				continue;
+			}
 			WeightedEntityList list;
 			for (auto&& weightedEntity : slotObj.value.GetArray())
 			{

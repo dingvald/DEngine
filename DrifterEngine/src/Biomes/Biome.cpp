@@ -286,8 +286,9 @@ std::vector<entt::id_type> Biome::getFeatureDependencyIds() const
 	return result;
 }
 
-std::optional<entt::id_type> Biome::determineValidFeature(const DependencyValues& dependencyValues) const
+std::vector<entt::id_type> Biome::determineValidFeatures(const DependencyValues& dependencyValues) const
 {
+	std::vector<entt::id_type> result;
 	for (auto&& [slotId, slotDeterminer] : _featureDeterminers)
 	{
 		TokenValues values;
@@ -298,10 +299,10 @@ std::optional<entt::id_type> Biome::determineValidFeature(const DependencyValues
 		}
 		if (slotDeterminer.expression.evaluate(values))
 		{
-			return slotId;
+			result.push_back(slotId);
 		}
 	}
-	return std::nullopt;
+	return result;
 }
 
 void Biome::setBaseTileColor(sf::Color iconColor)

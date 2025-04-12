@@ -1,6 +1,5 @@
 #pragma once
 #include "Grid2d.h"
-#include <algorithm>
 
 namespace drft::spatial
 {
@@ -80,6 +79,19 @@ namespace drft::spatial
 	inline const T& Grid2d<T>::at(int x, int y) const
 	{
 		return _cells.at(y * _width + x);
+	}
+
+	template<typename T>
+	inline void Grid2d<T>::forEach(std::function<void(int, int, T)> func) const
+	{
+		for (int y = 0; y < _height; ++y)
+		{
+			for (int x = 0; x < _width; ++x)
+			{
+				T val = this->at(x, y);
+				func(x, y, val);
+			}
+		}
 	}
 
 	template<typename T>

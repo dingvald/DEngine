@@ -16,18 +16,6 @@
 
 namespace drft
 {
-	inline GenerationState combinedState(std::vector<GenerationState> states)
-	{
-		for (auto&& state : states)
-		{
-			if (state == GenerationState::Failed || state == GenerationState::Generating)
-			{
-				return state;
-			}
-		}
-		return GenerationState::Complete;
-	}
-
 	enum class GenerationLevel : unsigned int
 	{
 		All = 0,
@@ -133,8 +121,6 @@ namespace drft
 	private:
 		unsigned int _globalSeed;
 	};
-
-	
 
 	class CanvasLayer
 	{
@@ -337,6 +323,15 @@ namespace drft
 		};
 		virtual bool isGenerated() const override final { return _currentLevel > numLevels(); }
 
+		unsigned int getLocalSeed() const
+		{
+			return _localSeed;
+		}
+		unsigned int getGlobalSeed() const
+		{
+			return _globalSeed;
+		}
+
 	protected:
 		virtual GenerationState generate(GenerationLevel desiredLevel) { return GenerationState::Complete; }
 		virtual GenerationLevel numLevels() const { return GenerationLevel::One; }
@@ -352,13 +347,15 @@ namespace drft
 			return _layer.getLayerManager().generate<T>(volume, level);
 		}
 
-		spatial::AABB<int> addPaddingToVolume(sf::Vector3i padding)
+		GenerationState generateNeighborChunks2d(GenerationLevel desiredLevel)
 		{
-			spatial::AABB<int> result = _volume;
-			result.min -= padding;
-			result.max += padding;
-			return result;
+			return _layer.accessor.generateNeighborChunks2d(_layer, _index, desiredLevel);
 		}
+		void forEachLoadedNeighborChunk2d(std::function<void(const ChunkType&)> func) const
+		{
+			_layer.accessor.forEachLoadedNeighborChunk2d(_layer, _index, func);
+		}
+
 		void forEachPointInBounds(std::function<void(sf::Vector3i)> func)
 		{
 			for (int y = _volume.min.y; y < _volume.max.y; y++)
@@ -371,14 +368,6 @@ namespace drft
 					}
 				}
 			}
-		}
-		unsigned int getLocalSeed() const
-		{
-			return _localSeed;
-		}
-		unsigned int getGlobalSeed() const
-		{
-			return _globalSeed;
 		}
 
 	protected:
@@ -397,40 +386,31 @@ namespace drft
 	{
 	public:
 		using AbstractLayer::AbstractLayer;
-		GenerationState generateNeighborChunks2d(sf::Vector3i chunkCoordinate, GenerationContext&& context)
-		{
-			auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
-			bool result = generateChunks(neighbors, context);
-			if (!result) return GenerationState::Generating;
-			return GenerationState::Complete;
-		}
-		void forEachLoadedNeighborChunk2d(sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
-		{
-			auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
-			for (auto&& neighbor : neighbors)
-			{
-				if (!_chunks.contains(neighbor)) continue;
-				func(_chunks.at(neighbor));
-			}
-		}
 
-		GenerationState generateNeighborChunks3d(sf::Vector3i chunkCoordinate, GenerationContext&& context)
+		class Accessor
 		{
-			auto neighbors = spatial::getSurroundingPoints(chunkCoordinate);
-			bool result = generateChunks(neighbors, context);
-			if (!result) return GenerationState::Generating;
-			return GenerationState::Complete;
-		}
-		void forEachLoadedNeighborChunk3d(sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
-		{
-			auto neighbors = spatial::getSurroundingPoints(chunkCoordinate);
-			for (auto&& neighbor : neighbors)
+		private:
+			template<typename LayerType, typename ChunkType>
+			friend class GenerationChunk;
+			GenerationState generateNeighborChunks2d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, GenerationLevel desiredLevel)
 			{
-				if (!_chunks.contains(neighbor)) continue;
-				func(_chunks.at(neighbor));
+				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
+				bool result = layer.generateChunks(neighbors, desiredLevel);
+				if (!result) return GenerationState::Generating;
+				return GenerationState::Complete;
 			}
-		}
-
+			void forEachLoadedNeighborChunk2d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
+			{
+				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
+				for (auto&& neighbor : neighbors)
+				{
+					if (!layer._chunks.contains(neighbor)) continue;
+					func(layer._chunks.at(neighbor));
+				}
+			}
+		};
+		
+		Accessor accessor;
 	protected:
 		virtual sf::Vector3i getChunkDimensions() const = 0;
 
@@ -461,11 +441,11 @@ namespace drft
 			}
 			return result;
 		}
-		std::vector<sf::Vector3i> getChunkPointsInsideArea(sf::IntRect area, sf::Vector3i origin) const
+		std::vector<sf::Vector3i> getChunkPointsInsideArea(sf::IntRect area, int z) const
 		{
 			std::vector<sf::Vector3i> result;
-			sf::Vector3i chunkOrigin = toChunkPosition(origin);
-			const int z = chunkOrigin.z;
+
+			const int chunkz = z / getChunkDimensions().z;
 
 			sf::Vector3i top_left_point = toChunkPosition(spatial::vec3FromPlanar(area.position));
 			sf::Vector3i bottom_right_point = toChunkPosition(spatial::vec3FromPlanar(area.position + area.size));
@@ -473,7 +453,7 @@ namespace drft
 			{
 				for (int x = top_left_point.x; x <= bottom_right_point.x; ++x)
 				{
-					result.push_back({ x, y, z});
+					result.push_back({ x, y, chunkz });
 				}
 			}
 			return result;
@@ -505,9 +485,9 @@ namespace drft
 				func(chunk);
 			}
 		}
-		void forEachLoadedChunkInArea(sf::IntRect area, sf::Vector3i origin, std::function<void(ChunkType&)> func)
+		void forEachLoadedChunkInArea(sf::IntRect area, int z, std::function<void(ChunkType&)> func)
 		{
-			auto chunkPoints = getChunkPointsInsideArea(area, origin);
+			auto chunkPoints = getChunkPointsInsideArea(area, z);
 			for (auto&& chunkPoint : chunkPoints)
 			{
 				if (!_chunks.contains(chunkPoint)) continue;
@@ -517,15 +497,16 @@ namespace drft
 		}
 
 	private:
+		friend class Accessor;
 		GenerationState generate(GenerationContext&& context) override final
 		{
 			const auto chunks = getChunkPointsInsideVolume(context.volume);
-			const bool chunksReady = generateChunks(chunks, context);
+			const bool chunksReady = generateChunks(chunks, context.desiredLevel);
 			if (!chunksReady) return GenerationState::Generating;
 
 			return GenerationState::Complete;
 		}
-		bool generateChunks(const std::vector<sf::Vector3i>& chunks, GenerationContext& context)
+		bool generateChunks(const std::vector<sf::Vector3i>& chunks, GenerationLevel desiredLevel)
 		{
 			bool result = true;
 			for (auto&& point : chunks)
@@ -540,7 +521,7 @@ namespace drft
 					_chunks.emplace(point, std::move(chunk));
 				}
 
-				GenerationState state = _chunks.at(point).doGenerate(context.desiredLevel);
+				GenerationState state = _chunks.at(point).doGenerate(desiredLevel);
 				if (state == GenerationState::Generating)
 				{
 					result = false;

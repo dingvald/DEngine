@@ -12,7 +12,8 @@
                         "layer_packs": [ "standard" ],
                         "entity_packs": [ "basic" ],
                         "biomes": [
-                            "desert"
+                            "desert",
+                            "caves"
                         ]
                     }
                 ]

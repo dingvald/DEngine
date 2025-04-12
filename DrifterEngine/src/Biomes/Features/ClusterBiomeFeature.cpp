@@ -21,7 +21,7 @@ void ClusterBiomeFeature::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-FeatureGenerationResult ClusterBiomeFeature::generate(const FeatureGenerationContext& context) const
+FeatureGenerationResult ClusterBiomeFeature::doGenerate(const FeatureGenerationContext& context) const
 {
 	FeatureGenerationResult result;
 

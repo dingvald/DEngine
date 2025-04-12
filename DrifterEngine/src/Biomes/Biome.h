@@ -55,7 +55,7 @@ public:
 	std::vector<entt::id_type> determineValidEntitySlots(const DependencyValues& dependencyValues) const;
 
 	std::vector<entt::id_type> getFeatureDependencyIds() const;
-	std::optional<entt::id_type> determineValidFeature(const DependencyValues& dependencyValues) const;
+	std::vector<entt::id_type> determineValidFeatures(const DependencyValues& dependencyValues) const;
 
 private:
 	void setBaseTileColor(sf::Color iconColor);

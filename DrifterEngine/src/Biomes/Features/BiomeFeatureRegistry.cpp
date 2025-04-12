@@ -4,6 +4,7 @@
 #include <Utility/StandardLogger.h>
 
 #include <Biomes/Features/ClusterBiomeFeature.h>
+#include <Biomes/Features/CaveBiomeFeature.h>
 
 using namespace drft;
 
@@ -11,6 +12,7 @@ using namespace drft;
 BiomeFeatureRegistry::BiomeFeatureRegistry()
 {
 	_featureFactory.registerType<ClusterBiomeFeature>("cluster_feature");
+	_featureFactory.registerType<CaveBiomeFeature>("cave_feature");
 }
 
 void BiomeFeatureRegistry::loadBiomeFeatures(const std::filesystem::path& biomeFeatruresDirectory)

@@ -684,6 +684,9 @@
     <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Biomes\Features\CaveBiomeFeature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3225,6 +3228,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Layers\EntityLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Biomes\Features\CaveBiomeFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
