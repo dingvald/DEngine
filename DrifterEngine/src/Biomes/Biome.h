@@ -1,38 +1,10 @@
 #pragma once
-#include "Utility/Math.h"
 #include "Components/RenderComponent.h"
 #include <JSON/ICreateFromJson.h>
-#include <JSON/StringExpressions.h>
+#include <ProcGen/SlotDeterminer/SlotDeterminer.h>
 
 
 using BiomeIcon = RenderComponent;
-
-struct SlotDependency : public ICreateFromJson
-{
-	enum class CompareType
-	{
-		Less,
-		Greater,
-		Inside,
-		Outside,
-	};
-	void createFromJson(const rapidjson::Value& json) override;
-	bool satisfiesValue(float val) const;
-	float distanceFromValue(float val) const;
-
-private:
-	CompareType _compareType;
-	drft::math::Range<float> _range;
-};
-
-struct SlotDeterminer : public ICreateFromJson
-{
-	std::unordered_map<entt::id_type, SlotDependency> dependencies;
-	drft::util::BooleanStringExpression expression;
-	void createFromJson(const rapidjson::Value& json) override;
-};
-
-
 
 class Biome : public ICreateFromJson
 {
