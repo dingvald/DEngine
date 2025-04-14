@@ -41,7 +41,7 @@
                 "random_scatter": [ "less", 0.1 ]
             },
             "cavern": {
-                "random_scatter": [ "less", 0.5 ]
+                "random_scatter": [ "less", 0.7 ]
             }
         },
         "entity_slots": {

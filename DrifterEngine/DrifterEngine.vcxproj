@@ -213,6 +213,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Keybindings\StateKeybindings.cpp" />
     <ClCompile Include="src\ProcGen\EntityPack\EntityPack.cpp" />
     <ClCompile Include="src\ProcGen\EntityPack\EntityPackRegistry.cpp" />
+    <ClCompile Include="src\ProcGen\SlotDeterminer\SlotDeterminer.cpp" />
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPack.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPackRegistry.cpp" />
@@ -491,6 +492,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h" />
     <ClInclude Include="src\ProcGen\EntityPack\EntityPack.h" />
     <ClInclude Include="src\ProcGen\EntityPack\EntityPackRegistry.h" />
+    <ClInclude Include="src\ProcGen\SlotDeterminer\SlotDeterminer.h" />
     <ClInclude Include="src\ProcGen\GenerationState.h" />
     <ClInclude Include="src\ProcGen\IChunkGenerator.h" />
     <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h" />

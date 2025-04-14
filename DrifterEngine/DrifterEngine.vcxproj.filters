@@ -687,6 +687,9 @@
     <ClCompile Include="src\Biomes\Features\CaveBiomeFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\SlotDeterminer\SlotDeterminer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3231,6 +3234,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Biomes\Features\CaveBiomeFeature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SlotDeterminer\SlotDeterminer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
