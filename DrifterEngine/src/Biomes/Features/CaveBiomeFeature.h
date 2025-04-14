@@ -19,7 +19,7 @@ public:
 	FeatureGenerationResult doGenerate(const FeatureGenerationContext& context) const override;
 
 private:
-	using Grid = drft::spatial::Grid2d<bool>;
+	using Grid = drft::spatial::Grid2d<std::uint8_t>;
 	void initGrid(Grid& grid, drft::rng::Random& random) const;
 	void iteration(Grid& grid) const;
 	int sumOfAdjacentWalls(int x, int y, int seachRadius, Grid& grid) const;
