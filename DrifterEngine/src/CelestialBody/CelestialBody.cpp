@@ -78,11 +78,11 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	auto biomeLayer = _layerManager.generate<BiomeLayer>(volume);
 	if (!biomeLayer.isReady()) return biomeLayer.getState();
 
+	auto featureLayer = _layerManager.generate<FeatureLayer>(volume.expand({ 3.f, 3.f, 1.f }));
+	if (!featureLayer.isReady()) return featureLayer.getState();
+
 	auto entityLayer = _layerManager.generate<EntityLayer>(volume);
 	if (!entityLayer.isReady()) return entityLayer.getState();
-
-	auto featureLayer = _layerManager.generate<FeatureLayer>(volume.expand({3.f, 3.f, 1.f}));
-	if (!featureLayer.isReady()) return featureLayer.getState();
 
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
 	auto& entityCanvas = _layerManager.getCanvas("entity_canvas"_hs);
@@ -102,7 +102,7 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 
 			if (auto entityName = _entityPacks.selectEntity(std::any_cast<entt::id_type>(slotId), random))
 			{
-				auto tileHandle = gen::placeSingle(entityName.value(), spatial::asTileSpace(point3d), registry, factory);
+				gen::placeSingle(entityName.value(), spatial::asTileSpace(point3d), registry, factory);
 			}	
 		});
 
