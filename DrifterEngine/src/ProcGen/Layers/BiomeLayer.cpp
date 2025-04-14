@@ -141,7 +141,6 @@ void drft::BiomeLayer::forEachBiomeInArea(sf::IntRect area, int z, std::function
     forEachLoadedChunkInArea(area, z, [&biomes, &area, &func](BiomeLayerChunk& chunk) {
         for (auto&& [point, biome] : chunk.biomePoints)
         {
-            if (!area.contains(point)) continue;
             if (biomes.contains(biome)) continue;
             func(biome);
             biomes.insert(biome);
