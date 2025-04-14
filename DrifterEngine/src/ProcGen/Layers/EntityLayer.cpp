@@ -10,6 +10,7 @@ GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
     auto biomeLayer = generateDependency<BiomeLayer>(_volume);
     if (!biomeLayer.isReady()) return biomeLayer.getState();
 
+    // Collect dependencies
     std::unordered_set<entt::id_type> dependencies;
     biomeLayer.unwrap().forEachBiomeInArea(_volume.flatten(), _volume.min.z, 
         [&dependencies](const Biome* biome) {
@@ -17,6 +18,7 @@ GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
             dependencies.insert(deps.begin(), deps.end());
         });
 
+    // Generate dependencies
     GeneratedDependencies generatedDependencies;
     for (auto&& dependencyId : dependencies)
     {
@@ -26,6 +28,7 @@ GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
         generatedDependencies.emplace(dependencyId, &layer.unwrap());
     }
 
+    // Detemine entity for each tile position
     rng::Random random = { getLocalSeed() };
     auto& canvas = _layer.getLayerManager().getCanvas("entity_canvas"_hs);
     spatial::forEachPointInRect(_volume.flatten(), 
