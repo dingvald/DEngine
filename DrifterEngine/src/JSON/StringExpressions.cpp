@@ -45,7 +45,7 @@ bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) c
     // Validate input
     if (_parsedExpression.empty() && values.size() > 1)
     {
-        error_logger << "Error while evaluating expression: expression empty" << std::endl;
+        LOG_ERROR("While evaluating boolean expression: expression empty");
         return false;
     }
     for (auto&& id : _parsedExpression)
@@ -54,7 +54,7 @@ bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) c
 
         if (!values.contains(id))
         {
-            error_logger << "Error while evaluating expression: unknown ID of 1 or more values." << std::endl;
+            LOG_ERROR("While evaluating boolean expression: token values does not contain id {}", id);
             return false;
         }
     }
@@ -141,7 +141,7 @@ std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(
 
     if (error_found)
     {
-        error_logger << "Error when parsing malformed expression: " << expression << std::endl;
+        LOG_ERROR("While parsing boolean expression: malformed expression \"{}\"", expression);
         return {};
     }
 
