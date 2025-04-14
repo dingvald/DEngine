@@ -12,11 +12,11 @@ namespace drft
 		using GenerationChunk::GenerationChunk;
 		virtual GenerationState generate(GenerationLevel desiredLevel) override;
 		
-		std::optional<FeatureGenerationResult> optionalGeneratedFeature;
+		std::vector<FeatureGenerationResult> generatedFeatures;
 	private:
-		GenerationState selectFeature();
+		GenerationState generateFeatures();
 		GenerationState checkNeighbors();
-		GenerationState placeFeature();
+		GenerationState placeFeatures();
 		virtual GenerationLevel numLevels() const override { return GenerationLevel::Three; }
 	};
 

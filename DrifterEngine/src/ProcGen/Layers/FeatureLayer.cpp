@@ -10,13 +10,13 @@ GenerationState drft::FeatureLayerChunk::generate(GenerationLevel level)
     switch (level)
     {
     case drft::GenerationLevel::One:
-        return selectFeature();
+        return generateFeatures();
         break;
     case drft::GenerationLevel::Two:
         return checkNeighbors();
         break;
     case drft::GenerationLevel::Three:
-        return placeFeature();
+        return placeFeatures();
         break;
     default:
         break;
@@ -24,7 +24,7 @@ GenerationState drft::FeatureLayerChunk::generate(GenerationLevel level)
     return GenerationState::Complete;
 }
 
-GenerationState drft::FeatureLayerChunk::selectFeature()
+GenerationState drft::FeatureLayerChunk::generateFeatures()
 {
     auto biomes = generateDependency<BiomeLayer>(_volume);
     if (!biomes.isReady()) return biomes.getState();
@@ -48,13 +48,14 @@ GenerationState drft::FeatureLayerChunk::selectFeature()
     }
 
     auto features = biome->determineValidFeatures(dependencyValues);
-    auto selectedFeature = random.randomSelection(features);
-    if (!selectedFeature) return GenerationState::Complete;
-
-    if (auto feature = _layer.getRegistries().features.get(*selectedFeature))
+    for (auto&& featureId : features)
     {
-        optionalGeneratedFeature = feature->generate(FeatureGenerationContext{ getLocalSeed(), _layer.getRegistries() });
-        optionalGeneratedFeature->area.position += randomPoint;
+        auto feature = _layer.getRegistries().features.get(featureId);
+        if (!feature) continue;
+
+        FeatureGenerationResult generatedFeature = feature->generate(FeatureGenerationContext{ getLocalSeed(), _layer.getRegistries() });
+        generatedFeature.area.position += randomPoint;
+        generatedFeatures.push_back(std::move(generatedFeature));
     }
 
     return GenerationState::Complete;
@@ -65,32 +66,32 @@ GenerationState drft::FeatureLayerChunk::checkNeighbors()
     auto state = generateNeighborChunks2d(GenerationLevel::One);
     if (state != GenerationState::Complete) return state;
 
-    if (!optionalGeneratedFeature.has_value()) return GenerationState::Complete;
+    if (generatedFeatures.empty()) return GenerationState::Complete;
 
     forEachLoadedNeighborChunk2d([&](const FeatureLayerChunk& chunk) {
-            if (!optionalGeneratedFeature.has_value()) return;
-            if (!chunk.optionalGeneratedFeature.has_value()) return;
+            if (generatedFeatures.empty()) return;
+            if (!chunk.generatedFeatures.empty()) return;
 
-            auto intersection = chunk.optionalGeneratedFeature->area.findIntersection(optionalGeneratedFeature->area);
-            if (intersection)
-            {
-                LOG_MSG("Features overlapping fyi");
-            }
+            // TODO: Handle overlapping with neighbor features
         });
 
     return GenerationState::Complete;
 }
 
-GenerationState drft::FeatureLayerChunk::placeFeature()
+GenerationState drft::FeatureLayerChunk::placeFeatures()
 {
-    if (!optionalGeneratedFeature.has_value()) return GenerationState::Complete;
+    if (generatedFeatures.empty()) return GenerationState::Complete;
 
     auto& canvas = _layer.getLayerManager().getCanvas("entity_canvas"_hs);
-    for (auto&& [entity, position] : optionalGeneratedFeature->entityPositions)
+    for (auto&& generatedFeature : generatedFeatures)
     {
-        sf::Vector3i globalPosition = spatial::vec3FromPlanar(optionalGeneratedFeature->area.position) + position;
-        canvas.forceSet(entity, globalPosition);
+        for (auto&& [entity, position] : generatedFeature.entityPositions)
+        {
+            sf::Vector3i globalPosition = spatial::vec3FromPlanar(generatedFeature.area.position) + position;
+            canvas.forceSet(entity, globalPosition);
+        }
     }
+    
     return GenerationState::Complete;
 }
 
