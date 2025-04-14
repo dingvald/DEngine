@@ -28,14 +28,14 @@ void EntityPack::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-void EntityPack::add(EntityPack other)
+void EntityPack::add(const EntityPack& other)
 {
 	for (auto&& [slotId, entityList] : other._packs)
 	{
 		if (_packs.contains(slotId))
 		{
 			auto& existingList = _packs.at(slotId);
-			existingList.merge(entityList);
+			existingList.merge(EntityPack::WeightedEntityList{ entityList });
 		}
 		else
 		{
