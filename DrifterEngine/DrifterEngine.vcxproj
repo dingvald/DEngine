@@ -200,10 +200,14 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Biomes\Features\CaveBiomeFeature.cpp" />
-    <ClCompile Include="src\Biomes\Features\ClusterBiomeFeature.cpp" />
-    <ClCompile Include="src\Biomes\Features\IBiomeFeature.cpp" />
-    <ClCompile Include="src\Biomes\Features\BiomeFeatureRegistry.cpp" />
+    <ClCompile Include="src\ProcGen\Decorators\DecoratorFactory.cpp" />
+    <ClCompile Include="src\ProcGen\Decorators\EntityDecorator.cpp" />
+    <ClCompile Include="src\ProcGen\Decorators\IDecorator.cpp" />
+    <ClCompile Include="src\ProcGen\Decorators\SimpleDecorator.cpp" />
+    <ClCompile Include="src\ProcGen\Features\AutomataFeature.cpp" />
+    <ClCompile Include="src\ProcGen\Features\ClusterFeature.cpp" />
+    <ClCompile Include="src\ProcGen\Features\IFeature.cpp" />
+    <ClCompile Include="src\ProcGen\Features\FeatureRegistry.cpp" />
     <ClCompile Include="src\CelestialBody\CelestialBody.cpp" />
     <ClCompile Include="src\GUI\ItemTooltip.cpp" />
     <ClCompile Include="src\Actions\ActionMap.cpp" />
@@ -460,10 +464,15 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Biomes\Features\BiomeFeatureRegistry.h" />
-    <ClInclude Include="src\Biomes\Features\CaveBiomeFeature.h" />
-    <ClInclude Include="src\Biomes\Features\ClusterBiomeFeature.h" />
-    <ClInclude Include="src\Biomes\Features\IBiomeFeature.h" />
+    <ClInclude Include="src\ProcGen\Decorators\DecoratorFactory.h" />
+    <ClInclude Include="src\ProcGen\Decorators\EntityDecorator.h" />
+    <ClInclude Include="src\ProcGen\Decorators\SimpleDecorator.h" />
+    <ClInclude Include="src\ProcGen\SlotPositionList.h" />
+    <ClInclude Include="src\ProcGen\TaggedPositions.h" />
+    <ClInclude Include="src\ProcGen\Features\FeatureRegistry.h" />
+    <ClInclude Include="src\ProcGen\Features\AutomataFeature.h" />
+    <ClInclude Include="src\ProcGen\Features\ClusterFeature.h" />
+    <ClInclude Include="src\ProcGen\Features\IFeature.h" />
     <ClInclude Include="src\CelestialBody\CelestialBody.h" />
     <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h" />
@@ -490,8 +499,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Keybindings\StateKeybindings.h" />
     <ClInclude Include="src\Components\ArtificalInputComponent.h" />
     <ClInclude Include="src\Components\PhysicalBlockingComponent.h" />
+    <ClInclude Include="src\ProcGen\Decorators\IDecorator.h" />
     <ClInclude Include="src\ProcGen\EntityPack\EntityPack.h" />
     <ClInclude Include="src\ProcGen\EntityPack\EntityPackRegistry.h" />
+    <ClInclude Include="src\ProcGen\GenerationContext.h" />
     <ClInclude Include="src\ProcGen\SlotDeterminer\SlotDeterminer.h" />
     <ClInclude Include="src\ProcGen\GenerationState.h" />
     <ClInclude Include="src\ProcGen\IChunkGenerator.h" />

@@ -20,6 +20,9 @@
                 ],
                 "ore": [
                     [ "Iron Deposit", 1 ]
+                ],
+                "grass": [
+                    [ "Tall Grass", 1 ]
                 ]
             }
         } 

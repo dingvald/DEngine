@@ -88,8 +88,7 @@ namespace drft::spatial
 		{
 			for (int x = 0; x < _width; ++x)
 			{
-				T val = this->at(x, y);
-				func(x, y, val);
+				func(x, y, at(x, y));
 			}
 		}
 	}

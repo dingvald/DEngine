@@ -33,13 +33,19 @@ private:
 	void setBaseTileColor(sf::Color iconColor);
 
 private:
+	struct IdDeterminerPair
+	{
+		entt::id_type id;
+		SlotDeterminer determiner;
+	};
+
 	std::string _name;
 	BiomeIcon _icon;
 
 	sf::Color _baseTileColor = sf::Color::Black;
 	SlotDeterminer _climateDeterminer;
-	std::unordered_map<entt::id_type, SlotDeterminer> _entitySlotDeterminers;
-	std::unordered_map<entt::id_type, SlotDeterminer> _featureDeterminers;
+	std::vector<IdDeterminerPair> _entitySlotDeterminers;
+	std::vector<IdDeterminerPair> _featureDeterminers;
 };
 
  

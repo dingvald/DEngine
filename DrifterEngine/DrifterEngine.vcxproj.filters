@@ -669,13 +669,13 @@
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Biomes\Features\BiomeFeatureRegistry.cpp">
+    <ClCompile Include="src\ProcGen\Features\FeatureRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Biomes\Features\IBiomeFeature.cpp">
+    <ClCompile Include="src\ProcGen\Features\IFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Biomes\Features\ClusterBiomeFeature.cpp">
+    <ClCompile Include="src\ProcGen\Features\ClusterFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\FeatureLayer.cpp">
@@ -684,10 +684,22 @@
     <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Biomes\Features\CaveBiomeFeature.cpp">
+    <ClCompile Include="src\ProcGen\Features\AutomataFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\SlotDeterminer\SlotDeterminer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Decorators\IDecorator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Decorators\DecoratorFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Decorators\EntityDecorator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Decorators\SimpleDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3215,13 +3227,13 @@
     <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Biomes\Features\IBiomeFeature.h">
+    <ClInclude Include="src\ProcGen\Features\IFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Biomes\Features\BiomeFeatureRegistry.h">
+    <ClInclude Include="src\ProcGen\Features\FeatureRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Biomes\Features\ClusterBiomeFeature.h">
+    <ClInclude Include="src\ProcGen\Features\ClusterFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\AutoGrid3d.h">
@@ -3233,10 +3245,31 @@
     <ClInclude Include="src\ProcGen\Layers\EntityLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Biomes\Features\CaveBiomeFeature.h">
+    <ClInclude Include="src\ProcGen\Features\AutomataFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\SlotDeterminer\SlotDeterminer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Decorators\IDecorator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\TaggedPositions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Decorators\DecoratorFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Decorators\EntityDecorator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\GenerationContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\SlotPositionList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Decorators\SimpleDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

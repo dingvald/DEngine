@@ -34,7 +34,7 @@ void Biome::createFromJson(const rapidjson::Value& json)
 		{
 			SlotDeterminer newDeterminer;
 			newDeterminer.createFromJson(value);
-			_entitySlotDeterminers.emplace(entt::hashed_string{ name.GetString() }, std::move(newDeterminer));
+			_entitySlotDeterminers.emplace_back(entt::hashed_string{ name.GetString() }, std::move(newDeterminer));
 		}
 	}
 	if (json.HasMember("features"))
@@ -43,7 +43,7 @@ void Biome::createFromJson(const rapidjson::Value& json)
 		{
 			SlotDeterminer newDeterminer;
 			newDeterminer.createFromJson(value);
-			_featureDeterminers.emplace(entt::hashed_string{ name.GetString() }, std::move(newDeterminer));
+			_featureDeterminers.emplace_back(entt::hashed_string{ name.GetString() }, std::move(newDeterminer));
 		}
 	}
 }

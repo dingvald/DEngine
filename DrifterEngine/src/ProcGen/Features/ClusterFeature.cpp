@@ -1,13 +1,17 @@
 #include "pch.h"
-#include "ClusterBiomeFeature.h"
+#include "ClusterFeature.h"
 #include <Spatial/Helpers.h>
 #include <Random/Random.h>
+#include <ProcGen/GenerationContext.h>
 
-void ClusterBiomeFeature::createFromJson(const rapidjson::Value& json)
+void ClusterFeature::createFromJson(const rapidjson::Value& json)
 {
-	if (json.HasMember("entity_slot"))
+	if (json.HasMember("tags"))
 	{
-		_entitySlot = entt::hashed_string{ json["entity_slot"].GetString() };
+		for (auto&& tag : json["tags"].GetArray())
+		{
+			_tags.emplace_back(entt::hashed_string{ tag.GetString() });
+		}	
 	}
 	if (json.HasMember("density"))
 	{
@@ -21,24 +25,24 @@ void ClusterBiomeFeature::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-FeatureGenerationResult ClusterBiomeFeature::doGenerate(const FeatureGenerationContext& context) const
+TaggedPositions ClusterFeature::doGenerate(const GenerationContext& context) const
 {
-	FeatureGenerationResult result;
+	TaggedPositions result;
 
 	drft::rng::Random random{ context.seed };
 	float radius = random.realInRange(_radius);
 	float density = random.realInRange(_density);
 
 	auto circle = drft::spatial::getIntCircleInRadius({ 0,0,0 }, radius);
-	
-
 	for (auto&& position : circle)
 	{
 		auto randomDouble = random.realInRange(0.0, 1.0);
 		if (randomDouble < density) continue;
 		
-		result.entityPositions.emplace_back(_entitySlot, position);
-		result.area = drft::spatial::expandToFit(result.area, drft::spatial::toXY(position));
+		for (auto&& tag : _tags)
+		{
+			result[tag].push_back(position);
+		}
 	}
 
 	return result;

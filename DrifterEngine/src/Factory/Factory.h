@@ -14,7 +14,7 @@ public:
 	}
 
 	template<typename... Args>
-	std::unique_ptr<T> build(std::string name)
+	std::unique_ptr<T> build(std::string name) const
 	{
 		if (!_factoryMethods.contains(name))
 		{

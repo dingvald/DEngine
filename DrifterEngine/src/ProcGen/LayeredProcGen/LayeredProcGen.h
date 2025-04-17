@@ -28,13 +28,6 @@ namespace drft
 		// If you need more than five, perhaps reconsider your design
 	};
 
-	struct GenerationContext
-	{
-		spatial::AABB<int> volume;
-		GenerationLevel desiredLevel = GenerationLevel::All;
-		unsigned int seed;
-	};
-
 	class IGetValueAtLayer : public ICreateFromJson
 	{
 	public:
@@ -46,6 +39,13 @@ namespace drft
 
 	namespace details
 	{
+		struct GenerationContext
+		{
+			spatial::AABB<int> volume;
+			GenerationLevel desiredLevel = GenerationLevel::All;
+			unsigned int seed;
+		};
+
 		class AbstractLayer
 		{
 		public:
@@ -106,7 +106,7 @@ namespace drft
 		using AbstractLayer::AbstractLayer;
 		virtual void createFromJson(const rapidjson::Value& json) = 0;
 		virtual double getValueAt(sf::Vector3i tilePosition) = 0;
-		virtual GenerationState generate(GenerationContext&& context) override
+		virtual GenerationState generate(details::GenerationContext&& context) override
 		{
 			_globalSeed = context.seed;
 			return GenerationState::Complete;
@@ -498,7 +498,7 @@ namespace drft
 
 	private:
 		friend class Accessor;
-		GenerationState generate(GenerationContext&& context) override final
+		GenerationState generate(details::GenerationContext&& context) override final
 		{
 			const auto chunks = getChunkPointsInsideVolume(context.volume);
 			const bool chunksReady = generateChunks(chunks, context.desiredLevel);

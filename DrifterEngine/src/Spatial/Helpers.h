@@ -15,30 +15,15 @@ namespace drft::spatial
 	template<typename T>
 	sf::Rect<T> expandToFit(const sf::Rect<T>& rect, const sf::Vector2<T>& point)
 	{
-		sf::Rect<T> result = rect;
-		if (rect.contains(point)) return result;
+		int newLeft = std::min(rect.position.x, point.x);
+		int newRight = std::max(rect.position.x + rect.size.x, point.x);
+		int newTop = std::min(rect.position.y, point.y);
+		int newBottom = std::max(rect.position.y + rect.size.y, point.y);
 
-		if (point.x < rect.position.x)
-		{
-			T left = rect.position.x + rect.size.x;
-			result.position.x = point.x;
-			result.size.x = left - result.position.x;
-		}
-		else if (point.x > rect.position.x + rect.size.x)
-		{
-			result.size.x = point.x - result.position.x;
-		}
+		int newWidth = newRight - newLeft;
+		int newHeight = newBottom - newTop;
 
-		if (point.y < rect.position.y)
-		{
-			T bottom = rect.position.y + rect.size.y;
-			result.position.y = point.y;
-			result.size.y = bottom - result.position.y;
-		}
-		else if (point.y > rect.position.y + rect.size.y)
-		{
-			result.size.y = point.y - result.position.y;
-		}
+		return sf::IntRect{ {newLeft, newTop}, {newWidth, newHeight} };
 	}
 
 	// Returns a sf::Vector3i that copies the XY plane and assigns 0 to the Z dimension

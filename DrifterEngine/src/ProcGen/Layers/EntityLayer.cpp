@@ -30,7 +30,7 @@ GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
 
     // Detemine entity for each tile position
     rng::Random random = { getLocalSeed() };
-    auto& canvas = _layer.getLayerManager().getCanvas("entity_canvas"_hs);
+    auto& canvas = _layer.getLayerManager().getCanvas("slot_canvas"_hs);
     spatial::forEachPointInRect(_volume.flatten(), 
         [&, z = _volume.min.z](sf::Vector2i point) {
             const sf::Vector3i position = { point.x, point.y, z };
@@ -41,9 +41,11 @@ GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
             }
             auto biome = biomeLayer.unwrap().getBiomeAt(position);
             if (!biome) return;
+
             auto entities = biome->determineValidEntitySlots(values);
             auto selection = random.randomSelection(entities);
             if (!selection) return;
+
             canvas.set(*selection, position);
         });
 

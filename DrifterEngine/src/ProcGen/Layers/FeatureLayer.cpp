@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "FeatureLayer.h"
 #include <ProcGen/Layers/BiomeLayer.h>
+#include <ProcGen/Layers/EntityLayer.h>
 #include <Random/Random.h>
+#include <ProcGen/GenerationContext.h>
 
 using namespace entt::literals;
 
@@ -29,6 +31,10 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
     auto biomes = generateDependency<BiomeLayer>(_volume);
     if (!biomes.isReady()) return biomes.getState();
 
+    // EntityLayer needed to fill the slot_canvas - some features may need to check the canvas
+    auto entities = generateDependency<EntityLayer>(_volume.expand({ 2.0f, 2.0f, 1.0f }));
+    if (!entities.isReady()) return entities.getState();
+
     rng::Random random = { getLocalSeed() };
     auto randomPoint = random.positionInRect(_volume.expand({ 0.8f, 0.8f, 1.0f }).flatten());
     const sf::Vector3i randomPoint3d = { randomPoint.x, randomPoint.y, _volume.min.z };
@@ -47,14 +53,19 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
         dependencyValues.emplace(dependencyID, depLayer.unwrap().getValueAt(randomPoint3d));
     }
 
+    std::unordered_map<entt::id_type, std::reference_wrapper<const drft::CanvasLayer>> canvasLayers;
+    canvasLayers.emplace("slot_canvas"_hs,  _layer.getLayerManager().getCanvas("slot_canvas"_hs));
+    canvasLayers.emplace("tag_canvas"_hs,   _layer.getLayerManager().getCanvas("tag_canvas"_hs));
+
     auto features = biome->determineValidFeatures(dependencyValues);
     for (auto&& featureId : features)
     {
         auto feature = _layer.getRegistries().features.get(featureId);
         if (!feature) continue;
 
-        FeatureGenerationResult generatedFeature = feature->generate(FeatureGenerationContext{ getLocalSeed(), _layer.getRegistries() });
-        generatedFeature.area.position += randomPoint;
+        GenerationContext context = { getLocalSeed(), canvasLayers, _layer.getRegistries() };
+        FeatureGenerationResult generatedFeature = feature->generate(randomPoint, context);
+
         generatedFeatures.push_back(std::move(generatedFeature));
     }
 
@@ -82,13 +93,12 @@ GenerationState drft::FeatureLayerChunk::placeFeatures()
 {
     if (generatedFeatures.empty()) return GenerationState::Complete;
 
-    auto& canvas = _layer.getLayerManager().getCanvas("entity_canvas"_hs);
+    auto& canvas = _layer.getLayerManager().getCanvas("slot_canvas"_hs);
     for (auto&& generatedFeature : generatedFeatures)
     {
-        for (auto&& [entity, position] : generatedFeature.entityPositions)
+        for (auto&& [entity, position] : generatedFeature.slotPositions)
         {
-            sf::Vector3i globalPosition = spatial::vec3FromPlanar(generatedFeature.area.position) + position;
-            canvas.forceSet(entity, globalPosition);
+            canvas.forceSet(entity, position + spatial::vec3FromPlanar(generatedFeature.origin));
         }
     }
     

@@ -16,7 +16,7 @@ void LayerPackRegistry::loadLayerPacks(const std::filesystem::path& layerPackDir
 		json::JsonFileWrapper json{ entry.path(), "layer_pack" };
 		if (!json.load())
 		{
-			//LOG_WARNING("{} could not be loaded", entry);
+			LOG_WARNING("{} could not be loaded", entry.path().string());
 			continue;
 		}
 		for (auto&& packObj : json.getRoot().GetObject()) 

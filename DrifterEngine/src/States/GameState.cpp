@@ -22,6 +22,8 @@
 #include "Utility/StandardLogger.h"
 #include "Factory/EntityFactory.h"
 
+#include <ProcGen/Decorators/DecoratorFactory.h>
+
 
 drft::GameState::GameState(StateStack& stack, StateContext& context)
 	: State(stack, context)
@@ -81,8 +83,12 @@ void drft::GameState::loadOrCreateUniverseGenerator()
 
 void drft::GameState::loadGenerationRegistries()
 {
+	// Decorator factory can go out of scope because features and structures will own the decorations
+	DecoratorFactory decorators;
+	bindDecorators(decorators);
+
 	_generationRegistries.biomes.loadBiomes(BIOMES_DIRECTORY);
-	_generationRegistries.features.loadBiomeFeatures(BIOME_FEATURES_DIRECTORY);
+	_generationRegistries.features.loadFeatures(BIOME_FEATURES_DIRECTORY, decorators);
 	_generationRegistries.entityPacks.loadEntityPacks(ENTITY_PACKS_DIRECTORY);
 	_generationRegistries.layerPacks.loadLayerPacks(LAYER_PACKS_DIRECTORY);
 }

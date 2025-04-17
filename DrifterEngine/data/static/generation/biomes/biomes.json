@@ -12,7 +12,7 @@
         },
         "features": {
             "ore_vein": {
-                "random_scatter": [ "less", 0.01 ]
+                "random_scatter": [ "less", 0.005 ]
             }
         },
         "entity_slots": {
@@ -37,11 +37,11 @@
             "height": [ "less", 0.1 ]
         },
         "features": {
-            "ore_vein": {
-                "random_scatter": [ "less", 0.1 ]
-            },
             "cavern": {
                 "random_scatter": [ "less", 0.7 ]
+            },
+            "ore_vein": {
+                "random_scatter": [ "less", 0.1 ]
             }
         },
         "entity_slots": {
@@ -51,12 +51,9 @@
                 "expression": "height & random_scatter"
             },
             "rock_formations": {
-                "height": [ "less", 0.0 ],
-                "fill": [ "greater", 0.0 ],
-                "expression": "height & fill"
+                "height": [ "less", 0.0 ]
             }
         }
     }
   }
 }
-
