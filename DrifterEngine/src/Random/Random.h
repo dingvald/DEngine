@@ -15,9 +15,12 @@ namespace drft::rng
 		float realInRange(float min, float max);
 		float realInRange(math::Range<float> range);
 		int intInRange(int min, int max);
+		int intInRange(math::Range<int> range);
 		sf::Vector2i positionInCircle(sf::Vector2i origin, int radius);
 		sf::Vector2i positionInRect(sf::IntRect rect);
 		std::vector<sf::Vector2i> shuffleRect(sf::IntRect rect);
+
+		entt::id_type generateRandomId();
 
 		template<typename T>
 		const T* randomSelection(const std::vector<T>& elements)

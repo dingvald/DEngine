@@ -16,6 +16,6 @@ private:
 		int number;
 		float chance;
 	};
-	drft::math::Range<float> _radius;
+	drft::math::Range<int> _radius;
 	std::vector<SlotNumberChance> _slots;
 };

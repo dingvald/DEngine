@@ -13,15 +13,14 @@ void IDecorator::createFromJson(const rapidjson::Value& json)
 	if (json.HasMember("conditions"))
 	{
 		auto conditionsObj = json["conditions"].GetObject();
-		_tag = entt::hashed_string{ conditionsObj["tag"].GetString() };
+		_tagExpression = { conditionsObj["tag_expression"].GetString() };
 		_chance = conditionsObj["chance"].GetFloat();
 	}
 }
 
-const PositionList& IDecorator::getMyPositions(const TaggedPositions& taggedPositions) const
+PositionList IDecorator::getMyPositions(const TaggedPositions& taggedPositions) const
 {
-	if (!taggedPositions.contains(_tag)) return EmptyList;
-	return taggedPositions.at(_tag);
+	return _tagExpression.mergeLists(taggedPositions);
 }
 
 bool IDecorator::meetsCondition(drft::rng::Random& random) const

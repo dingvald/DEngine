@@ -2,6 +2,7 @@
 #include <JSON/ICreateFromJson.h>
 #include <ProcGen/TaggedPositions.h>
 #include <ProcGen/SlotPositionList.h>
+#include <JSON/StringExpressions.h>
 
 struct GenerationContext;
 
@@ -20,10 +21,10 @@ public:
 
 protected:
 	virtual void createFromJsonImpl(const rapidjson::Value& json) = 0;
-	const PositionList& getMyPositions(const TaggedPositions& taggedPositions) const;
+	PositionList getMyPositions(const TaggedPositions& taggedPositions) const;
 	bool meetsCondition(drft::rng::Random& random) const;
 
 private:
-	entt::id_type _tag;
+	drft::util::BooleanStringExpression _tagExpression;
 	float _chance;
 };

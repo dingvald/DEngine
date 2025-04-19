@@ -38,7 +38,9 @@
         },
         "features": {
             "cavern": {
-                "random_scatter": [ "less", 0.7 ]
+                "random_scatter": [ "less", 0.7 ],
+                "height": [ "less", 0.0 ],
+                "expression": "random_scatter & height"
             },
             "ore_vein": {
                 "random_scatter": [ "less", 0.1 ]

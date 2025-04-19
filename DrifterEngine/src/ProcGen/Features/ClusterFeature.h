@@ -11,5 +11,5 @@ public:
 private:
 	std::vector<entt::id_type> _tags;
 	drft::math::Range<float> _density;
-	drft::math::Range<float> _radius;
+	drft::math::Range<int> _radius;
 };

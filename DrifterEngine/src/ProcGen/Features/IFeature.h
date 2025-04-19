@@ -14,6 +14,8 @@ struct FeatureGenerationResult
 	const IFeature* feature = nullptr;
 };
 
+using TagList = std::vector<entt::id_type>;
+
 class IFeature : public ICreateFromJson
 {
 public:

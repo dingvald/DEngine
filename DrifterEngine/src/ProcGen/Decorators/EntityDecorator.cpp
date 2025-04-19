@@ -20,8 +20,8 @@ void EntityDecorator::createFromJsonImpl(const rapidjson::Value& json)
 {
 	if (json.HasMember("radius"))
 	{
-		_radius.setMin(json["radius"].GetArray()[0].GetFloat());
-		_radius.setMax(json["radius"].GetArray()[1].GetFloat());
+		_radius.setMin(json["radius"].GetArray()[0].GetInt());
+		_radius.setMax(json["radius"].GetArray()[1].GetInt());
 	}
 	if (json.HasMember("slots"))
 	{
@@ -38,13 +38,13 @@ void EntityDecorator::createFromJsonImpl(const rapidjson::Value& json)
 
 void EntityDecorator::generateCluster(sf::Vector3i origin, SlotPositionList& slotPositions, drft::rng::Random& random) const
 {
-	PositionList result;
-	auto radius = random.realInRange(_radius);
+	auto radius = random.intInRange(_radius);
 	for (auto&& [slot, num, chance] : _slots)
 	{
 		for (int i = 0; i < num; i++)
 		{
 			if (random.realInRange(0.f, 1.f) > chance) continue;
+
 			auto point = random.positionInCircle(drft::spatial::toXY(origin), static_cast<int>(radius));
 			slotPositions.emplace_back(slot, sf::Vector3i{ point.x, point.y, origin.z });
 		}

@@ -17,11 +17,11 @@ public:
 
 	void bind(const std::string& domain, const std::string& state, const std::string& name, Action action);
 
-	bool call(const std::string& domain, const std::string& state, const std::string& actionName);
-	bool call(const std::string& domain, const std::string& state, const std::string& actionName, ArgType arg);
+	bool call(const std::string& domain, const std::string& state, const std::string& actionName) const;
+	bool call(const std::string& domain, const std::string& state, const std::string& actionName, ArgType arg) const;
 
-	bool call(const std::string& domain, const std::string& state, const ModifiedInput& input);
-	bool call(const std::string& domain, const std::string& state, const ModifiedInput& input, ArgType arg);
+	bool call(const std::string& domain, const std::string& state, const ModifiedInput& input) const;
+	bool call(const std::string& domain, const std::string& state, const ModifiedInput& input, ArgType arg) const;
 
 private:
 	using NameActionMap = std::unordered_map<std::string, Action>;

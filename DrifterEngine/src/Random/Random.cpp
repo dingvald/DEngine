@@ -29,6 +29,11 @@ int drft::rng::Random::intInRange(int min, int max)
 	return dist(_gen, Dist::param_type(min, max));
 }
 
+int drft::rng::Random::intInRange(math::Range<int> range)
+{
+	return intInRange(range.getMin(), range.getMax());
+}
+
 sf::Vector2i drft::rng::Random::positionInCircle(sf::Vector2i origin, int radius)
 {
 	int x = intInRange(origin.x - radius, origin.x + radius);
@@ -56,6 +61,13 @@ std::vector<sf::Vector2i> drft::rng::Random::shuffleRect(sf::IntRect rect)
 	auto positions = spatial::getIntRect(rect.position, rect.size.x, rect.size.y);
 	std::shuffle(positions.begin(), positions.end(), _gen);
 	return positions;
+}
+
+entt::id_type drft::rng::Random::generateRandomId()
+{
+	using Dist = std::uniform_int_distribution<std::uint32_t>;
+	Dist dist{};
+	return dist(_gen);
 }
 
 unsigned int drft::rng::generateSeed()

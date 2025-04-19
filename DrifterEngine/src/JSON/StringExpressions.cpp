@@ -31,6 +31,11 @@ const std::unordered_map<char, entt::id_type> HashedOperationsMap =
 drft::util::BooleanStringExpression::BooleanStringExpression(std::string expression)
 {
     _parsedExpression = parseExpression(util::removeWhitespace(expression));
+    for (auto&& token : _parsedExpression)
+    {
+        if (HashedOperations.contains(token)) continue;
+        _tokens.insert(token);
+    }
 }
 
 bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) const
@@ -79,7 +84,12 @@ bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) c
     return stack.top();
 }
 
-std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(std::string expression)
+const std::unordered_set<entt::id_type>& drft::util::BooleanStringExpression::getTokens() const
+{
+    return _tokens;
+}
+
+std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(std::string expression) const
 {
     std::stack<char> operator_stack;
     std::vector<entt::id_type> output;
@@ -127,7 +137,8 @@ std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(
         else
         {
             size_t indexOfFirstSpecialChar = expression.find_first_of(BooleanOperations, i);
-            output.emplace_back(entt::hashed_string{ expression.substr(i, indexOfFirstSpecialChar - i).c_str()});
+            const entt::id_type token = entt::hashed_string{ expression.substr(i, indexOfFirstSpecialChar - i).c_str() };
+            output.emplace_back(token);
             i = indexOfFirstSpecialChar - 1;
         }
     }
@@ -151,6 +162,11 @@ std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(
 bool drft::util::BooleanStringExpression::isOperation(char ch) const
 {
     return BooleanOperations.find_first_of(ch) != StringEnd;
+}
+
+bool drft::util::BooleanStringExpression::isOperation(entt::id_type token) const
+{
+    return HashedOperations.contains(token);
 }
 
 

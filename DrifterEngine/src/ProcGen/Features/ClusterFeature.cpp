@@ -20,8 +20,8 @@ void ClusterFeature::createFromJson(const rapidjson::Value& json)
 	}
 	if (json.HasMember("radius"))
 	{
-		_radius.setMin(json["radius"].GetArray()[0].GetFloat());
-		_radius.setMax(json["radius"].GetArray()[1].GetFloat());
+		_radius.setMin(json["radius"].GetArray()[0].GetInt());
+		_radius.setMax(json["radius"].GetArray()[1].GetInt());
 	}
 }
 
@@ -30,7 +30,7 @@ TaggedPositions ClusterFeature::doGenerate(const GenerationContext& context) con
 	TaggedPositions result;
 
 	drft::rng::Random random{ context.seed };
-	float radius = random.realInRange(_radius);
+	int radius = random.intInRange(_radius);
 	float density = random.realInRange(_density);
 
 	auto circle = drft::spatial::getIntCircleInRadius({ 0,0,0 }, radius);

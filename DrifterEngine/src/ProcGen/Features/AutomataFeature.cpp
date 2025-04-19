@@ -10,17 +10,31 @@ using namespace entt::literals;
 
 void AutomataFeature::createFromJson(const rapidjson::Value& json)
 {
-	if (json.HasMember("tags"))
+	if (json.HasMember("on_tags"))
 	{
-		for (auto&& tag : json["tags"].GetArray())
+		for (auto&& tag : json["on_tags"].GetArray())
 		{
-			_tags.emplace_back(entt::hashed_string{ tag.GetString() });
+			_onTags.emplace_back(entt::hashed_string{ tag.GetString() });
+		}
+	}
+	if (json.HasMember("off_tags"))
+	{
+		for (auto&& tag : json["off_tags"].GetArray())
+		{
+			_offTags.emplace_back(entt::hashed_string{ tag.GetString() });
+		}
+	}
+	if (json.HasMember("center_tags"))
+	{
+		for (auto&& tag : json["center_tags"].GetArray())
+		{
+			_centerTags.emplace_back(entt::hashed_string{ tag.GetString() });
 		}
 	}
 	if (json.HasMember("radius"))
 	{
-		_radius.setMin(json["radius"].GetArray()[0].GetFloat());
-		_radius.setMax(json["radius"].GetArray()[1].GetFloat());
+		_radius.setMin(json["radius"].GetArray()[0].GetInt());
+		_radius.setMax(json["radius"].GetArray()[1].GetInt());
 	}
 	if (json.HasMember("iterations"))
 	{
@@ -33,8 +47,8 @@ TaggedPositions AutomataFeature::doGenerate(const GenerationContext& context) co
 	TaggedPositions result;
 
 	drft::rng::Random random = { context.seed };
-	int width = static_cast<int>(random.realInRange(_radius));
-	int height = static_cast<int>(random.realInRange(_radius));
+	const int width = random.intInRange(_radius);
+	const int height = random.intInRange(_radius);
 
 	Grid grid = { width, height };
 	initGrid(grid, random);
@@ -46,12 +60,26 @@ TaggedPositions AutomataFeature::doGenerate(const GenerationContext& context) co
 	const int halfWidth = width * 0.5f;
 	const int halfHeight = height * 0.5f;
 
+	for (auto&& tag : _centerTags)
+	{
+		result[tag].push_back(sf::Vector3i{0,0,0});
+	}
+
 	grid.forEach([&](int x, int y, bool val) {
-		if (!val) return;
 		sf::Vector3i position = { x - halfWidth, y - halfHeight, 0 };
-		for (auto&& tag : _tags)
+		if (!val)
 		{
-			result[tag].push_back(position);
+			for (auto&& tag : _offTags)
+			{
+				result[tag].push_back(position);
+			}
+		}
+		else
+		{
+			for (auto&& tag : _onTags)
+			{
+				result[tag].push_back(position);
+			}
 		}
 	});
 	

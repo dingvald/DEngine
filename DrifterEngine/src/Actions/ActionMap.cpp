@@ -25,7 +25,7 @@ void ActionMap::bind(const std::string& domain, const std::string& state, const 
 	_actionMap[domain][state][name] = action;
 }
 
-bool ActionMap::call(const std::string& domain, const std::string& state, const std::string& actionName)
+bool ActionMap::call(const std::string& domain, const std::string& state, const std::string& actionName) const
 {
 	auto& map = _actionMap.at(domain).at(state);
 	if (!map.contains(actionName)) return false;
@@ -38,7 +38,7 @@ bool ActionMap::call(const std::string& domain, const std::string& state, const 
 	return false;
 }
 
-bool ActionMap::call(const std::string& domain, const std::string& state, const std::string& actionName, ArgType arg)
+bool ActionMap::call(const std::string& domain, const std::string& state, const std::string& actionName, ArgType arg) const
 {
 	auto& map = _actionMap.at(domain).at(state);
 	if (!map.contains(actionName)) return false;
@@ -51,7 +51,7 @@ bool ActionMap::call(const std::string& domain, const std::string& state, const 
 	return false;
 }
 
-bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input)
+bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input) const
 {
 	if (!_keybindings) return false;
 
@@ -69,7 +69,7 @@ bool ActionMap::call(const std::string& domain, const std::string& state, const 
 	return false;
 }
 
-bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input, ArgType arg)
+bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input, ArgType arg) const
 {
 	if (!_keybindings) return false;
 

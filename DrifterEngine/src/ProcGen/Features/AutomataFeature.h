@@ -25,7 +25,10 @@ private:
 	int sumOfAdjacentCells(int x, int y, int seachRadius, Grid& grid) const;
 
 private:
-	std::vector<entt::id_type> _tags;
-	drft::math::Range<float> _radius;
+	TagList _onTags;
+	TagList _offTags;
+	TagList _centerTags;
+
+	drft::math::Range<int> _radius;
 	int _iterations = 1;
 };
