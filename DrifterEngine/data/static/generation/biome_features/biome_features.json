@@ -26,6 +26,7 @@
                 "on_tags": [ "floor" ],
                 "off_tags": [],
                 "center_tags": [ "center" ],
+                "border_tags": [ "border" ],
                 "radius": [ 10, 20 ],
                 "iterations": 3
             },
@@ -70,6 +71,16 @@
                     "conditions": {
                         "tag_expression": "center & floor",
                         "chance": 0.3
+                    }
+                },
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "water"
+                    },
+                    "conditions": {
+                        "tag_expression": "floor & border",
+                        "chance": 1.0
                     }
                 }
             ]

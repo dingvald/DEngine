@@ -31,6 +31,13 @@ void AutomataFeature::createFromJson(const rapidjson::Value& json)
 			_centerTags.emplace_back(entt::hashed_string{ tag.GetString() });
 		}
 	}
+	if (json.HasMember("border_tags"))
+	{
+		for (auto&& tag : json["border_tags"].GetArray())
+		{
+			_borderTags.emplace_back(entt::hashed_string{ tag.GetString() });
+		}
+	}
 	if (json.HasMember("radius"))
 	{
 		_radius.setMin(json["radius"].GetArray()[0].GetInt());
@@ -67,20 +74,33 @@ TaggedPositions AutomataFeature::doGenerate(const GenerationContext& context) co
 
 	grid.forEach([&](int x, int y, bool val) {
 		sf::Vector3i position = { x - halfWidth, y - halfHeight, 0 };
-		if (!val)
+		if (!val && !_offTags.empty())
 		{
 			for (auto&& tag : _offTags)
 			{
 				result[tag].push_back(position);
 			}
 		}
-		else
+		if (val && !_onTags.empty())
 		{
 			for (auto&& tag : _onTags)
 			{
 				result[tag].push_back(position);
 			}
 		}
+		if (!_borderTags.empty())
+		{
+			auto neighbors = drft::spatial::getAdjacentPoints({ x, y });
+			for (auto&& neighbor : neighbors)
+			{
+				if (!grid.contains(neighbor.x, neighbor.y)) continue;
+				if (grid.at(neighbor.x, neighbor.y) == val) continue;
+				for (auto&& tag : _borderTags)
+				{
+					result[tag].push_back(position);
+				}
+			}
+		}	
 	});
 	
 	return result;

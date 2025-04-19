@@ -28,6 +28,7 @@ private:
 	TagList _onTags;
 	TagList _offTags;
 	TagList _centerTags;
+	TagList _borderTags;
 
 	drft::math::Range<int> _radius;
 	int _iterations = 1;
