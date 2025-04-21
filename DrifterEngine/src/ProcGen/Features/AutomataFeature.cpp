@@ -3,7 +3,6 @@
 #include <Spatial/Grid2d.h>
 #include <Spatial/Helpers.h>
 #include <Random/Random.h>
-#include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 #include <ProcGen/GenerationContext.h>
 
 using namespace entt::literals;
@@ -143,4 +142,3 @@ void AutomataFeature::iteration(Grid& grid) const
 		}
 	}
 }
-
