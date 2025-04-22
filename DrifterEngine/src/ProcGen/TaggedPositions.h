@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include<EnTT/core/fwd.hpp>
 #include <SFML/System/Vector3.hpp>
 #include <unordered_map>
 
