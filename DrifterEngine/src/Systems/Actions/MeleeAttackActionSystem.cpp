@@ -1,26 +1,25 @@
 #include "pch.h"
-#include "MeleeAttackActionSystem.h"
-#include "Spatial/WorldGrid.h"
-#include "Spatial/Conversions.h"
 #include <Spatial/Helpers.h>
+#include "MeleeAttackActionSystem.h"
+#include "Spatial/Conversions.h"
+#include "Spatial/WorldGrid.h"
 
-#include "Components/Components.h"
-#include "Components/Actions/MeleeAttackAction.h"
-#include "Components/AttackerComponent.h"
 #include <Components/CurrentActorComponent.h>
 #include <Components/PhysicalBlockingComponent.h>
-#include "Components/PositionComponent.h"
-#include "Components/ProjectileComponent.h"
 #include <Components/TweeningComponent.h>
+#include "Components/Actions/MeleeAttackAction.h"
+#include "Components/Components.h"
+#include "Components/PositionComponent.h"
 
-#include <Systems/Core/TweeningSystem.h>
 #include <Systems/Core/ActorSystem.h>
+#include <Systems/Core/TweeningSystem.h>
+#include <Systems/Gameplay/SkillsSystem.h>
+#include <Skills/SkillIds.h>
 
-#include "Components/Tags.h"
-#include "Utility/EntityHelpers.h"
-#include "Utility/SpriteOptions.h"
+#include <Components/RenderComponent.h>
 #include <Systems/Helpers/EasingFunctions.h>
 #include "Systems/Helpers/SpawnEffect.h"
+#include "Utility/SpriteOptions.h"
 
 using namespace entt::literals;
 
@@ -28,7 +27,7 @@ const std::unordered_map<std::string, entt::id_type> DamageTypeToEffectTexture
 {
 	{"slashing", "slash_effect"_hs},
 	{"crushing", "impact_effect"_hs},
-	{"piercing", "slash_effect"_hs}
+	{"piercing", "slash_effect"_hs},
 };
 
 void drft::system::MeleeAttackActionSystem::init()
@@ -72,11 +71,8 @@ void drft::system::MeleeAttackActionSystem::update()
 void drft::system::MeleeAttackActionSystem::onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity) const
 {
 	auto& meleeAttack = registry.get<MeleeAttackAction>(entity);
-	if (auto attackerComponent = registry.try_get<AttackerComponent>(entity))
-	{
-		meleeAttack.damageTypes["crushing"] += attackerComponent->baseDamage;
-	}
 
+	meleeAttack.damageTypes["base"] += SkillsSystem::getSkillLevel(SkillId::Strength, {registry, entity});
 }
 
 void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle entity, MeleeAttackAction action) const
@@ -113,6 +109,8 @@ void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle ent
 			.animationSpeed = 20.0f
 			});
 	}
+
+	SkillsSystem::useSkill(SkillId::Strength, 20, entity);
 }
 
 void drft::system::MeleeAttackActionSystem::onReturnToStartPosition(entt::handle entity) const
@@ -122,16 +120,16 @@ void drft::system::MeleeAttackActionSystem::onReturnToStartPosition(entt::handle
 
 entt::id_type drft::system::MeleeAttackActionSystem::getEffectTexture(const std::unordered_map<std::string, int>& damageTypes) const
 {
-	entt::id_type result = {};
+	entt::id_type result = "impact_effect"_hs; // Default to the impact effect
 	int maxDamage = 0;
 
 	for (auto&& [type, damage] : damageTypes)
 	{
-		if (damage > maxDamage)
-		{
-			maxDamage = damage;
-			result = DamageTypeToEffectTexture.at(type);
-		}
+		if (damage <= maxDamage) continue;
+		if (!DamageTypeToEffectTexture.contains(type)) continue;
+
+		maxDamage = damage;
+		result = DamageTypeToEffectTexture.at(type);
 	}
 
 	return result;

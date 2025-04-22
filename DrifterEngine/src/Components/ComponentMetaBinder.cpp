@@ -38,6 +38,7 @@
 #include "PrototypeComponent.h"
 #include "RenderComponent.h"
 #include "SharpComponent.h"
+#include "SkillsComponent.h"
 #include "SprintingComponent.h"
 #include "SpriteControllerComponent.h"
 #include "StaminaComponent.h"
@@ -87,6 +88,7 @@ void ComponentMetaBinder::bindComponents()
 	PrototypeComponent::bind();
 	RenderComponent::bind();
 	SharpComponent::bind();
+	SkillsComponent::bind();
 	SprintingComponent::bind();
 	SpriteControllerComponent::bind();
 	StaminaComponent::bind();

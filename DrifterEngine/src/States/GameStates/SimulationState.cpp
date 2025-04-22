@@ -7,7 +7,6 @@
 #include <Components/CameraTargetComponent.h>
 #include <Components/PositionComponent.h>
 #include <Factory/EntityFactory.h>
-#include <Keybindings/Keybindings.h>
 #include <Spatial/WorldGrid.h>
 
 #include "Systems/SystemScheduler.h"
@@ -28,6 +27,7 @@
 #include <Systems/Core/AiSystem.h>
 #include <Systems/Core/MouseStateSystem.h>
 #include <Systems/Core/MouseVisualizationSystem.h>
+#include <Systems/Core/PlayerTransferSystem.h>
 #include <Systems/Core/TweeningSystem.h>
 #include "Systems/Core/ActorSystem.h"
 #include "Systems/Core/ArtificialInput.h"
@@ -37,7 +37,6 @@
 #include "Systems/Core/HUD.h"
 #include "Systems/Core/ItemUniqueIDGenerator.h"
 #include "Systems/Core/PlayerInput.h"
-#include <Systems/Core/PlayerTransferSystem.h>
 #include "Systems/Core/RealityBubble.h"
 #include "Systems/Core/VisualEffectSystem.h"
 #include "Systems/Core/WorldGridResolver.h"
@@ -65,6 +64,7 @@
 #include "Systems/Gameplay/OpenableSystem.h"
 #include "Systems/Gameplay/PathNavSystem.h"
 #include "Systems/Gameplay/ProjectileSystem.h"
+#include <Systems/Gameplay/SkillsSystem.h>
 #include "Systems/Gameplay/StaminaSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
 
@@ -73,21 +73,23 @@
 #include "Systems/PlayerSpecific/SelectDirectionSystem.h"
 #include "Systems/PlayerSpecific/TargetSelectSystem.h"
 
-#include "Utility/LoadEntity.h"
-#include "Utility/LoadRegistry.h"
-#include "Utility/SaveEntity.h"
-#include "Utility/SaveRegistry.h"
-#include <EnTT/entt.h>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Window/Event.hpp>
-#include <Engine/StateStack.h>
-#include <States/State.h>
-#include <States/StateContext.h>
+
+
 #include <cassert>
+#include <Engine/StateStack.h>
+#include <EnTT/entt.h>
 #include <filesystem>
 #include <iostream>
 #include <memory>
 #include <ostream>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Window/Event.hpp>
+#include <States/State.h>
+#include <States/StateContext.h>
+#include "Utility/LoadEntity.h"
+#include "Utility/LoadRegistry.h"
+#include "Utility/SaveEntity.h"
+#include "Utility/SaveRegistry.h"
 
 using namespace entt::literals;
 
@@ -144,7 +146,6 @@ void drft::SimulationState::onExit()
 void drft::SimulationState::setupRegistryContext()
 {
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(_world);
-	getContext().registry.ctx().emplace<Keybindings&>(getContext().keybindings);
 }
 
 void drft::SimulationState::importSystems()
@@ -208,6 +209,8 @@ void drft::SimulationState::importSystems()
 	_systems->add<MeleeAttackActionSystem>();
 	_systems->add<CollisionSystem>();
 	_systems->add<StaminaSystem>();
+
+	_systems->add<SkillsSystem>();
 
 	// Rendering Systems - Be mindful of the order
 	_systems->add<Camera>();

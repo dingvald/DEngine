@@ -42,6 +42,13 @@
             "materials": [ "Corpse" ]
         },
         "physical_blocking": {},
+        "skills": {
+            "strength": 1,
+            "agility": 1,
+            "toughness": 1,
+            "endurance": 1,
+            "latent_power": 1
+        },
         "Actor": {
           "moveSpeed": 1.0,
           "actSpeed": 1.0

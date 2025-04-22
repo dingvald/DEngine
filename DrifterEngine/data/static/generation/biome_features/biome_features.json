@@ -80,7 +80,7 @@
                     },
                     "conditions": {
                         "tag_expression": "floor & border",
-                        "chance": 1.0
+                        "chance": 0.3
                     }
                 }
             ]

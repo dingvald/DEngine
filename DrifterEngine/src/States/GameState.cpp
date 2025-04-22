@@ -103,6 +103,7 @@ void drft::GameState::setupRegistryContext()
 	using namespace entt::literals;
 
 	getContext().registry.ctx().emplace<system::InputBuffer&>(_inputBuffer);
+	getContext().registry.ctx().emplace<Keybindings&>(getContext().keybindings);
 	getContext().registry.ctx().emplace_as<SolarSystem&>("solar_system"_hs, * _solarSystem);
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace<TextureAtlas&>(getContext().textures);

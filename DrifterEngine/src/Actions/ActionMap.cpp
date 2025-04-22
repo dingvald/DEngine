@@ -72,6 +72,7 @@ bool ActionMap::call(const std::string& domain, const std::string& state, const 
 bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input, ArgType arg) const
 {
 	if (!_keybindings) return false;
+	if (!arg) return false;
 
 	if (auto actionName = _keybindings->forState(state).getActionForKey(input))
 	{

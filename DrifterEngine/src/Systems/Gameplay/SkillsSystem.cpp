@@ -1,0 +1,66 @@
+#include "pch.h"
+#include "SkillsSystem.h"
+#include <Events/SendFloatingMessageEvent.h>
+#include <Components/PositionComponent.h>
+#include <Spatial/Helpers.h>
+#include <Spatial/Conversions.h>
+
+
+void drft::system::SkillsSystem::init()
+{
+	_dispatcher.sink<UseSkillEvent>().connect<&SkillsSystem::onUseSkillEvent>(this);
+}
+
+void drft::system::SkillsSystem::onUseSkillEvent(UseSkillEvent& ev) const
+{
+	if (!ev.entity.all_of<SkillsComponent>()) return;
+
+	auto&& skillsComponent = ev.entity.get<SkillsComponent>();
+	auto& skill = skillsComponent.skills.at(ev.skill);
+	
+	addExp(skill, ev.magnitude, ev.entity);
+}
+
+void drft::system::SkillsSystem::addExp(Skill& skill, int exp, entt::handle entity) const
+{
+	if (skill.gainExp(exp))
+	{
+		if (auto position = entity.try_get<PositionComponent>())
+		{
+			events::SendFloatingMessageEvent message =
+			{
+				.message = std::format("{} now level {}", skill.name(), skill.level()),
+				.color = sf::Color::Magenta,
+				.position = spatial::toXY(spatial::toFloatSpace(position->tile)),
+				.velocity = {0,-0.2},
+				.fades = true,
+				.isScreenSpace = false,
+				.ttl = 80
+			};
+			_dispatcher.trigger(message);
+		}
+	}
+}
+
+int drft::system::SkillsSystem::getSkillLevel(const char* skill, entt::const_handle entity)
+{
+	if (!entity) return 0;
+
+	if (auto skillComponent = entity.try_get<SkillsComponent>())
+	{
+		const entt::id_type hashedSkillName = entt::hashed_string{ skill };
+		if (!skillComponent->skills.contains(hashedSkillName)) return 0;
+
+		return skillComponent->skills.at(hashedSkillName).level();
+	}
+	return 0;
+}
+
+void drft::system::SkillsSystem::useSkill(const char* skill, int magnitude, entt::handle entity)
+{
+	if (!entity) return;
+
+	UseSkillEvent ev = { entity, entt::hashed_string{skill}, magnitude};
+
+	entity.registry()->ctx().get<entt::dispatcher>().trigger(ev);
+}

@@ -13,7 +13,6 @@ public:
 		_factoryMethods.emplace(std::move(name), []() {return std::make_unique<U>(); });
 	}
 
-	template<typename... Args>
 	std::unique_ptr<T> build(std::string name) const
 	{
 		if (!_factoryMethods.contains(name))
