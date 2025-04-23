@@ -4,6 +4,9 @@
 #include "Components/Actions/MoveAction.h"
 #include "Components/StaminaComponent.h"
 
+#include <Systems/Gameplay/SkillsSystem.h>
+#include <Skills/SkillIds.h>
+
 void drft::system::StaminaSystem::init()
 {
 	_registry.on_construct<StaminaComponent>().connect<&StaminaSystem::onStaminaAdded>(this);
@@ -30,7 +33,12 @@ void drft::system::StaminaSystem::onStaminaConsumed(entt::registry& registry, en
 	if (auto stamina = _registry.try_get<StaminaComponent>(entity))
 	{
 		auto& consumeStaminaAction = _registry.get<component::action::ConsumeStamina>(entity);
-		stamina->current = std::clamp(stamina->current - (stamina->baseConsumption + consumeStaminaAction.amount), 0.f, stamina->max);
+		float totalConsumed = stamina->baseConsumption + consumeStaminaAction.amount;
+		if (totalConsumed > 0.f)
+		{
+			SkillsSystem::useSkill(SkillId::Endurance, totalConsumed*10.f, { registry, entity });
+		}
+		stamina->current = std::clamp(stamina->current - totalConsumed, 0.f, stamina->max);
 	}
 }
 
