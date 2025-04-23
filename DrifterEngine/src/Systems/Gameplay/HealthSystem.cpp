@@ -132,7 +132,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 	}
 
 	health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
-	if (health.current == 0)
+	if (health.current <= 0)
 	{
 		handle.emplace<component::action::Die>();
 		_registry.emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(handle));

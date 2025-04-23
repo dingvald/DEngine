@@ -22,34 +22,38 @@
 void drft::system::DeathSystem::update()
 {
 	const auto& factory = _registry.ctx().get<EntityFactory&>();
-	auto view = _registry.view<component::action::Die, MaterialComponent, PositionComponent>();
-	for (auto [entity, material, pos] : view.each())
+	auto view = _registry.view<component::action::Die, PositionComponent>();
+	for (auto [entity, pos] : view.each())
 	{
 		int chance = 80;
-		for (auto& matName : material.materials)
+		if (auto materialComp = _registry.try_get<MaterialComponent>(entity))
 		{
-			if (rng::percentChance(chance))
+			for (auto& matName : materialComp->materials)
 			{
-				auto dropped = factory.build(matName, _registry);
-				dropped.patch<PositionComponent>([&pos](PositionComponent& position)
-					{
-						position.tile = pos.tile;
-					});
-				if (matName.compare("Corpse") == 0)
+				if (rng::percentChance(chance))
 				{
-					auto entityName = util::getEntityName({ _registry, entity });
-					dropped.patch<MaterialComponent>([&material](MaterialComponent& mat)
+					auto dropped = factory.build(matName, _registry);
+					dropped.patch<PositionComponent>([&pos](PositionComponent& position)
 						{
-							mat.weight = material.weight;
+							position.tile = pos.tile;
 						});
-					dropped.patch<DescriptionComponent>([entityName, matName](DescriptionComponent& desc)
-						{
-							desc.name = entityName + "'s " + matName;
-						});
+					if (matName.compare("Corpse") == 0)
+					{
+						auto entityName = util::getEntityName({ _registry, entity });
+						dropped.patch<MaterialComponent>([&materialComp](MaterialComponent& mat)
+							{
+								mat.weight = materialComp->weight;
+							});
+						dropped.patch<DescriptionComponent>([entityName, matName](DescriptionComponent& desc)
+							{
+								desc.name = entityName + "'s " + matName;
+							});
+					}
 				}
+				chance *= 0.5;
 			}
-			chance *= 0.5;
 		}
+		
 		if (_registry.any_of<PlayerInputComponent>(entity))
 		{
 			std::filesystem::remove_all(".\\data\\savegame\\");

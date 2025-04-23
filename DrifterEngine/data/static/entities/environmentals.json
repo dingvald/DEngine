@@ -16,18 +16,21 @@
       "Inherits": [
         "Object"
       ],
-      "Components": {
-        "Description": {
-          "name": "Grass",
-          "description": "Just simple grass."
-        },
-        "Render": {
-          "texture": "short_grass",
-          "uv_size": [ 16, 24 ],
-          "layer": 1,
-          "color": [ 72, 111, 56 ]
+        "Components": {
+            "Description": {
+                "name": "Grass",
+                "description": "Just simple grass."
+            },
+            "Render": {
+                "texture": "short_grass",
+                "uv_size": [ 16, 24 ],
+                "layer": 1,
+                "color": [ 72, 111, 56 ]
+            },
+            "Health": {
+                "max": 5
+            }
         }
-      }
     },
     "Tall Grass": {
       "Inherits": [
@@ -45,7 +48,10 @@
           "color": [ 72, 111, 56 ]
         },
         "LightBlocking": {
-          "opacity": 1.0
+            "opacity": 1.0
+        },
+        "Health": {
+            "max": 5
         }
       }
     },

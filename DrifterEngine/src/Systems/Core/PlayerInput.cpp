@@ -130,7 +130,7 @@ void drft::system::PlayerInput::update()
 		if (inputBuffer.isEmpty()) continue;
 
 		entt::handle playerHandle = { _registry, entity };
-		if (!playerHandle.valid())
+		if (!playerHandle)
 		{
 			LOG_ERROR("From PlayerInput: Player handle invalid");
 			continue;

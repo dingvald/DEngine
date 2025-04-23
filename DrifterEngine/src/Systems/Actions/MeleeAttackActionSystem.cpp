@@ -81,12 +81,8 @@ void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle ent
 	const auto& positionComponent = entity.get<PositionComponent>();
 
 	sf::Vector3i targetPosition = positionComponent.tile + spatial::vec3FromPlanar(action.direction);
-	auto checkForBlockers = [this](entt::entity entity) -> bool
-		{
-			return _registry.all_of<PhysicalBlockingComponent>(entity);
-		};
-	auto blockers = grid.entitiesAt(spatial::asTileSpace(targetPosition), checkForBlockers);
-	for (auto target : blockers)
+	auto& targets = grid.entitiesAt(spatial::asTileSpace(targetPosition));
+	for (auto target : targets)
 	{
 		_registry.emplace_or_replace<component::action::IncomingDamage>(target, action.damageTypes, entity);
 	}
@@ -110,7 +106,10 @@ void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle ent
 			});
 	}
 
-	SkillsSystem::useSkill(SkillId::Strength, 20, entity);
+	if (!targets.empty())
+	{
+		SkillsSystem::useSkill(SkillId::Strength, 20, entity);
+	}
 }
 
 void drft::system::MeleeAttackActionSystem::onReturnToStartPosition(entt::handle entity) const
