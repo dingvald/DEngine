@@ -11,10 +11,7 @@ namespace drft::system
 		using System::System;
 
 	private:
-		void init() override;
 		void update() override;
-
-		void onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity) const;
 
 		void onCollideWithTarget(entt::handle entity, MeleeAttackAction action) const;
 		void onReturnToStartPosition(entt::handle entity) const;

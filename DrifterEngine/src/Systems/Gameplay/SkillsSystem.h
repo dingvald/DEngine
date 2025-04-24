@@ -25,5 +25,6 @@ namespace drft::system
 		void onUseSkillEvent(UseSkillEvent& ev) const;
 
 		void addExp(Skill& skill, int exp, entt::handle entity) const;
+		void onSkillLevelUp(const Skill& skill, entt::const_handle entity) const;
 	};
 }

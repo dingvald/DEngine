@@ -5,7 +5,6 @@
 #include "Spatial/WorldGrid.h"
 
 #include <Components/CurrentActorComponent.h>
-#include <Components/PhysicalBlockingComponent.h>
 #include <Components/TweeningComponent.h>
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/Components.h"
@@ -13,8 +12,6 @@
 
 #include <Systems/Core/ActorSystem.h>
 #include <Systems/Core/TweeningSystem.h>
-#include <Systems/Gameplay/SkillsSystem.h>
-#include <Skills/SkillIds.h>
 
 #include <Components/RenderComponent.h>
 #include <Systems/Helpers/EasingFunctions.h>
@@ -29,11 +26,6 @@ const std::unordered_map<std::string, entt::id_type> DamageTypeToEffectTexture
 	{"crushing", "impact_effect"_hs},
 	{"piercing", "slash_effect"_hs},
 };
-
-void drft::system::MeleeAttackActionSystem::init()
-{
-	_registry.on_construct<MeleeAttackAction>().connect<&MeleeAttackActionSystem::onMeleeAttackActionAdded>(this);
-}
 
 void drft::system::MeleeAttackActionSystem::update()
 {
@@ -68,13 +60,6 @@ void drft::system::MeleeAttackActionSystem::update()
 	}
 }
 
-void drft::system::MeleeAttackActionSystem::onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity) const
-{
-	auto& meleeAttack = registry.get<MeleeAttackAction>(entity);
-
-	meleeAttack.damageTypes["base"] += SkillsSystem::getSkillLevel(SkillId::Strength, {registry, entity});
-}
-
 void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle entity, MeleeAttackAction action) const
 {
 	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
@@ -104,11 +89,6 @@ void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle ent
 			.position = spatial::asTileSpace(targetPosition),
 			.animationSpeed = 20.0f
 			});
-	}
-
-	if (!targets.empty())
-	{
-		SkillsSystem::useSkill(SkillId::Strength, 20, entity);
 	}
 }
 

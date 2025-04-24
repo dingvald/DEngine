@@ -19,6 +19,8 @@ namespace
     }
 }
 
+
+
 namespace 
 {
     using namespace entt::literals;
@@ -63,7 +65,8 @@ const std::string& Skill::name() const
 
 const std::string& Skill::description() const
 {
-    // TODO: insert return statement here
+    static const std::string EmptyString = {};
+    return EmptyString;
 }
 
 const SkillCategory Skill::category() const
@@ -76,7 +79,7 @@ int Skill::level() const
     return _level;
 }
 
-bool Skill::gainExp(int amount)
+GainExpResult Skill::gainExp(int amount)
 {
     _exp += amount;
     if (_exp >= _expUntilNext)
@@ -84,7 +87,7 @@ bool Skill::gainExp(int amount)
         _level++;
         _exp -= _expUntilNext;
         _expUntilNext += determineAddedExpForLevel(_level);
-        return true;
+        return GainExpResult::LevelUp;
     }
-    return false;
+    return GainExpResult::NoLevelUp;
 }

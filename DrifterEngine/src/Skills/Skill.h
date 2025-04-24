@@ -8,6 +8,12 @@ enum class SkillCategory
 	Weapon
 };
 
+enum class GainExpResult
+{
+	NoLevelUp,
+	LevelUp
+};
+
 class Skill
 {
 public:
@@ -20,7 +26,7 @@ public:
 	int level() const;
 	// Add exp to the skill
 	// Returns true if the skill leveled up as a result
-	bool gainExp(int amount);
+	GainExpResult gainExp(int amount);
 
 private:
 	std::string _name;

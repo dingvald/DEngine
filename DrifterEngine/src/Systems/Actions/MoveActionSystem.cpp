@@ -27,7 +27,7 @@ void drft::system::MoveActionSystem::init()
 
 void drft::system::MoveActionSystem::update()
 {
-	auto view = _registry.view<PositionComponent, MoveAction>();
+	auto view = _registry.view<PositionComponent, MoveAction>(entt::exclude<CollisionComponent>);
 	for (auto&& [entity, position, move] : view.each())
 	{
 		entt::handle handle = { _registry, entity };
@@ -50,17 +50,20 @@ void drft::system::MoveActionSystem::update()
 		TweeningSystem::tween(handle, moveToTween);
 
 		ActorSystem::setActionInProgress(handle);
-		_registry.remove<MoveAction>(entity);
 	}
+	_registry.clear<MoveAction>();
 }
 
 void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry, entt::entity entity) const
 {
+	const auto positionComponent = registry.try_get<PositionComponent>(entity);
+	if (!positionComponent) return;
+
 	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
-	const auto& positionComponent = registry.get<PositionComponent>(entity);
+	
 	auto& moveAction = registry.get<MoveAction>(entity);
 
-	sf::Vector3i targetPosition = positionComponent.tile + spatial::vec3FromPlanar(moveAction.direction);
+	sf::Vector3i targetPosition = positionComponent->tile + spatial::vec3FromPlanar(moveAction.direction);
 	auto checkForBlockers = [this](entt::entity entity) -> bool
 		{
 			return _registry.all_of<PhysicalBlockingComponent>(entity);
@@ -70,7 +73,6 @@ void drft::system::MoveActionSystem::onMoveActionAdded(entt::registry& registry,
 	if (!blockers.empty())
 	{
 		_registry.emplace_or_replace<CollisionComponent>(entity, moveAction.direction, std::move(blockers));
-		_registry.remove<MoveAction>(entity);
 	}
 }
 
