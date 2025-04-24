@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Systems/System.h"
-#include <Components/SkillsComponent.h>
+
+class Skill;
 
 namespace drft::system
 {

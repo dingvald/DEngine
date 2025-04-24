@@ -17,6 +17,8 @@ enum class GainExpResult
 class Skill
 {
 public:
+	static inline const int DefaultLevel = 1;
+
 	Skill() = default;
 	Skill(const char* skillName, int level);
 	const std::string& name() const;
@@ -30,7 +32,7 @@ public:
 
 private:
 	std::string _name;
-	int _level = 0;
+	int _level = DefaultLevel;
 	int _exp = 0;
 	int _expUntilNext = 0;
 

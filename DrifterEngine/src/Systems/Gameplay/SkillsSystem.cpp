@@ -2,9 +2,9 @@
 #include "SkillsSystem.h"
 #include <Events/SendFloatingMessageEvent.h>
 #include <Components/PositionComponent.h>
+#include <Components/SkillsComponent.h>
 #include <Spatial/Helpers.h>
 #include <Spatial/Conversions.h>
-#include <Utility/StringManipulation.h>
 
 
 void drft::system::SkillsSystem::init()
@@ -50,7 +50,7 @@ void drft::system::SkillsSystem::onSkillLevelUp(const Skill& skill, entt::const_
 
 int drft::system::SkillsSystem::getSkillLevel(const char* skill, entt::const_handle entity)
 {
-	if (!entity) return 0;
+	if (!entity) return Skill::DefaultLevel;
 
 	if (auto skillComponent = entity.try_get<SkillsComponent>())
 	{
@@ -59,7 +59,7 @@ int drft::system::SkillsSystem::getSkillLevel(const char* skill, entt::const_han
 
 		return skillComponent->skills.at(hashedSkillName).level();
 	}
-	return 0;
+	return Skill::DefaultLevel;
 }
 
 void drft::system::SkillsSystem::useSkill(const char* skill, int magnitude, entt::handle entity)
