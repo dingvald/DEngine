@@ -13,8 +13,8 @@ namespace drft::system
 	private:
 		void update() override;
 
-		void onCollideWithTarget(entt::handle entity, MeleeAttackAction action) const;
-		void onReturnToStartPosition(entt::handle entity) const;
+		void onTweenReachedTarget(entt::handle entity, MeleeAttackAction action) const;
+		void onTweenReturnedToStart(entt::handle entity) const;
 
 		entt::id_type getEffectTexture(const std::unordered_map<std::string, int>& damageTypes) const;
 	};

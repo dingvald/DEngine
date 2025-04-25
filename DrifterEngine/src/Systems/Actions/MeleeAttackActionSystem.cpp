@@ -39,7 +39,7 @@ void drft::system::MeleeAttackActionSystem::update()
 			.time = 0.12f,
 			.easing = Easing::linear,
 			.onFinish = [this, action = meleeAttackAction](entt::handle entity) {
-				onCollideWithTarget(entity, std::move(action));
+				onTweenReachedTarget(entity, std::move(action));
 			}
 		};
 		Tween moveBackTween = {
@@ -47,7 +47,7 @@ void drft::system::MeleeAttackActionSystem::update()
 			.time = 0.22f,
 			.easing = Easing::easeOutBack,
 			.onFinish = [this](entt::handle entity) {
-				onReturnToStartPosition(entity);
+				onTweenReturnedToStart(entity);
 			}
 		};
 
@@ -60,7 +60,7 @@ void drft::system::MeleeAttackActionSystem::update()
 	}
 }
 
-void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle entity, MeleeAttackAction action) const
+void drft::system::MeleeAttackActionSystem::onTweenReachedTarget(entt::handle entity, MeleeAttackAction action) const
 {
 	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 	const auto& positionComponent = entity.get<PositionComponent>();
@@ -92,7 +92,7 @@ void drft::system::MeleeAttackActionSystem::onCollideWithTarget(entt::handle ent
 	}
 }
 
-void drft::system::MeleeAttackActionSystem::onReturnToStartPosition(entt::handle entity) const
+void drft::system::MeleeAttackActionSystem::onTweenReturnedToStart(entt::handle entity) const
 {
 	ActorSystem::setActionComplete(entity, ActionCategory::Act);
 }
