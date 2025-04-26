@@ -241,6 +241,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Gameplay\SkillsSystem.cpp" />
     <ClCompile Include="src\Utility\ColorToHexString.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityDescription.cpp" />
+    <ClCompile Include="src\Utility\EntityAccessors\GetEntityName.cpp" />
+    <ClCompile Include="src\Utility\EntityAccessors\GetEntityWeight.cpp" />
     <ClCompile Include="src\Utility\HashedString.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
     <ClCompile Include="src\AI\AiActions\IAiAction.cpp" />
@@ -540,6 +542,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Utility\ColorToHexString.h" />
     <ClInclude Include="src\Utility\DynamicPointerCast.h" />
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityDescription.h" />
+    <ClInclude Include="src\Utility\EntityAccessors\GetEntityName.h" />
+    <ClInclude Include="src\Utility\EntityAccessors\GetEntityWeight.h" />
     <ClInclude Include="src\Utility\HashedString.h" />
     <ClInclude Include="deps\zlib\include\crc32.h" />
     <ClInclude Include="deps\zlib\include\deflate.h" />

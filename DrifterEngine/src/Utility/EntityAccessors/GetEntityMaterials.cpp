@@ -25,6 +25,7 @@ std::optional<entt::const_handle> drft::util::getEntityPrimaryMaterial(entt::con
     std::string largestName = {};
     if (auto material = entity.try_get<MaterialCompositionComponent>())
     {
+        const auto& factory = entity.registry()->ctx().get<const EntityFactory&>();
         for (auto&& [name, percent] : material->materials)
         {
             if (percent > largestPercent)
@@ -32,8 +33,9 @@ std::optional<entt::const_handle> drft::util::getEntityPrimaryMaterial(entt::con
                 largestPercent = percent;
                 largestName = name;
             }
+            if (percent > 0.5f) break;
         }
-        const auto& factory = entity.registry()->ctx().get<const EntityFactory&>();
+        
         auto handle = factory.get(largestName);
         if (!handle) return std::nullopt;
         return handle;

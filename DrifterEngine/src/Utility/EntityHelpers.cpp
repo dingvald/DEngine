@@ -15,15 +15,6 @@ RenderComponent drft::util::getRenderData(entt::const_handle entity)
 	return system::SpriteControllerSystem::getDefaultRenderComponent(entity);
 }
 
-std::string drft::util::getEntityName(const entt::const_handle entity)
-{
-	if (auto description = entity.try_get<DescriptionComponent>())
-	{
-		return description->name;
-	}
-	return "UNNAMED";
-}
-
 bool drft::util::isType(entt::const_handle entity, const std::string& typeName)
 {
 	if (!entity.registry()->ctx().contains<const EntityFactory&>()) return false;

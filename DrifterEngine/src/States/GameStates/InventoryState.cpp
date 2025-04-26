@@ -15,7 +15,8 @@
 
 #include <Events/ChangeMouseVisibilityEvent.h>
 
-#include "Utility/EntityHelpers.h"
+#include <Utility/EntityAccessors/GetEntityName.h>
+#include <Utility/EntityHelpers.h>
 #include "Systems/Helpers/ItemDatabase.h"
 #include <Systems/Core/MouseVisualizationSystem.h>
 #include <Utility/StandardLogger.h>
@@ -474,7 +475,7 @@ void drft::InventoryState::onEnterItemContainingWidget(entt::const_handle item)
 	if (_tooltip.has_value()) return;
 
 	_tooltip.emplace(item, _guiGroup);
-	_tooltip->setDelayTime(30);
+	_tooltip->setDelayTime(15);
 }
 
 void drft::InventoryState::onLeaveItemContainingWidget()
@@ -492,10 +493,6 @@ drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx)
 	if (std::holds_alternative<std::monostate>(context)) return;
 
 	entt::const_handle item = getItem();
-
-	///_background.setFillColor(guiColor::BlackAgate);
-	///_background.setSize({ 64, 96 });
-	///_background.setOrigin(_background.getLocalBounds().size / 2.f);
 
 	auto render = util::getRenderData(item);
 	_icon = std::make_unique<sf::Sprite>(item.registry()->ctx().get<TextureAtlas>().getSprite(render.texture, render.uvSize, render.uvCoords));

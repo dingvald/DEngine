@@ -4,7 +4,7 @@
 #include <Components/MaterialPropertiesComponent.h>
 #include <Factory/EntityFactory.h>
 #include <Utility/StandardLogger.h>
-#include <Utility/EntityHelpers.h>
+#include <Utility/EntityAccessors/GetEntityName.h>
 
 
 void drft::system::MaterialPropertiesSystem::init()

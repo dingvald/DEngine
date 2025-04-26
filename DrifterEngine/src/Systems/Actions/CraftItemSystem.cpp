@@ -9,7 +9,7 @@
 
 #include "Factory/EntityFactory.h"
 #include "Systems/Helpers/ItemDatabase.h"
-#include "Utility/EntityHelpers.h"
+#include <Utility/EntityAccessors/GetEntityName.h>
 #include <Utility/StandardLogger.h>
 
 

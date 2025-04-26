@@ -2,7 +2,7 @@
 #include "ContainerWrapper.h"
 #include <Components/ContainerComponent.h>
 #include <Systems/Helpers/ItemDatabase.h>
-#include <Utility/EntityHelpers.h>
+#include <Utility/EntityAccessors/GetEntityName.h>
 #include <Utility/StringManipulation.h>
 
 static const std::vector<ItemComponent::ID> EmptyContainer = {};

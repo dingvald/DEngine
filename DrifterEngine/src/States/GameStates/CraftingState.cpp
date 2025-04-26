@@ -15,6 +15,7 @@
 
 #include "Factory/EntityFactory.h"
 #include "Utility/EntityHelpers.h"
+#include <Utility/EntityAccessors/GetEntityName.h>
 #include "Utility/TextureAtlas.h"
 #include <Utility/TGUIHelpers.h>
 #include "Systems/Helpers/ItemDatabase.h"

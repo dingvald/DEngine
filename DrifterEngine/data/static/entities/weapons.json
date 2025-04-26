@@ -1,13 +1,13 @@
 {
     "Prototypes": {
-        "Training Sword": {
+        "Sword": {
             "Inherits": [
                 "Item"
             ],
             "Components": {
                 "Description": {
-                    "name": "Training Sword",
-                    "description": "A wooden sword used to train technique with a blade."
+                    "name": "${material} Sword",
+                    "description": "A curved blade whose design has stood the test of time."
                 },
                 "Render": {
                     "texture": "katana",

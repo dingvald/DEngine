@@ -9,4 +9,5 @@ namespace drft::util
 
 	std::string capitalize(const std::string& str);
 	bool stringContains(const std::string& str, const std::string& subStr);
+	std::optional<std::string> getStringBetween(const std::string& str, const std::string& substr1, const std::string& substr2);
 }

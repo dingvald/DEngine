@@ -77,3 +77,17 @@ bool drft::util::stringContains(const std::string& str, const std::string& subSt
     return false;
 }
 
+std::optional<std::string> drft::util::getStringBetween(const std::string& str, const std::string& substr1, const std::string& substr2)
+{
+    size_t pos1 = str.find(substr1);
+    if (pos1 == std::string::npos) {
+        return std::nullopt;
+    }
+    size_t start_pos = pos1 + substr1.length();
+    size_t pos2 = str.find(substr2, start_pos);
+    if (pos2 == std::string::npos) {
+        return std::nullopt;
+    }
+    return str.substr(start_pos, pos2 - start_pos);
+}
+

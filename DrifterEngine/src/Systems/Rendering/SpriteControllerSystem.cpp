@@ -7,7 +7,7 @@
 #include "Components/SyncedAnimationComponent.h"
 
 #include <Utility/StandardLogger.h>
-#include <Utility/EntityHelpers.h>
+#include <Utility/EntityAccessors/GetEntityName.h>
 
 using namespace entt::literals;
 
