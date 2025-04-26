@@ -37,9 +37,8 @@
             }
           }
         },
-        "Material": {
-            "weight": 80.0,
-            "materials": [ "Corpse" ]
+        "weight": {
+            "value": 60.0
         },
         "physical_blocking": {},
         "skills": {
@@ -63,8 +62,7 @@
         "Stamina": {
           "max": 15.0
         },
-        "Player": {
-        },
+        "Player": {},
         "Attacker": {
           "baseDamage": 1
         },

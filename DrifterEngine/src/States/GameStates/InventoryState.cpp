@@ -10,7 +10,6 @@
 #include "Components/ItemComponent.h"
 #include "Components/WearableComponent.h"
 #include "Components/DescriptionComponent.h"
-#include "Components/MaterialComponent.h"
 
 #include <Defines/CommonGuiColors.h>
 

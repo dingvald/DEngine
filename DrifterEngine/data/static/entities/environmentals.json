@@ -29,6 +29,9 @@
             },
             "Health": {
                 "max": 5
+            },
+            "material_composition": {
+                "Plant Fibre": 1.0
             }
         }
     },
@@ -36,147 +39,27 @@
       "Inherits": [
         "Grass"
       ],
-      "Components": {
-        "Description": {
-          "name": "Tall Grass",
-          "description": "Just grass but longer."
-        },
-        "Render": {
-          "texture": "long_grass",
-          "uv_size": [ 16, 24 ],
-          "layer": 4,
-          "color": [ 72, 111, 56 ]
-        },
-        "LightBlocking": {
-            "opacity": 1.0
-        },
-        "Health": {
-            "max": 5
-        }
-      }
-    },
-    "Sand": {
-      "Inherits": [
-        "Object"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Sand",
-          "description": "Just simple sand."
-        },
-        "Render": {
-          "texture": "sand",
-          "uv_size": [ 16, 24 ],
-          "layer": 1,
-          "color": [ 174, 155, 125 ]
-        }
-      }
-    },
-    "Water": {
-      "Inherits": [
-        "Object"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Water",
-          "description": "Just simple water."
-        },
-        "SpriteController": {
-          "states": {
-            "default": {
-              "frames": [
-                {
-                  "texture": "liquid",
-                  "uv_size": [ 16, 24 ],
-                  "uv_coords": [ 0, 0 ],
-                  "layer": 2,
-                  "color": [ 27, 149, 224 ]
-                },
-                {
-                  "uv_coords": [ 1, 0 ]
-                }
-              ],
-              "speed": 1.0,
-              "synced": true
+        "Components": {
+            "Description": {
+                "name": "Tall Grass",
+                "description": "Just grass but longer."
+            },
+            "Render": {
+                "texture": "long_grass",
+                "uv_size": [ 16, 24 ],
+                "layer": 4,
+                "color": [ 72, 111, 56 ]
+            },
+            "LightBlocking": {
+                "opacity": 1.0
+            },
+            "Health": {
+                "max": 5
+            },
+            "material_composition": {
+                "Plant Fibre": 1.0
             }
-          }
-        },
-        "Liquid": {
-          "volume": 1000.0
         }
-      }
-    },
-    "Shallow Water": {
-      "Inherits": [
-        "Object"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Shallow Water",
-          "description": "Just simple water."
-        },
-        "SpriteController": {
-          "states": {
-            "default": {
-              "frames": [
-                {
-                  "texture": "liquid",
-                  "uv_size": [ 16, 24 ],
-                  "uv_coords": [ 0, 0 ],
-                  "layer": 2,
-                  "color": [ 50, 200, 250 ]
-                },
-                {
-                  "uv_coords": [ 1, 0 ]
-                }
-              ],
-              "speed": 1.0,
-              "synced": true
-            }
-          }
-        },
-        "Liquid": {
-          "volume": 100.0
-        }
-      }
-    },
-    "Murky Water": {
-      "Inherits": [
-        "Object"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Murky Water",
-          "description": "Just simple, dirty water."
-        },
-        "SpriteController": {
-          "states": {
-            "default": {
-              "frames": [
-                {
-                  "texture": "liquid",
-                  "uv_size": [ 16, 16 ],
-                  "uv_coords": [ 0, 0 ],
-                  "layer": 2,
-                  "color": [ 60, 92, 83 ]
-                },
-                {
-                  "texture": "liquid",
-                  "uv_size": [ 16, 16 ],
-                  "uv_coords": [ 1, 0 ],
-                  "layer": 2,
-                  "color": [ 60, 92, 83 ]
-                }
-              ],
-              "speed": 1.0,
-              "synced": true
-            }
-          }
-        },
-        "Liquid": {
-          "volume": 500.0
-        }
-      }
     },
     "Tree": {
       "Inherits": [
@@ -193,12 +76,12 @@
           "layer": 2,
           "color": [ 65, 97, 63 ]
         },
-        "Material": {
-            "weight": 400.0,
-            "materials": [
-                "Wood",
-                "Plant Fibre"
-            ]
+        "material_composition": {
+            "Wood": 0.9,
+            "Plant Fibre": 0.1
+        },
+        "weight": {
+            "value": 600.0
         },
         "physical_blocking": {},
         "Health": {
@@ -225,9 +108,11 @@
                 "layer": 2,
                 "color": [ 100, 100, 100 ]
             },
-            "Material": {
-                "weight": 1000.0,
-                "materials": [ "Stone" ]
+            "material_composition": {
+                "Stone": 1.0
+            },
+            "weight": {
+                "value": 1000.0
             },
             "physical_blocking": {},
             "Health": {
@@ -254,12 +139,12 @@
                 "layer": 3,
                 "color": [ 161, 157, 148 ]
             },
-            "Material": {
-                "weight": 800.0,
-                "materials": [
-                    "Stone",
-                    "Iron"
-                ]
+            "material_composition": {
+                "Stone": 0.75,
+                "Iron": 0.25
+            },
+            "weight": {
+                "value": 800.0
             },
             "physical_blocking": {},
             "Health": {

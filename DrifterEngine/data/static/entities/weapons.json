@@ -13,21 +13,23 @@
                     "texture": "katana",
                     "uv_size": [ 16, 24 ],
                     "layer": 1,
-                    "color": [ 68, 48, 40 ]
+                    "color": [ 161, 157, 148 ]
                 },
-                "Material": {
-                    "weight": 2.0,
-                    "materials": [ "Wood", "Twine" ]
+                "material_composition": {
+                    "Iron": 0.9,
+                    "Plant Fibre": 0.1
                 },
                 "Craftable": {
                     "recipe": {
-                        "Wood": 2,
-                        "Twine": 2,
-                        "Sharpened Stone": 1
+                        "Iron": 2,
+                        "Plant Fibre": 1
                     }
                 },
                 "Sharp": {
-                    "sharpness": 5
+                    "sharpness": 0.5
+                },
+                "weight": {
+                    "value": 1.5
                 }
             }
         }

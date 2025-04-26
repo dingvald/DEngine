@@ -4,20 +4,17 @@
 
 #include "Components/Components.h"
 #include "Components/DescriptionComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/MaterialCompositionComponent.h"
+#include <Components/WeightComponent.h>
 #include "Components/PositionComponent.h"
 #include "Components/PlayerInputComponent.h"
 #include "Components/ItemComponent.h"
 
 #include "Events/RequestStateChange.h"
 #include <States/StateIdentifiers.h>
-#include "Spatial/Conversions.h"
-#include <Spatial/Helpers.h>
-#include "Systems/Helpers/FindItemOwner.h"
 #include "Random/PercentChance.h"
-#include "Utility/EntityHelpers.h"
-#include "Events/SendFloatingMessageEvent.h"
 
+#pragma optimize("", off)
 
 void drft::system::DeathSystem::update()
 {
@@ -25,32 +22,20 @@ void drft::system::DeathSystem::update()
 	auto view = _registry.view<component::action::Die, PositionComponent>();
 	for (auto [entity, pos] : view.each())
 	{
-		int chance = 80;
-		if (auto materialComp = _registry.try_get<MaterialComponent>(entity))
+		const float chance = 80.f;
+		if (auto materialComp = _registry.try_get<MaterialCompositionComponent>(entity))
 		{
-			for (auto& matName : materialComp->materials)
+			auto weight = _registry.try_get<WeightComponent>(entity);
+			for (auto&& [matName, percent] : materialComp->materials)
 			{
-				if (rng::percentChance(chance))
+				if (rng::percentChance(chance * percent))
 				{
 					auto dropped = factory.build(matName, _registry);
-					dropped.patch<PositionComponent>([&pos](PositionComponent& position)
-						{
-							position.tile = pos.tile;
-						});
-					if (matName.compare("Corpse") == 0)
-					{
-						auto entityName = util::getEntityName({ _registry, entity });
-						dropped.patch<MaterialComponent>([&materialComp](MaterialComponent& mat)
-							{
-								mat.weight = materialComp->weight;
-							});
-						dropped.patch<DescriptionComponent>([entityName, matName](DescriptionComponent& desc)
-							{
-								desc.name = entityName + "'s " + matName;
-							});
+					dropped.emplace_or_replace<PositionComponent>(pos);
+					if (weight) {
+						dropped.emplace_or_replace<WeightComponent>(weight->value * percent);
 					}
 				}
-				chance *= 0.5;
 			}
 		}
 		

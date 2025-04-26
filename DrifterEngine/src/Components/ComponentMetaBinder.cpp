@@ -28,7 +28,8 @@
 #include "LiquidComponent.h"
 #include "LitComponent.h"
 #include "LocalLightSourceComponent.h"
-#include "MaterialComponent.h"
+#include "MaterialCompositionComponent.h"
+#include "MaterialPropertiesComponent.h"
 #include "OpenableComponent.h"
 #include "PaperdollLayoutComponent.h"
 #include "PhysicalBlockingComponent.h"
@@ -48,6 +49,7 @@
 #include "VisionComponent.h"
 #include "VisualEffectComponent.h"
 #include "WearableComponent.h"
+#include "WeightComponent.h"
 
 void ComponentMetaBinder::bindComponents()
 {
@@ -78,7 +80,8 @@ void ComponentMetaBinder::bindComponents()
 	LiquidComponent::bind();
 	LitComponent::bind();
 	LocalLightSourceComponent::bind();
-	MaterialComponent::bind();
+	MaterialCompositionComponent::bind();
+	MaterialPropertiesComponent::bind();
 	OpenableComponent::bind();
 	PaperdollLayoutComponent::bind();
 	PhysicalBlockingComponent::bind();
@@ -98,4 +101,5 @@ void ComponentMetaBinder::bindComponents()
 	VisionComponent::bind();
 	VisualEffectComponent::bind();
 	WearableComponent::bind();
+	WeightComponent::bind();
 }

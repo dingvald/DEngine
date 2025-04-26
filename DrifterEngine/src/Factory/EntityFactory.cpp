@@ -217,6 +217,11 @@ void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, co
 		{
 			auto componentName = component.name.GetString();
 			auto meta = entt::resolve(entt::hashed_string(componentName));
+			if (!meta)
+			{
+				LOG_ERROR("Component {} does not exist - has it been reflected?", componentName);
+				continue;
+			}
 			auto any = meta.func("emplace"_hs).invoke(meta, entt::forward_as_meta(_protoRegistry), entity);
 
 			// Allow the component to initialize itself using the json value

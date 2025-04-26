@@ -1,192 +1,201 @@
 {
-  "Prototypes": {
-    "Corpse": {
-      "Inherits": [
-        "Material"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Corpse",
-          "description": "A corpse."
+    "Prototypes": {
+        "Corpse": {
+            "Inherits": [
+                "Material"
+            ],
+            "Components": {
+                "Description": {
+                    "name": "Corpse",
+                    "description": "A corpse."
+                },
+                "Render": {
+                    "texture": "simple_tileset",
+                    "uv_size": [ 16, 16 ],
+                    "uv_coords": [ 7, 0 ],
+                    "layer": 1,
+                    "color": [ 88, 8, 8 ]
+                },
+                "material_properties": {
+                    "hardness": 0.1,
+                    "brittleness": 0.1,
+                    "malleability": 0.1
+                },
+                "weight": {
+                    "value": 1.0
+                }
+            }
         },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 7, 0 ],
-          "layer": 1,
-          "color": [ 88, 8, 8 ]
+        "Wood": {
+            "Inherits": [
+                "Material"
+            ],
+            "Components": {
+                "Description": {
+                    "name": "Wood",
+                    "description": "A chunk of wood."
+                },
+                "Render": {
+                    "texture": "simple_tileset",
+                    "uv_size": [ 16, 16 ],
+                    "uv_coords": [ 4, 1 ],
+                    "layer": 1,
+                    "color": [ 68, 48, 40 ]
+                },
+                "material_properties": {
+                    "hardness": 0.4,
+                    "brittleness": 0.8,
+                    "malleability": 0.1
+                },
+                "weight": {
+                    "value": 2.0
+                }
+            }
         },
-        "Material": {
-          "weight": 60.0,
-          "materials": [ "Corpse" ]
+        "Water": {
+            "Inherits": [
+                "Object"
+            ],
+            "Components": {
+                "Description": {
+                    "name": "Water",
+                    "description": "Just simple water."
+                },
+                "SpriteController": {
+                    "states": {
+                        "default": {
+                            "frames": [
+                                {
+                                    "texture": "liquid",
+                                    "uv_size": [ 16, 24 ],
+                                    "uv_coords": [ 0, 0 ],
+                                    "layer": 2,
+                                    "color": [ 27, 149, 224 ]
+                                },
+                                {
+                                    "uv_coords": [ 1, 0 ]
+                                }
+                            ],
+                            "speed": 1.0,
+                            "synced": true
+                        }
+                    }
+                },
+                "Liquid": {
+                    "volume": 1000.0
+                },
+                "material_properties": {
+                    "hardness": 0.0,
+                    "brittleness": 0.0,
+                    "malleability": 0.0
+                },
+                "weight": {
+                    "value": 1.0
+                }
+            }
+        },
+        "Sand": {
+            "Inherits": [
+                "Material"
+            ],
+            "Components": {
+                "Description": {
+                    "name": "Sand",
+                    "description": "Just simple sand."
+                },
+                "Render": {
+                    "texture": "sand",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 174, 155, 125 ]
+                },
+                "material_properties": {
+                    "hardness": 0.1,
+                    "brittleness": 0.0,
+                    "malleability": 0.0
+                },
+                "weight": {
+                    "value": 2.0
+                }
+            }
+        },
+        "Stone": {
+            "Inherits": [
+                "Material"
+            ],
+            "Components": {
+                "Description": {
+                    "name": "Stone",
+                    "description": "A small rock."
+                },
+                "Render": {
+                    "texture": "simple_tileset",
+                    "uv_size": [ 16, 16 ],
+                    "uv_coords": [ 0, 1 ],
+                    "layer": 1,
+                    "color": [ 128, 132, 135 ]
+                },
+                "material_properties": {
+                    "hardness": 0.8,
+                    "brittleness": 0.9,
+                    "malleability": 0.0
+                },
+                "weight": {
+                    "value": 1.5
+                }
+            }
+        },
+        "Iron": {
+            "Inherits": [
+                "Material"
+            ],
+            "Components": {
+                "Description": {
+                    "name": "Iron",
+                    "description": "An iron ore."
+                },
+                "Render": {
+                    "texture": "simple_tileset",
+                    "uv_size": [ 16, 16 ],
+                    "uv_coords": [ 3, 4 ],
+                    "layer": 1,
+                    "color": [ 161, 157, 148 ]
+                },
+                "material_properties": {
+                    "hardness": 0.8,
+                    "brittleness": 0.5,
+                    "malleability": 0.6
+                },
+                "weight": {
+                    "value": 2.0
+                }
+            }
+        },
+        "Plant Fibre": {
+            "Inherits": [
+                "Material"
+            ],
+            "Components": {
+                "Description": {
+                    "name": "Plant Fibre",
+                    "description": "Tough planty material."
+                },
+                "Render": {
+                    "texture": "simple_tileset",
+                    "uv_size": [ 16, 16 ],
+                    "uv_coords": [ 1, 3 ],
+                    "layer": 1,
+                    "color": [ 1, 50, 35 ]
+                },
+                "material_properties": {
+                    "hardness": 0.1,
+                    "brittleness": 0.1,
+                    "malleability": 0.5
+                },
+                "weight": {
+                    "value": 0.5
+                }
+            }
         }
-      }
-    },
-    "Wood": {
-      "Inherits": [
-        "Material"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Wood",
-          "description": "A chunk of wood."
-        },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 4, 1 ],
-          "layer": 1,
-          "color": [ 68, 48, 40 ]
-        },
-        "Material": {
-          "weight": 2.5,
-          "materials": [ "Wood" ]
-        }
-      }
-    },
-    "Stone": {
-      "Inherits": [
-        "Material"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Stone",
-          "description": "A small rock."
-        },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 0, 1 ],
-          "layer": 1,
-          "color": [ 128, 132, 135 ]
-        },
-        "Material": {
-          "weight": 1.5,
-          "materials": [ "Stone" ]
-        }
-      }
-    },
-    "Iron": {
-      "Inherits": [
-        "Material"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Iron",
-          "description": "An iron ore."
-        },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 3, 4 ],
-          "layer": 1,
-          "color": [ 161, 157, 148 ]
-        },
-        "Material": {
-          "weight": 3.0,
-          "materials": [ "Iron" ]
-        }
-      }
-    },
-    "Plant Fibre": {
-      "Inherits": [
-        "Material"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Plant Fibre",
-          "description": "Tough planty material."
-        },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 1, 3 ],
-          "layer": 1,
-          "color": [ 1, 50, 35 ]
-        },
-        "Material": {
-          "weight": 0.25,
-          "materials": [ "Plant Fibre" ]
-        }
-      }
-    },
-    "Twine": {
-      "Inherits": [
-        "Material"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Twine",
-          "description": "Versatile and durable."
-        },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 2, 3 ],
-          "layer": 1,
-          "color": [ 186, 161, 127 ]
-        },
-        "Material": {
-          "weight": 0.5,
-          "materials": [ "Plant Fibre" ]
-        },
-        "Craftable": {
-          "recipe": {
-            "Plant Fibre": 2
-          }
-        }
-      }
-    },
-    "Leather": {
-      "Inherits": [
-        "Material"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Leather",
-          "description": "Tough and stylish material."
-        },
-        "Render": {
-          "texture": "simple_tileset",
-          "uv_size": [ 16, 16 ],
-          "uv_coords": [ 8, 0 ],
-          "layer": 1,
-          "color": [ 98, 74, 46 ]
-        },
-        "Material": {
-          "weight": 0.5,
-          "materials": [ "Leather" ]
-        }
-      }
-    },
-    "Sharpened Stone": {
-      "Inherits": [
-        "Material"
-      ],
-      "Components": {
-        "Description": {
-          "name": "Sharpened Stone",
-          "description": "A stone, but its edges have been sharpened."
-        },
-        "Render": {
-          "texture": "sharp_stone",
-          "uv_size": [ 16, 24 ],
-          "layer": 1,
-          "color": [ 128, 132, 135 ]
-        },
-        "Material": {
-          "weight": 1.0,
-          "materials": [ "Stone" ]
-        },
-        "Craftable": {
-          "recipe": {
-            "Stone": 2
-          }
-        },
-        "Sharp": {
-          "sharpness": 3
-        }
-      }
     }
-  }
 }

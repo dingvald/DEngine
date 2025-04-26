@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ItemTooltip.h"
 #include <Defines/CommonGuiColors.h>
+#include <Components/MaterialCompositionComponent.h>
 #include <Utility/EntityHelpers.h>
 #include <Utility/EntityAccessors/GetEntityDescription.h>
 #include <Utility/EntityAccessors/GetEntityMaterials.h>
@@ -47,15 +48,25 @@ ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
 	materialsList->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
 	materialsList->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
 	std::stringstream ss;
-	ss << drft::GuiHelpers::colorizedString("Composed of ", sf::Color::White);
-	auto materials = drft::util::getEntityMaterials(item);
-	for (size_t i = 0; i < materials.size(); i++)
+
+	auto materials = drft::util::getEntityMaterialPercentages(item);
+	
+	if (materials.empty())
 	{
-		auto renderData = drft::util::getRenderData(materials.at(i));
-		ss << drft::GuiHelpers::colorizedString(drft::util::getEntityName(materials.at(i)), renderData.color);
-		if (i < materials.size() - 1)
+		ss << "[Base Material]";
+	}
+	else
+	{
+		ss << drft::GuiHelpers::colorizedString("Composed of ", sf::Color::White);
+		for (size_t i = 0; i < materials.size(); i++)
 		{
-			ss << ", ";
+			auto&& [material, percentage] = materials.at(i);
+			auto renderData = drft::util::getRenderData(material);
+			ss << drft::GuiHelpers::colorizedString(drft::util::getEntityName(material), renderData.color) << percentage*100.f << "%";
+			if (i < materials.size() - 1)
+			{
+				ss << ", ";
+			}
 		}
 	}
 

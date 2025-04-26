@@ -19,15 +19,16 @@
       "Inherits": [
         "Item"
       ],
-      "Components": {
-        "Health": {
-            "max": 10
-        },
-        "Material": {
-          "weight": 0.0,
-          "materials": [ "Material" ]
+        "Components": {
+            "Health": {
+                "max": 10
+            },
+            "material_properties": {
+                "hardness": 0.0,
+                "brittleness": 0.0,
+                "malleability": 0.0
+            }
         }
-      }
     }
   }
 }

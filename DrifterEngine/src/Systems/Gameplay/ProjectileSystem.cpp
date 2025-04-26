@@ -10,7 +10,7 @@
 #include "Components/RenderComponent.h"
 #include "Components/AttackerComponent.h"
 #include "Components/ActorComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/WeightComponent.h"
 #include "Components/Tags.h"
 
 #include <Spatial/Helpers.h>
@@ -68,9 +68,9 @@ void drft::system::ProjectileSystem::onProjectileAdded(entt::registry& registry,
 
 	if (registry.any_of<AttackerComponent>(entity)) return;
 
-	if (auto material = registry.try_get<MaterialComponent>(entity))
+	if (auto weight = registry.try_get<WeightComponent>(entity))
 	{
-		registry.emplace<AttackerComponent>(entity, static_cast<int>(material->weight));
+		registry.emplace<AttackerComponent>(entity, static_cast<int>(weight->value));
 		_attackerAdded.insert(entity);
 	}
 }

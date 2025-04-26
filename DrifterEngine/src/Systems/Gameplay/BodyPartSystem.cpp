@@ -4,7 +4,7 @@
 #include "Components/Components.h"
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/BodyComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/WeightComponent.h"
 #include "Components/SharpComponent.h"
 #include <Systems/Gameplay/SkillsSystem.h>
 #include <Skills/SkillIds.h>
@@ -17,6 +17,25 @@
 static constexpr int CHANCE_TO_DAMAGE_EQUIPPED_WEAPON = 15;
 const float C_CONSTANT = 0.5f;
 const float K_CONSTANT = 1.5f;
+static constexpr float SKILL_POINT_MULIPLIER = 10.f;
+
+namespace
+{
+	struct SplitDamage
+	{
+		float crushing = 1.f;
+		float slashing = 0.f;
+	};
+
+	SplitDamage determineDamageSplit(float percentSharpness)
+	{
+		SplitDamage result;
+		percentSharpness = std::clamp(percentSharpness, 0.f, 1.f);
+		result.slashing = percentSharpness;
+		result.crushing = 1.f - percentSharpness;
+		return result;
+	}
+}
 
 void drft::system::BodyPartSystem::init()
 {
@@ -42,16 +61,14 @@ void drft::system::BodyPartSystem::onMeleeAttackActionAdded(entt::registry& regi
 	{
 		auto& attack = registry.get<MeleeAttackAction>(entity);
 		auto weaponDamageTypes = calculateDamageTypesFromHeld(entity);
-		for (auto& [typeName, damage] : weaponDamageTypes)
-		{
-			attack.damageTypes[typeName] += damage;
-		}
+		
+		Damage::mergeOrAdd(attack.damageTypes, weaponDamageTypes);
 	}
 }
 
 std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDamageTypesFromHeld(entt::entity attacker)
 {
-	std::unordered_map<std::string, int> result;
+	Damage::TypeMap result;
 	entt::handle actor = { _registry, attacker };
 	if (auto body = actor.try_get<BodyComponent>())
 	{
@@ -62,33 +79,30 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 		const int agility = SkillsSystem::getSkillLevel(SkillId::Agility, actor);
 
 		float weight = 1.f;
-		int sharpness = 0;
+		float sharpness = 0.f;
 
 		if (itemEntity != entt::null)
 		{
-			auto material = _registry.try_get<MaterialComponent>(itemEntity);
+			auto weightComponent = _registry.try_get<WeightComponent>(itemEntity);
 			auto sharp = _registry.try_get<SharpComponent>(itemEntity);
 
-			if (material) weight = material->weight;
+			if (weightComponent) weight = weightComponent->value;
 			if (sharp) sharpness = sharp->sharpness;
 		}
 
-		float strengthContibution = ((weight + C_CONSTANT) / (weight + K_CONSTANT)) * strength;
-		float agilityContribution = ((K_CONSTANT - C_CONSTANT) / (weight + K_CONSTANT)) * agility;
+		const float strengthContibution = ((weight + C_CONSTANT) / (weight + K_CONSTANT)) * strength;
+		const float agilityContribution = ((K_CONSTANT - C_CONSTANT) / (weight + K_CONSTANT)) * agility;
 
 		const float forceSqaured = strengthContibution + agilityContribution;
 		const float force = std::sqrtf(forceSqaured);
-		if (sharpness > 0)
-		{
-			result["slashing"] += force + ((weight + sharpness) / 1.8f);
-		}
-		else
-		{
-			result["crushing"] += force + weight;
-		}
 
-		SkillsSystem::useSkill(SkillId::Strength, static_cast<int>(std::sqrtf(strengthContibution) * 10.f), actor);
-		SkillsSystem::useSkill(SkillId::Agility, static_cast<int>(std::sqrtf(agilityContribution) * 10.f), actor);
+		SplitDamage split = determineDamageSplit(sharpness);
+
+		result["slashing"] += std::ceilf((force + weight) * split.slashing);
+		result["crushing"] += std::ceilf((force + weight) * split.crushing);
+
+		SkillsSystem::useSkill(SkillId::Strength, (int)(std::sqrtf(strengthContibution) * SKILL_POINT_MULIPLIER), actor);
+		SkillsSystem::useSkill(SkillId::Agility, (int)(std::sqrtf(agilityContribution) * SKILL_POINT_MULIPLIER), actor);
 	}
 
 	return result;

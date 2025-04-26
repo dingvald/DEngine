@@ -5,7 +5,7 @@
 #include "Components/BodyComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/ProjectileComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/WeightComponent.h"
 
 #include <Defines/CommonGuiColors.h>
 
@@ -65,9 +65,9 @@ drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) co
 		if (item)
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-			if (auto material = actor.registry()->try_get<MaterialComponent>(itemEntity))
+			if (auto weight = actor.registry()->try_get<WeightComponent>(itemEntity))
 			{
-				int rangeVal = std::max(1, (maxRange - static_cast<int>(material->weight)));
+				int rangeVal = std::max(1, (maxRange - static_cast<int>(weight->value)));
 				return { 0, rangeVal };
 			}
 		}

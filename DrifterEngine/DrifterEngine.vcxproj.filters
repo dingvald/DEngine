@@ -711,6 +711,12 @@
     <ClCompile Include="src\Skills\SkillIds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\DamageTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\MaterialPropertiesSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1722,9 +1728,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\LightBlockingComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\MaterialComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\LiquidComponent.h">
@@ -3291,6 +3294,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Skills\SkillIds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\DamageTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\MaterialCompositionComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\MaterialPropertiesComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\WeightComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\MaterialPropertiesSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

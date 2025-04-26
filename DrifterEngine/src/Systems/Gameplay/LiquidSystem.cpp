@@ -11,7 +11,7 @@
 #include "Components/RenderComponent.h"
 #include "Components/HealthComponent.h"
 #include "Components/StaminaComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/WeightComponent.h"
 #include "Components/FlyingComponent.h"
 
 #include "Spatial/Conversions.h"
@@ -35,47 +35,7 @@ void drft::system::LiquidSystem::init()
 
 void drft::system::LiquidSystem::update()
 {
-	std::unordered_map<sf::Vector3i, entt::entity> liquidPositions;
-	auto liquidView = _registry.view<PositionComponent, LiquidComponent>();
-	for (auto&& [entity, position, liquid] : liquidView.each())
-	{
-		liquidPositions.emplace(position.tile, entity);
-	}
-
-	auto liquidAffectedView = _registry.view<MaterialComponent, PositionComponent>
-		(entt::exclude<LiquidComponent, FlyingComponent, InLiquidComponent>);
-	for (auto&& [entity, material, pos] : liquidAffectedView.each())
-	{
-		if (!liquidPositions.contains(pos.tile)) continue;
-
-		auto& liquid = _registry.get<LiquidComponent>(liquidPositions.at(pos.tile));
-		_registry.emplace<InLiquidComponent>(entity, liquid.volume);
-	}
-
-	for (auto e : _inLiquidEffects)
-	{
-		_registry.destroy(e);
-	}
-	_inLiquidEffects.clear();
-
-	auto inLiquidView = _registry.view<InLiquidComponent, PositionComponent>();
-	for (auto&& [entity, inLiquid, pos] : inLiquidView.each())
-	{
-		if (!liquidPositions.contains(pos.tile))
-		{
-			_registry.remove<InLiquidComponent>(entity);
-			continue;
-		}
-
-		auto liquidEntity = liquidPositions.at(pos.tile);
-		if (inLiquid.volume > DEEP_LIQUID_VOLUME)
-		{
-			if (auto render = _registry.try_get<RenderComponent>(liquidEntity))
-			{
-				addInLiquidEffect(pos.tile, render->color);
-			}
-		}
-	}
+	
 }
 
 void drft::system::LiquidSystem::addInLiquidEffect(sf::Vector3i position, sf::Color color)
