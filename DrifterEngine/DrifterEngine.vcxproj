@@ -232,7 +232,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Actions\MouseActionSystem.cpp" />
     <ClCompile Include="src\Systems\Core\MouseStateSystem.cpp" />
     <ClCompile Include="src\Systems\Core\PlayerTransferSystem.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\MaterialPropertiesSystem.cpp" />
+    <ClCompile Include="src\Systems\Gameplay\MaterialCompositionSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\DamageTypes.cpp" />
     <ClCompile Include="src\Systems\Helpers\EmplacePathNavToPosition.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetDominantSide.cpp" />
@@ -471,9 +471,12 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\BaseMaterialComponent.h" />
+    <ClInclude Include="src\Components\GasMaterialComponent.h" />
     <ClInclude Include="src\Components\MaterialCompositionComponent.h" />
-    <ClInclude Include="src\Components\MaterialPropertiesComponent.h" />
+    <ClInclude Include="src\Components\SolidMaterialComponent.h" />
     <ClInclude Include="src\Components\SkillsComponent.h" />
+    <ClInclude Include="src\Components\VolumeComponent.h" />
     <ClInclude Include="src\Components\WeightComponent.h" />
     <ClInclude Include="src\ProcGen\Decorators\DecoratorFactory.h" />
     <ClInclude Include="src\ProcGen\Decorators\EntityDecorator.h" />
@@ -532,7 +535,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Actions\MouseActionSystem.h" />
     <ClInclude Include="src\Systems\Core\MouseStateSystem.h" />
     <ClInclude Include="src\Systems\Core\PlayerTransferSystem.h" />
-    <ClInclude Include="src\Systems\Gameplay\MaterialPropertiesSystem.h" />
+    <ClInclude Include="src\Systems\Gameplay\MaterialCompositionSystem.h" />
     <ClInclude Include="src\Systems\Helpers\DamageTypes.h" />
     <ClInclude Include="src\Systems\Helpers\EmplacePathNavToPosition.h" />
     <ClInclude Include="src\Systems\Helpers\GetDominantSide.h" />
@@ -978,7 +981,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\ItemComponent.h" />
     <ClInclude Include="src\Components\LevelingComponent.h" />
     <ClInclude Include="src\Components\LightBlockingComponent.h" />
-    <ClInclude Include="src\Components\LiquidComponent.h" />
+    <ClInclude Include="src\Components\LiquidMaterialComponent.h" />
     <ClInclude Include="src\Components\LocalLightSourceComponent.h" />
     <ClInclude Include="src\Components\LitComponent.h" />
     <ClInclude Include="src\Components\MyCraftableItemsComponent.h" />

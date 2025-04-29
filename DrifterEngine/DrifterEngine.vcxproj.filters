@@ -714,7 +714,7 @@
     <ClCompile Include="src\Systems\Helpers\DamageTypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\MaterialPropertiesSystem.cpp">
+    <ClCompile Include="src\Systems\Gameplay\MaterialCompositionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityWeight.cpp">
@@ -1736,7 +1736,7 @@
     <ClInclude Include="src\Components\LightBlockingComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\LiquidComponent.h">
+    <ClInclude Include="src\Components\LiquidMaterialComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\InLiquidComponent.h">
@@ -3308,19 +3308,28 @@
     <ClInclude Include="src\Components\MaterialCompositionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\MaterialPropertiesComponent.h">
+    <ClInclude Include="src\Components\SolidMaterialComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\WeightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\MaterialPropertiesSystem.h">
+    <ClInclude Include="src\Systems\Gameplay\MaterialCompositionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityWeight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityName.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\GasMaterialComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\VolumeComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\BaseMaterialComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

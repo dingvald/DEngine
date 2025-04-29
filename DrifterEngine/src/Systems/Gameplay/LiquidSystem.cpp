@@ -1,23 +1,16 @@
 #include "pch.h"
 #include "LiquidSystem.h"
 
-#include "Systems/Rendering/RenderLayers.h"
-
 #include "Components/Components.h"
-#include "Components/Tags.h"
-#include "Components/LiquidComponent.h"
+#include "Components/LiquidMaterialComponent.h"
 #include "Components/InLiquidComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/HealthComponent.h"
 #include "Components/StaminaComponent.h"
-#include "Components/WeightComponent.h"
-#include "Components/FlyingComponent.h"
 
 #include "Spatial/Conversions.h"
-#include "Spatial/Helpers.h"
 #include "Spatial/WorldGrid.h"
-#include "Utility/stdHashing.h"
 
 using namespace entt::literals;
 
@@ -59,7 +52,7 @@ entt::entity drft::system::LiquidSystem::getLiquidAt(TilePosition tilePosition) 
 {
 	auto liquids = _grid->entitiesAt(tilePosition, 
 		[this](entt::entity entity) -> bool {
-			return _registry.all_of<LiquidComponent>(entity);
+			return _registry.all_of<LiquidMaterialComponent>(entity);
 		});
 	return liquids.empty() ? entt::null : liquids.front();
 }

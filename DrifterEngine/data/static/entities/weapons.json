@@ -6,30 +6,13 @@
             ],
             "Components": {
                 "Description": {
-                    "name": "${material} Sword",
+                    "name": "Sword",
                     "description": "A curved blade whose design has stood the test of time."
                 },
                 "Render": {
                     "texture": "katana",
                     "uv_size": [ 16, 24 ],
-                    "layer": 1,
-                    "color": [ 161, 157, 148 ]
-                },
-                "material_composition": {
-                    "Iron": 0.9,
-                    "Plant Fibre": 0.1
-                },
-                "Craftable": {
-                    "recipe": {
-                        "Iron": 2,
-                        "Plant Fibre": 1
-                    }
-                },
-                "Sharp": {
-                    "sharpness": 0.5
-                },
-                "weight": {
-                    "value": 1.5
+                    "layer": 1
                 }
             }
         }

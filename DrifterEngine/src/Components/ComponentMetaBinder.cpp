@@ -5,6 +5,7 @@
 #include "AIComponent.h"
 #include "AnimationComponent.h"
 #include "AttackerComponent.h"
+#include "BaseMaterialComponent.h"
 #include "BodyComponent.h"
 #include "ChunkSourceTrackerComponent.h"
 #include "ConsumableComponent.h"
@@ -15,6 +16,7 @@
 #include "DominantSideComponent.h"
 #include "FactionComponent.h"
 #include "FlyingComponent.h"
+#include "GasMaterialComponent.h"
 #include "GlobalLightSourceComponent.h"
 #include "HealingComponent.h"
 #include "HealthComponent.h"
@@ -25,11 +27,10 @@
 #include "ItemIDTrackerComponent.h"
 #include "LevelingComponent.h"
 #include "LightBlockingComponent.h"
-#include "LiquidComponent.h"
+#include "LiquidMaterialComponent.h"
 #include "LitComponent.h"
 #include "LocalLightSourceComponent.h"
 #include "MaterialCompositionComponent.h"
-#include "MaterialPropertiesComponent.h"
 #include "OpenableComponent.h"
 #include "PaperdollLayoutComponent.h"
 #include "PhysicalBlockingComponent.h"
@@ -40,6 +41,7 @@
 #include "RenderComponent.h"
 #include "SharpComponent.h"
 #include "SkillsComponent.h"
+#include "SolidMaterialComponent.h"
 #include "SprintingComponent.h"
 #include "SpriteControllerComponent.h"
 #include "StaminaComponent.h"
@@ -48,6 +50,7 @@
 #include "TickingLifetimeComponent.h"
 #include "VisionComponent.h"
 #include "VisualEffectComponent.h"
+#include "VolumeComponent.h"
 #include "WearableComponent.h"
 #include "WeightComponent.h"
 
@@ -57,6 +60,7 @@ void ComponentMetaBinder::bindComponents()
 	AIComponent::bind();
 	AnimationComponent::bind();
 	AttackerComponent::bind();
+	BaseMaterialComponent::bind();
 	BodyComponent::bind();
 	ChunkSourceTrackerComponent::bind();
 	ContainerComponent::bind();
@@ -67,6 +71,7 @@ void ComponentMetaBinder::bindComponents()
 	DominantSideComponent::bind();
 	FactionComponent::bind();
 	FlyingComponent::bind();
+	GasMaterialComponent::bind();
 	GlobalLightSourceComponent::bind();
 	HealingComponent::bind();
 	HealthComponent::bind();
@@ -77,11 +82,10 @@ void ComponentMetaBinder::bindComponents()
 	ItemIDTrackerComponent::bind();
 	LevelingComponent::bind();
 	LightBlockingComponent::bind();
-	LiquidComponent::bind();
+	LiquidMaterialComponent::bind();
 	LitComponent::bind();
 	LocalLightSourceComponent::bind();
 	MaterialCompositionComponent::bind();
-	MaterialPropertiesComponent::bind();
 	OpenableComponent::bind();
 	PaperdollLayoutComponent::bind();
 	PhysicalBlockingComponent::bind();
@@ -92,6 +96,7 @@ void ComponentMetaBinder::bindComponents()
 	RenderComponent::bind();
 	SharpComponent::bind();
 	SkillsComponent::bind();
+	SolidMaterialComponent::bind();
 	SprintingComponent::bind();
 	SpriteControllerComponent::bind();
 	StaminaComponent::bind();
@@ -100,6 +105,7 @@ void ComponentMetaBinder::bindComponents()
 	TickingLifetimeComponent::bind();
 	VisionComponent::bind();
 	VisualEffectComponent::bind();
+	VolumeComponent::bind();
 	WearableComponent::bind();
 	WeightComponent::bind();
 }

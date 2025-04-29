@@ -61,7 +61,7 @@
 #include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
-#include <Systems/Gameplay/MaterialPropertiesSystem.h>
+#include <Systems/Gameplay/MaterialCompositionSystem.h>
 #include "Systems/Gameplay/OpenableSystem.h"
 #include "Systems/Gameplay/PathNavSystem.h"
 #include "Systems/Gameplay/ProjectileSystem.h"
@@ -210,7 +210,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<MeleeAttackActionSystem>();
 	_systems->add<CollisionSystem>();
 	_systems->add<StaminaSystem>();
-	_systems->add<MaterialPropertiesSystem>();
+	_systems->add<MaterialCompositionSystem>();
 
 	_systems->add<SkillsSystem>();
 
