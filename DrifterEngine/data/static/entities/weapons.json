@@ -1,18 +1,28 @@
 {
-    "Prototypes": {
-        "Sword": {
-            "Inherits": [
-                "Item"
+    "prototypes": {
+        "sword": {
+            "inherits": [
+                "item"
             ],
-            "Components": {
-                "Description": {
-                    "name": "Sword",
-                    "description": "A curved blade whose design has stood the test of time."
+            "components": {
+                "description": {
+                    "name": "sword",
+                    "description": "a curved blade whose design has stood the test of time."
                 },
-                "Render": {
+                "render": {
                     "texture": "katana",
                     "uv_size": [ 16, 24 ],
                     "layer": 1
+                },
+                "craftable": {
+                    "recipe": [
+                        ["steel_bar", 2],
+                        ["twine", 1]
+                    ],
+                    "workstation": "workbench",
+                    "skills_required": [
+                        ["smithing", 5]
+                    ]  
                 }
             }
         }

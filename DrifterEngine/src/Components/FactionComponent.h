@@ -9,7 +9,7 @@ struct FactionComponent
 	std::string name;
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Faction";
+	static inline const std::string_view NAME = "faction";
 	static void bind()
 	{
 		using namespace entt::literals;

@@ -12,7 +12,7 @@ struct InheritanceComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Inheritance";
+	static inline const std::string_view NAME = "inheritance";
 	static void bind()
 	{
 		using namespace entt::literals;

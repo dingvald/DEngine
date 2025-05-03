@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "CraftItemSystem.h"
 
-#include "Components/Components.h"
 #include "Components/ContainerComponent.h"
 #include <Components/CraftableComponent.h>
 #include "Components/ItemComponent.h"
@@ -37,13 +36,17 @@ bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, const std::s
 
 		bool canCraft = true;
 		auto& container = crafter.get<ContainerComponent>();
-		for (auto&& [matName, amount] : craftable->recipe)
+		for (auto&& ingredient : craftable->recipe)
 		{
+			const auto& ingredientName = ingredient.getEntityName();
+			const int amount = ingredient.getAmount();
+
 			int count = 0;
-			for (auto item : container.contents)
+			for (auto&& item : container.contents)
 			{
 				auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-				if (matName.compare(util::getEntityName({ *crafter.registry(), itemEntity})) == 0)
+				auto& itemName = util::getEntityName({ *crafter.registry(), itemEntity });
+				if (ingredientName == itemName)
 				{
 					itemIdsToRemove.push_back(item);
 					itemEntitiesToDestroy.push_back(itemEntity);

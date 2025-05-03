@@ -12,7 +12,7 @@ struct DescriptionComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Description";
+	static inline const std::string_view NAME = "description";
 	static void bind()
 	{
 		using namespace entt::literals;

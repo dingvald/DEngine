@@ -7,11 +7,10 @@
 
 struct ArtificalInputComponent
 {
-	ActionID selectedAction = ActionID::None;
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "AI";
+	static inline const std::string_view NAME = "ai";
 	static void bind()
 	{
 		using namespace entt::literals;
@@ -25,6 +24,6 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, ArtificalInputComponent& ai)
 	{
-		archive(ai.selectedAction);
+		archive();
 	}
 }

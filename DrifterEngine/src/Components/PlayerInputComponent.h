@@ -9,7 +9,7 @@ private:
 	std::byte _byte;
 	friend class ComponentMetaBinder;
 	friend class cereal::access;
-	static inline const std::string_view NAME = "Player";
+	static inline const std::string_view NAME = "player_input";
 	static void bind()
 	{
 		using namespace entt::literals;

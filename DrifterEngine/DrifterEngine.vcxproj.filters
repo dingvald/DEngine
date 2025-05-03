@@ -723,6 +723,15 @@
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityName.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility\EntityAccessors\EntityHasTag.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\HelperClasses\CraftingIngredient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Skills\SkillRequirement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -1755,9 +1764,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\StaminaComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\AttackerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\SharpComponent.h">
@@ -3332,6 +3338,15 @@
     <ClInclude Include="src\Components\BaseMaterialComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utility\EntityAccessors\EntityHasTag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\HelperClasses\CraftingIngredient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Skills\SkillRequirement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -3465,13 +3480,16 @@
     <Image Include="resources\Textures\Effects\path_effect.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\Textures\Human\human_male_poncho_idle.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="resources\Textures\Human\human_male_tunic_idle.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\Weapons\Swords\katana.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Environmentals\boulder.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Environmentals\ore_vein.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

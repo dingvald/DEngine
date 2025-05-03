@@ -1,20 +1,20 @@
 {
-  "Prototypes": {
-    "Player": {
-      "Inherits": [
-        "Human Body"
+  "prototypes": {
+    "player": {
+      "inherits": [
+        "human_body"
       ],
-      "Components": {
-        "Description": {
-          "name": "Player",
-          "description": "The Player character. Can be anything the player wants..."
+      "components": {
+        "description": {
+          "name": "player",
+          "description": "the player character. can be anything the player wants..."
         },
-        "SpriteController": {
+        "sprite_controller": {
           "states": {
             "default": {
               "frames": [
                 {
-                  "texture": "human_male_poncho_idle",
+                  "texture": "human_male_tunic_idle",
                   "uv_size": [ 16, 24 ],
                   "uv_coords": [ 0, 0 ],
                   "layer": 2,
@@ -48,32 +48,26 @@
             "endurance": 1,
             "latent_power": 1
         },
-        "Actor": {
-          "moveSpeed": 1.0,
-          "actSpeed": 1.0
+        "actor": {
+          "move_speed": 1.0,
+          "act_speed": 1.0
         },
-        "Vision": {
+        "vision": {
           "sight_range": 60
         },
-        "Health": {
+        "health": {
           "max": 15.0,
           "recovery": 0.05
         },
-        "Stamina": {
+        "stamina": {
           "max": 15.0
         },
-        "Player": {},
-        "Attacker": {
-          "baseDamage": 1
-        },
-        "Faction": {
+        "player_input": {},
+        "faction": {
           "name": "player"
         },
-        "Container": {
+        "container": {
           "capacity": 30
-        },
-        "Leveling": {
-          "currentLevel": 0
         }
       }
     }

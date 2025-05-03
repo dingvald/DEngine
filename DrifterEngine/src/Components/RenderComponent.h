@@ -18,7 +18,7 @@ struct RenderComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Render";
+	static inline const std::string_view NAME = "render";
 	static int textureSetter(RenderComponent& r, std::string val)
 	{
 		return r.texture = entt::hashed_string(val.c_str()).value();

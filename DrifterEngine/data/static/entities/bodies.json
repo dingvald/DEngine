@@ -1,12 +1,12 @@
 {
-  "Prototypes": {
-    "Human Body": {
-      "Inherits": [
-        "Object"
+  "prototypes": {
+    "human_body": {
+      "inherits": [
+        "object"
       ],
-      "Components": {
+      "components": {
         "body": {
-          "Torso": {
+          "torso": {
             "slots": [
                 {
                     "name": "torso",
@@ -15,7 +15,7 @@
             ],
             "size": 36,
             "attached_parts": {
-              "Head": {
+              "head": {
                 "slots": [
                     {
                         "name": "head",
@@ -24,7 +24,7 @@
                 ],
                 "size": 9
               },
-              "Right Arm": {
+              "right arm": {
                 "slots": [
                     {
                         "name": "right_arm",
@@ -33,7 +33,7 @@
                 ],
                 "size": 7,
                 "attached_parts": {
-                  "Right Hand": {
+                  "right hand": {
                     "slots": [
                         {
                             "name": "right_hand",
@@ -48,7 +48,7 @@
                   }
                 }
               },
-              "Left Arm": {
+              "left arm": {
                 "slots": [
                     {
                         "name": "left_arm",
@@ -57,7 +57,7 @@
                 ],
                 "size": 7,
                 "attached_parts": {
-                  "Left Hand": {
+                  "left hand": {
                     "slots": [
                         {
                             "name": "left_hand",
@@ -72,7 +72,7 @@
                   }
                 }
               },
-              "Right Leg": {
+              "right leg": {
                 "slots": [
                     {
                         "name": "legs",
@@ -81,7 +81,7 @@
                 ],
                 "size": 15,
                 "attached_parts": {
-                  "Right Foot": {
+                  "right foot": {
                     "slots": [
                         {
                             "name": "feet",
@@ -92,7 +92,7 @@
                   }
                 }
               },
-              "Left Leg": {
+              "left leg": {
                 "slots": [
                     {
                         "name": "legs",
@@ -101,7 +101,7 @@
                 ],
                 "size": 15,
                 "attached_parts": {
-                  "Left Foot": {
+                  "left foot": {
                     "slots": [
                         {
                             "name": "feet",
@@ -140,7 +140,7 @@
             ]
         },
         "material_composition": {
-            "Corpse": 1.0
+            "corpse": 1.0
         }
       }
     }

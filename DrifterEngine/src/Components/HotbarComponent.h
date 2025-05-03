@@ -11,7 +11,7 @@ struct HotbarComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Hotbar";
+	static inline const std::string_view NAME = "hotbar";
 	static void bind()
 	{
 		using namespace entt::literals;

@@ -142,7 +142,7 @@ void drft::CraftingState::refreshSessionEntityIngredients()
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
 			entt::const_handle handle = { getContext().registry, itemEntity };
-			auto itemName = util::getEntityName(handle);
+			auto& itemName = util::getEntityName(handle);
 
 			_ingredients[itemName]++;
 		}
@@ -151,7 +151,7 @@ void drft::CraftingState::refreshSessionEntityIngredients()
 
 void drft::CraftingState::addItemToCraftingList(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
 {
-	auto name = util::getEntityName(item);
+	auto& name = util::getEntityName(item);
 	addItemIconAndNameWidgets(name, item, panel, isPartial);
 	addItemRecipeWidgets(item, panel, isPartial);
 }
@@ -188,10 +188,10 @@ void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Pa
 	grid->setIgnoreMouseEvents(true);
 
 	int index = 0;
-	for (auto&& [ingredient, amount] : craftable.recipe)
+	for (auto&& ingredient : craftable.recipe)
 	{
-		auto prototype = _factory->get(ingredient);
-		addIngredientWidget(prototype, amount, grid, index, isPartial);
+		auto prototype = _factory->get(ingredient.getEntityName());
+		addIngredientWidget(prototype, ingredient.getAmount(), grid, index, isPartial);
 		index++;
 	}
 }
@@ -199,7 +199,7 @@ void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Pa
 void drft::CraftingState::addIngredientWidget(entt::const_handle item, unsigned int amount, tgui::Grid::Ptr grid, int index, bool isPartial)
 {
 	auto sub_grid = tgui::Grid::create();
-	auto ingredientName = util::getEntityName(item);
+	auto& ingredientName = util::getEntityName(item);
 
 	auto render = util::getRenderData(item);
 	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);

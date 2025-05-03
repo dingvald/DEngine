@@ -7,6 +7,7 @@
 #include "Factory/EntityFactory.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include <Utility/EntityAccessors/GetEntityName.h>
+#include <Utility/StringManipulation.h>
 
 void drft::system::DetermineCraftableItemsSystem::init()
 {
@@ -34,12 +35,12 @@ void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::regis
 	{
 		bool hasSome = false;
 		bool hasAll = true;
-		for (auto&& [matName, quantity] : craftable.recipe)
+		for (auto&& ingredient : craftable.recipe)
 		{
-			if (inventoryContents.contains(matName))
+			if (inventoryContents.contains(ingredient.getEntityName()))
 			{
 				hasSome = true;
-				if (inventoryContents.at(matName) < static_cast<int>(quantity))
+				if (inventoryContents.at(ingredient.getEntityName()) < ingredient.getAmount())
 				{
 					hasAll = false;
 				}

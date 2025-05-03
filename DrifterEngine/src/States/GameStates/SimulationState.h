@@ -27,7 +27,7 @@ namespace drft
 		void setupRegistryContext();
 		void importSystems();
 
-		void loadPlayer();
+		void loadOrCreatePlayer();
 		void savePlayer();
 
 		void loadRegistry();

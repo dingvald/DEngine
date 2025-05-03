@@ -10,7 +10,7 @@ struct PrototypeComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Prototype";
+	static inline const std::string_view NAME = "prototype";
 	static void bind()
 	{
 		using namespace entt::literals;

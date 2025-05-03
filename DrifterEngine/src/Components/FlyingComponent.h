@@ -11,7 +11,7 @@ private:
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Flying";
+	static inline const std::string_view NAME = "flying";
 	static void bind()
 	{
 		using namespace entt::literals;

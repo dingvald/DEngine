@@ -19,13 +19,18 @@ void drft::system::MaterialCompositionSystem::init()
 void drft::system::MaterialCompositionSystem::onMaterialCompositionComponentAdded(entt::registry& registry, entt::entity entity)
 {
 	entt::handle handle = { registry, entity };
-	const auto& materialComposition = handle.get<MaterialCompositionComponent>();
+	const auto& materialComposition = handle.get<const MaterialCompositionComponent>();
 	handle.remove<SolidMaterialComponent>();
 	handle.remove<LiquidMaterialComponent>();
 	handle.remove<GasMaterialComponent>();
 
 	const auto primaryMaterial = util::getEntityPrimaryMaterial(handle);
-	if (!primaryMaterial) return;
+	if (!primaryMaterial)
+	{
+		auto& entityName = util::getEntityName(handle);
+		LOG_WARNING("Cannot find primary material for entity {}", entityName);
+		return;
+	}
 
 	MaterialType type = MaterialType::Solid;
 	if (primaryMaterial->all_of<SolidMaterialComponent>()) type = MaterialType::Solid;
@@ -38,7 +43,7 @@ void drft::system::MaterialCompositionSystem::onMaterialCompositionComponentAdde
 		auto mat = factory.get(materialName);
 		if (!mat)
 		{
-			auto entityName = util::getEntityName(handle);
+			auto& entityName = util::getEntityName(handle);
 			LOG_WARNING("Cannot find material {} for entity {}", materialName, entityName);
 			continue;
 		}

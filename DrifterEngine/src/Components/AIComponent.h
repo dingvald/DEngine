@@ -23,13 +23,13 @@ struct AIComponent
 	entt::entity target = entt::null;
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "AI";
+	static inline const std::string_view NAME = "ai";
 	static void bind()
 	{
 		using namespace entt::literals;
 		snapshot::reflectComponent<AIComponent, NAME>()
 			.prop("serialize"_hs)
-			.data<&AIComponent::sightRange>("sightRange"_hs)
+			.data<&AIComponent::sightRange>("sight_range"_hs)
 			.data<&AIComponent::goals>("goals"_hs);
 	}
 };

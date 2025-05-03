@@ -11,7 +11,7 @@ struct LightBlockingComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "LightBlocking";
+	static inline const std::string_view NAME = "light_blocking";
 	static void bind()
 	{
 		using namespace entt::literals;

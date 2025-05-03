@@ -9,7 +9,7 @@ struct ItemIDTrackerComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "MaxItemID";
+	static inline const std::string_view NAME = "item_id_tracker";
 	static void bind()
 	{
 		using namespace entt::literals;

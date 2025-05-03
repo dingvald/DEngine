@@ -13,7 +13,7 @@ struct VisualEffectComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "VisualEffect";
+	static inline const std::string_view NAME = "visual_effect";
 	static void bind()
 	{
 		using namespace entt::literals;

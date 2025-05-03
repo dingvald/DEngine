@@ -14,14 +14,14 @@ struct LocalLightSourceComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "LocalLightSource";
+	static inline const std::string_view NAME = "local_light_source";
 	static void bind()
 	{
 		using namespace entt::literals;
 		snapshot::reflectComponent<LocalLightSourceComponent, NAME>()
 			.prop("serialize"_hs)
 			.data<&LocalLightSourceComponent::radius>("radius"_hs)
-			.data<&LocalLightSourceComponent::dropOff>("dropOff"_hs)
+			.data<&LocalLightSourceComponent::dropOff>("drop_off"_hs)
 			.data<&LocalLightSourceComponent::color>("color"_hs);
 	}
 };

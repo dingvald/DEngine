@@ -87,7 +87,6 @@ std::unordered_map<std::string, int> drft::system::BodyPartSystem::calculateDama
 			auto sharp = _registry.try_get<SharpComponent>(itemEntity);
 
 			if (weightComponent) weight = weightComponent->value;
-			if (sharp) sharpness = sharp->sharpness;
 		}
 
 		const float strengthContibution = ((weight + C_CONSTANT) / (weight + K_CONSTANT)) * strength;

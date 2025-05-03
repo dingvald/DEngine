@@ -17,7 +17,7 @@ struct AnimationComponent
 	
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Animation";
+	static inline const std::string_view NAME = "animation";
 	static void bind()
 	{
 		using namespace entt::literals;

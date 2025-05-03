@@ -1,161 +1,161 @@
 {
-  "Prototypes": {
-    "Tile": {
-      "Inherits": [
-        "Object"
+  "prototypes": {
+    "tile": {
+      "inherits": [
+        "object"
       ],
-      "Components": {
-        "Render": {
+      "components": {
+        "render": {
           "texture": "basic_tile",
           "uv_size": [ 16, 24 ],
           "layer": 0
         }
       }
     },
-    "Grass": {
-      "Inherits": [
-        "Object"
+    "grass": {
+      "inherits": [
+        "object"
       ],
-        "Components": {
-            "Description": {
-                "name": "Grass",
-                "description": "Just simple grass."
+        "components": {
+            "description": {
+                "name": "grass",
+                "description": "just simple grass."
             },
-            "Render": {
+            "render": {
                 "texture": "short_grass",
                 "uv_size": [ 16, 24 ],
                 "layer": 1,
                 "color": [ 72, 111, 56 ]
             },
-            "Health": {
+            "health": {
                 "max": 5
             },
             "material_composition": {
-                "Plant Fibre": 1.0
+                "plant_fiber": 1.0
             }
         }
     },
-    "Tall Grass": {
-      "Inherits": [
-        "Grass"
+    "tall_grass": {
+      "inherits": [
+        "grass"
       ],
-        "Components": {
-            "Description": {
-                "name": "Tall Grass",
-                "description": "Just grass but longer."
+        "components": {
+            "description": {
+                "name": "tall grass",
+                "description": "just grass but longer."
             },
-            "Render": {
+            "render": {
                 "texture": "long_grass",
                 "uv_size": [ 16, 24 ],
                 "layer": 4,
                 "color": [ 72, 111, 56 ]
             },
-            "LightBlocking": {
+            "light_blocking": {
                 "opacity": 1.0
             },
-            "Health": {
+            "health": {
                 "max": 5
             },
             "material_composition": {
-                "Plant Fibre": 1.0
+                "plant_fiber": 1.0
             }
         }
     },
-    "Tree": {
-      "Inherits": [
-        "Object"
+    "tree": {
+      "inherits": [
+        "object"
       ],
-      "Components": {
-        "Description": {
-          "name": "Tree",
-          "description": "A wooden trunk with many leaves."
+      "components": {
+        "description": {
+          "name": "tree",
+          "description": "a wooden trunk with many leaves."
         },
-        "Render": {
+        "render": {
           "texture": "tree",
           "uv_size": [ 16, 24 ],
           "layer": 2,
           "color": [ 65, 97, 63 ]
         },
         "material_composition": {
-            "Wood": 0.9,
-            "Plant Fibre": 0.1
+            "wood": 0.9,
+            "plant_fiber": 0.1
         },
         "weight": {
             "value": 600.0
         },
         "physical_blocking": {},
-        "Health": {
+        "health": {
           "max": 70.0
         },
-        "LightBlocking": {
+        "light_blocking": {
           "opacity": 1.0
         }
       }
     },
-    "Boulder": {
-      "Inherits": [
-        "Object"
+    "boulder": {
+      "inherits": [
+        "object"
       ],
-        "Components": {
-            "Description": {
-                "name": "Boulder",
-                "description": "A very large chunk of rock."
+        "components": {
+            "description": {
+                "name": "boulder",
+                "description": "a very large chunk of rock."
             },
-            "Render": {
-                "texture": "simple_tileset",
-                "uv_size": [ 16, 16 ],
-                "uv_coords": [ 3, 2 ],
+            "render": {
+                "texture": "boulder",
+                "uv_size": [ 16, 24 ],
+                "uv_coords": [ 0, 0 ],
                 "layer": 2,
                 "color": [ 100, 100, 100 ]
             },
             "material_composition": {
-                "Stone": 1.0
+                "stone": 1.0
             },
             "weight": {
                 "value": 1000.0
             },
             "physical_blocking": {},
-            "Health": {
+            "health": {
                 "max": 500.0
             },
-            "LightBlocking": {
+            "light_blocking": {
                 "opacity": 1.0
             }
         }
     },
-    "Iron Deposit": {
-      "Inherits": [
-        "Object"
+    "iron_deposit": {
+      "inherits": [
+        "object"
       ],
-        "Components": {
-            "Description": {
-                "name": "Iron Deposit",
-                "description": "A deposit of iron ore."
+        "components": {
+            "description": {
+                "name": "iron deposit",
+                "description": "a deposit of iron ore."
             },
-            "Render": {
-                "texture": "simple_tileset",
-                "uv_size": [ 16, 16 ],
-                "uv_coords": [ 2, 4 ],
+            "render": {
+                "texture": "ore_vein",
+                "uv_size": [ 16, 24 ],
+                "uv_coords": [ 0, 0 ],
                 "layer": 3,
                 "color": [ 161, 157, 148 ]
             },
             "material_composition": {
-                "Stone": 0.75,
-                "Iron": 0.25
+                "stone": 0.75,
+                "iron": 0.25
             },
             "weight": {
                 "value": 800.0
             },
             "physical_blocking": {},
-            "Health": {
+            "health": {
                 "max": 300.0
             },
-            "LightBlocking": {
+            "light_blocking": {
                 "opacity": 1.0
             },
-            "LocalLightSource": {
+            "local_light_source": {
                 "radius": 3,
-                "dropOff": 0.4,
+                "drop_off": 0.4,
                 "color": [ 180, 180, 180 ]
             }
         }

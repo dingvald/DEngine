@@ -12,8 +12,8 @@
 
 using namespace entt::literals;
 
-static const char* COMPONENTS_KEY_NAME = "Components";
-static const char* INHERITS_KEY_NAME = "Inherits";
+static const char* COMPONENTS_KEY_NAME = "components";
+static const char* INHERITS_KEY_NAME = "inherits";
 
 drft::EntityFactory::EntityFactory()
 {
@@ -26,7 +26,7 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 	{
 		if (entry.is_directory()) continue;
 
-		json::JsonFileWrapper json{ entry.path(), "Prototypes" };
+		json::JsonFileWrapper json{ entry.path(), "prototypes" };
 		if (!json.load())
 		{
 			error_logger << "Error: " << entry << " could not be loaded." << std::endl;

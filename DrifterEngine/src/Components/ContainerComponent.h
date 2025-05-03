@@ -12,7 +12,7 @@ struct ContainerComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Container";
+	static inline const std::string_view NAME = "container";
 	static void bind()
 	{
 		using namespace entt::literals;

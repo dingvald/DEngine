@@ -12,7 +12,7 @@ struct PositionComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Position";
+	static inline const std::string_view NAME = "position";
 	static void bind()
 	{
 		using namespace entt::literals;

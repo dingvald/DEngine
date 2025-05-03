@@ -1,26 +1,26 @@
 {
-  "Prototypes": {
-    "Object": {
-      "Components": {
-        "Position": {
+  "prototypes": {
+    "object": {
+      "components": {
+        "position": {
           "position": [0,0,0]
         }
       }
     },
-    "Item": {
-      "Inherits": [
-        "Object"
+    "item": {
+      "inherits": [
+        "object"
       ],
-      "Components": {
-        "Item": {}
+      "components": {
+        "item": {}
       }
     },
-    "Material": {
-      "Inherits": [
-        "Item"
+    "material": {
+      "inherits": [
+        "item"
       ],
-        "Components": {
-            "Health": {
+        "components": {
+            "health": {
                 "max": 10
             },
             "base_material": {}

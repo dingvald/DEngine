@@ -6,28 +6,24 @@
 
 struct SharpComponent
 {
-	float sharpness = 0.f;
-
 private:
+	std::byte _byte;
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Sharp";
+	static inline const std::string_view NAME = "sharp";
 	static void bind()
 	{
 		using namespace entt::literals;
 		snapshot::reflectComponent<SharpComponent, NAME>()
-			.prop("serialize"_hs)
-			.data<&SharpComponent::sharpness>("sharpness"_hs);
+			.prop("serialize"_hs);
+	}
+	friend class cereal::access;
+	template<class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(_byte);
 	}
 };
 
-namespace cereal
-{
-	template<class Archive>
-	void serialize(Archive& archive, SharpComponent& sharp)
-	{
-		archive(sharp.sharpness);
-	}
-}
 
 
 

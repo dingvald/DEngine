@@ -74,8 +74,6 @@
 #include "Systems/PlayerSpecific/SelectDirectionSystem.h"
 #include "Systems/PlayerSpecific/TargetSelectSystem.h"
 
-
-
 #include <cassert>
 #include <Engine/StateStack.h>
 #include <EnTT/entt.h>
@@ -102,7 +100,7 @@ drft::SimulationState::SimulationState(StateStack& stack, StateContext& context)
 	setupRegistryContext();
 	importSystems();
 	loadRegistry();
-	loadPlayer();
+	loadOrCreatePlayer();
 
 	std::cout << "Starting Simulation..." << std::endl;
 	_systems->startAll();
@@ -226,7 +224,7 @@ void drft::SimulationState::importSystems()
 	_systems->initAll();
 }
 
-void drft::SimulationState::loadPlayer()
+void drft::SimulationState::loadOrCreatePlayer()
 {
 	if (std::filesystem::exists(PLAYER_SAVE_FILE_PATH))
 	{
@@ -236,8 +234,8 @@ void drft::SimulationState::loadPlayer()
 	else
 	{
 		const EntityFactory& factory = getContext().registry.ctx().get<const EntityFactory&>();
-		assert(factory.has("Player"));
-		_player = factory.build("Player", getContext().registry);
+		assert(factory.has("player"));
+		_player = factory.build("player", getContext().registry);
 		_player.patch<PositionComponent>([](PositionComponent& pos)
 			{
 				pos.tile = { 1024, 1024, 0 };

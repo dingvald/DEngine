@@ -11,7 +11,7 @@ struct SprintingComponent
 	sf::Vector2i direction = { 0,0 };
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Sprinting";
+	static inline const std::string_view NAME = "sprinting";
 	static void bind()
 	{
 		using namespace entt::literals;

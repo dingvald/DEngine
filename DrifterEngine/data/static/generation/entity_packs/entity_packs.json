@@ -3,26 +3,26 @@
         "basic": {
             "slots": {
                 "water": [
-                    [ "Water", 1 ]
+                    [ "water", 1 ]
                 ],
                 "shallow_water": [
-                    [ "Shallow Water", 1 ]
+                    [ "shallow_water", 1 ]
                 ],
                 "sand": [
-                    [ "Sand", 50 ],
-                    [ "Stone", 1 ]
+                    [ "sand", 50 ],
+                    [ "stone", 1 ]
                 ],
                 "trees": [
-                    [ "Tree", 1 ]
+                    [ "tree", 1 ]
                 ],
                 "rock_formations": [
-                    [ "Boulder", 20 ]
+                    [ "boulder", 20 ]
                 ],
                 "ore": [
-                    [ "Iron Deposit", 1 ]
+                    [ "iron_deposit", 1 ]
                 ],
                 "grass": [
-                    [ "Tall Grass", 1 ]
+                    [ "tall_grass", 1 ]
                 ]
             }
         } 

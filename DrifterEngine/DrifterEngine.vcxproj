@@ -200,6 +200,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Skills\SkillRequirement.cpp" />
+    <ClCompile Include="src\Systems\HelperClasses\CraftingIngredient.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\DecoratorFactory.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\EntityDecorator.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\IDecorator.cpp" />
@@ -240,6 +242,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Helpers\GetPlayerHandle.cpp" />
     <ClCompile Include="src\Systems\Gameplay\SkillsSystem.cpp" />
     <ClCompile Include="src\Utility\ColorToHexString.cpp" />
+    <ClCompile Include="src\Utility\EntityAccessors\EntityHasTag.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityDescription.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityName.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityWeight.cpp" />
@@ -471,6 +474,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Skills\SkillRequirement.h" />
+    <ClInclude Include="src\Systems\HelperClasses\CraftingIngredient.h" />
     <ClInclude Include="src\Components\BaseMaterialComponent.h" />
     <ClInclude Include="src\Components\GasMaterialComponent.h" />
     <ClInclude Include="src\Components\MaterialCompositionComponent.h" />
@@ -544,6 +549,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Gameplay\SkillsSystem.h" />
     <ClInclude Include="src\Utility\ColorToHexString.h" />
     <ClInclude Include="src\Utility\DynamicPointerCast.h" />
+    <ClInclude Include="src\Utility\EntityAccessors\EntityHasTag.h" />
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityDescription.h" />
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityName.h" />
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityWeight.h" />
@@ -962,7 +968,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\ActorComponent.h" />
     <ClInclude Include="src\Components\AIComponent.h" />
     <ClInclude Include="src\Components\AnimationComponent.h" />
-    <ClInclude Include="src\Components\AttackerComponent.h" />
     <ClInclude Include="src\Components\BodyComponent.h" />
     <ClInclude Include="src\Components\CameraComponent.h" />
     <ClInclude Include="src\Components\ConsumableComponent.h" />
@@ -1394,9 +1399,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <Image Include="resources\Textures\Effects\mouse_cursor_effect.png" />
     <Image Include="resources\Textures\Effects\path_effect.png" />
     <Image Include="resources\Textures\Effects\slash_effect.png" />
+    <Image Include="resources\Textures\Environmentals\boulder.png" />
+    <Image Include="resources\Textures\Environmentals\ore_vein.png" />
     <Image Include="resources\Textures\Environmentals\sharp_stone.png" />
     <Image Include="resources\Textures\Human\human_male_tunic_idle.png" />
-    <Image Include="resources\Textures\Human\human_male_poncho_idle.png" />
     <Image Include="resources\Textures\icons.png" />
     <Image Include="resources\Textures\Environmentals\liquid.png" />
     <Image Include="resources\Textures\Environmentals\long_grass.png" />

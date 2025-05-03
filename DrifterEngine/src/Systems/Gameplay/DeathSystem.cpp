@@ -5,6 +5,7 @@
 #include "Components/Components.h"
 #include "Components/DescriptionComponent.h"
 #include "Components/MaterialCompositionComponent.h"
+#include <Components/BaseMaterialComponent.h>
 #include <Components/WeightComponent.h>
 #include "Components/PositionComponent.h"
 #include "Components/PlayerInputComponent.h"
@@ -25,16 +26,15 @@ void drft::system::DeathSystem::update()
 		const float chance = 80.f;
 		if (auto materialComp = _registry.try_get<MaterialCompositionComponent>(entity))
 		{
-			auto weight = _registry.try_get<WeightComponent>(entity);
 			for (auto&& [matName, percent] : materialComp->materials)
 			{
-				if (rng::percentChance(chance * percent))
+				if (!rng::percentChance(chance * percent)) continue;
+
+				auto dropped = factory.build(matName, _registry);
+				dropped.emplace_or_replace<PositionComponent>(pos);
+				if (dropped.all_of<BaseMaterialComponent>())
 				{
-					auto dropped = factory.build(matName, _registry);
-					dropped.emplace_or_replace<PositionComponent>(pos);
-					if (weight) {
-						dropped.emplace_or_replace<WeightComponent>(weight->value * percent);
-					}
+					dropped.emplace_or_replace<WeightComponent>(1.0f);
 				}
 			}
 		}

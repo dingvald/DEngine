@@ -13,7 +13,7 @@ struct WearableComponent
 	std::unordered_map<std::string, int> protections;
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Wearable";
+	static inline const std::string_view NAME = "wearable";
 	static void bind()
 	{
 		using namespace entt::literals;

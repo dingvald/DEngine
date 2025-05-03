@@ -12,7 +12,7 @@ struct LitComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Lit";
+	static inline const std::string_view NAME = "lit";
 	static void bind()
 	{
 		using namespace entt::literals;

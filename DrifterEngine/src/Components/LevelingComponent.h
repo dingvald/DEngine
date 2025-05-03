@@ -12,7 +12,7 @@ struct LevelingComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Leveling";
+	static inline const std::string_view NAME = "leveling";
 	static void bind()
 	{
 		using namespace entt::literals;

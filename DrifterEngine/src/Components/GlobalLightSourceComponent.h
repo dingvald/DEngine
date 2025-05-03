@@ -12,7 +12,7 @@ struct GlobalLightSourceComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "GlobalLightSource";
+	static inline const std::string_view NAME = "global_light_source";
 	static void bind()
 	{
 		using namespace entt::literals;

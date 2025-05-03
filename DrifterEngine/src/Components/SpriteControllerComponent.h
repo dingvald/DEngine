@@ -31,7 +31,7 @@ public:
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "SpriteController";
+	static inline const std::string_view NAME = "sprite_controller";
 
 	static void setFromJSON(SpriteControllerComponent& spriteController, const rapidjson::Value& json)
 	{

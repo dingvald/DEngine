@@ -14,7 +14,7 @@ struct ProjectileComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Projectile";
+	static inline const std::string_view NAME = "projectile";
 	static void bind()
 	{
 		using namespace entt::literals;

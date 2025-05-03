@@ -45,7 +45,7 @@ namespace
 		{
 			tileColor = biome->getBaseTileColor();
 		}
-		auto tileHandle = gen::placeSingle("Tile", spatial::asTileSpace(position), registry, factory);
+		auto tileHandle = gen::placeSingle("tile", spatial::asTileSpace(position), registry, factory);
 		tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
 	}
 }

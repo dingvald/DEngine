@@ -10,7 +10,7 @@ struct TickingLifetimeComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "TickingLifetime";
+	static inline const std::string_view NAME = "ticking_lifetime";
 	static void bind()
 	{
 		using namespace entt::literals;

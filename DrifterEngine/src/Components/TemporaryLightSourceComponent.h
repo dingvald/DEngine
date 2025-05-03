@@ -14,7 +14,7 @@ struct TemporaryLightSourceComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "TemporaryLightSource";
+	static inline const std::string_view NAME = "temporary_light_source";
 	static void bind()
 	{
 		using namespace entt::literals;

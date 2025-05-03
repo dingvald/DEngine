@@ -13,14 +13,14 @@ struct ActorComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Actor";
+	static inline const std::string_view NAME = "actor";
 	static void bind()
 	{
 		using namespace entt::literals;
 		snapshot::reflectComponent<ActorComponent, NAME>()
 			.prop("serialize"_hs)
-			.data<&ActorComponent::moveSpeed>("moveSpeed"_hs)
-			.data<&ActorComponent::actSpeed>("actSpeed"_hs);
+			.data<&ActorComponent::moveSpeed>("move_speed"_hs)
+			.data<&ActorComponent::actSpeed>("act_speed"_hs);
 	}
 };
 

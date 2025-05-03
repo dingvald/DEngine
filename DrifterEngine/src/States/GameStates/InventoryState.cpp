@@ -278,7 +278,7 @@ void drft::InventoryState::refreshEquipmentUI(tgui::Grid::Ptr equipment)
 
 void drft::InventoryState::addItemToInventoryUI(size_t index, entt::const_handle item, tgui::Panel::Ptr panel)
 {
-	auto name = util::getEntityName(item);
+	auto& name = util::getEntityName(item);
 	auto render = util::getRenderData(item);
 	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
 	auto texture = GuiHelpers::createTGUITextureFromUV(name, rect);

@@ -8,7 +8,6 @@
 #include "Components/ProjectileComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
-#include "Components/AttackerComponent.h"
 #include "Components/ActorComponent.h"
 #include "Components/WeightComponent.h"
 #include "Components/Tags.h"
@@ -65,24 +64,11 @@ void drft::system::ProjectileSystem::onProjectileAdded(entt::registry& registry,
 {
 	auto& projectile = registry.get<ProjectileComponent>(entity);
 	registry.emplace<ActorComponent>(entity, 100, projectile.speed);
-
-	if (registry.any_of<AttackerComponent>(entity)) return;
-
-	if (auto weight = registry.try_get<WeightComponent>(entity))
-	{
-		registry.emplace<AttackerComponent>(entity, static_cast<int>(weight->value));
-		_attackerAdded.insert(entity);
-	}
 }
 
 void drft::system::ProjectileSystem::onProjectileRemoved(entt::registry& registry, entt::entity entity)
 {
 	registry.remove<ActorComponent>(entity);
-	if (_attackerAdded.contains(entity))
-	{
-		registry.remove<AttackerComponent>(entity);
-		_attackerAdded.erase(entity);
-	}
 }
 
 void drft::system::ProjectileSystem::onCollisionComponentAdded(entt::registry& registry, entt::entity entity)

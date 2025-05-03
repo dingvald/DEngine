@@ -14,7 +14,7 @@ struct SyncedAnimationComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "SyncedAnimation";
+	static inline const std::string_view NAME = "synced_animation";
 	static void bind()
 	{
 		using namespace entt::literals;

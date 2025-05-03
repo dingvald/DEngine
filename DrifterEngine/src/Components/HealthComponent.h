@@ -13,7 +13,7 @@ struct HealthComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Health";
+	static inline const std::string_view NAME = "health";
 	static void bind()
 	{
 		using namespace entt::literals;

@@ -12,7 +12,7 @@ struct DateAndTimeTrackerComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "DateAndTimeTracker";
+	static inline const std::string_view NAME = "date_and_time_tracker";
 	static void bind()
 	{
 		using namespace entt::literals;

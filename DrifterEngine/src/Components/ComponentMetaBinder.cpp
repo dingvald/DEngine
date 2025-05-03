@@ -4,7 +4,6 @@
 #include "ActorComponent.h"
 #include "AIComponent.h"
 #include "AnimationComponent.h"
-#include "AttackerComponent.h"
 #include "BaseMaterialComponent.h"
 #include "BodyComponent.h"
 #include "ChunkSourceTrackerComponent.h"
@@ -59,7 +58,6 @@ void ComponentMetaBinder::bindComponents()
 	ActorComponent::bind();
 	AIComponent::bind();
 	AnimationComponent::bind();
-	AttackerComponent::bind();
 	BaseMaterialComponent::bind();
 	BodyComponent::bind();
 	ChunkSourceTrackerComponent::bind();

@@ -1,9 +1,7 @@
 #pragma once
 
 #include <string>
-#include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
-#include "ItemComponent.h"
 
 struct ConsumableComponent
 {
@@ -11,7 +9,7 @@ struct ConsumableComponent
 
 private:
 	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "Consumable";
+	static inline const std::string_view NAME = "consumable";
 	static void bind()
 	{
 		using namespace entt::literals;
