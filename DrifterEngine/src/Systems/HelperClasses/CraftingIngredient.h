@@ -6,7 +6,7 @@ class CraftingIngredient : public ICreateFromJson
 public:
 	void createFromJson(const rapidjson::Value& json) override;
 
-	const std::string& getEntityName() const;
+	entt::id_type getEntityId() const;
 	int getAmount() const;
 
 private:
@@ -14,11 +14,11 @@ private:
 	template<typename Archive>
 	void serialize(Archive& ar)
 	{
-		ar(_name, _amount);
+		ar(_entityId, _amount);
 	}
 
 private:
-	std::string _name;
+	entt::id_type _entityId;
 	int _amount;
 };
 

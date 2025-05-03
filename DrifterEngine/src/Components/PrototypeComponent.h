@@ -6,7 +6,7 @@
 
 struct PrototypeComponent
 {
-	std::string name = { "PROTOTYPE" };
+	entt::id_type id = entt::hashed_string{ "NONE" };
 
 private:
 	friend class ComponentMetaBinder;
@@ -24,7 +24,7 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, PrototypeComponent& prototype)
 	{
-		archive(prototype.name);
+		archive(prototype.id);
 	}
 }
 

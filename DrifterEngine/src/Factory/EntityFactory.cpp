@@ -36,11 +36,11 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 			for (auto&& node : json.getRoot().GetObject())
 			{
 				entt::entity entity = _protoRegistry.create();
-				const std::string entityName = node.name.GetString();
-				_prototypes[entityName] = entity;
-				_prototypeNames[entity] = entityName;
+				entt::id_type entityId = entt::hashed_string{ node.name.GetString() };
+				_prototypes[entityId] = entity;
+				//_prototypeNames[entity] = entityName;
 
-				createEntitiyPrototypeFromJSON(entity, entityName, node.value);
+				createEntitiyPrototypeFromJSON(entity, entityId, node.value);
 			}
 		}
 	}
@@ -50,13 +50,13 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 	return true;
 }
 
-entt::const_handle drft::EntityFactory::get(const std::string& name) const
+entt::const_handle drft::EntityFactory::get(entt::id_type id) const
 {
-	if (!_prototypes.contains(name))
+	if (!_prototypes.contains(id))
 	{
 		return entt::const_handle{ _protoRegistry, entt::null };
 	}
-	return entt::const_handle{ _protoRegistry, _prototypes.at(name) };
+	return entt::const_handle{ _protoRegistry, _prototypes.at(id) };
 }
 
 const std::string& drft::EntityFactory::getName(entt::entity prototype) const
@@ -66,9 +66,9 @@ const std::string& drft::EntityFactory::getName(entt::entity prototype) const
 	return _prototypeNames.at(prototype);
 }
 
-std::unordered_set<std::string> drft::EntityFactory::getFlattenedInheritance(entt::const_handle entity) const
+std::unordered_set<entt::id_type> drft::EntityFactory::getFlattenedInheritance(entt::const_handle entity) const
 {
-	std::unordered_set<std::string> result;
+	std::unordered_set<entt::id_type> result;
 	if (auto inheritance = entity.try_get<InheritanceComponent>())
 	{
 		for (auto&& base : inheritance->bases)
@@ -87,24 +87,24 @@ const entt::registry& drft::EntityFactory::prototypes() const
 	return _protoRegistry;
 }
 
-entt::handle drft::EntityFactory::build(const std::string& name, entt::registry& registry) const
+entt::handle drft::EntityFactory::build(entt::id_type id, entt::registry& registry) const
 {
-	if (!_prototypes.contains(name))
+	if (!_prototypes.contains(id))
 	{
-		error_logger << "Error: Trying to create entity " << name << " but it does not exist in the prototype registry." << std::endl;
+		error_logger << "Error: Trying to create entity " << id << " but it does not exist in the prototype registry." << std::endl;
 		return entt::handle{ registry, entt::null };
 	}
 	entt::entity newEntity = registry.create();
-	util::copyEntity(newEntity, _prototypes.at(name), registry, _protoRegistry);
+	util::copyEntity(newEntity, _prototypes.at(id), registry, _protoRegistry);
 
-	registry.emplace<PrototypeComponent>(newEntity, name);
+	registry.emplace<PrototypeComponent>(newEntity, id);
 
 	return entt::handle(registry, newEntity);
 }
 
-bool drft::EntityFactory::has(const std::string& name) const
+bool drft::EntityFactory::has(entt::id_type id) const
 {
-	return _prototypes.contains(name);
+	return _prototypes.contains(id);
 }
 
 void drft::EntityFactory::resolvePrototypeInheritance()
@@ -144,7 +144,7 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 
 		if (canResolve)
 		{
-			auto entity = get(relationship.entityName);
+			auto entity = get(relationship.entityId);
 			auto& inheritanceComp = _protoRegistry.emplace<InheritanceComponent>(entity.entity());
 			for (auto&& base : relationship.bases)
 			{
@@ -152,7 +152,7 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 				util::copyEntity(entity.entity(), baseEntity.entity(), _protoRegistry, false);
 				inheritanceComp.bases.insert(base);
 			}
-			_resolvedInheritance.insert(relationship.entityName);
+			_resolvedInheritance.insert(relationship.entityId);
 		}
 		else
 		{
@@ -183,31 +183,30 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 		while (!_inheritanceQueue.empty())
 		{
 			auto& relationship = _inheritanceQueue.front();
-			error_logger << relationship.entityName << std::endl;
+			error_logger << relationship.entityId << std::endl;
 			_inheritanceQueue.pop();
 		}
 	}
 }
 
-void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, const std::string& entityName, const rapidjson::Value& json)
+void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, entt::id_type id, const rapidjson::Value& json)
 {
 	const auto entityObject = json.GetObject();
 
 	if (entityObject.HasMember(INHERITS_KEY_NAME))
 	{
 		InheritanceRelationship newRelationship;
-		newRelationship.entityName = entityName;
+		newRelationship.entityId = id;
 		for (auto&& base : entityObject[INHERITS_KEY_NAME].GetArray())
 		{
-			auto baseName = std::string(base.GetString());
-			if (baseName.empty()) continue;
-			newRelationship.bases.emplace_back(std::move(baseName));
+			auto baseId = entt::hashed_string{ base.GetString() };
+			newRelationship.bases.emplace_back(baseId);
 		}
 		_inheritanceQueue.push(newRelationship);
 	}
 	else
 	{
-		_resolvedInheritance.insert(entityName);
+		_resolvedInheritance.insert(id);
 	}
 
 	if (entityObject.HasMember(COMPONENTS_KEY_NAME))

@@ -8,7 +8,7 @@ namespace drft::system
 	public:
 		using System::System;
 
-		static bool craftItem(entt::handle crafter, const std::string& itemName);
+		static bool craftItem(entt::handle crafter, entt::id_type itemEntityId);
 	};
 
 }

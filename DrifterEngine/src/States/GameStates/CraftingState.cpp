@@ -16,6 +16,7 @@
 #include "Factory/EntityFactory.h"
 #include "Utility/EntityHelpers.h"
 #include <Utility/EntityAccessors/GetEntityName.h>
+#include <Utility/EntityAccessors/GetEntityPrototype.h>
 #include "Utility/TextureAtlas.h"
 #include <Utility/TGUIHelpers.h>
 #include "Systems/Helpers/ItemDatabase.h"
@@ -151,16 +152,15 @@ void drft::CraftingState::refreshSessionEntityIngredients()
 
 void drft::CraftingState::addItemToCraftingList(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
 {
-	auto& name = util::getEntityName(item);
-	addItemIconAndNameWidgets(name, item, panel, isPartial);
+	addItemIconAndNameWidgets(item, panel, isPartial);
 	addItemRecipeWidgets(item, panel, isPartial);
 }
 
-void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
+void drft::CraftingState::addItemIconAndNameWidgets(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
 {
 	auto render = util::getRenderData(item);
 	auto rect = getContext().textures.getUV(render.texture, render.uvSize, render.uvCoords);
-	auto texture = GuiHelpers::createTGUITextureFromUV(name, rect);
+	auto texture = GuiHelpers::createTGUITextureFromUV(std::to_string((std::uint32_t)item.entity()), rect);
 	texture.setColor(render.color);
 
 	auto icon = panel->get<tgui::Picture>(w_EntryIcon);
@@ -168,7 +168,7 @@ void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, ent
 	icon->setIgnoreMouseEvents(true);
 
 	auto text = panel->get<tgui::Label>(w_EntryName);
-	text->setText(name);
+	text->setText(util::getEntityName(item));
 	text->setIgnoreMouseEvents(true);
 
 	if (isPartial)
@@ -178,7 +178,7 @@ void drft::CraftingState::addItemIconAndNameWidgets(const std::string& name, ent
 
 	auto button = GuiHelpers::buttonizePanel(panel, text);
 
-	button->onPress([this, name](){ onCraft(name); });
+	button->onPress([this, id = util::getEntityPrototype(item)]() { onCraft(id); });
 }
 
 void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)
@@ -190,7 +190,7 @@ void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Pa
 	int index = 0;
 	for (auto&& ingredient : craftable.recipe)
 	{
-		auto prototype = _factory->get(ingredient.getEntityName());
+		auto prototype = _factory->get(ingredient.getEntityId());
 		addIngredientWidget(prototype, ingredient.getAmount(), grid, index, isPartial);
 		index++;
 	}
@@ -236,9 +236,9 @@ void drft::CraftingState::addNothingToCraftWidget(tgui::Panel::Ptr panel)
 	text->setIgnoreMouseEvents(true);
 }
 
-void drft::CraftingState::onCraft(const std::string& name)
+void drft::CraftingState::onCraft(entt::id_type itemEntityId)
 {
-	if (system::CraftItemSystem::craftItem(_sessionEntity, name))
+	if (system::CraftItemSystem::craftItem(_sessionEntity, itemEntityId))
 	{
 		refreshCraftingList(_guiGroup->get<tgui::PanelListBox>(w_CraftablesList));
 	}

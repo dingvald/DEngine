@@ -22,7 +22,7 @@ std::vector<entt::const_handle> drft::util::getEntityMaterials(entt::const_handl
 std::optional<entt::const_handle> drft::util::getEntityPrimaryMaterial(entt::const_handle entity)
 {
     float largestPercent = 0.f;
-    std::string largestName = {};
+    entt::id_type largestId = {};
     if (auto material = entity.try_get<MaterialCompositionComponent>())
     {
         const auto& factory = entity.registry()->ctx().get<const EntityFactory&>();
@@ -31,12 +31,12 @@ std::optional<entt::const_handle> drft::util::getEntityPrimaryMaterial(entt::con
             if (percent > largestPercent)
             {
                 largestPercent = percent;
-                largestName = name;
+                largestId = name;
             }
             if (percent > 0.5f) break;
         }
         
-        auto handle = factory.get(largestName);
+        auto handle = factory.get(largestId);
         if (!handle) return std::nullopt;
         return handle;
     }

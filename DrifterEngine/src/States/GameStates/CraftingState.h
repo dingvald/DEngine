@@ -20,12 +20,12 @@ namespace drft
 		void refreshSessionEntityIngredients();
 
 		void addItemToCraftingList(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial);
-		void addItemIconAndNameWidgets(const std::string& name, entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial);
+		void addItemIconAndNameWidgets(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial);
 		void addItemRecipeWidgets(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial);
 		void addIngredientWidget(entt::const_handle item, unsigned int amount, tgui::Grid::Ptr grid, int index, bool isPartial);
 		void addNothingToCraftWidget(tgui::Panel::Ptr panel);
 
-		void onCraft(const std::string& name);
+		void onCraft(entt::id_type itemEntityId);
 
 	private:
 		entt::handle _sessionEntity = {};

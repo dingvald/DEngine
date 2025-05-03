@@ -6,8 +6,7 @@
 
 #include "Factory/EntityFactory.h"
 #include "Systems/Helpers/ItemDatabase.h"
-#include <Utility/EntityAccessors/GetEntityName.h>
-#include <Utility/StringManipulation.h>
+#include <Utility/EntityAccessors/GetEntityPrototype.h>
 
 void drft::system::DetermineCraftableItemsSystem::init()
 {
@@ -20,7 +19,7 @@ void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::regis
 	const auto& prototypeReg = registry.ctx().get<const EntityFactory&>().prototypes();
 	auto craftableView = prototypeReg.view<CraftableComponent>();
 	auto& container = registry.get<ContainerComponent>(entity);
-	std::unordered_map<std::string, int> inventoryContents;
+	std::unordered_map<entt::id_type, int> inventoryContents;
 
 	std::vector<entt::entity> craftables;
 	std::vector<entt::entity> partialCraftables;
@@ -28,7 +27,7 @@ void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::regis
 	for (auto itemID : container.contents)
 	{
 		auto itemEntity = ItemDatabase::getEntityFromItemID(itemID);
-		++inventoryContents[util::getEntityName({ registry, itemEntity })];
+		++inventoryContents[util::getEntityPrototype({registry, itemEntity})];
 	}
 
 	for (auto [item, craftable] : craftableView.each())
@@ -37,10 +36,10 @@ void drft::system::DetermineCraftableItemsSystem::onContainerUpdated(entt::regis
 		bool hasAll = true;
 		for (auto&& ingredient : craftable.recipe)
 		{
-			if (inventoryContents.contains(ingredient.getEntityName()))
+			if (inventoryContents.contains(ingredient.getEntityId()))
 			{
 				hasSome = true;
-				if (inventoryContents.at(ingredient.getEntityName()) < ingredient.getAmount())
+				if (inventoryContents.at(ingredient.getEntityId()) < ingredient.getAmount())
 				{
 					hasAll = false;
 				}

@@ -15,13 +15,13 @@ RenderComponent drft::util::getRenderData(entt::const_handle entity)
 	return system::SpriteControllerSystem::getDefaultRenderComponent(entity);
 }
 
-bool drft::util::isType(entt::const_handle entity, const std::string& typeName)
+bool drft::util::isType(entt::const_handle entity, entt::id_type typeId)
 {
 	if (!entity.registry()->ctx().contains<const EntityFactory&>()) return false;
 
 	const auto& factory = entity.registry()->ctx().get<const EntityFactory&>();
 
-	return factory.getFlattenedInheritance(entity).contains(typeName);
+	return factory.getFlattenedInheritance(entity).contains(typeId);
 }
 
 float drft::util::getDistanceBetween(entt::const_handle e1, entt::const_handle e2)

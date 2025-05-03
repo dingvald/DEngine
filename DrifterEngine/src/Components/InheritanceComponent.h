@@ -8,7 +8,7 @@
 
 struct InheritanceComponent
 {
-	std::unordered_set<std::string> bases;
+	std::unordered_set<entt::id_type> bases;
 
 private:
 	friend class ComponentMetaBinder;

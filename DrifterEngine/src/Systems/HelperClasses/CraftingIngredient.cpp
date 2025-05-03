@@ -3,13 +3,13 @@
 
 void CraftingIngredient::createFromJson(const rapidjson::Value& json)
 {
-	_name = json.GetArray()[0].GetString();
+	_entityId = entt::hashed_string{ json.GetArray()[0].GetString() };
 	_amount = json.GetArray()[1].GetInt();
 }
 
-const std::string& CraftingIngredient::getEntityName() const
+entt::id_type CraftingIngredient::getEntityId() const
 {
-	return _name;
+	return _entityId;
 }
 
 int CraftingIngredient::getAmount() const

@@ -10,7 +10,6 @@
 #include "Components/InteractableComponent.h"
 #include "Components/SpriteChangeRequestComponent.h"
 
-#include "Systems/Helpers/ContainerHasItem.h"
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
 #include "Events/SendFloatingMessageEvent.h"
@@ -30,7 +29,7 @@ void drft::system::OpenableSystem::openInteraction(entt::entity actor, entt::ent
 		bool canOpen = true;
 		if (openable->keyName != "")
 		{
-			canOpen = containerHasItem(_registry, actor, openable->keyName);
+			//canOpen = containerHasItem(_registry, actor, openable->keyName);
 			//TODO: Consume key
 		}
 

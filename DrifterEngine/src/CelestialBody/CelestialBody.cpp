@@ -45,7 +45,7 @@ namespace
 		{
 			tileColor = biome->getBaseTileColor();
 		}
-		auto tileHandle = gen::placeSingle("tile", spatial::asTileSpace(position), registry, factory);
+		auto tileHandle = gen::placeSingle("tile"_hs, spatial::asTileSpace(position), registry, factory);
 		tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
 	}
 }
@@ -100,10 +100,10 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 			auto slotId = entityCanvas.get(point3d);
 			if (!slotId.has_value()) return;
 
-			auto entityName = _entityPacks.selectEntity(std::any_cast<entt::id_type>(slotId), random);
-			if (!entityName.has_value()) return;
+			auto entityId = _entityPacks.selectEntity(std::any_cast<entt::id_type>(slotId), random);
+			if (!entityId.has_value()) return;
 
-			gen::placeSingle(entityName.value(), spatial::asTileSpace(point3d), registry, factory);
+			gen::placeSingle(entityId.value(), spatial::asTileSpace(point3d), registry, factory);
 		});
 
 	return GenerationState::Complete;

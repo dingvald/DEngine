@@ -234,8 +234,8 @@ void drft::SimulationState::loadOrCreatePlayer()
 	else
 	{
 		const EntityFactory& factory = getContext().registry.ctx().get<const EntityFactory&>();
-		assert(factory.has("player"));
-		_player = factory.build("player", getContext().registry);
+		assert(factory.has("player"_hs));
+		_player = factory.build("player"_hs, getContext().registry);
 		_player.patch<PositionComponent>([](PositionComponent& pos)
 			{
 				pos.tile = { 1024, 1024, 0 };

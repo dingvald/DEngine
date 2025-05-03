@@ -34,6 +34,7 @@
 #include "PaperdollLayoutComponent.h"
 #include "PhysicalBlockingComponent.h"
 #include "PlayerInputComponent.h"
+#include "PlayerHasSeenComponent.h"
 #include "PositionComponent.h"
 #include "ProjectileComponent.h"
 #include "PrototypeComponent.h"
@@ -88,6 +89,7 @@ void ComponentMetaBinder::bindComponents()
 	PaperdollLayoutComponent::bind();
 	PhysicalBlockingComponent::bind();
 	PlayerInputComponent::bind();
+	PlayerHasSeenComponent::bind();
 	PositionComponent::bind();
 	ProjectileComponent::bind();
 	PrototypeComponent::bind();

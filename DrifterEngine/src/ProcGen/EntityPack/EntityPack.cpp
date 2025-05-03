@@ -19,9 +19,9 @@ void EntityPack::createFromJson(const rapidjson::Value& json)
 			for (auto&& weightedEntity : slotObj.value.GetArray())
 			{
 				auto pair = weightedEntity.GetArray();
-				std::string entityName = pair[0].GetString();
+				entt::id_type entityId = entt::hashed_string{ pair[0].GetString() };
 				int entityWeight = pair[1].GetInt();
-				list.emplace(entityName, entityWeight);
+				list.emplace(entityId, entityWeight);
 			}
 			_packs.emplace(slotId, std::move(list));
 		}
@@ -44,7 +44,7 @@ void EntityPack::add(const EntityPack& other)
 	}
 }
 
-std::optional<std::string> EntityPack::selectEntity(entt::id_type slotId, drft::rng::Random& random)
+std::optional<entt::id_type> EntityPack::selectEntity(entt::id_type slotId, drft::rng::Random& random)
 {
 	if (!_packs.contains(slotId))
 	{

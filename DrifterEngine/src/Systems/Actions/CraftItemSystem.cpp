@@ -9,10 +9,11 @@
 #include "Factory/EntityFactory.h"
 #include "Systems/Helpers/ItemDatabase.h"
 #include <Utility/EntityAccessors/GetEntityName.h>
+#include <Utility/EntityAccessors/GetEntityPrototype.h>
 #include <Utility/StandardLogger.h>
 
 
-bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, const std::string& itemName)
+bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, entt::id_type itemEntityId)
 {
 	if (!crafter.all_of<ContainerComponent>())
 	{
@@ -21,11 +22,11 @@ bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, const std::s
 	}
 
 	auto& factory = crafter.registry()->ctx().get<const EntityFactory&>();
-	auto itemPrototype = factory.get(itemName);
+	auto itemPrototype = factory.get(itemEntityId);
 
 	if (!itemPrototype.valid())
 	{
-		warning_logger << "Warning: Trying to craft unknown item " << itemName << std::endl;
+		warning_logger << "Warning: Trying to craft unknown item " << itemEntityId << std::endl;
 		return false;
 	}
 
@@ -38,15 +39,14 @@ bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, const std::s
 		auto& container = crafter.get<ContainerComponent>();
 		for (auto&& ingredient : craftable->recipe)
 		{
-			const auto& ingredientName = ingredient.getEntityName();
+			const auto ingredientId = ingredient.getEntityId();
 			const int amount = ingredient.getAmount();
 
 			int count = 0;
 			for (auto&& item : container.contents)
 			{
 				auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-				auto& itemName = util::getEntityName({ *crafter.registry(), itemEntity });
-				if (ingredientName == itemName)
+				if (ingredientId == util::getEntityPrototype({*crafter.registry(), itemEntity}))
 				{
 					itemIdsToRemove.push_back(item);
 					itemEntitiesToDestroy.push_back(itemEntity);
@@ -69,7 +69,7 @@ bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, const std::s
 				}
 			});
 
-		auto newItem = factory.build(itemName, *crafter.registry());
+		auto newItem = factory.build(itemEntityId, *crafter.registry());
 		newItem.remove<PositionComponent>();
 		auto& itemComp = newItem.get<ItemComponent>();
 

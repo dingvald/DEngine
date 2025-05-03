@@ -140,6 +140,9 @@
                     "hardness": 0.8,
                     "brittleness": 0.9,
                     "malleability": 0.0
+                },
+                "weight": {
+                    "value": 1.0
                 }
             }
         },

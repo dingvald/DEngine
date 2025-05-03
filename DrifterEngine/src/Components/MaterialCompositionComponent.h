@@ -8,7 +8,7 @@
 
 struct MaterialPercentage
 {
-	std::string material;
+	entt::id_type material;
 	float percentage;
 private:
 	friend class cereal::access;
@@ -32,7 +32,7 @@ private:
 		for (auto&& val : json.GetObject())
 		{
 			MaterialPercentage newMat;
-			newMat.material = val.name.GetString();
+			newMat.material = entt::hashed_string{ val.name.GetString() };
 			newMat.percentage = val.value.GetFloat();
 			composition.materials.push_back(std::move(newMat));
 		}
