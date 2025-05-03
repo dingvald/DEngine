@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EntityRenderer.h"
-#include "Components/Components.h"
+#include <Components/PlayerHasSeenComponent.h>
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/LitComponent.h"
@@ -9,7 +9,6 @@
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/SpriteBatch.h"
 #include "Utility/TextureAtlas.h"
-#include "Spatial/Conversions.h"
 #include <Spatial/Helpers.h>
 #include "RenderLayers.h"
 #include "LightingSystem.h"
@@ -59,8 +58,8 @@ void drft::system::EntityRenderer::batchLitEntities(const CameraHandle& camera)
 
 void drft::system::EntityRenderer::batchHadSeenEntities(const CameraHandle& camera)
 {
-	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, const component::tag::PlayerHasSeen, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
-	for (auto const& [entity, pos, ren] : seenView.each())
+	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, PlayerHasSeenComponent, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
+	for (auto const& [entity, pos, ren, _] : seenView.each())
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.tile, camera) + spatial::toXY(pos.offset);
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);

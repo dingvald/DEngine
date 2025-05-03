@@ -2,6 +2,7 @@
 #include "PlayerFOVSystem.h"
 #include "Components/Components.h"
 #include "Components/PlayerInputComponent.h"
+#include <Components/PlayerHasSeenComponent.h>
 #include "Components/ActorComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/LightBlockingComponent.h"
@@ -55,7 +56,7 @@ void drft::system::PlayerFOVSystem::render(sf::RenderTarget& target)
 		if (!_registry.any_of<component::tag::InViewport>(entity)) continue;
 
 		_registry.emplace_or_replace<component::tag::InPlayerFOV>(entity);
-		_registry.emplace_or_replace<component::tag::PlayerHasSeen>(entity);
+		_registry.emplace_or_replace<PlayerHasSeenComponent>(entity);
 	}
 
 	_toLight.clear();
