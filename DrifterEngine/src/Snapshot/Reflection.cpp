@@ -67,7 +67,7 @@ namespace snapshot {
         auto prop = _reflection.type().prop("serialize"_hs);
 
         if (prop) return true;
-        else return false;
+        return false;
     }
 
     bool ComponentReflection::contains(entt::const_handle h) const

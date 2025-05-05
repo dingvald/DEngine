@@ -18,8 +18,8 @@
       ],
         "components": {
             "description": {
-                "name": "grass",
-                "description": "just simple grass."
+                "name": "Grass",
+                "description": "Just simple grass."
             },
             "render": {
                 "texture": "short_grass",
@@ -41,8 +41,8 @@
       ],
         "components": {
             "description": {
-                "name": "tall grass",
-                "description": "just grass but longer."
+                "name": "Tall Grass",
+                "description": "Just simple grass but longer."
             },
             "render": {
                 "texture": "long_grass",
@@ -67,8 +67,8 @@
       ],
       "components": {
         "description": {
-          "name": "tree",
-          "description": "a wooden trunk with many leaves."
+          "name": "Tree",
+          "description": "A wooden trunk with many leaves."
         },
         "render": {
           "texture": "tree",
@@ -98,7 +98,7 @@
       ],
         "components": {
             "description": {
-                "name": "boulder",
+                "name": "Boulder",
                 "description": "a very large chunk of rock."
             },
             "render": {

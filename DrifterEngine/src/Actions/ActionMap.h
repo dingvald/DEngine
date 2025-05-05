@@ -8,12 +8,14 @@ class ActionMap
 {
 public:
 	using BasicAction = std::function<void(void)>;
+
 	using ArgType = entt::handle;
 	using EntityAction = std::function<void(ArgType)>;
+
 	using Action = std::variant<BasicAction, EntityAction>;
 
 public:
-	void setKeybindings(Keybindings& keybindings);
+	ActionMap(Keybindings& keybindings);
 
 	void bind(const std::string& domain, const std::string& state, const std::string& name, Action action);
 
@@ -28,5 +30,5 @@ private:
 	using StateNameToActionMap = std::unordered_map<std::string, NameActionMap>;
 
 	std::unordered_map<std::string, StateNameToActionMap> _actionMap;
-	Keybindings* _keybindings = nullptr;
+	Keybindings& _keybindings;
 };

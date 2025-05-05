@@ -58,7 +58,7 @@ void drft::system::EntityRenderer::batchLitEntities(const CameraHandle& camera)
 
 void drft::system::EntityRenderer::batchHadSeenEntities(const CameraHandle& camera)
 {
-	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, PlayerHasSeenComponent, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
+	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, const PlayerHasSeenComponent, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren, _] : seenView.each())
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.tile, camera) + spatial::toXY(pos.offset);

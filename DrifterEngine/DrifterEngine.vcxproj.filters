@@ -3098,9 +3098,6 @@
     <ClInclude Include="src\Components\CameraTargetComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Actions\ActionTypeIds.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\HashedString.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "StringManipulation.h"
 
+static const std::string drft::util::EMPTY_STRING = {};
+
 std::string drft::util::getStringAcronym(const std::string& string)
 {
     std::string result;

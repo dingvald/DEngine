@@ -2,6 +2,8 @@
 
 namespace drft::util
 {
+	extern const std::string EMPTY_STRING;
+
 	std::string getStringAcronym(const std::string& string);
 	std::vector<std::string> split(const std::string& string, const std::string& delimiters);
 	std::string removeWhitespace(const std::string& str);

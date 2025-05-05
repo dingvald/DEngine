@@ -153,8 +153,6 @@ void drft::Engine::loadDefaultKeybindings()
 
 void drft::Engine::setupActionMap()
 {
-	_actionMap.setKeybindings(_keybindings);
-
 	_actionMap.bind("engine", "general", "toggle_fullscreen",	[this]() {toggleFullscreen();});
 	_actionMap.bind("engine", "general", "toggle_debug",		[this]() {toggleDebug();});
 

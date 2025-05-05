@@ -4,21 +4,17 @@
 #include <Keybindings/ModifiedKey.h>
 #include <Utility/StandardLogger.h>
 
-void ActionMap::setKeybindings(Keybindings& keybindings)
+
+ActionMap::ActionMap(Keybindings& keybindings)
+	: _keybindings(keybindings)
 {
-	_keybindings = &keybindings;
 }
 
 void ActionMap::bind(const std::string& domain, const std::string& state, const std::string& name, Action action)
 {
-	if (!_keybindings)
+	if (!_keybindings.containsState(state))
 	{
-		error_logger << "Error: trying to bind action before keybindings are set" << std::endl;
-		return;
-	}
-	if (!_keybindings->containsState(state))
-	{
-		error_logger << "Error: trying to bind action to unknown state" << std::endl;
+		LOG_ERROR("Domain {} is trying to bind action {} to unknown state {}", domain, name, state);
 		return;
 	}
 
@@ -53,9 +49,7 @@ bool ActionMap::call(const std::string& domain, const std::string& state, const 
 
 bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input) const
 {
-	if (!_keybindings) return false;
-
-	if (auto actionName = _keybindings->forState(state).getActionForKey(input))
+	if (auto actionName = _keybindings.forState(state).getActionForKey(input))
 	{
 		auto& map = _actionMap.at(domain).at(state);
 		if (!map.contains(actionName.value())) return false;
@@ -71,10 +65,9 @@ bool ActionMap::call(const std::string& domain, const std::string& state, const 
 
 bool ActionMap::call(const std::string& domain, const std::string& state, const ModifiedInput& input, ArgType arg) const
 {
-	if (!_keybindings) return false;
 	if (!arg) return false;
 
-	if (auto actionName = _keybindings->forState(state).getActionForKey(input))
+	if (auto actionName = _keybindings.forState(state).getActionForKey(input))
 	{
 		auto& map = _actionMap.at(domain).at(state);
 		if (!map.contains(actionName.value())) return false;

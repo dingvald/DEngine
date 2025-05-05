@@ -566,7 +566,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="deps\zlib\include\zconf.h" />
     <ClInclude Include="deps\zlib\include\zlib.h" />
     <ClInclude Include="deps\zlib\include\zutil.h" />
-    <ClInclude Include="src\Actions\ActionTypeIds.h" />
     <ClInclude Include="src\AI\AiActions\AiActionRegistry.h" />
     <ClInclude Include="src\AI\AiActions\IAiAction.h" />
     <ClInclude Include="src\AI\AiActions\MeleeAttackAiAction.h" />

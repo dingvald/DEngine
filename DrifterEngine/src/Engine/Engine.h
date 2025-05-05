@@ -51,7 +51,7 @@ namespace drft
 		ControlsContext _controlsContext = {};
 
 		Keybindings _keybindings;
-		ActionMap _actionMap;
+		ActionMap _actionMap{_keybindings};
 
 		StateContext _stateContext = {
 			_window,

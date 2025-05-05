@@ -2,7 +2,6 @@
 #include "EntityFactory.h"
 #include "Components/ComponentMetaBinder.h"
 #include "Utility/CopyEntity.h"
-#include <EnTT/meta/container.hpp>
 #include "JSON/JSONHelpers.h"
 
 #include "Components/InheritanceComponent.h"
@@ -29,7 +28,8 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 		json::JsonFileWrapper json{ entry.path(), "prototypes" };
 		if (!json.load())
 		{
-			error_logger << "Error: " << entry << " could not be loaded." << std::endl;
+			LOG_ERROR("{} could not be loaded", entry.path().string());
+			continue;
 		}
 		else
 		{
@@ -37,8 +37,7 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 			{
 				entt::entity entity = _protoRegistry.create();
 				entt::id_type entityId = entt::hashed_string{ node.name.GetString() };
-				_prototypes[entityId] = entity;
-				//_prototypeNames[entity] = entityName;
+				_prototypes.emplace(entityId, entity);
 
 				createEntitiyPrototypeFromJSON(entity, entityId, node.value);
 			}
@@ -57,13 +56,6 @@ entt::const_handle drft::EntityFactory::get(entt::id_type id) const
 		return entt::const_handle{ _protoRegistry, entt::null };
 	}
 	return entt::const_handle{ _protoRegistry, _prototypes.at(id) };
-}
-
-const std::string& drft::EntityFactory::getName(entt::entity prototype) const
-{
-	if (!_protoRegistry.valid(prototype)) throw std::exception("Entity does not belong to prototypes");
-	if (!_prototypeNames.contains(prototype)) throw std::exception("Entity does not belong to prototypes"); // Something went wrong...
-	return _prototypeNames.at(prototype);
 }
 
 std::unordered_set<entt::id_type> drft::EntityFactory::getFlattenedInheritance(entt::const_handle entity) const
@@ -91,7 +83,7 @@ entt::handle drft::EntityFactory::build(entt::id_type id, entt::registry& regist
 {
 	if (!_prototypes.contains(id))
 	{
-		error_logger << "Error: Trying to create entity " << id << " but it does not exist in the prototype registry." << std::endl;
+		LOG_ERROR("Trying to create entity {} but it does not exist in the prototype registry", id);
 		return entt::handle{ registry, entt::null };
 	}
 	entt::entity newEntity = registry.create();
@@ -109,11 +101,10 @@ bool drft::EntityFactory::has(entt::id_type id) const
 
 void drft::EntityFactory::resolvePrototypeInheritance()
 {
-	std::cout << "Resolving entity inheritance..." << std::endl;
-	const int numEntitiesToResolve = _inheritanceQueue.size();
-	std::cout << "Entities to resolve: " << numEntitiesToResolve << std::endl;
+	LOG_MSG("Resolving entity inheritance...");
+	LOG_MSG("Entities to resolve: {}", _inheritanceQueue.size());
 
-	int currentQueueSize = numEntitiesToResolve;
+	int currentQueueSize = _inheritanceQueue.size();
 	int oldQueueSize = currentQueueSize;
 	int iterations = 0;
 
@@ -175,17 +166,11 @@ void drft::EntityFactory::resolvePrototypeInheritance()
 
 	if (_inheritanceQueue.empty())
 	{
-		std::cout << "All entities resolved." << std::endl;
+		LOG_MSG("All entities resolved.");
 	}
 	else
 	{
-		error_logger << "Error: " << _inheritanceQueue.size() << " entities could not be resolved:" << std::endl;
-		while (!_inheritanceQueue.empty())
-		{
-			auto& relationship = _inheritanceQueue.front();
-			error_logger << relationship.entityId << std::endl;
-			_inheritanceQueue.pop();
-		}
+		LOG_ERROR("{} entities could not be resolved", _inheritanceQueue.size());
 	}
 }
 

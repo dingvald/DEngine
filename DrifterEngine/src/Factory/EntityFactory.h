@@ -17,8 +17,6 @@ namespace drft
 		// Returns the entity prototype with the given id. Returns entt::null if not found.
 		entt::const_handle get(entt::id_type id) const;
 
-		const std::string& getName(entt::entity prototype) const;
-
 		std::unordered_set<entt::id_type> getFlattenedInheritance(entt::const_handle entity) const;
 
 		// Access the prototype registry (read-only).
