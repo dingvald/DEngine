@@ -11,7 +11,7 @@ namespace drft
 	public:
 		EntityFactory();
 
-		// Load entity prototypes from the given JSON file into the prototype registry.
+		// Load all entity prototype files in the given directory into the prototype registry.
 		bool loadPrototypes(const std::filesystem::path& directoryPath);
 
 		// Returns the entity prototype with the given id. Returns entt::null if not found.
@@ -35,7 +35,6 @@ namespace drft
 	private:
 		entt::registry _protoRegistry;
 		std::unordered_map<entt::id_type, entt::entity> _prototypes;
-		std::unordered_map<entt::entity, std::string> _prototypeNames;
 		
 		struct InheritanceRelationship
 		{
