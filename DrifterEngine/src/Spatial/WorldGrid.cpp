@@ -4,6 +4,7 @@
 #include "Spatial/Conversions.h"
 #include "Spatial/Helpers.h"
 #include "Utility/stdHashing.h"
+#include <Spatial/PathingHeuristics/IPathingHeuristic.h>
 
 using namespace drft::spatial;
 
@@ -173,33 +174,36 @@ std::vector<entt::entity> drft::spatial::WorldGrid::castRay(TilePosition origin,
 	return result;
 }
 
-drft::spatial::WorldGrid::GridPath drft::spatial::WorldGrid::getPath(TilePosition pt1, TilePosition pt2, Heuristic costFunc) const
+drft::spatial::WorldGrid::GridPath drft::spatial::WorldGrid::getPath(TilePosition from, TilePosition to, const IPathingHeuristic& heuristic, unsigned int maxCost) const
 {
-	const sf::Vector2i start = toXY(pt1);
-	const sf::Vector2i goal = toXY(pt2);
+	const sf::Vector2i start = toXY(from);
+	const sf::Vector2i goal = toXY(to);
 
 	std::unordered_map<sf::Vector2i, sf::Vector2i> cameFrom;
 	std::unordered_map<sf::Vector2i, double> costSoFar;
 
 	PriorityQueue<sf::Vector2i, double> frontier;
-	frontier.put(goal, 0);
+	frontier.put(start, 0);
 
-	cameFrom[goal] = goal;
-	costSoFar[goal] = 0;
+	cameFrom[start] = start;
+	costSoFar[start] = 0;
+
+	sf::Vector2i current = start;
 
 	while (!frontier.empty())
 	{
-		const sf::Vector2i current = frontier.get();
+		current = frontier.get();
 
-		if (current == start) break;
+		if (current == goal) break;
+		if (costSoFar[current] >= maxCost) break;
 
 		for (auto&& neighbour : spatial::getAdjacentPoints(current))
 		{
-			double newCost = costSoFar[current] + costFunc(entitiesAt({ neighbour.x, neighbour.y, pt1.z }));
+			double newCost = costSoFar[current] + heuristic.evaluate(entitiesAt({ neighbour.x, neighbour.y, from.z }));
 			if (!costSoFar.contains(neighbour) || newCost < costSoFar[neighbour])
 			{
 				costSoFar[neighbour] = newCost;
-				double priority = newCost + distance2d(neighbour, start);
+				double priority = newCost + distance2d(neighbour, goal);
 				frontier.put(neighbour, priority);
 				cameFrom[neighbour] = current;
 			}
@@ -207,18 +211,12 @@ drft::spatial::WorldGrid::GridPath drft::spatial::WorldGrid::getPath(TilePositio
 	}
 
 	GridPath result;
-	if (!cameFrom.contains(start))
+	while (current != start)
 	{
-		return result; // no path
-	}
-
-	sf::Vector2i current = cameFrom[start];
-	while (current != goal)
-	{
-		result.emplace_back(current.x, current.y, pt1.z);
+		result.emplace_back(current.x, current.y, from.z);
 		current = cameFrom[current];
 	}
-	result.emplace_back(goal.x, goal.y, pt1.z);
+	std::reverse(result.begin(), result.end());
 
 	return result;
 }

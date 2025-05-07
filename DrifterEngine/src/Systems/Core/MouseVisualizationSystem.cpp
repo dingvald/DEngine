@@ -13,6 +13,7 @@
 #include <Systems/Helpers/GetPlayerHandle.h>
 #include <Engine/ControlsContext.h>
 #include <Events/ChangeMouseVisibilityEvent.h>
+#include <Spatial/PathingHeuristics/PhysicalBlockingHeuristic.h>
 
 using namespace entt::literals;
 
@@ -33,6 +34,34 @@ static const SpriteOptions PathSprite = {
 		.color = sf::Color{255, 255, 255, 200}
 };
 
+namespace Internal
+{
+	struct RequestVisualizedPathEvent 
+	{
+		std::vector<drft::TilePosition> path;
+	};
+	struct ReturnVisualizedPathEvent
+	{
+		std::vector<drft::TilePosition> path;
+	};
+
+	static void onRequestVisualizedPath(drft::system::MouseVisualizationSystem* sys, RequestVisualizedPathEvent* ev)
+	{
+		if (!sys) return;
+		if (!ev) return;
+		ev->path = sys->getCachedPath();
+	}
+}
+
+std::vector<drft::TilePosition> drft::system::MouseVisualizationSystem::getVisualizedPath(entt::registry& registry)
+{
+	Internal::RequestVisualizedPathEvent ev;
+	auto& dispatcher = registry.ctx().get<entt::dispatcher>();
+	dispatcher.trigger(&ev);
+
+	return std::move(ev.path);
+}
+
 void drft::system::MouseVisualizationSystem::changeMouseVisibility(entt::registry& registry, MouseVisibilityOptions&& options)
 {
 	events::ChangeMouseVisibilityEvent ev =
@@ -43,9 +72,15 @@ void drft::system::MouseVisualizationSystem::changeMouseVisibility(entt::registr
 	registry.ctx().get<entt::dispatcher>().trigger(ev);
 }
 
+const std::vector<drft::TilePosition>& drft::system::MouseVisualizationSystem::getCachedPath() const
+{
+	return _cachedPath;
+}
+
 void drft::system::MouseVisualizationSystem::init()
 {
 	_dispatcher.sink<events::ChangeMouseVisibilityEvent>().connect<&MouseVisualizationSystem::onChangeMouseVisibilityEvent>(this);
+	_dispatcher.sink<Internal::RequestVisualizedPathEvent*>().connect<&Internal::onRequestVisualizedPath>(this);
 }
 
 void drft::system::MouseVisualizationSystem::start()
@@ -169,17 +204,23 @@ void drft::system::MouseVisualizationSystem::refreshVisualizedPath(const std::ve
 void drft::system::MouseVisualizationSystem::creatNewVisualizedPathToPlayer(TilePosition mousePosition, TilePosition playerPosition)
 {
 	auto& grid = _registry.ctx().get<spatial::WorldGrid>();
-	auto path = grid.getPath(playerPosition, mousePosition, 
-		[this](const std::vector<entt::entity>& entities) -> int
+	auto tempPath = grid.getPath(playerPosition, mousePosition, spatial::PhysicalBlockingHeuristic{ _registry }, 10);
+	
+	if (tempPath.empty())
+	{
+		_cachedPath = {};
+	}
+	else
+	{
+		if (tempPath.back() == mousePosition)
 		{
-			for (auto entity : entities)
-			{
-				if (_registry.all_of<PhysicalBlockingComponent>(entity))
-				{
-					return 10;
-				}
-			}
-			return 0;
-		});
-	refreshVisualizedPath(path, 0);
+			_cachedPath = std::move(tempPath);
+		}
+		else
+		{
+			_cachedPath = {};
+		}
+	}
+
+	refreshVisualizedPath(_cachedPath, 0);
 }

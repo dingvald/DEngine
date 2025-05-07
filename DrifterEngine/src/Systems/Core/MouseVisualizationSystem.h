@@ -21,7 +21,10 @@ namespace drft::system
 	public:
 		using System::System;
 
+		static std::vector<TilePosition> getVisualizedPath(entt::registry& registry);
 		static void changeMouseVisibility(entt::registry& registry, MouseVisibilityOptions&& options);
+
+		const std::vector<TilePosition>& getCachedPath() const;
 
 	private:
 		void init() override;
@@ -44,6 +47,8 @@ namespace drft::system
 		TilePosition _lastMousePosition;
 		bool _shouldShowMouse = true;
 		bool _hideMouse = false;
+
+		std::vector<TilePosition> _cachedPath;
 		std::vector<entt::entity> _visualizedPath;
 	};
 }

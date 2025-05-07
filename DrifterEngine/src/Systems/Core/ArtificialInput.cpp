@@ -21,7 +21,7 @@
 #include "AI/GOAP/ActionRegistry.h"
 #include "AI/GOAP/WorldStateTypes.h"
 #include "AI/GOAP/Sensors/HostileSensor.h"
-
+#include <Spatial/PathingHeuristics/PhysicalBlockingHeuristic.h>
 
 
 void drft::system::ArtificialInput::init()
@@ -77,18 +77,7 @@ void drft::system::ArtificialInput::pathToTarget(entt::handle entity, TilePositi
 	if (!_cachedPaths.contains(entity.entity()) || _cachedPaths.at(entity.entity()).empty())
 	{
 		const auto& grid = _registry.ctx().get<const spatial::WorldGrid&>();
-		_cachedPaths[entity.entity()] = grid.getPath(position, targetPosition,
-			[this](const std::vector<entt::entity>& entities) -> int
-			{
-				for (auto entity : entities)
-				{
-					if (_registry.all_of<PhysicalBlockingComponent>(entity))
-					{
-						return 1000;
-					}
-				}
-				return 0;
-			});
+		_cachedPaths[entity.entity()] = grid.getPath(position, targetPosition, spatial::PhysicalBlockingHeuristic{ _registry });
 	}
 	if (_cachedPaths.at(entity.entity()).empty())
 	{

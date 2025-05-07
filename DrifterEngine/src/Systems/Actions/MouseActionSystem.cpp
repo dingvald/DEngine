@@ -6,9 +6,11 @@
 #include <Components/Actions/MouseInspectAction.h>
 #include <Components/MouseCursorComponent.h>
 #include <Components/PositionComponent.h>
+#include <Components/PathNavComponent.h>
 
 #include <Systems/Helpers/EmplacePathNavToPosition.h>
 #include <Systems/Helpers/GetMouseHandle.h>
+#include <Systems/Core/MouseVisualizationSystem.h>
 
 void drft::system::MouseActionSystem::init()
 {
@@ -34,11 +36,17 @@ void drft::system::MouseActionSystem::onMouseContextActionAdded(entt::registry& 
 	switch (mouseCursorComponent->actionState)
 	{
 	case MouseContextualActionState::Move:
-		emplacePathNavToPosition({ registry, entity }, mousePositionComponent->tile);
+	{
+		auto path = MouseVisualizationSystem::getVisualizedPath(_registry);
+		registry.emplace_or_replace<PathNavComponent>(entity, std::move(path));
 		break;
+	}	
 	case MouseContextualActionState::Attack:
-		emplacePathNavToPosition({ registry, entity }, mousePositionComponent->tile);
+	{
+		auto path = MouseVisualizationSystem::getVisualizedPath(_registry);
+		registry.emplace_or_replace<PathNavComponent>(entity, std::move(path));
 		break;
+	}
 	case MouseContextualActionState::Interact:
 		std::cout << "Interact action" << std::endl;
 		break;

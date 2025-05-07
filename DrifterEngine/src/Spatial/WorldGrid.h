@@ -5,6 +5,8 @@
 
 namespace drft::spatial
 {	
+	class IPathingHeuristic;
+
 	using EntityList = std::vector<entt::entity>;
 
 	// Class for single point of access to query/manipulate entity and chunk positions
@@ -59,7 +61,7 @@ namespace drft::spatial
 		using GridPath = std::vector<TilePosition>;
 		// Produces a path from pt1 to pt2.
 		// Operates at the Z-Level of point 1
-		GridPath getPath(TilePosition pt1, TilePosition pt2, Heuristic h = [](const EntityList&){return 0;}) const;
+		GridPath getPath(TilePosition from, TilePosition to, const IPathingHeuristic& heuristic, unsigned int maxCost = 10000u) const;
 
 	private:
 		std::unordered_map<ChunkPosition, WorldChunk> _chunks;
