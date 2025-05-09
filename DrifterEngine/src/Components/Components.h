@@ -29,6 +29,7 @@ namespace component::action
 	{
 		std::unordered_map<std::string, int> damageTypes;
 		entt::entity source = entt::null;
+		entt::entity itemUsed = entt::null;
 	};
 
 	struct TakeDamage

@@ -9,6 +9,7 @@ namespace drft::system
 		using System::System;
 	
 		void init() override;
+		void start() override;
 		void updateEnd() override;
 
 	private:

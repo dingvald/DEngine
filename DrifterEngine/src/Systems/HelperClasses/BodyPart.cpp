@@ -229,7 +229,7 @@ unsigned long BodyPartTree::getEquipped(BodyPart::Slot::Type type, const std::st
 			}
 		}
 	}
-	return 0ul;
+	return 0ul; // No Item
 }
 
 BodyPart* BodyPartTree::searchForPart(BodyPart& root, const std::string& partName)

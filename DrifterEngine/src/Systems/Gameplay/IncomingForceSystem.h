@@ -1,21 +1,17 @@
 #pragma once
 #include "Systems/System.h"
 
-struct BodyPart;
+struct SolidMaterialComponent;
 
 namespace drft::system
 {
-	class BodyPartSystem : public System
+	class IncomingForceSystem : public System
 	{
 	public:
 		using System::System;
 
 	private:
 		void init() override;
-
-		void onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity);
+		void update() override;
 	};
-
 }
-
-

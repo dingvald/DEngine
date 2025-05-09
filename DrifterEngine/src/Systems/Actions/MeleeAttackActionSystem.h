@@ -16,7 +16,7 @@ namespace drft::system
 		void onTweenReachedTarget(entt::handle entity, MeleeAttackAction action) const;
 		void onTweenReturnedToStart(entt::handle entity) const;
 
-		entt::id_type getEffectTexture(const std::unordered_map<std::string, int>& damageTypes) const;
+		float calculateForceGenerated(entt::handle actor, entt::const_handle item) const;
 	};
 }
 

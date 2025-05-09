@@ -10,6 +10,7 @@ namespace drft::system
 		std::vector<SpriteOptions> frames;
 
 		TilePosition position = { 0,0,0 };
+		sf::Vector3f offset = { 0,0,0 };
 		float animationSpeed = 0.f;
 		int ttl = 60; // how many ticks the effect is alive for (60 ticks / second)
 		int fadeRate = 0; // decrease in alpha per tick

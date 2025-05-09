@@ -273,9 +273,6 @@
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Helpers\RemoveFromContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utility\Math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -730,6 +727,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityPrototype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Gameplay\IncomingForceSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\MaterialForceDistribution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1500,9 +1506,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Helpers\RemoveFromContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\SendFloatingMessageEvent.h">
@@ -3345,6 +3348,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\PlayerHasSeenComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\IncomingForceComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Gameplay\IncomingForceSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\MaterialForceDistribution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

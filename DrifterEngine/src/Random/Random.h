@@ -10,7 +10,10 @@ namespace drft::rng
 	class Random
 	{
 	public:
+		Random() = default;
 		Random(unsigned int seed);
+
+		void setSeed(unsigned int seed);
 
 		float realInRange(float min, float max);
 		float realInRange(math::Range<float> range);

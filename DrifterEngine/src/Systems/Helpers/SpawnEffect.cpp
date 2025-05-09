@@ -27,7 +27,7 @@ entt::entity drft::system::spawnEffect(entt::registry& registry, EffectStruct&& 
 		effectHandle.emplace<AnimationComponent>(animation);
 	}
 
-	effectHandle.emplace<PositionComponent>(effect.position);
+	effectHandle.emplace<PositionComponent>(effect.position, effect.offset);
 	effectHandle.emplace<VisualEffectComponent>(ttl, effect.fadeRate, effect.requiresInFOV);
 	
 	return effectHandle.entity();

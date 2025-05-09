@@ -59,9 +59,7 @@
           "max": 15.0,
           "recovery": 0.05
         },
-        "stamina": {
-          "max": 15.0
-        },
+        "stamina": {},
         "player_input": {},
         "faction": {
           "name": "player"

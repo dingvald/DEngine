@@ -7,25 +7,25 @@
 #include <Components/CurrentActorComponent.h>
 #include <Components/TweeningComponent.h>
 #include "Components/Actions/MeleeAttackAction.h"
-#include "Components/Components.h"
 #include "Components/PositionComponent.h"
+#include <Components/WeightComponent.h>
+#include <Components/IncomingForceComponent.h>
+
+#include <Skills/SkillIds.h>
 
 #include <Systems/Core/ActorSystem.h>
 #include <Systems/Core/TweeningSystem.h>
 
-#include <Components/RenderComponent.h>
 #include <Systems/Helpers/EasingFunctions.h>
-#include "Systems/Helpers/SpawnEffect.h"
-#include "Utility/SpriteOptions.h"
+#include <Systems/Gameplay/SkillsSystem.h>
+
+#pragma optimize ("", off)
+
+static const float C_CONSTANT = 0.5f;
+static const float K_CONSTANT = 1.5f;
+static constexpr float SKILL_POINT_MULIPLIER = 10.f;
 
 using namespace entt::literals;
-
-const std::unordered_map<std::string, entt::id_type> DamageTypeToEffectTexture
-{
-	{"slashing", "slash_effect"_hs},
-	{"crushing", "impact_effect"_hs},
-	{"piercing", "slash_effect"_hs},
-};
 
 void drft::system::MeleeAttackActionSystem::update()
 {
@@ -65,30 +65,13 @@ void drft::system::MeleeAttackActionSystem::onTweenReachedTarget(entt::handle en
 	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 	const auto& positionComponent = entity.get<PositionComponent>();
 
-	sf::Vector3i targetPosition = positionComponent.tile + spatial::vec3FromPlanar(action.direction);
-	auto& targets = grid.entitiesAt(spatial::asTileSpace(targetPosition));
-	for (auto target : targets)
+	const float force = calculateForceGenerated(entity, action.itemUsed);
+
+	drft::TilePosition targetPosition = positionComponent.tile + spatial::asTileSpace(action.direction);
+	auto& targets = grid.entitiesAt(targetPosition);
+	for (auto&& target : targets)
 	{
-		_registry.emplace_or_replace<component::action::IncomingDamage>(target, action.damageTypes, entity);
-	}
-
-	if (auto positionComponent = _registry.try_get<PositionComponent>(entity))
-	{
-		sf::Color effectColor = sf::Color::White;
-		entt::id_type effectTextureId = getEffectTexture(action.damageTypes);
-
-		std::vector<SpriteOptions> frames =
-		{
-			SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = effectTextureId, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsFront), .color = effectColor},
-			SpriteOptions{.uvCoords = sf::Vector2i{1, 0}},
-		};
-
-		const sf::Vector3i targetPosition = positionComponent->tile + spatial::vec3FromPlanar(action.direction);
-		spawnEffect(_registry, {
-			.frames = frames,
-			.position = spatial::asTileSpace(targetPosition),
-			.animationSpeed = 20.0f
-			});
+		_registry.emplace_or_replace<IncomingForceComponent>(target, force, action.itemUsed);
 	}
 }
 
@@ -97,19 +80,35 @@ void drft::system::MeleeAttackActionSystem::onTweenReturnedToStart(entt::handle 
 	ActorSystem::setActionComplete(entity, ActionCategory::Act);
 }
 
-entt::id_type drft::system::MeleeAttackActionSystem::getEffectTexture(const std::unordered_map<std::string, int>& damageTypes) const
+float drft::system::MeleeAttackActionSystem::calculateForceGenerated(entt::handle actor, entt::const_handle item) const
 {
-	entt::id_type result = "impact_effect"_hs; // Default to the impact effect
-	int maxDamage = 0;
+	const float strength = static_cast<float>(SkillsSystem::getSkillLevel(SkillId::Strength, actor));
+	const float agility = static_cast<float>(SkillsSystem::getSkillLevel(SkillId::Agility, actor));
 
-	for (auto&& [type, damage] : damageTypes)
+	float weight = 0.5f;
+	if (actor.entity() != item.entity())
 	{
-		if (damage <= maxDamage) continue;
-		if (!DamageTypeToEffectTexture.contains(type)) continue;
-
-		maxDamage = damage;
-		result = DamageTypeToEffectTexture.at(type);
+		auto weightComponent = item.try_get<WeightComponent>();
+		if (weightComponent) weight = weightComponent->value;
 	}
 
-	return result;
+	float strengthContribution = 0.f;
+	float agilityContribution = 0.f;
+
+	const float strengthCap = sqrtf(strength);
+	if (weight <= strengthCap) 
+	{
+		strengthContribution = strength * (weight / strengthCap);
+	}
+	else
+	{
+		strengthContribution = strength * strength / (weight * weight);
+	}
+
+	agilityContribution = agility / (weight + 1.0f);
+
+	SkillsSystem::useSkill(SkillId::Strength, (int)(std::sqrtf(strengthContribution) * SKILL_POINT_MULIPLIER), actor);
+	SkillsSystem::useSkill(SkillId::Agility, (int)(std::sqrtf(agilityContribution) * SKILL_POINT_MULIPLIER), actor);
+
+	return (strengthContribution + agilityContribution);
 }

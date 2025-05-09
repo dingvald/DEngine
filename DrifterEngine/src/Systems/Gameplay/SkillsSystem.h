@@ -4,15 +4,22 @@
 
 class Skill;
 
+namespace Internal
+{
+	struct RegisterLevelUpHandlerEvent;
+}
+
 namespace drft::system
 {
 	class SkillsSystem : public System
 	{
 	public:
+		using LevelUpHandler = std::function<void(int, entt::handle)>;
 		using System::System;
 
 		static int getSkillLevel(const char* skill, entt::const_handle entity);
 		static void useSkill(const char* skill, int magnitude, entt::handle entity);
+		static void registerLevelUpHandler(const char* skill, LevelUpHandler handler, entt::registry& registry);
 
 	private:
 		struct UseSkillEvent
@@ -26,6 +33,11 @@ namespace drft::system
 		void onUseSkillEvent(UseSkillEvent& ev) const;
 
 		void addExp(Skill& skill, int exp, entt::handle entity) const;
-		void onSkillLevelUp(const Skill& skill, entt::const_handle entity) const;
+		void onSkillLevelUp(const Skill& skill, entt::handle entity) const;
+		void onRegisterLevelUpHandler(Internal::RegisterLevelUpHandlerEvent& ev);
+
+	private:
+		using LevelUpHandlers = std::vector<LevelUpHandler>;
+		std::unordered_map<std::string, LevelUpHandlers> _levelUpHandlers;
 	};
 }

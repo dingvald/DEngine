@@ -7,7 +7,7 @@
 
 struct StaminaComponent
 {
-	float max = 10.f;
+	float max = std::numeric_limits<float>::min();
 	float current = std::numeric_limits<float>::min();
 	float baseConsumption = 0.f;
 
@@ -19,7 +19,6 @@ private:
 		using namespace entt::literals;
 		snapshot::reflectComponent<StaminaComponent, NAME>()
 			.prop("serialize"_hs)
-			.data<&StaminaComponent::max>("max"_hs)
 			.data<&StaminaComponent::baseConsumption>("base_consumption"_hs);
 	}
 };

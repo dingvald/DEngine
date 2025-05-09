@@ -23,6 +23,5 @@ namespace drft::system
 
 		void onTurnStartEvent(events::TurnStartEvent& ev);
 		void onHealthComponentAdded(entt::registry& registry, entt::entity entity);
-		void onLevelUp(entt::registry& registry, entt::entity entity);
 	};
 }

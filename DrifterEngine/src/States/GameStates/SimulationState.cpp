@@ -58,6 +58,7 @@
 #include "Systems/Gameplay/FactionSystem.h"
 #include "Systems/Gameplay/HealingSystem.h"
 #include "Systems/Gameplay/HealthSystem.h"
+#include <Systems/Gameplay/IncomingForceSystem.h>
 #include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
@@ -144,6 +145,7 @@ void drft::SimulationState::onExit()
 
 void drft::SimulationState::setupRegistryContext()
 {
+	getContext().registry.ctx().emplace<rng::Random&>(_random);
 	getContext().registry.ctx().emplace<spatial::WorldGrid&>(_world);
 }
 
@@ -183,6 +185,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<DayNightCycleSystem>();
 	_systems->add<SprintingSystem>();
 	_systems->add<LiquidSystem>();
+	_systems->add<IncomingForceSystem>();
 	
 	_systems->add<LightSourceSystem>();
 	

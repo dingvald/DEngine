@@ -7,11 +7,35 @@
 #include <Systems/Gameplay/SkillsSystem.h>
 #include <Skills/SkillIds.h>
 
+namespace Internal
+{
+	static float calculateMaxStaminaForLevel(int level)
+	{
+		float result = 10.f;
+		result += (logf(level) / logf(1.3));
+		return result;
+	}
+
+	static void onEnduranceLevelUp(int level, entt::handle entity)
+	{
+		if (auto stamina = entity.try_get<StaminaComponent>())
+		{
+			stamina->max -= calculateMaxStaminaForLevel(level - 1);
+			stamina->max += calculateMaxStaminaForLevel(level);
+		}
+	}
+}
+
 void drft::system::StaminaSystem::init()
 {
 	_registry.on_construct<StaminaComponent>().connect<&StaminaSystem::onStaminaAdded>(this);
 	_registry.on_construct<component::action::ConsumeStamina>().connect<&StaminaSystem::onStaminaConsumed>(this);
 	_registry.on_construct<MoveAction>().connect<&StaminaSystem::onMoveActionAdded>(this);
+}
+
+void drft::system::StaminaSystem::start()
+{
+	SkillsSystem::registerLevelUpHandler(SkillId::Endurance, Internal::onEnduranceLevelUp, _registry);
 }
 
 void drft::system::StaminaSystem::updateEnd()
@@ -22,8 +46,10 @@ void drft::system::StaminaSystem::updateEnd()
 void drft::system::StaminaSystem::onStaminaAdded(entt::registry& registry, entt::entity entity) const
 {
 	auto& staminaComponent = _registry.get<StaminaComponent>(entity);
-	if (staminaComponent.current == std::numeric_limits<float>::min())
+	if (staminaComponent.max == std::numeric_limits<float>::min())
 	{
+		int endurance = SkillsSystem::getSkillLevel(SkillId::Endurance, { registry, entity });
+		staminaComponent.max = Internal::calculateMaxStaminaForLevel(endurance);
 		staminaComponent.current = staminaComponent.max;
 	}
 }

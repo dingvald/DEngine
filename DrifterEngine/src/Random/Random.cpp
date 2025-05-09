@@ -10,6 +10,11 @@ drft::rng::Random::Random(unsigned int seed)
 	_gen.seed(seed);
 }
 
+void drft::rng::Random::setSeed(unsigned int seed)
+{
+	_gen.seed(seed);
+}
+
 float Random::realInRange(float min, float max)
 {
 	using Dist = std::uniform_real_distribution<float>;

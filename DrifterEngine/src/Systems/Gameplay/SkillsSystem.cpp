@@ -6,10 +6,20 @@
 #include <Spatial/Helpers.h>
 #include <Spatial/Conversions.h>
 
+namespace Internal
+{
+	struct RegisterLevelUpHandlerEvent
+	{
+		const char* skill;
+		std::function<void(int, entt::handle)> handler;
+	};
+}
+
 
 void drft::system::SkillsSystem::init()
 {
 	_dispatcher.sink<UseSkillEvent>().connect<&SkillsSystem::onUseSkillEvent>(this);
+	_dispatcher.sink<Internal::RegisterLevelUpHandlerEvent>().connect<&SkillsSystem::onRegisterLevelUpHandler>(this);
 }
 
 void drft::system::SkillsSystem::onUseSkillEvent(UseSkillEvent& ev) const
@@ -30,7 +40,7 @@ void drft::system::SkillsSystem::addExp(Skill& skill, int exp, entt::handle enti
 	onSkillLevelUp(skill, entity);
 }
 
-void drft::system::SkillsSystem::onSkillLevelUp(const Skill& skill, entt::const_handle entity) const
+void drft::system::SkillsSystem::onSkillLevelUp(const Skill& skill, entt::handle entity) const
 {
 	if (auto position = entity.try_get<PositionComponent>())
 	{
@@ -46,6 +56,18 @@ void drft::system::SkillsSystem::onSkillLevelUp(const Skill& skill, entt::const_
 		};
 		_dispatcher.trigger(message);
 	}
+	if (!_levelUpHandlers.contains(skill.name())) return;
+
+	for (auto&& handler : _levelUpHandlers.at(skill.name()))
+	{
+		handler(skill.level(), entity);
+	}
+}
+
+void drft::system::SkillsSystem::onRegisterLevelUpHandler(Internal::RegisterLevelUpHandlerEvent& ev)
+{
+	std::string skillName = ev.skill;
+	_levelUpHandlers[skillName].push_back(ev.handler);
 }
 
 int drft::system::SkillsSystem::getSkillLevel(const char* skill, entt::const_handle entity)
@@ -69,4 +91,12 @@ void drft::system::SkillsSystem::useSkill(const char* skill, int magnitude, entt
 	UseSkillEvent ev = { entity, entt::hashed_string{skill}, magnitude};
 
 	entity.registry()->ctx().get<entt::dispatcher>().trigger(ev);
+}
+
+void drft::system::SkillsSystem::registerLevelUpHandler(const char* skill, LevelUpHandler handler, entt::registry& registry)
+{
+	Internal::RegisterLevelUpHandlerEvent ev;
+	ev.skill = skill;
+	ev.handler = handler;
+	registry.ctx().get<entt::dispatcher>().trigger(ev);
 }

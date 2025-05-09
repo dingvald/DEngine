@@ -2,6 +2,7 @@
 #include <States/State.h>
 #include <Engine/StateStack.h>
 #include <Spatial/WorldGrid.h>
+#include <Random/Random.h>
 
 namespace drft
 {
@@ -38,6 +39,7 @@ namespace drft
 		spatial::WorldGrid _world;
 		std::unique_ptr<system::SystemScheduler> _systems;
 		entt::handle _player{};
+		rng::Random _random;
 	};
 
 } // namespace drft

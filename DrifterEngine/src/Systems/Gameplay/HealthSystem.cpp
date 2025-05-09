@@ -14,6 +14,7 @@
 #include <Utility/EntityAccessors/GetEntityMaterials.h>
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
+#include <Random/Random.h>
 
 
 
@@ -22,7 +23,6 @@ using namespace entt::literals;
 void drft::system::HealthSystem::init()
 {
 	_dispatcher.sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
-	_registry.on_update<component::action::LevelUp>().connect<&HealthSystem::onLevelUp>(this);
 	_registry.on_construct<HealthComponent>().connect<&HealthSystem::onHealthComponentAdded>(this);
 }
 
@@ -104,10 +104,17 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 				SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
 				SpriteOptions{.uvCoords = sf::Vector2i{2, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
 			};
+
+			rng::Random& random = _registry.ctx().get<rng::Random>();
+			sf::Vector3f randomOffset;
+			randomOffset.x = std::roundf(random.realInRange(-2.0f, 2.0f));
+			randomOffset.y = std::roundf(random.realInRange(-2.0f, 2.0f));
+
 			// Spawn Hit particles
 			spawnEffect(_registry, {
 				.frames = std::move(hitParticles),
 				.position = posComp->tile,
+				.offset = randomOffset,
 				.animationSpeed = 10.0f
 				});
 		}
@@ -153,18 +160,5 @@ void drft::system::HealthSystem::onHealthComponentAdded(entt::registry& registry
 	if (healthComponent.current == std::numeric_limits<float>::min())
 	{
 		healthComponent.current = healthComponent.max;
-	}
-}
-
-void drft::system::HealthSystem::onLevelUp(entt::registry& registry, entt::entity entity)
-{
-	if (auto health = registry.try_get<HealthComponent>(entity))
-	{
-		const auto& levelUp = registry.get<component::action::LevelUp>(entity);
-		if (levelUp.statChanges.contains("vitality"))
-		{
-			health->max += levelUp.statChanges.at("vitality");
-		}
-		health->current = health->max;
 	}
 }
