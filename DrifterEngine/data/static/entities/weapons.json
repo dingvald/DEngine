@@ -12,17 +12,25 @@
                 "render": {
                     "texture": "katana",
                     "uv_size": [ 16, 24 ],
-                    "layer": 1
+                    "layer": 1,
+                    "color": [ 161, 157, 148 ]
                 },
                 "craftable": {
                     "recipe": [
-                        ["steel_bar", 2],
-                        ["twine", 1]
+                        [ "iron", 2 ],
+                        [ "plant_fiber", 1 ]
                     ],
                     "workstation": "workbench",
                     "skills_required": [
-                        ["smithing", 5]
-                    ]  
+                        [ "smithing", 5 ]
+                    ]
+                },
+                "sharp": {},
+                "weight": {
+                    "value": 1.5
+                },
+                "material_composition": {
+                    "iron": 1.0
                 }
             }
         }

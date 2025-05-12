@@ -93,7 +93,7 @@
       }
     },
     "boulder": {
-      "inherits": [
+        "inherits": [
         "object"
       ],
         "components": {
@@ -124,7 +124,7 @@
         }
     },
     "iron_deposit": {
-      "inherits": [
+        "inherits": [
         "object"
       ],
         "components": {
@@ -140,8 +140,8 @@
                 "color": [ 161, 157, 148 ]
             },
             "material_composition": {
-                "stone": 0.75,
-                "iron": 0.25
+                "stone": 0.50,
+                "iron": 0.50
             },
             "weight": {
                 "value": 800.0
