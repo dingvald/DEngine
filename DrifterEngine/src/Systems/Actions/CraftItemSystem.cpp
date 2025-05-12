@@ -8,16 +8,21 @@
 
 #include "Factory/EntityFactory.h"
 #include "Systems/Helpers/ItemDatabase.h"
-#include <Utility/EntityAccessors/GetEntityName.h>
 #include <Utility/EntityAccessors/GetEntityPrototype.h>
 #include <Utility/StandardLogger.h>
 
 
 bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, entt::id_type itemEntityId)
 {
+	if (itemEntityId == NullEntity)
+	{
+		LOG_WARNING("Trying to craft null entity");
+		return false;
+	}
+
 	if (!crafter.all_of<ContainerComponent>())
 	{
-		warning_logger << "Warning: Entity without a container is attempting to craft an item." << std::endl;
+		LOG_WARNING("Entity without a container is attempting to craft an item");
 		return false;
 	}
 
@@ -26,7 +31,7 @@ bool drft::system::CraftItemSystem::craftItem(entt::handle crafter, entt::id_typ
 
 	if (!itemPrototype.valid())
 	{
-		warning_logger << "Warning: Trying to craft unknown item " << itemEntityId << std::endl;
+		LOG_WARNING("Warning: Trying to craft unknown item {}", itemEntityId);
 		return false;
 	}
 

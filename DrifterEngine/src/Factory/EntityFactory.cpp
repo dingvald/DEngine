@@ -14,6 +14,8 @@ using namespace entt::literals;
 static const char* COMPONENTS_KEY_NAME = "components";
 static const char* INHERITS_KEY_NAME = "inherits";
 
+const entt::id_type NullEntity = "NULL_ENTITY"_hs;
+
 drft::EntityFactory::EntityFactory()
 {
 	ComponentMetaBinder::bindComponents();
@@ -37,7 +39,9 @@ bool drft::EntityFactory::loadPrototypes(const std::filesystem::path& directoryP
 			{
 				entt::entity entity = _protoRegistry.create();
 				entt::id_type entityId = entt::hashed_string{ node.name.GetString() };
+
 				_prototypes.emplace(entityId, entity);
+				_prototypeIDs.emplace(entity, entityId);
 
 				createEntitiyPrototypeFromJSON(entity, entityId, node.value);
 			}
@@ -56,6 +60,20 @@ entt::const_handle drft::EntityFactory::get(entt::id_type id) const
 		return entt::const_handle{ _protoRegistry, entt::null };
 	}
 	return entt::const_handle{ _protoRegistry, _prototypes.at(id) };
+}
+
+entt::id_type drft::EntityFactory::getId(entt::entity prototype) const
+{
+	if (!_prototypeIDs.contains(prototype))
+	{
+		return NullEntity;
+	}
+	return _prototypeIDs.at(prototype);
+}
+
+entt::id_type drft::EntityFactory::getId(entt::const_handle prototype) const
+{
+	return getId(prototype.entity());
 }
 
 std::unordered_set<entt::id_type> drft::EntityFactory::getFlattenedInheritance(entt::const_handle entity) const

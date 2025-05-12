@@ -175,10 +175,11 @@ void drft::CraftingState::addItemIconAndNameWidgets(entt::const_handle item, tgu
 	{
 		text->getRenderer()->setTextColor({ 100, 100, 100 });
 	}
-
-	auto button = GuiHelpers::buttonizePanel(panel, text);
-
-	button->onPress([this, id = util::getEntityPrototype(item)]() { onCraft(id); });
+	else
+	{
+		auto button = GuiHelpers::buttonizePanel(panel, text);
+		button->onPress([this, id = _factory->getId(item)]() { onCraft(id); });
+	}
 }
 
 void drft::CraftingState::addItemRecipeWidgets(entt::const_handle item, tgui::Panel::Ptr panel, bool isPartial)

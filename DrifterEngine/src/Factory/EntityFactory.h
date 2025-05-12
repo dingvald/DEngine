@@ -2,6 +2,8 @@
 
 namespace drft
 {
+	static const entt::id_type NullEntity;
+
 	/// <summary>
 	/// Class that initializes and builds entities from prototypes.
 	/// Prototypes are loaded from a JSON file located in the data/static folder.
@@ -16,6 +18,11 @@ namespace drft
 
 		// Returns the entity prototype with the given id. Returns entt::null if not found.
 		entt::const_handle get(entt::id_type id) const;
+
+		// Returns the identifier for the prototype entity
+		entt::id_type getId(entt::entity prototype) const;
+		// Returns the identifier for the prototype entity handle
+		entt::id_type getId(entt::const_handle prototype) const;
 
 		std::unordered_set<entt::id_type> getFlattenedInheritance(entt::const_handle entity) const;
 
@@ -35,6 +42,7 @@ namespace drft
 	private:
 		entt::registry _protoRegistry;
 		std::unordered_map<entt::id_type, entt::entity> _prototypes;
+		std::unordered_map<entt::entity, entt::id_type> _prototypeIDs;
 		
 		struct InheritanceRelationship
 		{
