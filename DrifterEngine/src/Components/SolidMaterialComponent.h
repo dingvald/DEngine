@@ -33,6 +33,7 @@ namespace cereal
 	void serialize(Archive& archive, SolidMaterialComponent& properties)
 	{
 		archive(
+			properties.density,
 			properties.hardness, 
 			properties.brittleness, 
 			properties.malleability
