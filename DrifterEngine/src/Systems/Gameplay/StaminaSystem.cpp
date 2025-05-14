@@ -62,7 +62,7 @@ void drft::system::StaminaSystem::onStaminaConsumed(entt::registry& registry, en
 		const float totalConsumed = stamina->baseConsumption + consumeStaminaAction.amount;
 		if (totalConsumed > 0.f)
 		{
-			const float skillPointsToAdd = totalConsumed * 5.f;
+			const float skillPointsToAdd = totalConsumed * 15.f;
 			SkillsSystem::useSkill(SkillId::Endurance, skillPointsToAdd, { registry, entity });
 		}
 		stamina->current = std::clamp(stamina->current - totalConsumed, 0.f, stamina->max);
