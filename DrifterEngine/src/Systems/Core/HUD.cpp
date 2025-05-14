@@ -1,20 +1,12 @@
 #include "pch.h"
 #include "HUD.h"
-#include "Spatial/Conversions.h"
 #include "Spatial/WorldGrid.h"
-#include "Utility/EntityHelpers.h"
-#include "Utility/GetTextCenter.h"
-#include "Utility/SmoothTransition.h"
-#include "Systems/Helpers/ItemDatabase.h"
-#include "Systems/Helpers/FindItemOwner.h"
-#include "Systems/Helpers/GetCurrentCamera.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
 #include <Systems/Helpers/GetPlayerHandle.h>
 
 #include "Components/DescriptionComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/PlayerInputComponent.h"
-#include "Components/RenderComponent.h"
 #include "Components/HealthComponent.h"
 #include "Components/LevelingComponent.h"
 #include "Components/StaminaComponent.h"
@@ -42,9 +34,9 @@ static const char* HealthBarContainerWidgetId = "health bar container";
 static const char* StaminaBarFillWidgetId = "stamina bar fill";
 static const char* StaminaBarContainerWidgetId = "stamina bar container";
 
-namespace
+namespace Internal
 {
-	void setOverlayColor(tgui::Group::Ptr group, sf::Color color)
+	static void setOverlayColor(tgui::Group::Ptr group, sf::Color color)
 	{
 		auto overlay = group->get<tgui::Panel>("overlay");
 		overlay->getRenderer()->setBackgroundColor(color);
@@ -328,7 +320,7 @@ void drft::system::HUD::updateFlashEffects()
 
 void drft::system::HUD::updateHotbar(entt::const_handle player)
 {
-	if (auto hotbarComponent = player.try_get<HotbarComponent>())
+	if (auto hotbarComponent = player.try_get<const HotbarComponent>())
 	{
 		TextureAtlas& textures = _registry.ctx().get<TextureAtlas>();
 
@@ -353,7 +345,7 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 			button->getRenderer()->setTexture(texture);
 
 			sf::Color overlayColor = ability.isToggledOn(player) ? sf::Color{ 255, 255, 0, 100 } : sf::Color::Transparent;
-			setOverlayColor(group, overlayColor);
+			Internal::setOverlayColor(group, overlayColor);
 		}
 	}
 }
