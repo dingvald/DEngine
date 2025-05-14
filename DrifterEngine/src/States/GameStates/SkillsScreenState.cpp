@@ -69,8 +69,9 @@ void drft::SkillsScreenState::setupPanelTemplate(tgui::Panel::Ptr templatePanel)
 	auto skillName = tgui::Label::create();
 	templatePanel->add(skillName, w_SkillName);
 	skillName->setVerticalAlignment(tgui::VerticalAlignment::Center);
+	skillName->setOrigin(0.f, 0.5f);
 	skillName->setTextSize(16);
-	skillName->setPosition("1%", "0%");
+	skillName->setPosition("1%", "50%");
 
 	auto progressBar = tgui::ProgressBar::create();
 	templatePanel->add(progressBar, w_ProgressBar);
@@ -86,8 +87,9 @@ void drft::SkillsScreenState::setupPanelTemplate(tgui::Panel::Ptr templatePanel)
 	auto skillLevel = tgui::Label::create();
 	templatePanel->add(skillLevel, w_SkillLevel);
 	skillLevel->setVerticalAlignment(tgui::VerticalAlignment::Center);
+	skillLevel->setOrigin(0.f, 0.5f);
 	skillLevel->setTextSize(16);
-	skillLevel->setPosition(tgui::bindRight(progressBar) + 8, "0%");
+	skillLevel->setPosition(tgui::bindRight(progressBar) + 8, "50%");
 }
 
 void drft::SkillsScreenState::refreshSkillsList(tgui::PanelListBox::Ptr skillsList)
