@@ -42,10 +42,10 @@
         },
         "physical_blocking": {},
         "skills": {
-            "strength": 15,
-            "agility": 15,
+            "strength": 1,
+            "agility": 1,
             "toughness": 1,
-            "endurance": 10,
+            "endurance": 1,
             "latent_power": 1
         },
         "actor": {
