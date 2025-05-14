@@ -27,6 +27,7 @@
                 "drop": [ "D" ],
                 "open_equipment": [ "E" ],
                 "open_crafting": [ "C" ],
+                "open_skills": ["K"],
                 "interact": [ "Space" ],
 
                 "hotbar_1": [ "Num1" ],

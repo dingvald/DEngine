@@ -70,20 +70,14 @@
 #include "Systems/Gameplay/StaminaSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
 
-#include "Systems/PlayerSpecific/OpenCraftingSystem.h"
-#include "Systems/PlayerSpecific/OpenEquipmentSystem.h"
-#include "Systems/PlayerSpecific/SelectDirectionSystem.h"
-#include "Systems/PlayerSpecific/TargetSelectSystem.h"
+#include "Systems/Actions/PlayerOnly/OpenCraftingSystem.h"
+#include "Systems/Actions/PlayerOnly/OpenEquipmentSystem.h"
+#include <Systems/Actions/PlayerOnly/OpenSkillsSystem.h>
+#include "Systems/Actions/PlayerOnly/SelectDirectionSystem.h"
+#include "Systems/Actions/PlayerOnly/TargetSelectSystem.h"
 
-#include <cassert>
+
 #include <Engine/StateStack.h>
-#include <EnTT/entt.h>
-#include <filesystem>
-#include <iostream>
-#include <memory>
-#include <ostream>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Window/Event.hpp>
 #include <States/State.h>
 #include <States/StateContext.h>
 #include "Utility/LoadEntity.h"
@@ -206,6 +200,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<HealingSystem>();
 	_systems->add<OpenCraftingSystem>();
 	_systems->add<OpenEquipmentSystem>();
+	_systems->add<OpenSkillsSystem>();
 	_systems->add<PickUpSystem>();
 	_systems->add<MoveActionSystem>();
 	_systems->add<MeleeAttackActionSystem>();

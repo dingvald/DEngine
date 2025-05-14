@@ -17,6 +17,7 @@ namespace drft
 		SelectDirection,
 		SelectTarget,
 		Simulation,
+		Skills
 	};
 }
 

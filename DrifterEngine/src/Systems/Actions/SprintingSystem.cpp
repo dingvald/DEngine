@@ -60,7 +60,7 @@ void drft::system::SprintingSystem::applySprintBuff(entt::registry& registry, en
 	}
 	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
-		stamina->baseConsumption += 3.f;
+		stamina->baseConsumption += 2.f;
 	}
 }
 
@@ -72,7 +72,7 @@ void drft::system::SprintingSystem::removeSprintBuff(entt::registry& registry, e
 	}
 	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
-		stamina->baseConsumption -= 3.f;
+		stamina->baseConsumption -= 2.f;
 	}
 }
 

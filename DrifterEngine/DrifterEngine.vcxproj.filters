@@ -174,7 +174,7 @@
     <ClCompile Include="src\Systems\Actions\EquipItemSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\PlayerSpecific\OpenEquipmentSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenEquipmentSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Random\PerlinNoise.cpp">
@@ -183,7 +183,7 @@
     <ClCompile Include="src\Random\RandomNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\PlayerSpecific\OpenCraftingSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenCraftingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\States\GameStates\CraftingState.cpp">
@@ -258,7 +258,7 @@
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\PlayerSpecific\SelectDirectionSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\SelectDirectionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\HelperClasses\InputBuffer.cpp">
@@ -387,7 +387,7 @@
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityMaterials.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\PlayerSpecific\TargetSelectSystem.cpp">
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\TargetSelectSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\States\GameStates\SelectTargetState.cpp">
@@ -736,6 +736,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\MaterialForceDistribution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenSkillsSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1388,7 +1397,7 @@
     <ClInclude Include="src\Systems\Actions\EquipItemSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\PlayerSpecific\OpenEquipmentSystem.h">
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenEquipmentSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\PerlinNoise.h">
@@ -1397,7 +1406,7 @@
     <ClInclude Include="src\Random\RandomNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\PlayerSpecific\OpenCraftingSystem.h">
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenCraftingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\States\GameStates\CraftingState.h">
@@ -1493,7 +1502,7 @@
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\PlayerSpecific\SelectDirectionSystem.h">
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\SelectDirectionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\HelperClasses\InputBuffer.h">
@@ -1652,7 +1661,7 @@
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityMaterials.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\PlayerSpecific\TargetSelectSystem.h">
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\TargetSelectSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\States\GameStates\SelectTargetState.h">
@@ -3363,6 +3372,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\MaterialForceDistribution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\States\GameStates\SkillsScreenState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Actions\OpenSkillsScreenAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenSkillsSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Wrappers\SkillsWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

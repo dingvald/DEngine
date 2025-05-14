@@ -15,6 +15,7 @@
 #include <States/GameStates/SelectDirectionState.h>
 #include <States/GameStates/SelectTargetState.h>
 #include <States/GameStates/SimulationState.h>
+#include <States/GameStates/SkillsScreenState.h>
 
 #include <Systems/Helpers/GetCurrentCamera.h>
 
@@ -55,6 +56,7 @@ void drft::GameState::registerGameStates()
 	_gameStateStack.registerState<CraftingState>(States::Crafting);
 	_gameStateStack.registerState<SelectDirectionState>(States::SelectDirection);
 	_gameStateStack.registerState<SelectTargetState>(States::SelectTarget);
+	_gameStateStack.registerState<SkillsScreenState>(States::Skills);
 	_gameStateStack.registerState<GameOverState>(States::GameOver);
 }
 

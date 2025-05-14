@@ -91,3 +91,8 @@ GainExpResult Skill::gainExp(int amount)
     }
     return GainExpResult::NoLevelUp;
 }
+
+float Skill::getProgress() const
+{
+    return static_cast<float>(_exp) / static_cast<float>(_expUntilNext);
+}

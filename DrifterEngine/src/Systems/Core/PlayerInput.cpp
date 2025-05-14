@@ -7,6 +7,7 @@
 #include <Components/Actions/MeleeAttackAction.h>
 #include <Components/Actions/MouseContextAction.h>
 #include <Components/Actions/MouseInspectAction.h>
+#include <Components/Actions/OpenSkillsScreenAction.h>
 #include <Components/CurrentActorComponent.h>
 #include <Components/PathNavComponent.h>
 #include "Components/Actions/InteractionAction.h"
@@ -87,6 +88,9 @@ void drft::system::PlayerInput::init()
 		});
 	actions.bind("player_input", "gameplay", "open_crafting",			[](entt::handle entity) {
 		entity.emplace_or_replace<component::action::OpenCrafting>();
+		});
+	actions.bind("player_input", "gameplay", "open_skills",				[](entt::handle entity) {
+		entity.emplace_or_replace<OpenSkillsScreenAction>();
 		});
 	actions.bind("player_input", "gameplay", "toggle_sprint",			[](entt::handle entity) {
 			if (entity.all_of<SprintingComponent>())

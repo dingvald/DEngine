@@ -1,16 +1,11 @@
 #include "pch.h"
 #include "CollisionSystem.h"
 
-#include "Components/Components.h"
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/Actions/WaitAction.h"
-#include "Components/PositionComponent.h"
 #include "Components/CollisionComponent.h"
-#include "Components/FactionComponent.h"
 
 #include "Systems/Gameplay/FactionSystem.h"
-
-#include "Spatial/WorldGrid.h"
 
 void drft::system::CollisionSystem::init()
 {
@@ -25,8 +20,9 @@ void drft::system::CollisionSystem::updateEnd()
 void drft::system::CollisionSystem::onCollisionAdded(entt::registry& registry, entt::entity entity) const
 {
 	const auto& collisionComponent = registry.get<CollisionComponent>(entity);
+	entt::const_handle handle = { registry, entity };
 
-	switch (determineTargetRelationship({ registry, entity }, collisionComponent.blockers))
+	switch (determineTargetRelationship(handle, collisionComponent.blockers))
 	{
 	case drft::system::Relationship::Friendly:
 		// TODO: Implement swap
@@ -35,7 +31,7 @@ void drft::system::CollisionSystem::onCollisionAdded(entt::registry& registry, e
 	case drft::system::Relationship::Neutral:
 	case drft::system::Relationship::Hostile:
 	{
-		_registry.emplace_or_replace<MeleeAttackAction>(entity, collisionComponent.direction);
+		_registry.emplace_or_replace<MeleeAttackAction>(entity, collisionComponent.direction, handle);
 	}
 		break;
 	default:

@@ -29,6 +29,7 @@ public:
 	// Add exp to the skill
 	// Returns true if the skill leveled up as a result
 	GainExpResult gainExp(int amount);
+	float getProgress() const;
 
 private:
 	std::string _name;

@@ -200,8 +200,11 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
+    <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenSkillsSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\IncomingForceSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\CraftingIngredient.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\DecoratorFactory.cpp" />
@@ -298,7 +301,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\JSON\JSONHelpers.cpp" />
     <ClCompile Include="src\Algorithms\FloodFill.cpp" />
     <ClCompile Include="src\States\GameStates\SelectTargetState.cpp" />
-    <ClCompile Include="src\Systems\PlayerSpecific\TargetSelectSystem.cpp" />
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\TargetSelectSystem.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityMaterials.cpp" />
     <ClCompile Include="src\Systems\Rendering\AnimationSystem.cpp" />
     <ClCompile Include="src\Systems\Core\VisualEffectSystem.cpp" />
@@ -334,7 +337,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp" />
     <ClCompile Include="src\Systems\Helpers\HasLineOfSight.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\InputBuffer.cpp" />
-    <ClCompile Include="src\Systems\PlayerSpecific\SelectDirectionSystem.cpp" />
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\SelectDirectionSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\InteractionSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\FindItemOwner.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetCurrentCamera.cpp" />
@@ -352,10 +355,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Actions\CraftItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
     <ClCompile Include="src\States\GameStates\CraftingState.cpp" />
-    <ClCompile Include="src\Systems\PlayerSpecific\OpenCraftingSystem.cpp" />
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenCraftingSystem.cpp" />
     <ClCompile Include="src\Random\PerlinNoise.cpp" />
     <ClCompile Include="src\Random\RandomNoise.cpp" />
-    <ClCompile Include="src\Systems\PlayerSpecific\OpenEquipmentSystem.cpp" />
+    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenEquipmentSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\EquipItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\BodyPartSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\DropItemSystem.cpp" />
@@ -476,11 +479,15 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\Actions\OpenSkillsScreenAction.h" />
     <ClInclude Include="src\Components\IncomingForceComponent.h" />
     <ClInclude Include="src\Components\PlayerHasSeenComponent.h" />
+    <ClInclude Include="src\Components\Wrappers\SkillsWrapper.h" />
     <ClInclude Include="src\Skills\SkillRequirement.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />
+    <ClInclude Include="src\States\GameStates\SkillsScreenState.h" />
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenSkillsSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\IncomingForceSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\CraftingIngredient.h" />
     <ClInclude Include="src\Components\BaseMaterialComponent.h" />
@@ -1023,7 +1030,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Spatial\AutoGrid.h" />
     <ClInclude Include="src\Engine\EngineConstants.h" />
     <ClInclude Include="src\States\GameStates\SelectTargetState.h" />
-    <ClInclude Include="src\Systems\PlayerSpecific\TargetSelectSystem.h" />
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\TargetSelectSystem.h" />
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityMaterials.h" />
     <ClInclude Include="src\Systems\Rendering\AnimationSystem.h" />
     <ClInclude Include="src\Events\SpawnEffectEvent.h" />
@@ -1067,7 +1074,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h" />
     <ClInclude Include="src\Systems\Helpers\HasLineOfSight.h" />
     <ClInclude Include="src\Systems\HelperClasses\InputBuffer.h" />
-    <ClInclude Include="src\Systems\PlayerSpecific\SelectDirectionSystem.h" />
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\SelectDirectionSystem.h" />
     <ClInclude Include="src\Systems\Actions\InteractionSystem.h" />
     <ClInclude Include="src\Systems\Helpers\FindItemOwner.h" />
     <ClInclude Include="src\Systems\Helpers\GetCurrentCamera.h" />
@@ -1092,10 +1099,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Actions\CraftItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
     <ClInclude Include="src\States\GameStates\CraftingState.h" />
-    <ClInclude Include="src\Systems\PlayerSpecific\OpenCraftingSystem.h" />
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenCraftingSystem.h" />
     <ClInclude Include="src\Random\PerlinNoise.h" />
     <ClInclude Include="src\Random\RandomNoise.h" />
-    <ClInclude Include="src\Systems\PlayerSpecific\OpenEquipmentSystem.h" />
+    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenEquipmentSystem.h" />
     <ClInclude Include="src\Systems\Actions\EquipItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\BodyPartSystem.h" />
     <ClInclude Include="src\Systems\Actions\DropItemSystem.h" />
