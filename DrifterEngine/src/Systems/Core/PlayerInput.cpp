@@ -20,6 +20,7 @@
 #include <Keybindings/Keybindings.h>
 #include "Systems/HelperClasses/InputBuffer.h"
 #include "Systems/Helpers/ToHotbarIndex.h"
+#include <Systems/Helpers/RequestGameplayScreen.h>
 #include <Utility/StandardLogger.h>
 
 
@@ -84,13 +85,13 @@ void drft::system::PlayerInput::init()
 		entity.emplace_or_replace<component::action::PickUp>();
 		});
 	actions.bind("player_input", "gameplay", "open_equipment",			[](entt::handle entity) {
-		entity.emplace_or_replace<component::action::OpenEquipment>();
+		requestGameplayScreen(drft::States::Inventory, entity);
 		});
 	actions.bind("player_input", "gameplay", "open_crafting",			[](entt::handle entity) {
-		entity.emplace_or_replace<component::action::OpenCrafting>();
+		requestGameplayScreen(drft::States::Crafting, entity);
 		});
 	actions.bind("player_input", "gameplay", "open_skills",				[](entt::handle entity) {
-		entity.emplace_or_replace<OpenSkillsScreenAction>();
+		requestGameplayScreen(drft::States::Skills, entity);
 		});
 	actions.bind("player_input", "gameplay", "toggle_sprint",			[](entt::handle entity) {
 			if (entity.all_of<SprintingComponent>())

@@ -203,8 +203,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
+    <ClCompile Include="src\States\GameStates\AbilityScreenState.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
-    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenSkillsSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\IncomingForceSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\CraftingIngredient.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\DecoratorFactory.cpp" />
@@ -247,6 +247,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Helpers\GetPlayerHandle.cpp" />
     <ClCompile Include="src\Systems\Gameplay\SkillsSystem.cpp" />
     <ClCompile Include="src\Systems\Helpers\MaterialForceDistribution.cpp" />
+    <ClCompile Include="src\Systems\Helpers\RequestGameplayScreen.cpp" />
     <ClCompile Include="src\Utility\ColorToHexString.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\EntityHasTag.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityDescription.cpp" />
@@ -355,10 +356,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Actions\CraftItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.cpp" />
     <ClCompile Include="src\States\GameStates\CraftingState.cpp" />
-    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenCraftingSystem.cpp" />
     <ClCompile Include="src\Random\PerlinNoise.cpp" />
     <ClCompile Include="src\Random\RandomNoise.cpp" />
-    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenEquipmentSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\EquipItemSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\BodyPartSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\DropItemSystem.cpp" />
@@ -479,6 +478,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\Actions\OpenAbilitiesScreenAction.h" />
     <ClInclude Include="src\Components\Actions\OpenSkillsScreenAction.h" />
     <ClInclude Include="src\Components\IncomingForceComponent.h" />
     <ClInclude Include="src\Components\PlayerHasSeenComponent.h" />
@@ -486,8 +486,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Skills\SkillRequirement.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />
+    <ClInclude Include="src\States\GameStates\AbilityScreenState.h" />
     <ClInclude Include="src\States\GameStates\SkillsScreenState.h" />
-    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenSkillsSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\IncomingForceSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\CraftingIngredient.h" />
     <ClInclude Include="src\Components\BaseMaterialComponent.h" />
@@ -562,6 +562,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Helpers\GetPlayerHandle.h" />
     <ClInclude Include="src\Systems\Gameplay\SkillsSystem.h" />
     <ClInclude Include="src\Systems\Helpers\MaterialForceDistribution.h" />
+    <ClInclude Include="src\Systems\Helpers\RequestGameplayScreen.h" />
     <ClInclude Include="src\Utility\ColorToHexString.h" />
     <ClInclude Include="src\Utility\DynamicPointerCast.h" />
     <ClInclude Include="src\Utility\EntityAccessors\EntityHasTag.h" />
@@ -1099,10 +1100,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Actions\CraftItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\DetermineCraftableItemsSystem.h" />
     <ClInclude Include="src\States\GameStates\CraftingState.h" />
-    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenCraftingSystem.h" />
     <ClInclude Include="src\Random\PerlinNoise.h" />
     <ClInclude Include="src\Random\RandomNoise.h" />
-    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenEquipmentSystem.h" />
     <ClInclude Include="src\Systems\Actions\EquipItemSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\BodyPartSystem.h" />
     <ClInclude Include="src\Systems\Actions\DropItemSystem.h" />

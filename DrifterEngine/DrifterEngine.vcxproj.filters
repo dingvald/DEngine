@@ -174,16 +174,10 @@
     <ClCompile Include="src\Systems\Actions\EquipItemSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenEquipmentSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Random\PerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Random\RandomNoise.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenCraftingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\States\GameStates\CraftingState.cpp">
@@ -741,10 +735,13 @@
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Actions\PlayerOnly\OpenSkillsSystem.cpp">
+    <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp">
+    <ClCompile Include="src\States\GameStates\AbilityScreenState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\RequestGameplayScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1397,16 +1394,10 @@
     <ClInclude Include="src\Systems\Actions\EquipItemSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenEquipmentSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Random\PerlinNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\RandomNoise.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenCraftingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\States\GameStates\CraftingState.h">
@@ -3380,10 +3371,16 @@
     <ClInclude Include="src\Components\Actions\OpenSkillsScreenAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Actions\PlayerOnly\OpenSkillsSystem.h">
+    <ClInclude Include="src\Components\Wrappers\SkillsWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Wrappers\SkillsWrapper.h">
+    <ClInclude Include="src\States\GameStates\AbilityScreenState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\RequestGameplayScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Actions\OpenAbilitiesScreenAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

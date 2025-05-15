@@ -70,9 +70,6 @@
 #include "Systems/Gameplay/StaminaSystem.h"
 #include "Systems/Gameplay/TickingLifetimeSystem.h"
 
-#include "Systems/Actions/PlayerOnly/OpenCraftingSystem.h"
-#include "Systems/Actions/PlayerOnly/OpenEquipmentSystem.h"
-#include <Systems/Actions/PlayerOnly/OpenSkillsSystem.h>
 #include "Systems/Actions/PlayerOnly/SelectDirectionSystem.h"
 #include "Systems/Actions/PlayerOnly/TargetSelectSystem.h"
 
@@ -198,9 +195,6 @@ void drft::SimulationState::importSystems()
 	_systems->add<OpenableSystem>();
 	_systems->add<ConsumableSystem>();
 	_systems->add<HealingSystem>();
-	_systems->add<OpenCraftingSystem>();
-	_systems->add<OpenEquipmentSystem>();
-	_systems->add<OpenSkillsSystem>();
 	_systems->add<PickUpSystem>();
 	_systems->add<MoveActionSystem>();
 	_systems->add<MeleeAttackActionSystem>();
