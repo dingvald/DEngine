@@ -6,7 +6,6 @@
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
 
-#include "Utility/EntityHelpers.h"
 #include "Utility/SpriteOptions.h"
 #include "Systems/Helpers/GetExperienceFromKilling.h"
 #include "Events/SendFloatingMessageEvent.h"
@@ -100,15 +99,15 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 			damageEffectSprite.color = sf::Color::Red;
 			std::vector<SpriteOptions> hitParticles =
 			{
-				SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
-				SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
-				SpriteOptions{.uvCoords = sf::Vector2i{2, 0}, .texture = "hit_particle"_hs, .uvSize = DefaultTileTextureSize, .layer = static_cast<unsigned int>(RenderLayer::EffectsBack), .color = materialColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
+				SpriteOptions{.uvCoords = sf::Vector2i{2, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
 			};
 
-			rng::Random& random = _registry.ctx().get<rng::Random>();
 			sf::Vector3f randomOffset;
-			randomOffset.x = std::roundf(random.realInRange(-2.0f, 2.0f));
-			randomOffset.y = std::roundf(random.realInRange(-2.0f, 2.0f));
+			rng::Random& random = _registry.ctx().get<rng::Random>();
+			randomOffset.x = std::roundf(random.realInRange(-1.f, 1.f));
+			randomOffset.y = std::roundf(random.realInRange(-1.f, 1.f));
 
 			// Spawn Hit particles
 			spawnEffect(_registry, {
@@ -123,7 +122,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 			.message = message + std::to_string(std::abs(damage.amount)),
 			.color = messageColor,
 			.position = spatial::toXY(spatial::toFloatSpace(posComp->tile)),
-			.velocity = {0,-1},
+			.velocity = {0.f,-1.f},
 			.fades = true,
 			.isScreenSpace = false,
 			.ttl = 80
