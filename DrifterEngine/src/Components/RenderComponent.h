@@ -12,7 +12,7 @@ struct RenderComponent
 {
 	entt::id_type texture;
 	sf::Vector2i uvSize = DefaultTileTextureSize;
-	sf::Vector2i uvCoords;
+	sf::Vector2i uvCoords = { 0,0 };
 	unsigned int layer = 0u;
 	sf::Color color = sf::Color::Magenta;
 
