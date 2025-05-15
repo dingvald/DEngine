@@ -2,15 +2,19 @@
 
 namespace drft::system
 {
-    enum class RenderLayer : unsigned int
+    class RenderLayer
     {
-        Tiles,
-        Items,
-        Props,
-        Actors,
-        EffectsBack,
-        EffectsFront,
-        Camera,
-        Total
+    public:
+        enum Layer : unsigned int
+        {
+            Tiles,
+            Items,
+            Props,
+            Actors,
+            EffectsBack,
+            EffectsFront,
+            Camera,
+            Total
+        };
     };
 }
