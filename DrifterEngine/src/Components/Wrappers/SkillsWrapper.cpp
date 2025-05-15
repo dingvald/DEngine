@@ -1,15 +1,11 @@
 #include "pch.h"
 #include "SkillsWrapper.h"
 
-std::vector<const Skill*> drft::SkillsWrapper::getSkills() const
+const std::vector<Skill>& drft::SkillsWrapper::getSkills() const
 {
-    std::vector<const Skill*> result;
     if (auto component = tryGetUnderlyingConst())
     {
-        for (auto&& [id, skill] : component->skills)
-        {
-            result.emplace_back(&skill);
-        }
+        return component->skills;
     }
-    return result;
+    return {};
 }

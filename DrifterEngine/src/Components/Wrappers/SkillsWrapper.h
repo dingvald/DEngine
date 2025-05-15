@@ -8,6 +8,6 @@ namespace drft
 	class SkillsWrapper : public ComponentWrapper<SkillsComponent>
 	{
 	public:
-		std::vector<const Skill*> getSkills() const;
+		const std::vector<Skill>& getSkills() const;
 	};
 }

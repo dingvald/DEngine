@@ -63,6 +63,11 @@ const std::string& Skill::name() const
     return _name;
 }
 
+entt::id_type Skill::id() const
+{
+    return entt::hashed_string{_name.data()};
+}
+
 const std::string& Skill::description() const
 {
     static const std::string EmptyString = {};

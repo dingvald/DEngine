@@ -10,9 +10,33 @@ namespace Internal
 {
 	struct RegisterLevelUpHandlerEvent
 	{
-		const char* skill;
+		const char* skill = nullptr;
 		std::function<void(int, entt::handle)> handler;
 	};
+
+	static Skill* tryFindSkill(entt::id_type skillId, SkillsComponent& skillsComponent)
+	{
+		for (auto&& skill : skillsComponent.skills)
+		{
+			if (skill.id() == skillId)
+			{
+				return &skill;
+			}
+		}
+		return nullptr;
+	}
+
+	static const Skill* tryFindSkill(entt::id_type skillId, const SkillsComponent& skillsComponent)
+	{
+		for (auto&& skill : skillsComponent.skills)
+		{
+			if (skill.id() == skillId)
+			{
+				return &skill;
+			}
+		}
+		return nullptr;
+	}
 }
 
 
@@ -27,9 +51,10 @@ void drft::system::SkillsSystem::onUseSkillEvent(UseSkillEvent& ev) const
 	if (!ev.entity.all_of<SkillsComponent>()) return;
 
 	auto& skillsComponent = ev.entity.get<SkillsComponent>();
-	auto& skill = skillsComponent.skills.at(ev.skill);
+	auto skillPtr = Internal::tryFindSkill(ev.skill, skillsComponent);
+	if (!skillPtr) return;
 	
-	addExp(skill, ev.magnitude, ev.entity);
+	addExp(*skillPtr, ev.magnitude, ev.entity);
 }
 
 void drft::system::SkillsSystem::addExp(Skill& skill, int exp, entt::handle entity) const
@@ -70,16 +95,17 @@ void drft::system::SkillsSystem::onRegisterLevelUpHandler(Internal::RegisterLeve
 	_levelUpHandlers[skillName].push_back(ev.handler);
 }
 
-int drft::system::SkillsSystem::getSkillLevel(const char* skill, entt::const_handle entity)
+int drft::system::SkillsSystem::getSkillLevel(const char* skillName, entt::const_handle entity)
 {
 	if (!entity) return Skill::DefaultLevel;
 
-	if (auto skillComponent = entity.try_get<SkillsComponent>())
+	if (auto skillComponentPtr = entity.try_get<SkillsComponent>())
 	{
-		const entt::id_type hashedSkillName = entt::hashed_string{ skill };
-		if (!skillComponent->skills.contains(hashedSkillName)) return 0;
+		entt::id_type skillId = entt::hashed_string{ skillName };
+		auto skill = Internal::tryFindSkill(skillId, *skillComponentPtr);
+		if (!skill) return Skill::DefaultLevel;
 
-		return skillComponent->skills.at(hashedSkillName).level();
+		return skill->level();
 	}
 	return Skill::DefaultLevel;
 }

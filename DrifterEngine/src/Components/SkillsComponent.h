@@ -5,7 +5,7 @@
 
 struct SkillsComponent
 {
-	std::unordered_map<entt::id_type, Skill> skills;
+	std::vector<Skill> skills;
 private:
 	static void setFromJSON(SkillsComponent& skills, const rapidjson::Value& json)
 	{
@@ -13,7 +13,7 @@ private:
 		{
 			const char* name = skillObj.name.GetString();
 			const int val = skillObj.value.GetInt();
-			skills.skills.emplace(entt::hashed_string{ name }, Skill{ name, val });
+			skills.skills.emplace_back(name, val);
 		}
 	}
 

@@ -22,6 +22,7 @@ public:
 	Skill() = default;
 	Skill(const char* skillName, int level);
 	const std::string& name() const;
+	entt::id_type id() const;
 	const std::string& description() const;
 	const SkillCategory category() const;
 

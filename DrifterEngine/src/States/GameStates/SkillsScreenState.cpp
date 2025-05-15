@@ -96,16 +96,16 @@ void drft::SkillsScreenState::refreshSkillsList(tgui::PanelListBox::Ptr skillsLi
 {
 	for (auto&& skill : _skills.getSkills())
 	{
-		auto panel = skillsList->addItem(skill->name());
+		auto panel = skillsList->addItem(skill.name());
 
 		auto skillName = panel->get<tgui::Label>(w_SkillName);
-		skillName->setText(skill->name());
+		skillName->setText(skill.name());
 
 		auto skillLevel = panel->get<tgui::Label>(w_SkillLevel);
-		skillLevel->setText(std::to_string(skill->level()));
+		skillLevel->setText(std::to_string(skill.level()));
 
 		auto progressBar = panel->get<tgui::ProgressBar>(w_ProgressBar);
-		int progressValue = skill->getProgress() * 100;
+		int progressValue = skill.getProgress() * 100;
 		progressBar->setValue(progressValue);
 	}
 }
