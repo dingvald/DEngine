@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ComponentMetaBinder.h"
 
+#include "AbilitiesComponent.h"
 #include "ActorComponent.h"
 #include "AIComponent.h"
 #include "AnimationComponent.h"
@@ -56,6 +57,7 @@
 
 void ComponentMetaBinder::bindComponents()
 {
+	AbilitiesComponent::bind();
 	ActorComponent::bind();
 	AIComponent::bind();
 	AnimationComponent::bind();

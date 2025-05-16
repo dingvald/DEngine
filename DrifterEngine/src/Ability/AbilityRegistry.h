@@ -1,6 +1,5 @@
 #pragma once
 #include "Ability/IAbility.h"
-#include "Ability/AbilityType.h"
 
 namespace drft
 {
@@ -8,10 +7,10 @@ namespace drft
 	{
 	public:
 		static void bind();
-		static const IAbility& get(AbilityType ability);
+		static const IAbility& get(entt::id_type abilityId);
 
 	private:
-		using AbilityMap = std::unordered_map<AbilityType, std::unique_ptr<IAbility>>;
+		using AbilityMap = std::unordered_map<entt::id_type, std::unique_ptr<IAbility>>;
 		static AbilityMap _abilities;
 	};
 }

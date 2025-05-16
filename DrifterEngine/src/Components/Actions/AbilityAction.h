@@ -1,9 +1,9 @@
 #pragma once
-#include <Ability/AbilityType.h>
+#include <Ability/AbilityIds.h>
 #include <Spatial/TilePosition.h>
 
 struct AbilityAction
 {
-	drft::AbilityType ability = drft::AbilityType::NullAbility;
+	entt::id_type ability = AbilityIds::NullAbility;
 	std::optional<drft::TilePosition> target = std::nullopt;
 };

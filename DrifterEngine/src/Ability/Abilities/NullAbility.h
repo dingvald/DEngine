@@ -13,7 +13,6 @@ namespace drft
 
 		// Inherited via IAbility
 		AbilityIconData getIconData() const override;
-
 	};
 }
 

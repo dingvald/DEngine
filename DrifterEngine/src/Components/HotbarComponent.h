@@ -3,11 +3,10 @@
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
-#include "Ability/AbilityType.h"
 
 struct HotbarComponent
 {
-	std::array<drft::AbilityType, 10> abilities;
+	std::array<entt::id_type, 10> abilities;
 
 private:
 	friend class ComponentMetaBinder;

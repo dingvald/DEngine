@@ -48,6 +48,10 @@
             "endurance": 1,
             "latent_power": 1
         },
+        "abilities": [
+            "sprint_ability",
+            "throw_ability"
+        ],
         "actor": {
           "move_speed": 1.0,
           "act_speed": 1.0

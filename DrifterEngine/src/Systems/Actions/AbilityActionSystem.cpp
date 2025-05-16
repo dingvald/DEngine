@@ -10,7 +10,6 @@
 #include <Components/CurrentActorComponent.h>
 
 #include <Spatial/Conversions.h>
-#include <Spatial/Helpers.h>
 
 #include <Systems/Core/ActorSystem.h>
 

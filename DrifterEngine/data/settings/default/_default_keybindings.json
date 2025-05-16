@@ -22,12 +22,12 @@
                 "force_attack_south_east": [ "Shift + Numpad3" ],
                 "force_attack_south_west": [ "Shift + Numpad1" ],
 
-                "toggle_sprint": [ "S" ],
                 "pick_up": [ "G" ],
                 "drop": [ "D" ],
                 "open_equipment": [ "E" ],
                 "open_crafting": [ "C" ],
-                "open_skills": ["K"],
+                "open_skills": [ "S" ],
+                "open_abilities": [ "A" ],
                 "interact": [ "Space" ],
 
                 "hotbar_1": [ "Num1" ],

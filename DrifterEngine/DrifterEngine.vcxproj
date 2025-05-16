@@ -200,6 +200,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ability\AbilityIds.cpp" />
     <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
@@ -478,6 +479,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\AbilitiesComponent.h" />
     <ClInclude Include="src\Components\Actions\OpenAbilitiesScreenAction.h" />
     <ClInclude Include="src\Components\Actions\OpenSkillsScreenAction.h" />
     <ClInclude Include="src\Components\IncomingForceComponent.h" />
@@ -1040,7 +1042,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Actions\HotbarActionSystem.h" />
     <ClInclude Include="src\Ability\AbilityRegistry.h" />
     <ClInclude Include="src\Ability\AbilityTargetingType.h" />
-    <ClInclude Include="src\Ability\AbilityType.h" />
+    <ClInclude Include="src\Ability\AbilityIds.h" />
     <ClInclude Include="src\Ability\IAbility.h" />
     <ClInclude Include="src\Systems\Core\FloatingTextSystem.h" />
     <ClInclude Include="src\AI\GOAP\Actions\InvestigateHostileAction.h" />
