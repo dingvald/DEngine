@@ -19,14 +19,12 @@ void drft::system::HotbarActionSystem::init()
 void drft::system::HotbarActionSystem::update()
 {
 	auto view = _registry.view<HotbarComponent, HotbarAction, CurrentActorComponent>();
-	for (auto&& [entity, hotbar, hotbarSlot, currentActor] : view.each())
+	for (auto&& [entity, hotbar, hotbarAction, currentActor] : view.each())
 	{
 		if (currentActor.state == CurrentActorState::InProgress) continue;
 
 		entt::handle handle = { _registry, entity };
-		entt::id_type abilityId = hotbar.abilities[hotbarSlot.index];
-
-		//TODO: add ability targeting here - this is really only used by player anyways
+		entt::id_type abilityId = hotbar.abilities[hotbarAction.index];
 
 		handle.emplace_or_replace<AbilityAction>(abilityId);
 

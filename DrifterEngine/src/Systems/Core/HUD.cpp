@@ -76,6 +76,14 @@ void drft::system::HUD::init()
 	_dispatcher.sink<events::ChangeHUDEnabledEvent>().connect<&HUD::onChangeHUDEnabledEvent>(this);
 }
 
+void drft::system::HUD::start()
+{
+	if (auto player = getPlayerHandle(_registry))
+	{
+		player.emplace_or_replace<HotbarComponent>();
+	}
+}
+
 void drft::system::HUD::update()
 {
 	auto player = getPlayerConstHandle(_registry);

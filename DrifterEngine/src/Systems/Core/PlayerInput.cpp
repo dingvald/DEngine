@@ -7,7 +7,6 @@
 #include <Components/Actions/MeleeAttackAction.h>
 #include <Components/Actions/MouseContextAction.h>
 #include <Components/Actions/MouseInspectAction.h>
-#include <Components/Actions/OpenSkillsScreenAction.h>
 #include <Components/CurrentActorComponent.h>
 #include <Components/PathNavComponent.h>
 #include "Components/Actions/InteractionAction.h"

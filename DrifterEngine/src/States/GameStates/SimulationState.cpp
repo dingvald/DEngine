@@ -161,13 +161,13 @@ void drft::SimulationState::importSystems()
 	_systems->add<ProjectileSystem>();
 	_systems->add<InteractionSystem>();
 	_systems->add<WaitActionSystem>();
+	_systems->add<HotbarActionSystem>();
 	_systems->add<AbilityActionSystem>();
 	_systems->add<MouseActionSystem>();
 	_systems->add<DropItemSystem>();
 	_systems->add<EquipItemSystem>();
 	_systems->add<CraftItemSystem>();
 	_systems->add<BodyPartSystem>();
-	_systems->add<HotbarActionSystem>();
 	_systems->add<HealthSystem>();
 	_systems->add<DeathSystem>();
 	_systems->add<LevelingSystem>();

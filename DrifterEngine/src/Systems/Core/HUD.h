@@ -19,6 +19,7 @@ namespace drft::system
 
 	private:
 		void init() override;
+		void start() override;
 		void update() override;
 		void shutdown() override;
 
