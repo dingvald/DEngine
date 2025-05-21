@@ -5,7 +5,7 @@ using namespace entt::literals;
 
 namespace AbilityIds
 {
-	const char* NullAbility = "null_ability";
-	const char* ThrowAbility = "throw_ability";
-	const char* SprintAbility = "sprint_ability";
+	const entt::hashed_string NullAbility = "null_ability";
+	const entt::hashed_string ThrowAbility = "throw_ability";
+	const entt::hashed_string SprintAbility = "sprint_ability";
 }
