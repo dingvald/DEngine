@@ -4,6 +4,9 @@ namespace drft
 {
 	class ToggleSprintAbility : public IAbility
 	{
+	public:
+		using IAbility::IAbility;
+
 		virtual AbilityTargetingType getTargetingType() const override;
 		virtual bool isValid(entt::const_handle actor) const override;
 		virtual void perform(entt::handle actor, std::optional<TilePosition> targetPosition) const override;
@@ -11,6 +14,8 @@ namespace drft
 		virtual bool isToggledOn(entt::const_handle actor) const override;
 
 		AbilityIconData getIconData() const override;
+
+		entt::id_type getAssociatedSkill() const override;
 	};
 }
 

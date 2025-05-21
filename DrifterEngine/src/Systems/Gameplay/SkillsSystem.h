@@ -17,9 +17,9 @@ namespace drft::system
 		using LevelUpHandler = std::function<void(int, entt::handle)>;
 		using System::System;
 
-		static int getSkillLevel(const char* skill, entt::const_handle entity);
-		static void useSkill(const char* skill, int magnitude, entt::handle entity);
-		static void registerLevelUpHandler(const char* skill, LevelUpHandler handler, entt::registry& registry);
+		static int getSkillLevel(entt::id_type skill, entt::const_handle entity);
+		static void useSkill(entt::id_type skill, int magnitude, entt::handle entity);
+		static void registerLevelUpHandler(entt::id_type skill, LevelUpHandler handler, entt::registry& registry);
 
 	private:
 		struct UseSkillEvent
@@ -38,6 +38,6 @@ namespace drft::system
 
 	private:
 		using LevelUpHandlers = std::vector<LevelUpHandler>;
-		std::unordered_map<std::string, LevelUpHandlers> _levelUpHandlers;
+		std::unordered_map<entt::id_type, LevelUpHandlers> _levelUpHandlers;
 	};
 }

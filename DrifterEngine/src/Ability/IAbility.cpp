@@ -2,6 +2,16 @@
 #include "IAbility.h"
 
 
+drft::IAbility::IAbility(const char* name)
+	: _name(name)
+{
+}
+
+const std::string& drft::IAbility::getName() const
+{
+	return _name;
+}
+
 int drft::IAbility::getCost() const
 {
 	return 100;

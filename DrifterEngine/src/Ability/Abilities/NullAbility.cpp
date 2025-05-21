@@ -10,7 +10,7 @@ drft::AbilityTargetingType drft::NullAbility::getTargetingType() const
 	return AbilityTargetingType::Auto;
 }
 
-bool drft::NullAbility::isValid(entt::const_handle actor) const
+bool drft::NullAbility::isValid(entt::const_handle) const
 {
 	return false;
 }
@@ -36,7 +36,10 @@ drft::AbilityIconData drft::NullAbility::getIconData() const
 	return AbilityIconData{ 
 		.textureId = entt::hashed_string{"icons"}, 
 		.color = sf::Color::Magenta, 
-		.uv = {0,0}, 
-		.uvSize = {16, 16} 
 	};
+}
+
+entt::id_type drft::NullAbility::getAssociatedSkill() const
+{
+	return SkillId::None;
 }

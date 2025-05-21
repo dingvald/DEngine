@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ability\AbilityHelpers.cpp" />
     <ClCompile Include="src\Ability\AbilityIds.cpp" />
     <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
@@ -480,6 +481,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Ability\AbilityHelpers.h" />
     <ClInclude Include="src\Components\AbilitiesComponent.h" />
     <ClInclude Include="src\Components\Actions\OpenAbilitiesScreenAction.h" />
     <ClInclude Include="src\Components\Actions\OpenSkillsScreenAction.h" />

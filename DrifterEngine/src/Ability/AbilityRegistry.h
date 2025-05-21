@@ -7,6 +7,11 @@ namespace drft
 	{
 	public:
 		static void bind();
+		template<typename T>
+		static void registerAbility(const char* name)
+		{
+			_abilities.emplace(entt::hashed_string{ name }, std::make_unique<T>(name));
+		}
 		static const IAbility& get(entt::id_type abilityId);
 
 	private:

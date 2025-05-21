@@ -87,6 +87,10 @@ drft::AbilityIconData drft::ThrowAbility::getIconData() const
 		.textureId = entt::hashed_string{"icons"},
 		.color = guiColor::MGSHudBlue,
 		.uv = {2,0},
-		.uvSize = {16, 16}
 	};
+}
+
+entt::id_type drft::ThrowAbility::getAssociatedSkill() const
+{
+	return SkillId::Strength;
 }

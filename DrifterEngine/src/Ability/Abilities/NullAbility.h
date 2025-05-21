@@ -5,14 +5,16 @@ namespace drft
 {
 	class NullAbility : public IAbility
 	{
-		// Inherited via IAbility
+	public:
+		using IAbility::IAbility;
+
 		virtual AbilityTargetingType getTargetingType() const override;
 		virtual bool isValid(entt::const_handle actor) const override;
 		virtual void perform(entt::handle actor, std::optional<TilePosition> targetPosition) const override;
 		
-
-		// Inherited via IAbility
 		AbilityIconData getIconData() const override;
+
+		entt::id_type getAssociatedSkill() const override;
 	};
 }
 

@@ -2,14 +2,11 @@
 #include "AbilityActionSystem.h"
 
 #include <Ability/AbilityRegistry.h>
+#include <Ability/AbilityHelpers.h>
 
 #include <Components/Actions/AbilityAction.h>
-#include <Components/Components.h>
 #include <Components/PlayerInputComponent.h>
-#include <Components/PositionComponent.h>
 #include <Components/CurrentActorComponent.h>
-
-#include <Spatial/Conversions.h>
 
 #include <Systems/Core/ActorSystem.h>
 
@@ -27,20 +24,20 @@ void drft::system::AbilityActionSystem::update()
 	{
 		if (currentActor.state == CurrentActorState::InProgress) continue;
 
-		const auto& ability = AbilityRegistry::get(action.ability);
+		const IAbility& ability = AbilityRegistry::get(action.ability);
 		entt::handle handle = { _registry, entity };
 		if (ability.isValid(handle))
 		{
 			switch (ability.getTargetingType())
 			{
 			case AbilityTargetingType::Auto:
-				performAutoAbility(handle, ability);
+				AbilityHelpers::performAbility(handle, ability, std::nullopt);
 				break;
 			case AbilityTargetingType::SelectDirection:
-				performDirectionalAbility(handle, ability);
+				AbilityHelpers::performDirectionalAbility(handle, ability);
 				break;
 			case AbilityTargetingType::SelectSquare:
-				performTargetedAbility(handle, ability);
+				AbilityHelpers::performTargetedAbility(handle, ability);
 				break;
 			default:
 				throw std::exception("Unhandled targetting type for ability.");
@@ -66,35 +63,4 @@ void drft::system::AbilityActionSystem::update()
 
 		handle.remove<AbilityAction>();
 	}
-}
-
-void drft::system::AbilityActionSystem::performAutoAbility(entt::handle actor, const IAbility& ability) const
-{
-	ability.perform(actor);
-	ActorSystem::setActionComplete(actor, ActionCategory::Act, ability.getCost());
-}
-
-void drft::system::AbilityActionSystem::performTargetedAbility(entt::handle actor, const IAbility& ability) const
-{
-	auto range = ability.getRange(actor);
-	auto targetingShape = ability.getTargetingShape(actor);
-	actor.emplace<component::action::SelectTarget>(range, targetingShape,
-		[&ability, actor](sf::Vector3i position) -> bool 
-		{
-			ability.perform(actor, spatial::asTileSpace(position));
-			ActorSystem::setActionComplete(actor, ActionCategory::Act, ability.getCost());
-			return true;
-		});
-}
-
-void drft::system::AbilityActionSystem::performDirectionalAbility(entt::handle actor, const IAbility& ability) const
-{
-	auto tilePosition = actor.get<PositionComponent>().tile;
-	actor.emplace<component::action::SelectDirection>(
-		[tilePosition, &ability, actor](sf::Vector2i direction) -> bool
-		{
-			ability.perform(actor, tilePosition + spatial::asTileSpace(direction));
-			ActorSystem::setActionComplete(actor, ActionCategory::Act, ability.getCost());
-			return true;
-		});
 }

@@ -5,6 +5,9 @@ namespace drft
 {
 	class ThrowAbility : public IAbility
 	{
+	public:
+		using IAbility::IAbility;
+
 		virtual AbilityTargetingType getTargetingType() const override;
 		virtual bool isValid(entt::const_handle actor) const override;
 		virtual void perform(entt::handle actor, std::optional<TilePosition> targetPosition) const override;
@@ -13,6 +16,8 @@ namespace drft
 		virtual std::vector<sf::Vector2i> getTargetingShape(entt::const_handle actor) const override;
 
 		AbilityIconData getIconData() const override;
+
+		entt::id_type getAssociatedSkill() const override;
 	};
 
 }

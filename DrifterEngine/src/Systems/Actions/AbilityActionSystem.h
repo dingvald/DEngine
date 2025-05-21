@@ -17,9 +17,5 @@ namespace drft::system
 	private:
 		void init() override;
 		void update() override;
-
-		void performAutoAbility(entt::handle actor, const IAbility& ability) const;
-		void performTargetedAbility(entt::handle actor, const IAbility& ability) const;
-		void performDirectionalAbility(entt::handle actor, const IAbility& ability) const;
 	};
 }

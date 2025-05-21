@@ -2,7 +2,6 @@
 #include "ToggleSprintAbility.h"
 #include "Components/StaminaComponent.h"
 #include "Components/SprintingComponent.h"
-#include "Events/SendFloatingMessageEvent.h"
 
 #include <Defines/CommonGuiColors.h>
 
@@ -53,6 +52,10 @@ drft::AbilityIconData drft::ToggleSprintAbility::getIconData() const
 		.textureId = entt::hashed_string{"icons"},
 		.color = guiColor::StaminaGreen,
 		.uv = {1,0},
-		.uvSize = {16, 16}
 	};
+}
+
+entt::id_type drft::ToggleSprintAbility::getAssociatedSkill() const
+{
+	return SkillId::Agility;
 }

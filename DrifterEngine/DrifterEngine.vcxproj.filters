@@ -747,6 +747,9 @@
     <ClCompile Include="src\Ability\AbilityIds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ability\AbilityHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3387,6 +3390,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\AbilitiesComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ability\AbilityHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

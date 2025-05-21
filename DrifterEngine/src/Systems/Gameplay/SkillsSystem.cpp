@@ -5,12 +5,13 @@
 #include <Components/SkillsComponent.h>
 #include <Spatial/Helpers.h>
 #include <Spatial/Conversions.h>
+#include <Skills/SkillIds.h>
 
 namespace Internal
 {
 	struct RegisterLevelUpHandlerEvent
 	{
-		const char* skill = nullptr;
+		entt::id_type skillId = SkillId::None;
 		std::function<void(int, entt::handle)> handler;
 	};
 
@@ -60,9 +61,10 @@ void drft::system::SkillsSystem::onUseSkillEvent(UseSkillEvent& ev) const
 void drft::system::SkillsSystem::addExp(Skill& skill, int exp, entt::handle entity) const
 {
 	GainExpResult result = skill.gainExp(exp);
-	if (result != GainExpResult::LevelUp) return;
-
-	onSkillLevelUp(skill, entity);
+	if (result == GainExpResult::LevelUp)
+	{
+		onSkillLevelUp(skill, entity);
+	}
 }
 
 void drft::system::SkillsSystem::onSkillLevelUp(const Skill& skill, entt::handle entity) const
@@ -81,9 +83,9 @@ void drft::system::SkillsSystem::onSkillLevelUp(const Skill& skill, entt::handle
 		};
 		_dispatcher.trigger(message);
 	}
-	if (!_levelUpHandlers.contains(skill.name())) return;
+	if (!_levelUpHandlers.contains(skill.id())) return;
 
-	for (auto&& handler : _levelUpHandlers.at(skill.name()))
+	for (auto&& handler : _levelUpHandlers.at(skill.id()))
 	{
 		handler(skill.level(), entity);
 	}
@@ -91,17 +93,15 @@ void drft::system::SkillsSystem::onSkillLevelUp(const Skill& skill, entt::handle
 
 void drft::system::SkillsSystem::onRegisterLevelUpHandler(Internal::RegisterLevelUpHandlerEvent& ev)
 {
-	std::string skillName = ev.skill;
-	_levelUpHandlers[skillName].push_back(ev.handler);
+	_levelUpHandlers[ev.skillId].push_back(ev.handler);
 }
 
-int drft::system::SkillsSystem::getSkillLevel(const char* skillName, entt::const_handle entity)
+int drft::system::SkillsSystem::getSkillLevel(entt::id_type skillId, entt::const_handle entity)
 {
 	if (!entity) return Skill::DefaultLevel;
 
 	if (auto skillComponentPtr = entity.try_get<SkillsComponent>())
 	{
-		entt::id_type skillId = entt::hashed_string{ skillName };
 		auto skill = Internal::tryFindSkill(skillId, *skillComponentPtr);
 		if (!skill) return Skill::DefaultLevel;
 
@@ -110,19 +110,19 @@ int drft::system::SkillsSystem::getSkillLevel(const char* skillName, entt::const
 	return Skill::DefaultLevel;
 }
 
-void drft::system::SkillsSystem::useSkill(const char* skill, int magnitude, entt::handle entity)
+void drft::system::SkillsSystem::useSkill(entt::id_type skillId, int magnitude, entt::handle entity)
 {
 	if (!entity) return;
 
-	UseSkillEvent ev = { entity, entt::hashed_string{skill}, magnitude};
+	UseSkillEvent ev = { entity, skillId, magnitude};
 
 	entity.registry()->ctx().get<entt::dispatcher>().trigger(ev);
 }
 
-void drft::system::SkillsSystem::registerLevelUpHandler(const char* skill, LevelUpHandler handler, entt::registry& registry)
+void drft::system::SkillsSystem::registerLevelUpHandler(entt::id_type skillId, LevelUpHandler handler, entt::registry& registry)
 {
 	Internal::RegisterLevelUpHandlerEvent ev;
-	ev.skill = skill;
+	ev.skillId = skillId;
 	ev.handler = handler;
 	registry.ctx().get<entt::dispatcher>().trigger(ev);
 }
