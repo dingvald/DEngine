@@ -27,7 +27,7 @@ void drft::system::MaterialCompositionSystem::onMaterialCompositionComponentAdde
 	const auto primaryMaterial = util::getEntityPrimaryMaterial(handle);
 	if (!primaryMaterial)
 	{
-		auto& entityName = util::getEntityName(handle);
+		auto entityName = util::getEntityName(handle);
 		LOG_WARNING("Cannot find primary material for entity {}", entityName);
 		return;
 	}
@@ -43,7 +43,7 @@ void drft::system::MaterialCompositionSystem::onMaterialCompositionComponentAdde
 		auto mat = factory.get(materialName);
 		if (!mat)
 		{
-			auto& entityName = util::getEntityName(handle);
+			auto entityName = util::getEntityName(handle);
 			LOG_WARNING("Cannot find material {} for entity {}", materialName, entityName);
 			continue;
 		}

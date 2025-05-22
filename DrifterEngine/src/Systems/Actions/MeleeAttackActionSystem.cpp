@@ -9,6 +9,7 @@
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/PositionComponent.h"
 #include <Components/WeightComponent.h>
+#include <Components/HealthComponent.h>
 #include <Components/IncomingForceComponent.h>
 
 #include <Skills/SkillIds.h>
@@ -65,10 +66,11 @@ void drft::system::MeleeAttackActionSystem::onTweenReachedTarget(entt::handle en
 	const auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
 	const auto& positionComponent = entity.get<PositionComponent>();
 
-	const float force = calculateForceGenerated(entity, action.itemUsed);
-
 	drft::TilePosition targetPosition = positionComponent.tile + spatial::asTileSpace(action.direction);
-	auto& targets = grid.entitiesAt(targetPosition);
+	auto hasHealthFilter = [this](entt::entity entity) -> bool { return _registry.all_of<HealthComponent>(entity); };
+	auto targets = grid.entitiesAt(targetPosition, hasHealthFilter);
+
+	const float force = targets.empty() ? 0.f : calculateForceGenerated(entity, action.itemUsed);
 	for (auto&& target : targets)
 	{
 		_registry.emplace_or_replace<IncomingForceComponent>(target, force, action.itemUsed);

@@ -22,6 +22,7 @@
 #include <Events/ChangeHUDEnabledEvent.h>
 
 #include "Ability/AbilityRegistry.h"
+#include <Ability/AbilityIds.h>
 
 #include "Utility/TextureAtlas.h"
 #include <Utility/TGUIHelpers.h>

@@ -20,8 +20,8 @@ void drft::ContainerWrapper::sort(SortType sortType)
 			[this, registry](ItemComponent::ID first, ItemComponent::ID second) {
 				auto e1 = ItemDatabase::getEntityFromItemID(first);
 				auto e2 = ItemDatabase::getEntityFromItemID(second);
-				auto& name1 = util::getEntityName({ *registry, e1 });
-				auto& name2 = util::getEntityName({ *registry, e2 });
+				auto name1 = util::getEntityName({ *registry, e1 });
+				auto name2 = util::getEntityName({ *registry, e2 });
 
 				size_t i = 0;
 				while (i < name1.length() && i < name2.length())

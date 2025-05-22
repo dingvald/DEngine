@@ -6,6 +6,7 @@
 #include <Utility/EntityAccessors/GetEntityMaterials.h>
 #include <Utility/EntityAccessors/GetEntityWeight.h>
 #include <Utility/EntityAccessors/GetEntityName.h>
+#include <Utility/StringManipulation.h>
 #include <Utility/ColorToHexString.h>
 #include <Utility/TGUIHelpers.h>
 

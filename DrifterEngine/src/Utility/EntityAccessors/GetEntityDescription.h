@@ -2,5 +2,5 @@
 
 namespace drft::util
 {
-	const std::string& getEntityDescription(entt::const_handle entity);
+	std::string getEntityDescription(entt::const_handle entity);
 }
