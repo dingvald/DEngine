@@ -16,6 +16,7 @@ namespace drft
 		void determineSessionEntity();
 		void setupPanelTemplate(tgui::Panel::Ptr templatePanel);
 		void refreshSkillsList(tgui::PanelListBox::Ptr skillsList);
+		void refreshAbilities(tgui::HorizontalWrap::Ptr abilities, entt::id_type skillId);
 
 	private:
 		SkillsWrapper _skills;
