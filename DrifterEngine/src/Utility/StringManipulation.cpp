@@ -70,6 +70,29 @@ std::string drft::util::capitalize(const std::string& str)
     return result;
 }
 
+std::string drft::util::capitalizeAll(const std::string& str)
+{
+    if (str.empty()) return {};
+
+    std::string result = str;
+    bool capitalizeNext = true;
+
+    for (size_t i = 0; i < result.size(); ++i)
+    {
+        if (std::isspace(static_cast<unsigned char>(result[i])))
+        {
+            capitalizeNext = true;
+        }
+        else if (capitalizeNext)
+        {
+            result[i] = std::toupper(static_cast<unsigned char>(result[i]));
+            capitalizeNext = false;
+        }
+    }
+
+    return result;
+}
+
 bool drft::util::stringContains(const std::string& str, const std::string& subStr)
 {
     if (str.find(subStr) != std::string::npos)
@@ -91,5 +114,12 @@ std::optional<std::string> drft::util::getStringBetween(const std::string& str, 
         return std::nullopt;
     }
     return str.substr(start_pos, pos2 - start_pos);
+}
+
+std::string drft::util::removeUnderscores(const std::string& jsonString)
+{
+    std::string result = jsonString;
+    std::replace(result.begin(), result.end(), '_', ' ');
+    return result;
 }
 
