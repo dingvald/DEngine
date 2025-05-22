@@ -80,7 +80,10 @@ void drft::system::HUD::start()
 {
 	if (auto player = getPlayerHandle(_registry))
 	{
-		player.emplace_or_replace<HotbarComponent>();
+		if (player.all_of<HotbarComponent>()) return;
+
+		auto& comp = player.emplace<HotbarComponent>();
+		comp.abilities.fill(AbilityIds::NullAbility);
 	}
 }
 
