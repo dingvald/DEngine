@@ -18,7 +18,6 @@ namespace drft
 		SelectTarget,
 		Simulation,
 		Skills,
-		Abilities,
 	};
 }
 

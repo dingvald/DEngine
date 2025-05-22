@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "RequestGameplayScreen.h"
 
-#include <Components/Actions/OpenAbilitiesScreenAction.h>
 #include <Components/Actions/OpenSkillsScreenAction.h>
 #include <Components/Components.h>
 #include <Events/RequestStateChange.h>
@@ -13,7 +12,6 @@ static const std::unordered_map<drft::States, std::function<void(entt::handle)>>
 	{drft::States::Skills,		[](entt::handle entity) { entity.emplace<OpenSkillsScreenAction>(); }},
 	{drft::States::Crafting,	[](entt::handle entity) { entity.emplace<component::action::OpenCrafting>(); }},
 	{drft::States::Inventory,	[](entt::handle entity) { entity.emplace<component::action::OpenEquipment>(); }},
-	{drft::States::Abilities,	[](entt::handle entity) { entity.emplace<OpenAbilitiesScreenAction>(); }},
 };
 
 void requestGameplayScreen(drft::States state, entt::handle entity)

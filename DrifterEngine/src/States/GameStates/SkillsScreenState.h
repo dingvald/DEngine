@@ -16,11 +16,14 @@ namespace drft
 		void determineSessionEntity();
 		void setupPanelTemplate(tgui::Panel::Ptr templatePanel);
 		void refreshSkillsList(tgui::PanelListBox::Ptr skillsList);
+		
+		void setupTemplateAbilityIcon(tgui::Panel::Ptr temp);
 		void refreshAbilities(tgui::HorizontalWrap::Ptr abilities, entt::id_type skillId);
 
 	private:
 		SkillsWrapper _skills;
-
 		entt::handle _sessionEntity;
+
+		tgui::Panel::Ptr _templateAbilityIcon;
 	};
 }
