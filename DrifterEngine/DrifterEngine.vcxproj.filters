@@ -738,9 +738,6 @@
     <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\States\GameStates\AbilityScreenState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Helpers\RequestGameplayScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -3380,13 +3377,7 @@
     <ClInclude Include="src\Components\Wrappers\SkillsWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\States\GameStates\AbilityScreenState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Helpers\RequestGameplayScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\Actions\OpenAbilitiesScreenAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\AbilitiesComponent.h">
