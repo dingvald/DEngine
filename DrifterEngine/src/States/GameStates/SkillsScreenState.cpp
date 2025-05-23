@@ -94,18 +94,27 @@ bool drft::SkillsScreenState::handleEvent(const sf::Event& ev)
 					const auto& ability = AbilityRegistry::get(_draggingAbility->abilityId);
 					refreshAbilities(_guiGroup->get<tgui::HorizontalWrap>(w_Abilities), ability.getAssociatedSkill());
 					_draggingAbility.reset();
-					break;
+					return true;
 				}
 				else
 				{
 					auto abilityId = hotbar.getAbility(system::toHotbarIndex(i));
 					hotbar.removeAbility(system::toHotbarIndex(i));
+					const auto& ability = AbilityRegistry::get(abilityId);
+					refreshAbilities(_guiGroup->get<tgui::HorizontalWrap>(w_Abilities), ability.getAssociatedSkill());
 					_draggingAbility = createDraggedAbility(abilityId);
-					break;
+					return true;
 				}
 			}
 		}
 		
+		if (_draggingAbility)
+		{
+			const auto& ability = AbilityRegistry::get(_draggingAbility->abilityId);
+			refreshAbilities(_guiGroup->get<tgui::HorizontalWrap>(w_Abilities), ability.getAssociatedSkill());
+			_draggingAbility.reset();
+		}
+
 		return false;
 	}
 
