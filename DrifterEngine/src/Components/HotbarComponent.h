@@ -4,7 +4,8 @@
 
 struct HotbarComponent
 {
-	std::array<entt::id_type, 10> abilities;
+	static const int MAX_SIZE = 10;
+	std::array<entt::id_type, MAX_SIZE> abilities;
 
 private:
 	friend class ComponentMetaBinder;

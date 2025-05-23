@@ -8,6 +8,9 @@
 #include <Utility/TGUIHelpers.h>
 #include <Utility/StandardLogger.h>
 #include <Utility/StringManipulation.h>
+#include <Systems/Helpers/GetPlayerHandle.h>
+#include <Systems/Helpers/ToHotbarIndex.h>
+#include <Components/Wrappers/HotbarWrapper.h>
 
 #pragma optimize("", off)
 
@@ -73,10 +76,45 @@ drft::SkillsScreenState::SkillsScreenState(StateStack& stack, StateContext& cont
 
 bool drft::SkillsScreenState::handleEvent(const sf::Event& ev)
 {
-	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>())
-	{
-		if (keypressed->code == sf::Keyboard::Key::Escape)
-		{
+	if (const auto mousepressed = ev.getIf<sf::Event::MouseButtonPressed>()) {
+
+		// Get HUD hotbar layout from registry context
+		auto& gui = getContext().registry.ctx().get<tgui::Gui>();
+		auto hudGroup = gui.get<tgui::Group>("hud");
+		auto hotbar = hudGroup->get<tgui::GrowHorizontalLayout>("hotbar");
+		for (size_t i = 0; i < HotbarComponent::MAX_SIZE; ++i) {
+			auto group = hotbar->get<tgui::Group>(std::format("index_{}", i));
+			sf::FloatRect bounds(group->getAbsolutePosition(), group->getSize());
+			if (bounds.contains(sf::Vector2f{ mousepressed->position })) {
+				auto player = getPlayerHandle(getContext().registry);
+				HotbarWrapper hotbar{ player };
+				if (_draggingAbility.has_value())
+				{
+					hotbar.setAbility(_draggingAbility->abilityId, system::toHotbarIndex(i));
+					const auto& ability = AbilityRegistry::get(_draggingAbility->abilityId);
+					refreshAbilities(_guiGroup->get<tgui::HorizontalWrap>(w_Abilities), ability.getAssociatedSkill());
+					_draggingAbility.reset();
+					break;
+				}
+				else
+				{
+					auto abilityId = hotbar.getAbility(system::toHotbarIndex(i));
+					hotbar.removeAbility(system::toHotbarIndex(i));
+					_draggingAbility = createDraggedAbility(abilityId);
+					break;
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>()) {
+		if (keypressed->code == sf::Keyboard::Key::Escape) {
+			if (_draggingAbility) {
+				_draggingAbility.reset();
+				return true;
+			}
 			requestStackPop();
 			return true;
 		}
@@ -148,6 +186,7 @@ void drft::SkillsScreenState::refreshSkillsList(tgui::PanelListBox::Ptr skillsLi
 
 		auto button = GuiHelpers::buttonizePanel(newPanel);
 		button->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+		button->getRenderer()->setBackgroundColorFocused(guiColor::TranslucentAsh);
 
 		button->onPress([this, skillId = skill.id()]() { 
 			refreshAbilities(_guiGroup->get<tgui::HorizontalWrap>(w_Abilities), skillId); 
@@ -173,6 +212,8 @@ void drft::SkillsScreenState::refreshAbilities(tgui::HorizontalWrap::Ptr abiliti
 	auto abilitiesComponent = _sessionEntity.try_get<AbilitiesComponent>();
 	if (!abilitiesComponent) return;
 
+	HotbarWrapper hotbar = { _sessionEntity };
+
 	TextureAtlas& textures = getContext().registry.ctx().get<TextureAtlas>();
 	for (auto&& abilityId : abilitiesComponent->abilities)
 	{
@@ -190,6 +231,78 @@ void drft::SkillsScreenState::refreshAbilities(tgui::HorizontalWrap::Ptr abiliti
 		auto icon = templateCopy->get<tgui::Picture>(w_AbilityIcon);
 		icon->getRenderer()->setTexture(texture);
 
+		// Add a button for drag
+		auto button = tgui::Button::create();
+		button->setSize(tgui::bindSize(templateCopy));
+		button->getRenderer()->setBorders(0);
+		button->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+		button->onMousePress([this, abilityId]() {
+			_draggingAbility = createDraggedAbility(abilityId);
+		});
+		if (auto index = hotbar.findAbilityIndex(abilityId))
+		{
+			button->setText(tgui::String::fromNumber(index.value()));
+			button->getRenderer()->setTextColor(guiColor::AlphaWhite);
+			button->getRenderer()->setTextColorFocused(guiColor::AlphaWhite);
+			button->getRenderer()->setTextColorDownHover(guiColor::AlphaWhite);
+			button->getRenderer()->setTextColorHover(guiColor::TranslucentAsh);
+			button->setTextSize(36);
+			button->setTextPosition({"50%", "50%"}, {0.5f, 0.5f});
+		}
+		templateCopy->add(button);
+
 		abilities->add(templateCopy, ability.getName());
 	}
+}
+
+std::optional<drft::SkillsScreenState::DraggingAbility> drft::SkillsScreenState::createDraggedAbility(entt::id_type abilityId) const
+{
+	const TextureAtlas& textures = getContext().registry.ctx().get<TextureAtlas>();
+	const IAbility& ability = AbilityRegistry::get(abilityId);
+
+	auto iconData = ability.getIconData();
+	auto uv = textures.getUV(iconData.textureId, iconData.uvSize, iconData.uv);
+	auto sprite = textures.getSprite(iconData.textureId, iconData.uvSize, iconData.uv);
+
+	return DraggingAbility{abilityId, sprite, iconData.color};
+}
+
+void drft::SkillsScreenState::guiRender(sf::RenderTarget& target)
+{
+	if (_draggingAbility) {
+		sf::Vector2i mousePos = sf::Mouse::getPosition(getContext().window);
+		_draggingAbility->setPosition(mousePos);
+		_draggingAbility->render(target);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///    DraggingAbility   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+drft::SkillsScreenState::DraggingAbility::DraggingAbility(entt::id_type id, const sf::Sprite& sprite, const sf::Color& color)
+	: abilityId(id)
+{
+	icon = std::make_unique<sf::Sprite>(sprite);
+	icon->setColor(color);
+	icon->setScale({ 4.f, 4.f });
+	icon->setOrigin(icon->getLocalBounds().size / 2.f);
+
+	background.setFillColor(guiColor::BlackAgate);
+	background.setOutlineColor(guiColor::TranslucentAsh);
+	background.setOutlineThickness(1.f);
+	background.setSize(icon->getLocalBounds().size.componentWiseMul(icon->getScale()));
+	background.setOrigin(background.getGeometricCenter());
+}
+
+void drft::SkillsScreenState::DraggingAbility::render(sf::RenderTarget& target) const
+{
+	target.draw(background);
+	target.draw(*icon);
+}
+
+void drft::SkillsScreenState::DraggingAbility::setPosition(sf::Vector2i pos) {
+	sf::Vector2f floatPosition = { static_cast<float>(pos.x), static_cast<float>(pos.y) };
+	icon->setPosition(floatPosition);
+	background.setPosition(floatPosition);
 }

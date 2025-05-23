@@ -9,6 +9,7 @@
 #include <Components/Actions/MouseInspectAction.h>
 #include <Components/CurrentActorComponent.h>
 #include <Components/PathNavComponent.h>
+#include <Components/HotbarComponent.h>
 #include "Components/Actions/InteractionAction.h"
 #include "Components/Actions/MoveAction.h"
 #include "Components/Actions/WaitAction.h"
@@ -114,7 +115,7 @@ void drft::system::PlayerInput::init()
 		});
 
 	// Hotbar //
-	for (int i = 0; i < HOTBAR_SIZE; ++i)
+	for (int i = 0; i < HotbarComponent::MAX_SIZE; ++i)
 	{
 		actions.bind("player_input", "gameplay", std::format("hotbar_{}", i), [i](entt::handle entity) {
 			entity.emplace_or_replace<HotbarAction>(fromHotbarIndex(i));

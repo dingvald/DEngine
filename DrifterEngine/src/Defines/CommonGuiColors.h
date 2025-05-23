@@ -8,6 +8,7 @@ namespace guiColor
 
 	const sf::Color SelectionBlue = { 0,0,150,100 };
 	const sf::Color HoverWhite = { 100,100,100,100 };
+	const sf::Color AlphaWhite = { 255, 255, 255, 200 };
 
 	const sf::Color MGSHudBlue = { 60, 115, 132 };
 	const sf::Color StaminaGreen = { 101,122,98 };

@@ -19,7 +19,8 @@ protected:
 	/// - Successful calls to `isValid` guarentees the registry exists
 	/// </summary>
 	/// <returns></returns>
-	const entt::registry* tryGetRegistry() const;
+	const entt::registry* tryGetRegistryConst() const;
+	entt::registry* tryGetRegistry();
 
 private:
 	entt::handle _handle;
@@ -60,7 +61,14 @@ inline void ComponentWrapper<ComponentType>::modify(std::function<void(Component
 }
 
 template<typename ComponentType>
-inline const entt::registry* ComponentWrapper<ComponentType>::tryGetRegistry() const
+inline const entt::registry* ComponentWrapper<ComponentType>::tryGetRegistryConst() const
+{
+	if (!isValid()) return nullptr;
+	return _handle.registry();
+}
+
+template<typename ComponentType>
+inline entt::registry* ComponentWrapper<ComponentType>::tryGetRegistry()
 {
 	if (!isValid()) return nullptr;
 	return _handle.registry();

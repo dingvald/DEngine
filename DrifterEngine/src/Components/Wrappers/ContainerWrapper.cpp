@@ -15,7 +15,7 @@ void drft::ContainerWrapper::sort(SortType sortType)
 	case drft::SortType::Alphabetic:
 	{
 		auto comp = tryGetUnderlying();
-		auto registry = tryGetRegistry();
+		auto registry = tryGetRegistryConst();
 		std::sort(comp->contents.begin(), comp->contents.end(),
 			[this, registry](ItemComponent::ID first, ItemComponent::ID second) {
 				auto e1 = ItemDatabase::getEntityFromItemID(first);
@@ -45,7 +45,7 @@ bool drft::ContainerWrapper::remove(entt::entity item)
 	if (!isValid()) return false;
 
 	size_t result = 0;
-	if (auto itemComp = tryGetRegistry()->try_get<ItemComponent>(item))
+	if (auto itemComp = tryGetRegistryConst()->try_get<ItemComponent>(item))
 	{
 		modify([&result, itemComp](ContainerComponent& comp) {result = std::erase(comp.contents, itemComp->id);});
 	}
@@ -57,7 +57,7 @@ bool drft::ContainerWrapper::add(entt::entity item)
 	if (!isValid()) return false;
 	if (tryGetUnderlyingConst()->contents.size() >= tryGetUnderlyingConst()->capacity) return false;
 
-	if (auto itemComp = tryGetRegistry()->try_get<ItemComponent>(item))
+	if (auto itemComp = tryGetRegistryConst()->try_get<ItemComponent>(item))
 	{
 		modify([id = itemComp->id](ContainerComponent& comp) {comp.contents.push_back(id);});
 		return true;
@@ -71,7 +71,7 @@ bool drft::ContainerWrapper::addBefore(entt::entity itemToAdd, size_t index)
 	if (tryGetUnderlyingConst()->contents.size() >= tryGetUnderlyingConst()->capacity) return false;
 	if (index > tryGetUnderlyingConst()->contents.size()) return add(itemToAdd);
 
-	if (auto itemComp = tryGetRegistry()->try_get<ItemComponent>(itemToAdd))
+	if (auto itemComp = tryGetRegistryConst()->try_get<ItemComponent>(itemToAdd))
 	{
 		modify([index, id = itemComp->id](ContainerComponent& comp) {comp.contents.insert(comp.contents.begin() + index, id);});
 		return true;
@@ -86,7 +86,7 @@ bool drft::ContainerWrapper::addAfter(entt::entity itemToAdd, size_t index)
 	const size_t indexAfter = index + 1;
 	if (indexAfter > tryGetUnderlyingConst()->contents.size()) return add(itemToAdd);
 
-	if (auto itemComp = tryGetRegistry()->try_get<ItemComponent>(itemToAdd))
+	if (auto itemComp = tryGetRegistryConst()->try_get<ItemComponent>(itemToAdd))
 	{
 		modify([indexAfter, id = itemComp->id](ContainerComponent& comp) {comp.contents.insert(comp.contents.begin() + indexAfter, id);});
 		return true;

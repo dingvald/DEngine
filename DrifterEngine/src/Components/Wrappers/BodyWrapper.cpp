@@ -15,7 +15,7 @@ bool drft::BodyWrapper::canEquip(const std::string& slotName, entt::entity item)
         return true;
     }
 
-    if (auto wearable = tryGetRegistry()->try_get<WearableComponent>(item))
+    if (auto wearable = tryGetRegistryConst()->try_get<WearableComponent>(item))
     {
         for (auto&& slotName : wearable->slots)
         {
@@ -33,7 +33,7 @@ bool drft::BodyWrapper::equip(const std::string& slot, entt::entity item)
 {
     if (!isValid()) return false;
 
-    auto itemID = ItemDatabase::getItemIDFromEntity({ *tryGetRegistry(), item});
+    auto itemID = ItemDatabase::getItemIDFromEntity({ *tryGetRegistryConst(), item});
     if (itemID == 0u) return false;
 
     bool result = false;

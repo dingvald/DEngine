@@ -7,6 +7,11 @@ namespace drft::events
 	struct ChangeHUDEnabledEvent;
 }
 
+namespace Internal
+{
+	struct HudRefreshRequestEvent;
+}
+
 namespace drft::system
 {
 	class HUD : public System
@@ -16,6 +21,7 @@ namespace drft::system
 
 		static void setVisible(entt::registry& registry, bool shouldBeVisible);
 		static void setEnabled(entt::registry& registry, bool shouldBeEnabled);
+		static void refresh(entt::registry& registry);
 
 	private:
 		void init() override;
@@ -44,6 +50,7 @@ namespace drft::system
 		void onConsumeStamina(entt::registry& registry, entt::entity entity);
 
 		void onChangeHUDEnabledEvent(const events::ChangeHUDEnabledEvent& ev);
+		void onHudRefreshRequestEvent(const Internal::HudRefreshRequestEvent& ev);
 
 	private:
 		struct FlashEffect

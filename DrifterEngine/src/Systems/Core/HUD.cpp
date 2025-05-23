@@ -42,6 +42,8 @@ namespace Internal
 		auto overlay = group->get<tgui::Panel>("overlay");
 		overlay->getRenderer()->setBackgroundColor(color);
 	}
+
+	struct HudRefreshRequestEvent {};
 }
 
 void drft::system::HUD::setVisible(entt::registry& registry, bool shouldBeVisible)
@@ -54,11 +56,16 @@ void drft::system::HUD::setEnabled(entt::registry& registry, bool shouldBeEnable
 	registry.ctx().get<entt::dispatcher>().trigger(events::ChangeHUDEnabledEvent{ .shouldEnable = shouldBeEnabled });
 }
 
+void drft::system::HUD::refresh(entt::registry& registry)
+{
+	registry.ctx().get<entt::dispatcher>().trigger(Internal::HudRefreshRequestEvent{});
+}
+
 void drft::system::HUD::init()
 {
 	auto& gui = _registry.ctx().get<tgui::Gui>();
 	_gui = tgui::Group::create();
-	gui.add(_gui);
+	gui.add(_gui, "hud");
 	_gui->setVisible(true);
 	_gui->onMouseEnter([this]() { MouseVisualizationSystem::changeMouseVisibility(_registry, { false, false }); });
 	_gui->onMouseLeave([this]() { MouseVisualizationSystem::changeMouseVisibility(_registry, { true, true }); });
@@ -75,6 +82,7 @@ void drft::system::HUD::init()
 	_registry.on_construct<HotbarAction>().connect<&HUD::onHotbarPressed>(this);
 
 	_dispatcher.sink<events::ChangeHUDEnabledEvent>().connect<&HUD::onChangeHUDEnabledEvent>(this);
+	_dispatcher.sink<Internal::HudRefreshRequestEvent>().connect<&HUD::onHudRefreshRequestEvent>(this);
 }
 
 void drft::system::HUD::start()
@@ -216,7 +224,7 @@ void drft::system::HUD::createHotbar()
 	_gui->add(hotbarBackground);
 	_gui->add(hotbar, HotbarWidgetId);
 
-	for (size_t i = 0; i < HOTBAR_SIZE; i++)
+	for (size_t i = 0; i < HotbarComponent::MAX_SIZE; i++)
 	{
 		auto newGroup = tgui::Group::copy(_templateHotbarIcon);
 		hotbar->add(newGroup, std::format("index_{}", i));
@@ -337,7 +345,7 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 		TextureAtlas& textures = _registry.ctx().get<TextureAtlas>();
 
 		auto hotbar = _gui->get<tgui::GrowHorizontalLayout>(HotbarWidgetId);
-		for (size_t i = 0; i < HOTBAR_SIZE; i++)
+		for (size_t i = 0; i < HotbarComponent::MAX_SIZE; i++)
 		{
 			const std::string groupName = std::format("index_{}", i);
 			auto group = hotbar->get<tgui::Group>(groupName);
@@ -403,4 +411,9 @@ void drft::system::HUD::onChangeHUDEnabledEvent(const events::ChangeHUDEnabledEv
 {
 	_gui->setEnabled(ev.shouldEnable.value_or(_gui->isEnabled()));
 	_gui->setVisible(ev.shouldShow.value_or(_gui->isVisible()));
+}
+
+void drft::system::HUD::onHudRefreshRequestEvent(const Internal::HudRefreshRequestEvent& ev)
+{
+	this->update();
 }
