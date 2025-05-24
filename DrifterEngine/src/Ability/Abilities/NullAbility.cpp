@@ -43,3 +43,8 @@ entt::id_type drft::NullAbility::getAssociatedSkill() const
 {
 	return SkillId::None;
 }
+
+std::string drft::NullAbility::getContextualDescription(entt::const_handle actor) const
+{
+	return "This ability does nothing.";
+}

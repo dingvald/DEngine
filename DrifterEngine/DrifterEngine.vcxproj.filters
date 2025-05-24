@@ -750,6 +750,9 @@
     <ClCompile Include="src\Components\Wrappers\HotbarWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\AbilityTooltip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3390,6 +3393,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\Wrappers\HotbarWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\AbilityTooltip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

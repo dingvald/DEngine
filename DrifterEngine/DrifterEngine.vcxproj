@@ -205,6 +205,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Ability\AbilityIds.cpp" />
     <ClCompile Include="src\Components\Wrappers\HotbarWrapper.cpp" />
     <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp" />
+    <ClCompile Include="src\GUI\AbilityTooltip.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
@@ -488,6 +489,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\PlayerHasSeenComponent.h" />
     <ClInclude Include="src\Components\Wrappers\HotbarWrapper.h" />
     <ClInclude Include="src\Components\Wrappers\SkillsWrapper.h" />
+    <ClInclude Include="src\GUI\AbilityTooltip.h" />
     <ClInclude Include="src\Skills\SkillRequirement.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />

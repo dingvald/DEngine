@@ -8,7 +8,8 @@
 
 struct SprintingComponent
 {
-	sf::Vector2i direction = { 0,0 };
+	float multiplier = 1.f;
+	float staminaCost = 0.f;
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "sprinting";
@@ -25,7 +26,10 @@ namespace cereal
 	template<class Archive>
 	void serialize(Archive& archive, SprintingComponent& sprinting) 
 	{
-		archive(sprinting.direction.x, sprinting.direction.y);
+		archive(
+			sprinting.multiplier, 
+			sprinting.staminaCost
+		);
 	}
 }
 

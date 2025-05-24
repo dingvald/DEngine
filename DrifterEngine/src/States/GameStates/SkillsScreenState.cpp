@@ -248,6 +248,8 @@ void drft::SkillsScreenState::refreshAbilities(tgui::HorizontalWrap::Ptr abiliti
 		button->onMousePress([this, abilityId]() {
 			_draggingAbility = createDraggedAbility(abilityId);
 		});
+		button->onMouseEnter([this, &ability](){ onEnterAbilityContainingWidget(ability); });
+		button->onMouseLeave([this](){ onExitAbilityContainingWidget(); });
 		if (auto index = hotbar.findAbilityIndex(abilityId))
 		{
 			button->setText(tgui::String::fromNumber(index.value()));
@@ -264,6 +266,19 @@ void drft::SkillsScreenState::refreshAbilities(tgui::HorizontalWrap::Ptr abiliti
 	}
 }
 
+void drft::SkillsScreenState::onEnterAbilityContainingWidget(const IAbility& ability)
+{
+	if (_abilityTooltip.has_value()) return;
+
+	_abilityTooltip.emplace(ability, _sessionEntity, _guiGroup);
+	_abilityTooltip->setDelayTime(15);
+}
+
+void drft::SkillsScreenState::onExitAbilityContainingWidget()
+{
+	_abilityTooltip.reset();
+}
+
 std::optional<drft::SkillsScreenState::DraggingAbility> drft::SkillsScreenState::createDraggedAbility(entt::id_type abilityId) const
 {
 	const TextureAtlas& textures = getContext().registry.ctx().get<TextureAtlas>();
@@ -274,6 +289,21 @@ std::optional<drft::SkillsScreenState::DraggingAbility> drft::SkillsScreenState:
 	auto sprite = textures.getSprite(iconData.textureId, iconData.uvSize, iconData.uv);
 
 	return DraggingAbility{abilityId, sprite, iconData.color};
+}
+
+bool drft::SkillsScreenState::update()
+{
+	if (_abilityTooltip.has_value())
+	{
+		sf::Vector2i mousePosition = sf::Mouse::getPosition(getContext().window);
+		_abilityTooltip->setPosition(mousePosition);
+		_abilityTooltip->update();
+	}
+	if (_draggingAbility.has_value())
+	{
+		_abilityTooltip.reset();
+	}
+	return true;
 }
 
 void drft::SkillsScreenState::guiRender(sf::RenderTarget& target)

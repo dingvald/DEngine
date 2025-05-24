@@ -54,25 +54,31 @@ void drft::system::SprintingSystem::onSprintingRemoved(entt::registry& registry,
 
 void drft::system::SprintingSystem::applySprintBuff(entt::registry& registry, entt::entity entity)
 {
+	auto sprintingComponent = registry.try_get<SprintingComponent>(entity);
+	if (!sprintingComponent) return;
+
 	if (auto actor = registry.try_get<ActorComponent>(entity))
 	{
-		actor->moveSpeed += 2.f;
+		actor->moveSpeed += sprintingComponent->multiplier;
 	}
 	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
-		stamina->baseConsumption += 2.f;
+		stamina->baseConsumption += sprintingComponent->staminaCost;
 	}
 }
 
 void drft::system::SprintingSystem::removeSprintBuff(entt::registry& registry, entt::entity entity)
 {
+	auto sprintingComponent = registry.try_get<SprintingComponent>(entity);
+	if (!sprintingComponent) return;
+
 	if (auto actor = registry.try_get<ActorComponent>(entity))
 	{
-		actor->moveSpeed -= 2.f;
+		actor->moveSpeed -= sprintingComponent->multiplier;
 	}
 	if (auto stamina = registry.try_get<StaminaComponent>(entity))
 	{
-		stamina->baseConsumption -= 2.f;
+		stamina->baseConsumption -= sprintingComponent->staminaCost;
 	}
 }
 

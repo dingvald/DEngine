@@ -16,6 +16,12 @@ namespace drft
 		AbilityIconData getIconData() const override;
 
 		entt::id_type getAssociatedSkill() const override;
+
+		std::string getContextualDescription(entt::const_handle actor) const override;
+
+	private:
+		float calculateSpeedMultiplier(entt::const_handle actor) const;
+		float calculateStaminaCost(entt::const_handle actor) const;
 	};
 }
 

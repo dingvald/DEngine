@@ -93,16 +93,6 @@ void drft::system::PlayerInput::init()
 	actions.bind("player_input", "gameplay", "open_skills",				[](entt::handle entity) {
 		requestGameplayScreen(drft::States::Skills, entity);
 		});
-	actions.bind("player_input", "gameplay", "toggle_sprint",			[](entt::handle entity) {
-			if (entity.all_of<SprintingComponent>())
-			{
-				entity.remove<SprintingComponent>();
-			}
-			else
-			{
-				entity.emplace<SprintingComponent>();
-			}
-		});
 	actions.bind("player_input", "gameplay", "interact",				[](entt::handle entity) {
 		entity.emplace_or_replace<InteractionAction>();
 		});

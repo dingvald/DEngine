@@ -21,6 +21,7 @@ namespace drft
 		IAbility(const char* name);
 		virtual AbilityIconData getIconData() const = 0;
 		const std::string& getName() const;
+		virtual std::string getContextualDescription(entt::const_handle actor) const = 0;
 
 		virtual bool isValid(entt::const_handle actor) const = 0;
 		virtual void perform(entt::handle actor, std::optional<TilePosition> targetPosition = std::nullopt) const = 0;

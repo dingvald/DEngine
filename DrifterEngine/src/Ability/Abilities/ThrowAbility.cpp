@@ -10,7 +10,10 @@
 #include <Defines/CommonGuiColors.h>
 
 #include "Systems/Helpers/ItemDatabase.h"
+#include <Utility/EntityAccessors/GetEntityName.h>
 #include <Systems/Helpers/GetDominantSide.h>
+#include <Systems/Gameplay/SkillsSystem.h>
+#include <Utility/TGUIHelpers.h>
 
 drft::AbilityTargetingType drft::ThrowAbility::getTargetingType() const
 {
@@ -57,8 +60,9 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<TilePosition>
 }
 
 drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) const
-{
-	const int maxRange = 12;
+{	
+	int maxRange = system::SkillsSystem::getSkillLevel(SkillId::Strength, actor);
+	maxRange = static_cast<int>(std::sqrt(static_cast<float>(maxRange)));
 	if (auto body = actor.try_get<BodyComponent>())
 	{
 		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(actor));
@@ -93,4 +97,27 @@ drft::AbilityIconData drft::ThrowAbility::getIconData() const
 entt::id_type drft::ThrowAbility::getAssociatedSkill() const
 {
 	return SkillId::Strength;
+}
+
+std::string drft::ThrowAbility::getContextualDescription(entt::const_handle actor) const
+{
+	std::string itemName = "no item";
+	std::string range = std::to_string(0);
+
+	if (auto body = actor.try_get<BodyComponent>())
+	{
+		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(actor));
+		if (item)
+		{
+			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+			itemName = util::getEntityName({ *actor.registry(), itemEntity });
+		}
+	}
+
+	range = std::to_string(getRange(actor).getMax());
+
+	return std::format(
+		"Throws the {} a maximum of {}m away.", 
+		itemName, 
+		GuiHelpers::colorizedString(range, sf::Color::Yellow));
 }

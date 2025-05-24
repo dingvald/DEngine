@@ -15,6 +15,9 @@ namespace drft
 		AbilityIconData getIconData() const override;
 
 		entt::id_type getAssociatedSkill() const override;
+
+		// Inherited via IAbility
+		std::string getContextualDescription(entt::const_handle actor) const override;
 	};
 }
 
