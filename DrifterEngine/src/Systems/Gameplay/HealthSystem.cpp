@@ -4,6 +4,7 @@
 #include "Components/Components.h"
 #include "Components/HealthComponent.h"
 #include "Components/PositionComponent.h"
+#include <Components/SkillsComponent.h>
 #include "Components/RenderComponent.h"
 
 #include "Utility/SpriteOptions.h"
@@ -14,15 +15,45 @@
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
 #include <Random/Random.h>
-
-
+#include <Systems/Gameplay/SkillsSystem.h>
+#include <Skills/SkillIds.h>
 
 using namespace entt::literals;
+
+namespace Internal
+{
+	static float calculateMaxHealthForLevel(int level)
+	{
+		float result = 10.f;
+		result += (logf(level) / logf(1.3));
+		return result;
+	}
+
+	static void onToughnessLevelUp(int level, entt::handle entity)
+	{
+		if (auto health = entity.try_get<HealthComponent>())
+		{
+			health->max -= calculateMaxHealthForLevel(level - 1);
+			health->max += calculateMaxHealthForLevel(level);
+		}
+	}
+}
 
 void drft::system::HealthSystem::init()
 {
 	_dispatcher.sink<events::TurnStartEvent>().connect<&HealthSystem::onTurnStartEvent>(this);
 	_registry.on_construct<HealthComponent>().connect<&HealthSystem::onHealthComponentAdded>(this);
+	_healthAddedObserver.connect(_registry, entt::collector.group<HealthComponent, SkillsComponent>());
+}
+
+void drft::system::HealthSystem::start()
+{
+	SkillsSystem::registerLevelUpHandler(SkillId::Toughness, Internal::onToughnessLevelUp, _registry);
+	for (auto&& entity : _healthAddedObserver)
+	{
+		setupHealthComponentOnStart({ _registry, entity });
+	}
+	_healthAddedObserver.clear();
 }
 
 void drft::system::HealthSystem::update()
@@ -153,11 +184,24 @@ void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)
 	}
 }
 
-void drft::system::HealthSystem::onHealthComponentAdded(entt::registry& registry, entt::entity entity)
+void drft::system::HealthSystem::onHealthComponentAdded(entt::registry& registry, entt::entity entity) const
 {
 	auto& healthComponent = registry.get<HealthComponent>(entity);
 	if (healthComponent.current == std::numeric_limits<float>::min())
 	{
 		healthComponent.current = healthComponent.max;
+	}
+}
+
+void drft::system::HealthSystem::setupHealthComponentOnStart(entt::handle entity) const
+{
+	auto healthComponent = entity.try_get<HealthComponent>();
+	if (!healthComponent) return;
+
+	if (healthComponent->max == std::numeric_limits<float>::min())
+	{
+		int toughness = SkillsSystem::getSkillLevel(SkillId::Toughness, entity);
+		healthComponent->max = Internal::calculateMaxHealthForLevel(toughness);
+		healthComponent->current = healthComponent->max;
 	}
 }

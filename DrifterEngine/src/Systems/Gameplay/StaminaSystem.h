@@ -13,9 +13,13 @@ namespace drft::system
 		void updateEnd() override;
 
 	private:
-		void onStaminaAdded(entt::registry& registry, entt::entity entity) const;
+		void setupStaminaComponentOnStart(entt::handle entity) const;
+		void onStaminaComponentAdded(entt::registry& registry, entt::entity entity) const;
 		void onStaminaConsumed(entt::registry& registry, entt::entity entity) const;
 		void onMoveActionAdded(entt::registry& registry, entt::entity entity) const;
+
+	private:
+		entt::observer _observer;
 	};
 }
 

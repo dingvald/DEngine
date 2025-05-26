@@ -42,15 +42,15 @@
         },
         "physical_blocking": {},
         "skills": {
-            "strength": 1,
-            "agility": 1,
-            "toughness": 1,
-            "endurance": 1,
-            "latent_power": 1
+            "strength": 20,
+            "agility": 15,
+            "toughness": 10,
+            "endurance": 15,
+            "latent_power": 10
         },
         "abilities": [
-            "sprint_ability",
-            "throw_ability"
+            "sprint",
+            "throw"
         ],
         "actor": {
           "move_speed": 1.0,
@@ -60,7 +60,6 @@
           "sight_range": 60
         },
         "health": {
-          "max": 15.0,
           "recovery": 0.05
         },
         "stamina": {},

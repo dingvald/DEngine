@@ -30,6 +30,7 @@ void drft::system::AbilityActionSystem::update()
 		{
 			switch (ability.getTargetingType())
 			{
+			case AbilityTargetingType::Self:
 			case AbilityTargetingType::Auto:
 				AbilityHelpers::performAbility(handle, ability, std::nullopt);
 				break;
@@ -58,7 +59,7 @@ void drft::system::AbilityActionSystem::update()
 		if (ability.isValid(handle))
 		{
 			ability.perform(handle, action.target);
-			ActorSystem::setActionComplete(handle, ActionCategory::Act, ability.getCost());
+			ActorSystem::setActionComplete(handle, ActionCategory::Act, ability.getTimeCost());
 		}
 
 		handle.remove<AbilityAction>();

@@ -7,7 +7,7 @@
 
 struct HealthComponent
 {
-	float max = 10.f;
+	float max = std::numeric_limits<float>::min();
 	float current = std::numeric_limits<float>::min();
 	float recovery = 0.f;
 

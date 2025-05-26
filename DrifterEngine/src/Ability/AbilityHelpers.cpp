@@ -9,7 +9,7 @@
 void AbilityHelpers::performAbility(entt::handle actor, const drft::IAbility& ability, std::optional<drft::TilePosition> target)
 {
 	ability.perform(actor, target);
-	drft::system::ActorSystem::setActionComplete(actor, drft::system::ActionCategory::Act, ability.getCost());
+	drft::system::ActorSystem::setActionComplete(actor, drft::system::ActionCategory::Act, ability.getTimeCost());
 }
 
 void AbilityHelpers::performTargetedAbility(entt::handle actor, const drft::IAbility& ability)

@@ -12,7 +12,7 @@
 
 drft::AbilityTargetingType drft::ToggleSprintAbility::getTargetingType() const
 {
-    return AbilityTargetingType::Auto;
+    return AbilityTargetingType::Self;
 }
 
 bool drft::ToggleSprintAbility::isValid(entt::const_handle actor) const
@@ -38,12 +38,17 @@ void drft::ToggleSprintAbility::perform(entt::handle actor, std::optional<TilePo
 	}
 }
 
-int drft::ToggleSprintAbility::getCost() const
+int drft::ToggleSprintAbility::getTimeCost() const
 {
 	return 0;
 }
 
-bool drft::ToggleSprintAbility::isToggledOn(entt::const_handle actor) const
+drft::IAbility::ResourceCosts drft::ToggleSprintAbility::getResourceCosts(entt::const_handle actor) const
+{
+	return { {AbilityResourceType::Stamina, calculateStaminaCost(actor)} };
+}
+
+bool drft::ToggleSprintAbility::isSustained(entt::const_handle actor) const
 {
 	if (actor.all_of<SprintingComponent>())
 	{
@@ -70,7 +75,7 @@ float drft::ToggleSprintAbility::calculateSpeedMultiplier(entt::const_handle act
 {
 	const int agility = system::SkillsSystem::getSkillLevel(SkillId::Agility, actor);
 	float result = 1.5f;
-	result += (logf(agility) / logf(3.9));
+	result += 0.1f * (logf(agility) / logf(1.2));
 	return math::floorToMultiple(result, 0.5f);
 }
 
@@ -85,7 +90,7 @@ std::string drft::ToggleSprintAbility::getContextualDescription(entt::const_hand
 	const float staminaCost = calculateStaminaCost(actor);
 
 	return std::format(
-        "Increases speed by x{}. Consume {} extra stamina while moving.",
-		GuiHelpers::colorizedString(std::format("{:.1f}", speedMultiplier), sf::Color::Yellow),
-		GuiHelpers::colorizedString(std::format("{:.1f}", staminaCost), sf::Color::Yellow));
+        "Increases movement speed by {}x. Consume {} extra stamina while moving.",
+		GuiHelpers::colorizedString(std::format("{:.1f}", speedMultiplier), guiColor::VariableGreen),
+		GuiHelpers::colorizedString(std::format("{:.1f}", staminaCost), guiColor::VariableGreen));
 }

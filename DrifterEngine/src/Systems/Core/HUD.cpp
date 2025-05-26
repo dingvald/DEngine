@@ -364,7 +364,7 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 			auto button = group->get<tgui::Button>("button");
 			button->getRenderer()->setTexture(texture);
 
-			sf::Color overlayColor = ability.isToggledOn(player) ? sf::Color{ 255, 255, 0, 100 } : sf::Color::Transparent;
+			sf::Color overlayColor = ability.isSustained(player) ? sf::Color{ 255, 255, 0, 100 } : sf::Color::Transparent;
 			Internal::setOverlayColor(group, overlayColor);
 		}
 	}

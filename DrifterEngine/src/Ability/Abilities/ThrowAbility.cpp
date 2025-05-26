@@ -6,6 +6,7 @@
 #include "Components/PositionComponent.h"
 #include "Components/ProjectileComponent.h"
 #include "Components/WeightComponent.h"
+#include <Components/DominantSideComponent.h>
 
 #include <Defines/CommonGuiColors.h>
 
@@ -14,6 +15,19 @@
 #include <Systems/Helpers/GetDominantSide.h>
 #include <Systems/Gameplay/SkillsSystem.h>
 #include <Utility/TGUIHelpers.h>
+
+namespace Internal
+{
+	static int calculateMaxRange(int strength, float weight)
+	{
+		if (weight <= FLT_EPSILON) return 1;
+
+		float result = 1.0f;
+		result += 0.6f * (logf(static_cast<float>(strength)) / logf(1.1f));
+
+		return static_cast<int>(result / std::powf(weight, 1.5f));
+	}
+}
 
 drft::AbilityTargetingType drft::ThrowAbility::getTargetingType() const
 {
@@ -61,23 +75,22 @@ void drft::ThrowAbility::perform(entt::handle actor, std::optional<TilePosition>
 
 drft::math::Range<int> drft::ThrowAbility::getRange(entt::const_handle actor) const
 {	
-	int maxRange = system::SkillsSystem::getSkillLevel(SkillId::Strength, actor);
-	maxRange = static_cast<int>(std::sqrt(static_cast<float>(maxRange)));
+	int strength = system::SkillsSystem::getSkillLevel(SkillId::Strength, actor);
+	float weight = 0.f;
 	if (auto body = actor.try_get<BodyComponent>())
 	{
 		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(actor));
 		if (item)
 		{
 			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-			if (auto weight = actor.registry()->try_get<WeightComponent>(itemEntity))
+			if (auto weightComponent = actor.registry()->try_get<WeightComponent>(itemEntity))
 			{
-				int rangeVal = std::max(1, (maxRange - static_cast<int>(weight->value)));
-				return { 0, rangeVal };
+				weight = weightComponent->value;
 			}
 		}
-
 	}
-	return {0, 0};
+
+	return {0, Internal::calculateMaxRange(strength, weight)};
 }
 
 std::vector<sf::Vector2i> drft::ThrowAbility::getTargetingShape(entt::const_handle actor) const
@@ -101,23 +114,18 @@ entt::id_type drft::ThrowAbility::getAssociatedSkill() const
 
 std::string drft::ThrowAbility::getContextualDescription(entt::const_handle actor) const
 {
-	std::string itemName = "no item";
+	std::string dominantHandString = "dominant hand";
 	std::string range = std::to_string(0);
 
-	if (auto body = actor.try_get<BodyComponent>())
+	if (auto dominantSide = actor.try_get<DominantSideComponent>())
 	{
-		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(actor));
-		if (item)
-		{
-			auto itemEntity = ItemDatabase::getEntityFromItemID(item);
-			itemName = util::getEntityName({ *actor.registry(), itemEntity });
-		}
+		dominantHandString = std::format("{} hand", dominantSide->side);
 	}
 
 	range = std::to_string(getRange(actor).getMax());
 
 	return std::format(
-		"Throws the {} a maximum of {}m away.", 
-		itemName, 
-		GuiHelpers::colorizedString(range, sf::Color::Yellow));
+		"Throws the item in your {} a maximum of {} meters.\nThe range depends on the item's weight.", 
+		dominantHandString, 
+		GuiHelpers::colorizedString(range, guiColor::VariableGreen));
 }

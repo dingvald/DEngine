@@ -77,7 +77,6 @@ drft::SkillsScreenState::SkillsScreenState(StateStack& stack, StateContext& cont
 bool drft::SkillsScreenState::handleEvent(const sf::Event& ev)
 {
 	if (const auto mousepressed = ev.getIf<sf::Event::MouseButtonPressed>()) {
-
 		// Get HUD hotbar layout from registry context
 		auto& gui = getContext().registry.ctx().get<tgui::Gui>();
 		auto hudGroup = gui.get<tgui::Group>("hud");
@@ -115,7 +114,7 @@ bool drft::SkillsScreenState::handleEvent(const sf::Event& ev)
 			_draggingAbility.reset();
 		}
 
-		return false;
+		return true;
 	}
 
 	if (const auto keypressed = ev.getIf<sf::Event::KeyPressed>()) {

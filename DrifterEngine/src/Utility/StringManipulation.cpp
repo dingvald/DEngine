@@ -116,6 +116,17 @@ std::optional<std::string> drft::util::getStringBetween(const std::string& str, 
     return str.substr(start_pos, pos2 - start_pos);
 }
 
+std::string drft::util::removeSubString(const std::string& str, const std::string& substr)
+{
+    if (substr.empty()) return str;
+    std::string result = str;
+    size_t pos = 0;
+    while ((pos = result.find(substr, pos)) != std::string::npos) {
+        result.erase(pos, substr.length());
+    }
+    return result;
+}
+
 std::string drft::util::removeUnderscores(const std::string& jsonString)
 {
     std::string result = jsonString;

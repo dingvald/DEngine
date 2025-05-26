@@ -14,5 +14,7 @@ namespace drft::util
 	bool stringContains(const std::string& str, const std::string& subStr);
 	std::optional<std::string> getStringBetween(const std::string& str, const std::string& substr1, const std::string& substr2);
 
+	std::string removeSubString(const std::string& str, const std::string& substr);
+
 	std::string removeUnderscores(const std::string& str);
 }
