@@ -14,7 +14,7 @@ public:
 
     void update();
     void setDelayTime(unsigned int delay);
-    void setPosition(sf::Vector2i position);
+    void setPosition(sf::Vector2i position, sf::Vector2f origin = {0.f, 0.f});
 
 private:
     tgui::Group::Ptr _tooltip;

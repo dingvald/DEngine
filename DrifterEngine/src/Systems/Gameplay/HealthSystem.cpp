@@ -26,7 +26,7 @@ namespace Internal
 	{
 		float result = 10.f;
 		result += (logf(level) / logf(1.3));
-		return result;
+		return std::round(result);
 	}
 
 	static void onToughnessLevelUp(int level, entt::handle entity)

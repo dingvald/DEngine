@@ -31,6 +31,7 @@ drft::SkillsScreenState::SkillsScreenState(StateStack& stack, StateContext& cont
 	panel->setPosition("50%, 50%");
 	panel->setSize(tgui::bindSize(_guiGroup) * 0.5f);
 	panel->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+	panel->onMousePress([this]() { onMousePress(); });
 	_guiGroup->add(panel);
 
 	auto titleBar = tgui::Label::create();
@@ -107,12 +108,7 @@ bool drft::SkillsScreenState::handleEvent(const sf::Event& ev)
 			}
 		}
 		
-		if (_draggingAbility)
-		{
-			const auto& ability = AbilityRegistry::get(_draggingAbility->abilityId);
-			refreshAbilities(_guiGroup->get<tgui::HorizontalWrap>(w_Abilities), ability.getAssociatedSkill());
-			_draggingAbility.reset();
-		}
+		onMousePress();
 
 		return true;
 	}
@@ -262,6 +258,16 @@ void drft::SkillsScreenState::refreshAbilities(tgui::HorizontalWrap::Ptr abiliti
 		templateCopy->add(button);
 
 		abilities->add(templateCopy, ability.getName());
+	}
+}
+
+void drft::SkillsScreenState::onMousePress()
+{
+	if (_draggingAbility.has_value())
+	{
+		const auto& ability = AbilityRegistry::get(_draggingAbility->abilityId);
+		refreshAbilities(_guiGroup->get<tgui::HorizontalWrap>(w_Abilities), ability.getAssociatedSkill());
+		_draggingAbility.reset();
 	}
 }
 

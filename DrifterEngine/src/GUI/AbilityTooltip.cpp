@@ -5,7 +5,7 @@
 #include <Utility/TGUIHelpers.h>
 #include <Utility/StringManipulation.h>
 
-static const sf::Color TooltipStatNameColor = { 119, 179, 110 };
+#pragma optimize("", off)
 
 namespace Internal
 {
@@ -51,8 +51,8 @@ namespace Internal
         auto resourceCostLabel = tgui::RichTextLabel::create();
         resourceCostLabel->setPosition(4, tgui::bindBottom(widgetAbove));
         resourceCostLabel->setText(
-            drft::GuiHelpers::colorizedString(std::format("{} Cost: ", drft::AbilityResourceCostToString.at(resourceType)), TooltipStatNameColor)
-            + std::format("{:.1f}", cost));
+            drft::GuiHelpers::colorizedString(std::format("{} Cost: ", drft::AbilityResourceCostToString.at(resourceType)), guiColor::TooltipStatNameColor)
+            + drft::GuiHelpers::colorizedString(std::format("{:.1f}", cost), guiColor::VariableGreen));
         resourceCostLabel->setTextSize(14);
         resourceCostLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
         resourceCostLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
@@ -73,6 +73,7 @@ AbilityTooltip::AbilityTooltip(const drft::IAbility& ability, entt::const_handle
     panel->getRenderer()->setBorderColor(guiColor::TranslucentAsh);
     panel->getRenderer()->setBorders({ 1, 1 });
     _tooltip->add(panel);
+    _tooltip->setSize(tgui::bindSize(panel));
 
     auto nameLabel = tgui::RichTextLabel::create();
     nameLabel->setPosition("50%", tgui::bindTop(panel));
@@ -91,31 +92,48 @@ AbilityTooltip::AbilityTooltip(const drft::IAbility& ability, entt::const_handle
 
     // Use mode
     auto useModeLabel = tgui::RichTextLabel::create();
-    useModeLabel->setPosition(4, tgui::bindBottom(separatorLine));
+    useModeLabel->setPosition(4, tgui::bindBottom(separatorLine) + 4.f);
     useModeLabel->setText(
-        drft::GuiHelpers::colorizedString("Use Mode: ", TooltipStatNameColor)
+        drft::GuiHelpers::colorizedString("Use Mode: ", guiColor::TooltipStatNameColor)
         + drft::AbilityUseModeToString.at(ability.getUseMode()));
     useModeLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
     useModeLabel->setTextSize(14);
     useModeLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
     useModeLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
     panel->add(useModeLabel);
+    tgui::Widget::Ptr widgetAbove = useModeLabel;
 
     // Targeting Type
     auto targetingTypeLabel = tgui::RichTextLabel::create();
-    targetingTypeLabel->setPosition(4, tgui::bindBottom(useModeLabel));
+    targetingTypeLabel->setPosition(4, tgui::bindBottom(widgetAbove));
     targetingTypeLabel->setText(
-        drft::GuiHelpers::colorizedString("Targeting: ", TooltipStatNameColor)
+        drft::GuiHelpers::colorizedString("Targeting: ", guiColor::TooltipStatNameColor)
         + Internal::buildTargetingTypeString(ability, actor));
     targetingTypeLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
     targetingTypeLabel->setTextSize(14);
     targetingTypeLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
     targetingTypeLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
     panel->add(targetingTypeLabel);
+    widgetAbove = targetingTypeLabel;
 
+    if (ability.getTargetingType() != drft::AbilityTargetingType::Self)
+    {
+        // Range
+        auto rangeLabel = tgui::RichTextLabel::create();
+        rangeLabel->setPosition(4, tgui::bindBottom(widgetAbove));
+        rangeLabel->setText(
+            drft::GuiHelpers::colorizedString("Range: ", guiColor::TooltipStatNameColor)
+            + Internal::buildAbilityRangeString(ability, actor));
+        rangeLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
+        rangeLabel->setTextSize(14);
+        rangeLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
+        rangeLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
+        panel->add(rangeLabel);
+        widgetAbove = rangeLabel;
+    }
+    
     // Costs
     auto resourceCosts = ability.getResourceCosts(actor);
-    tgui::Widget::Ptr widgetAbove = targetingTypeLabel;
     for (auto&& [resourceType, cost] : resourceCosts)
     {
         auto newWidget = Internal::buildResourceCostWidget(resourceType, cost, widgetAbove);
@@ -124,43 +142,33 @@ AbilityTooltip::AbilityTooltip(const drft::IAbility& ability, entt::const_handle
         widgetAbove = newWidget;
     }
 
-    // Range
-    auto rangeLabel = tgui::RichTextLabel::create();
-    rangeLabel->setPosition(4, tgui::bindBottom(widgetAbove));
-    rangeLabel->setText(
-        drft::GuiHelpers::colorizedString("Range: ", TooltipStatNameColor)
-        + Internal::buildAbilityRangeString(ability, actor));
-    rangeLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
-    rangeLabel->setTextSize(14);
-    rangeLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
-    rangeLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
-    panel->add(rangeLabel);
-
     // Use speed
     auto useSpeedLabel = tgui::RichTextLabel::create();
-    useSpeedLabel->setPosition(4, tgui::bindBottom(rangeLabel));
+    useSpeedLabel->setPosition(4, tgui::bindBottom(widgetAbove));
     useSpeedLabel->setText(
-        drft::GuiHelpers::colorizedString("Use Speed: ", TooltipStatNameColor)
+        drft::GuiHelpers::colorizedString("Use Speed: ", guiColor::TooltipStatNameColor)
         + Internal::buildUseSpeedString(ability, actor));
     useSpeedLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
     useSpeedLabel->setTextSize(14);
     useSpeedLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
     useSpeedLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
     panel->add(useSpeedLabel);
+    widgetAbove = useSpeedLabel;
 
     // Description
     auto descriptionLabel = tgui::RichTextLabel::create();
-    descriptionLabel->setPosition(4, tgui::bindBottom(useSpeedLabel));
+    descriptionLabel->setPosition(4, tgui::bindBottom(widgetAbove));
     descriptionLabel->setText(
-        drft::GuiHelpers::colorizedString("Description: ", TooltipStatNameColor)
+        drft::GuiHelpers::colorizedString("Description: ", guiColor::TooltipStatNameColor)
         + ability.getContextualDescription(actor));
     descriptionLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
     descriptionLabel->setTextSize(14);
     descriptionLabel->getRenderer()->setTextColor(tgui::Color{100,100,100});
     descriptionLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
     panel->add(descriptionLabel);
+    widgetAbove = descriptionLabel;
 
-    panel->setHeight(tgui::bindBottom(descriptionLabel) - tgui::bindTop(nameLabel) + 2);
+    panel->setHeight(tgui::bindBottom(widgetAbove) - tgui::bindTop(nameLabel) + 4.f);
 }
 
 AbilityTooltip::~AbilityTooltip()
@@ -187,8 +195,9 @@ void AbilityTooltip::setDelayTime(unsigned int delay)
     _delay = delay;
 }
 
-void AbilityTooltip::setPosition(sf::Vector2i position)
+void AbilityTooltip::setPosition(sf::Vector2i position, sf::Vector2f origin)
 {
     tgui::Vector2f pos = { static_cast<float>(position.x), static_cast<float>(position.y) };
     _tooltip->setPosition(pos);
+    _tooltip->setOrigin(origin);
 }

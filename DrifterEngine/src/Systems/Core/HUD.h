@@ -1,6 +1,6 @@
 #pragma once
 #include "Systems/System.h"
-#include "Events/SendFloatingMessageEvent.h"
+#include <GUI/AbilityTooltip.h>
 
 namespace drft::events
 {
@@ -34,7 +34,7 @@ namespace drft::system
 		void createStaminaBar();
 		void createInHandsDisplay();
 		void createItemsOnGroundDisplay();
-		void createHotbar();
+		void createHotbar(entt::const_handle player);
 
 		void updateLevelInfo(entt::const_handle player);
 		void updateHealthBar(entt::const_handle player);
@@ -42,15 +42,20 @@ namespace drft::system
 		void updateItemsOnGround(entt::const_handle player);
 		void updateInHandsDisplay(entt::const_handle player);
 		void updateFlashEffects();
-		void updateHotbar(entt::const_handle player);
+		void updateHotbar(tgui::GrowHorizontalLayout::Ptr hotbar, entt::const_handle player);
+		void refreshHotbar(tgui::GrowHorizontalLayout::Ptr hotbar, entt::const_handle player);
 
 		void queueFlashEffect(sf::Vector2f position, sf::Vector2f size, int ttl, bool fades = false);
 		void onHotbarPressed(entt::registry& registry, entt::entity entity);
 		void onTakeDamage(entt::registry& registry, entt::entity entity);
 		void onConsumeStamina(entt::registry& registry, entt::entity entity);
+		void onHotbarComponentUpdated(entt::registry& registry, entt::entity entity);
 
 		void onChangeHUDEnabledEvent(const events::ChangeHUDEnabledEvent& ev);
 		void onHudRefreshRequestEvent(const Internal::HudRefreshRequestEvent& ev);
+
+		void onEnterAbilityContainingWidget(const drft::IAbility& ability, entt::const_handle entity);
+		void onExitAbilityContainingWidget();
 
 	private:
 		struct FlashEffect
@@ -63,6 +68,7 @@ namespace drft::system
 		std::vector<FlashEffect> _flashEffects;
 		tgui::Group::Ptr _gui;
 		tgui::Group::Ptr _templateHotbarIcon;
+		std::optional<AbilityTooltip> _abilityTooltip;
 	};
 }
 

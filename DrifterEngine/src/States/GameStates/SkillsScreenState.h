@@ -26,6 +26,7 @@ namespace drft
 		void setupTemplateAbilityIcon(tgui::Panel::Ptr temp);
 		void refreshAbilities(tgui::HorizontalWrap::Ptr abilities, entt::id_type skillId);
 
+		void onMousePress();
 		void onEnterAbilityContainingWidget(const IAbility& ability);
 		void onExitAbilityContainingWidget();
 

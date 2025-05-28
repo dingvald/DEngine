@@ -39,20 +39,11 @@ ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
 	separatorLine1->getRenderer()->setColor(guiColor::TranslucentAsh);
 	panel->add(separatorLine1);
 
-	auto descriptionLabel = tgui::Label::create();
-	descriptionLabel->setPosition("50%", tgui::bindBottom(separatorLine1) + 8);
-	descriptionLabel->setText(drft::util::getEntityDescription(item));
-	descriptionLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
-	descriptionLabel->setTextSize(14);
-	descriptionLabel->setOrigin(0.5f, 0.f);
-	descriptionLabel->getRenderer()->setTextColor(tgui::Color{100,100,100});
-	descriptionLabel->getRenderer()->setTextStyle(tgui::TextStyle::Italic);
-	descriptionLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
-	panel->add(descriptionLabel);
-
-	auto weightLabel = tgui::Label::create();
-	weightLabel->setPosition("50%", tgui::bindBottom(descriptionLabel) + 8);
-	weightLabel->setText(std::format("- Weighs {}kg", drft::util::getEntityWeight(item)));
+	auto weightLabel = tgui::RichTextLabel::create();
+	weightLabel->setPosition("50%", tgui::bindBottom(separatorLine1) + 4);
+	weightLabel->setText(
+		drft::GuiHelpers::colorizedString("Weight: ", guiColor::TooltipStatNameColor)
+		+ std::format("{} kg", drft::util::getEntityWeight(item)));
 	weightLabel->setTextSize(14);
 	weightLabel->setOrigin(0.5f, 0.f);
 	weightLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
@@ -60,7 +51,7 @@ ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
 	panel->add(weightLabel);
 
 	auto materialsList = tgui::RichTextLabel::create();
-	materialsList->setPosition("50%", tgui::bindBottom(weightLabel) + 2);
+	materialsList->setPosition("50%", tgui::bindBottom(weightLabel));
 	materialsList->setTextSize(14);
 	materialsList->setOrigin(0.5f, 0.f);
 	materialsList->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
@@ -68,37 +59,30 @@ ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
 	std::stringstream ss;
 
 	auto materials = drft::util::getEntityMaterialPercentages(item);
-	
-	if (materials.empty())
+	ss << drft::GuiHelpers::colorizedString("Composed of: ", guiColor::TooltipStatNameColor);
+	for (size_t i = 0; i < materials.size(); i++)
 	{
-		ss << "- Base Material";
-	}
-	else
-	{
-		ss << drft::GuiHelpers::colorizedString("- Composed of ", tgui::Color{ 100,100,100 }) << "\n";
-		for (size_t i = 0; i < materials.size(); i++)
-		{
-			auto&& [material, percentage] = materials.at(i);
-			auto renderData = drft::util::getRenderData(material);
-			ss << "\t- " << percentage * 100.f << "% " << drft::GuiHelpers::colorizedString(drft::util::getEntityName(material), renderData.color);
-			if (i < materials.size() - 1)
-			{
-				ss << "\n";
-			}
-		}
+		auto&& [material, percentage] = materials.at(i);
+		auto renderData = drft::util::getRenderData(material);
+		ss << std::format("{:.0f}% {}", percentage * 100.f, drft::GuiHelpers::colorizedString(drft::util::getEntityName(material), renderData.color));
 	}
 
 	materialsList->setText(ss.str());
 	materialsList->setVerticalAlignment(tgui::VerticalAlignment::Center);
 	panel->add(materialsList);
 
-	auto separatorLine2 = tgui::SeparatorLine::create();
-	separatorLine2->setPosition("0%", tgui::bindBottom(materialsList) + 8);
-	separatorLine2->setSize(panel->getSize().x, 1);
-	separatorLine2->getRenderer()->setColor(guiColor::TranslucentAsh);
-	panel->add(separatorLine2);
+	auto descriptionLabel = tgui::RichTextLabel::create();
+	descriptionLabel->setPosition("50%", tgui::bindBottom(materialsList));
+	descriptionLabel->setText(
+		drft::GuiHelpers::colorizedString("Description: ", guiColor::TooltipStatNameColor)
+		+ drft::util::getEntityDescription(item));
+	descriptionLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
+	descriptionLabel->setTextSize(14);
+	descriptionLabel->setOrigin(0.5f, 0.f);
+	descriptionLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
+	panel->add(descriptionLabel);
 
-	panel->setHeight(tgui::bindBottom(separatorLine2) - tgui::bindTop(itemNameLabel) + 8);
+	panel->setHeight(tgui::bindBottom(descriptionLabel) - tgui::bindTop(itemNameLabel) + 8);
 }
 
 ItemTooltip::~ItemTooltip()

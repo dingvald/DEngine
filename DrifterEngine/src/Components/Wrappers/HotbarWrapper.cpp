@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "HotbarWrapper.h"
-#include <Systems/Core/HUD.h>
 #include <Systems/Helpers/ToHotbarIndex.h>
 #include <Utility/StandardLogger.h>
 
@@ -26,7 +25,6 @@ void drft::HotbarWrapper::setAbility(entt::id_type abilityId, unsigned int hotba
 			if (i == arrayIndex)
 			{
 				modify([arrayIndex, abilityId](HotbarComponent& comp) { comp.abilities.at(arrayIndex) = abilityId; });
-				system::HUD::refresh(*tryGetRegistry()); // Should not be null due to isValid check above
 			}
 		}
 	}
@@ -59,7 +57,6 @@ void drft::HotbarWrapper::removeAbility(unsigned int hotbarIndex)
 	}
 
 	modify([arrayIndex](HotbarComponent& comp) { comp.abilities.at(arrayIndex) = AbilityIds::NullAbility; });
-	system::HUD::refresh(*tryGetRegistry()); // Should not be null due to isValid check above
 }
 
 std::optional<unsigned int> drft::HotbarWrapper::findAbilityIndex(entt::id_type abilityId) const

@@ -29,11 +29,9 @@
 
 static const char* HotbarWidgetId = "hotbar";
 
-static const char* HealthBarFillWidgetId = "health bar fill";
-static const char* HealthBarContainerWidgetId = "health bar container";
-
-static const char* StaminaBarFillWidgetId = "stamina bar fill";
-static const char* StaminaBarContainerWidgetId = "stamina bar container";
+static const char* w_ResourceBarNumber = "resource_bar_number";
+static const char* w_ResourceBarContainer = "resource_bar_container";
+static const char* w_ResourceBarFill = "resource_bar_fill";
 
 namespace Internal
 {
@@ -44,6 +42,46 @@ namespace Internal
 	}
 
 	struct HudRefreshRequestEvent {};
+
+	static tgui::Group::Ptr createNewResourceBar(sf::Vector2f position, const std::string& displayString, sf::Color fillColor)
+	{
+		auto group = tgui::Group::create();
+
+		auto label = tgui::Label::create();
+		label->setPosition(position.x, position.y);
+		label->setText(displayString);
+		label->setTextSize(20);
+		label->setOrigin(0.f, 0.5f);
+		label->setWidth(32);
+		label->setVerticalAlignment(tgui::VerticalAlignment::Center);
+		label->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+		group->add(label);
+
+		auto number = tgui::Label::create();
+		number->setPosition(tgui::bindRight(label) + 4, tgui::bindPosY(label));
+		number->setTextSize(20);
+		number->setOrigin(0.f, 0.5f);
+		number->setWidth(48);
+		number->setVerticalAlignment(tgui::VerticalAlignment::Center);
+		number->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+		group->add(number, w_ResourceBarNumber);
+
+		auto container = tgui::Panel::create();
+		container->setSize({ 1, 14 });
+		container->setPosition(tgui::bindRight(number) + 4, tgui::bindPosY(number));
+		container->setOrigin(0.f, 0.5f);
+		container->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+		group->add(container, w_ResourceBarContainer);
+
+		auto fill = tgui::Panel::create();
+		fill->setPosition(tgui::bindPosition(container) + tgui::Layout2d{ 1, 0 });
+		fill->setOrigin(0.f, 0.5f);
+		fill->setSize({ tgui::bindWidth(container) - 2, tgui::bindHeight(container) - 2 });
+		fill->getRenderer()->setBackgroundColor(fillColor);
+		group->add(fill, w_ResourceBarFill);
+
+		return group;
+	}
 }
 
 void drft::system::HUD::setVisible(entt::registry& registry, bool shouldBeVisible)
@@ -75,11 +113,11 @@ void drft::system::HUD::init()
 	createStaminaBar();
 	createInHandsDisplay();
 	createItemsOnGroundDisplay();
-	createHotbar();
 
 	_registry.on_construct<component::action::TakeDamage>().connect<&HUD::onTakeDamage>(this);
 	_registry.on_construct<component::action::ConsumeStamina>().connect<&HUD::onConsumeStamina>(this);
 	_registry.on_construct<HotbarAction>().connect<&HUD::onHotbarPressed>(this);
+	_registry.on_update<HotbarComponent>().connect<&HUD::onHotbarComponentUpdated>(this);
 
 	_dispatcher.sink<events::ChangeHUDEnabledEvent>().connect<&HUD::onChangeHUDEnabledEvent>(this);
 	_dispatcher.sink<Internal::HudRefreshRequestEvent>().connect<&HUD::onHudRefreshRequestEvent>(this);
@@ -89,10 +127,12 @@ void drft::system::HUD::start()
 {
 	if (auto player = getPlayerHandle(_registry))
 	{
-		if (player.all_of<HotbarComponent>()) return;
-
-		auto& comp = player.emplace<HotbarComponent>();
-		comp.abilities.fill(AbilityIds::NullAbility);
+		if (!player.all_of<HotbarComponent>())
+		{
+			auto& comp = player.emplace<HotbarComponent>();
+			comp.abilities.fill(AbilityIds::NullAbility);
+		}
+		createHotbar(player);
 	}
 }
 
@@ -106,9 +146,17 @@ void drft::system::HUD::update()
 	updateStaminaBar(player);
 	updateInHandsDisplay(player);
 	updateItemsOnGround(player);
-	updateHotbar(player);
+	updateHotbar(_gui->get<tgui::GrowHorizontalLayout>(HotbarWidgetId), player);
 
 	updateFlashEffects();
+
+	if (_abilityTooltip.has_value())
+	{
+		auto& window = _registry.ctx().get<sf::RenderWindow>();
+		sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+		_abilityTooltip->setPosition(mousePosition, {0.f, 1.f});
+		_abilityTooltip->update();
+	}
 }
 
 void drft::system::HUD::shutdown()
@@ -124,56 +172,14 @@ void drft::system::HUD::createLevelInfo()
 
 void drft::system::HUD::createHealthBar()
 {
-	auto label = tgui::Label::create();
-	label->setPosition(16, 24);
-	label->setText("HP");
-	label->setTextSize(20);
-	label->setOrigin(0.f, 0.5f);
-	label->setWidth(32);
-	label->setVerticalAlignment(tgui::VerticalAlignment::Center);
-	label->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
-	_gui->add(label);
-
-	auto container = tgui::Panel::create();
-	container->setSize({ 1, 14 });
-	container->setPosition(tgui::bindRight(label), tgui::bindPosY(label));
-	container->setOrigin(0.f, 0.5f);
-	container->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
-	_gui->add(container, HealthBarContainerWidgetId);
-
-	auto fill = tgui::Panel::create();
-	fill->setPosition(tgui::bindPosition(container) + tgui::Layout2d{1, 0});
-	fill->setOrigin(0.f, 0.5f);
-	fill->setSize({tgui::bindWidth(container) - 2, tgui::bindHeight(container) - 2});
-	fill->getRenderer()->setBackgroundColor(guiColor::MGSHudBlue);
-	_gui->add(fill, HealthBarFillWidgetId);
+	auto newBar = Internal::createNewResourceBar({ 16, 24 }, "HP", guiColor::MGSHudBlue);
+	_gui->add(newBar, "HP");
 }
 
 void drft::system::HUD::createStaminaBar()
 {
-	auto label = tgui::Label::create();
-	label->setPosition(16, 48);
-	label->setText("ST");
-	label->setTextSize(20);
-	label->setOrigin(0.f, 0.5f);
-	label->setWidth(32);
-	label->setVerticalAlignment(tgui::VerticalAlignment::Center);
-	label->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
-	_gui->add(label);
-
-	auto container = tgui::Panel::create();
-	container->setSize({ 1, 14 });
-	container->setPosition(tgui::bindRight(label), tgui::bindPosY(label));
-	container->setOrigin(0.f, 0.5f);
-	container->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
-	_gui->add(container, StaminaBarContainerWidgetId);
-
-	auto fill = tgui::Panel::create();
-	fill->setPosition(tgui::bindPosition(container) + tgui::Layout2d{ 1, 0 });
-	fill->setOrigin(0.f, 0.5f);
-	fill->setSize({ tgui::bindWidth(container) - 2, tgui::bindHeight(container) - 2 });
-	fill->getRenderer()->setBackgroundColor(guiColor::StaminaGreen);
-	_gui->add(fill, StaminaBarFillWidgetId);
+	auto newBar = Internal::createNewResourceBar({ 16, 48 }, "ST", guiColor::StaminaGreen);
+	_gui->add(newBar, "ST");
 }
 
 void drft::system::HUD::createInHandsDisplay()
@@ -186,7 +192,7 @@ void drft::system::HUD::createItemsOnGroundDisplay()
 
 }
 
-void drft::system::HUD::createHotbar()
+void drft::system::HUD::createHotbar(entt::const_handle player)
 {
 	// Template icon setup
 	_templateHotbarIcon = tgui::Group::create();
@@ -224,20 +230,7 @@ void drft::system::HUD::createHotbar()
 	_gui->add(hotbarBackground);
 	_gui->add(hotbar, HotbarWidgetId);
 
-	for (size_t i = 0; i < HotbarComponent::MAX_SIZE; i++)
-	{
-		auto newGroup = tgui::Group::copy(_templateHotbarIcon);
-		hotbar->add(newGroup, std::format("index_{}", i));
-
-		auto newButton = newGroup->get<tgui::Button>("button");
-		newButton->setText(tgui::String::fromNumber(toHotbarIndex(i)));
-		newButton->setTextSize(12);
-		newButton->setTextPosition("10%, 10%", { 0.5f, 0.5f });
-		newButton->onPress([this, i]() { _dispatcher.trigger(events::HUDHotbarPressedEvent{ i }); });
-
-		auto overlay = newGroup->get<tgui::Panel>("overlay");
-		overlay->setIgnoreMouseEvents(true);
-	}
+	refreshHotbar(hotbar, player);
 }
 
 void drft::system::HUD::updateLevelInfo(entt::const_handle player)
@@ -252,12 +245,17 @@ void drft::system::HUD::updateHealthBar(entt::const_handle player)
 {
 	if (auto health = player.try_get<HealthComponent>())
 	{
-		auto container = _gui->get<tgui::Panel>(HealthBarContainerWidgetId);
+		auto bar = _gui->get<tgui::Group>("HP");
+
+		auto number = bar->get<tgui::Label>(w_ResourceBarNumber);
+		number->setText(std::format("{:.1f}", health->current));
+
+		auto container = bar->get<tgui::Panel>(w_ResourceBarContainer);
 		container->setWidth(24 * health->max);
 
 		const float ratio = health->current / health->max;
 
-		auto fill = _gui->get<tgui::Panel>(HealthBarFillWidgetId);
+		auto fill = bar->get<tgui::Panel>(w_ResourceBarFill);
 		fill->setSize({ (tgui::bindWidth(container) - 2) * ratio, tgui::bindHeight(container) - 2 });
 	}
 	else
@@ -270,12 +268,17 @@ void drft::system::HUD::updateStaminaBar(entt::const_handle player)
 {
 	if (auto stamina = player.try_get<StaminaComponent>())
 	{
-		auto container = _gui->get<tgui::Panel>(StaminaBarContainerWidgetId);
+		auto bar = _gui->get<tgui::Group>("ST");
+
+		auto number = bar->get<tgui::Label>(w_ResourceBarNumber);
+		number->setText(std::format("{:.1f}", stamina->current));
+
+		auto container = bar->get<tgui::Panel>(w_ResourceBarContainer);
 		container->setWidth(24 * stamina->max);
 
 		const float ratio = stamina->current / stamina->max;
 
-		auto fill = _gui->get<tgui::Panel>(StaminaBarFillWidgetId);
+		auto fill = bar->get<tgui::Panel>(w_ResourceBarFill);
 		fill->setSize({ (tgui::bindWidth(container) - 2) * ratio, tgui::bindHeight(container) - 2 });
 	}
 	else
@@ -338,17 +341,50 @@ void drft::system::HUD::updateFlashEffects()
 	}
 }
 
-void drft::system::HUD::updateHotbar(entt::const_handle player)
+void drft::system::HUD::updateHotbar(tgui::GrowHorizontalLayout::Ptr hotbar, entt::const_handle player)
+{
+	auto hotbarComponent = player.try_get<const HotbarComponent>();
+	if (!hotbarComponent) return;
+	
+	TextureAtlas& textures = _registry.ctx().get<TextureAtlas>();
+	for (size_t i = 0; i < HotbarComponent::MAX_SIZE; i++)
+	{
+		const std::string groupName = std::format("index_{}", i);
+		auto group = hotbar->get<tgui::Group>(groupName);
+
+		auto abilityType = hotbarComponent->abilities.at(i);
+		const IAbility& ability = AbilityRegistry::get(abilityType);
+
+		// Set Icon
+		auto icon = ability.getIconData();
+		auto uv = textures.getUV(icon.textureId, icon.uvSize, icon.uv);
+		auto texture = GuiHelpers::createTGUITextureFromUV(groupName, uv);
+
+		sf::Color iconColor = ability.isValid(player) ? icon.color : sf::Color{ 150, 150, 150, 100 };
+		texture.setColor(iconColor);
+
+		auto button = group->get<tgui::Button>("button");
+		button->getRenderer()->setTexture(texture);
+
+		auto overlay = group->get<tgui::Panel>("overlay");
+		overlay->setIgnoreMouseEvents(true);
+		sf::Color overlayColor = ability.isSustained(player) ? sf::Color{ 255, 255, 0, 100 } : sf::Color::Transparent;
+		Internal::setOverlayColor(group, overlayColor);
+	}
+}
+
+void drft::system::HUD::refreshHotbar(tgui::GrowHorizontalLayout::Ptr hotbar, entt::const_handle player)
 {
 	if (auto hotbarComponent = player.try_get<const HotbarComponent>())
 	{
-		TextureAtlas& textures = _registry.ctx().get<TextureAtlas>();
+		hotbar->removeAllWidgets();
 
-		auto hotbar = _gui->get<tgui::GrowHorizontalLayout>(HotbarWidgetId);
+		TextureAtlas& textures = _registry.ctx().get<TextureAtlas>();
 		for (size_t i = 0; i < HotbarComponent::MAX_SIZE; i++)
 		{
 			const std::string groupName = std::format("index_{}", i);
-			auto group = hotbar->get<tgui::Group>(groupName);
+			auto group = tgui::Group::copy(_templateHotbarIcon);
+			hotbar->add(group, groupName);
 
 			auto abilityType = hotbarComponent->abilities.at(i);
 			const IAbility& ability = AbilityRegistry::get(abilityType);
@@ -362,8 +398,16 @@ void drft::system::HUD::updateHotbar(entt::const_handle player)
 			texture.setColor(iconColor);
 
 			auto button = group->get<tgui::Button>("button");
+			button->setText(tgui::String::fromNumber(toHotbarIndex(i)));
+			button->setTextSize(12);
+			button->setTextPosition("10%, 10%", { 0.5f, 0.5f });
 			button->getRenderer()->setTexture(texture);
+			button->onPress([this, i, hotbar, player]() { _dispatcher.trigger(events::HUDHotbarPressedEvent{ i }); });
+			button->onMouseEnter([this, player, &ability]() { onEnterAbilityContainingWidget(ability, player); });
+			button->onMouseLeave([this]() { onExitAbilityContainingWidget(); });
 
+			auto overlay = group->get<tgui::Panel>("overlay");
+			overlay->setIgnoreMouseEvents(true);
 			sf::Color overlayColor = ability.isSustained(player) ? sf::Color{ 255, 255, 0, 100 } : sf::Color::Transparent;
 			Internal::setOverlayColor(group, overlayColor);
 		}
@@ -407,6 +451,14 @@ void drft::system::HUD::onConsumeStamina(entt::registry& registry, entt::entity 
 
 }
 
+void drft::system::HUD::onHotbarComponentUpdated(entt::registry& registry, entt::entity entity)
+{
+	if (!registry.all_of<PlayerInputComponent>(entity)) return;
+
+	_abilityTooltip.reset();
+	refreshHotbar(_gui->get<tgui::GrowHorizontalLayout>(HotbarWidgetId), { registry, entity });
+}
+
 void drft::system::HUD::onChangeHUDEnabledEvent(const events::ChangeHUDEnabledEvent& ev)
 {
 	_gui->setEnabled(ev.shouldEnable.value_or(_gui->isEnabled()));
@@ -416,4 +468,17 @@ void drft::system::HUD::onChangeHUDEnabledEvent(const events::ChangeHUDEnabledEv
 void drft::system::HUD::onHudRefreshRequestEvent(const Internal::HudRefreshRequestEvent& ev)
 {
 	this->update();
+}
+
+void drft::system::HUD::onEnterAbilityContainingWidget(const drft::IAbility& ability, entt::const_handle entity)
+{
+	if (_abilityTooltip.has_value()) return;
+
+	_abilityTooltip.emplace(ability, entity, _gui);
+	_abilityTooltip->setDelayTime(15);
+}
+
+void drft::system::HUD::onExitAbilityContainingWidget()
+{
+	_abilityTooltip.reset();
 }

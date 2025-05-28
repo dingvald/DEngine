@@ -14,4 +14,6 @@ namespace guiColor
 	const sf::Color StaminaGreen = { 101,122,98 };
 
 	const sf::Color VariableGreen = { 127, 248, 56 };
+
+	const sf::Color TooltipStatNameColor = { 119, 179, 110 };
 }

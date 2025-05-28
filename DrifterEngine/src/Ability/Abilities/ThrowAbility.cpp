@@ -125,7 +125,8 @@ std::string drft::ThrowAbility::getContextualDescription(entt::const_handle acto
 	range = std::to_string(getRange(actor).getMax());
 
 	return std::format(
-		"Throws the item in your {} a maximum of {} meters.\nThe range depends on the item's weight.", 
-		dominantHandString, 
-		GuiHelpers::colorizedString(range, guiColor::VariableGreen));
+		"Throws the item in your {} a maximum of {} {}.\nThe range depends on the item's weight.", 
+		GuiHelpers::colorizedString(dominantHandString, guiColor::VariableGreen),
+		GuiHelpers::colorizedString(range, guiColor::VariableGreen),
+		getRange(actor).getMax() != 1 ? "meters" : "meter");
 }
