@@ -12,9 +12,13 @@ namespace Internal
     static std::string buildAbilityRangeString(const drft::IAbility& ability, entt::const_handle actor)
     {
         auto range = ability.getRange(actor);
+        
         if (range.getMin() == range.getMax())
         {
-            return std::format("{} meters", drft::GuiHelpers::colorizedString(std::to_string(range.getMax()), guiColor::VariableGreen));
+            return std::format(
+                "{} {}", 
+                drft::GuiHelpers::colorizedString(std::to_string(range.getMax()), guiColor::VariableGreen), 
+                range.getMax() == 1 ? "meter" : "meters");
         }
         else
         {
@@ -24,7 +28,7 @@ namespace Internal
                 drft::GuiHelpers::colorizedString(std::to_string(range.getMax()), guiColor::VariableGreen));
         }
     }
-    static std::string buildUseSpeedString(const drft::IAbility& ability, entt::const_handle)
+    static std::string buildTimeCostString(const drft::IAbility& ability, entt::const_handle)
     {
         if (ability.getTimeCost() == 0) return "instant";
         return std::to_string(ability.getTimeCost());
@@ -77,7 +81,7 @@ AbilityTooltip::AbilityTooltip(const drft::IAbility& ability, entt::const_handle
 
     auto nameLabel = tgui::RichTextLabel::create();
     nameLabel->setPosition("50%", tgui::bindTop(panel));
-    nameLabel->setText(drft::util::capitalizeAll(ability.getName()));
+    nameLabel->setText(drft::util::capitalizeAll(drft::util::removeUnderscores(ability.getName())));
     nameLabel->setTextSize(20);
     nameLabel->setOrigin(0.5f, 0.0f);
     nameLabel->setVerticalAlignment(tgui::VerticalAlignment::Center);
@@ -146,8 +150,8 @@ AbilityTooltip::AbilityTooltip(const drft::IAbility& ability, entt::const_handle
     auto useSpeedLabel = tgui::RichTextLabel::create();
     useSpeedLabel->setPosition(4, tgui::bindBottom(widgetAbove));
     useSpeedLabel->setText(
-        drft::GuiHelpers::colorizedString("Use Speed: ", guiColor::TooltipStatNameColor)
-        + Internal::buildUseSpeedString(ability, actor));
+        drft::GuiHelpers::colorizedString("Time Cost: ", guiColor::TooltipStatNameColor)
+        + Internal::buildTimeCostString(ability, actor));
     useSpeedLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
     useSpeedLabel->setTextSize(14);
     useSpeedLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });

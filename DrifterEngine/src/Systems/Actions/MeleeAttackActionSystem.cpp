@@ -18,6 +18,7 @@
 #include <Systems/Core/TweeningSystem.h>
 
 #include <Systems/Helpers/EasingFunctions.h>
+#include <Systems/Helpers/CalculateForceGenerated.h>
 #include <Systems/Gameplay/SkillsSystem.h>
 
 #pragma optimize ("", off)
@@ -70,7 +71,15 @@ void drft::system::MeleeAttackActionSystem::onTweenReachedTarget(entt::handle en
 	auto hasHealthFilter = [this](entt::entity entity) -> bool { return _registry.all_of<HealthComponent>(entity); };
 	auto targets = grid.entitiesAt(targetPosition, hasHealthFilter);
 
-	const float force = targets.empty() ? 0.f : calculateForceGenerated(entity, action.itemUsed);
+	float force = 0.f;
+	if (!targets.empty())
+	{
+		GeneratedForce generatedForce = calculateForceGenerated(entity, action.itemUsed);
+		SkillsSystem::useSkill(SkillId::Strength, (int)(std::sqrtf(generatedForce.fromStrength) * SKILL_POINT_MULIPLIER), entity);
+		SkillsSystem::useSkill(SkillId::Agility, (int)(std::sqrtf(generatedForce.fromAgility) * SKILL_POINT_MULIPLIER), entity);
+		force = generatedForce.total;
+	}
+	
 	for (auto&& target : targets)
 	{
 		_registry.emplace_or_replace<IncomingForceComponent>(target, force, action.itemUsed);
@@ -80,37 +89,4 @@ void drft::system::MeleeAttackActionSystem::onTweenReachedTarget(entt::handle en
 void drft::system::MeleeAttackActionSystem::onTweenReturnedToStart(entt::handle entity) const
 {
 	ActorSystem::setActionComplete(entity, ActionCategory::Act);
-}
-
-float drft::system::MeleeAttackActionSystem::calculateForceGenerated(entt::handle actor, entt::const_handle item) const
-{
-	const float strength = static_cast<float>(SkillsSystem::getSkillLevel(SkillId::Strength, actor));
-	const float agility = static_cast<float>(SkillsSystem::getSkillLevel(SkillId::Agility, actor));
-
-	float weight = 0.5f;
-	if (actor.entity() != item.entity())
-	{
-		auto weightComponent = item.try_get<WeightComponent>();
-		if (weightComponent) weight = weightComponent->value;
-	}
-
-	float strengthContribution = 0.f;
-	float agilityContribution = 0.f;
-
-	const float strengthCap = sqrtf(strength);
-	if (weight <= strengthCap) 
-	{
-		strengthContribution = strength * (weight / strengthCap);
-	}
-	else
-	{
-		strengthContribution = strength * strength / (weight * weight);
-	}
-
-	agilityContribution = agility / (weight + 1.0f);
-
-	SkillsSystem::useSkill(SkillId::Strength, (int)(std::sqrtf(strengthContribution) * SKILL_POINT_MULIPLIER), actor);
-	SkillsSystem::useSkill(SkillId::Agility, (int)(std::sqrtf(agilityContribution) * SKILL_POINT_MULIPLIER), actor);
-
-	return (strengthContribution + agilityContribution);
 }

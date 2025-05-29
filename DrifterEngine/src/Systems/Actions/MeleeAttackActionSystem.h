@@ -15,8 +15,6 @@ namespace drft::system
 
 		void onTweenReachedTarget(entt::handle entity, MeleeAttackAction action) const;
 		void onTweenReturnedToStart(entt::handle entity) const;
-
-		float calculateForceGenerated(entt::handle actor, entt::const_handle item) const;
 	};
 }
 

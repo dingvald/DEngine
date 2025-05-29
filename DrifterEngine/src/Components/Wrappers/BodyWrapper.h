@@ -14,5 +14,7 @@ namespace drft
 
 		bool hasSlot(const std::string& slot) const;
 		const BodyPart::Slot* getSlot(const std::string& slot) const;
+
+		entt::const_handle getItemInDominantHand() const;
 	};
 }

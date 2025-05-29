@@ -34,7 +34,7 @@ namespace component::action
 
 	struct TakeDamage
 	{
-		int amount = 0;
+		float amount = 0;
 		entt::entity source = entt::null;
 	};
 

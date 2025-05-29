@@ -1,6 +1,26 @@
 #include "pch.h"
 #include "Math.h"
 
+bool drft::math::isNear(double d, double target)
+{
+    return std::abs(d - target) <= std::numeric_limits<double>::epsilon();
+}
+
+bool drft::math::isNear(float f, float target)
+{
+    return std::abs(f - target) <= std::numeric_limits<float>::epsilon();
+}
+
+bool drft::math::isNearZero(double d)
+{
+    return isNear(d, 0.0);
+}
+
+bool drft::math::isNearZero(float f)
+{
+    return isNear(f, 0.0f);
+}
+
 double drft::math::lerp(double a, double b, double t)
 {
     return (1.0 - t) * a + b * t;

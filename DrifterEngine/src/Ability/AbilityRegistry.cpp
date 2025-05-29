@@ -3,6 +3,7 @@
 #include "Abilities/NullAbility.h"
 #include "Abilities/ToggleSprintAbility.h"
 #include "Abilities/ThrowAbility.h"
+#include "Abilities/PowerAttackAbility.h"
 #include <Ability/AbilityIds.h>
 
 #include <Utility/StandardLogger.h>
@@ -15,6 +16,7 @@ void drft::AbilityRegistry::bind()
     AbilityRegistry::registerAbility<NullAbility>(AbilityIds::NullAbility);
     AbilityRegistry::registerAbility<ToggleSprintAbility>(AbilityIds::SprintAbility);
     AbilityRegistry::registerAbility<ThrowAbility>(AbilityIds::ThrowAbility);
+    AbilityRegistry::registerAbility<PowerAttackAbility>(AbilityIds::PowerAttackAbility);
 }
 
 const drft::IAbility& drft::AbilityRegistry::get(entt::id_type abilityId)

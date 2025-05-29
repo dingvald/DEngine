@@ -17,6 +17,7 @@
 #include <Random/Random.h>
 #include <Systems/Gameplay/SkillsSystem.h>
 #include <Skills/SkillIds.h>
+#include <Utility/Math.h>
 
 using namespace entt::literals;
 
@@ -76,10 +77,10 @@ void drft::system::HealthSystem::update()
 
 void drft::system::HealthSystem::processIncomingDamage(entt::entity entity, component::action::IncomingDamage& damage) const
 {
-	int total = 0;
+	float total = 0;
 	for (auto& [_, damage] : damage.damageTypes)
 	{
-		total += damage;
+		total += static_cast<float>(damage);
 	}
 	_registry.emplace<component::action::TakeDamage>(entity, total, damage.source);
 }
@@ -88,6 +89,8 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 {
 	auto handle = entt::handle{ _registry, entity };
 	if (!handle.all_of<HealthComponent>()) return;
+
+	const float damageEffective = math::floorToMultiple(damage.amount, 0.5f);
 
 	auto& health = handle.get<HealthComponent>();
 	// send floating message
@@ -111,21 +114,21 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 
 		int effect_ttl = 2;
 
-		if (damage.amount == 0)
+		if (math::isNearZero(damageEffective))
 		{
 			messageColor = sf::Color::Blue;
 			damageEffectSprite.color = sf::Color::White;
 			damageEffectSprite.texture = "diamond"_hs;
 			effect_ttl = 30;
 		}
-		else if (damage.amount < 0)
+		else if (damageEffective < 0)
 		{
 			message += "+";
 			messageColor = sf::Color::Green;
 			damageEffectSprite.color = sf::Color::Green;
 			effect_ttl = 10;
 		}
-		else if (damage.amount > 0)
+		else if (damageEffective > 0)
 		{
 			damageEffectSprite.color = sf::Color::Red;
 			std::vector<SpriteOptions> hitParticles =
@@ -150,7 +153,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 		}
 
 		_dispatcher.trigger(events::SendFloatingMessageEvent{
-			.message = message + std::to_string(std::abs(damage.amount)),
+			.message = message + std::format("{:.0f}", std::abs(damageEffective)),
 			.color = messageColor,
 			.position = spatial::toXY(spatial::toFloatSpace(posComp->tile)),
 			.velocity = {0.f,-1.f},
@@ -168,7 +171,7 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 			});
 	}
 
-	health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
+	health.current = std::clamp(health.current - damageEffective, 0.f, health.max);
 	if (health.current <= 0.f)
 	{
 		handle.emplace<component::action::Die>();

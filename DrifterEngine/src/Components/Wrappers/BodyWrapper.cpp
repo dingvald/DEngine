@@ -2,6 +2,7 @@
 #include "BodyWrapper.h"
 #include <Systems/Helpers/ItemDatabase.h>
 #include <Components/WearableComponent.h>
+#include <Systems/Helpers/GetDominantSide.h>
 
 bool drft::BodyWrapper::canEquip(const std::string& slotName, entt::entity item) const
 {
@@ -77,4 +78,14 @@ const BodyPart::Slot* drft::BodyWrapper::getSlot(const std::string& slot) const
     if (!isValid()) return nullptr;
 
     return tryGetUnderlyingConst()->parts.getSlot(slot);
+}
+
+entt::const_handle drft::BodyWrapper::getItemInDominantHand() const
+{
+    if (!isValid()) return {};
+
+    auto item = tryGetUnderlyingConst()->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide(getConstHandle()));
+    auto itemEntity = ItemDatabase::getEntityFromItemID(item);
+
+    return entt::const_handle{*tryGetRegistryConst(), itemEntity};
 }

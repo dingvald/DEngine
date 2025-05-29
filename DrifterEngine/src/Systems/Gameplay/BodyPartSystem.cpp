@@ -3,6 +3,7 @@
 
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/BodyComponent.h"
+#include <Components/Wrappers/BodyWrapper.h>
 
 #include "Systems/Helpers/ItemDatabase.h"
 #include <Systems/Helpers/GetDominantSide.h>
@@ -32,14 +33,11 @@ void drft::system::BodyPartSystem::init()
 
 void drft::system::BodyPartSystem::onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity)
 {
-	if (auto body = registry.try_get<BodyComponent>(entity))
-	{
-		auto& attack = registry.get<MeleeAttackAction>(entity);
-		auto item = body->parts.getEquipped(BodyPart::Slot::Type::Held, util::getDominantSide({ registry, entity }));
+	BodyWrapper body = { entt::handle{registry, entity} };
+	if (!body.isValid()) return;
 
-		auto itemEntity = item != 0ul ? ItemDatabase::getEntityFromItemID(item) : entity;
-		
-		attack.itemUsed = entt::const_handle{ registry, itemEntity };
-	}
+	auto itemInHand = body.getItemInDominantHand();
+	auto& attack = registry.get<MeleeAttackAction>(entity);
+	attack.itemUsed = itemInHand;
 }
  

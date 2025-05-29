@@ -2,6 +2,11 @@
 
 namespace drft::math
 {
+	bool isNear(double d, double target);
+	bool isNear(float f, float target);
+	bool isNearZero(double d);
+	bool isNearZero(float f);
+
 	double lerp(double a, double b, double t);
 	double inverseLerp(double a, double b, double v);
 	double remap(double iMin, double iMax, double oMin, double oMax, double val);

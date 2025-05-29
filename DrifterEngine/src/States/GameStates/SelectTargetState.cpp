@@ -6,7 +6,7 @@
 #include "Components/Components.h"
 #include "Components/PositionComponent.h"
 #include "Components/RenderComponent.h"
-
+#include <Defines/CardinalDirections.h>
 #include "Events/SendFloatingMessageEvent.h"
 
 #include <Spatial/Conversions.h>
@@ -25,14 +25,14 @@ drft::SelectTargetState::SelectTargetState(StateStack& stack, StateContext& cont
 {
 	ActionMap& actions = getContext().actions;
 
-	actions.bind("select_target", "gameplay", "move_south_west",	[this]() { moveCursor({ -1, 1 }); });
-	actions.bind("select_target", "gameplay", "move_south",			[this]() { moveCursor({ 0, 1 }); });
-	actions.bind("select_target", "gameplay", "move_south_east",	[this]() { moveCursor({ 1, 1 }); });
-	actions.bind("select_target", "gameplay", "move_west",			[this]() { moveCursor({ -1, 0 }); });
-	actions.bind("select_target", "gameplay", "move_east",			[this]() { moveCursor({ 1, 0 }); });
-	actions.bind("select_target", "gameplay", "move_north_west",	[this]() { moveCursor({ -1, -1 }); });
-	actions.bind("select_target", "gameplay", "move_north",			[this]() { moveCursor({ 0, -1 }); });
-	actions.bind("select_target", "gameplay", "move_north_east",	[this]() { moveCursor({ 1, -1 }); });
+	actions.bind("select_target", "gameplay", "move_south_west",	[this]() { moveCursor(CardinalDirection::SouthWest); });
+	actions.bind("select_target", "gameplay", "move_south",			[this]() { moveCursor(CardinalDirection::South); });
+	actions.bind("select_target", "gameplay", "move_south_east",	[this]() { moveCursor(CardinalDirection::SouthEast); });
+	actions.bind("select_target", "gameplay", "move_west",			[this]() { moveCursor(CardinalDirection::West); });
+	actions.bind("select_target", "gameplay", "move_east",			[this]() { moveCursor(CardinalDirection::East); });
+	actions.bind("select_target", "gameplay", "move_north_west",	[this]() { moveCursor(CardinalDirection::NorthWest); });
+	actions.bind("select_target", "gameplay", "move_north",			[this]() { moveCursor(CardinalDirection::North); });
+	actions.bind("select_target", "gameplay", "move_north_east",	[this]() { moveCursor(CardinalDirection::NorthEast); });
 
 	actions.bind("select_target", "gameplay", "interact",			[this]() { select(); });
 	actions.bind("select_target", "menu", "exit",					[this]() { requestStackPop(); });
@@ -76,7 +76,7 @@ void drft::SelectTargetState::onPush()
 		requestStackPop();
 	}
 
-	const entt::id_type tileSetTexture = entt::hashed_string("rectangle").value();
+	const entt::id_type tileSetTexture = entt::hashed_string("rectangle");
 
 	auto radius = spatial::getIntCircleInRadius(_startPosition, _targetSelect->range.getMax());
 
@@ -136,14 +136,9 @@ void drft::SelectTargetState::onPop()
 {
 	getContext().registry.clear<component::action::SelectTarget>();
 	getContext().registry.destroy(_cursor);
-	for (auto radiusEffect : _radiusEffects)
-	{
-		getContext().registry.destroy(radiusEffect);
-	}
-	for (auto aoeEffect : _aoeEffects)
-	{
-		getContext().registry.destroy(aoeEffect);
-	}
+
+	getContext().registry.destroy(_radiusEffects.begin(), _radiusEffects.end());
+	getContext().registry.destroy(_aoeEffects.begin(), _aoeEffects.end());
 }
 
 bool drft::SelectTargetState::isInRange() const

@@ -5,6 +5,10 @@
 #include <Components/Components.h>
 #include <Spatial/Conversions.h>
 #include <Components/PositionComponent.h>
+#include <Components/HealthComponent.h>
+#include <Components/StaminaComponent.h>
+
+#include <Utility/StandardLogger.h>
 
 void AbilityHelpers::performAbility(entt::handle actor, const drft::IAbility& ability, std::optional<drft::TilePosition> target)
 {
@@ -34,4 +38,51 @@ void AbilityHelpers::performDirectionalAbility(entt::handle actor, const drft::I
 			performAbility(actor, ability, target);
 			return true;
 		});
+}
+
+bool AbilityHelpers::hasResources(entt::const_handle actor, const drft::IAbility& ability)
+{
+	for (auto&& [resource, amount] : ability.getResourceCosts(actor))
+	{
+		switch (resource)
+		{
+		case drft::AbilityResourceType::Health:
+			if (auto health = actor.try_get<HealthComponent>())
+			{
+				if (health->current >= amount) continue;
+			}
+			return false;
+		case drft::AbilityResourceType::Stamina:
+			if (auto stamina = actor.try_get<StaminaComponent>())
+			{
+				if (stamina->current >= amount) continue;
+			}
+			return false;
+		default:
+			LOG_ERROR("Unhandled enum");
+			__debugbreak();
+			break;
+		}
+	}
+	return true;
+}
+
+void AbilityHelpers::spendResources(entt::handle actor, const drft::IAbility& ability)
+{
+	for (auto&& [resource, amount] : ability.getResourceCosts(actor))
+	{
+		switch (resource)
+		{
+		case drft::AbilityResourceType::Health:
+			actor.emplace_or_replace<component::action::TakeDamage>(amount);
+			break;
+		case drft::AbilityResourceType::Stamina:
+			actor.emplace_or_replace<component::action::ConsumeStamina>(amount);
+			break;
+		default:
+			LOG_ERROR("Unhandled enum");
+			__debugbreak();
+			break;
+		}
+	}
 }

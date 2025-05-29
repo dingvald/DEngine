@@ -14,6 +14,15 @@ namespace drft
 
 		void onPush() override;
 		void onPop() override;
+
+	private:
+		void placeTargetingTiles();
+
+		void selectDirection(sf::Vector2i direction);
+
+	private:
+		entt::handle _sessionEntity;
+		std::vector<entt::entity> _targetingTileEntities;
 	};
 }
 

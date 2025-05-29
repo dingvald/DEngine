@@ -31,7 +31,7 @@ void drft::system::IncomingForceSystem::update()
 		{
 			bool isSharp = other.all_of<SharpComponent>();
 			auto forces = calculateMaterialForceDistribution(incomingForce.force, { solid, 0.f}, { *otherSolid, isSharp ? 1.0f : 0.0f });
-			hit.emplace_or_replace<component::action::TakeDamage>(static_cast<int>(forces.force1), other.entity());
+			hit.emplace_or_replace<component::action::TakeDamage>(forces.force1, other.entity());
 		}
 	}
 

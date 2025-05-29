@@ -65,7 +65,7 @@ void drft::system::LiquidSystem::onTurnEndEvent(events::TurnEndEvent& ev) const
 
 	if (health && stamina && isInLiquid && stamina->current <= 0.f)
 	{
-		_registry.emplace_or_replace<component::action::TakeDamage>(ev.entity, static_cast<int>(health->max / 10));
+		_registry.emplace_or_replace<component::action::TakeDamage>(ev.entity, health->max / 10.f);
 	}
 }
 

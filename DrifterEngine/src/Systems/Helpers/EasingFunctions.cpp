@@ -28,3 +28,19 @@ float drft::Easing::easeInOutCirc(float f)
 		? (1 - std::sqrtf(1.f - std::powf(2.f * f, 2.f))) / 2.f
 		: (std::sqrtf(1.f - std::powf(-2.f * f + 2.f, 2.f)) + 1.f) / 2.f;
 }
+
+float drft::Easing::easeInBack(float f)
+{
+	const float c1 = 1.70158f;
+	const float c3 = c1 + 1;
+
+	return c3 * f * f * f - c1 * f * f;
+}
+
+float drft::Easing::easeInBackSlow(float f)
+{
+	const float c1 = 1.90158f;
+	const float c3 = c1 + 1;
+
+	return c3 * f * f * f - c1 * f * f;
+}

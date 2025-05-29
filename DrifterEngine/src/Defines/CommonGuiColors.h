@@ -12,6 +12,7 @@ namespace guiColor
 
 	const sf::Color MGSHudBlue = { 60, 115, 132 };
 	const sf::Color StaminaGreen = { 101,122,98 };
+	const sf::Color SofterRed = { 221, 66, 71 };
 
 	const sf::Color VariableGreen = { 127, 248, 56 };
 

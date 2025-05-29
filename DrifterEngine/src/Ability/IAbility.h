@@ -62,6 +62,10 @@ namespace drft
 		virtual bool isSustained(entt::const_handle actor) const { return false; }
 
 		virtual entt::id_type getAssociatedSkill() const = 0;
+
+	protected:
+		bool hasResources(entt::const_handle actor) const;
+		void spendResources(entt::handle actor) const;
 		
 	private:
 		std::string _name;

@@ -7,7 +7,7 @@
 
 struct HealingComponent
 {
-	int amount = 1;
+	float amount = 0.f;
 	// if > 1, then it applies the amount over time
 	int ticks = 0;
 

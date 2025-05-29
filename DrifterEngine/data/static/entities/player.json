@@ -50,7 +50,8 @@
         },
         "abilities": [
             "sprint",
-            "throw"
+            "throw",
+            "power_attack"
         ],
         "actor": {
           "move_speed": 1.0,

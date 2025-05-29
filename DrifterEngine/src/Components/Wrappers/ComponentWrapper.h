@@ -22,6 +22,9 @@ protected:
 	const entt::registry* tryGetRegistryConst() const;
 	entt::registry* tryGetRegistry();
 
+	entt::const_handle getConstHandle() const;
+	entt::handle getHandle();
+
 private:
 	entt::handle _handle;
 };
@@ -72,4 +75,16 @@ inline entt::registry* ComponentWrapper<ComponentType>::tryGetRegistry()
 {
 	if (!isValid()) return nullptr;
 	return _handle.registry();
+}
+
+template<typename ComponentType>
+inline entt::const_handle ComponentWrapper<ComponentType>::getConstHandle() const
+{
+	return _handle;
+}
+
+template<typename ComponentType>
+inline entt::handle ComponentWrapper<ComponentType>::getHandle()
+{
+	return _handle;
 }

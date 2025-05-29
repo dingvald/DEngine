@@ -6,8 +6,6 @@
 #include <Utility/EntityAccessors/GetEntityMaterials.h>
 #include <Utility/EntityAccessors/GetEntityWeight.h>
 #include <Utility/EntityAccessors/GetEntityName.h>
-#include <Utility/StringManipulation.h>
-#include <Utility/ColorToHexString.h>
 #include <Utility/TGUIHelpers.h>
 
 ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
@@ -43,7 +41,7 @@ ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
 	weightLabel->setPosition("50%", tgui::bindBottom(separatorLine1) + 4);
 	weightLabel->setText(
 		drft::GuiHelpers::colorizedString("Weight: ", guiColor::TooltipStatNameColor)
-		+ std::format("{} kg", drft::util::getEntityWeight(item)));
+		+ std::format("{:.1f} kg", drft::util::getEntityWeight(item)));
 	weightLabel->setTextSize(14);
 	weightLabel->setOrigin(0.5f, 0.f);
 	weightLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
@@ -60,13 +58,20 @@ ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
 
 	auto materials = drft::util::getEntityMaterialPercentages(item);
 	ss << drft::GuiHelpers::colorizedString("Composed of: ", guiColor::TooltipStatNameColor);
-	for (size_t i = 0; i < materials.size(); i++)
+	if (materials.empty())
 	{
-		auto&& [material, percentage] = materials.at(i);
-		auto renderData = drft::util::getRenderData(material);
-		ss << std::format("{:.0f}% {}", percentage * 100.f, drft::GuiHelpers::colorizedString(drft::util::getEntityName(material), renderData.color));
+		auto renderData = drft::util::getRenderData(item);
+		ss << std::format("100% {}", drft::GuiHelpers::colorizedString(drft::util::getEntityName(item), renderData.color));
 	}
-
+	else
+	{
+		for (auto&& [material, percentage] : materials)
+		{
+			auto renderData = drft::util::getRenderData(material);
+			ss << std::format("{:.0f}% {}", percentage * 100.f, drft::GuiHelpers::colorizedString(drft::util::getEntityName(material), renderData.color));
+		}
+	}
+	
 	materialsList->setText(ss.str());
 	materialsList->setVerticalAlignment(tgui::VerticalAlignment::Center);
 	panel->add(materialsList);

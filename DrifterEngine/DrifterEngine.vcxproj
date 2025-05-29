@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ability\Abilities\PowerAttackAbility.cpp" />
     <ClCompile Include="src\Ability\AbilityHelpers.cpp" />
     <ClCompile Include="src\Ability\AbilityIds.cpp" />
     <ClCompile Include="src\Components\Wrappers\HotbarWrapper.cpp" />
@@ -244,6 +245,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Core\MouseStateSystem.cpp" />
     <ClCompile Include="src\Systems\Core\PlayerTransferSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\MaterialCompositionSystem.cpp" />
+    <ClCompile Include="src\Systems\Helpers\CalculateForceGenerated.cpp" />
     <ClCompile Include="src\Systems\Helpers\DamageTypes.cpp" />
     <ClCompile Include="src\Systems\Helpers\EmplacePathNavToPosition.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetDominantSide.cpp" />
@@ -258,6 +260,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityName.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityPrototype.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\GetEntityWeight.cpp" />
+    <ClCompile Include="src\Utility\EntityAccessors\GetItemInDominantHand.cpp" />
     <ClCompile Include="src\Utility\HashedString.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionRegistry.cpp" />
     <ClCompile Include="src\AI\AiActions\IAiAction.cpp" />
@@ -482,6 +485,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Ability\Abilities\PowerAttackAbility.h" />
     <ClInclude Include="src\Ability\AbilityHelpers.h" />
     <ClInclude Include="src\Components\AbilitiesComponent.h" />
     <ClInclude Include="src\Components\Actions\OpenSkillsScreenAction.h" />
@@ -489,6 +493,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\PlayerHasSeenComponent.h" />
     <ClInclude Include="src\Components\Wrappers\HotbarWrapper.h" />
     <ClInclude Include="src\Components\Wrappers\SkillsWrapper.h" />
+    <ClInclude Include="src\Defines\CardinalDirections.h" />
     <ClInclude Include="src\GUI\AbilityTooltip.h" />
     <ClInclude Include="src\Skills\SkillRequirement.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
@@ -561,6 +566,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Core\MouseStateSystem.h" />
     <ClInclude Include="src\Systems\Core\PlayerTransferSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\MaterialCompositionSystem.h" />
+    <ClInclude Include="src\Systems\Helpers\CalculateForceGenerated.h" />
     <ClInclude Include="src\Systems\Helpers\DamageTypes.h" />
     <ClInclude Include="src\Systems\Helpers\EmplacePathNavToPosition.h" />
     <ClInclude Include="src\Systems\Helpers\GetDominantSide.h" />
@@ -576,6 +582,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityName.h" />
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityPrototype.h" />
     <ClInclude Include="src\Utility\EntityAccessors\GetEntityWeight.h" />
+    <ClInclude Include="src\Utility\EntityAccessors\GetItemInDominantHand.h" />
     <ClInclude Include="src\Utility\HashedString.h" />
     <ClInclude Include="deps\zlib\include\crc32.h" />
     <ClInclude Include="deps\zlib\include\deflate.h" />

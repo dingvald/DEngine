@@ -116,7 +116,7 @@
             },
             "physical_blocking": {},
             "health": {
-                "max": 500.0
+                "max": 120.0
             },
             "light_blocking": {
                 "opacity": 1.0
@@ -140,15 +140,15 @@
                 "color": [ 161, 157, 148 ]
             },
             "material_composition": {
-                "stone": 0.50,
-                "iron": 0.50
+                "stone": 0.40,
+                "iron": 0.60
             },
             "weight": {
                 "value": 800.0
             },
             "physical_blocking": {},
             "health": {
-                "max": 300.0
+                "max": 80.0
             },
             "light_blocking": {
                 "opacity": 1.0

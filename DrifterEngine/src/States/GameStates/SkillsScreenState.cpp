@@ -252,8 +252,8 @@ void drft::SkillsScreenState::refreshAbilities(tgui::HorizontalWrap::Ptr abiliti
 			button->getRenderer()->setTextColorFocused(guiColor::AlphaWhite);
 			button->getRenderer()->setTextColorDownHover(guiColor::AlphaWhite);
 			button->getRenderer()->setTextColorHover(guiColor::TranslucentAsh);
-			button->setTextSize(36);
-			button->setTextPosition({"50%", "50%"}, {0.5f, 0.5f});
+			button->setTextSize(12);
+			button->setTextPosition("10%, 10%", { 0.5f, 0.5f });
 		}
 		templateCopy->add(button);
 
