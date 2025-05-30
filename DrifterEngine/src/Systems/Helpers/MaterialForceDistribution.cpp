@@ -30,19 +30,17 @@ ForceDistribution calculateMaterialForceDistribution(float force, SolidMaterialD
 
 	// Calculate relative density contributions (normalized to 0-1 range)
 	float total_density = solid1.component.density + solid2.component.density + epsilon;
-	float attack_density_ratio = solid2.component.density / total_density;  // Attacker's contribution
-	float defense_density_ratio = solid1.component.density / total_density;  // Defender's contribution
+	float attack_density_ratio = solid2.component.density / total_density;
+	float defense_density_ratio = solid1.component.density / total_density;
 
 	// Attack score (solid2's ability to deal damage)
 	float attackScore = Internal::calculateMaterialScore(solid2, attack_density_ratio);
 	float defenseScore = Internal::calculateMaterialScore(solid1, defense_density_ratio);
 
-	// Exponential force distribution based on score difference
-	float diff = attackScore - defenseScore;
-	// Tune the sharpness of the exponential with a factor (higher = more extreme)
-	const float sharpness = 3.0f;
-	float expValue = std::exp(sharpness * diff);
-	float distribution = expValue / (1.0f + expValue);
+	float stretchedAttackScore = std::powf(attackScore, 2.1f);
+	float stretchedDefenceScore = std::powf(defenseScore, 2.1f);
+
+	float distribution = stretchedAttackScore / (stretchedAttackScore + stretchedDefenceScore);
 
 	return ForceDistribution{ distribution * force, (1.f - distribution) * force };
 }
