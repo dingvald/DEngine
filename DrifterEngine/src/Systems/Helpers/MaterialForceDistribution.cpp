@@ -2,19 +2,21 @@
 #include "MaterialForceDistribution.h"
 #include <Components/SolidMaterialComponent.h>
 
+#pragma optimize("", off)
+
 // Solid Material Property Scalars
 static const float HardnessScalar = 4.0f;
 static const float DensityScalar = 3.0f;
 static const float BrittlenessScalar = 2.0f;
 static const float MalleabilityScalar = 1.0f;
-static const float SharpnessScalar = 2.666f;
+static const float SharpnessScalar = 3.0f;
 static const float SolidScalarSum = HardnessScalar + DensityScalar + BrittlenessScalar + MalleabilityScalar;
 
 namespace Internal
 {
 	static float calculateMaterialScore(const SolidMaterialDescription& solid, float densityRatio)
 	{
-		float hardness = solid.component.hardness * HardnessScalar;
+		float hardness = solid.component.hardness * HardnessScalar + (solid.sharpness * SharpnessScalar);
 		float density = (densityRatio + (densityRatio * solid.sharpness * SharpnessScalar)) * DensityScalar; // Sharpness positively modifies density
 		float brittleness = (1.0f - solid.component.brittleness) * BrittlenessScalar; // Lower brittleness = better
 		float malleability = (1.0f - solid.component.malleability) * MalleabilityScalar; // Lower malleability = better
@@ -35,9 +37,12 @@ ForceDistribution calculateMaterialForceDistribution(float force, SolidMaterialD
 	float attackScore = Internal::calculateMaterialScore(solid2, attack_density_ratio);
 	float defenseScore = Internal::calculateMaterialScore(solid1, defense_density_ratio);
 
-	// Calculate force distribution (attack vs. defense)
-	float total = std::max(attackScore + defenseScore, epsilon);
-	float distribution = attackScore / total;
+	// Exponential force distribution based on score difference
+	float diff = attackScore - defenseScore;
+	// Tune the sharpness of the exponential with a factor (higher = more extreme)
+	const float sharpness = 3.0f;
+	float expValue = std::exp(sharpness * diff);
+	float distribution = expValue / (1.0f + expValue);
 
 	return ForceDistribution{ distribution * force, (1.f - distribution) * force };
 }
