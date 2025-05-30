@@ -18,7 +18,7 @@ namespace drft::system
 	private:
 		struct PendingPlayerTransfer
 		{
-			entt::id_type sourceId;
+			std::optional<entt::id_type> sourceId;
 			TilePosition targetPosition;
 			PositionComponent positionComponent;
 			entt::handle player;

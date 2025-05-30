@@ -25,7 +25,7 @@ void drft::spatial::ChunkSource::update(TilePosition cameraPosition, entt::regis
 	_isFlushed &= processLoadQueue(registry);
 	_isFlushed &= processSaveQueue(registry);
 
-	cleanUpSavedChunks(registry);
+	if (_isFlushed) cleanUpSavedChunks(registry);
 }
 
 void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync)

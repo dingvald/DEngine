@@ -210,6 +210,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
+    <ClCompile Include="src\Systems\Actions\StairsMoveActionSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\IncomingForceSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\CraftingIngredient.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\DecoratorFactory.cpp" />
@@ -303,7 +304,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Gameplay\ConsumableSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\OpenableSystem.cpp" />
     <ClCompile Include="src\ProcGen\PlaceEntities.cpp" />
-    <ClCompile Include="src\Structures\Shapes\RectangleShape.cpp" />
     <ClCompile Include="src\Biomes\BiomeRegistry.cpp" />
     <ClCompile Include="src\Biomes\Biome.cpp" />
     <ClCompile Include="src\JSON\JSONHelpers.cpp" />
@@ -473,13 +473,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Ability\Abilities\ToggleSprintAbility.cpp" />
     <ClCompile Include="src\Ability\Abilities\ThrowAbility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ProjectileSystem.cpp" />
-    <ClCompile Include="src\Structures\StructureFactory.cpp" />
-    <ClCompile Include="src\Structures\StructureBlueprint.cpp" />
-    <ClCompile Include="src\Structures\StructureInstance.cpp" />
-    <ClCompile Include="src\Structures\StructureDecorator.cpp" />
-    <ClCompile Include="src\Structures\StructureBaseShape.cpp" />
-    <ClCompile Include="src\Structures\StructureShapeFactory.cpp" />
-    <ClCompile Include="src\Structures\StructureShapeInstance.cpp" />
     <ClCompile Include="src\Utility\TextureAtlas.cpp" />
     <ClCompile Include="src\Systems\Rendering\SyncedAnimationSystem.cpp" />
     <ClCompile Include="src\Random\XORshift.cpp" />
@@ -488,9 +481,12 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Ability\Abilities\PowerAttackAbility.h" />
     <ClInclude Include="src\Ability\AbilityHelpers.h" />
     <ClInclude Include="src\Components\AbilitiesComponent.h" />
+    <ClInclude Include="src\Components\Actions\MoveDownStairsAction.h" />
+    <ClInclude Include="src\Components\Actions\MoveUpStairsAction.h" />
     <ClInclude Include="src\Components\Actions\OpenSkillsScreenAction.h" />
     <ClInclude Include="src\Components\IncomingForceComponent.h" />
     <ClInclude Include="src\Components\PlayerHasSeenComponent.h" />
+    <ClInclude Include="src\Components\StairsComponent.h" />
     <ClInclude Include="src\Components\Wrappers\HotbarWrapper.h" />
     <ClInclude Include="src\Components\Wrappers\SkillsWrapper.h" />
     <ClInclude Include="src\Defines\CardinalDirections.h" />
@@ -499,6 +495,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />
     <ClInclude Include="src\States\GameStates\SkillsScreenState.h" />
+    <ClInclude Include="src\Systems\Actions\StairsMoveActionSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\IncomingForceSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\CraftingIngredient.h" />
     <ClInclude Include="src\Components\BaseMaterialComponent.h" />
@@ -1036,7 +1033,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Gameplay\ConsumableSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\OpenableSystem.h" />
     <ClInclude Include="src\ProcGen\PlaceEntities.h" />
-    <ClInclude Include="src\Structures\Shapes\RectangleShape.h" />
     <ClInclude Include="src\Biomes\BiomeRegistry.h" />
     <ClInclude Include="src\Biomes\Biome.h" />
     <ClInclude Include="src\JSON\JSONHelpers.h" />
@@ -1359,13 +1355,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Ability\Abilities\ToggleSprintAbility.h" />
     <ClInclude Include="src\Ability\Abilities\ThrowAbility.h" />
     <ClInclude Include="src\Systems\Gameplay\ProjectileSystem.h" />
-    <ClInclude Include="src\Structures\StructureFactory.h" />
-    <ClInclude Include="src\Structures\StructureBlueprint.h" />
-    <ClInclude Include="src\Structures\StructureInstance.h" />
-    <ClInclude Include="src\Structures\StructureDecorator.h" />
-    <ClInclude Include="src\Structures\StructureBaseShape.h" />
-    <ClInclude Include="src\Structures\StructureShapeFactory.h" />
-    <ClInclude Include="src\Structures\StructureShapeInstance.h" />
     <ClInclude Include="src\Utility\TextureAtlas.h" />
     <ClInclude Include="src\Systems\Rendering\SyncedAnimationSystem.h" />
     <ClInclude Include="src\Random\XORshift.h" />
@@ -1374,6 +1363,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   <ItemGroup>
     <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\bodies.json" />
+    <None Include="data\static\entities\stairs.json" />
     <None Include="data\static\entities\weapons.json" />
     <None Include="data\static\generation\biome_features\biome_features.json" />
     <None Include="data\static\generation\entity_packs\entity_packs.json" />

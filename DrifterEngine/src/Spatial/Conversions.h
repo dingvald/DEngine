@@ -7,19 +7,19 @@ namespace drft::spatial
 	// Spatial conversion functions //
 
 	// Converts a position in world space into a position in tile space.
-	sf::Vector2i toTileSpace(sf::Vector2f worldPosition);
+	constexpr sf::Vector2i toTileSpace(sf::Vector2f worldPosition);
 
 	// Converts a chunk coordinate into a position in tile space.
-	sf::Vector2i toTileSpace(sf::Vector2i chunkCoordinate);
+	constexpr sf::Vector2i toTileSpace(sf::Vector2i chunkCoordinate);
 
 	// Converts a position in tile space into a position in float space.
-	sf::Vector2f toFloatSpace(sf::Vector2i tilePosition);
+	constexpr sf::Vector2f toFloatSpace(sf::Vector2i tilePosition);
 
 	// Converts a tile position into a chunk coordinate
-	sf::Vector2i toChunkCoordinate(sf::Vector2i tilePosition);
+	constexpr sf::Vector2i toChunkCoordinate(sf::Vector2i tilePosition);
 
 	// Converts a world position into a chunk coordinate
-	sf::Vector2i toChunkCoordinate(sf::Vector2f worldPosition);
+	constexpr sf::Vector2i toChunkCoordinate(sf::Vector2f worldPosition);
 
 	// Converts a tile position into a chunk-relative position.
 	// Upper-left corner of chunk is (0,0)

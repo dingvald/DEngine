@@ -66,6 +66,16 @@
                         "tag_expression": "floor & border",
                         "chance": 0.4
                     }
+                },
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "stairs_down"
+                    },
+                    "conditions": {
+                        "tag_expression": "floor & center",
+                        "chance": 1.0
+                    }
                 }
             ]
         }

@@ -13,6 +13,9 @@
 
                 "wait": [ "Numpad5" ],
 
+                "move_down_stairs": [ "PageDown" ],
+                "move_up_stairs": ["PageUp"],
+
                 "force_attack_east": [ "Shift + Numpad6" ],
                 "force_attack_west": [ "Shift + Numpad4" ],
                 "force_attack_north": [ "Shift + Numpad8" ],

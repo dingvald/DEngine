@@ -13,6 +13,8 @@
 #include "Components/Actions/InteractionAction.h"
 #include "Components/Actions/MoveAction.h"
 #include "Components/Actions/WaitAction.h"
+#include <Components/Actions/MoveDownStairsAction.h>
+#include <Components/Actions/MoveUpStairsAction.h>
 #include "Components/Components.h"
 #include "Components/PlayerInputComponent.h"
 #include "Components/SprintingComponent.h"
@@ -54,6 +56,13 @@ void drft::system::PlayerInput::init()
 		});
 	actions.bind("player_input", "gameplay", "wait",					[](entt::handle entity) {
 		entity.emplace_or_replace<WaitAction>();
+		});
+
+	actions.bind("player_input", "gameplay", "move_down_stairs",		[](entt::handle entity) {
+		entity.emplace_or_replace<MoveDownStairsAction>();
+		});
+	actions.bind("player_input", "gameplay", "move_up_stairs",			[](entt::handle entity) {
+		entity.emplace_or_replace<MoveUpStairsAction>();
 		});
 											 
 	actions.bind("player_input", "gameplay", "force_attack_south_west", [](entt::handle entity) {

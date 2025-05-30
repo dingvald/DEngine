@@ -23,6 +23,9 @@
                 ],
                 "grass": [
                     [ "tall_grass", 1 ]
+                ],
+                "stairs_down": [
+                    [ "stairs_down", 1]
                 ]
             }
         } 

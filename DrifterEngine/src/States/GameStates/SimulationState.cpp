@@ -20,6 +20,7 @@
 #include "Systems/Actions/InteractionSystem.h"
 #include "Systems/Actions/MeleeAttackActionSystem.h"
 #include "Systems/Actions/MoveActionSystem.h"
+#include <Systems/Actions/StairsMoveActionSystem.h>
 #include "Systems/Actions/PickUpSystem.h"
 #include "Systems/Actions/SprintingSystem.h"
 #include "Systems/Actions/WaitActionSystem.h"
@@ -197,6 +198,7 @@ void drft::SimulationState::importSystems()
 	_systems->add<HealingSystem>();
 	_systems->add<PickUpSystem>();
 	_systems->add<MoveActionSystem>();
+	_systems->add<StairsMoveActionSystem>();
 	_systems->add<MeleeAttackActionSystem>();
 	_systems->add<CollisionSystem>();
 	_systems->add<StaminaSystem>();

@@ -40,7 +40,8 @@ void drft::system::Camera::updateEnd()
 	targetScreenPosition.x += TileDimensions.x / 2.f;
 	targetScreenPosition.y += TileDimensions.y / 2.f;
 
-	if (camera.getViewRect().contains(targetScreenPosition))
+	if (camera.getViewRect().contains(targetScreenPosition) 
+		&& camera.position.tile.z == target->tile.z)
 	{
 		smoothCameraToTarget(targetScreenPosition, camera);
 	}

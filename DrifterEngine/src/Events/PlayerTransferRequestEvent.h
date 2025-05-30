@@ -6,7 +6,7 @@ namespace drft::events
 {
 	struct PlayerTransferRequestEvent
 	{
-		entt::id_type sourceId;
+		std::optional<entt::id_type> sourceId;
 		TilePosition position;
 	};
 }

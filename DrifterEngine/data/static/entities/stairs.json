@@ -1,0 +1,25 @@
+{
+    "prototypes": {
+        "stairs_down": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "description": {
+                    "name": "Stairs Down",
+                    "description": "Stairs that go down one level."
+                },
+                "render": {
+                    "texture": "stairs_down",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 100, 100, 100 ]
+                },
+                "stairs": {
+                    "type": "down"
+                }
+            }
+        }
+    }
+}
+    

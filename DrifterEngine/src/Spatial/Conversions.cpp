@@ -3,15 +3,23 @@
 
 using namespace drft::spatial;
 
-sf::Vector2i drft::spatial::toTileSpace(sf::Vector2f worldPosition)
+namespace Internal
 {
-	int x = static_cast<int>(std::floor(worldPosition.x / TileDimensions.x));
-	int y = static_cast<int>(std::floor(worldPosition.y / TileDimensions.y));
+    static constexpr float constexprFloor(float f)
+    {
+        return (f >= 0.0f || static_cast<int>(f) == f) ? static_cast<int>(f) : static_cast<int>(f) - 1;
+    }
+}
+
+constexpr sf::Vector2i drft::spatial::toTileSpace(sf::Vector2f worldPosition)
+{
+	int x = static_cast<int>(Internal::constexprFloor(worldPosition.x / TileDimensions.x));
+	int y = static_cast<int>(Internal::constexprFloor(worldPosition.y / TileDimensions.y));
 
 	return { x, y };
 }
 
-sf::Vector2i drft::spatial::toTileSpace(sf::Vector2i chunkCoordinate)
+constexpr sf::Vector2i drft::spatial::toTileSpace(sf::Vector2i chunkCoordinate)
 {
 	int x = chunkCoordinate.x * ChunkDimensions.x;
 	int y = chunkCoordinate.y * ChunkDimensions.y;
@@ -19,7 +27,7 @@ sf::Vector2i drft::spatial::toTileSpace(sf::Vector2i chunkCoordinate)
 	return { x,y };
 }
 
-sf::Vector2f drft::spatial::toFloatSpace(sf::Vector2i tilePosition)
+constexpr sf::Vector2f drft::spatial::toFloatSpace(sf::Vector2i tilePosition)
 {
 	float x = static_cast<float>(tilePosition.x * TileDimensions.x);
 	float y = static_cast<float>(tilePosition.y * TileDimensions.y);
@@ -27,7 +35,7 @@ sf::Vector2f drft::spatial::toFloatSpace(sf::Vector2i tilePosition)
 	return { x, y };
 }
 
-sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2i tilePosition)
+constexpr sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2i tilePosition)
 {
 	int xChunk = tilePosition.x / ChunkDimensions.x;
 	if (tilePosition.x < 0)
@@ -45,7 +53,7 @@ sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2i tilePosition)
 	return { xChunk, yChunk };
 }
 
-sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2f worldPosition)
+constexpr sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2f worldPosition)
 {
 	auto tilePosition = toTileSpace(worldPosition);
 	return toChunkCoordinate(tilePosition);

@@ -45,6 +45,7 @@
 #include "SolidMaterialComponent.h"
 #include "SprintingComponent.h"
 #include "SpriteControllerComponent.h"
+#include "StairsComponent.h"
 #include "StaminaComponent.h"
 #include "SyncedAnimationComponent.h"
 #include "TemporaryLightSourceComponent.h"
@@ -101,6 +102,7 @@ void ComponentMetaBinder::bindComponents()
 	SolidMaterialComponent::bind();
 	SprintingComponent::bind();
 	SpriteControllerComponent::bind();
+	StairsComponent::bind();
 	StaminaComponent::bind();
 	SyncedAnimationComponent::bind();
 	TemporaryLightSourceComponent::bind();
