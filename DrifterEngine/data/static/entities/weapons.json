@@ -25,7 +25,9 @@
                         [ "smithing", 5 ]
                     ]
                 },
-                "sharp": {},
+                "sharp": {
+                    "value": 0.4
+                },
                 "weight": {
                     "value": 1.5
                 },
