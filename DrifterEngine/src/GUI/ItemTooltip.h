@@ -2,7 +2,7 @@
 class ItemTooltip
 {
 public:
-	ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui);
+	ItemTooltip(entt::const_handle item, entt::const_handle actor, tgui::Group::Ptr gui);
 	~ItemTooltip();
 
 	void update();

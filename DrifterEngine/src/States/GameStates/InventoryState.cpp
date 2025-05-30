@@ -474,7 +474,7 @@ void drft::InventoryState::onEnterItemContainingWidget(entt::const_handle item)
 {
 	if (_tooltip.has_value()) return;
 
-	_tooltip.emplace(item, _guiGroup);
+	_tooltip.emplace(item, _sessionEntity, _guiGroup);
 	_tooltip->setDelayTime(15);
 }
 

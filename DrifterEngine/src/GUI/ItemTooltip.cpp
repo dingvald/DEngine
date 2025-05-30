@@ -6,9 +6,10 @@
 #include <Utility/EntityAccessors/GetEntityMaterials.h>
 #include <Utility/EntityAccessors/GetEntityWeight.h>
 #include <Utility/EntityAccessors/GetEntityName.h>
+#include <Systems/Helpers/CalculateForceGenerated.h>
 #include <Utility/TGUIHelpers.h>
 
-ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
+ItemTooltip::ItemTooltip(entt::const_handle item, entt::const_handle actor, tgui::Group::Ptr gui)
 {
 	_tooltip = tgui::Group::create();
 	_tooltip->setVisible(false);
@@ -48,8 +49,19 @@ ItemTooltip::ItemTooltip(entt::const_handle item, tgui::Group::Ptr gui)
 	weightLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
 	panel->add(weightLabel);
 
+	auto forceLabel = tgui::RichTextLabel::create();
+	forceLabel->setPosition("50%", tgui::bindBottom(weightLabel));
+	forceLabel->setText(
+		drft::GuiHelpers::colorizedString("Force: ", guiColor::TooltipStatNameColor)
+		+ drft::GuiHelpers::colorizedString(std::format("{:.1f}", calculateForceGenerated(actor, item).total), guiColor::VariableGreen));
+	forceLabel->setTextSize(14);
+	forceLabel->setOrigin(0.5f, 0.f);
+	forceLabel->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
+	forceLabel->getRenderer()->setTextColor(tgui::Color{ 100,100,100 });
+	panel->add(forceLabel);
+
 	auto materialsList = tgui::RichTextLabel::create();
-	materialsList->setPosition("50%", tgui::bindBottom(weightLabel));
+	materialsList->setPosition("50%", tgui::bindBottom(forceLabel));
 	materialsList->setTextSize(14);
 	materialsList->setOrigin(0.5f, 0.f);
 	materialsList->setMaximumTextWidth(panel->getInnerSize().x - 8.f);
