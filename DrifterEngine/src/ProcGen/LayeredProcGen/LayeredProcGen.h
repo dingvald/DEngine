@@ -416,7 +416,15 @@ namespace drft
 
 		sf::Vector3i toChunkPosition(sf::Vector3i tilePosition) const
 		{
-			return tilePosition.componentWiseDiv(getChunkDimensions());
+			sf::Vector3i result;
+			const sf::Vector3i chunkDimensions = getChunkDimensions();
+			result.x = (tilePosition.x >= 0) ? (tilePosition.x / chunkDimensions.x)
+				: ((tilePosition.x + 1) / chunkDimensions.x - 1);
+			result.y = (tilePosition.y >= 0) ? (tilePosition.y / chunkDimensions.y)
+				: ((tilePosition.y + 1) / chunkDimensions.y - 1);
+			result.z = (tilePosition.z >= 0) ? (tilePosition.z / chunkDimensions.z)
+				: ((tilePosition.z + 1) / chunkDimensions.z - 1);
+			return result;
 		}
 		sf::Vector3i toTilePosition(sf::Vector3i chunkPosition) const
 		{
