@@ -25,7 +25,7 @@ void drft::spatial::ChunkSource::update(TilePosition cameraPosition, entt::regis
 	_isFlushed &= processLoadQueue(registry);
 	_isFlushed &= processSaveQueue(registry);
 
-	if (_isFlushed) cleanUpSavedChunks(registry);
+	cleanUpSavedChunks(registry);
 }
 
 void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync)
@@ -78,12 +78,9 @@ void drft::spatial::ChunkSource::updateChunkStates(TilePosition position)
 	for (auto&& coord : activeCoords)
 	{
 		const ChunkPosition chunkPosition = spatial::asChunkSpace(coord);
-		if (!_chunks.contains(chunkPosition))
-		{
-			_chunks.emplace(chunkPosition, spatial::VirtualChunk{_sourceId, chunkPosition });
-		}
+		auto&& [mapKeyValue, inserted] = _chunks.try_emplace(chunkPosition, spatial::VirtualChunk{ _sourceId, chunkPosition });
 
-		spatial::VirtualChunk& chunk = _chunks.at(chunkPosition);
+		spatial::VirtualChunk& chunk = mapKeyValue->second;
 		switch (chunk.getState())
 		{
 		case spatial::ChunkState::None:
@@ -110,8 +107,7 @@ void drft::spatial::ChunkSource::updateChunkStates(TilePosition position)
 
 		if (isWithinChunkSaveArea(coord, chunkPosition)) continue;
 
-		_toSave.push_back(coord);
-		chunk.setState(spatial::ChunkState::ToSave);
+		saveChunk(coord, chunk);
 	}
 }
 
@@ -228,6 +224,12 @@ void drft::spatial::ChunkSource::loadOrBuildChunk(ChunkPosition position, spatia
 		chunk.setState(spatial::ChunkState::ToBuild);
 		_toBuild.push_back(std::move(position));
 	}
+}
+
+void drft::spatial::ChunkSource::saveChunk(ChunkPosition position, spatial::VirtualChunk& chunk)
+{
+	chunk.setState(spatial::ChunkState::ToSave);
+	_toSave.push_back(position);
 }
 
 bool drft::spatial::ChunkSource::isWithinChunkSaveArea(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const

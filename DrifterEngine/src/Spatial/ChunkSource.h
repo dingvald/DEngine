@@ -29,6 +29,7 @@ namespace drft::spatial
 		bool processSaveQueue(entt::registry& registry);
 
 		void loadOrBuildChunk(ChunkPosition position, spatial::VirtualChunk& chunk);
+		void saveChunk(ChunkPosition position, spatial::VirtualChunk& chunk);
 
 		bool isWithinChunkSaveArea(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const;
 

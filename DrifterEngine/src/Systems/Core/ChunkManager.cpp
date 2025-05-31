@@ -103,7 +103,8 @@ void drft::system::ChunkManager::onTransfer()
 		}
 	}
 
-	if (_activeSource->id() == _pendingTransfer->oldSourceId)
+	if (_activeSource->id() == _pendingTransfer->oldSourceId
+		&& _pendingTransfer->oldSourceId != _pendingTransfer->newSourceId)
 	{
 		// Check if the new souce even exists before transferring
 		if (!doesChunkSourceExist(_pendingTransfer->newSourceId))
