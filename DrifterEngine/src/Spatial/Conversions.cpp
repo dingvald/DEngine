@@ -11,71 +11,6 @@ namespace Internal
     }
 }
 
-constexpr sf::Vector2i drft::spatial::toTileSpace(sf::Vector2f worldPosition)
-{
-	int x = static_cast<int>(Internal::constexprFloor(worldPosition.x / TileDimensions.x));
-	int y = static_cast<int>(Internal::constexprFloor(worldPosition.y / TileDimensions.y));
-
-	return { x, y };
-}
-
-constexpr sf::Vector2i drft::spatial::toTileSpace(sf::Vector2i chunkCoordinate)
-{
-	int x = chunkCoordinate.x * ChunkDimensions.x;
-	int y = chunkCoordinate.y * ChunkDimensions.y;
-
-	return { x,y };
-}
-
-constexpr sf::Vector2f drft::spatial::toFloatSpace(sf::Vector2i tilePosition)
-{
-	float x = static_cast<float>(tilePosition.x * TileDimensions.x);
-	float y = static_cast<float>(tilePosition.y * TileDimensions.y);
-
-	return { x, y };
-}
-
-constexpr sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2i tilePosition)
-{
-	int xChunk = tilePosition.x / ChunkDimensions.x;
-	if (tilePosition.x < 0)
-	{
-		xChunk = (tilePosition.x + 1) / ChunkDimensions.x;
-		--xChunk;
-	}
-
-	int yChunk = tilePosition.y / ChunkDimensions.y;
-	if (tilePosition.y < 0)
-	{
-		yChunk = (tilePosition.y + 1) / ChunkDimensions.y;
-		--yChunk;
-	}
-	return { xChunk, yChunk };
-}
-
-constexpr sf::Vector2i drft::spatial::toChunkCoordinate(sf::Vector2f worldPosition)
-{
-	auto tilePosition = toTileSpace(worldPosition);
-	return toChunkCoordinate(tilePosition);
-}
-
-sf::Vector2i drft::spatial::toLocalChunkSpace(sf::Vector2i tilePosition)
-{
-	int xPos = tilePosition.x % ChunkDimensions.x;
-	if (xPos < 0)
-	{
-		xPos += ChunkDimensions.x;
-	}
-
-	int yPos = tilePosition.y % ChunkDimensions.y;
-	if (yPos < 0)
-	{
-		yPos += ChunkDimensions.y;
-	}
-
-	return { xPos, yPos };
-}
-
 drft::TilePosition drft::spatial::asTileSpace(sf::Vector2i position)
 {
 	return TilePosition{ position.x, position.y, 0 };
@@ -93,22 +28,16 @@ drft::ChunkPosition drft::spatial::asChunkSpace(sf::Vector3i position)
 	return std::move(result);
 }
 
-drft::ChunkPosition drft::spatial::toChunkSpace(sf::Vector3f position)
-{
-	ChunkPosition result;
-	result.x = static_cast<int>(position.x) / TileDimensions.x / ChunkDimensions.x;
-	result.y = static_cast<int>(position.y) / TileDimensions.y / ChunkDimensions.y;
-	result.z = static_cast<int>(position.z) / TileDimensions.z / ChunkDimensions.z;
-	return std::move(result);
-}
-
 drft::ChunkPosition drft::spatial::toChunkSpace(TilePosition tilePosition)
 {
-	ChunkPosition result;
-	result.x = tilePosition.x / ChunkDimensions.x;
-	result.y = tilePosition.y / ChunkDimensions.y;
-	result.z = tilePosition.z / ChunkDimensions.z;
-	return std::move(result);
+    ChunkPosition result;
+    result.x = (tilePosition.x >= 0) ? (tilePosition.x / ChunkDimensions.x)
+                                  : ((tilePosition.x + 1) / ChunkDimensions.x - 1);
+    result.y = (tilePosition.y >= 0) ? (tilePosition.y / ChunkDimensions.y)
+                                  : ((tilePosition.y + 1) / ChunkDimensions.y - 1);
+    result.z = (tilePosition.z >= 0) ? (tilePosition.z / ChunkDimensions.z)
+                                  : ((tilePosition.z + 1) / ChunkDimensions.z - 1);
+    return std::move(result);
 }
 
 sf::Vector3i drft::spatial::toChunkLocalSpace(TilePosition tilePosition)
@@ -145,11 +74,14 @@ drft::TilePosition drft::spatial::toTileSpace(ChunkPosition chunkPosition)
 
 drft::TilePosition drft::spatial::toTileSpace(sf::Vector3f position)
 {
-	TilePosition result;
-	result.x = static_cast<int>(position.x) / TileDimensions.x;
-	result.y = static_cast<int>(position.y) / TileDimensions.y;
-	result.z = static_cast<int>(position.z) / TileDimensions.z;
-	return std::move(result);
+    TilePosition result;
+    result.x = (position.x >= 0) ? (static_cast<int>(position.x) / TileDimensions.x)
+                              : ((static_cast<int>(position.x) + 1) / TileDimensions.x - 1);
+    result.y = (position.y >= 0) ? (static_cast<int>(position.y) / TileDimensions.y)
+                              : ((static_cast<int>(position.y) + 1) / TileDimensions.y - 1);
+    result.z = (position.z >= 0) ? (static_cast<int>(position.z) / TileDimensions.z)
+                              : ((static_cast<int>(position.z) + 1) / TileDimensions.z - 1);
+    return std::move(result);
 }
 
 sf::Vector3f drft::spatial::toFloatSpace(TilePosition tilePosition)
