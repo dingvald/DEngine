@@ -115,7 +115,7 @@ void drft::system::ChunkManager::onTransfer()
 			return;
 		}
 
-		_activeSource->shutdown(_registry, false);
+		_activeSource->shutdown(_registry, true);
 		_activeSource = tryCreateNewChunkSource(_pendingTransfer->newSourceId);
 
 		if (!_activeSource) throw std::exception("Something went terribly wrong during source transfer");

@@ -23,7 +23,6 @@ namespace drft::spatial
 		void cleanUpSavedChunks(entt::registry& registry);
 		void cleanUpAllChunks(entt::registry& registry);
 
-		void flushAllQueues(entt::registry& registry);
 		bool processBuildQueue(entt::registry& registry);
 		bool processLoadQueue(entt::registry& registry);
 		bool processSaveQueue(entt::registry& registry);
@@ -31,12 +30,11 @@ namespace drft::spatial
 		void loadOrBuildChunk(ChunkPosition position, spatial::VirtualChunk& chunk);
 		void saveChunk(ChunkPosition position, spatial::VirtualChunk& chunk);
 
-		bool isWithinChunkSaveArea(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const;
+		bool isWithinActiveArea(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const;
 
 
 	private:
 		entt::id_type _sourceId;
-		bool _isFlushed = true; // has nothing in any queue
 		bool _isShuttingDown = false;
 		ChunkSerializer& _serializer;
 		IChunkGenerator& _generator;

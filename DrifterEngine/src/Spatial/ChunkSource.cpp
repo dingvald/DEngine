@@ -20,16 +20,16 @@ void drft::spatial::ChunkSource::update(TilePosition cameraPosition, entt::regis
 {
 	updateChunkStates(cameraPosition);
 
-	_isFlushed = true;
-	_isFlushed &= processBuildQueue(registry);
-	_isFlushed &= processLoadQueue(registry);
-	_isFlushed &= processSaveQueue(registry);
+	processBuildQueue(registry);
+	processLoadQueue(registry);
+	processSaveQueue(registry);
 
 	cleanUpSavedChunks(registry);
 }
 
 void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync)
 {
+	_isShuttingDown = true;
 	for (auto&& [coord, chunk] : _chunks)
 	{
 		_toSave.push_back(coord);
@@ -42,7 +42,6 @@ void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync
 		isDone = processSaveQueue(registry);
 	} 
 	while (!isDone && !isAsync);
-	
 	
 	cleanUpAllChunks(registry);
 }
@@ -70,9 +69,9 @@ void drft::spatial::ChunkSource::updateChunkStates(TilePosition position)
 {
 	if (_isShuttingDown) return;
 
-	ChunkPosition chunkPosition = spatial::toChunkSpace(position);
+	ChunkPosition centerChunkPosition = spatial::toChunkSpace(position);
 
-	auto activeCoords = spatial::getIntCircleInRadius(chunkPosition, ACTIVE_CHUNK_RADIUS_XY);
+	auto activeCoords = spatial::getIntCircleInRadius(centerChunkPosition, ACTIVE_CHUNK_RADIUS_XY);
 
 	// Ensure active chunks are active or will be built
 	for (auto&& coord : activeCoords)
@@ -101,13 +100,13 @@ void drft::spatial::ChunkSource::updateChunkStates(TilePosition position)
 	}
 
 	// Then, scan for chunks to save
-	for (auto&& [coord, chunk] : _chunks)
+	for (auto&& [chunkPosition, chunk] : _chunks)
 	{
 		if (chunk.getState() != spatial::ChunkState::Active) continue;
 
-		if (isWithinChunkSaveArea(coord, chunkPosition)) continue;
+		if (isWithinActiveArea(chunkPosition, centerChunkPosition)) continue;
 
-		saveChunk(coord, chunk);
+		saveChunk(chunkPosition, chunk);
 	}
 }
 
@@ -130,10 +129,6 @@ void drft::spatial::ChunkSource::cleanUpAllChunks(entt::registry& registry)
 		grid.removeChunk(position);
 	}
 	_chunks.clear();
-}
-
-void drft::spatial::ChunkSource::flushAllQueues(entt::registry& registry)
-{
 }
 
 bool drft::spatial::ChunkSource::processBuildQueue(entt::registry& registry)
@@ -232,7 +227,7 @@ void drft::spatial::ChunkSource::saveChunk(ChunkPosition position, spatial::Virt
 	_toSave.push_back(position);
 }
 
-bool drft::spatial::ChunkSource::isWithinChunkSaveArea(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const
+bool drft::spatial::ChunkSource::isWithinActiveArea(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const
 {
 	const int dz_abs = std::abs(chunkPosition.z - centerPosition.z);
 	if (dz_abs == 0)
