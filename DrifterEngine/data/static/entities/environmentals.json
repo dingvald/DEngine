@@ -155,8 +155,7 @@
             },
             "local_light_source": {
                 "radius": 3,
-                "drop_off": 0.4,
-                "color": [ 180, 180, 180 ]
+                "color": [ 255, 235, 225 ]
             }
         }
     }

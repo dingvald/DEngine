@@ -29,12 +29,11 @@ void drft::system::LightSourceSystem::update()
 					std::uint8_t b = static_cast<std::uint8_t>(std::clamp(tempLight->color.b * (static_cast<float>(light->color.b) / 255.f), 0.f, 255.f));
 
 					const float radius = std::max(tempLight->radius, light->radius);
-					const float dropOff = std::min(tempLight->dropOff, light->dropOff);
-					_registry.emplace_or_replace<TemporaryLightSourceComponent>(entity, radius, dropOff, sf::Color(r, g, b, tempLight->color.a));
+					_registry.emplace_or_replace<TemporaryLightSourceComponent>(entity, radius, sf::Color(r, g, b, tempLight->color.a));
 				}
 				else
 				{
-					_registry.emplace_or_replace<TemporaryLightSourceComponent>(entity, light->radius, light->dropOff, light->color);
+					_registry.emplace_or_replace<TemporaryLightSourceComponent>(entity, light->radius, light->color);
 				}
 			}
 		}

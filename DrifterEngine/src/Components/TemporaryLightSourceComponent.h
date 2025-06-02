@@ -9,7 +9,6 @@
 struct TemporaryLightSourceComponent
 {
 	float radius = 1.f;
-	float dropOff = 0.1f;
 	sf::Color color = sf::Color::White;
 
 private:
@@ -30,7 +29,6 @@ namespace cereal
 	{
 		archive(
 			temporaryLightSource.radius,
-			temporaryLightSource.dropOff,
 			temporaryLightSource.color.r,
 			temporaryLightSource.color.g,
 			temporaryLightSource.color.b

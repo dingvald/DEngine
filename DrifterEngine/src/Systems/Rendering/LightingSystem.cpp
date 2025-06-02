@@ -17,6 +17,16 @@
 #include "Spatial/WorldGrid.h"
 #include "Spatial/Grid2d.h"
 
+#pragma optimize("", off)
+
+namespace Internal
+{
+	static float calculateLightIntensity(float radius, float distance)
+	{
+		return 1.f - (distance * distance) / (radius * radius);
+	}
+}
+
 void drft::system::LightingSystem::init()
 {
 	auto& grid = _registry.ctx().get<spatial::WorldGrid&>();
@@ -32,7 +42,7 @@ void drft::system::LightingSystem::init()
 	};
 	auto getDistance = [](sf::Vector3i position) -> int
 	{
-		return static_cast<int>(spatial::distance3d({0,0,0}, position));
+		return static_cast<int>(spatial::distance3d({0,0,position.z}, position));
 	};
 
 	_fov = std::make_unique<Visibility>(blocksLight, setVisible, getDistance);
@@ -70,8 +80,8 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 		{
 			auto& pos = _registry.get<PositionComponent>(entity);
 			auto tileDistance = spatial::distance3d(pos.tile, lightpos.tile);
-			float denom = (tileDistance / light.radius) + (1.f*light.dropOff);
-			float i = std::clamp( 1 / (denom*denom), 0.0f, 1.0f);
+
+			const float i = Internal::calculateLightIntensity(light.radius, tileDistance);
 			sf::Color lightColor = 
 			{
 				static_cast<std::uint8_t>(light.color.r * i),
@@ -99,8 +109,8 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 		{
 			auto& pos = _registry.get<PositionComponent>(entity);
 			auto tileDistance = spatial::distance3d(pos.tile, lightpos.tile);
-			float denom = (tileDistance / light.radius) + (1.f * light.dropOff);
-			float i = std::clamp(1 / (denom * denom), 0.0f, 1.0f);
+
+			const float i = Internal::calculateLightIntensity(light.radius, tileDistance);
 			sf::Color lightColor =
 			{
 				static_cast<std::uint8_t>(light.color.r * i),
