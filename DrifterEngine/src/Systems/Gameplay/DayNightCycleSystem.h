@@ -2,6 +2,11 @@
 #include "Systems/System.h"
 #include "Events/GameTickEvent.h"
 
+namespace drft
+{
+	struct TilePosition;
+}
+
 namespace drft::system
 {
 	class DayNightCycleSystem : public System
@@ -16,7 +21,8 @@ namespace drft::system
 	private:
 		void onGameTickEvent(const events::GameTickEvent& ev);
 		void onConstructDateAndTimeTracker(entt::registry& registry, entt::entity entity);
-		sf::Color determineGlobalIllumination() const;
+		sf::Color determineGlobalIllumination(drft::TilePosition position) const;
+		void setSurfaceLight();
 
 	private:
 		entt::entity _dateAndTimeTracker = entt::null;

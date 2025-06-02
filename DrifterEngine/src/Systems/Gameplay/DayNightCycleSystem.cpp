@@ -22,6 +22,14 @@ static constexpr int HOURS_PER_DAY = 24;
 static const sf::Color NIGHT_COLOR = { 30,30,50 };
 static const sf::Color DAY_COLOR = { 225,225,225 };
 
+namespace Internal
+{
+	static bool isUnderground(drft::TilePosition position)
+	{
+		return position.z < 0;
+	}
+}
+
 void drft::system::DayNightCycleSystem::init()
 {
 	_dispatcher.sink<events::GameTickEvent>()
@@ -41,12 +49,7 @@ void drft::system::DayNightCycleSystem::start()
 
 void drft::system::DayNightCycleSystem::update()
 {
-	const auto color = determineGlobalIllumination();
-	auto cameraView = _registry.view<CameraComponent>();
-	for (auto entity : cameraView)
-	{
-		_registry.emplace_or_replace<GlobalLightSourceComponent>(entity, color);
-	}
+	setSurfaceLight();
 
 	auto& time = _registry.get<DateAndTimeTrackerComponent>(_dateAndTimeTracker);
 	auto timeMessage = std::format("Day {} - {}:{:02} {}", 
@@ -109,7 +112,7 @@ void drft::system::DayNightCycleSystem::onConstructDateAndTimeTracker(entt::regi
 	_dateAndTimeTracker = entity;
 }
 
-sf::Color drft::system::DayNightCycleSystem::determineGlobalIllumination() const
+sf::Color drft::system::DayNightCycleSystem::determineGlobalIllumination(drft::TilePosition position) const
 {
 	sf::Color result = { sf::Color::White };
 
@@ -149,4 +152,19 @@ sf::Color drft::system::DayNightCycleSystem::determineGlobalIllumination() const
 	}
 
 	return result;
+}
+
+void drft::system::DayNightCycleSystem::setSurfaceLight()
+{
+	auto camera = getCurrentCamera(_registry);
+
+	if (Internal::isUnderground(camera.position.tile))
+	{
+		_registry.remove<GlobalLightSourceComponent>(camera.entity);
+	}
+	else
+	{
+		const auto color = determineGlobalIllumination(camera.position.tile);
+		_registry.emplace_or_replace<GlobalLightSourceComponent>(camera.entity, color);
+	}
 }
