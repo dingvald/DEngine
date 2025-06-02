@@ -75,12 +75,12 @@ drft::TilePosition drft::spatial::toTileSpace(ChunkPosition chunkPosition)
 drft::TilePosition drft::spatial::toTileSpace(sf::Vector3f position)
 {
     TilePosition result;
-    result.x = (position.x >= 0) ? (static_cast<int>(position.x) / TileDimensions.x)
-                              : ((static_cast<int>(position.x) + 1) / TileDimensions.x - 1);
-    result.y = (position.y >= 0) ? (static_cast<int>(position.y) / TileDimensions.y)
-                              : ((static_cast<int>(position.y) + 1) / TileDimensions.y - 1);
-    result.z = (position.z >= 0) ? (static_cast<int>(position.z) / TileDimensions.z)
-                              : ((static_cast<int>(position.z) + 1) / TileDimensions.z - 1);
+    result.x = (position.x >= 0) ? (static_cast<int>(std::floor(position.x)) / TileDimensions.x)
+                              : ((static_cast<int>(std::floor(position.x)) + 1) / TileDimensions.x - 1);
+    result.y = (position.y >= 0) ? (static_cast<int>(std::floor(position.y)) / TileDimensions.y)
+                              : ((static_cast<int>(std::floor(position.y)) + 1) / TileDimensions.y - 1);
+    result.z = (position.z >= 0) ? (static_cast<int>(std::floor(position.z)) / TileDimensions.z)
+                              : ((static_cast<int>(std::floor(position.z)) + 1) / TileDimensions.z - 1);
     return std::move(result);
 }
 
