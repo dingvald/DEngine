@@ -86,12 +86,14 @@ void drft::system::ChunkManager::onFirstUpdate()
 
 void drft::system::ChunkManager::onNoSource()
 {
+	LOG_ERROR("No generation source - no entity generation will occur");
 }
 
 void drft::system::ChunkManager::onTransfer()
 {
 	if (!_pendingTransfer) throw std::exception("Called onTransfer without a pending transfer");
 
+	// Create new source
 	if (!_activeSource)
 	{
 		_activeSource = tryCreateNewChunkSource(_pendingTransfer->newSourceId);
@@ -103,8 +105,9 @@ void drft::system::ChunkManager::onTransfer()
 		}
 	}
 
+	// Shutdown old source
 	if (_activeSource->id() == _pendingTransfer->oldSourceId
-		&& _pendingTransfer->oldSourceId != _pendingTransfer->newSourceId)
+		&& _activeSource->id() != _pendingTransfer->newSourceId)
 	{
 		// Check if the new souce even exists before transferring
 		if (!doesChunkSourceExist(_pendingTransfer->newSourceId))
@@ -121,6 +124,7 @@ void drft::system::ChunkManager::onTransfer()
 		if (!_activeSource) throw std::exception("Something went terribly wrong during source transfer");
 	}
 
+	// Update new source until fully loaded
 	if (_activeSource->id() == _pendingTransfer->newSourceId)
 	{
 		_activeSource->update(_pendingTransfer->position, _registry);
@@ -159,6 +163,8 @@ void drft::system::ChunkManager::onUpdateSource()
 
 void drft::system::ChunkManager::setState(State newState)
 {
+	if (_state == newState) return;
+
 	_state = newState;
 	onStateChange(_state);
 }
@@ -174,7 +180,7 @@ void drft::system::ChunkManager::onStateChange(State newState)
 		LOG_WARNING("No chunk source found");
 		break;
 	case State::Transferring:
-		LOG_MSG("Requesting transfer to source id {}", _pendingTransfer->newSourceId);
+		LOG_MSG("Requesting transfer to source id {}, position {}", _pendingTransfer->newSourceId, TilePosition::toString(_pendingTransfer->position));
 		_dispatcher.trigger(events::ChunkSourceTransferStartedEvent{ _pendingTransfer->oldSourceId, _pendingTransfer->newSourceId });
 		break;
 	case State::SourceReady:

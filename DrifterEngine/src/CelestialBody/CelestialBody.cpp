@@ -72,8 +72,7 @@ CelestialBody::CelestialBody(const GenerationRegistries& registries)
 GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt::registry& registry)
 {
 	const sf::Vector3i origin = spatial::toTileSpace(position);
-	const sf::Vector3i dimensions = spatial::asTileSpace(ChunkDimensions);
-	spatial::AABB<int> volume = { origin, dimensions };
+	spatial::AABB<int> volume = { origin, ChunkDimensions };
 
 	auto biomeLayer = _layerManager.generate<BiomeLayer>(volume);
 	if (!biomeLayer.isReady()) return biomeLayer.getState();
@@ -85,7 +84,7 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	if (!featureLayer.isReady()) return featureLayer.getState();
 
 	const auto& factory = registry.ctx().get<const EntityFactory&>();
-	auto& entityCanvas = _layerManager.getCanvas("slot_canvas"_hs);
+	auto& slotCanvas = _layerManager.getCanvas("slot_canvas"_hs);
 
 	rng::Random random = { std::hash<ChunkPosition>()(position) };
 
@@ -97,7 +96,7 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 			::placeTile(point3d, biomeLayer.unwrap().getBiomeAt(point3d), registry, factory);
 			
 			// Place entity
-			auto slotId = entityCanvas.get(point3d);
+			auto slotId = slotCanvas.get(point3d);
 			if (!slotId.has_value()) return;
 
 			auto entityId = _entityPacks.selectEntity(std::any_cast<entt::id_type>(slotId), random);

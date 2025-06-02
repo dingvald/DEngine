@@ -3,11 +3,9 @@
 #include <Spatial/Helpers.h>
 #include <Spatial/TilePosition.h>
 #include <Spatial/WorldGrid.h>
-#include <Systems/Helpers/GetMouseTilePosition.h>
 #include <Components/RenderComponent.h>
 #include <Components/MouseCursorComponent.h>
 #include <Components/PathNavComponent.h>
-#include <Components/PhysicalBlockingComponent.h> 
 #include <Components/PositionComponent.h>
 #include <Systems/Helpers/SpawnEffect.h>
 #include <Systems/Helpers/GetPlayerHandle.h>
