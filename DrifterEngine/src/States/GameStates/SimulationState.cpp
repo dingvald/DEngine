@@ -209,8 +209,8 @@ void drft::SimulationState::importSystems()
 	// Rendering Systems - Be mindful of the order
 	_systems->add<Camera>();
 	_systems->add<CullingSystem>();
-	_systems->add<PlayerFOVSystem>();
 	_systems->add<LightingSystem>();
+	_systems->add<PlayerFOVSystem>();
 	_systems->add<EntityRenderer>();
 	_systems->add<FloatingTextSystem>();
 	_systems->add<HUD>();

@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Components/PositionComponent.h"
 #include "Components/LightBlockingComponent.h"
+#include <Components/LitComponent.h>
 #include <Components/VisionComponent.h>
 #include "Components/Tags.h"
 #include "Spatial/WorldGrid.h"
@@ -28,7 +29,7 @@ void drft::system::PlayerFOVSystem::init()
 	};
 	auto getDistance = [](sf::Vector3i position) -> int
 	{
-		return static_cast<int>(spatial::distance3d({ 0,0,0 }, position));
+		return static_cast<int>(spatial::distance3d({ 0,0,position.z }, position));
 	};
 
 	_fov = std::make_unique<Visibility>(blocksLight, setVisible, getDistance);
@@ -53,7 +54,7 @@ void drft::system::PlayerFOVSystem::render(sf::RenderTarget& target)
 
 	for (auto&& entity : _toLight)
 	{
-		if (!_registry.any_of<component::tag::InViewport>(entity)) continue;
+		if (!_registry.all_of<component::tag::InViewport, LitComponent>(entity)) continue;
 
 		_registry.emplace_or_replace<component::tag::InPlayerFOV>(entity);
 		_registry.emplace_or_replace<PlayerHasSeenComponent>(entity);
