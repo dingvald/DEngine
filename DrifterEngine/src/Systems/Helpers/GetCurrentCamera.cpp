@@ -17,12 +17,22 @@ static constexpr float MinZoomScale = 0.0625f;
 drft::system::CameraHandle drft::system::getCurrentCamera(entt::registry& registry)
 {
 	auto cameraView = registry.view<CameraComponent, PositionComponent>();
-	for (auto&& [_, camera, pos] : cameraView.each())
+	for (auto&& [entity, camera, pos] : cameraView.each())
 	{
-		return CameraHandle{ .position = pos, .camera = camera, .isInitialized = (camera.target == entt::null ? false : true) };
+		return CameraHandle {
+			.entity = entity, 
+			.position = pos, 
+			.camera = camera, 
+			.isInitialized = (camera.target == entt::null ? false : true) 
+		};
 	}
 
-	return CameraHandle{ .position = EmptyPosition, .camera = EmptyCamera, .isInitialized = false };
+	return CameraHandle {
+		.entity = entt::null, 
+		.position = EmptyPosition, 
+		.camera = EmptyCamera, 
+		.isInitialized = false 
+	};
 }
 
 sf::Vector2f drft::system::toScreenSpace(TilePosition tilePosition, CameraHandle camera)

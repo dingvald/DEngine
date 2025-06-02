@@ -7,6 +7,7 @@ namespace drft::system
 {
 	struct CameraHandle
 	{
+		entt::entity entity;
 		PositionComponent& position;
 		CameraComponent& camera;
 		bool isInitialized = false;
