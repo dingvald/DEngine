@@ -5,6 +5,8 @@
 #include <Random/Random.h>
 #include <ProcGen/GenerationContext.h>
 
+#pragma optimize("", off)
+
 using namespace entt::literals;
 
 GenerationState drft::FeatureLayerChunk::generate(GenerationLevel level)
@@ -64,7 +66,7 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
         if (!feature) continue;
 
         GenerationContext context = { getLocalSeed(), canvasLayers, _layer.getRegistries() };
-        FeatureGenerationResult generatedFeature = feature->generate(randomPoint, context);
+        FeatureGenerationResult generatedFeature = feature->generate(randomPoint3d, context);
 
         generatedFeatures.push_back(std::move(generatedFeature));
     }
@@ -98,7 +100,7 @@ GenerationState drft::FeatureLayerChunk::placeFeatures()
     {
         for (auto&& [entity, position] : generatedFeature.slotPositions)
         {
-            canvas.forceSet(entity, position + spatial::vec3FromPlanar(generatedFeature.origin));
+            canvas.forceSet(entity, position + generatedFeature.origin);
         }
     }
     

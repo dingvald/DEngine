@@ -2,14 +2,14 @@
 #include "IFeature.h"
 #include <ProcGen/GenerationContext.h>
 
-FeatureGenerationResult IFeature::generate(sf::Vector2i position, const GenerationContext& context) const
+FeatureGenerationResult IFeature::generate(sf::Vector3i position, const GenerationContext& context) const
 {
 	auto taggedPositions = this->doGenerate(context);
 	auto result = decorate(taggedPositions, context);
 	result.origin = position;
 	result.feature = this;
 
-	return std::move(result);
+	return result;
 }
 
 void IFeature::addDecorator(IDecorator::Ptr&& decorator)
