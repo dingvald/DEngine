@@ -47,7 +47,7 @@ drft::TilePosition drft::system::fromScreenSpace(sf::Vector2i screenPosition, Ca
 	auto topleft = spatial::toXY(cameraPosition) - (camera.camera.view.getSize() / 2.f);
 	auto totalPosition = topleft + sf::Vector2f{ static_cast<float>(screenPosition.x), static_cast<float>(screenPosition.y) };
 
-	return spatial::toTileSpace(sf::Vector3f{ totalPosition.x, totalPosition.y, static_cast<float>(camera.position.tile.z) });
+	return spatial::toTileSpace(sf::Vector3f{ totalPosition.x, totalPosition.y, 0.f }) + TilePosition{ 0,0,camera.position.tile.z };
 }
 
 void drft::system::CameraHandle::zoomIn()
