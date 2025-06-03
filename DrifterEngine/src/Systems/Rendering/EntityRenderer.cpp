@@ -44,7 +44,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 
 void drft::system::EntityRenderer::batchLitEntities(const CameraHandle& camera)
 {
-	const auto view = _registry.view< const PositionComponent, const RenderComponent, const LitComponent, const component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
+	const auto view = _registry.view< const PositionComponent, const RenderComponent, const LitComponent, component::tag::InPlayerFOV, component::tag::InViewport>(entt::exclude<VisualEffectComponent>);
 	for (auto const& [entity, pos, ren, lit] : view.each())
 	{
 		auto finalColor = LightingSystem::blendLight(ren.color, lit.color);

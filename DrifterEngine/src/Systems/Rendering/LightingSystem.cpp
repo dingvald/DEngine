@@ -15,15 +15,34 @@
 #include "Spatial/Conversions.h"
 #include "Utility/Visibility.h"
 #include "Spatial/WorldGrid.h"
-#include "Spatial/Grid2d.h"
-
-#pragma optimize("", off)
 
 namespace Internal
 {
 	static float calculateLightIntensity(float radius, float distance)
 	{
 		return 1.f - (distance * distance) / (radius * radius);
+	}
+
+	static sf::Color addIntensityToColor(float intensity, const sf::Color& color)
+	{
+		return
+		{
+			static_cast<std::uint8_t>(color.r * intensity),
+			static_cast<std::uint8_t>(color.g * intensity),
+			static_cast<std::uint8_t>(color.b * intensity)
+		};
+	}
+
+	static void blendOrAddLight(entt::registry& registry, entt::entity entity, const sf::Color& color)
+	{
+		if (auto lit = registry.try_get<LitComponent>(entity))
+		{
+			lit->color = drft::system::LightingSystem::blendColor(lit->color, color);
+		}
+		else
+		{
+			registry.emplace<LitComponent>(entity, color);
+		}
 	}
 }
 
@@ -82,20 +101,9 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 			auto tileDistance = spatial::distance3d(pos.tile, lightpos.tile);
 
 			const float i = Internal::calculateLightIntensity(light.radius, tileDistance);
-			sf::Color lightColor = 
-			{
-				static_cast<std::uint8_t>(light.color.r * i),
-				static_cast<std::uint8_t>(light.color.g * i),
-				static_cast<std::uint8_t>(light.color.b * i)
-			};
-			if (auto lit = _registry.try_get<LitComponent>(entity))
-			{
-				lit->color = LightingSystem::blendColor(lit->color, lightColor);
-			}
-			else
-			{
-				_registry.emplace<LitComponent>(entity, lightColor);
-			}
+			const sf::Color lightColor = Internal::addIntensityToColor(i, light.color);
+
+			Internal::blendOrAddLight(_registry, entity, lightColor);
 		}
 		_toLight.clear();
 	}
@@ -111,20 +119,9 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 			auto tileDistance = spatial::distance3d(pos.tile, lightpos.tile);
 
 			const float i = Internal::calculateLightIntensity(light.radius, tileDistance);
-			sf::Color lightColor =
-			{
-				static_cast<std::uint8_t>(light.color.r * i),
-				static_cast<std::uint8_t>(light.color.g * i),
-				static_cast<std::uint8_t>(light.color.b * i)
-			};
-			if (auto lit = _registry.try_get<LitComponent>(entity))
-			{
-				lit->color = LightingSystem::blendColor(lit->color, lightColor);
-			}
-			else
-			{
-				_registry.emplace<LitComponent>(entity, lightColor);
-			}
+			const sf::Color lightColor = Internal::addIntensityToColor(i, light.color);
+
+			Internal::blendOrAddLight(_registry, entity, lightColor);
 		}
 		_toLight.clear();
 	}

@@ -4,9 +4,19 @@
 #include "Components/PositionComponent.h"
 #include "Components/VisualEffectComponent.h"
 #include "Spatial/WorldGrid.h"
-#include "Spatial/Conversions.h"
 #include "Events/LeaveTileEvent.h"
 #include "Events/EnterTileEvent.h"
+
+namespace Internal
+{
+	static bool shouldExclude(entt::registry& registry, entt::entity entity)
+	{
+		return registry.any_of<
+			CameraComponent, 
+			VisualEffectComponent
+		>(entity);
+	}
+}
 
 void drft::system::WorldGridResolver::init()
 {
@@ -19,7 +29,7 @@ void drft::system::WorldGridResolver::init()
 
 void drft::system::WorldGridResolver::onPositionAdd(entt::registry& registry, entt::entity entity)
 {
-	if (registry.any_of<CameraComponent, VisualEffectComponent>(entity)) return;
+	if (Internal::shouldExclude(registry, entity)) return;
 
 	auto& pos = registry.get<PositionComponent>(entity);
 	_grid->placeEntity(entity, pos.tile);
@@ -28,7 +38,7 @@ void drft::system::WorldGridResolver::onPositionAdd(entt::registry& registry, en
 
 void drft::system::WorldGridResolver::onPositionUpdate(entt::registry& registry, entt::entity entity)
 {
-	if (registry.any_of<CameraComponent, VisualEffectComponent>(entity)) return;
+	if (Internal::shouldExclude(registry, entity)) return;
 
 	auto& pos = registry.get<PositionComponent>(entity);
 	const auto prevPos = _grid->getPosition(entity);
@@ -39,7 +49,7 @@ void drft::system::WorldGridResolver::onPositionUpdate(entt::registry& registry,
 
 void drft::system::WorldGridResolver::onPositionRemove(entt::registry& registry, entt::entity entity)
 {
-	if (registry.any_of<CameraComponent, VisualEffectComponent>(entity)) return;
+	if (Internal::shouldExclude(registry, entity)) return;
 
 	_grid->removeEntity(entity);
 }

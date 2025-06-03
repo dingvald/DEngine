@@ -148,7 +148,8 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 				.frames = std::move(hitParticles),
 				.position = posComp->tile,
 				.offset = randomOffset,
-				.animationSpeed = 10.0f
+				.animationSpeed = 10.0f,
+				.requiresInFOV = false
 				});
 		}
 
@@ -167,7 +168,8 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 			.frames = { damageEffectSprite },
 			.position = posComp->tile,
 			.animationSpeed = 10.0f,
-			.ttl = effect_ttl
+			.ttl = effect_ttl,
+			.requiresInFOV = false
 			});
 	}
 
