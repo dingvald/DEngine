@@ -22,6 +22,7 @@ namespace drft::rng
 		sf::Vector2i positionInCircle(sf::Vector2i origin, int radius);
 		sf::Vector2i positionInRect(sf::IntRect rect);
 		std::vector<sf::Vector2i> shuffleRect(sf::IntRect rect);
+		bool chance(float percent);
 
 		entt::id_type generateRandomId();
 

@@ -34,7 +34,7 @@ GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
     spatial::forEachPointInRect(_volume.flatten(), 
         [&, z = _volume.min.z](sf::Vector2i point) {
             const sf::Vector3i position = { point.x, point.y, z };
-            Biome::DependencyValues values;
+            SlotDeterminer::DependencyValues values;
             for (auto&& [id, dep] : generatedDependencies)
             {
                 values.emplace(id, dep->getValueAt(position));

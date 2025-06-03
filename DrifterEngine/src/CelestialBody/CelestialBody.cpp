@@ -24,6 +24,7 @@
 #include <ProcGen/Layers/PerlinNoiseLayer.h>
 #include <ProcGen/Layers/LloydRelaxedLayer.h>
 #include <ProcGen/Layers/FillLayer.h>
+#include <ProcGen/Layers/DepthLayer.h>
 #include <ProcGen/Layers/FeatureLayer.h>
 #include <ProcGen/Layers/EntityLayer.h>
 
@@ -60,6 +61,7 @@ CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	_layerManager.registerType<drft::PerlinNoiseLayer>("perlin"_hs);
 	_layerManager.registerType<drft::LloydRelaxedLayer>("relaxed_points"_hs);
 	_layerManager.registerType<drft::FillLayer>("fill"_hs);
+	_layerManager.registerType<drft::DepthLayer>("depth"_hs);
 
 	// Add generic layers that all generators can use
 	_layerManager.add<RandomLayer>();

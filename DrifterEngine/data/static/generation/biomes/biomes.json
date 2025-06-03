@@ -34,7 +34,7 @@
             "color": [ 174, 155, 125 ]
         },
         "climate": {
-            "height": [ "less", 0.1 ]
+            "height": [ "less", 0.5 ]
         },
         "features": {
             "cavern": {

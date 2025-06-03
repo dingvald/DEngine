@@ -2,7 +2,6 @@
 #include "Biome.h"
 
 #include <Utility/Math.h>
-#include <Utility/ContainerHelpers.h>
 
 
 Biome::Biome(std::string name)
@@ -63,35 +62,19 @@ const std::string& Biome::getName() const
 	return _name;
 }
 
-bool Biome::satisfiesClimate(const DependencyValues& dependencyValues) const
+bool Biome::satisfiesClimate(const SlotDeterminer::DependencyValues& dependencyValues) const
 {
-	TokenValues values;
-	for (auto&& [layerID, slotDependency] : _climateDeterminer.dependencies)
-	{
-		if (!dependencyValues.contains(layerID)) continue;
-		values.emplace(layerID, slotDependency.satisfiesValue(dependencyValues.at(layerID)));
-	}
-	return _climateDeterminer.expression.evaluate(values);
+	return _climateDeterminer.isValidSlot(dependencyValues);
 }
 
-float Biome::closenessToClimate(const DependencyValues& values) const
+float Biome::closenessToClimate(const SlotDeterminer::DependencyValues& values) const
 {
-	float result = 0.f;
-	for (auto&& [id, val] : values)
-	{
-		if (!_climateDeterminer.dependencies.contains(id))
-		{
-			result += 1.0f;
-			continue;
-		}
-		result += _climateDeterminer.dependencies.at(id).distanceFromValue(val);
-	}
-	return result;
+	return _climateDeterminer.distanceFromValid(values);
 }
 
 std::vector<entt::id_type> Biome::getClimateDependencyIds() const
 {
-	return drft::util::extractKeys(_climateDeterminer.dependencies);
+	return _climateDeterminer.getDependencyIds();
 }
 
 std::vector<entt::id_type> Biome::getEntitySlotDependencyIds() const
@@ -99,27 +82,19 @@ std::vector<entt::id_type> Biome::getEntitySlotDependencyIds() const
 	std::vector<entt::id_type> result;
 	for (auto&& [slotID, determiner] : _entitySlotDeterminers)
 	{
-		auto ids = drft::util::extractKeys(determiner.dependencies);
+		auto ids = determiner.getDependencyIds();
 		result.insert(result.end(), std::make_move_iterator(ids.begin()), std::make_move_iterator(ids.end()));
 	}
 	return result;
 }
 
-std::vector<entt::id_type> Biome::determineValidEntitySlots(const DependencyValues& dependencyValues) const
+std::vector<entt::id_type> Biome::determineValidEntitySlots(const SlotDeterminer::DependencyValues& dependencyValues) const
 {
 	std::vector<entt::id_type> result;
 	for (auto&& [slotId, slotDeterminer] : _entitySlotDeterminers)
 	{
-		TokenValues values;
-		for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
-		{
-			if (!dependencyValues.contains(layerID)) continue;
-			values.emplace(layerID, slotDependency.satisfiesValue(dependencyValues.at(layerID)));
-		}
-		if (slotDeterminer.expression.evaluate(values))
-		{
-			result.emplace_back(slotId);
-		}
+		if (!slotDeterminer.isValidSlot(dependencyValues)) continue;
+		result.push_back(slotId);
 	}
 	return result;
 }
@@ -129,27 +104,19 @@ std::vector<entt::id_type> Biome::getFeatureDependencyIds() const
 	std::vector<entt::id_type> result;
 	for (auto&& [slotID, determiner] : _featureDeterminers)
 	{
-		auto ids = drft::util::extractKeys(determiner.dependencies);
+		auto ids = determiner.getDependencyIds();
 		result.insert(result.end(), std::make_move_iterator(ids.begin()), std::make_move_iterator(ids.end()));
 	}
 	return result;
 }
 
-std::vector<entt::id_type> Biome::determineValidFeatures(const DependencyValues& dependencyValues) const
+std::vector<entt::id_type> Biome::determineValidFeatures(const SlotDeterminer::DependencyValues& dependencyValues) const
 {
 	std::vector<entt::id_type> result;
 	for (auto&& [slotId, slotDeterminer] : _featureDeterminers)
 	{
-		TokenValues values;
-		for (auto&& [layerID, slotDependency] : slotDeterminer.dependencies)
-		{
-			if (!dependencyValues.contains(layerID)) continue;
-			values.emplace(layerID, slotDependency.satisfiesValue(dependencyValues.at(layerID)));
-		}
-		if (slotDeterminer.expression.evaluate(values))
-		{
-			result.push_back(slotId);
-		}
+		if (!slotDeterminer.isValidSlot(dependencyValues)) continue;
+		result.push_back(slotId);
 	}
 	return result;
 }

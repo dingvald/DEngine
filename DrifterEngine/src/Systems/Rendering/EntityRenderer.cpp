@@ -72,10 +72,7 @@ void drft::system::EntityRenderer::batchEffectEntities(const CameraHandle& camer
 	const auto effectsView = _registry.view< const PositionComponent, const RenderComponent, const VisualEffectComponent, component::tag::InViewport>();
 	for (auto const& [entity, pos, ren, effect] : effectsView.each())
 	{
-		if (effect.requiresInFOV && !_registry.all_of<component::tag::InPlayerFOV>(entity))
-		{
-			continue;
-		}
+		if (effect.requiresInFOV && !_registry.all_of<component::tag::InPlayerFOV>(entity)) continue;
 
 		sf::Vector2f renderPosition = toScreenSpace(pos.tile, camera) + spatial::toXY(pos.offset);
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);

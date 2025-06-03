@@ -26,8 +26,8 @@ namespace drft
 
 	private:
 		GenerationState assignBiomesToVoronoiCells(spatial::AABB<int> volume);
-		void assignBiomeToVoronoiCell(sf::Vector3i centroid, const Biome::DependencyValues& climateValues);
-		Biome::DependencyValues getClimateValuesAtPoint(sf::Vector3i point, const GeneratedDependencies& generatedDependencies) const;
+		void assignBiomeToVoronoiCell(sf::Vector3i centroid, const SlotDeterminer::DependencyValues& dependencyValues);
+		SlotDeterminer::DependencyValues getDependencyValuesAtPoint(sf::Vector3i point, const GeneratedDependencies& generatedDependencies) const;
 		virtual GenerationLevel numLevels() const override { return GenerationLevel::One; }
 
 	public:
@@ -44,14 +44,16 @@ namespace drft
 		sf::Vector3i getChunkDimensions() const override;
 
 		const std::vector<const Biome*>& getBiomes() const;
-		const std::unordered_set<entt::id_type>& getClimateDependencies() const;
+		const std::unordered_set<entt::id_type>& getLayerDependencies() const;
+		bool satisfiesBiomeSpecificDependencies(const Biome& biome, const SlotDeterminer::DependencyValues& dependencyValues) const;
 		// Gets the Biome at a given tile positions
 		const Biome* getBiomeAt(sf::Vector3i tilePosition) const;
 		void forEachBiomeInArea(sf::IntRect area, int z, std::function<void(const Biome* biome)> func);
 
 	private:
 		std::vector<const Biome*> _biomes;
-		std::unordered_set<entt::id_type> _climateDependencies;
+		std::unordered_set<entt::id_type> _layerDependencies;
+		std::unordered_map<std::string, SlotDeterminer> _biomeSpecificLayerDependencies;
 	};
 }
 

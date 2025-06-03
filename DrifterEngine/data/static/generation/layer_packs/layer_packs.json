@@ -51,6 +51,9 @@
                 },
                 "fill": {
                     "type": "fill"
+                },
+                "depth": {
+                    "type": "depth"
                 }
             }
         }  

@@ -9,9 +9,6 @@ using BiomeIcon = RenderComponent;
 class Biome : public ICreateFromJson
 {
 public:
-	using DependencyValues = std::unordered_map<entt::id_type, double>;
-
-public:
 	Biome(std::string name);
 	void createFromJson(const rapidjson::Value& json) override;
 
@@ -20,14 +17,14 @@ public:
 	const std::string& getName() const;
 	
 	std::vector<entt::id_type> getClimateDependencyIds() const;
-	bool satisfiesClimate(const DependencyValues& dependencyValues) const;
-	float closenessToClimate(const DependencyValues& dependencyValues) const;
+	bool satisfiesClimate(const SlotDeterminer::DependencyValues& dependencyValues) const;
+	float closenessToClimate(const SlotDeterminer::DependencyValues& dependencyValues) const;
 
 	std::vector<entt::id_type> getEntitySlotDependencyIds() const;
-	std::vector<entt::id_type> determineValidEntitySlots(const DependencyValues& dependencyValues) const;
+	std::vector<entt::id_type> determineValidEntitySlots(const SlotDeterminer::DependencyValues& dependencyValues) const;
 
 	std::vector<entt::id_type> getFeatureDependencyIds() const;
-	std::vector<entt::id_type> determineValidFeatures(const DependencyValues& dependencyValues) const;
+	std::vector<entt::id_type> determineValidFeatures(const SlotDeterminer::DependencyValues& dependencyValues) const;
 
 private:
 	void setBaseTileColor(sf::Color iconColor);

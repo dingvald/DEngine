@@ -68,6 +68,13 @@ std::vector<sf::Vector2i> drft::rng::Random::shuffleRect(sf::IntRect rect)
 	return positions;
 }
 
+bool drft::rng::Random::chance(float percent)
+{
+	float choice = realInRange(0.0, 100.0);
+	if (choice <= percent) return true;
+	return false;
+}
+
 entt::id_type drft::rng::Random::generateRandomId()
 {
 	using Dist = std::uniform_int_distribution<std::uint32_t>;

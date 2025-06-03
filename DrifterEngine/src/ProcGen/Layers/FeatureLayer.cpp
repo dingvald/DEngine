@@ -44,7 +44,7 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
     auto biome = biomes.unwrap().getBiomeAt(randomPoint3d);
     if (!biome) return GenerationState::Complete;
 
-    Biome::DependencyValues dependencyValues;
+    SlotDeterminer::DependencyValues dependencyValues;
     for (auto&& dependencyID : biome->getFeatureDependencyIds())
     {
         if (dependencyValues.contains(dependencyID)) continue;

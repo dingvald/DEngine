@@ -11,10 +11,14 @@
                         "distance": 150,
                         "layer_packs": [ "standard" ],
                         "entity_packs": [ "basic" ],
-                        "biomes": [
-                            "desert",
-                            "caves"
-                        ]
+                        "biomes": {
+                            "desert": {
+                                "depth": ["greater_or_equal", 0]
+                            },
+                            "caves": {
+                                "depth": ["less", 0]
+                            }
+                        }
                     }
                 ]
             }
