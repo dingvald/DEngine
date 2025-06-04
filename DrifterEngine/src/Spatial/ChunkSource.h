@@ -15,6 +15,8 @@ namespace drft::spatial
 
 		void update(TilePosition position, entt::registry& registry);
 		void shutdown(entt::registry& registry, bool isAsync);
+
+		void setBuildsPerFrame(unsigned int value);
 		bool isLoadedAroundPosition(TilePosition position) const;
 		entt::id_type id() const;
 
@@ -36,6 +38,7 @@ namespace drft::spatial
 	private:
 		entt::id_type _sourceId;
 		bool _isShuttingDown = false;
+		unsigned int _buildsPerFrame = std::numeric_limits<unsigned int>::max();
 		ChunkSerializer& _serializer;
 		IChunkGenerator& _generator;
 		std::unordered_map<ChunkPosition, spatial::VirtualChunk> _chunks;

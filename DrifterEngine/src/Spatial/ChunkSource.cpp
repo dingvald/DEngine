@@ -46,6 +46,11 @@ void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync
 	cleanUpAllChunks(registry);
 }
 
+void drft::spatial::ChunkSource::setBuildsPerFrame(unsigned int value)
+{
+	_buildsPerFrame = value;
+}
+
 bool drft::spatial::ChunkSource::isLoadedAroundPosition(TilePosition position) const
 {
 	ChunkPosition chunkPosition = spatial::toChunkSpace(position);
@@ -136,12 +141,14 @@ bool drft::spatial::ChunkSource::processBuildQueue(entt::registry& registry)
 	if (_toBuild.empty()) return true;
 
 	bool anyPending = false;
+	unsigned int kickedOffBuilds = 0;
 	std::vector<ChunkPosition> toRemove;
 	for (auto&& coord : _toBuild)
 	{
-		spatial::VirtualChunk& chunk = _chunks.at(coord);
+		kickedOffBuilds++;
+		if (kickedOffBuilds > _buildsPerFrame) break;
 
-		spatial::ioStatus status = chunk.build(registry, _generator);
+		spatial::ioStatus status = _chunks.at(coord).build(registry, _generator);
 		if (status == spatial::ioStatus::Done)
 		{
 			toRemove.push_back(coord);

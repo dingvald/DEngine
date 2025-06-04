@@ -47,10 +47,10 @@ GenerationState drft::EntityPlacementLayerChunk::generate(GenerationLevel desire
 	switch (desiredLevel)
 	{
 	case drft::GenerationLevel::One:
-		chooseEntitiesForSlots();
+		return chooseEntitiesForSlots();
 		break;
 	case drft::GenerationLevel::Two:
-		resolveWithNeighborChunks();
+		return resolveWithNeighborChunks();
 		break;
 	default:
 		break;
@@ -87,6 +87,8 @@ GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 
 		chosenEntities.emplace_back(entityId.value(), position3d);
 	});
+
+	return GenerationState::Complete;
 }
 
 GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
@@ -109,7 +111,7 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 			{
 				if (stair.type == StairsComponent::Type::Down)
 				{
-					chosenEntities.emplace_back("stairs_down"_hs, sf::Vector3i{ position.x, position.y, _volume.min.z });
+					chosenEntities.emplace_back("stairs_up"_hs, sf::Vector3i{ position.x, position.y, _volume.min.z });
 				}
 			}
 		}
@@ -120,7 +122,7 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 			{
 				if (stair.type == StairsComponent::Type::Up)
 				{
-					chosenEntities.emplace_back("stairs_up"_hs, sf::Vector3i{ position.x, position.y, _volume.min.z });
+					chosenEntities.emplace_back("stairs_down"_hs, sf::Vector3i{ position.x, position.y, _volume.min.z });
 				}
 			}
 		}

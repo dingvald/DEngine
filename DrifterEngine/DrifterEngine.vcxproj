@@ -212,6 +212,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\Layers\DepthLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntityPlacementLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
@@ -501,6 +502,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\Layers\DepthLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\EntityPlacementLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\EntitySlotLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h" />
     <ClInclude Include="src\Skills\SkillRequirement.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />
@@ -1373,6 +1375,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\bodies.json" />
     <None Include="data\static\entities\stairs.json" />
+    <None Include="data\static\entities\tools.json" />
     <None Include="data\static\entities\weapons.json" />
     <None Include="data\static\generation\biome_features\biome_features.json" />
     <None Include="data\static\generation\entity_packs\entity_packs.json" />
@@ -1437,6 +1440,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <Image Include="resources\Textures\Environmentals\short_grass.png" />
     <Image Include="resources\Textures\simple_tileset.png" />
     <Image Include="resources\Textures\Environmentals\tree.png" />
+    <Image Include="resources\Textures\Stairs\stairs_down.png" />
+    <Image Include="resources\Textures\Stairs\stairs_up.png" />
     <Image Include="resources\Textures\Weapons\Swords\katana.png" />
   </ItemGroup>
   <ItemGroup>

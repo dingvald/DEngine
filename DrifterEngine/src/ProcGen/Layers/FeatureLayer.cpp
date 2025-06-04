@@ -82,7 +82,7 @@ GenerationState drft::FeatureLayerChunk::checkNeighbors()
     if (generatedFeatures.empty()) return GenerationState::Complete;
 
     forEachLoadedNeighborChunk2d([&](const FeatureLayerChunk& chunk) {
-            if (!chunk.generatedFeatures.empty()) return;
+            if (chunk.generatedFeatures.empty()) return;
 
             // TODO: Handle overlapping with neighbor features
         });

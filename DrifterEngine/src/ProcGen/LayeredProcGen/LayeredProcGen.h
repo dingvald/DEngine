@@ -490,7 +490,7 @@ namespace drft
 			const sf::Vector3i zChunk = toChunkPosition({ 0,0,z });
 
 			sf::Vector3i top_left_point = toChunkPosition(spatial::vec3FromPlanar(area.position));
-			sf::Vector3i bottom_right_point = toChunkPosition(spatial::vec3FromPlanar(area.position + area.size));
+			sf::Vector3i bottom_right_point = toChunkPosition(spatial::vec3FromPlanar(area.position + area.size - sf::Vector2i{1, 1}));
 			for (int y = top_left_point.y; y <= bottom_right_point.y; ++y)
 			{
 				for (int x = top_left_point.x; x <= bottom_right_point.x; ++x)

@@ -41,7 +41,7 @@ void drft::system::StairsMoveActionSystem::onMoveUpStairsActionAdded(entt::regis
 		auto& stairsComponent = registry.get<StairsComponent>(stairsEntities.front());
 		if (stairsComponent.type != StairsComponent::Type::Up) return;
 
-		LOG_MSG("Stairs up here!");
+		_dispatcher.trigger(events::PlayerTransferRequestEvent{ .position = position->tile + OneChunkUp });
 	}
 }
 
@@ -57,9 +57,5 @@ void drft::system::StairsMoveActionSystem::onMoveDownStairsActionAdded(entt::reg
 		if (stairsComponent.type != StairsComponent::Type::Down) return;
 
 		_dispatcher.trigger(events::PlayerTransferRequestEvent{ .position = position->tile + OneChunkDown });
-
-		///_registry.patch<PositionComponent>(entity, [](PositionComponent& position) {
-		///	position.tile += OneChunkDown;
-		///});
 	}
 }

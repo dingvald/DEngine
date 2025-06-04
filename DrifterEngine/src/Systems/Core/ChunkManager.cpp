@@ -19,7 +19,13 @@
 
 using namespace entt::literals;
 
-const entt::id_type NULL_SOURCE_ID = "NULL_ID"_hs;
+
+namespace Internal
+{
+	const entt::id_type NULL_SOURCE_ID = "NULL_ID"_hs;
+	static const unsigned int RUNTIME_BUILDS_PER_FRAME = 2u;
+}
+
 
 void drft::system::ChunkManager::init()
 {
@@ -74,7 +80,7 @@ void drft::system::ChunkManager::onFirstUpdate()
 		if (_chunkSourceTracker != entt::null)
 		{
 			auto& tracker = _registry.get<ChunkSourceTrackerComponent>(_chunkSourceTracker);
-			_pendingTransfer.emplace(NULL_SOURCE_ID, tracker.sourceId, tracker.position);
+			_pendingTransfer.emplace(Internal::NULL_SOURCE_ID, tracker.sourceId, tracker.position);
 			setState(State::Transferring);
 		}
 		else
@@ -127,11 +133,13 @@ void drft::system::ChunkManager::onTransfer()
 	// Update new source until fully loaded
 	if (_activeSource->id() == _pendingTransfer->newSourceId)
 	{
+		_activeSource->setBuildsPerFrame(std::numeric_limits<unsigned int>::max());
 		_activeSource->update(_pendingTransfer->position, _registry);
 		if (_activeSource->isLoadedAroundPosition(_pendingTransfer->position))
 		{
 			LOG_MSG("Transfer complete");
 			setState(State::SourceReady);
+			_activeSource->setBuildsPerFrame(Internal::RUNTIME_BUILDS_PER_FRAME);
 			_registry.emplace_or_replace<ChunkSourceTrackerComponent>(_chunkSourceTracker, _pendingTransfer->newSourceId, _pendingTransfer->position);
 			_pendingTransfer.reset();
 			return;
@@ -202,7 +210,7 @@ void drft::system::ChunkManager::onChunkSourceTransferRequestEvent(events::Chunk
 {
 	if (_pendingTransfer.has_value()) return; // TODO: should new transfer requests be ignored?
 
-	entt::id_type oldSourceId = _activeSource ? _activeSource->id() : NULL_SOURCE_ID;
+	entt::id_type oldSourceId = _activeSource ? _activeSource->id() : Internal::NULL_SOURCE_ID;
 	_pendingTransfer.emplace(oldSourceId, ev.sourceId.has_value() ? ev.sourceId.value() : oldSourceId, ev.position);
 
 	setState(State::Transferring);

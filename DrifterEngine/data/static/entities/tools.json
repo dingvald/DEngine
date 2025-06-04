@@ -1,0 +1,31 @@
+{
+    "prototypes": {
+        "glowing_crystal": {
+            "inherits": [
+                "item"
+            ],
+            "components": {
+                "description": {
+                    "name": "glowing crystal",
+                    "description": "a small crystal that emits light."
+                },
+                "render": {
+                    "texture": "sharp_stone",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 185, 255, 251 ]
+                },
+                "weight": {
+                    "value": 0.5
+                },
+                "material_composition": {
+                    "stone": 1.0
+                },
+                "local_light_source": {
+                    "radius": 8,
+                    "color": [ 185, 255, 251 ]
+                }
+            }
+        }
+    }
+}

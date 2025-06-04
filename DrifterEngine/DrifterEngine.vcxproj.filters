@@ -753,6 +753,9 @@
     <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3413,6 +3416,9 @@
     <ClInclude Include="src\ProcGen\EntityPositionList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -3491,6 +3497,7 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="data\static\entities\stairs.json" />
+    <None Include="data\static\entities\tools.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">
@@ -3557,6 +3564,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\Environmentals\ore_vein.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Stairs\stairs_down.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Stairs\stairs_up.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

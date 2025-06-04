@@ -28,6 +28,7 @@
 #include <ProcGen/Layers/FeatureLayer.h>
 #include <ProcGen/Layers/EntitySlotLayer.h>
 #include <ProcGen/Layers/EntityPlacementLayer.h>
+#include <ProcGen/Layers/TilePlacementLayer.h>
 
 #include <ProcGen/GenerationRegistries.h>
 #include <ProcGen/EntityPack/EntityPack.h>
@@ -71,6 +72,7 @@ CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	_layerManager.add<FeatureLayer>();
 	_layerManager.add<EntitySlotLayer>();
 	_layerManager.add<EntityPlacementLayer>();
+	_layerManager.add<TilePlacementLayer>();
 }
 
 GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt::registry& registry)
@@ -78,9 +80,13 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	const sf::Vector3i origin = spatial::toTileSpace(position);
 	spatial::AABB<int> volume = { origin, ChunkDimensions };
 
+	auto tilePlacementLayer = _layerManager.generate<TilePlacementLayer>(volume);
+	if (!tilePlacementLayer.isReady()) return tilePlacementLayer.getState();
+
 	auto entityPlacementLayer = _layerManager.generate<EntityPlacementLayer>(volume);
 	if (!entityPlacementLayer.isReady()) return entityPlacementLayer.getState();
 
+	tilePlacementLayer.unwrap().placeTiles(volume, registry);
 	entityPlacementLayer.unwrap().placeEntities(volume, registry);
 
 	return GenerationState::Complete;

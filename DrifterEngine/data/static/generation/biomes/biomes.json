@@ -23,11 +23,7 @@
             },
             "rock_formations": {
                 "relaxed_scatter": [ "greater", 0.5 ]
-            },
-            "stairs_down":{
-                "random_scatter" : ["less", 0.001]
             }
-            
         }
     },
     "caves": {
@@ -43,7 +39,7 @@
         "features": {
             "cavern": {
                 "random_scatter": [ "less", 0.7 ],
-                "height": [ "less", 0.0 ],
+                "height": [ "inside", -1.0, 1.0 ],
                 "expression": "random_scatter & height"
             },
             "ore_vein": {
@@ -57,7 +53,7 @@
                 "expression": "height & random_scatter"
             },
             "rock_formations": {
-                "height": [ "less", 0.0 ]
+                "height": [ "inside", -1.0, 1.0 ]
             }
         }
     }

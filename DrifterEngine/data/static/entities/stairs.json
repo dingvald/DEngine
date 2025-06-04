@@ -19,6 +19,26 @@
                     "type": "down"
                 }
             }
+        },
+        "stairs_up": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "description": {
+                    "name": "Stairs Up",
+                    "description": "Stairs that go up one level."
+                },
+                "render": {
+                    "texture": "stairs_up",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 100, 100, 100 ]
+                },
+                "stairs": {
+                    "type": "up"
+                }
+            }
         }
     }
 }

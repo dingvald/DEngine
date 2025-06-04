@@ -70,11 +70,11 @@
                 {
                     "type": "simple_decorator",
                     "params": {
-                        "slot": "stairs_down"
+                        "slot": "stairs_up"
                     },
                     "conditions": {
                         "tag_expression": "floor & center",
-                        "chance": 1.0
+                        "chance": 0.1
                     }
                 }
             ]
