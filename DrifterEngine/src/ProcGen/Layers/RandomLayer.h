@@ -10,5 +10,8 @@ namespace drft
 
 		void createFromJson(const rapidjson::Value& json) override;
 		double getValueAt(sf::Vector3i tilePosition) override;
+
+	private:
+		unsigned int _seed;
 	};
 }

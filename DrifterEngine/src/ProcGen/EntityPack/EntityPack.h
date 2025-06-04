@@ -13,7 +13,7 @@ class EntityPack : public ICreateFromJson
 public:
 	void createFromJson(const rapidjson::Value& json) override;
 	void add(const EntityPack& other);
-	std::optional<entt::id_type> selectEntity(entt::id_type slotId, drft::rng::Random& random);
+	std::optional<entt::id_type> selectEntity(entt::id_type slotId, drft::rng::Random& random) const;
 
 private:
 	using WeightedEntityList = std::unordered_map<entt::id_type, int>;

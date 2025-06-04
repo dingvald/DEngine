@@ -4,16 +4,16 @@
 
 namespace drft
 {
-	class EntityLayer;
+	class EntitySlotLayer;
 
-	class EntityLayerChunk : public GenerationChunk<EntityLayer, EntityLayerChunk>
+	class EntitySlotLayerChunk : public GenerationChunk<EntitySlotLayer, EntitySlotLayerChunk>
 	{
 	public:
 		using GenerationChunk::GenerationChunk;
 		virtual GenerationState generate(GenerationLevel desiredLevel) override;
 	};
 
-	class EntityLayer : public GenerationLayer<EntityLayer, EntityLayerChunk>
+	class EntitySlotLayer : public GenerationLayer<EntitySlotLayer, EntitySlotLayerChunk>
 	{
 	public:
 		using GenerationLayer::GenerationLayer;

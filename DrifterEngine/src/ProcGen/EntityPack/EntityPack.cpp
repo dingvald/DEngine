@@ -44,7 +44,7 @@ void EntityPack::add(const EntityPack& other)
 	}
 }
 
-std::optional<entt::id_type> EntityPack::selectEntity(entt::id_type slotId, drft::rng::Random& random)
+std::optional<entt::id_type> EntityPack::selectEntity(entt::id_type slotId, drft::rng::Random& random) const
 {
 	if (!_packs.contains(slotId))
 	{

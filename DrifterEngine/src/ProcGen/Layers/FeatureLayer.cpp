@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "FeatureLayer.h"
 #include <ProcGen/Layers/BiomeLayer.h>
-#include <ProcGen/Layers/EntityLayer.h>
+#include <ProcGen/Layers/EntitySlotLayer.h>
 #include <Random/Random.h>
 #include <ProcGen/GenerationContext.h>
+#include <ProcGen/Decorators/DecoratorIds.h>
 
 #pragma optimize("", off)
 
@@ -33,8 +34,8 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
     auto biomes = generateDependency<BiomeLayer>(_volume);
     if (!biomes.isReady()) return biomes.getState();
 
-    // EntityLayer needed to fill the slot_canvas - some features may need to check the canvas
-    auto entities = generateDependency<EntityLayer>(_volume.expand({ 2.0f, 2.0f, 1.0f }));
+    // EntitySlotLayer needed to fill the slot_canvas - some features may need to check the canvas
+    auto entities = generateDependency<EntitySlotLayer>(_volume.expand({ 2.0f, 2.0f, 1.0f }));
     if (!entities.isReady()) return entities.getState();
 
     rng::Random random = { getLocalSeed() };
@@ -57,7 +58,6 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
 
     std::unordered_map<entt::id_type, std::reference_wrapper<const drft::CanvasLayer>> canvasLayers;
     canvasLayers.emplace("slot_canvas"_hs,  _layer.getLayerManager().getCanvas("slot_canvas"_hs));
-    canvasLayers.emplace("tag_canvas"_hs,   _layer.getLayerManager().getCanvas("tag_canvas"_hs));
 
     auto features = biome->determineValidFeatures(dependencyValues);
     for (auto&& featureId : features)
@@ -82,7 +82,6 @@ GenerationState drft::FeatureLayerChunk::checkNeighbors()
     if (generatedFeatures.empty()) return GenerationState::Complete;
 
     forEachLoadedNeighborChunk2d([&](const FeatureLayerChunk& chunk) {
-            if (generatedFeatures.empty()) return;
             if (!chunk.generatedFeatures.empty()) return;
 
             // TODO: Handle overlapping with neighbor features

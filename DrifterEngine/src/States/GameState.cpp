@@ -35,7 +35,6 @@ drft::GameState::GameState(StateStack& stack, StateContext& context)
 	loadGenerationRegistries();
 
 	_solarSystem = std::make_unique<SolarSystem>(_generationRegistries);
-	_factory = std::make_unique<EntityFactory>();
 	_dispatcher = std::make_unique<entt::dispatcher>();
 
 	registerGameStates();
@@ -44,7 +43,6 @@ drft::GameState::GameState(StateStack& stack, StateContext& context)
 	setupActionMap();
 
 	loadOrCreateUniverseGenerator();
-	loadEntityPrototypes();
 
 	_gameStateStack.pushState(drft::States::Simulation);
 }
@@ -89,15 +87,11 @@ void drft::GameState::loadGenerationRegistries()
 	DecoratorFactory decorators;
 	bindDecorators(decorators);
 
+	_generationRegistries.entityFactory.loadPrototypes(ENTITIES_DIRECTORY);
 	_generationRegistries.biomes.loadBiomes(BIOMES_DIRECTORY);
 	_generationRegistries.features.loadFeatures(BIOME_FEATURES_DIRECTORY, decorators);
 	_generationRegistries.entityPacks.loadEntityPacks(ENTITY_PACKS_DIRECTORY);
 	_generationRegistries.layerPacks.loadLayerPacks(LAYER_PACKS_DIRECTORY);
-}
-
-void drft::GameState::loadEntityPrototypes()
-{
-	_factory->loadPrototypes(ENTITIES_DIRECTORY);
 }
 
 void drft::GameState::setupRegistryContext()
@@ -112,7 +106,7 @@ void drft::GameState::setupRegistryContext()
 	getContext().registry.ctx().emplace<const ControlsContext&>(getContext().controls);
 	getContext().registry.ctx().emplace<ActionMap>(getContext().actions);
 	getContext().registry.ctx().emplace_as<sf::Font&>("terminus"_hs, getContext().fonts.get("Terminus"));
-	getContext().registry.ctx().emplace<EntityFactory&>(*_factory);
+	getContext().registry.ctx().emplace<EntityFactory&>(_generationRegistries.entityFactory);
 	getContext().registry.ctx().emplace<entt::dispatcher&>(*_dispatcher);
 	getContext().registry.ctx().emplace<tgui::Gui&>(getContext().gui);
 }

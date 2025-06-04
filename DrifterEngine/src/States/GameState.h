@@ -41,7 +41,6 @@ namespace drft
 		void connectEventHandlers();
 		void loadOrCreateUniverseGenerator();
 		void loadGenerationRegistries();
-		void loadEntityPrototypes();
 		void setupRegistryContext();
 		void setupActionMap();
 		void onRequestStatePush(const drft::events::RequestStateStackPush& ev);
@@ -51,7 +50,6 @@ namespace drft
 		system::InputBuffer _inputBuffer{ 3 };
 
 		std::unique_ptr<SolarSystem> _solarSystem;
-		std::unique_ptr<EntityFactory> _factory;
 		std::unique_ptr<entt::dispatcher> _dispatcher;
 
 		GenerationRegistries _generationRegistries;

@@ -4,8 +4,10 @@
 #include <ProcGen/Decorators/EntityDecorator.h>
 #include <ProcGen/Decorators/SimpleDecorator.h>
 
+#include <ProcGen/Decorators/DecoratorIds.h>
+
 void bindDecorators(DecoratorFactory& decoratorFactory)
 {
-	decoratorFactory.registerType<EntityDecorator>("entity_decorator");
-	decoratorFactory.registerType<SimpleDecorator>("simple_decorator");
+	decoratorFactory.registerType<EntityDecorator>(DecoratorId::Entity);
+	decoratorFactory.registerType<SimpleDecorator>(DecoratorId::Simple);
 }

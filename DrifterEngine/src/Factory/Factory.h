@@ -8,9 +8,16 @@ class Factory
 {
 public:
 	template<DerivedType<T> U>
-	void registerType(std::string name)
+	void registerType(const char* name)
 	{
-		_factoryMethods.emplace(std::move(name), []() {return std::make_unique<U>(); });
+		if constexpr (std::is_constructible_v<U, std::string>)
+		{
+			_factoryMethods.emplace(std::move(name), [namecopy=name]() {return std::make_unique<U>(namecopy); });
+		}
+		else
+		{
+			_factoryMethods.emplace(std::move(name), []() {return std::make_unique<U>(); });
+		}
 	}
 
 	std::unique_ptr<T> build(std::string name) const

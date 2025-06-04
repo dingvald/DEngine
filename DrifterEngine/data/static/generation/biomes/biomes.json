@@ -23,7 +23,11 @@
             },
             "rock_formations": {
                 "relaxed_scatter": [ "greater", 0.5 ]
+            },
+            "stairs_down":{
+                "random_scatter" : ["less", 0.001]
             }
+            
         }
     },
     "caves": {

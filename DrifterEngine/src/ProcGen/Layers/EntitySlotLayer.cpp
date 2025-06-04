@@ -1,11 +1,11 @@
 #include "pch.h"
-#include "EntityLayer.h"
+#include "EntitySlotLayer.h"
 #include <ProcGen/Layers/BiomeLayer.h>
 #include <Random/Random.h>
 
 using namespace entt::literals;
 
-GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
+GenerationState drft::EntitySlotLayerChunk::generate(GenerationLevel desiredLevel)
 {
     auto biomeLayer = generateDependency<BiomeLayer>(_volume);
     if (!biomeLayer.isReady()) return biomeLayer.getState();
@@ -28,7 +28,7 @@ GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
         generatedDependencies.emplace(dependencyId, &layer.unwrap());
     }
 
-    // Detemine entity for each tile position
+    // Detemine entity slot for each tile position
     rng::Random random = { getLocalSeed() };
     auto& canvas = _layer.getLayerManager().getCanvas("slot_canvas"_hs);
     spatial::forEachPointInRect(_volume.flatten(), 
@@ -52,7 +52,7 @@ GenerationState drft::EntityLayerChunk::generate(GenerationLevel desiredLevel)
     return GenerationState::Complete;
 }
 
-sf::Vector3i drft::EntityLayer::getChunkDimensions() const
+sf::Vector3i drft::EntitySlotLayer::getChunkDimensions() const
 {
     return { 8, 8, 8 };
 }

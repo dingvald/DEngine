@@ -197,6 +197,15 @@ namespace drft
 			return _globalSeed;
 		}
 
+		void setEntityPack(const EntityPack& entityPack)
+		{
+			_entityPack = &entityPack;
+		}
+		const EntityPack* tryGetEntityPack() const
+		{
+			return _entityPack;
+		}
+
 		template<typename T>
 		FutureLayer<T> generate(spatial::AABB<int> volume, GenerationLevel level = GenerationLevel::All)
 		{
@@ -279,6 +288,7 @@ namespace drft
 		details::LayerFactory _layerFactory;
 		unsigned int _globalSeed = 0;
 		const GenerationRegistries& _generationRegistries;
+		const EntityPack* _entityPack = nullptr;
 	};
 
 	template<typename LayerType, typename ChunkType>
@@ -355,6 +365,14 @@ namespace drft
 		{
 			_layer.accessor.forEachLoadedNeighborChunk2d(_layer, _index, func);
 		}
+		GenerationState generateNeighborChunks3d(GenerationLevel desiredLevel)
+		{
+			return _layer.accessor.generateNeighborChunks3d(_layer, _index, desiredLevel);
+		}
+		void forEachLoadedNeighborChunk3d(std::function<void(const ChunkType&)> func) const
+		{
+			_layer.accessor.forEachLoadedNeighborChunk3d(_layer, _index, func);
+		}
 
 		void forEachPointInBounds(std::function<void(sf::Vector3i)> func)
 		{
@@ -402,6 +420,22 @@ namespace drft
 			void forEachLoadedNeighborChunk2d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
 			{
 				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
+				for (auto&& neighbor : neighbors)
+				{
+					if (!layer._chunks.contains(neighbor)) continue;
+					func(layer._chunks.at(neighbor));
+				}
+			}
+			GenerationState generateNeighborChunks3d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, GenerationLevel desiredLevel)
+			{
+				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate);
+				bool result = layer.generateChunks(neighbors, desiredLevel);
+				if (!result) return GenerationState::Generating;
+				return GenerationState::Complete;
+			}
+			void forEachLoadedNeighborChunk3d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
+			{
+				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate);
 				for (auto&& neighbor : neighbors)
 				{
 					if (!layer._chunks.contains(neighbor)) continue;
@@ -501,6 +535,20 @@ namespace drft
 				if (!_chunks.contains(chunkPoint)) continue;
 				ChunkType& chunk = _chunks.at(chunkPoint);
 				func(chunk);
+			}
+		}
+
+		void removeChunksInVolume(spatial::AABB<int> volume)
+		{
+			auto chunkPoints = getChunkPointsInsideVolume(volume);
+			_chunks.erase(chunkPoints.begin(), chunkPoints.end());
+		}
+		void removeChunksInArea(sf::IntRect area, int z)
+		{
+			auto chunks = getChunkPointsInsideArea(area, z);
+			for (auto&& chunk : chunks)
+			{
+				_chunks.erase(chunk);
 			}
 		}
 

@@ -44,7 +44,7 @@ void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, const Slot
     else if (satisfyingBiomes.size() > 1)
     {
         drft::rng::Random random{ getGlobalSeed() + std::hash<sf::Vector3i>()(centroid)};
-        size_t index = random.intInRange(0, satisfyingBiomes.size());
+        size_t index = random.intInRange(0, satisfyingBiomes.size() - 1);
         biomePoints.emplace(point, satisfyingBiomes.at(index));
     }
     // Fall back on their rank
@@ -79,7 +79,7 @@ GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> v
         generatedDependencies.emplace(dependencyID, &depLayer.unwrap());
     }
 
-    const auto centroids = voronoiLayer.unwrap().getCentroidsInArea(volume.flatten(), volume.center().z);
+    const auto centroids = voronoiLayer.unwrap().getCentroidsInArea(volume.flatten(), volume.min.z);
     for (auto&& point : centroids)
     {
         const auto values = getDependencyValuesAtPoint(point, generatedDependencies);
@@ -104,7 +104,7 @@ void drft::BiomeLayer::createFromJson(const rapidjson::Value& json)
             const Biome* biome = getRegistries().biomes.get(biomeName);
             if (!biome)
             {
-                LOG_WARNING("Biome name {} does not exist in the biome registry", biomeName);
+                LOG_ERROR("Biome name {} does not exist in the biome registry", biomeName);
                 continue;
             }
             

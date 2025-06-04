@@ -645,9 +645,6 @@
     <ClCompile Include="src\ProcGen\Layers\FeatureLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ProcGen\Features\AutomataFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -745,6 +742,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\DepthLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Decorators\DecoratorIds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\EntityPlacementLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3242,9 +3248,6 @@
     <ClInclude Include="src\ProcGen\Layers\FeatureLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\EntityLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ProcGen\Features\AutomataFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -3396,6 +3399,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Layers\DepthLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Decorators\DecoratorIds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\EntityPlacementLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\EntitySlotLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\EntityPositionList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

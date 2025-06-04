@@ -208,7 +208,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Components\Wrappers\SkillsWrapper.cpp" />
     <ClCompile Include="src\GUI\AbilityTooltip.cpp" />
     <ClCompile Include="src\JSON\JsonValueComparison.cpp" />
+    <ClCompile Include="src\ProcGen\Decorators\DecoratorIds.cpp" />
     <ClCompile Include="src\ProcGen\Layers\DepthLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\EntityPlacementLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
@@ -236,7 +239,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPack.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPackRegistry.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\FeatureLayer.cpp" />
     <ClCompile Include="src\Skills\Skill.cpp" />
     <ClCompile Include="src\Skills\SkillIds.cpp" />
@@ -494,7 +496,11 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Defines\CardinalDirections.h" />
     <ClInclude Include="src\GUI\AbilityTooltip.h" />
     <ClInclude Include="src\JSON\JsonValueComparison.h" />
+    <ClInclude Include="src\ProcGen\Decorators\DecoratorIds.h" />
+    <ClInclude Include="src\ProcGen\EntityPositionList.h" />
     <ClInclude Include="src\ProcGen\Layers\DepthLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\EntityPlacementLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\EntitySlotLayer.h" />
     <ClInclude Include="src\Skills\SkillRequirement.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />
@@ -554,7 +560,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h" />
     <ClInclude Include="src\ProcGen\LayerPack\LayerPack.h" />
     <ClInclude Include="src\ProcGen\LayerPack\LayerPackRegistry.h" />
-    <ClInclude Include="src\ProcGen\Layers\EntityLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\FeatureLayer.h" />
     <ClInclude Include="src\Skills\Skill.h" />
     <ClInclude Include="src\Skills\SkillIds.h" />

@@ -26,6 +26,9 @@
                 ],
                 "stairs_down": [
                     [ "stairs_down", 1]
+                ],
+                "stairs_up": [
+                    ["stairs_up", 1]
                 ]
             }
         } 

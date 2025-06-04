@@ -1,7 +1,6 @@
 #pragma once
 #include <unordered_map>
 #include <EnTT/entt.h>
-#include <type_traits>
 
 namespace drft
 {
