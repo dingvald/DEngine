@@ -236,7 +236,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPack.cpp" />
     <ClCompile Include="src\ProcGen\LayerPack\LayerPackRegistry.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\EntityLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\FeatureLayer.cpp" />
     <ClCompile Include="src\Skills\Skill.cpp" />
     <ClCompile Include="src\Skills\SkillIds.cpp" />
