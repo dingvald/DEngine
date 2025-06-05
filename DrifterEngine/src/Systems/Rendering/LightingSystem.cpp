@@ -27,9 +27,9 @@ namespace Internal
 	{
 		return
 		{
-			static_cast<std::uint8_t>(color.r * intensity),
-			static_cast<std::uint8_t>(color.g * intensity),
-			static_cast<std::uint8_t>(color.b * intensity)
+			static_cast<std::uint8_t>(std::clamp(color.r * intensity, 0.f, 255.f)),
+			static_cast<std::uint8_t>(std::clamp(color.g * intensity, 0.f, 255.f)),
+			static_cast<std::uint8_t>(std::clamp(color.b * intensity, 0.f, 255.f))
 		};
 	}
 
