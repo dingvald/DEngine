@@ -2,6 +2,8 @@
 #include "Snapshot.h"
 #include "Reflection.h"
 
+using namespace entt::literals;
+
 namespace snapshot {
 
 	void Snapshot::save(OutputArchive archive, entt::const_handle h)
@@ -43,8 +45,7 @@ namespace snapshot {
 		for (auto [id, storage] : h.storage())
 		{
 			const auto refl_comp = ComponentReflection{ storage.type() };
-			const auto isSerializable = entt::resolve(storage.type()).prop(entt::hashed_string("serialize"));
-			if (refl_comp && isSerializable)
+			if (refl_comp && refl_comp.isSerializable())
 			{
 				e_serial.components.push_back(Handle{ refl_comp.get(h) });
 			}
@@ -84,9 +85,7 @@ namespace snapshot {
 		auto h = entt::handle{ reg, reg.create(serial_e.e) };
 
 		for (auto& comp : serial_e.components) {
-			auto comp_name = comp.reflection().name().data();
 			comp.componentReflection().emplace(h, *comp);
-
 		}
 	}
 
@@ -96,7 +95,6 @@ namespace snapshot {
 		archive(serial_e);
 
 		for (auto& comp : serial_e.components) {
-			auto comp_name = comp.reflection().name().data();
 			comp.componentReflection().emplace(h, *comp);
 		}
 	}

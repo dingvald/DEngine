@@ -54,18 +54,6 @@ namespace snapshot {
 
     } // namespace detail
 
-    using ShouldSerializePred = std::function<bool(char const*)>;
-
-    namespace ShouldSerialize {
-
-        inline ShouldSerializePred
-            tautology()
-        {
-            return [](std::string const&) { return true; };
-        }
-
-    } // namespace ShouldSerialize
-
     class Snapshot
     {
     public:

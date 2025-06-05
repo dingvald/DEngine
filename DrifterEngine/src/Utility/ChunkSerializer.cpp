@@ -7,6 +7,7 @@
 #include <Utility/StandardLogger.h>
 
 const std::filesystem::path CHUNK_LIST_FILEPATH = REGION_DIRECTORY / "chunk_list.dat";
+static const size_t PROMISE_LIST_RESERVE = 100u;
 
 drft::ChunkSerializer::ChunkSerializer()
 {
@@ -88,7 +89,7 @@ void drft::ChunkSerializer::serializationThread()
 		}
 		catch (std::exception e)
 		{
-			error_logger << "Error in serlialization thread: " << e.what() << std::endl;
+			LOG_ERROR("Error in serialization thread: {}", e.what());
 		}
 	} 
 	while (!_shouldShutdown || !_saveList.empty() || !_loadList.empty());
@@ -119,19 +120,20 @@ void drft::ChunkSerializer::syncLoadList()
 void drft::ChunkSerializer::processSaveList()
 {
 	std::vector<SourceChunkPositionPair> promisesToComplete;
-	for (auto&& [region, list] : _saveList)
+	promisesToComplete.reserve(PROMISE_LIST_RESERVE);
+	for (auto&& [filepath, list] : _saveList)
 	{
-		if (!_regionFiles.contains(region))
+		if (!_regionFiles.contains(filepath))
 		{
-			_regionFiles.emplace(region, region);
+			_regionFiles.emplace(filepath, REGION_DIRECTORY / filepath);
 		}
 
-		RegionFile& regionFile = _regionFiles.at(region);
+		RegionFile& regionFile = _regionFiles.at(filepath);
 		if (regionFile.open())
 		{
 			for (auto&& [sourcePositionPair, registry] : list)
 			{
-				auto compressed = serializeAndCompressRegistry(registry);
+				const CompressedChunk compressed = serializeAndCompressRegistry(registry);
 				regionFile.writeChunk(sourcePositionPair.position, compressed);
 				promisesToComplete.push_back(sourcePositionPair);
 			}
@@ -148,19 +150,19 @@ void drft::ChunkSerializer::processSaveList()
 		_savePromises.erase(chunk);
 	}
 }
-
+ 
 void drft::ChunkSerializer::processLoadList()
 {
-	for (auto&& [region, list] : _loadList)
+	std::vector<SourceChunkPositionPair> promisesToComplete;
+	promisesToComplete.reserve(PROMISE_LIST_RESERVE);
+	for (auto&& [filepath, list] : _loadList)
 	{
-		std::vector<SourceChunkPositionPair> promisesToComplete;
-		promisesToComplete.reserve(list.size());
-		if (!_regionFiles.contains(region))
+		if (!_regionFiles.contains(filepath))
 		{
-			_regionFiles.emplace(region, region);
+			_regionFiles.emplace(filepath, REGION_DIRECTORY / filepath);
 		}
 
-		RegionFile& regionFile = _regionFiles.at(region);
+		RegionFile& regionFile = _regionFiles.at(filepath);
 		if (regionFile.open())
 		{
 			for (auto&& [sourcePositionPair, registry] : list)
@@ -171,16 +173,15 @@ void drft::ChunkSerializer::processLoadList()
 			}
 		}
 		regionFile.close();
-
-		std::lock_guard<std::mutex> lock(_loadPromiseLock);
-		for (auto&& chunk : promisesToComplete)
-		{
-			_loadPromises.at(chunk).set_value();
-			_loadPromises.erase(chunk);
-		}
 	}
 
 	_loadList.clear();
+	std::lock_guard<std::mutex> lock(_loadPromiseLock);
+	for (auto&& chunk : promisesToComplete)
+	{
+		_loadPromises.at(chunk).set_value();
+		_loadPromises.erase(chunk);
+	}
 }
 
 void drft::ChunkSerializer::saveSerializedChunkList()
@@ -201,12 +202,11 @@ void drft::ChunkSerializer::loadSerializedChunkList()
 
 std::filesystem::path drft::ChunkSerializer::getRegionFilePath(SourceChunkPositionPair sourcePositionPair) const
 {
-	std::string filename = "r_"
-		+ std::to_string(sourcePositionPair.position.x / REGION_DIMENSIONS)
-		+ "_"
-		+ std::to_string(sourcePositionPair.position.y / REGION_DIMENSIONS)
-		+ "_"
-		+ std::to_string(sourcePositionPair.position.z)
-		+ ".dat";
-	return REGION_DIRECTORY / std::to_string(sourcePositionPair.sourceId) / filename;
+	const std::string filename = std::format(
+		"r_{}_{}_{}.dat",
+		sourcePositionPair.position.x / REGION_DIMENSIONS,
+		sourcePositionPair.position.y / REGION_DIMENSIONS,
+		sourcePositionPair.position.z);
+
+	return std::filesystem::path{ std::to_string(sourcePositionPair.sourceId) } / filename;
 }

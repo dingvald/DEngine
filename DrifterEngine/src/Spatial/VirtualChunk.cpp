@@ -10,7 +10,7 @@ using namespace drft::spatial;
 using namespace entt::literals;
 using namespace std::chrono_literals;
 
-static constexpr auto WAIT_TIME = 0.0ms; // How long to wait for async operations
+static constexpr auto ASYNC_WAIT_TIME = 0.00ms; // How long to wait for async operations
 
 void drft::spatial::VirtualChunk::setState(ChunkState state)
 {
@@ -37,7 +37,7 @@ ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg, IChunkGenerator
 	GenerationState result = generator.generateChunk(_coordinate, reg);
 	if (result == GenerationState::Failed)
 	{
-		LOG_ERROR("Could not load source {} at position {} {} {}", _sourceId, _coordinate.x, _coordinate.y, _coordinate.z);
+		LOG_ERROR("Could not build from source {} at position {} {} {}", _sourceId, _coordinate.x, _coordinate.y, _coordinate.z);
 		setState(ChunkState::Built);
 		return ioStatus::Done;
 	}
@@ -55,11 +55,12 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, ChunkSerial
 {
 	if (getState() == ChunkState::ToLoad)
 	{
-		setFuture(serializer.queueForLoad({ _sourceId, _coordinate }, _asyncRegistry));
+		auto future = serializer.queueForLoad({ _sourceId, _coordinate }, _asyncRegistry);
+		setFuture(std::move(future));
 		setState(ChunkState::Loading);
 	}
 
-	auto status = getFuture().wait_for(WAIT_TIME);
+	auto status = getFuture().wait_for(ASYNC_WAIT_TIME);
 	if (status != std::future_status::ready)
 	{
 		return ioStatus::Busy;
@@ -92,11 +93,12 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, ChunkSerial
 
 		reg.compact();
 		
-		setFuture(serializer.queueForSave({ _sourceId, _coordinate }, _asyncRegistry));
+		auto future = serializer.queueForSave({ _sourceId, _coordinate }, _asyncRegistry);
+		setFuture(std::move(future));
 		setState(ChunkState::Saving);
 	}
 
-	auto status = getFuture().wait_for(WAIT_TIME);
+	auto status = getFuture().wait_for(ASYNC_WAIT_TIME);
 	if (status != std::future_status::ready)
 	{
 		return ioStatus::Busy;

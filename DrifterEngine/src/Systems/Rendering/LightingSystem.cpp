@@ -20,7 +20,8 @@ namespace Internal
 {
 	static float calculateLightIntensity(float radius, float distance)
 	{
-		return 1.f - (distance * distance) / (radius * radius);
+		float i = 1.f - (distance * distance) / (radius * radius);
+		return std::clamp(i, 0.1f, 1.0f); // clamp prevents the light from being darker than the "hasSeenTile" color
 	}
 
 	static sf::Color addIntensityToColor(float intensity, const sf::Color& color)
