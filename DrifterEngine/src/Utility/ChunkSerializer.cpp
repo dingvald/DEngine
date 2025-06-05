@@ -151,9 +151,10 @@ void drft::ChunkSerializer::processSaveList()
 
 void drft::ChunkSerializer::processLoadList()
 {
-	std::vector<SourceChunkPositionPair> promisesToComplete;
 	for (auto&& [region, list] : _loadList)
 	{
+		std::vector<SourceChunkPositionPair> promisesToComplete;
+		promisesToComplete.reserve(list.size());
 		if (!_regionFiles.contains(region))
 		{
 			_regionFiles.emplace(region, region);
@@ -170,16 +171,16 @@ void drft::ChunkSerializer::processLoadList()
 			}
 		}
 		regionFile.close();
+
+		std::lock_guard<std::mutex> lock(_loadPromiseLock);
+		for (auto&& chunk : promisesToComplete)
+		{
+			_loadPromises.at(chunk).set_value();
+			_loadPromises.erase(chunk);
+		}
 	}
 
 	_loadList.clear();
-
-	std::lock_guard<std::mutex> lock(_loadPromiseLock);
-	for (auto&& chunk : promisesToComplete)
-	{
-		_loadPromises.at(chunk).set_value();
-		_loadPromises.erase(chunk);
-	}
 }
 
 void drft::ChunkSerializer::saveSerializedChunkList()
