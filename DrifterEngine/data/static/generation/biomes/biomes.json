@@ -37,7 +37,12 @@
             "height": [ "less", 0.5 ]
         },
         "features": {
-            "cavern": {
+            "verdent_cavern": {
+                "random_scatter": [ "less", 0.4 ],
+                "height": [ "inside", -1.0, 1.0 ],
+                "expression": "random_scatter & height"
+            },
+            "desolate_cavern": {
                 "random_scatter": [ "less", 0.7 ],
                 "height": [ "inside", -1.0, 1.0 ],
                 "expression": "random_scatter & height"

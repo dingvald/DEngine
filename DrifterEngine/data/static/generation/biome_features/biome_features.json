@@ -20,14 +20,14 @@
                 }
             ]
         },
-        "cavern": {
+        "verdent_cavern": {
             "type": "automata_feature",
             "params": {
                 "on_tags": [ "floor" ],
                 "off_tags": [],
                 "center_tags": [ "center" ],
                 "border_tags": [ "border" ],
-                "radius": [ 10, 20 ],
+                "radius": [ 10, 25 ],
                 "iterations": 3
             },
             "decorators": [
@@ -74,7 +74,56 @@
                     },
                     "conditions": {
                         "tag_expression": "floor & center",
-                        "chance": 0.1
+                        "chance": 0.05
+                    }
+                }
+            ]
+        },
+        "desolate_cavern": {
+            "type": "automata_feature",
+            "params": {
+                "on_tags": [ "floor" ],
+                "off_tags": [],
+                "center_tags": [ "center" ],
+                "border_tags": [ "border" ],
+                "radius": [ 5, 25 ],
+                "iterations": 3
+            },
+            "decorators": [
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "null_entity"
+                    },
+                    "conditions": {
+                        "tag_expression": "floor",
+                        "chance": 1.0
+                    }
+                },
+                {
+                    "type": "entity_decorator",
+                    "params": {
+                        "radius": [ 3, 5 ],
+                        "slots": {
+                            "sand": {
+                                "rolls": 15,
+                                "chance": 0.95
+                            }
+                        }
+                    },
+                    "conditions": {
+                        "tag_expression": "center & floor",
+                        "chance": 0.3
+                    }
+                },
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "sand"
+                    },
+                    "conditions": {
+                        "tag_expression": "floor & border",
+                        "chance": 0.4
                     }
                 }
             ]
