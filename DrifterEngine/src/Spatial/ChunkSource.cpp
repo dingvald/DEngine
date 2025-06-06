@@ -168,12 +168,14 @@ bool drft::spatial::ChunkSource::processLoadQueue(entt::registry& registry)
 	if (_toLoad.empty()) return true;
 
 	bool anyPending = false;
+	unsigned int kickedOffLoads = 0;
 	std::vector<ChunkPosition> toRemove;
 	for (auto&& coord : _toLoad)
 	{
-		spatial::VirtualChunk& chunk = _chunks.at(coord);
+		kickedOffLoads++;
+		if (kickedOffLoads > _buildsPerFrame) break;
 
-		spatial::ioStatus status = chunk.asyncLoad(registry, _serializer);
+		spatial::ioStatus status = _chunks.at(coord).asyncLoad(registry, _serializer);
 		if (status == spatial::ioStatus::Done)
 		{
 			toRemove.push_back(coord);
