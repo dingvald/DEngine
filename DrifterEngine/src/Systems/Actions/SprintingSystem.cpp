@@ -14,8 +14,6 @@
 
 using namespace entt::literals;
 
-static constexpr float PI = 3.141592f;
-
 void drft::system::SprintingSystem::init()
 {
 	_registry.on_construct<SprintingComponent>().connect<&SprintingSystem::onSprintingAdded>(this);
@@ -90,7 +88,13 @@ void drft::system::SprintingSystem::spawnSprintEffect(const RenderComponent& ren
 	effectSprite.color = sf::Color::White;
 	effectSprite.color.value().a = 30;
 
-	EffectStruct sprintEffect = { .frames = { effectSprite }, .position = positionComponent.tile, .ttl = 25, .fadeRate = 1 };
+	EffectStruct sprintEffect = {
+		.frames = { effectSprite },
+		.position = positionComponent.tile,
+		.ttl = 25,
+		.fadeRate = 1,
+		.requiresInFOV = false
+	};
 
 	spawnEffect(_registry, std::move(sprintEffect));
 }
