@@ -4,6 +4,7 @@
 #include <Utility/StandardLogger.h>
 
 using namespace drft;
+using namespace entt::literals;
 
 static const LayerPack EmptyLayerPack = {};
 
@@ -22,6 +23,12 @@ void LayerPackRegistry::loadLayerPacks(const std::filesystem::path& layerPackDir
 		for (auto&& packObj : json.getRoot().GetObject()) 
 		{
 			entt::id_type name = entt::hashed_string{ packObj.name.GetString() };
+			if (name == "expression"_hs)
+			{
+				LOG_ERROR("Cannot create layer with protected name 'expression'");
+				continue;
+			}
+
 			LayerPack layerPack;
 			layerPack.createFromJson(packObj.value);
 			_packs.emplace(std::move(name), std::move(layerPack));
