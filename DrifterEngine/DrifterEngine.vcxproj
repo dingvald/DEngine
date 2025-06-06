@@ -1389,7 +1389,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <None Include="data\static\entities\materials.json" />
     <None Include="data\static\entities\player.json" />
     <None Include="data\static\entities\environmentals.json" />
-    <None Include="data\static\structures\wooden_house.json" />
     <None Include="deps\cereal\external\rapidxml\manual.html" />
     <None Include="deps\SFML-2.6.1\include\SFML\Audio\SoundFileFactory.inl" />
     <None Include="deps\SFML-2.6.1\include\SFML\Graphics\Glsl.inl" />
