@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "CopyEntity.h"
 #include <Components/ComponentMetaBinder.h>
-
-using namespace entt::literals;
+#include <Snapshot/Reflection.h>
 
 void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& registry, bool overwrite)
 {
@@ -29,8 +28,9 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 			auto toStorage = toRegistry.storage(id);
 			if (!toStorage)
 			{
+				// If the type is in the ComponentMetaBinder ctx then we should copy - we don't care otherwise
 				const entt::meta_type meta = entt::resolve(ComponentMetaBinder::cxt(), fromStorage.type());
-				if (const entt::meta_func func = meta.func("emplace"_hs)) // If the type is in the ComponentMetaBinder ctx then we should copy
+				if (const entt::meta_func func = meta.func(snapshot::EMPLACE_INTO_REG_FN_NAME)) 
 				{
 					func.invoke(meta, entt::forward_as_meta(toRegistry), to);
 					toStorage = toRegistry.storage(id);
