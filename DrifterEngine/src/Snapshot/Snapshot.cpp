@@ -40,14 +40,15 @@ namespace snapshot {
 	{
 		auto e = h.entity();
 
-		auto e_serial = detail::SerializeHandleEntity{ .e = e, .components = std::vector<Handle>{} };
+		auto e_serial = detail::SerializeHandleEntity{ .e = e };
+		e_serial.components.reserve(10u);
 
 		for (auto [id, storage] : h.storage())
 		{
 			const auto refl_comp = ComponentReflection{ storage.type() };
 			if (refl_comp && refl_comp.isSerializable())
 			{
-				e_serial.components.push_back(Handle{ refl_comp.get(h) });
+				e_serial.components.emplace_back(refl_comp.get(h));
 			}
 		}
 
