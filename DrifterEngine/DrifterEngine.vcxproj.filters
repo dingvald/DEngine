@@ -3583,6 +3583,7 @@
   <ItemGroup>
     <Text Include="resources\GUI\Themes\debug_theme.txt" />
     <Text Include="resources\GUI\Themes\drifter_theme.txt" />
+    <Text Include="deps\EnTT\License.txt" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="deps\zlib\lib\zlibstat.lib" />
