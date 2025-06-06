@@ -1,20 +1,17 @@
 #pragma once
-#pragma once
 
-#include "Archive.h"
+#include <Snapshot/Archive.h>
 
 namespace snapshot 
 {
     using namespace entt::literals;
 
     constexpr auto EMPLACE_INTO_REG_FN_NAME = "emplace"_hs;
+    constexpr auto META_NAME_DATA_NAME = "meta_name"_hs;
     constexpr auto TAKE_COMPONENT_SNAPSHOT_FN_NAME = "take_component_snapshot"_hs;
     constexpr auto LOAD_COMPONENT_SNAPSHOT_FN_NAME = "load_component_snapshot"_hs;
 
-    /**
-     * Collection of functions to be reflected for components.
-     * */
-    namespace ReflectionFunctions 
+    namespace detail 
     {
         template<typename T>
         void takeSnapshot(const entt::snapshot& snapshot, OutputArchive archive)
@@ -40,7 +37,7 @@ namespace snapshot
         void assignName(entt::meta_factory<T>& meta)
         {
             using namespace entt::literals;
-            meta.data<&Str>("meta_name"_hs);
+            meta.data<&Str>(META_NAME_DATA_NAME);
         }
 
         template<typename T, std::string_view const& Str>
@@ -50,20 +47,16 @@ namespace snapshot
             assignName<T, Str>(meta);
         }
 
-    } // namespace ReflectionFunctions
+    } // namespace detail
 
-    /**
-     * Reflects serialization, emplace, removal, contains, get, get-type for passed
-     * component type.
-     * */
+
     template<typename T, std::string_view const& Str>
     entt::meta_factory<T> reflectComponent(entt::meta_ctx& ctx)
     {
-        using namespace ReflectionFunctions;
         entt::meta_factory<T> meta = entt::meta<T>(ctx);
 
-        reflectWithName<T, Str>(meta);
-        reflectComponentFunctions<T>(meta);
+        detail::reflectWithName<T, Str>(meta);
+        detail::reflectComponentFunctions<T>(meta);
 
         return meta;
     }

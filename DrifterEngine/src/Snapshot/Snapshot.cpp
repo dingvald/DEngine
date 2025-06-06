@@ -1,16 +1,16 @@
 #include <pch.h>
-#include "Snapshot.h"
-#include "Reflection.h"
 #include <Components/ComponentMetaBinder.h>
+#include <Snapshot/Reflection.h>
+#include <Snapshot/Snapshot.h>
 
-namespace snapshot {
-
+namespace snapshot 
+{
 	void Snapshot::save(OutputArchive archive, const entt::registry& reg)
 	{
 		entt::snapshot snapshot = { reg };
 		for (auto&& [id, meta] : entt::resolve(ComponentMetaBinder::cxt()))
 		{
-			meta.func(TAKE_COMPONENT_SNAPSHOT_FN_NAME).invoke(entt::meta_handle{}, entt::forward_as_meta(snapshot), archive);
+			meta.func(TAKE_COMPONENT_SNAPSHOT_FN_NAME).invoke({}, entt::forward_as_meta(snapshot), archive);
 		}
 	}
 
@@ -19,7 +19,7 @@ namespace snapshot {
 		entt::snapshot_loader loader = { reg };
 		for (auto&& [id, meta] : entt::resolve(ComponentMetaBinder::cxt()))
 		{
-			meta.func(LOAD_COMPONENT_SNAPSHOT_FN_NAME).invoke(entt::meta_handle{}, entt::forward_as_meta(loader), archive);
+			meta.func(LOAD_COMPONENT_SNAPSHOT_FN_NAME).invoke({}, entt::forward_as_meta(loader), archive);
 		}
 	}
 

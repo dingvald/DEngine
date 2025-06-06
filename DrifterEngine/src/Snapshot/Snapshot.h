@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Archive.h"
-#include "Reflection.h"
+#include <Snapshot/Archive.h>
 
 namespace snapshot {
 

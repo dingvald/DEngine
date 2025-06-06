@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CopyEntity.h"
 #include <Components/ComponentMetaBinder.h>
+#include <Utility/StandardLogger.h>
 
 using namespace entt::literals;
 
@@ -30,13 +31,16 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 			if (!toStorage)
 			{
 				const auto meta = entt::resolve(ComponentMetaBinder::cxt(), fromStorage.type());
-				const auto func = meta.func("emplace"_hs); // entt::registry::emplace_or_replace
-				if (func)
+				if (const auto func = meta.func("emplace"_hs)) [[likely]]
 				{
 					func.invoke(meta, entt::forward_as_meta(toRegistry), to);
 					toStorage = toRegistry.storage(id);
 					toStorage->remove(to);
 					toStorage->emplace(to, fromStorage.get(from));
+				}
+				else
+				{
+					LOG_ERROR("Could not find type {} in component reflection context", fromStorage.type().name());
 				}
 			}
 			else
