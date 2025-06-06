@@ -12,14 +12,14 @@
         },
         "features": {
             "ore_vein": {
-                "random_scatter": [ "less", 0.005 ]
+                "random_scatter_1": [ "less", 0.005 ]
             }
         },
         "entity_slots": {
             "sand": {
                 "height": [ "inside", -1.0, 1.0 ],
-                "random_scatter": [ "less", 0.15 ],
-                "expression": "height & random_scatter"
+                "random_scatter_2": [ "less", 0.15 ],
+                "expression": "height & random_scatter_2"
             },
             "rock_formations": {
                 "relaxed_scatter": [ "greater", 0.5 ]
@@ -38,24 +38,24 @@
         },
         "features": {
             "verdent_cavern": {
-                "random_scatter": [ "less", 0.4 ],
+                "random_scatter_1": [ "less", 0.4 ],
                 "height": [ "inside", -1.0, 1.0 ],
-                "expression": "random_scatter & height"
+                "expression": "random_scatter_1 & height"
             },
             "desolate_cavern": {
-                "random_scatter": [ "less", 0.7 ],
+                "random_scatter_2": [ "less", 0.7 ],
                 "height": [ "inside", -1.0, 1.0 ],
-                "expression": "random_scatter & height"
+                "expression": "random_scatter_2 & height"
             },
             "ore_vein": {
-                "random_scatter": [ "less", 0.1 ]
+                "random_scatter_3": [ "less", 0.1 ]
             }
         },
         "entity_slots": {
             "sand": {
                 "height": [ "inside", 0.0, 0.1 ],
-                "random_scatter": [ "less", 0.15 ],
-                "expression": "height & random_scatter"
+                "random_scatter_1": [ "less", 0.15 ],
+                "expression": "height & random_scatter_1"
             },
             "rock_formations": {
                 "height": [ "inside", -1.0, 1.0 ]

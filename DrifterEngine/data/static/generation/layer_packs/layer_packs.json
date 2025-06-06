@@ -43,10 +43,22 @@
                         "passes": 2
                     }
                 },
-                "random_scatter": {
+                "random_scatter_1": {
                     "type": "random",
                     "params": {
-                        "seed": 1
+                        "seed": 743687
+                    }
+                },
+                "random_scatter_2": {
+                    "type": "random",
+                    "params": {
+                        "seed": 69
+                    }
+                },
+                "random_scatter_3": {
+                    "type": "random",
+                    "params": {
+                        "seed": 42
                     }
                 },
                 "fill": {
