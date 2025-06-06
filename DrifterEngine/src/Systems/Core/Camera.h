@@ -3,6 +3,11 @@
 
 struct CameraComponent;
 
+namespace drft::events
+{
+	struct ChunkSourceTransferCompleteEvent;
+}
+
 namespace drft
 {
 	struct TilePosition;
@@ -25,11 +30,13 @@ namespace drft::system
 
 		void smoothCameraToTarget(sf::Vector2f targetPosition, CameraHandle& cam) const;
 		void snapCameraToTarget(TilePosition targetPosition, CameraHandle& cam) const;
+		void onChunkSourceTransferCompleteEvent(events::ChunkSourceTransferCompleteEvent& ev);
 
 		entt::entity tryFindTarget() const;
 
 	private:
 		entt::entity _camera = entt::null;
+		bool _justCompletedTransfer = false;
 	};
 
 }

@@ -5,6 +5,8 @@
 #include "Components/PositionComponent.h"
 #include "Components/CameraTargetComponent.h"
 
+#include <Events/ChunkSourceTransferCompleteEvent.h>
+
 #include <Spatial/Helpers.h>
 
 #include <Systems/Helpers/GetCurrentCamera.h>
@@ -81,8 +83,9 @@ void drft::system::Camera::smoothCameraToTarget(sf::Vector2f targetPosition, Cam
 
 void drft::system::Camera::snapCameraToTarget(TilePosition targetPosition, CameraHandle& cam) const
 {
-	cam.position.tile = targetPosition;
-	cam.camera.lag = { 0, 0, 0 };
+	auto collapsed = spatial::collapseOffset(targetPosition, { static_cast<float>(TileDimensions.x)/2.f, static_cast<float>(TileDimensions.y)/2.f, 0.f });
+	cam.position.tile = collapsed.position;
+	cam.camera.lag = collapsed.offset;
 }
 
 entt::entity drft::system::Camera::tryFindTarget() const
@@ -96,4 +99,9 @@ entt::entity drft::system::Camera::tryFindTarget() const
 		return entity;
 	}
 	return entt::null;
+}
+
+void drft::system::Camera::onChunkSourceTransferCompleteEvent(events::ChunkSourceTransferCompleteEvent& ev)
+{
+	_justCompletedTransfer = true;
 }
