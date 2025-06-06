@@ -137,7 +137,7 @@ EntityList drft::spatial::WorldGrid::getAllEntities(ChunkPosition coordinate) co
 {
 	if (!_chunks.contains(coordinate))
 	{
-		return EntityList{};
+		return EmptyEntityList;
 	}
 	return _chunks.at(coordinate).getAllEntities();
 }

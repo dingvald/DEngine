@@ -19,16 +19,6 @@ void drft::spatial::WorldChunk::removeEntity(entt::entity entity, sf::Vector3i p
 	_entities.erase(entity);
 }
 
-bool drft::spatial::WorldChunk::moveEntity(entt::entity entity, sf::Vector3i fromPosition, sf::Vector3i toPosition)
-{
-	auto& fromCell = _grid.at(fromPosition);
-	fromCell.removeEntity(entity);
-	auto& toCell = _grid.at(toPosition);
-	toCell.placeEntity(entity);
-
-	return true;
-}
-
 const std::vector<entt::entity>& drft::spatial::WorldChunk::entitiesAt(sf::Vector3i position) const
 {
 	const Cell& cell = _grid.at(position);

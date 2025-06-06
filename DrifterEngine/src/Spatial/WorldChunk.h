@@ -2,11 +2,8 @@
 #include "Cell.h"
 #include <Spatial/Grid3d.h>
 
-
 namespace drft::spatial
-
 {
-
 	class WorldChunk
 	{
 	public:
@@ -16,8 +13,7 @@ namespace drft::spatial
 		void placeEntity(entt::entity entity, sf::Vector3i position);
 		// Removes entity from given chunk tile position and returns that entity.
 		void removeEntity(entt::entity entity, sf::Vector3i position);
-		// Moves entity from one chunk tile position to another and returns if successful.
-		bool moveEntity(entt::entity, sf::Vector3i fromPosition, sf::Vector3i toPosition);
+
 		const std::vector<entt::entity>& entitiesAt(sf::Vector3i chunkPosition) const;
 		std::vector<entt::entity> getAllEntities() const;
 
@@ -25,7 +21,7 @@ namespace drft::spatial
 		bool empty() const;
 
 	private:
-		std::unordered_set<entt::entity> _entities;
+		entt::dense_set<entt::entity> _entities;
 		Grid3d<Cell> _grid = { sf::Vector3i{8, 8, 8} };
 	};
 
