@@ -14,11 +14,10 @@ struct StaminaComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "stamina";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<StaminaComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<StaminaComponent, NAME>(ctx)
 			.data<&StaminaComponent::baseConsumption>("base_consumption"_hs);
 	}
 };

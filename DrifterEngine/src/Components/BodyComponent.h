@@ -18,11 +18,10 @@ private:
 		body.parts.createFromJson(json);
 	}
 
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<BodyComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<BodyComponent, NAME>(ctx)
 			.func<&BodyComponent::setFromJSON>("set_from_json"_hs);
 	}
 };

@@ -14,11 +14,9 @@ struct TemporaryLightSourceComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "temporary_light_source";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
-		using namespace entt::literals;
-		snapshot::reflectComponent<TemporaryLightSourceComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<TemporaryLightSourceComponent, NAME>(ctx);
 	}
 };
 

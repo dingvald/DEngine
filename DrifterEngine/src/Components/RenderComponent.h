@@ -23,11 +23,10 @@ private:
 	{
 		return r.texture = entt::hashed_string(val.c_str()).value();
 	}
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<RenderComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<RenderComponent, NAME>(ctx)
 			.data<&RenderComponent::textureSetter, &RenderComponent::texture>("texture"_hs)
 			.data<&RenderComponent::uvSize>("uv_size"_hs)
 			.data<&RenderComponent::uvCoords>("uv_coords"_hs)

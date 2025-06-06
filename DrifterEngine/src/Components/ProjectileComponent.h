@@ -15,11 +15,10 @@ struct ProjectileComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "projectile";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<ProjectileComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<ProjectileComponent, NAME>(ctx);
 	}
 };
 

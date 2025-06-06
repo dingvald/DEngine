@@ -12,11 +12,10 @@ private:
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "flying";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<FlyingComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<FlyingComponent, NAME>(ctx);
 	}
 
 	friend class cereal::access;

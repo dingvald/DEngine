@@ -10,11 +10,10 @@ struct SharpComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "sharp";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<SharpComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<SharpComponent, NAME>(ctx)
 			.data<&SharpComponent::value>("value"_hs);
 	}
 	friend class cereal::access;

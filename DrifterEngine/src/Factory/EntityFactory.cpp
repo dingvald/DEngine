@@ -218,7 +218,7 @@ void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, en
 		for (auto&& component : entityObject[COMPONENTS_KEY_NAME].GetObject())
 		{
 			auto componentName = component.name.GetString();
-			auto meta = entt::resolve(entt::hashed_string(componentName));
+			auto meta = entt::resolve(ComponentMetaBinder::cxt(), entt::hashed_string(componentName));
 			if (!meta)
 			{
 				LOG_ERROR("Component {} does not exist - has it been reflected?", componentName);

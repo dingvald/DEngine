@@ -13,11 +13,10 @@ struct GlobalLightSourceComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "global_light_source";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<GlobalLightSourceComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<GlobalLightSourceComponent, NAME>(ctx)
 			.data<&GlobalLightSourceComponent::color>("color"_hs);
 	}
 };

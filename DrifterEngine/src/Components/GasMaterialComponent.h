@@ -11,11 +11,10 @@ struct GasMaterialComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "gas_material";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<GasMaterialComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<GasMaterialComponent, NAME>(ctx)
 			.data<&GasMaterialComponent::density>("density"_hs);
 	}
 };

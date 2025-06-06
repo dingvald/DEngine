@@ -13,11 +13,9 @@ struct InheritanceComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "inheritance";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
-		using namespace entt::literals;
-		snapshot::reflectComponent<InheritanceComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<InheritanceComponent, NAME>(ctx);
 	}
 };
 

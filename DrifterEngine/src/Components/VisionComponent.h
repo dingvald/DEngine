@@ -11,11 +11,10 @@ struct VisionComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "vision";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<VisionComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<VisionComponent, NAME>(ctx)
 			.data<&VisionComponent::sightRange>("sight_range"_hs);
 	}
 };

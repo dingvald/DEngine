@@ -15,11 +15,10 @@ private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "solid_material";
 
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<SolidMaterialComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<SolidMaterialComponent, NAME>(ctx)
 			.data<&SolidMaterialComponent::density>("density"_hs)
 			.data<&SolidMaterialComponent::hardness>("hardness"_hs)
 			.data<&SolidMaterialComponent::brittleness>("brittleness"_hs)

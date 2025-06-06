@@ -13,11 +13,9 @@ struct VisualEffectComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "visual_effect";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
-		using namespace entt::literals;
-		snapshot::reflectComponent<VisualEffectComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<VisualEffectComponent, NAME>(ctx);
 	}
 };
 

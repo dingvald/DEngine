@@ -12,11 +12,10 @@ struct OpenableComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "openable";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<OpenableComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<OpenableComponent, NAME>(ctx)
 			.data<&OpenableComponent::keyName>("key_name"_hs);
 	}
 };

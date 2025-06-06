@@ -12,11 +12,10 @@ struct LiquidMaterialComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "liquid_material";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<LiquidMaterialComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<LiquidMaterialComponent, NAME>(ctx)
 			.data<&LiquidMaterialComponent::density>("density"_hs)
 			.data<&LiquidMaterialComponent::viscosity>("viscosity"_hs);
 	}

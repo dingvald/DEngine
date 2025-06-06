@@ -9,11 +9,10 @@ struct WeightComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "weight";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<WeightComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<WeightComponent, NAME>(ctx)
 			.data<&WeightComponent::value>("value"_hs);
 	}
 };

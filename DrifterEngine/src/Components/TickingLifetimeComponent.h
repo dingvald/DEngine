@@ -11,11 +11,10 @@ struct TickingLifetimeComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "ticking_lifetime";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<TickingLifetimeComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<TickingLifetimeComponent, NAME>(ctx)
 			.data<&TickingLifetimeComponent::ticksRemaining>("ticks"_hs);
 	}
 };

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CopyEntity.h"
+#include <Components/ComponentMetaBinder.h>
 
 using namespace entt::literals;
 
@@ -28,7 +29,7 @@ void drft::util::copyEntity(entt::entity to, entt::entity from, entt::registry& 
 			auto toStorage = toRegistry.storage(id);
 			if (!toStorage)
 			{
-				const auto meta = entt::resolve(fromStorage.type());
+				const auto meta = entt::resolve(ComponentMetaBinder::cxt(), fromStorage.type());
 				const auto func = meta.func("emplace"_hs); // entt::registry::emplace_or_replace
 				if (func)
 				{

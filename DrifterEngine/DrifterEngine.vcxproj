@@ -128,7 +128,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;TGUI_STATIC;BOOST_IOSTREAMS_NO_LIB;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)DrifterEngine\deps;$(SolutionDir)DrifterEngine\src;$(SolutionDir)DrifterEngine\deps\SFML-3.0.0\include;$(SolutionDir)DrifterEngine\deps\TGUI-1.8\include;$(SolutionDir)DrifterEngine\deps\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>

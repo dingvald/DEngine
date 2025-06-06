@@ -9,11 +9,9 @@ private:
 	friend class ComponentMetaBinder;
 	
 	static inline const std::string_view NAME = "base_material";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
-		using namespace entt::literals;
-		snapshot::reflectComponent<BaseMaterialComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<BaseMaterialComponent, NAME>(ctx);
 	}
 
 	friend class cereal::access;

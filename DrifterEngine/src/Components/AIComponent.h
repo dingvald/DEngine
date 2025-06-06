@@ -24,11 +24,10 @@ struct AIComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "ai";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<AIComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<AIComponent, NAME>(ctx)
 			.data<&AIComponent::sightRange>("sight_range"_hs)
 			.data<&AIComponent::goals>("goals"_hs);
 	}

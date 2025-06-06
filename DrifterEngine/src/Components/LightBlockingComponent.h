@@ -12,11 +12,10 @@ struct LightBlockingComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "light_blocking";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<LightBlockingComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<LightBlockingComponent, NAME>(ctx)
 			.data<&LightBlockingComponent::opacity>("opacity"_hs);
 	}
 };

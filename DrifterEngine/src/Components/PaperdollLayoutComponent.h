@@ -67,11 +67,10 @@ private:
 		}
 	}
 
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<PaperdollLayoutComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<PaperdollLayoutComponent, NAME>(ctx)
 			.func<&PaperdollLayoutComponent::setFromJSON>("set_from_json"_hs);
 	}
 };

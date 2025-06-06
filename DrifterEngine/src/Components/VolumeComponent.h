@@ -9,11 +9,10 @@ struct VolumeComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "volume";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<VolumeComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<VolumeComponent, NAME>(ctx)
 			.data<&VolumeComponent::value>("value"_hs);
 	}
 };

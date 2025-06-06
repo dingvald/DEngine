@@ -11,11 +11,10 @@ private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "dominant_side";
 
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<DominantSideComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<DominantSideComponent, NAME>(ctx)
 			.data<&DominantSideComponent::side>("side"_hs);
 	}
 };

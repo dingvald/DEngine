@@ -3,7 +3,6 @@
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
-#include <Actions/ActionTypeIds.h>
 
 struct ArtificalInputComponent
 {
@@ -11,11 +10,9 @@ struct ArtificalInputComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "ai";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
-		using namespace entt::literals;
-		snapshot::reflectComponent<ArtificalInputComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<ArtificalInputComponent, NAME>(ctx);
 	}
 };
 

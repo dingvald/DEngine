@@ -15,11 +15,9 @@ struct SyncedAnimationComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "synced_animation";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
-		using namespace entt::literals;
-		snapshot::reflectComponent<SyncedAnimationComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<SyncedAnimationComponent, NAME>(ctx);
 	}
 };
 

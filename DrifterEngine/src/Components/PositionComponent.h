@@ -13,11 +13,10 @@ struct PositionComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "position";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<PositionComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<PositionComponent, NAME>(ctx)
 			.data<&PositionComponent::tile>("position"_hs);
 	}
 };

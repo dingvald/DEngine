@@ -10,11 +10,10 @@ struct FactionComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "faction";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<FactionComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<FactionComponent, NAME>(ctx)
 			.data<&FactionComponent::name>("name"_hs);
 	}
 };

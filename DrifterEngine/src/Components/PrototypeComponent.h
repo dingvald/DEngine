@@ -11,11 +11,10 @@ struct PrototypeComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "prototype";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<PrototypeComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<PrototypeComponent, NAME>(ctx);
 	}
 };
 

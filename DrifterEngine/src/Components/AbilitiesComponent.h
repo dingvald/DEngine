@@ -20,11 +20,10 @@ private:
 		}
 	}
 
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<AbilitiesComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<AbilitiesComponent, NAME>(ctx)	
 			.func<&AbilitiesComponent::setFromJSON>("set_from_json"_hs);
 	}
 };

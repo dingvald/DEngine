@@ -10,11 +10,10 @@ private:
 	friend class ComponentMetaBinder;
 	friend class cereal::access;
 	static inline const std::string_view NAME = "player_input";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<PlayerInputComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<PlayerInputComponent, NAME>(ctx);
 	}
 
 	template<class Archive>

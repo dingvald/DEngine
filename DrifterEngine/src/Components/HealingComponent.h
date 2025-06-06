@@ -14,11 +14,10 @@ struct HealingComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "healing";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<HealingComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<HealingComponent, NAME>(ctx)
 			.data<&HealingComponent::amount>("amount"_hs)
 			.data<&HealingComponent::ticks>("ticks"_hs);
 	}

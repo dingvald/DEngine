@@ -96,11 +96,10 @@ private:
 		}
 	}
 
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<SpriteControllerComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<SpriteControllerComponent, NAME>(ctx)
 			.func<&SpriteControllerComponent::setFromJSON>("set_from_json"_hs);
 	}
 };

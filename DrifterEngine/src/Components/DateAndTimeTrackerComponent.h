@@ -13,11 +13,10 @@ struct DateAndTimeTrackerComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "date_and_time_tracker";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<DateAndTimeTrackerComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<DateAndTimeTrackerComponent, NAME>(ctx);
 	}
 };
 

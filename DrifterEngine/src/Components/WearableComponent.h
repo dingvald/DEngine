@@ -14,11 +14,10 @@ struct WearableComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "wearable";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<WearableComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<WearableComponent, NAME>(ctx)
 			.data<&WearableComponent::slots>("slots"_hs)
 			.data<&WearableComponent::protections>("protections"_hs);
 	}

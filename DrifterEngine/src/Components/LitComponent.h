@@ -13,11 +13,9 @@ struct LitComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "lit";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
-		using namespace entt::literals;
-		snapshot::reflectComponent<LitComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<LitComponent, NAME>(ctx);
 	}
 };
 

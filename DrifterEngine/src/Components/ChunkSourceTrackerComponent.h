@@ -10,11 +10,10 @@ struct ChunkSourceTrackerComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "chunk_source_tracker";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<ChunkSourceTrackerComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<ChunkSourceTrackerComponent, NAME>(ctx);
 	}
 };
 

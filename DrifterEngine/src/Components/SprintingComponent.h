@@ -13,11 +13,10 @@ struct SprintingComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "sprinting";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<SprintingComponent, NAME>()
-			.prop("serialize"_hs);
+		snapshot::reflectComponent<SprintingComponent, NAME>(ctx);
 	}
 };
 

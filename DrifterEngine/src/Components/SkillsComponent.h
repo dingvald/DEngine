@@ -19,11 +19,10 @@ private:
 
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "skills";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<SkillsComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<SkillsComponent, NAME>(ctx)
 			.func<&SkillsComponent::setFromJSON>("set_from_json"_hs);
 	}
 };

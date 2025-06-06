@@ -13,11 +13,10 @@ struct DescriptionComponent
 private:
 	friend class ComponentMetaBinder;
 	static inline const std::string_view NAME = "description";
-	static void bind()
+	static void bind(entt::meta_ctx& ctx)
 	{
 		using namespace entt::literals;
-		snapshot::reflectComponent<DescriptionComponent, NAME>()
-			.prop("serialize"_hs)
+		snapshot::reflectComponent<DescriptionComponent, NAME>(ctx)
 			.data<&DescriptionComponent::name>("name"_hs)
 			.data<&DescriptionComponent::description>("description"_hs);
 	}
