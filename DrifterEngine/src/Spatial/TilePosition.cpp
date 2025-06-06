@@ -11,7 +11,7 @@ drft::TilePosition::TilePosition(sf::Vector3i position)
 
 std::string drft::TilePosition::toString(const TilePosition& tilePosition)
 {
-    return "(" + std::to_string(tilePosition.x) + ", " + std::to_string(tilePosition.y) + ", " + std::to_string(tilePosition.z) + ")";
+    return std::format("({},{},{})", tilePosition.x, tilePosition.y, tilePosition.z);
 }
 
 drft::TilePosition drft::operator-(const TilePosition& left)
