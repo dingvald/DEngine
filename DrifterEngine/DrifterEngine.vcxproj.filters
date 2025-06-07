@@ -3571,6 +3571,12 @@
     <Image Include="resources\Textures\Stairs\stairs_up.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="resources\Textures\Environmentals\geo_wall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\Environmentals\geo_pile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\Fonts\terminus.ttf" />

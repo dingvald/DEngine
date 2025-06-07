@@ -119,6 +119,33 @@
                 }
             }
         },
+        "dirt": {
+            "inherits": [
+                "material"
+            ],
+            "components": {
+                "description": {
+                    "name": "dirt",
+                    "description": "a pile of dirt."
+                },
+                "render": {
+                    "texture": "geo_pile",
+                    "uv_size": [ 16, 24 ],
+                    "uv_coords": [ 0, 0 ],
+                    "layer": 1,
+                    "color": [ 112, 84, 62 ]
+                },
+                "solid_material": {
+                    "density": 1.6,
+                    "hardness": 0.2,
+                    "brittleness": 0.5,
+                    "malleability": 0.0
+                },
+                "weight": {
+                    "value": 1.0
+                }
+            }
+        },
         "stone": {
             "inherits": [
                 "material"

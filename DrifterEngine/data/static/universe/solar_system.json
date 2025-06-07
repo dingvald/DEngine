@@ -13,10 +13,13 @@
                         "entity_packs": [ "basic" ],
                         "biomes": {
                             "desert": {
-                                "depth": ["greater_or_equal", 0]
+                                "depth": [ "greater_or_equal", 0 ]
                             },
-                            "caves": {
-                                "depth": ["less", 0]
+                            "shallow_caves": {
+                                "depth": [ "less", 0 ]
+                            },
+                            "deep_caves": {
+                                "depth": [ "less", 0 ]
                             }
                         }
                     }

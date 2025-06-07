@@ -21,14 +21,25 @@
                 "ore": [
                     [ "iron_deposit", 1 ]
                 ],
-                "grass": [
+                "tall_grass": [
                     [ "tall_grass", 1 ]
+                ],
+                "short_grass": [
+                    [ "grass", 1 ]
                 ],
                 "stairs_down": [
                     [ "stairs_down", 1]
                 ],
                 "stairs_up": [
-                    ["stairs_up", 1]
+                    [ "stairs_up", 1 ]
+                ],
+                "dirt_wall": [
+                    [ "dirt_wall", 10 ],
+                    [ "stone_wall", 1]
+                ],
+                "stone_wall": [
+                    [ "stone_wall", 10 ],
+                    [ "dirt_wall", 1]
                 ]
             }
         } 

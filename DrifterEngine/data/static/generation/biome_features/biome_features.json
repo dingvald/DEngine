@@ -60,11 +60,21 @@
                 {
                     "type": "simple_decorator",
                     "params": {
-                        "slot": "grass"
+                        "slot": "tall_grass"
                     },
                     "conditions": {
                         "tag_expression": "floor & border",
                         "chance": 0.4
+                    }
+                },
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "short_grass"
+                    },
+                    "conditions": {
+                        "tag_expression": "floor",
+                        "chance": 0.1
                     }
                 },
                 {

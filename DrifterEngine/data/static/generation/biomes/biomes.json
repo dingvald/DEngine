@@ -1,66 +1,102 @@
 {
-  "biomes": {
-    "desert": {
-        "icon": {
-            "texture": "simple_tileset",
-            "uv_size": [ 16, 16 ],
-            "uv_coords": [ 5, 2 ],
-            "color": [ 174, 155, 125 ]
-        },
-        "climate": {
-            "height": [ "inside", 0.1, 0.5 ]
-        },
-        "features": {
-            "ore_vein": {
-                "random_scatter_1": [ "less", 0.005 ]
+    "biomes": {
+        "desert": {
+            "icon": {
+                "texture": "simple_tileset",
+                "uv_size": [ 16, 16 ],
+                "uv_coords": [ 5, 2 ],
+                "color": [ 174, 155, 125 ]
+            },
+            "climate": {
+                "height": [ "inside", 0.1, 0.5 ]
+            },
+            "features": {
+                "ore_vein": {
+                    "random_scatter_1": [ "less", 0.005 ]
+                }
+            },
+            "entity_slots": {
+                "sand": {
+                    "height": [ "inside", -1.0, 1.0 ],
+                    "random_scatter_2": [ "less", 0.15 ],
+                    "expression": "height & random_scatter_2"
+                },
+                "rock_formations": {
+                    "relaxed_scatter": [ "greater", 0.5 ]
+                }
             }
         },
-        "entity_slots": {
-            "sand": {
-                "height": [ "inside", -1.0, 1.0 ],
-                "random_scatter_2": [ "less", 0.15 ],
-                "expression": "height & random_scatter_2"
+        "shallow_caves": {
+            "icon": {
+                "texture": "simple_tileset",
+                "uv_size": [ 16, 16 ],
+                "uv_coords": [ 5, 2 ],
+                "color": [ 174, 155, 125 ]
             },
-            "rock_formations": {
-                "relaxed_scatter": [ "greater", 0.5 ]
+            "climate": {
+                "height": [ "greater", 0.0 ]
+            },
+            "features": {
+                "verdent_cavern": {
+                    "random_scatter_1": [ "less", 0.4 ],
+                    "height": [ "inside", -1.0, 1.0 ],
+                    "expression": "random_scatter_1 & height"
+                },
+                "desolate_cavern": {
+                    "random_scatter_2": [ "less", 0.7 ],
+                    "height": [ "inside", -1.0, 1.0 ],
+                    "expression": "random_scatter_2 & height"
+                },
+                "ore_vein": {
+                    "random_scatter_3": [ "less", 0.1 ]
+                }
+            },
+            "entity_slots": {
+                "sand": {
+                    "height": [ "inside", 0.0, 0.1 ],
+                    "random_scatter_1": [ "less", 0.15 ],
+                    "expression": "height & random_scatter_1"
+                },
+                "dirt_wall": {
+                    "height": [ "inside", -1.0, 1.0 ]
+                }
             }
-        }
-    },
-    "caves": {
-        "icon": {
-            "texture": "simple_tileset",
-            "uv_size": [ 16, 16 ],
-            "uv_coords": [ 5, 2 ],
-            "color": [ 174, 155, 125 ]
         },
-        "climate": {
-            "height": [ "less", 0.5 ]
-        },
-        "features": {
-            "verdent_cavern": {
-                "random_scatter_1": [ "less", 0.4 ],
-                "height": [ "inside", -1.0, 1.0 ],
-                "expression": "random_scatter_1 & height"
+        "deep_caves": {
+            "icon": {
+                "texture": "simple_tileset",
+                "uv_size": [ 16, 16 ],
+                "uv_coords": [ 5, 2 ],
+                "color": [ 174, 155, 125 ]
             },
-            "desolate_cavern": {
-                "random_scatter_2": [ "less", 0.7 ],
-                "height": [ "inside", -1.0, 1.0 ],
-                "expression": "random_scatter_2 & height"
+            "climate": {
+                "height": [ "less", 0.0 ]
             },
-            "ore_vein": {
-                "random_scatter_3": [ "less", 0.1 ]
-            }
-        },
-        "entity_slots": {
-            "sand": {
-                "height": [ "inside", 0.0, 0.1 ],
-                "random_scatter_1": [ "less", 0.15 ],
-                "expression": "height & random_scatter_1"
+            "features": {
+                "verdent_cavern": {
+                    "random_scatter_1": [ "less", 0.1 ],
+                    "height": [ "inside", -1.0, 1.0 ],
+                    "expression": "random_scatter_1 & height"
+                },
+                "desolate_cavern": {
+                    "random_scatter_2": [ "less", 0.8 ],
+                    "height": [ "inside", -1.0, 1.0 ],
+                    "expression": "random_scatter_2 & height"
+                },
+                "ore_vein": {
+                    "random_scatter_3": [ "less", 0.1 ]
+                }
             },
-            "rock_formations": {
-                "height": [ "inside", -1.0, 1.0 ]
+            "entity_slots": {
+                "sand": {
+                    "height": [ "inside", 0.0, 0.1 ],
+                    "random_scatter_1": [ "less", 0.15 ],
+                    "expression": "height & random_scatter_1"
+                },
+                "stone_wall": {
+                    "height": [ "inside", -1.0, 1.0 ]
+                }
             }
         }
     }
-  }
 }

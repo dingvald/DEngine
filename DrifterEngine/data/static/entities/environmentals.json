@@ -1,163 +1,225 @@
 {
-  "prototypes": {
-    "tile": {
-      "inherits": [
-        "object"
-      ],
-      "components": {
-        "render": {
-          "texture": "basic_tile",
-          "uv_size": [ 16, 24 ],
-          "layer": 0
-        }
-      }
-    },
-    "grass": {
-      "inherits": [
-        "object"
-      ],
-        "components": {
-            "description": {
-                "name": "Grass",
-                "description": "Just simple grass."
-            },
-            "render": {
-                "texture": "short_grass",
-                "uv_size": [ 16, 24 ],
-                "layer": 1,
-                "color": [ 72, 111, 56 ]
-            },
-            "health": {
-                "max": 5
-            },
-            "material_composition": {
-                "plant_fiber": 1.0
+    "prototypes": {
+        "tile": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "render": {
+                    "texture": "basic_tile",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 0
+                }
             }
-        }
-    },
-    "tall_grass": {
-      "inherits": [
-        "grass"
-      ],
-        "components": {
-            "description": {
-                "name": "Tall Grass",
-                "description": "Just simple grass but longer."
-            },
-            "render": {
-                "texture": "long_grass",
-                "uv_size": [ 16, 24 ],
-                "layer": 4,
-                "color": [ 72, 111, 56 ]
-            },
-            "light_blocking": {
-                "opacity": 1.0
-            },
-            "health": {
-                "max": 5
-            },
-            "material_composition": {
-                "plant_fiber": 1.0
+        },
+        "grass": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "description": {
+                    "name": "Grass",
+                    "description": "Just simple grass."
+                },
+                "render": {
+                    "texture": "short_grass",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 72, 111, 56 ]
+                },
+                "health": {
+                    "max": 5
+                },
+                "material_composition": {
+                    "plant_fiber": 1.0
+                }
             }
-        }
-    },
-    "tree": {
-      "inherits": [
-        "object"
-      ],
-      "components": {
-        "description": {
-          "name": "Tree",
-          "description": "A wooden trunk with many leaves."
         },
-        "render": {
-          "texture": "tree",
-          "uv_size": [ 16, 24 ],
-          "layer": 2,
-          "color": [ 65, 97, 63 ]
-        },
-        "material_composition": {
-            "wood": 0.9,
-            "plant_fiber": 0.1
-        },
-        "weight": {
-            "value": 600.0
-        },
-        "physical_blocking": {},
-        "health": {
-          "max": 70.0
-        },
-        "light_blocking": {
-          "opacity": 1.0
-        }
-      }
-    },
-    "boulder": {
-        "inherits": [
-        "object"
-      ],
-        "components": {
-            "description": {
-                "name": "Boulder",
-                "description": "a very large chunk of rock."
-            },
-            "render": {
-                "texture": "boulder",
-                "uv_size": [ 16, 24 ],
-                "uv_coords": [ 0, 0 ],
-                "layer": 2,
-                "color": [ 100, 100, 100 ]
-            },
-            "material_composition": {
-                "stone": 1.0
-            },
-            "weight": {
-                "value": 1000.0
-            },
-            "physical_blocking": {},
-            "health": {
-                "max": 120.0
-            },
-            "light_blocking": {
-                "opacity": 1.0
+        "tall_grass": {
+            "inherits": [
+                "grass"
+            ],
+            "components": {
+                "description": {
+                    "name": "Tall Grass",
+                    "description": "Just simple grass but longer."
+                },
+                "render": {
+                    "texture": "long_grass",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 4,
+                    "color": [ 72, 111, 56 ]
+                },
+                "light_blocking": {
+                    "opacity": 1.0
+                },
+                "health": {
+                    "max": 5
+                },
+                "material_composition": {
+                    "plant_fiber": 1.0
+                }
             }
-        }
-    },
-    "iron_deposit": {
-        "inherits": [
-        "object"
-      ],
-        "components": {
-            "description": {
-                "name": "iron deposit",
-                "description": "a deposit of iron ore."
-            },
-            "render": {
-                "texture": "ore_vein",
-                "uv_size": [ 16, 24 ],
-                "uv_coords": [ 0, 0 ],
-                "layer": 3,
-                "color": [ 161, 157, 148 ]
-            },
-            "material_composition": {
-                "stone": 0.40,
-                "iron": 0.60
-            },
-            "weight": {
-                "value": 800.0
-            },
-            "physical_blocking": {},
-            "health": {
-                "max": 80.0
-            },
-            "light_blocking": {
-                "opacity": 1.0
-            },
-            "local_light_source": {
-                "radius": 3,
-                "color": [ 255, 235, 225 ]
+        },
+        "tree": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "description": {
+                    "name": "Tree",
+                    "description": "A wooden trunk with many leaves."
+                },
+                "render": {
+                    "texture": "tree",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 2,
+                    "color": [ 65, 97, 63 ]
+                },
+                "material_composition": {
+                    "wood": 0.9,
+                    "plant_fiber": 0.1
+                },
+                "weight": {
+                    "value": 600.0
+                },
+                "physical_blocking": {},
+                "health": {
+                    "max": 70.0
+                },
+                "light_blocking": {
+                    "opacity": 1.0
+                }
+            }
+        },
+        "boulder": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "description": {
+                    "name": "Boulder",
+                    "description": "a very large chunk of rock."
+                },
+                "render": {
+                    "texture": "boulder",
+                    "uv_size": [ 16, 24 ],
+                    "uv_coords": [ 0, 0 ],
+                    "layer": 2,
+                    "color": [ 100, 100, 100 ]
+                },
+                "material_composition": {
+                    "stone": 1.0
+                },
+                "weight": {
+                    "value": 1000.0
+                },
+                "physical_blocking": {},
+                "health": {
+                    "max": 120.0
+                },
+                "light_blocking": {
+                    "opacity": 1.0
+                }
+            }
+        },
+        "iron_deposit": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "description": {
+                    "name": "iron deposit",
+                    "description": "a deposit of iron ore."
+                },
+                "render": {
+                    "texture": "ore_vein",
+                    "uv_size": [ 16, 24 ],
+                    "uv_coords": [ 0, 0 ],
+                    "layer": 3,
+                    "color": [ 161, 157, 148 ]
+                },
+                "material_composition": {
+                    "stone": 0.40,
+                    "iron": 0.60
+                },
+                "weight": {
+                    "value": 800.0
+                },
+                "physical_blocking": {},
+                "health": {
+                    "max": 80.0
+                },
+                "light_blocking": {
+                    "opacity": 1.0
+                },
+                "local_light_source": {
+                    "radius": 3,
+                    "color": [ 255, 235, 225 ]
+                }
+            }
+        },
+        "dirt_wall": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "description": {
+                    "name": "Dirt Wall",
+                    "description": "a wall made of dirt"
+                },
+                "render": {
+                    "texture": "geo_wall",
+                    "uv_size": [ 16, 24 ],
+                    "uv_coords": [ 0, 0 ],
+                    "layer": 2,
+                    "color": [ 112, 84, 62 ]
+                },
+                "material_composition": {
+                    "dirt": 1.0
+                },
+                "weight": {
+                    "value": 1000.0
+                },
+                "physical_blocking": {},
+                "health": {
+                    "max": 65.0
+                },
+                "light_blocking": {
+                    "opacity": 1.0
+                }
+            }
+        },
+        "stone_wall": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "description": {
+                    "name": "Stone Wall",
+                    "description": "a wall made of stone"
+                },
+                "render": {
+                    "texture": "geo_wall",
+                    "uv_size": [ 16, 24 ],
+                    "uv_coords": [ 0, 0 ],
+                    "layer": 2,
+                    "color": [ 100, 100, 100 ]
+                },
+                "material_composition": {
+                    "stone": 1.0
+                },
+                "weight": {
+                    "value": 1000.0
+                },
+                "physical_blocking": {},
+                "health": {
+                    "max": 200.0
+                },
+                "light_blocking": {
+                    "opacity": 1.0
+                }
             }
         }
     }
-  }
 }
