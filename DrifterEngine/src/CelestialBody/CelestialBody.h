@@ -21,6 +21,7 @@ public:
 
 	void createFromJson(const rapidjson::Value& json) override;
 
+	void generateInit(entt::registry& registry) override;
 	GenerationState generateChunk(drft::ChunkPosition position, entt::registry& registry) override;
 	entt::id_type getSourceId() override;
 	IChunkGenerator* tryGetGenerator(entt::id_type sourceId) override;

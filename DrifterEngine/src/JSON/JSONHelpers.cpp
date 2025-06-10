@@ -2,6 +2,11 @@
 #include "JSONHelpers.h"
 #include <Utility/StandardLogger.h>
 
+drft::json::JsonFileWrapper::JsonFileWrapper(const std::filesystem::path& path)
+	: _rootName("")
+	, _path(path)
+{}
+
 drft::json::JsonFileWrapper::JsonFileWrapper(const std::filesystem::path& path, const char* rootName)
 	: _rootName(rootName)
 	, _path(path)
@@ -31,7 +36,7 @@ bool drft::json::JsonFileWrapper::load()
 		return false;
 	}
 
-	if (!doc.HasMember(_rootName))
+	if (!_rootName.empty() && !doc.HasMember(_rootName.c_str()))
 	{
 		error_logger << _path << " does not have the expected root object " << "\"" << _rootName << "\"" << std::endl;
 		return false;
@@ -46,7 +51,7 @@ bool drft::json::JsonFileWrapper::create()
 	rapidjson::Document doc;
 	doc.SetObject();
 	_optionalDoc.emplace(std::move(doc));
-	_optionalDoc->AddMember(rapidjson::StringRef(_rootName), rapidjson::Value{ rapidjson::kObjectType }, _optionalDoc->GetAllocator());
+	_optionalDoc->AddMember(rapidjson::StringRef(_rootName.c_str()), rapidjson::Value{ rapidjson::kObjectType }, _optionalDoc->GetAllocator());
 	return true;
 }
 
@@ -62,12 +67,20 @@ bool drft::json::JsonFileWrapper::loadOrCreate()
 
 const rapidjson::Value& drft::json::JsonFileWrapper::getRoot() const
 {
-	return _optionalDoc.value()[_rootName];
+	if (_rootName.empty())
+	{
+		return _optionalDoc.value();
+	}
+	return _optionalDoc.value()[_rootName.c_str()];
 }
 
 rapidjson::Value& drft::json::JsonFileWrapper::getRoot()
 {
-	return _optionalDoc.value()[_rootName];
+	if (_rootName.empty())
+	{
+		return _optionalDoc.value();
+	}
+	return _optionalDoc.value()[_rootName.c_str()];
 }
 
 rapidjson::Document::AllocatorType& drft::json::JsonFileWrapper::getAllocator()

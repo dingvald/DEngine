@@ -77,6 +77,7 @@ void drft::system::ChunkManager::onFirstUpdate()
 	LOG_MSG("<<< First Chunk Manager Update >>>")
 	if (!_activeSource && !_pendingTransfer)
 	{
+		_hasInitializedNewSource = false;
 		if (_chunkSourceTracker != entt::null)
 		{
 			auto& tracker = _registry.get<ChunkSourceTrackerComponent>(_chunkSourceTracker);
@@ -126,8 +127,18 @@ void drft::system::ChunkManager::onTransfer()
 
 		_activeSource->shutdown(_registry, true);
 		_activeSource = tryCreateNewChunkSource(_pendingTransfer->newSourceId);
+		_hasInitializedNewSource = false;
 
 		if (!_activeSource) throw std::exception("Something went terribly wrong during source transfer");
+	}
+
+	if (_activeSource->id() != _pendingTransfer->oldSourceId
+		&& _activeSource->id() == _pendingTransfer->newSourceId
+		&& !_hasInitializedNewSource)
+	{
+		// TODO: May want to spread this over a few frames? Or play a nice animation or something because it could be very slow
+		_activeSource->init(_registry);
+		_hasInitializedNewSource = true;
 	}
 
 	// Update new source until fully loaded

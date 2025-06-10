@@ -213,6 +213,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\Layers\EntityPlacementLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Structures\PrefabStructure.cpp" />
+    <ClCompile Include="src\ProcGen\Structures\PrefabStructureRegistry.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
@@ -503,6 +505,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\Layers\EntityPlacementLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\EntitySlotLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h" />
+    <ClInclude Include="src\ProcGen\Structures\PrefabStructure.h" />
+    <ClInclude Include="src\ProcGen\Structures\PrefabStructureRegistry.h" />
     <ClInclude Include="src\Skills\SkillRequirement.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />
@@ -1380,6 +1384,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <None Include="data\static\generation\biome_features\biome_features.json" />
     <None Include="data\static\generation\entity_packs\entity_packs.json" />
     <None Include="data\static\generation\layer_packs\layer_packs.json" />
+    <None Include="data\static\generation\structures\iron_deposit_cache.json" />
     <None Include="data\static\universe\solar_system.json" />
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
     <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />

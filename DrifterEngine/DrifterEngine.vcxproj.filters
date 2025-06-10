@@ -756,6 +756,12 @@
     <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\Structures\PrefabStructure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Structures\PrefabStructureRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3419,6 +3425,12 @@
     <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ProcGen\Structures\PrefabStructure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Structures\PrefabStructureRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -3497,6 +3509,7 @@
     </None>
     <None Include="data\static\entities\stairs.json" />
     <None Include="data\static\entities\tools.json" />
+    <None Include="data\static\generation\structures\iron_deposit_cache.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

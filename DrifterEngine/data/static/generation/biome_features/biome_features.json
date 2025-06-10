@@ -74,7 +74,7 @@
                     },
                     "conditions": {
                         "tag_expression": "floor",
-                        "chance": 0.1
+                        "chance": 0.2
                     }
                 },
                 {

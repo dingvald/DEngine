@@ -101,6 +101,13 @@ void CelestialBody::tick()
 {
 }
 
+void CelestialBody::generateInit(entt::registry& registry)
+{
+	// Generate the starting state of this source
+	
+	LOG_MSG("Generating {}", this->_name);
+}
+
 IChunkGenerator* CelestialBody::tryGetGenerator(entt::id_type sourceId)
 {
 	for (auto&& child : _celestialBodies)

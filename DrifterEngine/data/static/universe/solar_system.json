@@ -21,6 +21,9 @@
                             "deep_caves": {
                                 "depth": [ "less", 0 ]
                             }
+                        },
+                        "structures": {
+
                         }
                     }
                 ]

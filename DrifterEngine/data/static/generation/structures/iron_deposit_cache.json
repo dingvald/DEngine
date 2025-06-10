@@ -1,0 +1,618 @@
+{
+    "name": "iron_deposit_cache",
+    "reference_depth": -1,
+    "layers": [
+        {
+            "entities": [
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 4
+                }
+            ]
+        },
+        {
+            "entities": [
+                {
+                    "id": "iron_deposit",
+                    "x": 1,
+                    "y": 2
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 3,
+                    "y": 2
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 4,
+                    "y": 2
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 5,
+                    "y": 2
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 6,
+                    "y": 2
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 6,
+                    "y": 3
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 6,
+                    "y": 4
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 5,
+                    "y": 4
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 5,
+                    "y": 3
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 4,
+                    "y": 3
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 2,
+                    "y": 3
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 1,
+                    "y": 4
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 2,
+                    "y": 4
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 3,
+                    "y": 4
+                },
+                {
+                    "id": "iron_deposit",
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 6,
+                    "y": 1
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 7,
+                    "y": 1
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 7,
+                    "y": 2
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 7,
+                    "y": 3
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 7,
+                    "y": 4
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 7,
+                    "y": 5
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 6,
+                    "y": 5
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 5,
+                    "y": 5
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 4,
+                    "y": 5
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 3,
+                    "y": 5
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 2,
+                    "y": 5
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 1,
+                    "y": 5
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 0,
+                    "y": 5
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 0,
+                    "y": 4
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "id": "stone_wall",
+                    "x": 0,
+                    "y": 2
+                }
+            ]
+        },
+        {
+            "entities": [
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 1
+                },
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 0,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 5
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 7,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 2
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 3
+                },
+                {
+                    "id": "boulder",
+                    "x": 6,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 5,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 3,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 2,
+                    "y": 4
+                },
+                {
+                    "id": "boulder",
+                    "x": 1,
+                    "y": 4
+                }
+            ]
+        }
+    ]
+}

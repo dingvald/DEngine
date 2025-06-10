@@ -16,6 +16,11 @@ drft::spatial::ChunkSource::ChunkSource(entt::id_type sourceId, ChunkSerializer&
 {
 }
 
+void drft::spatial::ChunkSource::init(entt::registry& registry)
+{
+	_generator.generateInit(registry);
+}
+
 void drft::spatial::ChunkSource::update(TilePosition cameraPosition, entt::registry& registry)
 {
 	updateChunkStates(cameraPosition);

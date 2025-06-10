@@ -29,5 +29,6 @@ static const std::filesystem::path BIOMES_DIRECTORY = GENERATION_DIRECTORY / "bi
 static const std::filesystem::path BIOME_FEATURES_DIRECTORY = GENERATION_DIRECTORY / "biome_features";
 static const std::filesystem::path ENTITY_PACKS_DIRECTORY = GENERATION_DIRECTORY / "entity_packs";
 static const std::filesystem::path LAYER_PACKS_DIRECTORY = GENERATION_DIRECTORY / "layer_packs";
+static const std::filesystem::path STRUCTURES_DIRECTORY = GENERATION_DIRECTORY / "structures";
 
 static const std::filesystem::path SOLAR_SYSTEM_FILE_PATH = UNIVERSE_DIRECTORY / "solar_system.json";

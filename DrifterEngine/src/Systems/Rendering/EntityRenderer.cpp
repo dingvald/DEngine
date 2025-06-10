@@ -13,7 +13,7 @@
 #include "RenderLayers.h"
 #include "LightingSystem.h"
 
-static const sf::Color SeenTileColor = sf::Color(8, 8, 8);
+static const sf::Color SeenTileColor = sf::Color(10, 10, 10);
 
 void drft::system::EntityRenderer::init()
 {

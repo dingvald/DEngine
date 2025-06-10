@@ -5,6 +5,7 @@ namespace drft::json
 	class JsonFileWrapper
 	{
 	public:
+		JsonFileWrapper(const std::filesystem::path& path);
 		JsonFileWrapper(const std::filesystem::path& path, const char* rootName);
 
 		bool load();
@@ -18,7 +19,7 @@ namespace drft::json
 
 	private:
 		std::filesystem::path _path;
-		const char* _rootName;
+		std::string _rootName;
 		std::optional<rapidjson::Document> _optionalDoc;
 	};
 }

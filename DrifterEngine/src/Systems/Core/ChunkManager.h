@@ -67,6 +67,7 @@ namespace drft::system
 		SourcePtr _activeSource;
 		entt::entity _chunkSourceTracker = entt::null;
 		std::optional<PendingTransfer> _pendingTransfer = std::nullopt;
+		bool _hasInitializedNewSource = false;
 	};
 }
 
