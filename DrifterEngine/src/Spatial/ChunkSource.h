@@ -35,7 +35,6 @@ namespace drft::spatial
 
 		bool isWithinActiveArea(sf::Vector3i chunkPosition, sf::Vector3i centerPosition) const;
 
-
 	private:
 		entt::id_type _sourceId;
 		bool _isShuttingDown = false;

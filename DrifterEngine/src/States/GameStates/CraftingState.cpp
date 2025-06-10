@@ -1,5 +1,3 @@
-#pragma optimize("", off)
-
 #include "pch.h"
 #include "CraftingState.h"
 

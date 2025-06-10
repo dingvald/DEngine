@@ -103,6 +103,7 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 		return GenerationState::Failed;
 	}
 
+	// Check for stairs
 	forEachLoadedNeighborChunk3d([&](const EntityPlacementLayerChunk& neighbor) {
 		if (Internal::isAbove(_index, neighbor._index))
 		{

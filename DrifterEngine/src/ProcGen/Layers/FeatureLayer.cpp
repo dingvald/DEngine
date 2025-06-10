@@ -4,9 +4,7 @@
 #include <ProcGen/Layers/EntitySlotLayer.h>
 #include <Random/Random.h>
 #include <ProcGen/GenerationContext.h>
-#include <ProcGen/Decorators/DecoratorIds.h>
 
-#pragma optimize("", off)
 
 using namespace entt::literals;
 

@@ -8,7 +8,6 @@
 #include <Components/TweeningComponent.h>
 #include "Components/Actions/MeleeAttackAction.h"
 #include "Components/PositionComponent.h"
-#include <Components/WeightComponent.h>
 #include <Components/HealthComponent.h>
 #include <Components/IncomingForceComponent.h>
 
@@ -21,7 +20,6 @@
 #include <Systems/Helpers/CalculateForceGenerated.h>
 #include <Systems/Gameplay/SkillsSystem.h>
 
-#pragma optimize ("", off)
 
 static const float C_CONSTANT = 0.5f;
 static const float K_CONSTANT = 1.5f;

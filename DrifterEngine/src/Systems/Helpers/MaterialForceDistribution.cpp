@@ -2,8 +2,6 @@
 #include "MaterialForceDistribution.h"
 #include <Components/SolidMaterialComponent.h>
 
-#pragma optimize("", off)
-
 // Solid Material Property Scalars
 static const float HardnessScalar = 4.0f;
 static const float DensityScalar = 3.0f;

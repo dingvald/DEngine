@@ -13,7 +13,6 @@
 #include <States/StateIdentifiers.h>
 #include "Random/PercentChance.h"
 
-#pragma optimize("", off)
 
 void drft::system::DeathSystem::update()
 {

@@ -9,9 +9,6 @@
 #include <Spatial/Conversions.h>
 #include <spatial/ChunkPosition.h>
 
-#include <Utility/StandardLogger.h>
-
-#pragma optimize("", off)
 
 static const drft::TilePosition OneChunkDown = drft::spatial::toTileSpace(drft::ChunkPosition{ 0, 0, -1 });
 static const drft::TilePosition OneChunkUp = drft::spatial::toTileSpace(drft::ChunkPosition{ 0, 0, 1 });

@@ -6,13 +6,10 @@
 #include <Components/Actions/OpenSkillsScreenAction.h>
 #include <Components/AbilitiesComponent.h>
 #include <Utility/TGUIHelpers.h>
-#include <Utility/StandardLogger.h>
 #include <Utility/StringManipulation.h>
 #include <Systems/Helpers/GetPlayerHandle.h>
 #include <Systems/Helpers/ToHotbarIndex.h>
 #include <Components/Wrappers/HotbarWrapper.h>
-
-#pragma optimize("", off)
 
 static const char* w_SkillName = "skill_name";
 static const char* w_SkillLevel = "skill_level";

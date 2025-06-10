@@ -5,7 +5,6 @@
 #include <Components/WeightComponent.h>
 #include <Components/SharpComponent.h>
 
-#pragma optimize ("", off)
 
 GeneratedForce::GeneratedForce(float fromStrength, float fromAgility)
 	: total(fromStrength + fromAgility)

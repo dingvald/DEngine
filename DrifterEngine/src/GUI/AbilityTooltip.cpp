@@ -5,8 +5,6 @@
 #include <Utility/TGUIHelpers.h>
 #include <Utility/StringManipulation.h>
 
-#pragma optimize("", off)
-
 namespace Internal
 {
     static std::string buildAbilityRangeString(const drft::IAbility& ability, entt::const_handle actor)
