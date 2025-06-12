@@ -49,6 +49,8 @@ void drft::Engine::run()
 
 		handleEvents();
 
+		_debugDisplay.displayValue("seconds passed", std::to_string(secondsPassed));
+
 		while (lag >= SECONDS_PER_FRAME)
 		{
 			update();
@@ -208,14 +210,11 @@ void drft::Engine::update()
 void drft::Engine::render(const float)
 {
 	_window.clear();
+
 	_stateStack.render(_window);
 	_gui.draw();
 	_stateStack.guiRender(_window);
-
-	if (_showDebug)
-	{
-		// TODO: re-implement a debug display
-	}
+	_debugDisplay.render();
 			
 	_window.display();
 }
@@ -305,7 +304,7 @@ void drft::Engine::toggleFullscreen()
 
 void drft::Engine::toggleDebug()
 {
-	_showDebug = !_showDebug;
+	_debugDisplay.setVisible(!_debugDisplay.isVisible());
 }
 
 void drft::Engine::saveKeybindings()

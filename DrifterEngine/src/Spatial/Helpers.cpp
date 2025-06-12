@@ -34,6 +34,12 @@ bool drft::spatial::isAtChunkOrigin(TilePosition position)
 	return chunkLocalPosition == ZeroVector3i;
 }
 
+sf::Vector3i drft::spatial::getChunkOrigin(sf::Vector3i position)
+{
+	auto localSpace = toChunkLocalSpace(asTileSpace(position));
+	return position - localSpace;
+}
+
 std::vector<sf::Vector2i> drft::spatial::getIntRect(sf::Vector2i origin, int width, int height)
 {
 	std::vector<sf::Vector2i> result;

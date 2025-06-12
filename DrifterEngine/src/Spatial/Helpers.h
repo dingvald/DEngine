@@ -34,6 +34,9 @@ namespace drft::spatial
 	// Checks if a position is the top-left tile of a chunk
 	bool isAtChunkOrigin(TilePosition position);
 
+	// Gets the origin point of the chunk that 'position' lies in
+	sf::Vector3i getChunkOrigin(sf::Vector3i position);
+
 	std::vector<sf::Vector2i> getIntRect(sf::Vector2i origin, int width, int height);
 	std::vector<sf::Vector2i> getOutlineIntRect(sf::Vector2i origin, int width, int height);
 	// Returns a list of integer points located in a circle around the given center.

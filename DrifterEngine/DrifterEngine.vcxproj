@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp" />
     <ClCompile Include="src\ProcGen\LayeredProcGen\CanvasLayer.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\PrefabDecorator.cpp" />
     <ClCompile Include="src\Ability\Abilities\PowerAttackAbility.cpp" />
@@ -488,6 +489,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\Debug\DebugDisplay.h" />
     <ClInclude Include="src\ProcGen\EntityPack\NullEntitySlot.h" />
     <ClInclude Include="src\ProcGen\LayeredProcGen\CanvasLayer.h" />
     <ClInclude Include="src\ProcGen\Decorators\PrefabDecorator.h" />

@@ -771,6 +771,9 @@
     <ClCompile Include="src\ProcGen\LayeredProcGen\CanvasLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3450,6 +3453,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\EntityPack\NullEntitySlot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Debug\DebugDisplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

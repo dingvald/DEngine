@@ -6,6 +6,7 @@
 #include "Utility/Statistics.h"
 #include <Keybindings/Keybindings.h>
 #include <Actions/ActionMap.h>
+#include <Engine/Debug/DebugDisplay.h>
 
 namespace drft
 {
@@ -49,6 +50,7 @@ namespace drft
 		TextureAtlas _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
 		ControlsContext _controlsContext = {};
+		DebugDisplay _debugDisplay{_window};
 
 		Keybindings _keybindings;
 		ActionMap _actionMap{_keybindings};
