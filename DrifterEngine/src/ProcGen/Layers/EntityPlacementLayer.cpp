@@ -17,12 +17,12 @@ namespace Internal
 		StairsComponent stairs;
 		sf::Vector3i position;
 	};
-	static bool isAbove(sf::Vector3i myPos, sf::Vector3i otherPos)
+	static bool isChunkAbove(sf::Vector3i myPos, sf::Vector3i otherPos)
 	{
 		if (myPos.x != otherPos.x || myPos.y != otherPos.y) return false;
 		return otherPos.z > myPos.z;
 	}
-	static bool isBelow(sf::Vector3i myPos, sf::Vector3i otherPos)
+	static bool isChunkBelow(sf::Vector3i myPos, sf::Vector3i otherPos)
 	{
 		if (myPos.x != otherPos.x || myPos.y != otherPos.y) return false;
 		return otherPos.z < myPos.z;
@@ -96,7 +96,7 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 	GenerationState result = generateNeighborChunks3d(GenerationLevel::One);
 	if (result != GenerationState::Complete) return result;
 
-	auto* entityPack = _layer.getLayerManager().tryGetEntityPack();
+	const EntityPack* entityPack = _layer.getLayerManager().tryGetEntityPack();
 	if (!entityPack)
 	{
 		LOG_ERROR("Layer manager does not have its EntityPack set. Did you remember to call LayerManager::setEntityPack()?");
@@ -105,7 +105,7 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 
 	// Check for stairs
 	forEachLoadedNeighborChunk3d([&](const EntityPlacementLayerChunk& neighbor) {
-		if (Internal::isAbove(_index, neighbor._index))
+		if (Internal::isChunkAbove(_index, neighbor._index))
 		{
 			auto stairs = Internal::tryGetStairs(neighbor.chosenEntities, _layer.getRegistries().entityFactory);
 			for (auto&& [stair, position] : stairs)
@@ -116,7 +116,7 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 				}
 			}
 		}
-		if (Internal::isBelow(_index, neighbor._index))
+		if (Internal::isChunkBelow(_index, neighbor._index))
 		{
 			auto stairs = Internal::tryGetStairs(neighbor.chosenEntities, _layer.getRegistries().entityFactory);
 			for (auto&& [stair, position] : stairs)

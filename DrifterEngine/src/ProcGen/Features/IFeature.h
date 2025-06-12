@@ -7,9 +7,8 @@
 class IFeature;
 struct GenerationContext;
 
-struct FeatureGenerationResult
+struct GeneratedFeature
 {
-	sf::Vector3i origin;
 	SlotPositionList slotPositions;
 	const IFeature* feature = nullptr;
 };
@@ -22,14 +21,14 @@ public:
 	using Ptr = std::unique_ptr<IFeature>;
 public:
 	virtual void createFromJson(const rapidjson::Value& json) = 0;
-	FeatureGenerationResult generate(sf::Vector3i position, const GenerationContext& context) const;
+	GeneratedFeature generate(sf::Vector3i position, const GenerationContext& context) const;
 	void addDecorator(IDecorator::Ptr&& decorator);
 
 protected:
-	virtual TaggedPositions generateTags(const GenerationContext& context) const = 0;
+	virtual TaggedPositions generateTags(sf::Vector3i position, const GenerationContext& context) const = 0;
 
 private:
-	FeatureGenerationResult decorate(TaggedPositions& taggedPositions, const GenerationContext& context) const;
+	GeneratedFeature decorate(TaggedPositions& taggedPositions, const GenerationContext& context) const;
 
 private:
 	std::vector<IDecorator::Ptr> _decorators;

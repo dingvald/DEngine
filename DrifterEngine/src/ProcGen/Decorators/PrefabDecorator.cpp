@@ -4,7 +4,6 @@
 #include <ProcGen/GenerationContext.h>
 #include <ProcGen/GenerationRegistries.h>
 #include <Spatial/Helpers.h>
-#include <Spatial/Conversions.h>
 #include <Spatial/ChunkPosition.h>
 
 namespace Internal
@@ -33,8 +32,13 @@ void PrefabDecorator::decorate(SlotPositionList& inOutSlotPositions, TaggedPosit
 	for (auto&& position : getMyPositions(inOutTaggedPositions))
 	{
 		if (!meetsCondition(random)) continue;
-
-		placementPosition = shouldAlignToChunk ? sf::Vector3i{0, 0, 0} : position;
+		if (shouldAlignToChunk)
+		{
+			placementPosition = drft::spatial::getChunkOrigin(position);
+			break;
+		}
+			
+		placementPosition = position;
 		break;
 	}
 

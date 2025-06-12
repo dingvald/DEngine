@@ -25,7 +25,7 @@ void ClusterFeature::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-TaggedPositions ClusterFeature::generateTags(const GenerationContext& context) const
+TaggedPositions ClusterFeature::generateTags(sf::Vector3i position, const GenerationContext& context) const
 {
 	TaggedPositions result;
 
@@ -33,7 +33,7 @@ TaggedPositions ClusterFeature::generateTags(const GenerationContext& context) c
 	int radius = random.intInRange(_radius);
 	float density = random.realInRange(_density);
 
-	auto circle = drft::spatial::getIntCircleInRadius({ 0,0,0 }, radius);
+	auto circle = drft::spatial::getIntCircleInRadius(position, radius);
 	for (auto&& position : circle)
 	{
 		auto randomDouble = random.realInRange(0.0, 1.0);

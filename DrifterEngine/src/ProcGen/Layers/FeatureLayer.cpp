@@ -65,7 +65,7 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
         if (!feature) continue;
 
         GenerationContext context = { getLocalSeed(), canvasLayers, _layer.getRegistries() };
-        FeatureGenerationResult generatedFeature = feature->generate(randomPoint3d, context);
+        GeneratedFeature generatedFeature = feature->generate(randomPoint3d, context);
 
         generatedFeatures.push_back(std::move(generatedFeature));
     }
@@ -99,7 +99,7 @@ GenerationState drft::FeatureLayerChunk::placeFeatures()
         for (auto&& [entity, position, priority] : generatedFeature.slotPositions)
         {
             const int finalPriority = priority == CanvasLayer::UninitializedPriority ? 100 : priority;
-            canvas.set(entity, position + generatedFeature.origin, finalPriority);
+            canvas.set(entity, position, finalPriority);
         }
     }
     

@@ -9,11 +9,11 @@ void SingleFeature::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-TaggedPositions SingleFeature::generateTags(const GenerationContext& context) const
+TaggedPositions SingleFeature::generateTags(sf::Vector3i position, const GenerationContext& context) const
 {
 	TaggedPositions result;
 	PositionList newList;
-	newList.emplace_back(0,0,0);
+	newList.emplace_back(position);
 	result.emplace(_tag, std::move(newList));
 	return result;
 }

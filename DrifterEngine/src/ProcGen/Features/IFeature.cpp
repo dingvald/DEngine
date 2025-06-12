@@ -2,11 +2,10 @@
 #include "IFeature.h"
 #include <ProcGen/GenerationContext.h>
 
-FeatureGenerationResult IFeature::generate(sf::Vector3i position, const GenerationContext& context) const
+GeneratedFeature IFeature::generate(sf::Vector3i position, const GenerationContext& context) const
 {
-	auto taggedPositions = this->generateTags(context);
+	auto taggedPositions = this->generateTags(position, context);
 	auto result = decorate(taggedPositions, context);
-	result.origin = position;
 	result.feature = this;
 
 	return result;
@@ -17,9 +16,9 @@ void IFeature::addDecorator(IDecorator::Ptr&& decorator)
 	_decorators.emplace_back(std::move(decorator));
 }
 
-FeatureGenerationResult IFeature::decorate(TaggedPositions& taggedPositions, const GenerationContext& context) const
+GeneratedFeature IFeature::decorate(TaggedPositions& taggedPositions, const GenerationContext& context) const
 {
-	FeatureGenerationResult result;
+	GeneratedFeature result;
 	for (auto&& decorator : _decorators)
 	{
 		decorator->decorate(result.slotPositions, taggedPositions, context);

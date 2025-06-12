@@ -48,7 +48,7 @@ void AutomataFeature::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-TaggedPositions AutomataFeature::generateTags(const GenerationContext& context) const
+TaggedPositions AutomataFeature::generateTags(sf::Vector3i position, const GenerationContext& context) const
 {
 	TaggedPositions result;
 
@@ -68,23 +68,23 @@ TaggedPositions AutomataFeature::generateTags(const GenerationContext& context) 
 
 	for (auto&& tag : _centerTags)
 	{
-		result[tag].push_back(sf::Vector3i{0,0,0});
+		result[tag].push_back(position);
 	}
 
 	grid.forEach([&](int x, int y, bool val) {
-		sf::Vector3i position = { x - halfWidth, y - halfHeight, 0 };
+		sf::Vector3i pos = position + sf::Vector3i{ x - halfWidth, y - halfHeight, 0 };
 		if (!val && !_offTags.empty())
 		{
 			for (auto&& tag : _offTags)
 			{
-				result[tag].push_back(position);
+				result[tag].push_back(pos);
 			}
 		}
 		if (val && !_onTags.empty())
 		{
 			for (auto&& tag : _onTags)
 			{
-				result[tag].push_back(position);
+				result[tag].push_back(pos);
 			}
 		}
 		if (!_borderTags.empty())
@@ -96,7 +96,7 @@ TaggedPositions AutomataFeature::generateTags(const GenerationContext& context) 
 				if (grid.at(neighbor.x, neighbor.y) == val) continue;
 				for (auto&& tag : _borderTags)
 				{
-					result[tag].push_back(position);
+					result[tag].push_back(pos);
 				}
 			}
 		}	

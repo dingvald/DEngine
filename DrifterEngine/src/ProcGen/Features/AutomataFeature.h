@@ -16,7 +16,7 @@ class AutomataFeature : public IFeature
 {
 public:
 	void createFromJson(const rapidjson::Value& json) override;
-	TaggedPositions generateTags(const GenerationContext& context) const override;
+	TaggedPositions generateTags(sf::Vector3i position, const GenerationContext& context) const override;
 
 private:
 	using Grid = drft::spatial::Grid2d<std::uint8_t>;
