@@ -25,7 +25,7 @@ void ClusterFeature::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-TaggedPositions ClusterFeature::doGenerate(const GenerationContext& context) const
+TaggedPositions ClusterFeature::generateTags(const GenerationContext& context) const
 {
 	TaggedPositions result;
 

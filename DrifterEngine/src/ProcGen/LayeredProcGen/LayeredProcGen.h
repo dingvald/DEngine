@@ -11,8 +11,7 @@
 #include <Utility/stdHashing.h>
 #include <JSON/ICreateFromJson.h>
 #include <ProcGen/GenerationRegistries.h>
-
-#include <Spatial/AutoGrid3d.h>
+#include <ProcGen/LayeredProcGen/CanvasLayer.h>
 
 namespace drft
 {
@@ -122,27 +121,6 @@ namespace drft
 		unsigned int _globalSeed;
 	};
 
-	class CanvasLayer
-	{
-	public:
-		void set(std::any val, sf::Vector3i position)
-		{
-			auto& exsistingVal = _grid.at(position);
-			if (exsistingVal.has_value()) return;
-			exsistingVal = val;
-		}
-		std::any get(sf::Vector3i position) const
-		{
-			return _grid.at(position);
-		}
-		void forceSet(std::any val, sf::Vector3i position)
-		{
-			_grid.at(position) = val;
-		}
-	private:
-		spatial::AutoGrid3d<std::any> _grid{ sf::Vector3i{32, 32, 32} };
-	};
-
 	template<typename T>
 	concept DerivedLayer = std::is_base_of<details::AbstractLayer, T>::value;
 
@@ -179,7 +157,7 @@ namespace drft
 	public:
 		GenerationLayerManager(const GenerationRegistries& generationRegistries)
 			: _generationRegistries(generationRegistries)
-		{};
+		{}
 		~GenerationLayerManager() = default;
 
 		GenerationLayerManager(const GenerationLayerManager&) = delete;
@@ -282,8 +260,9 @@ namespace drft
 	private:
 		using GenLayerPtr = std::unique_ptr<details::AbstractLayer>;
 		using GenLayerIdMap = std::unordered_map<entt::id_type, GenLayerPtr>;
-		GenLayerIdMap _layers;
 		using CanvasLayerIdMap = std::unordered_map<entt::id_type, CanvasLayer>;
+
+		GenLayerIdMap _layers;
 		CanvasLayerIdMap _canvasLayers;
 		details::LayerFactory _layerFactory;
 		unsigned int _globalSeed = 0;

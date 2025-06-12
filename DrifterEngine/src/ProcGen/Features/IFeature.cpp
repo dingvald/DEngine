@@ -1,10 +1,10 @@
-#include "pch.h"
+#include <pch.h>
 #include "IFeature.h"
 #include <ProcGen/GenerationContext.h>
 
 FeatureGenerationResult IFeature::generate(sf::Vector3i position, const GenerationContext& context) const
 {
-	auto taggedPositions = this->doGenerate(context);
+	auto taggedPositions = this->generateTags(context);
 	auto result = decorate(taggedPositions, context);
 	result.origin = position;
 	result.feature = this;

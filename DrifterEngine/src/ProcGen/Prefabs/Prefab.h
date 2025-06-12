@@ -7,12 +7,12 @@
 struct GenerationContext;
 
 // Represents the data generated from Tiled exports
-class PrefabStructure : ICreateFromJson
+class Prefab : ICreateFromJson
 {
 public:
 	void createFromJson(const rapidjson::Value & json) override;
 
-	TaggedPositions generate(sf::Vector3i position, const GenerationContext& context) const;
+	SlotPositionList generate(sf::Vector3i position, const GenerationContext& context) const;
 
 	const drft::spatial::AABB<int>& getVolume() const;
 

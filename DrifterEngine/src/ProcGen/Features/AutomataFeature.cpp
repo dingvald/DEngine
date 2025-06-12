@@ -48,7 +48,7 @@ void AutomataFeature::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-TaggedPositions AutomataFeature::doGenerate(const GenerationContext& context) const
+TaggedPositions AutomataFeature::generateTags(const GenerationContext& context) const
 {
 	TaggedPositions result;
 

@@ -5,7 +5,7 @@
 
 void SimpleDecorator::decorate(SlotPositionList& slotPositions, TaggedPositions& taggedPositions, const GenerationContext& context) const
 {
-	drft::rng::Random random{ context.seed };
+	drft::rng::Random random{ generateUniqueSeed<SimpleDecorator>(context.seed) };
 	for (auto&& position : getMyPositions(taggedPositions))
 	{
 		if (!meetsCondition(random)) continue;

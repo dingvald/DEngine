@@ -26,7 +26,7 @@ public:
 	void addDecorator(IDecorator::Ptr&& decorator);
 
 protected:
-	virtual TaggedPositions doGenerate(const GenerationContext& context) const = 0;
+	virtual TaggedPositions generateTags(const GenerationContext& context) const = 0;
 
 private:
 	FeatureGenerationResult decorate(TaggedPositions& taggedPositions, const GenerationContext& context) const;

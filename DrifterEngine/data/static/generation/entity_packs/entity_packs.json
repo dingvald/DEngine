@@ -9,10 +9,9 @@
                     [ "shallow_water", 1 ]
                 ],
                 "sand": [
-                    [ "sand", 50 ],
-                    [ "stone", 1 ]
+                    [ "sand", 1 ]
                 ],
-                "trees": [
+                "tree": [
                     [ "tree", 1 ]
                 ],
                 "rock_formations": [
@@ -34,12 +33,10 @@
                     [ "stairs_up", 1 ]
                 ],
                 "dirt_wall": [
-                    [ "dirt_wall", 10 ],
-                    [ "stone_wall", 1]
+                    [ "dirt_wall", 1 ]
                 ],
                 "stone_wall": [
-                    [ "stone_wall", 10 ],
-                    [ "dirt_wall", 1]
+                    [ "stone_wall", 1 ]
                 ]
             }
         } 

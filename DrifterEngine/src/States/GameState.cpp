@@ -92,7 +92,7 @@ void drft::GameState::loadGenerationRegistries()
 	_generationRegistries.features.loadFeatures(BIOME_FEATURES_DIRECTORY, decorators);
 	_generationRegistries.entityPacks.loadEntityPacks(ENTITY_PACKS_DIRECTORY);
 	_generationRegistries.layerPacks.loadLayerPacks(LAYER_PACKS_DIRECTORY);
-	_generationRegistries.structures.loadStructures(STRUCTURES_DIRECTORY);
+	_generationRegistries.prefabs.loadPrefabs(PREFABS_DIRECTORY);
 }
 
 void drft::GameState::setupRegistryContext()

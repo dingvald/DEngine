@@ -6,7 +6,7 @@
 
 void EntityDecorator::decorate(SlotPositionList& slotPositions, TaggedPositions& taggedPositions, const GenerationContext& context) const
 {
-	drft::rng::Random random = { context.seed };
+	drft::rng::Random random = { generateUniqueSeed<EntityDecorator>(context.seed) };
 	
 	for (auto&& position : getMyPositions(taggedPositions))
 	{

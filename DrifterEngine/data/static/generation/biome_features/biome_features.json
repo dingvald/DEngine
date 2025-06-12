@@ -1,5 +1,41 @@
 {
     "biome_features": {
+        "small_oasis": {
+            "type": "single_feature",
+            "params":{
+                "tag": "oasis"
+            },
+            "decorators":[
+                {
+                    "type": "prefab_decorator",
+                    "params":{
+                        "prefab": "size_test_prefab"
+                    },
+                    "conditions": {
+                        "tag_expression": "oasis",
+                        "chance": 1.0
+                    }
+                }
+            ]
+        },
+        "desert_hut": {
+            "type": "single_feature",
+            "params":{
+                "tag": "hut"
+            },
+            "decorators":[
+                {
+                    "type": "prefab_decorator",
+                    "params":{
+                        "prefab": "desert_hut"
+                    },
+                    "conditions": {
+                        "tag_expression": "hut",
+                        "chance": 1.0
+                    }
+                }
+            ]
+        },
         "ore_vein": {
             "type": "cluster_feature",
             "params": {
@@ -84,7 +120,7 @@
                     },
                     "conditions": {
                         "tag_expression": "floor & center",
-                        "chance": 0.05
+                        "chance": 1.0
                     }
                 }
             ]

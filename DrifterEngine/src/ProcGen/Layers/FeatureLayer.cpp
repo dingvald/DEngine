@@ -4,6 +4,7 @@
 #include <ProcGen/Layers/EntitySlotLayer.h>
 #include <Random/Random.h>
 #include <ProcGen/GenerationContext.h>
+#include <ProcGen/LayeredProcGen/CanvasLayer.h>
 
 
 using namespace entt::literals;
@@ -33,7 +34,7 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
     if (!biomes.isReady()) return biomes.getState();
 
     // EntitySlotLayer needed to fill the slot_canvas - some features may need to check the canvas
-    auto entities = generateDependency<EntitySlotLayer>(_volume.expand({ 2.0f, 2.0f, 1.0f }));
+    auto entities = generateDependency<EntitySlotLayer>(_volume.expand({ 5.0f, 5.0f, 1.0f }));
     if (!entities.isReady()) return entities.getState();
 
     rng::Random random = { getLocalSeed() };
@@ -54,7 +55,7 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
         dependencyValues.emplace(dependencyID, depLayer.unwrap().getValueAt(randomPoint3d));
     }
 
-    std::unordered_map<entt::id_type, std::reference_wrapper<const drft::CanvasLayer>> canvasLayers;
+    std::unordered_map<entt::id_type, std::reference_wrapper<const CanvasLayer>> canvasLayers;
     canvasLayers.emplace("slot_canvas"_hs,  _layer.getLayerManager().getCanvas("slot_canvas"_hs));
 
     auto features = biome->determineValidFeatures(dependencyValues);
@@ -95,9 +96,10 @@ GenerationState drft::FeatureLayerChunk::placeFeatures()
     auto& canvas = _layer.getLayerManager().getCanvas("slot_canvas"_hs);
     for (auto&& generatedFeature : generatedFeatures)
     {
-        for (auto&& [entity, position] : generatedFeature.slotPositions)
+        for (auto&& [entity, position, priority] : generatedFeature.slotPositions)
         {
-            canvas.forceSet(entity, position + generatedFeature.origin);
+            const int finalPriority = priority == CanvasLayer::UninitializedPriority ? 100 : priority;
+            canvas.set(entity, position + generatedFeature.origin, finalPriority);
         }
     }
     

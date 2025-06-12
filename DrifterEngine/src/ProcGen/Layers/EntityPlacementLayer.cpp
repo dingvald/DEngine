@@ -64,7 +64,7 @@ GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 	auto entitySlotLayer = _layer.getLayerManager().generate<EntitySlotLayer>(_volume);
 	if (!entitySlotLayer.isReady()) return entitySlotLayer.getState();
 
-	auto featureLayer = _layer.getLayerManager().generate<FeatureLayer>(_volume.expand({ 3.f, 3.f, 3.f }));
+	auto featureLayer = _layer.getLayerManager().generate<FeatureLayer>(_volume.expand({ 5.f, 5.f, 1.f }));
 	if (!featureLayer.isReady()) return featureLayer.getState();
 
 	auto& slotCanvas = _layer.getLayerManager().getCanvas("slot_canvas"_hs);

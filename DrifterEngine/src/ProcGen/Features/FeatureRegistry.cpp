@@ -5,6 +5,7 @@
 
 #include <ProcGen/Features/ClusterFeature.h>
 #include <ProcGen/Features/AutomataFeature.h>
+#include <ProcGen/Features/SingleFeature.h>
 
 using namespace drft;
 
@@ -13,6 +14,7 @@ FeatureRegistry::FeatureRegistry()
 {
 	_featureFactory.registerType<ClusterFeature>("cluster_feature");
 	_featureFactory.registerType<AutomataFeature>("automata_feature");
+	_featureFactory.registerType<SingleFeature>("single_feature");
 }
 
 void FeatureRegistry::loadFeatures(const std::filesystem::path& biomeFeatruresDirectory, const DecoratorFactory& decorators)
@@ -40,6 +42,7 @@ void FeatureRegistry::loadFeatures(const std::filesystem::path& biomeFeatruresDi
 				LOG_WARNING("Feature {} json does not have \"type\" member", featureObj.name.GetString());
 				continue;
 			}
+
 			if (featureObj.value.HasMember("params"))
 			{
 				auto& params = featureObj.value["params"];
@@ -59,7 +62,13 @@ void FeatureRegistry::loadFeatures(const std::filesystem::path& biomeFeatruresDi
 				continue;
 			}
 
-			if (_features.contains(featureId) && featureObj.value.HasMember("decorators"))
+			if (!_features.contains(featureId))
+			{
+				LOG_ERROR("Could not create feature {}", featureObj.name.GetString());
+				continue;
+			}
+
+			if (featureObj.value.HasMember("decorators"))
 			{
 				for (auto&& decoratorObj : featureObj.value["decorators"].GetArray())
 				{
@@ -70,6 +79,11 @@ void FeatureRegistry::loadFeatures(const std::filesystem::path& biomeFeatruresDi
 						_features.at(featureId)->addDecorator(std::move(decorator));
 					}
 				}
+			}
+			else
+			{
+				LOG_WARNING("Feature {} has no decorators, the feature will have no effect without at least one", featureObj.name.GetString());
+				continue;
 			}
 		}
 	}

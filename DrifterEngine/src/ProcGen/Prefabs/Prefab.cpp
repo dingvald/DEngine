@@ -1,10 +1,13 @@
 #include <pch.h>
-#include "PrefabStructure.h"
+#include "Prefab.h"
 #include <ProcGen/GenerationContext.h>
+#include <ProcGen/LayeredProcGen/CanvasLayer.h>
 
 using namespace entt::literals;
 
-void PrefabStructure::createFromJson(const rapidjson::Value& json)
+const int PREFAB_PRIORITY = 1000;
+
+void Prefab::createFromJson(const rapidjson::Value& json)
 {
 	if (json.HasMember("reference_depth"))
 	{
@@ -48,23 +51,24 @@ void PrefabStructure::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-TaggedPositions PrefabStructure::generate(sf::Vector3i position, const GenerationContext& context) const
+SlotPositionList Prefab::generate(sf::Vector3i position, const GenerationContext& context) const
 {
-	TaggedPositions result;
+	SlotPositionList result;
 	for (int i = 0; i < _layers.size(); i++)
 	{
 		const int localZ = i + _volume.min.z;
-		for (auto&& [slot, pos] : _layers.at(i))
+		for (auto&& [slot, pos, priority] : _layers.at(i))
 		{
 			sf::Vector3i finalPos = pos + position;
 			finalPos.z += localZ;
-			result[slot].push_back(finalPos);
+			const int finalPriority = priority == CanvasLayer::UninitializedPriority ? PREFAB_PRIORITY : priority;
+			result.emplace_back(slot, finalPos, finalPriority);
 		}
 	}
 	return result;
 }
 
-const drft::spatial::AABB<int>& PrefabStructure::getVolume() const
+const drft::spatial::AABB<int>& Prefab::getVolume() const
 {
 	return _volume;
 }

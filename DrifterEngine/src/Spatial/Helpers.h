@@ -31,6 +31,9 @@ namespace drft::spatial
 	sf::Vector2i toXY(sf::Vector3i vec3);
 	sf::Vector2f toXY(sf::Vector3f vec3);
 
+	// Checks if a position is the top-left tile of a chunk
+	bool isAtChunkOrigin(TilePosition position);
+
 	std::vector<sf::Vector2i> getIntRect(sf::Vector2i origin, int width, int height);
 	std::vector<sf::Vector2i> getOutlineIntRect(sf::Vector2i origin, int width, int height);
 	// Returns a list of integer points located in a circle around the given center.

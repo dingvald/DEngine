@@ -2,14 +2,12 @@
 #include <ProcGen/Features/IFeature.h>
 #include <Utility/Math.h>
 
-class ClusterFeature : public IFeature
+class SingleFeature : public IFeature
 {
 public:
 	void createFromJson(const rapidjson::Value& json) override;
 	TaggedPositions generateTags(const GenerationContext& context) const override;
 
 private:
-	std::vector<entt::id_type> _tags;
-	drft::math::Range<float> _density;
-	drft::math::Range<int> _radius;
+	entt::id_type _tag;
 };

@@ -756,10 +756,19 @@
     <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Structures\PrefabStructure.cpp">
+    <ClCompile Include="src\ProcGen\Prefabs\Prefab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Structures\PrefabStructureRegistry.cpp">
+    <ClCompile Include="src\ProcGen\Prefabs\PrefabRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Decorators\PrefabDecorator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Features\SingleFeature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\LayeredProcGen\CanvasLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3425,10 +3434,22 @@
     <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Structures\PrefabStructure.h">
+    <ClInclude Include="src\ProcGen\Prefabs\Prefab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Structures\PrefabStructureRegistry.h">
+    <ClInclude Include="src\ProcGen\Prefabs\PrefabRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Decorators\PrefabDecorator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Features\SingleFeature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\LayeredProcGen\CanvasLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\EntityPack\NullEntitySlot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -3509,7 +3530,9 @@
     </None>
     <None Include="data\static\entities\stairs.json" />
     <None Include="data\static\entities\tools.json" />
-    <None Include="data\static\generation\structures\iron_deposit_cache.json" />
+    <None Include="data\static\generation\prefabs\iron_deposit_cache.json" />
+    <None Include="data\static\generation\prefabs\tree_grove.json" />
+    <None Include="data\static\generation\prefabs\small_oasis.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

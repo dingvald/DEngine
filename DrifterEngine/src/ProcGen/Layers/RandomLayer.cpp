@@ -25,7 +25,7 @@ void drft::RandomLayer::createFromJson(const rapidjson::Value& json)
 		}
 		else
 		{
-			LOG_ERROR("Random Layer seed value {} is invalid", json["seed"].GetString());
+			LOG_ERROR("Random Layer seed value {} is invalid. Requires unsigned int", json["seed"].GetString());
 			_seed = 0u;
 		}
 	}

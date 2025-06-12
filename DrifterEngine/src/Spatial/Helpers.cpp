@@ -3,6 +3,7 @@
 #include "Utility/stdHashing.h"
 #include <Spatial/Conversions.h>
 
+static const sf::Vector3i ZeroVector3i = { 0,0,0 };
 
 drft::spatial::OffsetPosition drft::spatial::collapseOffset(const TilePosition& position, const sf::Vector3f& offset)
 {
@@ -25,6 +26,12 @@ sf::Vector2i drft::spatial::toXY(sf::Vector3i vec3)
 sf::Vector2f drft::spatial::toXY(sf::Vector3f vec3)
 {
 	return { vec3.x, vec3.y };
+}
+
+bool drft::spatial::isAtChunkOrigin(TilePosition position)
+{
+	auto chunkLocalPosition = toChunkLocalSpace(position);
+	return chunkLocalPosition == ZeroVector3i;
 }
 
 std::vector<sf::Vector2i> drft::spatial::getIntRect(sf::Vector2i origin, int width, int height)

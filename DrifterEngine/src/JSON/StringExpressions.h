@@ -51,8 +51,10 @@ namespace drft::util
 	inline std::vector<T> BooleanStringExpression::mergeLists(const TokenValueLists<T>& lists) const
 	{
 		using namespace entt::literals;
-		if (lists.empty()) return {};
 
+		if (_parsedExpression.empty()) return {};
+		if (lists.empty()) return {};
+		
 		if (_parsedExpression.size() == 1)
 		{
 			entt::id_type onlyToken = *_parsedExpression.begin();
