@@ -6,6 +6,7 @@
 #include "Components/CameraTargetComponent.h"
 
 #include <Events/ChunkSourceTransferCompleteEvent.h>
+#include <Engine/Debug/IDebugDisplay.h>
 
 #include <Spatial/Helpers.h>
 
@@ -52,6 +53,8 @@ void drft::system::Camera::updateEnd()
 		snapCameraToTarget(target->tile, camera);
 	}
 	
+	auto& debug = entt::locator<IDebugDisplay>::value();
+	debug.displayValue("position", TilePosition::toString(camera.position.tile));
 }
 
 void drft::system::Camera::render(sf::RenderTarget& target)

@@ -32,7 +32,6 @@ static constexpr int UPDATES_PER_FRAME_LIMIT = 10;
 drft::Engine::Engine()
 	: _window(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine")
 	, _gui(_window)
-	, _showDebug(false)
 {
 	initialize();
 }
@@ -44,12 +43,12 @@ void drft::Engine::run()
 
 	while (_window.isOpen())
 	{
-		const float secondsPassed = clock.restart().asSeconds();
-		lag += std::min(secondsPassed, SECONDS_PER_FRAME * UPDATES_PER_FRAME_LIMIT);
+		const float timePassed = clock.restart().asSeconds();
+		lag += std::min(timePassed, SECONDS_PER_FRAME * UPDATES_PER_FRAME_LIMIT);
 
 		handleEvents();
 
-		_debugDisplay.displayValue("seconds passed", std::to_string(secondsPassed));
+		_debugDisplay.displayValue("dt", std::format("{:.3f} ms", timePassed*1000.f));
 
 		while (lag >= SECONDS_PER_FRAME)
 		{
@@ -57,7 +56,7 @@ void drft::Engine::run()
 			lag -= SECONDS_PER_FRAME;
 		}
 		
-		render(secondsPassed);
+		render(timePassed);
 
 		if (_stateStack.isEmpty())
 		{
@@ -73,15 +72,22 @@ void drft::Engine::initialize()
 
 	setWindowIcon();
 	loadResources();
+	initializeDebugDisplay();
 	loadDefaultKeybindings();
 	loadSavedKeybindings();
 	setupActionMap();
 	registerStates();
+	setupServiceLocator();
 
 	_gui.setKeyboardNavigationEnabled(true);
 	_window.setMouseCursor(sf::Cursor{ sf::Cursor::Type::Cross });
 
 	_stateStack.pushState(States::Title);
+}
+
+void drft::Engine::setupServiceLocator()
+{
+	entt::locator<IDebugDisplay>::emplace<DebugDisplay>(_debugDisplay);
 }
 
 void drft::Engine::setWindowIcon()
@@ -153,6 +159,13 @@ void drft::Engine::loadDefaultKeybindings()
 	}
 }
 
+void drft::Engine::initializeDebugDisplay()
+{
+	auto group = tgui::Group::create();
+	_debugDisplay.initialize(group);
+	_gui.add(group);
+}
+
 void drft::Engine::setupActionMap()
 {
 	_actionMap.bind("engine", "general", "toggle_fullscreen",	[this]() {toggleFullscreen();});
@@ -199,6 +212,7 @@ void drft::Engine::handleEvents()
 		
 		if (passEventToGui(event.value())) continue;
 		if (passEventToStates(event.value())) continue;
+		if (passEventToDebug(event.value())) continue;
 	}
 }
 
@@ -209,12 +223,13 @@ void drft::Engine::update()
 
 void drft::Engine::render(const float)
 {
+	_debugDisplay.moveToFront();
+
 	_window.clear();
 
 	_stateStack.render(_window);
 	_gui.draw();
 	_stateStack.guiRender(_window);
-	_debugDisplay.render();
 			
 	_window.display();
 }
@@ -257,6 +272,12 @@ bool drft::Engine::passEventToGui(sf::Event event)
 bool drft::Engine::passEventToStates(sf::Event event)
 {
 	return _stateStack.handleEvent(event);
+}
+
+bool drft::Engine::passEventToDebug(sf::Event event)
+{
+	_debugDisplay.handleEvent(event);
+	return false;
 }
 
 void drft::Engine::swapToMouse()
@@ -305,6 +326,7 @@ void drft::Engine::toggleFullscreen()
 void drft::Engine::toggleDebug()
 {
 	_debugDisplay.setVisible(!_debugDisplay.isVisible());
+	_debugDisplay.moveToFront();
 }
 
 void drft::Engine::saveKeybindings()

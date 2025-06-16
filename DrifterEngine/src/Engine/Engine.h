@@ -18,10 +18,12 @@ namespace drft
 
 	private:
 		void initialize();
+		void setupServiceLocator();
 		void setWindowIcon();
 		void loadResources();
 		void loadSavedKeybindings();
 		void loadDefaultKeybindings();
+		void initializeDebugDisplay();
 		void setupActionMap();
 		void registerStates();
 		void handleEvents();
@@ -34,6 +36,7 @@ namespace drft
 
 		bool passEventToGui(sf::Event event);
 		bool passEventToStates(sf::Event event);
+		bool passEventToDebug(sf::Event event);
 
 		void swapToMouse();
 		void swapToKeyboard();
@@ -50,7 +53,7 @@ namespace drft
 		TextureAtlas _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
 		ControlsContext _controlsContext = {};
-		DebugDisplay _debugDisplay{_window};
+		DebugDisplay _debugDisplay;
 
 		Keybindings _keybindings;
 		ActionMap _actionMap{_keybindings};
@@ -67,7 +70,6 @@ namespace drft
 		};
 		StateStack _stateStack{ _stateContext };
 
-		bool _showDebug;
 		bool _isFullScreen = false;
 	};
 
