@@ -392,9 +392,7 @@ namespace drft
 			GenerationState generateNeighborChunks2d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, GenerationLevel desiredLevel)
 			{
 				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
-				bool result = layer.generateChunks(neighbors, desiredLevel);
-				if (!result) return GenerationState::Generating;
-				return GenerationState::Complete;
+				return layer.generateChunks(neighbors, desiredLevel);
 			}
 			void forEachLoadedNeighborChunk2d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
 			{
@@ -408,9 +406,7 @@ namespace drft
 			GenerationState generateNeighborChunks3d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, GenerationLevel desiredLevel)
 			{
 				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate);
-				bool result = layer.generateChunks(neighbors, desiredLevel);
-				if (!result) return GenerationState::Generating;
-				return GenerationState::Complete;
+				return layer.generateChunks(neighbors, desiredLevel);
 			}
 			void forEachLoadedNeighborChunk3d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
 			{
@@ -536,33 +532,23 @@ namespace drft
 		GenerationState generate(details::GenerationContext&& context) override final
 		{
 			const auto chunks = getChunkPointsInsideVolume(context.volume);
-			const bool chunksReady = generateChunks(chunks, context.desiredLevel);
-			if (!chunksReady) return GenerationState::Generating;
-
-			return GenerationState::Complete;
+			return generateChunks(chunks, context.desiredLevel);
 		}
-		bool generateChunks(const std::vector<sf::Vector3i>& chunks, GenerationLevel desiredLevel)
+		GenerationState generateChunks(const std::vector<sf::Vector3i>& chunks, GenerationLevel desiredLevel)
 		{
 			bool result = true;
 			for (auto&& point : chunks)
 			{
-				if (!_chunks.contains(point))
-				{
-					ChunkType chunk = ChunkType{
-						point,
-						spatial::AABB<int>{ toTilePosition(point), getChunkDimensions() },
-						*static_cast<LayerType*>(this)
-					};
-					_chunks.emplace(point, std::move(chunk));
-				}
-
+				auto chunk = _chunks.try_emplace(
+					point, 
+					ChunkType{
+						point,spatial::AABB<int>{ toTilePosition(point), getChunkDimensions() }, 
+						*static_cast<LayerType*>(this)}
+				);
 				GenerationState state = _chunks.at(point).doGenerate(desiredLevel);
-				if (state == GenerationState::Generating)
-				{
-					result = false;
-				}
+				if (state != GenerationState::Complete) return state;
 			}
-			return result;
+			return GenerationState::Complete;
 		}
 
 	private:
