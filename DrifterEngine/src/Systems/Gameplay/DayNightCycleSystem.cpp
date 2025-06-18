@@ -6,10 +6,12 @@
 #include "Events/DayStartEvent.h"
 #include "Events/NightStartEvent.h"
 #include "Events/SendFloatingMessageEvent.h"
+#include <Events/ChunkSourceTransferCompleteEvent.h>
 #include "Spatial/Conversions.h"
 #include <Spatial/Helpers.h>
 #include "Utility/SmoothTransition.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
+#include <Engine/Debug/IDebugDisplay.h>
 
 static constexpr int DAY_START_HOUR = 5;
 static constexpr int NIGHT_START_HOUR = 23;
@@ -57,6 +59,9 @@ void drft::system::DayNightCycleSystem::update()
 		time.hours > 12 ? time.hours - 12 : time.hours, 
 		time.minutes, 
 		time.hours >= 12 ? "pm" : "am");
+
+	auto& debug = entt::locator<IDebugDisplay>::value();
+	debug.displayValue("time", timeMessage);
 }
 
 void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEvent& ev)
