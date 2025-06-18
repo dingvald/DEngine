@@ -5,6 +5,7 @@
 #include "Components/RenderComponent.h"
 #include "Components/LitComponent.h"
 #include "Components/VisualEffectComponent.h"
+#include <Components/StairsComponent.h>
 #include "Components/Tags.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
 #include "Utility/SpriteBatch.h"
@@ -14,6 +15,7 @@
 #include "LightingSystem.h"
 
 static const sf::Color SeenTileColor = sf::Color(10, 10, 10);
+static const sf::Color SeenStairsTileColor = sf::Color(30, 35, 5);
 
 void drft::system::EntityRenderer::init()
 {
@@ -58,12 +60,19 @@ void drft::system::EntityRenderer::batchLitEntities(const CameraHandle& camera)
 
 void drft::system::EntityRenderer::batchHadSeenEntities(const CameraHandle& camera)
 {
-	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, const PlayerHasSeenComponent, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
+	const auto seenView = _registry.view< const PositionComponent, const RenderComponent, const PlayerHasSeenComponent, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV, StairsComponent>);
 	for (auto const& [entity, pos, ren, _] : seenView.each())
 	{
 		sf::Vector2f renderPosition = toScreenSpace(pos.tile, camera) + spatial::toXY(pos.offset);
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
 		_spriteLayers.at(ren.layer).addSprite(uv, SeenTileColor, renderPosition);
+	}
+	const auto seenStairsView = _registry.view< const PositionComponent, const RenderComponent, const PlayerHasSeenComponent, const StairsComponent, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
+	for (auto const& [entity, pos, ren, _, stairs] : seenStairsView.each())
+	{
+		sf::Vector2f renderPosition = toScreenSpace(pos.tile, camera) + spatial::toXY(pos.offset);
+		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
+		_spriteLayers.at(ren.layer).addSprite(uv, SeenStairsTileColor, renderPosition);
 	}
 }
 
