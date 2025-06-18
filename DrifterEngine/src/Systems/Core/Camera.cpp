@@ -16,6 +16,11 @@ static const float CAMERA_SPEED = 7.0f;
 
 static const float STARTING_ZOOM_SCALE = 0.5f;
 
+void drft::system::Camera::init()
+{
+	_dispatcher.sink<events::ChunkSourceTransferCompleteEvent>().connect<&Camera::onChunkSourceTransferCompleteEvent>(this);
+}
+
 void drft::system::Camera::start()
 {
 	_camera = _registry.create();
@@ -106,5 +111,11 @@ entt::entity drft::system::Camera::tryFindTarget() const
 
 void drft::system::Camera::onChunkSourceTransferCompleteEvent(events::ChunkSourceTransferCompleteEvent& ev)
 {
-	_justCompletedTransfer = true;
+	CameraHandle camera = getCurrentCamera(_registry);
+	camera.camera.target = tryFindTarget();
+
+	const auto target = _registry.try_get<const PositionComponent>(camera.camera.target);
+	if (!target) return;
+
+	snapCameraToTarget(target->tile, camera);
 }

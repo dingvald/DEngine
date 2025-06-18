@@ -23,6 +23,7 @@ namespace drft::system
 		using System::System;
 
 	private:
+		void init() override;
 		void start() override;
 		void updateEnd() override;
 		void render(sf::RenderTarget& target) override;
