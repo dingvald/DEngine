@@ -12,7 +12,6 @@ void drft::system::CullingSystem::render(sf::RenderTarget& target)
 	_registry.clear<component::tag::InViewport>();
 
 	const auto camera = getCurrentCamera(_registry);
-	const auto cameraTilePosition = camera.position.tile;
 
 	sf::FloatRect viewRect = camera.getViewRect();
 	viewRect = addBufferToViewport(viewRect);
@@ -20,7 +19,7 @@ void drft::system::CullingSystem::render(sf::RenderTarget& target)
 	const auto view = _registry.view<const PositionComponent>();
 	for (auto [entity, pos] : view.each())
 	{
-		if (cameraTilePosition.z != pos.tile.z) continue;
+		if (camera.position.tile.z != pos.tile.z) continue;
 
 		auto screenPosition = toScreenSpace(pos.tile, camera);
 		if (!viewRect.contains(screenPosition)) continue;
