@@ -89,6 +89,8 @@ GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt:
 	tilePlacementLayer.unwrap().placeTiles(volume, registry);
 	entityPlacementLayer.unwrap().placeEntities(volume, registry);
 
+	_layerManager.cleanup(volume);
+
 	return GenerationState::Complete;
 }
 
@@ -106,6 +108,11 @@ void CelestialBody::generateInit(entt::registry& registry)
 	// Generate the starting state of this source
 	
 	LOG_MSG("Generating {}", this->_name);
+}
+
+void CelestialBody::setGenerationMode(GenerationMode mode)
+{
+	_layerManager.setGenerationMode(mode);
 }
 
 IChunkGenerator* CelestialBody::tryGetGenerator(entt::id_type sourceId)

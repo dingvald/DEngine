@@ -23,7 +23,7 @@ using namespace entt::literals;
 namespace Internal
 {
 	const entt::id_type NULL_SOURCE_ID = "NULL_ID"_hs;
-	static const unsigned int RUNTIME_BUILDS_PER_FRAME = 2u;
+	static const unsigned int RUNTIME_BUILDS_PER_FRAME = 4u;
 }
 
 
@@ -144,12 +144,14 @@ void drft::system::ChunkManager::onTransfer()
 	// Update new source until fully loaded
 	if (_activeSource->id() == _pendingTransfer->newSourceId)
 	{
+		_activeSource->setGenerationMode(GenerationMode::Batch);
 		_activeSource->setBuildsPerFrame(std::numeric_limits<unsigned int>::max());
 		_activeSource->update(_pendingTransfer->position, _registry);
 		if (_activeSource->isLoadedAroundPosition(_pendingTransfer->position))
 		{
 			LOG_MSG("Transfer complete");
 			setState(State::SourceReady);
+			_activeSource->setGenerationMode(GenerationMode::OnePerFrame);
 			_activeSource->setBuildsPerFrame(Internal::RUNTIME_BUILDS_PER_FRAME);
 			_registry.emplace_or_replace<ChunkSourceTrackerComponent>(_chunkSourceTracker, _pendingTransfer->newSourceId, _pendingTransfer->position);
 			_pendingTransfer.reset();

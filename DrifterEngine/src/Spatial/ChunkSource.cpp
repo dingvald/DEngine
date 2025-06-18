@@ -51,6 +51,11 @@ void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync
 	cleanUpAllChunks(registry);
 }
 
+void drft::spatial::ChunkSource::setGenerationMode(GenerationMode mode)
+{
+	_generator.setGenerationMode(mode);
+}
+
 void drft::spatial::ChunkSource::setBuildsPerFrame(unsigned int value)
 {
 	_buildsPerFrame = value;

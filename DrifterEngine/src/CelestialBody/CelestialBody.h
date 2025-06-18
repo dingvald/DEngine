@@ -24,6 +24,7 @@ public:
 	void generateInit(entt::registry& registry) override;
 	GenerationState generateChunk(drft::ChunkPosition position, entt::registry& registry) override;
 	entt::id_type getSourceId() override;
+	void setGenerationMode(GenerationMode mode) override;
 	IChunkGenerator* tryGetGenerator(entt::id_type sourceId) override;
 
 	void tick();

@@ -1,6 +1,7 @@
 #pragma once
 #include "Spatial/VirtualChunk.h"
 #include <Utility/ChunkSerializer.h>
+#include <ProcGen/GenerationMode.h>
 
 class IChunkGenerator;
 
@@ -18,6 +19,7 @@ namespace drft::spatial
 		void shutdown(entt::registry& registry, bool isAsync);
 
 		void setBuildsPerFrame(unsigned int value);
+		void setGenerationMode(GenerationMode mode);
 		bool isLoadedAroundPosition(TilePosition position) const;
 		entt::id_type id() const;
 
