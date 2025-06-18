@@ -1,6 +1,5 @@
 #pragma once
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
-#include <Biomes/BiomeRegistry.h>
 
 #include <JSON/ICreateFromJson.h>
 
