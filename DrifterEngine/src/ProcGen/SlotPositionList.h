@@ -2,7 +2,7 @@
 #include <SFML/System/Vector3.hpp>
 #include <vector>
 #include <ProcGen/EntityPack/NullEntitySlot.h>
-#include <ProcGen/LayeredProcGen/CanvasLayer.h>
+#include <ProcGen/Layers/CanvasLayer.h>
 
 struct SlotPositionPair
 {

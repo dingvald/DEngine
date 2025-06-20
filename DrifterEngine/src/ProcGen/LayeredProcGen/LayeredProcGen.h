@@ -11,7 +11,7 @@
 #include <Utility/stdHashing.h>
 #include <JSON/ICreateFromJson.h>
 #include <ProcGen/GenerationRegistries.h>
-#include <ProcGen/LayeredProcGen/CanvasLayer.h>
+#include <ProcGen/Layers/CanvasLayer.h>
 #include <ProcGen/GenerationMode.h>
 
 namespace drft

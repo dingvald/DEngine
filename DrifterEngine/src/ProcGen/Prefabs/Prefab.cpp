@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "Prefab.h"
 #include <ProcGen/GenerationContext.h>
-#include <ProcGen/LayeredProcGen/CanvasLayer.h>
+#include <ProcGen/Layers/CanvasLayer.h>
 
 using namespace entt::literals;
 

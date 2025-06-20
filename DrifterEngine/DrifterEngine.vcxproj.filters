@@ -768,7 +768,7 @@
     <ClCompile Include="src\ProcGen\Features\SingleFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\LayeredProcGen\CanvasLayer.cpp">
+    <ClCompile Include="src\ProcGen\Layers\CanvasLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp">
@@ -3449,7 +3449,7 @@
     <ClInclude Include="src\ProcGen\Features\SingleFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\LayeredProcGen\CanvasLayer.h">
+    <ClInclude Include="src\ProcGen\Layers\CanvasLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\EntityPack\NullEntitySlot.h">
