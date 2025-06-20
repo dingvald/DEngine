@@ -10,6 +10,11 @@ namespace drft::spatial
 		AABB();
 		AABB(const sf::Vector3<T>& position, const sf::Vector3<T>& size);
 
+		bool operator==(const AABB<T>& other) const
+		{
+			return this->min == other.min && this->max == other.max;
+		}
+
 		bool contains(const sf::Vector3<T>& point) const;
 		bool contains2d(const sf::Vector2<T>& point) const;
 		bool intersects(const AABB<T>& aabb) const;
@@ -49,6 +54,8 @@ namespace drft::spatial
 		sf::Vector3<T> min; // top-back-left corner
 		sf::Vector3<T> max; // bottom-front-right corner
 	};
+
+	using AABBi = AABB<int>;
 
 	template<typename T>
 	inline AABB<T>::AABB()
