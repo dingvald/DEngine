@@ -15,13 +15,8 @@ GenerationState drft::FeatureLayerChunk::generate(GenerationLevel level)
     {
     case drft::GenerationLevel::One:
         return generateFeatures();
-        break;
     case drft::GenerationLevel::Two:
-        return checkNeighbors();
-        break;
-    case drft::GenerationLevel::Three:
         return placeFeatures();
-        break;
     default:
         break;
     }
@@ -69,22 +64,6 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
 
         generatedFeatures.push_back(std::move(generatedFeature));
     }
-
-    return GenerationState::Complete;
-}
-
-GenerationState drft::FeatureLayerChunk::checkNeighbors()
-{
-    auto state = generateNeighborChunks2d(GenerationLevel::One);
-    if (state != GenerationState::Complete) return state;
-
-    if (generatedFeatures.empty()) return GenerationState::Complete;
-
-    forEachLoadedNeighborChunk2d([&](const FeatureLayerChunk& chunk) {
-            if (chunk.generatedFeatures.empty()) return;
-
-            // TODO: Handle overlapping with neighbor features
-        });
 
     return GenerationState::Complete;
 }

@@ -15,9 +15,8 @@ namespace drft
 		std::vector<GeneratedFeature> generatedFeatures;
 	private:
 		GenerationState generateFeatures();
-		GenerationState checkNeighbors();
 		GenerationState placeFeatures();
-		virtual GenerationLevel numLevels() const override { return GenerationLevel::Three; }
+		virtual GenerationLevel numLevels() const override { return GenerationLevel::Two; }
 	};
 
 	class FeatureLayer : public GenerationLayer<FeatureLayer, FeatureLayerChunk>
