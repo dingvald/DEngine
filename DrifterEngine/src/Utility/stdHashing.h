@@ -2,6 +2,22 @@
 #include <memory> // For std::hash definition
 #include <Spatial/AABB.h>
 
+
+template<typename T>
+concept Hashable = requires(T a) {
+    { std::hash<T>{}(a) } -> std::convertible_to<std::size_t>;
+};
+
+namespace drft
+{
+	template<Hashable T>
+	size_t hash(const T& val)
+	{
+		return std::hash<T>{}(val);
+	}
+}
+
+
 template <typename T>
 inline void hash_combine(std::size_t& seed, T const& v)
 {

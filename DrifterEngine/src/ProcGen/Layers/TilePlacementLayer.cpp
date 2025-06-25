@@ -14,10 +14,12 @@ GenerationState drft::TilePlacementLayerChunk::generate(GenerationLevel /*desire
 	auto biomeLayer = generateDependency<BiomeLayer>(_volume);
 	if (!biomeLayer.isReady()) return biomeLayer.getState();
 
+	const BiomeLayer& unwrappedBiomeLayer = biomeLayer.unwrap();
+
 	// Place tiles for each position in the chunk
 	spatial::forEachPointInRect(_volume.flatten(), [&](sf::Vector2i point) {
 		const sf::Vector3i position = { point.x, point.y, _volume.min.z };
-		const Biome* biome = biomeLayer.unwrap().getBiomeAt(position);
+		const Biome* biome = unwrappedBiomeLayer.getBiomeAt(position);
 
 		sf::Color tileColor = { 10, 10, 10 };
 		if (biome)
@@ -45,7 +47,6 @@ void drft::TilePlacementLayer::placeTiles(spatial::AABB<int> volume, entt::regis
 		[&registry](TilePlacementLayerChunk& chunk) {
 			chunk.placeTiles(registry);
 		});
-	removeChunksInArea(volume.flatten(), volume.min.z);
 }
 
 sf::Vector3i drft::TilePlacementLayer::getChunkDimensions() const

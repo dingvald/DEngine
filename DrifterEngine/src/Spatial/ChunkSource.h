@@ -1,7 +1,8 @@
 #pragma once
 #include "Spatial/VirtualChunk.h"
-#include <Utility/ChunkSerializer.h>
-#include <ProcGen/GenerationMode.h>
+
+class drft::ChunkSerializer;
+class ChunkGenerator;
 
 class IChunkGenerator;
 
@@ -12,14 +13,13 @@ namespace drft::spatial
 	class ChunkSource
 	{
 	public:
-		ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer, IChunkGenerator& generatorProvider);
+		ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer, ChunkGenerator& generator);
 
 		void init(entt::registry& registry);
 		void update(TilePosition position, entt::registry& registry);
+		void updateEnd(TilePosition cameraPosition);
 		void shutdown(entt::registry& registry, bool isAsync);
 
-		void setBuildsPerFrame(unsigned int value);
-		void setGenerationMode(GenerationMode mode);
 		bool isLoadedAroundPosition(TilePosition position) const;
 		entt::id_type id() const;
 
@@ -40,9 +40,9 @@ namespace drft::spatial
 	private:
 		entt::id_type _sourceId;
 		bool _isShuttingDown = false;
-		unsigned int _buildsPerFrame = std::numeric_limits<unsigned int>::max();
+
 		ChunkSerializer& _serializer;
-		IChunkGenerator& _generator;
+		ChunkGenerator& _generator;
 		std::unordered_map<ChunkPosition, spatial::VirtualChunk> _chunks;
 
 		std::vector<ChunkPosition> _toBuild;

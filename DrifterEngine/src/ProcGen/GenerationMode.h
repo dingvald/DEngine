@@ -2,6 +2,6 @@
 
 enum class GenerationMode
 {
-	OnePerFrame,
+	Step,
 	Batch,
 };

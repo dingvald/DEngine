@@ -504,13 +504,13 @@ std::vector<sf::Vector3i> drft::spatial::getSurroundingPoints(sf::Vector3i point
 	case drft::spatial::PlaneType::All:
 		return 
 		{
-		point + sf::Vector3i(1,  1,  1), point + sf::Vector3i(1,  1,  0), point + sf::Vector3i(1,  1, -1),
-		point + sf::Vector3i(1,  0,  1), point + sf::Vector3i(1,  0,  0), point + sf::Vector3i(1,  0, -1),
-		point + sf::Vector3i(1, -1,  1), point + sf::Vector3i(1, -1,  0), point + sf::Vector3i(1, -1, -1),
+		point + sf::Vector3i(1,  1,  1), point + sf::Vector3i(1,  1,  0),	point + sf::Vector3i(1,  1, -1),
+		point + sf::Vector3i(1,  0,  1), point + sf::Vector3i(1,  0,  0),	point + sf::Vector3i(1,  0, -1),
+		point + sf::Vector3i(1, -1,  1), point + sf::Vector3i(1, -1,  0),	point + sf::Vector3i(1, -1, -1),
 
-		point + sf::Vector3i(0,  1,  1), point + sf::Vector3i(0,  1,  0), point + sf::Vector3i(0,  1, -1),
-		point + sf::Vector3i(0,  0,  1), point + sf::Vector3i(0,  0,  0), point + sf::Vector3i(0,  0, -1),
-		point + sf::Vector3i(0, -1,  1), point + sf::Vector3i(0, -1,  0), point + sf::Vector3i(0, -1, -1),
+		point + sf::Vector3i(0,  1,  1), point + sf::Vector3i(0,  1,  0),	point + sf::Vector3i(0,  1, -1),
+		point + sf::Vector3i(0,  0,  1), /* Do not include self */			point + sf::Vector3i(0,  0, -1),
+		point + sf::Vector3i(0, -1,  1), point + sf::Vector3i(0, -1,  0),	point + sf::Vector3i(0, -1, -1),
 
 		point + sf::Vector3i(-1,  1,  1), point + sf::Vector3i(-1,  1,  0), point + sf::Vector3i(-1,  1, -1),
 		point + sf::Vector3i(-1,  0,  1), point + sf::Vector3i(-1,  0,  0), point + sf::Vector3i(-1,  0, -1),

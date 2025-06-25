@@ -274,7 +274,7 @@ void drft::EntityFactory::createEntitiyPrototypeFromJSON(entt::entity entity, en
 								std::vector<std::string> strings;
 								for (int i = 0; i < size; ++i)
 								{
-									strings.push_back(arr[i].GetString());
+									strings.emplace_back(arr[i].GetString());
 								}
 								meta.data(entt::hashed_string(memberName)).set(any, strings);
 							}

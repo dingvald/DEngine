@@ -1,22 +1,18 @@
 #include "pch.h"
 #include "CelestialBody.h"
 
-#include <Random/Random.h>
-#include "Factory/EntityFactory.h"
-#include "ProcGen/PlaceEntities.h"
-#include "Spatial/Conversions.h"
-#include "Spatial/Helpers.h"
-
 #include <Cereal/external/rapidjson/document.h>
-#include <Components/RenderComponent.h>
 #include <EnTT/entt.h>
-#include <ProcGen/GenerationState.h>
 #include <ProcGen/Layers/BiomeLayer.h>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/System/Vector3.hpp>
+
 #include <Spatial/AABB.h>
 #include <Spatial/ChunkPosition.h>
+
+#include <ProcGen/GenerationRegistries.h>
+#include <ProcGen/EntityPack/EntityPack.h>
+#include <ProcGen/LayerPack/LayerPack.h>
+
+#include <Utility/StandardLogger.h>
 
 #include <ProcGen/Layers/VoronoiLayer.h>
 #include <ProcGen/Layers/JitteredGridLayer.h>
@@ -30,68 +26,31 @@
 #include <ProcGen/Layers/EntityPlacementLayer.h>
 #include <ProcGen/Layers/TilePlacementLayer.h>
 
-#include <ProcGen/GenerationRegistries.h>
-#include <ProcGen/EntityPack/EntityPack.h>
-#include <ProcGen/LayerPack/LayerPack.h>
-
-#include <Utility/StandardLogger.h>
+#pragma optimize("", off)
 
 using namespace drft;
 using namespace entt::literals;
 
-namespace Internal
-{
-	static void placeTile(sf::Vector3i position, const Biome* biome, entt::registry& registry, const drft::EntityFactory& factory)
-	{
-		sf::Color tileColor = { 10,10,10 };
-		if (biome)
-		{
-			tileColor = biome->getBaseTileColor();
-		}
-		auto tileHandle = gen::placeSingle("tile"_hs, spatial::asTileSpace(position), registry, factory);
-		tileHandle.patch<RenderComponent>([&tileColor](RenderComponent& comp) {comp.color = tileColor; });
-	}
-}
-
 CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	: _registries(registries)
-	, _layerManager(registries)
+	, _layers(registries)
 {
 	using namespace entt::literals;
 	// register layer types that can have multiple instances created using add
-	_layerManager.registerType<drft::RandomLayer>("random"_hs);
-	_layerManager.registerType<drft::PerlinNoiseLayer>("perlin"_hs);
-	_layerManager.registerType<drft::LloydRelaxedLayer>("relaxed_points"_hs);
-	_layerManager.registerType<drft::FillLayer>("fill"_hs);
-	_layerManager.registerType<drft::DepthLayer>("depth"_hs);
+	_layers.registerType<drft::RandomLayer>("random"_hs);
+	_layers.registerType<drft::PerlinNoiseLayer>("perlin"_hs);
+	_layers.registerType<drft::LloydRelaxedLayer>("relaxed_points"_hs);
+	_layers.registerType<drft::FillLayer>("fill"_hs);
+	_layers.registerType<drft::DepthLayer>("depth"_hs);
 
 	// Add generic layers that all generators can use
-	_layerManager.add<RandomLayer>();
-	_layerManager.add<JitteredGridLayer>();
-	_layerManager.add<VoronoiLayer>();
-	_layerManager.add<FeatureLayer>();
-	_layerManager.add<EntitySlotLayer>();
-	_layerManager.add<EntityPlacementLayer>();
-	_layerManager.add<TilePlacementLayer>();
-}
-
-GenerationState CelestialBody::generateChunk(drft::ChunkPosition position, entt::registry& registry)
-{
-	const sf::Vector3i origin = spatial::toTileSpace(position);
-	spatial::AABB<int> volume = { origin, ChunkDimensions };
-
-	auto tilePlacementLayer = _layerManager.generate<TilePlacementLayer>(volume);
-	if (!tilePlacementLayer.isReady()) return tilePlacementLayer.getState();
-
-	auto entityPlacementLayer = _layerManager.generate<EntityPlacementLayer>(volume);
-	if (!entityPlacementLayer.isReady()) return entityPlacementLayer.getState();
-
-	tilePlacementLayer.unwrap().placeTiles(volume, registry);
-	entityPlacementLayer.unwrap().placeEntities(volume, registry);
-
-	_layerManager.cleanup(volume);
-
-	return GenerationState::Complete;
+	_layers.add<drft::RandomLayer>();
+	_layers.add<drft::JitteredGridLayer>();
+	_layers.add<drft::VoronoiLayer>();
+	_layers.add<drft::FeatureLayer>();
+	_layers.add<drft::EntitySlotLayer>();
+	_layers.add<drft::EntityPlacementLayer>();
+	_layers.add<drft::TilePlacementLayer>();
 }
 
 entt::id_type CelestialBody::getSourceId()
@@ -99,33 +58,26 @@ entt::id_type CelestialBody::getSourceId()
 	return entt::hashed_string{_name.c_str()};
 }
 
-void CelestialBody::tick()
-{
-}
-
-void CelestialBody::generateInit(entt::registry& registry)
-{
-	// Generate the starting state of this source
-	
-	LOG_MSG("Generating {}", this->_name);
-}
-
-void CelestialBody::setGenerationMode(GenerationMode mode)
-{
-	_layerManager.setGenerationMode(mode);
-}
-
-IChunkGenerator* CelestialBody::tryGetGenerator(entt::id_type sourceId)
+IChunkDataSource* CelestialBody::tryGetDataSource(entt::id_type sourceId)
 {
 	for (auto&& child : _celestialBodies)
 	{
 		if (child.getSourceId() == sourceId) return &child;
-		if (auto generator = child.tryGetGenerator(sourceId))
+		if (auto generator = child.tryGetDataSource(sourceId))
 		{
 			return generator;
 		}
 	}
 	return nullptr;
+}
+
+void CelestialBody::tick()
+{
+}
+
+drft::GenerationLayerManager& CelestialBody::getGenerationLayers()
+{
+	return _layers;
 }
 
 void CelestialBody::createFromJson(const rapidjson::Value& json)
@@ -143,7 +95,7 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 			auto& pack = _registries.layerPacks.get(packId);
 			for (auto&& [layerId, typeAndParams] : pack.getLayers())
 			{
-				if (auto layer = _layerManager.add<ICreateFromJson>(typeAndParams.layerTypeId, layerId))
+				if (auto layer = _layers.add<ICreateFromJson>(typeAndParams.layerTypeId, layerId))
 				{
 					layer->createFromJson(typeAndParams.json);
 				}
@@ -162,7 +114,7 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 			auto& pack = _registries.entityPacks.get(packId);
 			_entityPacks.add(pack);
 		}
-		_layerManager.setEntityPack(_entityPacks);
+		_layers.setEntityPack(_entityPacks);
 	}
 	if (json.HasMember("size"))
 	{
@@ -192,15 +144,14 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 	}
 	if (json.HasMember("biomes"))
 	{
-		_layerManager.add<BiomeLayer>()->createFromJson(json);
+		_layers.add<BiomeLayer>()->createFromJson(json);
 	}
 	if (json.HasMember("bodies"))
 	{
 		_celestialBodies.reserve(json["bodies"].GetArray().Size());
 		for (auto&& body : json["bodies"].GetArray())
 		{
-			_celestialBodies.emplace_back(_registries);
-			_celestialBodies.back().createFromJson(body);
+			_celestialBodies.emplace_back(_registries).createFromJson(body);
 		}
 	}
 }

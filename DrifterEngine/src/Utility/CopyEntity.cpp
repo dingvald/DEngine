@@ -56,7 +56,7 @@ void drft::util::copyEntities(const std::vector<entt::entity>& entities, entt::r
 	}
 }
 
-void drft::util::copyEntities(entt::registry& toRegistry, entt::registry& fromRegistry)
+void drft::util::copyEntities(entt::registry& toRegistry, const entt::registry& fromRegistry)
 {
 	fromRegistry.each([&](auto from_e)
 		{

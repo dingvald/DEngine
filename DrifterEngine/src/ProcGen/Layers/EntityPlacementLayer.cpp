@@ -67,6 +67,10 @@ GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 	auto featureLayer = _layer.getLayerManager().generate<FeatureLayer>(_volume.expand({ 30.f, 30.f, 1.f }));
 	if (!featureLayer.isReady()) return featureLayer.getState();
 
+	// call unwrap to release the reference
+	entitySlotLayer.unwrap();
+	featureLayer.unwrap();
+
 	auto& slotCanvas = _layer.getLayerManager().getCanvas("slot_canvas"_hs);
 	auto* entityPack = _layer.getLayerManager().tryGetEntityPack();
 	if (!entityPack)
@@ -142,7 +146,6 @@ void drft::EntityPlacementLayer::placeEntities(spatial::AABB<int> volume, entt::
 				gen::placeSingle(entity, spatial::asTileSpace(position), registry, factory);
 			}
 		});
-	removeChunksInArea(volume.flatten(), volume.min.z);
 }
 
 sf::Vector3i drft::EntityPlacementLayer::getChunkDimensions() const

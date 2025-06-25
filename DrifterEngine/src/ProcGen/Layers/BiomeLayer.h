@@ -26,7 +26,6 @@ namespace drft
 	private:
 		GenerationState assignBiomesToVoronoiCells(spatial::AABB<int> volume);
 		void assignBiomeToVoronoiCell(sf::Vector3i centroid, const SlotDeterminer::DependencyValues& dependencyValues);
-		SlotDeterminer::DependencyValues getDependencyValuesAtPoint(sf::Vector3i point, const GeneratedDependencies& generatedDependencies) const;
 		virtual GenerationLevel numLevels() const override { return GenerationLevel::One; }
 
 	public:

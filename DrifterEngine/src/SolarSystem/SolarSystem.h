@@ -6,14 +6,14 @@
 
 #include <JSON/ICreateFromJson.h>
 
-#include <ProcGen/IChunkGenerator.h>
-#include <ProcGen/IChunkGeneratorProvider.h>
+#include <ProcGen/IChunkDataSource.h>
+#include <ProcGen/IChunkDataSourceProvider.h>
 
 #include <vector>
 
 struct GenerationRegistries;
 
-class SolarSystem : public ICreateFromJson, public IChunkGeneratorProvider
+class SolarSystem : public ICreateFromJson, public IChunkDataSourceProvider
 {
 public:
 	SolarSystem(const GenerationRegistries& registries);
@@ -22,7 +22,7 @@ public:
 
 	void createFromJson(const rapidjson::Value& json) override;
 
-	IChunkGenerator* tryGetGenerator(entt::id_type sourceId) override;
+	IChunkDataSource* tryGetDataSource(entt::id_type sourceId) override;
 
 	void tick();
 

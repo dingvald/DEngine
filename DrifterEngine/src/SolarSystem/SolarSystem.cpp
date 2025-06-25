@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SolarSystem.h"
 #include <EnTT/entt.h>
-#include <ProcGen/IChunkGenerator.h>
+#include <ProcGen/IChunkDataSource.h>
 #include <ProcGen/GenerationRegistries.h>
 
 SolarSystem::SolarSystem(const GenerationRegistries& registries)
@@ -29,12 +29,12 @@ void SolarSystem::tick()
 	}
 }
 
-IChunkGenerator* SolarSystem::tryGetGenerator(entt::id_type sourceId)
+IChunkDataSource* SolarSystem::tryGetDataSource(entt::id_type sourceId)
 {
 	for (auto&& celestialBody : _celestialBodies)
 	{
 		if (celestialBody.getSourceId() == sourceId) return &celestialBody;
-		if (auto generator = celestialBody.tryGetGenerator(sourceId))
+		if (auto generator = celestialBody.tryGetDataSource(sourceId))
 		{
 			return generator;
 		}

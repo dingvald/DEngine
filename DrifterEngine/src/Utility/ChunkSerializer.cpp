@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ChunkSerializer.h"
-#include <Utility/VectorBuffer.h>
 #include <Utility/CompressData.h>
 #include <Snapshot/EnTTSnapshot.h>
 #include <Engine/CommonEngineDirectories.h>
@@ -29,29 +28,29 @@ bool drft::ChunkSerializer::isSerialized(SourceChunkPositionPair position) const
 	return _serializedChunks.contains(position);
 }
 
-std::future<void> drft::ChunkSerializer::queueForSave(SourceChunkPositionPair position, entt::registry& registry)
+std::future<entt::registry> drft::ChunkSerializer::queueForSave(SourceChunkPositionPair position, entt::registry&& registry)
 {
 	{
 		std::lock_guard<std::mutex> lock(_saveQueueLock);
-		_saveQueue.emplace_back(position, registry);
+		_saveQueue.emplace_back(position, std::move(registry));
 	}
 
 	_serializedChunks.insert(position); // HACKZ: Maybe not the best place to add because it assumes serialization worked, but avoids needing a mutex
 	
 	std::lock_guard<std::mutex> lock(_savePromiseLock);
-	_savePromises.emplace(position, std::promise<void>{});
+	_savePromises.emplace(position, std::promise<entt::registry>{});
 	return _savePromises.at(position).get_future();
 }
 
-std::future<void> drft::ChunkSerializer::queueForLoad(SourceChunkPositionPair position, entt::registry& registry)
+std::future<entt::registry> drft::ChunkSerializer::queueForLoad(SourceChunkPositionPair position, entt::registry&& registry)
 {
 	{
 		std::lock_guard<std::mutex> lock(_loadQueueLock);
-		_loadQueue.emplace_back(position, registry);
+		_loadQueue.emplace_back(position, std::move(registry));
 	}
 
 	std::lock_guard<std::mutex> lock(_loadPromiseLock);
-	_loadPromises.emplace(position, std::promise<void>{});
+	_loadPromises.emplace(position, std::promise<entt::registry>{});
 	return _loadPromises.at(position).get_future();
 }
 
@@ -101,7 +100,7 @@ void drft::ChunkSerializer::syncSaveList()
 	for (auto&& [position, registry] : _saveQueue)
 	{
 		auto path = getRegionFilePath(position);
-		_saveList[path].emplace_back(position, registry);
+		_saveList[path].emplace_back(position, std::move(registry));
 	}
 	_saveQueue.clear();
 }
@@ -112,7 +111,7 @@ void drft::ChunkSerializer::syncLoadList()
 	for (auto&& [position, registry] : _loadQueue)
 	{
 		auto path = getRegionFilePath(position);
-		_loadList[path].emplace_back(position, registry);
+		_loadList[path].emplace_back(position, std::move(registry));
 	}
 	_loadQueue.clear();
 }
@@ -146,7 +145,7 @@ void drft::ChunkSerializer::processSaveList()
 	std::lock_guard<std::mutex> lock(_savePromiseLock);
 	for (auto&& chunk : promisesToComplete)
 	{
-		_savePromises.at(chunk).set_value();
+		_savePromises.at(chunk).set_value({}); // The registry won't be needed by the requester
 		_savePromises.erase(chunk);
 	}
 }
@@ -169,19 +168,16 @@ void drft::ChunkSerializer::processLoadList()
 			{
 				auto compressed = regionFile.readChunk(sourcePositionPair.position);
 				decompressAndDeserializeRegistry(compressed, registry);
-				promisesToComplete.push_back(sourcePositionPair);
+
+				std::lock_guard<std::mutex> lock(_loadPromiseLock);
+				_loadPromises.at(sourcePositionPair).set_value(std::move(registry));
+				_loadPromises.erase(sourcePositionPair);
 			}
 		}
 		regionFile.close();
 	}
 
 	_loadList.clear();
-	std::lock_guard<std::mutex> lock(_loadPromiseLock);
-	for (auto&& chunk : promisesToComplete)
-	{
-		_loadPromises.at(chunk).set_value();
-		_loadPromises.erase(chunk);
-	}
 }
 
 void drft::ChunkSerializer::saveSerializedChunkList()

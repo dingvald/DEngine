@@ -14,6 +14,8 @@
 #include <ProcGen/Layers/CanvasLayer.h>
 #include <ProcGen/GenerationMode.h>
 
+#pragma optimize("", off)
+
 namespace drft
 {
 	enum class GenerationLevel : unsigned int
@@ -56,9 +58,10 @@ namespace drft
 			}
 
 			virtual GenerationState generate(GenerationContext&& context) = 0;
-			virtual void cleanup(spatial::AABB<int> volume) {};
 			const GenerationRegistries& getRegistries() const { return _registries; }
 			GenerationLayerManager& getLayerManager() { return _manager; }
+			virtual void release(spatial::AABBi& volume) {};
+			virtual void cleanup() {};
 
 		private:
 			std::reference_wrapper<GenerationLayerManager> _manager;
@@ -145,13 +148,24 @@ namespace drft
 		T& unwrap()
 		{
 			if (!_instance) throw std::exception("Trying to unwrap nullptr future layer");
+			release();
 			return *_instance;
+		}
+
+	private:
+		void release()
+		{
+			if constexpr (std::is_base_of<details::AbstractLayer, T>::value)
+			{
+				static_cast<details::AbstractLayer*>(_instance)->release(_volume);
+			}
 		}
 
 	private:
 		friend class GenerationLayerManager;
 		GenerationState _state = GenerationState::Generating;
-		T* _instance;
+		spatial::AABBi _volume;
+		T* _instance = nullptr;
 	};
 
 	class GenerationLayerManager
@@ -165,17 +179,8 @@ namespace drft
 		GenerationLayerManager(const GenerationLayerManager&) = delete;
 		GenerationLayerManager& operator= (const GenerationLayerManager&) = delete;
 
-		GenerationLayerManager(GenerationLayerManager&&) = default;
-		GenerationLayerManager& operator= (GenerationLayerManager&&) = default;
-
-		GenerationMode getGenerationMode() const
-		{
-			return _generationMode;
-		}
-		void setGenerationMode(GenerationMode mode)
-		{
-			_generationMode = mode;
-		}
+		GenerationLayerManager(GenerationLayerManager&&);
+		GenerationLayerManager& operator= (GenerationLayerManager&&);
 
 		void setSeed(unsigned int seed)
 		{
@@ -218,6 +223,7 @@ namespace drft
 					.desiredLevel = level, 
 					.seed = _globalSeed
 				});
+				result._volume = volume;
 			}
 
 			if (result._state == GenerationState::Complete)
@@ -230,15 +236,19 @@ namespace drft
 			}
 			return result;
 		}
-
-		void cleanup(spatial::AABB<int> volume)
+		
+		void cleanup(sf::Vector3i chunkPosition)
 		{
-			for (auto&& [id, layer] : _layers)
+			if (spatial::distance3d(chunkPosition, _previousChunk) > 4)
 			{
-				layer->cleanup(volume);
+				_previousChunk = chunkPosition;
+				for (auto&& [id, layer] : _layers)
+				{
+					layer->cleanup();
+				}
 			}
 		}
-		
+
 		template<DerivedLayer T>
 		T* add()
 		{
@@ -286,7 +296,7 @@ namespace drft
 		unsigned int _globalSeed = 0;
 		const GenerationRegistries& _generationRegistries;
 		const EntityPack* _entityPack = nullptr;
-		GenerationMode _generationMode = GenerationMode::OnePerFrame;
+		sf::Vector3i _previousChunk;
 	};
 
     template<typename LayerType, typename ChunkType>
@@ -346,18 +356,9 @@ namespace drft
 			return _globalSeed;
 		}
 
-		int getNumberOfGenerationRequests()
-		{
-			return _numberOfRequests;
-		}
-		void incrementGenerationRequests()
-		{
-			_numberOfRequests++;
-		}
-		void decrementGenerationRequests()
-		{
-			_numberOfRequests--;
-		}
+		void incrementRef() { ++_refCount; }
+		void decrementRef() { --_refCount; }
+		int getRefCount() { return _refCount; }
 
     protected:
 		virtual GenerationState generate(GenerationLevel desiredLevel) { return GenerationState::Complete; }
@@ -414,7 +415,7 @@ namespace drft
 		unsigned int _localSeed;
 		unsigned int _globalSeed;
 		GenerationLevel _currentLevel = GenerationLevel::One;
-		int _numberOfRequests = 0;
+		int _refCount = 0;
     };
 
 	template<typename LayerType, typename ChunkType>
@@ -431,7 +432,7 @@ namespace drft
 			GenerationState generateNeighborChunks2d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, GenerationLevel desiredLevel)
 			{
 				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
-				return layer.generateChunks(neighbors, desiredLevel);
+				return layer.generateChunks(neighbors, desiredLevel, drft::hash(chunkCoordinate));
 			}
 			void forEachLoadedNeighborChunk2d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
 			{
@@ -441,11 +442,12 @@ namespace drft
 					if (!layer._chunks.contains(neighbor)) continue;
 					func(layer._chunks.at(neighbor));
 				}
+				layer.releaseChunks(drft::hash(chunkCoordinate));
 			}
 			GenerationState generateNeighborChunks3d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, GenerationLevel desiredLevel)
 			{
 				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate);
-				return layer.generateChunks(neighbors, desiredLevel);
+				return layer.generateChunks(neighbors, desiredLevel, drft::hash(chunkCoordinate));
 			}
 			void forEachLoadedNeighborChunk3d(GenerationLayer<LayerType, ChunkType>& layer, sf::Vector3i chunkCoordinate, std::function<void(const ChunkType&)> func) const
 			{
@@ -455,6 +457,7 @@ namespace drft
 					if (!layer._chunks.contains(neighbor)) continue;
 					func(layer._chunks.at(neighbor));
 				}
+				layer.releaseChunks(drft::hash(chunkCoordinate));
 			}
 		};
 		
@@ -509,7 +512,7 @@ namespace drft
 			{
 				for (int x = top_left_point.x; x <= bottom_right_point.x; ++x)
 				{
-					result.push_back({ x, y, zChunk.z });
+					result.emplace_back(x, y, zChunk.z);
 				}
 			}
 			return result;
@@ -552,50 +555,8 @@ namespace drft
 			}
 		}
 
-		void removeChunksInVolume(spatial::AABB<int> volume)
-		{
-			auto chunkPoints = getChunkPointsInsideVolume(volume);
-			_chunks.erase(chunkPoints.begin(), chunkPoints.end());
-		}
-		void removeChunksInArea(sf::IntRect area, int z)
-		{
-			auto chunks = getChunkPointsInsideArea(area, z);
-			for (auto&& chunk : chunks)
-			{
-				_chunks.erase(chunk);
-			}
-		}
-
 	private:
 		friend class Accessor;
-		GenerationState generate(details::GenerationContext&& context) override final
-		{
-			const auto chunks = getChunkPointsInsideVolume(context.volume);
-			return generateChunks(chunks, context.desiredLevel);
-		}
-		GenerationState generateChunks(const std::vector<sf::Vector3i>& chunks, GenerationLevel desiredLevel)
-		{
-			GenerationMode mode = getLayerManager().getGenerationMode();
-			switch (mode)
-			{
-			case GenerationMode::OnePerFrame:
-				return stepGenerate(chunks, desiredLevel);
-			case GenerationMode::Batch:
-				return batchGenerate(chunks, desiredLevel);
-			default:
-				throw std::exception("Unknown enum");
-				return GenerationState::Failed;
-			}
-		}
-		void cleanup(spatial::AABB<int> volume) override
-		{
-			auto chunks = getChunkPointsInsideVolume(volume);
-			for (auto&& pos : chunks)
-			{
-				_chunks.erase(pos);
-			}
-		}
-
 		ChunkType& getOrCreateChunk(sf::Vector3i point)
 		{
 			if (!_chunks.contains(point))
@@ -606,12 +567,40 @@ namespace drft
 			}
 			return _chunks.at(point);
 		}
-		GenerationState batchGenerate(const std::vector<sf::Vector3i>& chunks, GenerationLevel desiredLevel)
+		ChunkType& acquireChunk(sf::Vector3i point, size_t consumerId)
+		{
+			ChunkType& chunk = getOrCreateChunk(point);
+			auto& list = _consumers[consumerId];
+			auto&& [val, inserted] = list.insert(point);
+			if (inserted)
+			{
+				chunk.incrementRef();
+			}
+			return chunk;
+		}
+		void releaseChunks(size_t consumerId)
+		{
+			if (!_consumers.contains(consumerId)) return;
+
+			for (auto&& pos : _consumers.at(consumerId))
+			{
+				if (!_chunks.contains(pos)) continue;
+				_chunks.at(pos).decrementRef();
+			}
+			_consumers.erase(consumerId);
+		}
+
+		GenerationState generate(details::GenerationContext&& context) override final
+		{
+			const auto chunks = getChunkPointsInsideVolume(context.volume);
+			return generateChunks(chunks, context.desiredLevel, drft::hash(context.volume));
+		}
+		GenerationState generateChunks(const std::vector<sf::Vector3i>& chunks, GenerationLevel desiredLevel, size_t consumerId)
 		{
 			GenerationState result = GenerationState::Complete;
 			for (auto&& point : chunks)
 			{
-				ChunkType& chunk = getOrCreateChunk(point);
+				ChunkType& chunk = acquireChunk(point, consumerId);
 
 				GenerationState state = chunk.doGenerate(desiredLevel);
 				if (state != GenerationState::Complete)
@@ -621,19 +610,30 @@ namespace drft
 			}
 			return result;
 		}
-		GenerationState stepGenerate(const std::vector<sf::Vector3i>& chunks, GenerationLevel desiredLevel)
-		{
-			for (auto&& point : chunks)
-			{
-				ChunkType& chunk = getOrCreateChunk(point);
 
-				GenerationState state = chunk.doGenerate(desiredLevel);
-				if (state != GenerationState::Complete) return state;
+		void release(spatial::AABBi& volume) override
+		{
+			releaseChunks(drft::hash(volume));
+		}
+		void cleanup() override
+		{
+			auto it = _chunks.begin();
+			while (it != _chunks.end())
+			{
+				auto&& [pos, chunk] = *it;
+				if (chunk.getRefCount() <= 0)
+				{
+					it = _chunks.erase(it);
+				}
+				else
+				{
+					++it;
+				}
 			}
-			return GenerationState::Complete;
 		}
 
 	private:
 		std::unordered_map<sf::Vector3i, ChunkType> _chunks;
+		std::unordered_map<size_t, std::unordered_set<sf::Vector3i>> _consumers;
 	};
 }

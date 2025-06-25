@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "VirtualChunk.h"
-#include "ProcGen/IChunkGenerator.h"
 #include "Utility/CopyEntity.h"
 #include "WorldGrid.h"
 #include <Utility/ChunkSerializer.h>
+#include <ProcGen/ChunkGenerator.h>
 #include <Utility/StandardLogger.h>
 
 using namespace drft::spatial;
@@ -27,25 +27,23 @@ drft::ChunkPosition drft::spatial::VirtualChunk::getPosition() const
 	return _coordinate;
 }
 
-ioStatus drft::spatial::VirtualChunk::build(entt::registry& reg, IChunkGenerator& generator)
+ioStatus drft::spatial::VirtualChunk::asyncBuild(entt::registry& reg, ChunkGenerator& generator)
 {
 	if (getState() == ChunkState::ToBuild)
 	{
+		auto future = generator.queueForGeneration(_coordinate, entt::registry{});
+		setFuture(std::move(future));
 		setState(ChunkState::Building);
 	}
 
-	GenerationState result = generator.generateChunk(_coordinate, reg);
-	if (result == GenerationState::Failed)
+	auto status = getFuture().wait_for(ASYNC_WAIT_TIME);
+	if (status != std::future_status::ready)
 	{
-		LOG_ERROR("Could not build from source {} at position {} {} {}", _sourceId, _coordinate.x, _coordinate.y, _coordinate.z);
-		setState(ChunkState::Built);
-		return ioStatus::Done;
-	}
-	if (result == GenerationState::Generating)
-	{
-		setState(ChunkState::Building);
 		return ioStatus::Busy;
 	}
+
+	entt::registry result = getFuture().get();
+	util::copyEntities(reg, result);
 
 	setState(ChunkState::Built);
 	return ioStatus::Done;
@@ -55,7 +53,7 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, ChunkSerial
 {
 	if (getState() == ChunkState::ToLoad)
 	{
-		auto future = serializer.queueForLoad({ _sourceId, _coordinate }, _asyncRegistry);
+		auto future = serializer.queueForLoad({ _sourceId, _coordinate }, entt::registry{});
 		setFuture(std::move(future));
 		setState(ChunkState::Loading);
 	}
@@ -66,8 +64,8 @@ ioStatus drft::spatial::VirtualChunk::asyncLoad(entt::registry& reg, ChunkSerial
 		return ioStatus::Busy;
 	}
 
-	util::copyEntities(reg, _asyncRegistry);
-	_asyncRegistry = {};
+	entt::registry result = getFuture().get();
+	util::copyEntities(reg, result);
 	
 	setState(ChunkState::Loaded);
 
@@ -87,13 +85,13 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, ChunkSerial
 			return ioStatus::Done;
 		}
 		
-		util::copyEntities(entities, _asyncRegistry, reg);
+		entt::registry asyncRegistry;
+		util::copyEntities(entities, asyncRegistry, reg);
 		
 		reg.destroy(entities.begin(), entities.end());
-
 		reg.compact();
 		
-		auto future = serializer.queueForSave({ _sourceId, _coordinate }, _asyncRegistry);
+		auto future = serializer.queueForSave({ _sourceId, _coordinate }, std::move(asyncRegistry));
 		setFuture(std::move(future));
 		setState(ChunkState::Saving);
 	}
@@ -103,20 +101,18 @@ ioStatus drft::spatial::VirtualChunk::asyncSave(entt::registry& reg, ChunkSerial
 	{
 		return ioStatus::Busy;
 	}
-	
-	_asyncRegistry = {};
 
 	setState(ChunkState::Saved);
 
 	return ioStatus::Done;
 }
 
-void VirtualChunk::setFuture(std::future<void> future)
+void VirtualChunk::setFuture(FutureRegistry&& future)
 {
 	_future = std::move(future);
 }
 
-const std::future<void>& VirtualChunk::getFuture() const
+VirtualChunk::FutureRegistry& VirtualChunk::getFuture()
 {
 	return _future;
 }

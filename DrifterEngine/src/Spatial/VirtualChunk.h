@@ -1,7 +1,7 @@
 #pragma once
 #include <Spatial/ChunkPosition.h>
 
-class IChunkGenerator;
+class ChunkGenerator;
 
 namespace drft
 {
@@ -43,23 +43,22 @@ namespace drft::spatial
 		ChunkState getState() const;
 		ChunkPosition getPosition() const;
 
-		ioStatus build(entt::registry& reg, IChunkGenerator& generator);
-
+		ioStatus asyncBuild(entt::registry& reg, ChunkGenerator& generator);
 		ioStatus asyncLoad(entt::registry& reg, ChunkSerializer& serializer);
 		ioStatus asyncSave(entt::registry& reg, ChunkSerializer& serializer);
 
 		std::string toString() const;
 
 	private:
-		void setFuture(std::future<void> future);
-		const std::future<void>& getFuture() const;
+		using FutureRegistry = std::future<entt::registry>;
+		void setFuture(FutureRegistry&& future);
+		FutureRegistry& getFuture();
 
 	private:
 		entt::id_type _sourceId;
 		ChunkPosition _coordinate;
 		ChunkState _state = ChunkState::None;
-		std::future<void> _future;
-		entt::registry _asyncRegistry;
+		FutureRegistry _future;
 	};
 
 }

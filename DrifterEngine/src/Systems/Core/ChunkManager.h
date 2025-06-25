@@ -3,6 +3,7 @@
 
 #include <Spatial/ChunkSource.h>
 #include <Utility/ChunkSerializer.h>
+#include <ProcGen/ChunkGenerator.h>
 #include <EnTT/entt.h>
 #include <memory>
 #include <optional>
@@ -63,6 +64,8 @@ namespace drft::system
 
 	private:
 		ChunkSerializer _serializer;
+		ChunkGenerator _generator;
+
 		State _state = State::FirstUpdate;
 		SourcePtr _activeSource;
 		entt::entity _chunkSourceTracker = entt::null;

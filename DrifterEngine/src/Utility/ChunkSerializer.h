@@ -24,8 +24,6 @@ namespace drft
 	};
 }
 
-
-
 template<>
 struct std::hash<drft::SourceChunkPositionPair>
 {
@@ -48,8 +46,8 @@ namespace drft
 
 		bool isSerialized(SourceChunkPositionPair position) const;
 
-		std::future<void> queueForSave(SourceChunkPositionPair sourcePositionPair, entt::registry& registry);
-		std::future<void> queueForLoad(SourceChunkPositionPair sourcePositionPair, entt::registry& registry);
+		[[nodiscard]] std::future<entt::registry> queueForSave(SourceChunkPositionPair sourcePositionPair, entt::registry&& registry);
+		[[nodiscard]] std::future<entt::registry> queueForLoad(SourceChunkPositionPair sourcePositionPair, entt::registry&& registry);
 
 	private:
 		void serializationThread();
@@ -72,7 +70,7 @@ namespace drft
 		struct ChunkRegistryPair
 		{
 			SourceChunkPositionPair position;
-			entt::registry& registry;
+			entt::registry registry;
 		};
 		std::unordered_set<SourceChunkPositionPair> _serializedChunks;
 
@@ -88,8 +86,8 @@ namespace drft
 
 		std::mutex _savePromiseLock;
 		std::mutex _loadPromiseLock;
-		std::unordered_map<SourceChunkPositionPair, std::promise<void>> _savePromises;
-		std::unordered_map<SourceChunkPositionPair, std::promise<void>> _loadPromises;
+		std::unordered_map<SourceChunkPositionPair, std::promise<entt::registry>> _savePromises;
+		std::unordered_map<SourceChunkPositionPair, std::promise<entt::registry>> _loadPromises;
 
 		std::unordered_map<std::filesystem::path, std::vector<ChunkRegistryPair>> _saveList;
 		std::unordered_map<std::filesystem::path, std::vector<ChunkRegistryPair>> _loadList;

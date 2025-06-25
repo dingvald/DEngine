@@ -202,6 +202,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp" />
+    <ClCompile Include="src\Engine\Debug\IDebugDisplay.cpp" />
+    <ClCompile Include="src\ProcGen\ChunkGenerator.cpp" />
     <ClCompile Include="src\ProcGen\Layers\CanvasLayer.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\PrefabDecorator.cpp" />
     <ClCompile Include="src\Ability\Abilities\PowerAttackAbility.cpp" />
@@ -493,6 +495,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Engine\Debug\IDebugDisplay.h" />
     <ClInclude Include="src\ProcGen\EntityPack\NullEntitySlot.h" />
     <ClInclude Include="src\ProcGen\GenerationMode.h" />
+    <ClInclude Include="src\ProcGen\ChunkGenerator.h" />
     <ClInclude Include="src\ProcGen\Layers\CanvasLayer.h" />
     <ClInclude Include="src\ProcGen\Decorators\PrefabDecorator.h" />
     <ClInclude Include="src\Ability\Abilities\PowerAttackAbility.h" />
@@ -573,8 +576,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\GenerationContext.h" />
     <ClInclude Include="src\ProcGen\SlotDeterminer\SlotDeterminer.h" />
     <ClInclude Include="src\ProcGen\GenerationState.h" />
-    <ClInclude Include="src\ProcGen\IChunkGenerator.h" />
-    <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h" />
+    <ClInclude Include="src\ProcGen\IChunkDataSource.h" />
+    <ClInclude Include="src\ProcGen\IChunkDataSourceProvider.h" />
     <ClInclude Include="src\ProcGen\LayerPack\LayerPack.h" />
     <ClInclude Include="src\ProcGen\LayerPack\LayerPackRegistry.h" />
     <ClInclude Include="src\ProcGen\Layers\FeatureLayer.h" />

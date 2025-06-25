@@ -774,6 +774,12 @@
     <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Debug\IDebugDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\ChunkGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3212,13 +3218,13 @@
     <ClInclude Include="src\Events\ChunkSourceTransferStartedEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\IChunkGeneratorProvider.h">
+    <ClInclude Include="src\ProcGen\IChunkDataSourceProvider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\GenerationState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\IChunkGenerator.h">
+    <ClInclude Include="src\ProcGen\IChunkDataSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\CelestialBody\CelestialBody.h">
@@ -3462,6 +3468,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\GenerationMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\ChunkGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

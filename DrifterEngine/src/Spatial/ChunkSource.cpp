@@ -4,12 +4,14 @@
 #include <Spatial/Helpers.h>
 #include <Spatial/Conversions.h>
 #include <Spatial/WorldGrid.h>
-#include <ProcGen/IChunkGenerator.h>
+#include <Engine/Debug/IDebugDisplay.h>
+#include <Utility/ChunkSerializer.h>
+#include <ProcGen/ChunkGenerator.h>
 
 static constexpr int ACTIVE_CHUNK_RADIUS_XY = 10;
 static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 2;
 
-drft::spatial::ChunkSource::ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer, IChunkGenerator& generator)
+drft::spatial::ChunkSource::ChunkSource(entt::id_type sourceId, ChunkSerializer& serializer, ChunkGenerator& generator)
 	: _sourceId(sourceId)
 	, _serializer(serializer)
 	, _generator(generator)
@@ -18,7 +20,7 @@ drft::spatial::ChunkSource::ChunkSource(entt::id_type sourceId, ChunkSerializer&
 
 void drft::spatial::ChunkSource::init(entt::registry& registry)
 {
-	_generator.generateInit(registry);
+	
 }
 
 void drft::spatial::ChunkSource::update(TilePosition cameraPosition, entt::registry& registry)
@@ -30,6 +32,11 @@ void drft::spatial::ChunkSource::update(TilePosition cameraPosition, entt::regis
 	processSaveQueue(registry);
 
 	cleanUpSavedChunks(registry);
+}
+
+void drft::spatial::ChunkSource::updateEnd(TilePosition cameraPosition)
+{
+	_generator.queueCleanup(spatial::toChunkSpace(cameraPosition));
 }
 
 void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync)
@@ -49,16 +56,6 @@ void drft::spatial::ChunkSource::shutdown(entt::registry& registry, bool isAsync
 	while (!isDone && !isAsync);
 	
 	cleanUpAllChunks(registry);
-}
-
-void drft::spatial::ChunkSource::setGenerationMode(GenerationMode mode)
-{
-	_generator.setGenerationMode(mode);
-}
-
-void drft::spatial::ChunkSource::setBuildsPerFrame(unsigned int value)
-{
-	_buildsPerFrame = value;
 }
 
 bool drft::spatial::ChunkSource::isLoadedAroundPosition(TilePosition position) const
@@ -114,6 +111,8 @@ void drft::spatial::ChunkSource::updateChunkStates(TilePosition position)
 		}
 	}
 
+	DEBUG_DISPLAY_VALUE("# builds", std::to_string(_toBuild.size()))
+
 	// Then, scan for chunks to save
 	for (auto&& [chunkPosition, chunk] : _chunks)
 	{
@@ -151,14 +150,12 @@ bool drft::spatial::ChunkSource::processBuildQueue(entt::registry& registry)
 	if (_toBuild.empty()) return true;
 
 	bool anyPending = false;
-	unsigned int kickedOffBuilds = 0;
 	std::vector<ChunkPosition> toRemove;
 	for (auto&& coord : _toBuild)
 	{
-		kickedOffBuilds++;
-		if (kickedOffBuilds > _buildsPerFrame) break;
+		spatial::VirtualChunk& chunk = _chunks.at(coord);
 
-		spatial::ioStatus status = _chunks.at(coord).build(registry, _generator);
+		spatial::ioStatus status = chunk.asyncBuild(registry, _generator);
 		if (status == spatial::ioStatus::Done)
 		{
 			toRemove.push_back(coord);
@@ -178,14 +175,12 @@ bool drft::spatial::ChunkSource::processLoadQueue(entt::registry& registry)
 	if (_toLoad.empty()) return true;
 
 	bool anyPending = false;
-	unsigned int kickedOffLoads = 0;
 	std::vector<ChunkPosition> toRemove;
 	for (auto&& coord : _toLoad)
 	{
-		kickedOffLoads++;
-		if (kickedOffLoads > _buildsPerFrame) break;
+		spatial::VirtualChunk& chunk = _chunks.at(coord);
 
-		spatial::ioStatus status = _chunks.at(coord).asyncLoad(registry, _serializer);
+		spatial::ioStatus status = chunk.asyncLoad(registry, _serializer);
 		if (status == spatial::ioStatus::Done)
 		{
 			toRemove.push_back(coord);
@@ -231,12 +226,12 @@ void drft::spatial::ChunkSource::loadOrBuildChunk(ChunkPosition position, spatia
 	if (_serializer.isSerialized({ _sourceId, position }))
 	{
 		chunk.setState(spatial::ChunkState::ToLoad);
-		_toLoad.push_back(std::move(position));
+		_toLoad.emplace_back(std::move(position));
 	}
 	else
 	{
 		chunk.setState(spatial::ChunkState::ToBuild);
-		_toBuild.push_back(std::move(position));
+		_toBuild.emplace_back(std::move(position));
 	}
 }
 

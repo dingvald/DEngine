@@ -32,6 +32,9 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
     auto entities = generateDependency<EntitySlotLayer>(_volume.expand({ 5.0f, 5.0f, 1.0f }));
     if (!entities.isReady()) return entities.getState();
 
+    // Unwrap to release references
+    entities.unwrap();
+
     rng::Random random = { getLocalSeed() };
     auto randomPoint = random.positionInRect(_volume.expand({ 0.8f, 0.8f, 1.0f }).flatten());
     const sf::Vector3i randomPoint3d = { randomPoint.x, randomPoint.y, _volume.min.z };
@@ -62,7 +65,7 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
         GenerationContext context = { getLocalSeed(), canvasLayers, _layer.getRegistries() };
         GeneratedFeature generatedFeature = feature->generate(randomPoint3d, context);
 
-        generatedFeatures.push_back(std::move(generatedFeature));
+        generatedFeatures.emplace_back(std::move(generatedFeature));
     }
 
     return GenerationState::Complete;

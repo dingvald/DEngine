@@ -54,35 +54,31 @@ void BiomeLayerChunk::assignBiomeToVoronoiCell(sf::Vector3i centroid, const Slot
     }
 }
 
-SlotDeterminer::DependencyValues BiomeLayerChunk::getDependencyValuesAtPoint(sf::Vector3i point, const GeneratedDependencies& generatedDependencies) const
-{
-    SlotDeterminer::DependencyValues result;
-    for (auto&& [name, layerPtr] : generatedDependencies)
-    {
-        if (!layerPtr) continue; // TODO: Should maybe be an assert...?
-        result.emplace(name, layerPtr->getValueAt(point));
-    }
-    return result;
-}
-
 GenerationState BiomeLayerChunk::assignBiomesToVoronoiCells(spatial::AABB<int> volume)
 {
     auto voronoiLayer = generateDependency<VoronoiLayer>(volume);
     if (!voronoiLayer.isReady()) return voronoiLayer.getState();
 
-    GeneratedDependencies generatedDependencies;
+    // Generate the dependencies first
     for (auto&& dependencyID : _layer.getLayerDependencies())
     {
         auto depLayer = generateDependency<IGetValueAtLayer>(dependencyID, volume);
         if (!depLayer.isReady()) return depLayer.getState();
-
-        generatedDependencies.emplace(dependencyID, &depLayer.unwrap());
     }
 
+    // Then unwrap all the dependencies together
+    SlotDeterminer::DependencyValues values;
     const auto centroids = voronoiLayer.unwrap().getCentroidsInArea(volume.flatten(), volume.min.z);
+    for (auto&& dependencyID : _layer.getLayerDependencies())
+    {
+        auto depLayer = generateDependency<IGetValueAtLayer>(dependencyID, volume);
+        for (auto&& pos : centroids)
+        {
+            values.emplace(dependencyID, depLayer.unwrap().getValueAt(pos));
+        }
+    }
     for (auto&& point : centroids)
     {
-        const auto values = getDependencyValuesAtPoint(point, generatedDependencies);
         assignBiomeToVoronoiCell(point, values);
     }
 

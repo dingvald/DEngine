@@ -19,13 +19,11 @@
 
 using namespace entt::literals;
 
-
 namespace Internal
 {
 	const entt::id_type NULL_SOURCE_ID = "NULL_ID"_hs;
-	static const unsigned int RUNTIME_BUILDS_PER_FRAME = 4u;
+	static const unsigned int RUNTIME_BUILDS_PER_FRAME = 16u;
 }
-
 
 void drft::system::ChunkManager::init()
 {
@@ -144,15 +142,11 @@ void drft::system::ChunkManager::onTransfer()
 	// Update new source until fully loaded
 	if (_activeSource->id() == _pendingTransfer->newSourceId)
 	{
-		_activeSource->setGenerationMode(GenerationMode::Batch);
-		_activeSource->setBuildsPerFrame(std::numeric_limits<unsigned int>::max());
 		_activeSource->update(_pendingTransfer->position, _registry);
 		if (_activeSource->isLoadedAroundPosition(_pendingTransfer->position))
 		{
 			LOG_MSG("Transfer complete");
 			setState(State::SourceReady);
-			_activeSource->setGenerationMode(GenerationMode::OnePerFrame);
-			_activeSource->setBuildsPerFrame(Internal::RUNTIME_BUILDS_PER_FRAME);
 			_registry.emplace_or_replace<ChunkSourceTrackerComponent>(_chunkSourceTracker, _pendingTransfer->newSourceId, _pendingTransfer->position);
 			_pendingTransfer.reset();
 			return;
@@ -180,6 +174,7 @@ void drft::system::ChunkManager::onUpdateSource()
 	if (!camera.isInitialized) return;
 
 	_activeSource->update(camera.position.tile, _registry);
+	_activeSource->updateEnd(camera.position.tile);
 }
 
 void drft::system::ChunkManager::setState(State newState)
@@ -248,9 +243,10 @@ void drft::system::ChunkManager::onUpdateCameraTarget(entt::registry& registry, 
 drft::system::ChunkManager::SourcePtr drft::system::ChunkManager::tryCreateNewChunkSource(entt::id_type sourceId)
 {
 	auto& solarSytem = _registry.ctx().get<SolarSystem>("solar_system"_hs);
-	if (auto generator = solarSytem.tryGetGenerator(sourceId))
+	if (auto dataSource = solarSytem.tryGetDataSource(sourceId))
 	{
-		return std::make_unique<spatial::ChunkSource>(_pendingTransfer->newSourceId, _serializer, *generator);
+		_generator.setGenerationLayers(dataSource->getGenerationLayers());
+		return std::make_unique<spatial::ChunkSource>(_pendingTransfer->newSourceId, _serializer, _generator);
 	}
 	return nullptr;
 }
@@ -258,7 +254,7 @@ drft::system::ChunkManager::SourcePtr drft::system::ChunkManager::tryCreateNewCh
 bool drft::system::ChunkManager::doesChunkSourceExist(entt::id_type sourceId) const
 {
 	auto& solarSytem = _registry.ctx().get<SolarSystem>("solar_system"_hs);
-	if (auto generator = solarSytem.tryGetGenerator(sourceId))
+	if (auto dataSource = solarSytem.tryGetDataSource(sourceId))
 	{
 		return true;
 	}
