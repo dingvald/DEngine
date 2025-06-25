@@ -12,9 +12,6 @@
 #include <JSON/ICreateFromJson.h>
 #include <ProcGen/GenerationRegistries.h>
 #include <ProcGen/Layers/CanvasLayer.h>
-#include <ProcGen/GenerationMode.h>
-
-#pragma optimize("", off)
 
 namespace drft
 {
@@ -237,15 +234,11 @@ namespace drft
 			return result;
 		}
 		
-		void cleanup(sf::Vector3i chunkPosition)
+		void cleanup(sf::Vector3i)
 		{
-			if (spatial::distance3d(chunkPosition, _previousChunk) > -1)
+			for (auto&& [id, layer] : _layers)
 			{
-				_previousChunk = chunkPosition;
-				for (auto&& [id, layer] : _layers)
-				{
-					layer->cleanup();
-				}
+				layer->cleanup();
 			}
 		}
 
@@ -296,7 +289,6 @@ namespace drft
 		unsigned int _globalSeed = 0;
 		const GenerationRegistries& _generationRegistries;
 		const EntityPack* _entityPack = nullptr;
-		sf::Vector3i _previousChunk;
 	};
 
     template<typename LayerType, typename ChunkType>
@@ -572,10 +564,8 @@ namespace drft
 			ChunkType& chunk = getOrCreateChunk(point);
 			auto& list = _consumers[consumerId];
 			auto&& [val, inserted] = list.insert(point);
-			if (inserted)
-			{
-				chunk.incrementRef();
-			}
+			if (inserted) chunk.incrementRef();
+	
 			return chunk;
 		}
 		void releaseChunks(size_t consumerId)
@@ -617,6 +607,9 @@ namespace drft
 		}
 		void cleanup() override
 		{
+			int numCleaned = 0;
+			const int targetCleaned = std::min(20, static_cast<int>(_chunks.size() * 0.05));
+
 			auto it = _chunks.begin();
 			while (it != _chunks.end())
 			{
@@ -624,6 +617,7 @@ namespace drft
 				if (chunk.getRefCount() <= 0)
 				{
 					it = _chunks.erase(it);
+					if ( (numCleaned++) >= targetCleaned) break;
 				}
 				else
 				{
