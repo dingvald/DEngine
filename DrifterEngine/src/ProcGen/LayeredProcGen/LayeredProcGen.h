@@ -70,7 +70,6 @@ namespace drft
 		public:
 			virtual ~AbstractChunk() {};
 			virtual GenerationState doGenerate(GenerationLevel level) = 0;
-			virtual bool isGenerated() const = 0;
 		};
 
 		template <typename T>
@@ -337,7 +336,6 @@ namespace drft
 			}
 			return state;
 		};
-		virtual bool isGenerated() const override final { return _currentLevel > numLevels(); }
 
 		unsigned int getLocalSeed() const
 		{
@@ -382,20 +380,6 @@ namespace drft
 		void forEachLoadedNeighborChunk3d(std::function<void(const ChunkType&)> func) const
 		{
 			_layer.accessor.forEachLoadedNeighborChunk3d(_layer, _index, func);
-		}
-
-		void forEachPointInBounds(std::function<void(sf::Vector3i)> func)
-		{
-			for (int y = _volume.min.y; y < _volume.max.y; y++)
-			{
-				for (int x = _volume.min.x; x < _volume.max.x; x++)
-				{
-					for (int z = _volume.min.z; z < _volume.max.z; z++)
-					{
-						func(sf::Vector3i{ x, y, z });
-					}
-				}
-			}
 		}
 
     protected:
