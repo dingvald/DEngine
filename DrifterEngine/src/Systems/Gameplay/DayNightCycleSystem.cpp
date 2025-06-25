@@ -60,8 +60,7 @@ void drft::system::DayNightCycleSystem::update()
 		time.minutes, 
 		time.hours >= 12 ? "pm" : "am");
 
-	auto& debug = entt::locator<IDebugDisplay>::value();
-	debug.displayValue("time", timeMessage);
+	DEBUG_DISPLAY_VALUE("time", timeMessage)
 }
 
 void drft::system::DayNightCycleSystem::onGameTickEvent(const events::GameTickEvent& ev)
