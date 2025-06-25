@@ -16,6 +16,11 @@ std::any CanvasLayer::get(sf::Vector3i position) const
 	return _grid.at(position).value;
 }
 
+void CanvasLayer::discard(sf::Vector3i position)
+{
+	_grid.discard(position);
+}
+
 void CanvasLayer::setOrReplace(std::any val, sf::Vector3i position, int priority)
 {
 	const int currentPriority = _grid.at(position).priority;
