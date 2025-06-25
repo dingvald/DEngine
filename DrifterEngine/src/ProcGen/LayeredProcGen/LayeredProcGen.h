@@ -155,9 +155,9 @@ namespace drft
 	private:
 		void release()
 		{
-			if constexpr (std::is_base_of<details::AbstractLayer, T>::value)
+			if (auto casted = dynamic_cast<details::AbstractLayer*>(_instance))
 			{
-				static_cast<details::AbstractLayer*>(_instance)->release(_volume);
+				casted->release(_volume);
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace drft
 		
 		void cleanup(sf::Vector3i chunkPosition)
 		{
-			if (spatial::distance3d(chunkPosition, _previousChunk) > 4)
+			if (spatial::distance3d(chunkPosition, _previousChunk) > -1)
 			{
 				_previousChunk = chunkPosition;
 				for (auto&& [id, layer] : _layers)

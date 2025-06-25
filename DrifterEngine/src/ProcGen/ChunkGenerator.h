@@ -17,6 +17,7 @@ public:
 	~ChunkGenerator();
 
 	void setGenerationLayers(drft::GenerationLayerManager& layers);
+
 	[[nodiscard]] std::future<entt::registry> queueForGeneration(drft::ChunkPosition chunkPosition, entt::registry&& registry);
 	void queueCleanup(drft::ChunkPosition chunkPosition);
 
