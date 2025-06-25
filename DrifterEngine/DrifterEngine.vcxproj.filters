@@ -3467,9 +3467,6 @@
     <ClInclude Include="src\Engine\Debug\IDebugDisplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationMode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ProcGen\ChunkGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
