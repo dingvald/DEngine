@@ -127,10 +127,7 @@ EntityList drft::spatial::WorldGrid::entitiesAt(TilePosition tilePosition, std::
 
 void drft::spatial::WorldGrid::removeChunk(ChunkPosition coordinate)
 {
-	if (_chunks.contains(coordinate))
-	{
-		_chunks.erase( coordinate );
-	}
+	_chunks.erase(coordinate);
 }
 
 EntityList drft::spatial::WorldGrid::getAllEntities(ChunkPosition coordinate) const
