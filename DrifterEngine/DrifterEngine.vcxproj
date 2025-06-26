@@ -224,6 +224,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
+    <ClCompile Include="src\Structures\Templates\StructureTemplate.cpp" />
+    <ClCompile Include="src\Structures\Templates\StructureTemplateLayer.cpp" />
     <ClCompile Include="src\Systems\Actions\StairsMoveActionSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\IncomingForceSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\CraftingIngredient.cpp" />
@@ -524,6 +526,8 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />
     <ClInclude Include="src\States\GameStates\SkillsScreenState.h" />
+    <ClInclude Include="src\Structures\Templates\StructureTemplate.h" />
+    <ClInclude Include="src\Structures\Templates\StructureTemplateLayer.h" />
     <ClInclude Include="src\Systems\Actions\StairsMoveActionSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\IncomingForceSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\CraftingIngredient.h" />

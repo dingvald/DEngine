@@ -780,6 +780,12 @@
     <ClCompile Include="src\ProcGen\ChunkGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Structures\Templates\StructureTemplate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\Templates\StructureTemplateLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3468,6 +3474,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\ChunkGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\Templates\StructureTemplate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\Templates\StructureTemplateLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
