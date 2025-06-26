@@ -14,9 +14,9 @@ public:
 
 	SlotPositionList generate(sf::Vector3i position, const GenerationContext& context) const;
 
-	const drft::spatial::AABB<int>& getVolume() const;
+	const sf::IntRect& getArea() const;
 
 private:
-	drft::spatial::AABB<int> _volume;
+	sf::IntRect _area;
 	std::vector<SlotPositionList> _layers;
 };

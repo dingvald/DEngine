@@ -10,7 +10,7 @@ namespace Internal
 {
 	static bool fitsInChunk(const Prefab& prefab)
 	{
-		auto area = prefab.getVolume().flatten();
+		auto& area = prefab.getArea();
 		auto chunkRect = sf::IntRect{ {0,0}, {drft::ChunkDimensions.x, drft::ChunkDimensions.y} };
 
 		return area.size.x <= chunkRect.size.x 
