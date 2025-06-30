@@ -111,8 +111,6 @@ void drft::spatial::ChunkSource::updateChunkStates(TilePosition position)
 		}
 	}
 
-	DEBUG_DISPLAY_VALUE("# builds", std::to_string(_toBuild.size()))
-
 	// Then, scan for chunks to save
 	for (auto&& [chunkPosition, chunk] : _chunks)
 	{
@@ -122,6 +120,9 @@ void drft::spatial::ChunkSource::updateChunkStates(TilePosition position)
 
 		saveChunk(chunkPosition, chunk);
 	}
+
+	DEBUG_DISPLAY_VALUE("# builds", std::to_string(_toBuild.size()));
+	DEBUG_DISPLAY_VALUE("# chunks", std::to_string(_chunks.size()));
 }
 
 void drft::spatial::ChunkSource::cleanUpSavedChunks(entt::registry& registry)
