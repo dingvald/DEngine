@@ -1,7 +1,6 @@
 #include <pch.h>
 #include "Prefab.h"
 #include <ProcGen/GenerationContext.h>
-#include <ProcGen/Layers/CanvasLayer.h>
 
 using namespace entt::literals;
 
@@ -49,7 +48,7 @@ SlotPositionList Prefab::generate(sf::Vector3i position, const GenerationContext
 		for (auto&& [slot, pos, priority] : _layers.at(i))
 		{
 			sf::Vector3i finalPos = pos + position;
-			const int finalPriority = priority == CanvasLayer::UninitializedPriority ? PREFAB_PRIORITY : priority;
+			const int finalPriority = priority == UNINITIALIZED_SLOT_PRIORITY ? PREFAB_PRIORITY : priority;
 			result.emplace_back(slot, finalPos, finalPriority);
 		}
 	}

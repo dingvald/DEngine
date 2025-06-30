@@ -204,7 +204,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp" />
     <ClCompile Include="src\Engine\Debug\IDebugDisplay.cpp" />
     <ClCompile Include="src\ProcGen\ChunkGenerator.cpp" />
-    <ClCompile Include="src\ProcGen\Layers\CanvasLayer.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\PrefabDecorator.cpp" />
     <ClCompile Include="src\Ability\Abilities\PowerAttackAbility.cpp" />
     <ClCompile Include="src\Ability\AbilityHelpers.cpp" />
@@ -221,6 +220,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp" />
     <ClCompile Include="src\ProcGen\Prefabs\Prefab.cpp" />
     <ClCompile Include="src\ProcGen\Prefabs\PrefabRegistry.cpp" />
+    <ClCompile Include="src\ProcGen\SlotPositionList.cpp" />
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
@@ -497,7 +497,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Engine\Debug\IDebugDisplay.h" />
     <ClInclude Include="src\ProcGen\EntityPack\NullEntitySlot.h" />
     <ClInclude Include="src\ProcGen\ChunkGenerator.h" />
-    <ClInclude Include="src\ProcGen\Layers\CanvasLayer.h" />
     <ClInclude Include="src\ProcGen\Decorators\PrefabDecorator.h" />
     <ClInclude Include="src\Ability\Abilities\PowerAttackAbility.h" />
     <ClInclude Include="src\Ability\AbilityHelpers.h" />

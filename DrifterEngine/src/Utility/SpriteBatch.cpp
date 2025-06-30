@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "SpriteBatch.h"
 
+#pragma optimize("", off)
+
 drft::SpriteBatch::SpriteBatch()
 	: _texture(nullptr)
 {

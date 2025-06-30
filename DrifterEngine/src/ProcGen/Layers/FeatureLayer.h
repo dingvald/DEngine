@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
+#include <ProcGen/SlotPositionList.h>
 
 namespace drft
 {
@@ -13,9 +14,10 @@ namespace drft
 		virtual GenerationState generate(GenerationLevel desiredLevel) override;
 		
 		std::vector<GeneratedFeature> generatedFeatures;
+		SlotPositionMap slots;
 	private:
 		GenerationState generateFeatures();
-		GenerationState placeFeatures();
+		GenerationState generateSurroundingFeatures();
 		virtual GenerationLevel numLevels() const override { return GenerationLevel::Two; }
 	};
 
@@ -23,7 +25,7 @@ namespace drft
 	{
 	public:
 		using GenerationLayer::GenerationLayer;
-		
+
 		sf::Vector3i getChunkDimensions() const override;
 	};
 }

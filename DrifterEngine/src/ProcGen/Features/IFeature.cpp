@@ -23,6 +23,5 @@ GeneratedFeature IFeature::decorate(TaggedPositions& taggedPositions, const Gene
 	{
 		decorator->decorate(result.slotPositions, taggedPositions, context);
 	}
-	
 	return result;
 }

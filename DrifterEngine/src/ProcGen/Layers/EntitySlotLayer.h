@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
+#include <ProcGen/SlotPositionList.h>
 
 namespace drft
 {
@@ -11,6 +12,7 @@ namespace drft
 	public:
 		using GenerationChunk::GenerationChunk;
 		virtual GenerationState generate(GenerationLevel desiredLevel) override;
+		SlotPositionMap slots;
 	};
 
 	class EntitySlotLayer : public GenerationLayer<EntitySlotLayer, EntitySlotLayerChunk>

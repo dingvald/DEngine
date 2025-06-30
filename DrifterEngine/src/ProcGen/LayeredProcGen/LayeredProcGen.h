@@ -11,7 +11,6 @@
 #include <Utility/stdHashing.h>
 #include <JSON/ICreateFromJson.h>
 #include <ProcGen/GenerationRegistries.h>
-#include <ProcGen/Layers/CanvasLayer.h>
 
 namespace drft
 {
@@ -262,15 +261,6 @@ namespace drft
 			return dynamic_cast<T*>(layerPtr);
 		}
 
-		CanvasLayer& getCanvas(entt::id_type id)
-		{
-			if (!_canvasLayers.contains(id))
-			{
-				_canvasLayers.emplace(id, CanvasLayer{});
-			}
-			return _canvasLayers.at(id);
-		}
-
 		template<details::ConvertableLayer T>
 		void registerType(entt::id_type typeId)
 		{
@@ -280,10 +270,8 @@ namespace drft
 	private:
 		using GenLayerPtr = std::unique_ptr<details::AbstractLayer>;
 		using GenLayerIdMap = std::unordered_map<entt::id_type, GenLayerPtr>;
-		using CanvasLayerIdMap = std::unordered_map<entt::id_type, CanvasLayer>;
 
 		GenLayerIdMap _layers;
-		CanvasLayerIdMap _canvasLayers;
 		details::LayerFactory _layerFactory;
 		unsigned int _globalSeed = 0;
 		const GenerationRegistries& _generationRegistries;
@@ -308,6 +296,8 @@ namespace drft
 
         GenerationChunk(GenerationChunk&&) = default;
         GenerationChunk& operator=(GenerationChunk&&) = default;
+
+		virtual ~GenerationChunk() = default;
 
 		virtual GenerationState doGenerate(GenerationLevel desiredLevel) override final
 		{
@@ -398,7 +388,34 @@ namespace drft
 	class GenerationLayer : public details::AbstractLayer
 	{
 	public:
-		using AbstractLayer::AbstractLayer;
+		GenerationLayer(GenerationLayerManager& generationLayerManager, const GenerationRegistries& registries)
+			: details::AbstractLayer(generationLayerManager, registries)
+			, _buffer(1024 * 1024)
+			, _monotonic(_buffer.data(), _buffer.size())
+			, _pool(&_monotonic)
+			, _chunks(&_pool)
+		{}
+
+		void forEachLoadedChunkInVolume(spatial::AABB<int> volume, std::function<void(ChunkType&)> func)
+		{
+			auto chunkPoints = getChunkPointsInsideVolume(volume);
+			for (auto&& chunkPoint : chunkPoints)
+			{
+				if (!_chunks.contains(chunkPoint)) continue;
+				ChunkType& chunk = _chunks.at(chunkPoint);
+				func(chunk);
+			}
+		}
+		void forEachLoadedChunkInArea(sf::IntRect area, int z, std::function<void(ChunkType&)> func)
+		{
+			auto chunkPoints = getChunkPointsInsideArea(area, z);
+			for (auto&& chunkPoint : chunkPoints)
+			{
+				if (!_chunks.contains(chunkPoint)) continue;
+				ChunkType& chunk = _chunks.at(chunkPoint);
+				func(chunk);
+			}
+		}
 
 		class Accessor
 		{
@@ -510,26 +527,6 @@ namespace drft
 				func(chunk);
 			}
 		}
-		void forEachLoadedChunkInVolume(spatial::AABB<int> volume, std::function<void(ChunkType&)> func)
-		{
-			auto chunkPoints = getChunkPointsInsideVolume(volume);
-			for (auto&& chunkPoint : chunkPoints)
-			{
-				if (!_chunks.contains(chunkPoint)) continue;
-				ChunkType& chunk = _chunks.at(chunkPoint);
-				func(chunk);
-			}
-		}
-		void forEachLoadedChunkInArea(sf::IntRect area, int z, std::function<void(ChunkType&)> func)
-		{
-			auto chunkPoints = getChunkPointsInsideArea(area, z);
-			for (auto&& chunkPoint : chunkPoints)
-			{
-				if (!_chunks.contains(chunkPoint)) continue;
-				ChunkType& chunk = _chunks.at(chunkPoint);
-				func(chunk);
-			}
-		}
 
 	private:
 		friend class Accessor;
@@ -611,7 +608,10 @@ namespace drft
 		}
 
 	private:
-		std::unordered_map<sf::Vector3i, ChunkType> _chunks;
+		std::vector<std::byte> _buffer;
+		std::pmr::monotonic_buffer_resource _monotonic;
+		std::pmr::unsynchronized_pool_resource _pool;
+		std::pmr::unordered_map<sf::Vector3i, ChunkType> _chunks;
 		std::unordered_map<size_t, std::unordered_set<sf::Vector3i>> _consumers;
 	};
 }

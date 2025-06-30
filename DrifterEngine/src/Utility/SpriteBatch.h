@@ -7,7 +7,8 @@ namespace drft
 	public:
 		SpriteBatch();
 		SpriteBatch(sf::Texture& texture);
-		SpriteBatch& operator=(const SpriteBatch&) = default;
+		SpriteBatch(const SpriteBatch&) = delete;
+		SpriteBatch& operator=(const SpriteBatch&) = delete;
 		SpriteBatch(SpriteBatch&&) = default;
 		SpriteBatch& operator=(SpriteBatch&&) = default;
 

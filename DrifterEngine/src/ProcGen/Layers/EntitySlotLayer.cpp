@@ -17,20 +17,22 @@ GenerationState drft::EntitySlotLayerChunk::generate(GenerationLevel desiredLeve
             auto deps = biome->getEntitySlotDependencyIds();
             dependencies.insert(deps.begin(), deps.end());
         });
-
-    // Generate dependencies
-    GeneratedDependencies generatedDependencies;
+    
     for (auto&& dependencyId : dependencies)
     {
         auto layer = generateDependency<IGetValueAtLayer>(dependencyId, _volume);
         if (!layer.isReady()) return layer.getState();
+    }
 
+    GeneratedDependencies generatedDependencies;
+    for (auto&& dependencyId : dependencies)
+    {
+        auto layer = generateDependency<IGetValueAtLayer>(dependencyId, _volume);
         generatedDependencies.emplace(dependencyId, &layer.unwrap());
     }
 
     // Detemine entity slot for each tile position
     rng::Random random = { getLocalSeed() };
-    auto& canvas = _layer.getLayerManager().getCanvas("slot_canvas"_hs);
     spatial::forEachPointInRect(_volume.flatten(), 
         [&, z = _volume.min.z](sf::Vector2i point) {
             const sf::Vector3i position = { point.x, point.y, z };
@@ -46,7 +48,7 @@ GenerationState drft::EntitySlotLayerChunk::generate(GenerationLevel desiredLeve
             auto selection = random.randomSelection(entities);
             if (!selection) return;
 
-            canvas.set(*selection, position);
+            slots.emplace(position, SlotPriority{ *selection, UNINITIALIZED_SLOT_PRIORITY });
         });
 
     return GenerationState::Complete;

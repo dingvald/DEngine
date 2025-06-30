@@ -111,9 +111,6 @@ GenerationState ChunkGenerator::generateChunk(drft::ChunkPosition position, entt
 	tilePlacementLayer.unwrap().placeTiles(volume, registry);
 	entityPlacementLayer.unwrap().placeEntities(volume, registry);
 
-	auto& slotCanvas = _layers->getCanvas("slot_canvas"_hs);
-	slotCanvas.discard(origin);
-
 	return GenerationState::Complete;
 }
 

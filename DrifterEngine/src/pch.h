@@ -24,6 +24,7 @@
 #include <sstream>
 #include <filesystem>
 #include <memory>
+#include <memory_resource>
 #include <numbers>
 #include <optional>
 #include <type_traits>

@@ -6,7 +6,6 @@
 #include <ProcGen/Layers/BiomeLayer.h>
 
 #include <Spatial/AABB.h>
-#include <Spatial/ChunkPosition.h>
 
 #include <ProcGen/GenerationRegistries.h>
 #include <ProcGen/EntityPack/EntityPack.h>
@@ -25,8 +24,6 @@
 #include <ProcGen/Layers/EntitySlotLayer.h>
 #include <ProcGen/Layers/EntityPlacementLayer.h>
 #include <ProcGen/Layers/TilePlacementLayer.h>
-
-#pragma optimize("", off)
 
 using namespace drft;
 using namespace entt::literals;

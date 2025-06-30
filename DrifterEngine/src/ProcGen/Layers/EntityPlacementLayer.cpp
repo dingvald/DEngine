@@ -48,10 +48,8 @@ GenerationState drft::EntityPlacementLayerChunk::generate(GenerationLevel desire
 	{
 	case drft::GenerationLevel::One:
 		return chooseEntitiesForSlots();
-		break;
 	case drft::GenerationLevel::Two:
 		return resolveWithNeighborChunks();
-		break;
 	default:
 		break;
 	}
@@ -60,18 +58,20 @@ GenerationState drft::EntityPlacementLayerChunk::generate(GenerationLevel desire
 
 GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 {
-	// Both of these layers add to the slot_canvas, so they are dependencies
 	auto entitySlotLayer = _layer.getLayerManager().generate<EntitySlotLayer>(_volume);
 	if (!entitySlotLayer.isReady()) return entitySlotLayer.getState();
 
-	auto featureLayer = _layer.getLayerManager().generate<FeatureLayer>(_volume.expand({ 30.f, 30.f, 1.f }));
+	auto featureLayer = _layer.getLayerManager().generate<FeatureLayer>(_volume);
 	if (!featureLayer.isReady()) return featureLayer.getState();
 
-	// call unwrap to release the reference
-	entitySlotLayer.unwrap();
-	featureLayer.unwrap();
+	SlotPositionMap slots;
+	featureLayer.unwrap().forEachLoadedChunkInVolume(_volume, [&slots](FeatureLayerChunk& chunk) {
+			mergeSlotPositionMaps(slots, chunk.slots);
+		});
+	entitySlotLayer.unwrap().forEachLoadedChunkInVolume(_volume, [&slots](EntitySlotLayerChunk& chunk) {
+			mergeSlotPositionMaps(slots, chunk.slots);
+		});
 
-	auto& slotCanvas = _layer.getLayerManager().getCanvas("slot_canvas"_hs);
 	auto* entityPack = _layer.getLayerManager().tryGetEntityPack();
 	if (!entityPack)
 	{
@@ -83,8 +83,9 @@ GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 
 	spatial::forEachPointInRect(_volume.flatten(), [&](sf::Vector2i position) {
 		const sf::Vector3i position3d = { position.x, position.y, _volume.min.z };
-		auto slotId = slotCanvas.get(position3d);
-		if (!slotId.has_value()) return;
+		if (!slots.contains(position3d)) return;
+
+		auto slotId = slots.at(position3d).slot;
 
 		auto entityId = entityPack->selectEntity(std::any_cast<entt::id_type>(slotId), localRandom);
 		if (!entityId.has_value()) return;
@@ -106,7 +107,7 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 		LOG_ERROR("Layer manager does not have its EntityPack set. Did you remember to call LayerManager::setEntityPack()?");
 		return GenerationState::Failed;
 	}
-
+	
 	// Check for stairs
 	forEachLoadedNeighborChunk3d([&](const EntityPlacementLayerChunk& neighbor) {
 		if (Internal::isChunkAbove(_index, neighbor._index))
@@ -114,10 +115,8 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 			auto stairs = Internal::tryGetStairs(neighbor.chosenEntities, _layer.getRegistries().entityFactory);
 			for (auto&& [stair, position] : stairs)
 			{
-				if (stair.type == StairsComponent::Type::Down)
-				{
-					chosenEntities.emplace_back("stairs_up"_hs, sf::Vector3i{ position.x, position.y, _volume.min.z });
-				}
+				if (stair.type != StairsComponent::Type::Down) continue;
+				chosenEntities.emplace_back("stairs_up"_hs, sf::Vector3i{ position.x, position.y, _volume.min.z });
 			}
 		}
 		if (Internal::isChunkBelow(_index, neighbor._index))
@@ -125,10 +124,8 @@ GenerationState drft::EntityPlacementLayerChunk::resolveWithNeighborChunks()
 			auto stairs = Internal::tryGetStairs(neighbor.chosenEntities, _layer.getRegistries().entityFactory);
 			for (auto&& [stair, position] : stairs)
 			{
-				if (stair.type == StairsComponent::Type::Up)
-				{
-					chosenEntities.emplace_back("stairs_down"_hs, sf::Vector3i{ position.x, position.y, _volume.min.z });
-				}
+				if (stair.type != StairsComponent::Type::Up) continue;
+				chosenEntities.emplace_back("stairs_down"_hs, sf::Vector3i{ position.x, position.y, _volume.min.z });
 			}
 		}
 	});

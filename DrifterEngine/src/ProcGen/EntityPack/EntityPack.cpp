@@ -59,4 +59,9 @@ std::optional<entt::id_type> EntityPack::selectEntity(entt::id_type slotId, drft
     return std::nullopt;
 }
 
+bool EntityPack::has(entt::id_type slotId) const
+{
+	return _packs.contains(slotId);
+}
+
 

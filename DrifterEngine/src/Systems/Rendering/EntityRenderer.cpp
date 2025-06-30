@@ -35,7 +35,7 @@ void drft::system::EntityRenderer::render(sf::RenderTarget& target)
 	batchHadSeenEntities(camera);
 	batchEffectEntities(camera);
 
-	for (auto& [layer, batch] : _spriteLayers)
+	for (auto&& [layer, batch] : _spriteLayers)
 	{
 		target.draw(batch);
 		batch.clear();
