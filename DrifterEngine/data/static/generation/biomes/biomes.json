@@ -18,7 +18,10 @@
                     "random_scatter_2": ["less", 0.01]
                 },
                 "desert_hut": {
-                    "random_scatter_3": ["less", 0.01]
+                    "random_scatter_3": [ "less", 0.01 ]
+                },
+                "chambered_cave": {
+                    "random_scatter_1": ["greater", 0.99]
                 }
             },
             "entity_slots": {

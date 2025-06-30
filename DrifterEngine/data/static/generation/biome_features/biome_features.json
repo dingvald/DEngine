@@ -173,6 +173,62 @@
                     }
                 }
             ]
+        },
+        "chambered_cave": {
+            "type": "chambers_feature",
+            "params": {
+                "wall_tags": [ "wall" ],
+                "center_tags": [ "center" ],
+                "floor_tags": [ "floor" ],
+                "door_tags": [ "door" ],
+                "hallway_tags": [ "hallway" ],
+                "entrances": [ 1, 2 ],
+                "room_count": [ 3, 7 ],
+                "room_size": [ 4, 10 ],
+                "max_area": [ 30, 30 ]
+            },
+            "decorators": [
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "dirt_wall"
+                    },
+                    "conditions": {
+                        "tag_expression": "wall",
+                        "chance": 1.0
+                    }
+                },
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "null_entity"
+                    },
+                    "conditions": {
+                        "tag_expression": "floor",
+                        "chance": 1.0
+                    }
+                },
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "short_grass"
+                    },
+                    "conditions": {
+                        "tag_expression": "hallway",
+                        "chance": 1.0
+                    }
+                },
+                {
+                    "type": "simple_decorator",
+                    "params": {
+                        "slot": "tall_grass"
+                    },
+                    "conditions": {
+                        "tag_expression": "door",
+                        "chance": 1.0
+                    }
+                }
+            ]
         }
     }
 }
