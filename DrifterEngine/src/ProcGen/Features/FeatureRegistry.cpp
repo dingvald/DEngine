@@ -6,6 +6,7 @@
 #include <ProcGen/Features/ClusterFeature.h>
 #include <ProcGen/Features/AutomataFeature.h>
 #include <ProcGen/Features/SingleFeature.h>
+#include <ProcGen/Features/ChambersFeature.h>
 
 using namespace drft;
 
@@ -15,6 +16,7 @@ FeatureRegistry::FeatureRegistry()
 	_featureFactory.registerType<ClusterFeature>("cluster_feature");
 	_featureFactory.registerType<AutomataFeature>("automata_feature");
 	_featureFactory.registerType<SingleFeature>("single_feature");
+	_featureFactory.registerType<ChambersFeature>("chambers_feature");
 }
 
 void FeatureRegistry::loadFeatures(const std::filesystem::path& biomeFeatruresDirectory, const DecoratorFactory& decorators)

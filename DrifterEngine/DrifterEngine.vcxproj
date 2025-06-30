@@ -213,6 +213,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\GUI\AbilityTooltip.cpp" />
     <ClCompile Include="src\JSON\JsonValueComparison.cpp" />
     <ClCompile Include="src\ProcGen\Decorators\DecoratorIds.cpp" />
+    <ClCompile Include="src\ProcGen\Features\ChambersFeature.cpp" />
     <ClCompile Include="src\ProcGen\Features\SingleFeature.cpp" />
     <ClCompile Include="src\ProcGen\Layers\DepthLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntityPlacementLayer.cpp" />
@@ -514,6 +515,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\JSON\JsonValueComparison.h" />
     <ClInclude Include="src\ProcGen\Decorators\DecoratorIds.h" />
     <ClInclude Include="src\ProcGen\EntityPositionList.h" />
+    <ClInclude Include="src\ProcGen\Features\ChambersFeature.h" />
     <ClInclude Include="src\ProcGen\Features\SingleFeature.h" />
     <ClInclude Include="src\ProcGen\Layers\DepthLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\EntityPlacementLayer.h" />

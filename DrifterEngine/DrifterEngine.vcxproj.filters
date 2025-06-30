@@ -786,6 +786,9 @@
     <ClCompile Include="src\ProcGen\SlotPositionList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\Features\ChambersFeature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3477,6 +3480,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Structures\Templates\StructureTemplateLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Features\ChambersFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
