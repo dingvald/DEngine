@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "EntityPack.h"
 #include <Random/Random.h>
+#include <ProcGen/EntityPack/NullEntitySlot.h>
 #include <Utility/StandardLogger.h>
 
 void EntityPack::createFromJson(const rapidjson::Value& json)
@@ -10,7 +11,7 @@ void EntityPack::createFromJson(const rapidjson::Value& json)
 		for (auto&& slotObj : json["slots"].GetObject())
 		{
 			auto slotId = entt::hashed_string{ slotObj.name.GetString() };
-			if (slotId == EMPTY_ENTITY_SLOT)
+			if (slotId == NullEntitySlot)
 			{
 				LOG_ERROR("Entity slot {} clashes with reserved slot", slotId.data());
 				continue;
@@ -46,8 +47,11 @@ void EntityPack::add(const EntityPack& other)
 
 std::optional<entt::id_type> EntityPack::selectEntity(entt::id_type slotId, drft::rng::Random& random) const
 {
+	if (slotId == NullEntitySlot) return std::nullopt;
+
 	if (!_packs.contains(slotId))
 	{
+		LOG_WARNING("Entity pack does not contain id {}", slotId);
 		return std::nullopt;
 	}
 	auto& pack = _packs.at(slotId);

@@ -21,14 +21,14 @@ static const SpriteOptions CursorSprite = {
 		.uvCoords = sf::Vector2i{0, 0},
 		.texture = "mouse_cursor_effect"_hs,
 		.uvSize = DefaultTileTextureSize,
-		.layer = static_cast<unsigned int>(drft::system::RenderLayer::EffectsFront),
+		.layer = drft::RenderLayer::EffectsFront,
 		.color = sf::Color{255, 255, 255}
 };
 static const SpriteOptions PathSprite = {
 		.uvCoords = sf::Vector2i{0, 0},
 		.texture = "path_effect"_hs,
 		.uvSize = DefaultTileTextureSize,
-		.layer = static_cast<unsigned int>(drft::system::RenderLayer::EffectsFront),
+		.layer = drft::RenderLayer::EffectsFront,
 		.color = sf::Color{255, 255, 255, 200}
 };
 

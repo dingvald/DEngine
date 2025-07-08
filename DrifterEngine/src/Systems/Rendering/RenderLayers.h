@@ -1,6 +1,6 @@
 #pragma once
 
-namespace drft::system
+namespace drft
 {
     class RenderLayer
     {
@@ -18,3 +18,4 @@ namespace drft::system
         };
     };
 }
+

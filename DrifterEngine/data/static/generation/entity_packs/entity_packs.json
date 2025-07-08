@@ -1,5 +1,18 @@
 {
     "entity_pack": {
+        "debug": {
+            "slots": {
+                "viz_red": [
+                    [ "debug_red", 1 ]
+                ],
+                "viz_green": [
+                    [ "debug_green", 1 ]
+                ],
+                "viz_blue": [
+                    [ "debug_blue", 1 ]
+                ]
+            }
+        },
         "basic": {
             "slots": {
                 "water": [
@@ -27,7 +40,7 @@
                     [ "grass", 1 ]
                 ],
                 "stairs_down": [
-                    [ "stairs_down", 1]
+                    [ "stairs_down", 1 ]
                 ],
                 "stairs_up": [
                     [ "stairs_up", 1 ]
@@ -39,6 +52,6 @@
                     [ "stone_wall", 1 ]
                 ]
             }
-        } 
+        }
     }
 }

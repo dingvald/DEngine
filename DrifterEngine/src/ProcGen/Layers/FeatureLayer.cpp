@@ -20,6 +20,27 @@ GenerationState drft::FeatureLayerChunk::generate(GenerationLevel level)
     return GenerationState::Complete;
 }
 
+void drft::FeatureLayerChunk::placeFeature(const SlotPositionList& slots)
+{
+    for (auto&& [slot, position, priority] : slots)
+    {
+        if (!_volume.contains(position)) continue;
+
+        const int finalPriority = priority == UNINITIALIZED_SLOT_PRIORITY ? 100 : priority;
+        if (!this->slots.contains(position))
+        {
+            this->slots.emplace(position, SlotPriority{ slot, finalPriority });
+            continue;
+        }
+
+        SlotPriority& slotPriority = this->slots.at(position);
+        if (slotPriority.priority > finalPriority) continue;
+
+        slotPriority.slot = slot;
+        slotPriority.priority = finalPriority;
+    }
+}
+
 GenerationState drft::FeatureLayerChunk::generateFeatures()
 {
     auto biomes = generateDependency<BiomeLayer>(_volume);
@@ -64,28 +85,38 @@ GenerationState drft::FeatureLayerChunk::generateSurroundingFeatures()
     auto featureLayer = generateDependency<FeatureLayer>(expandedVolume, GenerationLevel::One);
     if (!featureLayer.isReady()) return featureLayer.getState();
 
+    // Remove overlapping features
     featureLayer.unwrap().forEachLoadedChunkInVolume(expandedVolume, 
         [this](FeatureLayerChunk& chunk)
         {
             for (auto&& feature : chunk.generatedFeatures)
             {
-                for (auto&& [slot, position, priority] : feature.slotPositions)
+                if (this->_index != chunk._index)
                 {
-                    if (!_volume.contains(position)) continue;
-
-                    const int finalPriority = priority == UNINITIALIZED_SLOT_PRIORITY ? 100 : priority;
-                    if (!this->slots.contains(position))
+                    auto it = generatedFeatures.begin();
+                    while (it != generatedFeatures.end())
                     {
-                        this->slots.emplace(position, SlotPriority{ slot, finalPriority });
-                        continue;
+                        if (it->area.findIntersection(feature.area).has_value()
+                            && !it->feature->getCanBeOverwritten())
+                        {
+                            it = generatedFeatures.erase(it);
+                        }
+                        else
+                        {
+                            ++it;
+                        }
                     }
-
-                    SlotPriority& slotPriority = this->slots.at(position);
-                    if (slotPriority.priority > finalPriority) continue;
-
-                    slotPriority.slot = slot;
-                    slotPriority.priority = finalPriority;
                 }
+            }
+        });
+
+    // Place features
+    featureLayer.unwrap().forEachLoadedChunkInVolume(expandedVolume,
+        [this](FeatureLayerChunk& chunk)
+        {
+            for (auto&& feature : chunk.generatedFeatures)
+            {
+                placeFeature(feature.slotPositions);
             }
         });
 

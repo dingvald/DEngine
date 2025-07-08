@@ -14,12 +14,6 @@
                 "ore_vein": {
                     "random_scatter_1": [ "less", 0.005 ]
                 },
-                "small_oasis": {
-                    "random_scatter_2": ["less", 0.01]
-                },
-                "desert_hut": {
-                    "random_scatter_3": [ "less", 0.01 ]
-                },
                 "chambered_cave": {
                     "random_scatter_1": ["greater", 0.99]
                 }

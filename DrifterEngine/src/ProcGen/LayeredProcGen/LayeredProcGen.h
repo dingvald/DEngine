@@ -6,6 +6,7 @@
 #include <Spatial/Helpers.h>
 #include <unordered_map>
 #include <vector>
+#include <Utility/Vector3Utils.h>
 
 #include <Utility/StandardLogger.h>
 #include <Utility/stdHashing.h>
@@ -432,7 +433,11 @@ namespace drft
 				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate, spatial::PlaneType::XY);
 				for (auto&& neighbor : neighbors)
 				{
-					if (!layer._chunks.contains(neighbor)) continue;
+					if (!layer._chunks.contains(neighbor))
+					{
+						LOG_ERROR("Requested chunk {}, but chunk not loaded", Vector3Utils::toString(neighbor));
+						continue;
+					}
 					func(layer._chunks.at(neighbor));
 				}
 				layer.releaseChunks(drft::hash(chunkCoordinate));
@@ -447,7 +452,11 @@ namespace drft
 				auto neighbors = spatial::getSurroundingPoints(chunkCoordinate);
 				for (auto&& neighbor : neighbors)
 				{
-					if (!layer._chunks.contains(neighbor)) continue;
+					if (!layer._chunks.contains(neighbor))
+					{
+						LOG_ERROR("Requested chunk {}, but chunk not loaded", Vector3Utils::toString(neighbor));
+						continue;
+					}
 					func(layer._chunks.at(neighbor));
 				}
 				layer.releaseChunks(drft::hash(chunkCoordinate));

@@ -225,8 +225,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Skills\SkillRequirement.cpp" />
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp" />
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp" />
-    <ClCompile Include="src\Structures\Templates\StructureTemplate.cpp" />
-    <ClCompile Include="src\Structures\Templates\StructureTemplateLayer.cpp" />
+    <ClCompile Include="src\Structures\Instance\StructureInstance.cpp" />
+    <ClCompile Include="src\Structures\Instance\StructureInstanceLayer.cpp" />
+    <ClCompile Include="src\Structures\Template\StructureTemplate.cpp" />
+    <ClCompile Include="src\Structures\Template\StructureTemplateLayer.cpp" />
     <ClCompile Include="src\Systems\Actions\StairsMoveActionSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\IncomingForceSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\CraftingIngredient.cpp" />
@@ -527,8 +529,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Spatial\PathingHeuristics\IPathingHeuristic.h" />
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h" />
     <ClInclude Include="src\States\GameStates\SkillsScreenState.h" />
-    <ClInclude Include="src\Structures\Templates\StructureTemplate.h" />
-    <ClInclude Include="src\Structures\Templates\StructureTemplateLayer.h" />
+    <ClInclude Include="src\Structures\Instance\StructureInstance.h" />
+    <ClInclude Include="src\Structures\Instance\StructureInstanceLayer.h" />
+    <ClInclude Include="src\Structures\Template\StructureTemplate.h" />
+    <ClInclude Include="src\Structures\Template\StructureTemplateLayer.h" />
     <ClInclude Include="src\Systems\Actions\StairsMoveActionSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\IncomingForceSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\CraftingIngredient.h" />
@@ -1396,6 +1400,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   <ItemGroup>
     <None Include="data\settings\default\_default_keybindings.json" />
     <None Include="data\static\entities\bodies.json" />
+    <None Include="data\static\entities\debug.json" />
     <None Include="data\static\entities\stairs.json" />
     <None Include="data\static\entities\tools.json" />
     <None Include="data\static\entities\weapons.json" />
@@ -1446,6 +1451,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <Image Include="resources\Icons\drifter-project-icon.ico" />
     <Image Include="resources\Icons\drifter-project-icon.png" />
     <Image Include="resources\Textures\basic_tile.png" />
+    <Image Include="resources\Textures\debug.png" />
     <Image Include="resources\Textures\Effects\hit_particle.png" />
     <Image Include="resources\Textures\Effects\mouse_cursor_effect.png" />
     <Image Include="resources\Textures\Effects\path_effect.png" />

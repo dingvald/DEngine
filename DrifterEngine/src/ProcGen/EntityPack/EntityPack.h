@@ -6,8 +6,6 @@ namespace drft::rng
 	class Random;
 }
 
-static const entt::id_type EMPTY_ENTITY_SLOT = entt::hashed_string{ "NO_ENTITY" };
-
 class EntityPack : public ICreateFromJson
 {
 public:

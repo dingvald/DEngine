@@ -20,7 +20,6 @@ GenerationState LloydRelaxedLayerChunk::generate(GenerationLevel desiredLevel)
     default:
         break;
     }
-
     return GenerationState::Complete;
 }
 

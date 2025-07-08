@@ -2,17 +2,6 @@
 
 namespace drft::system
 {
-	class SystemScheduler;
-
-	enum class PhaseCategory : int
-	{
-		None,
-		Reactive,
-		OnUpdate,
-		OnFixedUpdate,
-		OnRender
-	};
-
 	class System
 	{
 	public:

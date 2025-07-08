@@ -10,6 +10,7 @@ struct GenerationContext;
 struct GeneratedFeature
 {
 	SlotPositionList slotPositions;
+	sf::IntRect area;
 	const IFeature* feature = nullptr;
 };
 
@@ -24,6 +25,9 @@ public:
 	GeneratedFeature generate(sf::Vector3i position, const GenerationContext& context) const;
 	void addDecorator(IDecorator::Ptr&& decorator);
 
+	void setCanBeOverwritten(bool val);
+	bool getCanBeOverwritten() const;
+
 protected:
 	virtual TaggedPositions generateTags(sf::Vector3i position, const GenerationContext& context) const = 0;
 
@@ -32,4 +36,5 @@ private:
 
 private:
 	std::vector<IDecorator::Ptr> _decorators;
+	bool _canBeOverridden = true;
 };

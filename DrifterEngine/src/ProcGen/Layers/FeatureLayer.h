@@ -16,6 +16,7 @@ namespace drft
 		std::vector<GeneratedFeature> generatedFeatures;
 		SlotPositionMap slots;
 	private:
+		void placeFeature(const SlotPositionList& slots);
 		GenerationState generateFeatures();
 		GenerationState generateSurroundingFeatures();
 		virtual GenerationLevel numLevels() const override { return GenerationLevel::Two; }

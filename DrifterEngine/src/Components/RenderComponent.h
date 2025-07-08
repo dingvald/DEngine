@@ -4,7 +4,8 @@
 #include <string>
 #include "EnTT/entt.hpp"
 #include "Snapshot/Reflection.h"
-#include "Utility/Vector2Serialization.h"
+#include <Systems/Rendering/RenderLayers.h>
+#include <Utility/Vector2Serialization.h>
 
 static inline const sf::Vector2i DefaultTileTextureSize = { 16, 24 };
 
@@ -13,7 +14,7 @@ struct RenderComponent
 	entt::id_type texture;
 	sf::Vector2i uvSize = DefaultTileTextureSize;
 	sf::Vector2i uvCoords = { 0,0 };
-	unsigned int layer = 0u;
+	unsigned int layer = drft::RenderLayer::Tiles;
 	sf::Color color = sf::Color::Magenta;
 
 private:
@@ -56,6 +57,6 @@ static const RenderComponent DebugRenderComponent =
 	.texture = entt::hashed_string("rectangle"),
 	.uvSize = DefaultTileTextureSize,
 	.uvCoords = {0, 0},
-	.layer = 2u,
+	.layer = drft::RenderLayer::Props,
 	.color = sf::Color::Magenta
 };

@@ -1,0 +1,43 @@
+{
+    "prototypes": {
+        "debug_red": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "render": {
+                    "texture": "debug",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 255, 0, 0 ]
+                }
+            }
+        },
+        "debug_green": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "render": {
+                    "texture": "debug",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 0, 255, 0 ]
+                }
+            }
+        },
+        "debug_blue": {
+            "inherits": [
+                "object"
+            ],
+            "components": {
+                "render": {
+                    "texture": "debug",
+                    "uv_size": [ 16, 24 ],
+                    "layer": 1,
+                    "color": [ 0, 0, 255 ]
+                }
+            }
+        }
+    }
+}

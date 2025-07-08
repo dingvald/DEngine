@@ -87,7 +87,7 @@ GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 
 		auto slotId = slots.at(position3d).slot;
 
-		auto entityId = entityPack->selectEntity(std::any_cast<entt::id_type>(slotId), localRandom);
+		auto entityId = entityPack->selectEntity(slotId, localRandom);
 		if (!entityId.has_value()) return;
 
 		chosenEntities.emplace_back(entityId.value(), position3d);

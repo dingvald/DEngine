@@ -72,7 +72,7 @@ void drft::SelectDirectionState::placeTargetingTiles()
 		.uvCoords = sf::Vector2i{0, 0},
 		.texture = "rectangle"_hs,
 		.uvSize = DefaultTileTextureSize,
-		.layer = static_cast<unsigned int>(system::RenderLayer::Tiles),
+		.layer = RenderLayer::Tiles,
 		.color = sf::Color(0, 0, 100, 100)
 	};
 	for (auto&& tile : surroundingTiles)

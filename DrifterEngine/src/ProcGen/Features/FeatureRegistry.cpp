@@ -51,6 +51,11 @@ void FeatureRegistry::loadFeatures(const std::filesystem::path& biomeFeatruresDi
 				if (auto feature = _featureFactory.build(type))
 				{
 					feature->createFromJson(params);
+					if (params.HasMember("can_be_overwritten"))
+					{
+						bool canBeOverwritten = params["can_be_overwritten"].GetBool();
+						feature->setCanBeOverwritten(canBeOverwritten);
+					}
 					_features.emplace(featureId, std::move(feature));
 				}
 				else
@@ -93,6 +98,10 @@ void FeatureRegistry::loadFeatures(const std::filesystem::path& biomeFeatruresDi
 
 const IFeature* FeatureRegistry::get(entt::id_type id) const
 {
-	if (!_features.contains(id)) return nullptr;
+	if (!_features.contains(id)) 
+	{
+		LOG_WARNING("Could not find feature with id {}", id);
+		return nullptr;
+	}
 	return _features.at(id).get();
 }

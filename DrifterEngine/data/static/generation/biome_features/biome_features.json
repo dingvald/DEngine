@@ -1,41 +1,5 @@
 {
     "biome_features": {
-        "small_oasis": {
-            "type": "single_feature",
-            "params":{
-                "tag": "oasis"
-            },
-            "decorators":[
-                {
-                    "type": "prefab_decorator",
-                    "params":{
-                        "prefab": "size_test_prefab"
-                    },
-                    "conditions": {
-                        "tag_expression": "oasis",
-                        "chance": 1.0
-                    }
-                }
-            ]
-        },
-        "desert_hut": {
-            "type": "single_feature",
-            "params":{
-                "tag": "hut"
-            },
-            "decorators":[
-                {
-                    "type": "prefab_decorator",
-                    "params":{
-                        "prefab": "desert_hut"
-                    },
-                    "conditions": {
-                        "tag_expression": "hut",
-                        "chance": 1.0
-                    }
-                }
-            ]
-        },
         "ore_vein": {
             "type": "cluster_feature",
             "params": {
@@ -177,21 +141,22 @@
         "chambered_cave": {
             "type": "chambers_feature",
             "params": {
+                "can_be_overwritten":  false,
                 "wall_tags": [ "wall" ],
-                "center_tags": [ "center" ],
+                "center_tags": [],
                 "floor_tags": [ "floor" ],
                 "door_tags": [ "door" ],
                 "hallway_tags": [ "hallway" ],
                 "entrances": [ 1, 2 ],
-                "room_count": [ 3, 7 ],
+                "room_count": [ 8, 10 ],
                 "room_size": [ 4, 10 ],
-                "max_area": [ 30, 30 ]
+                "max_area": [ 100, 100 ]
             },
             "decorators": [
                 {
                     "type": "simple_decorator",
                     "params": {
-                        "slot": "dirt_wall"
+                        "slot": "stone_wall"
                     },
                     "conditions": {
                         "tag_expression": "wall",
@@ -204,17 +169,7 @@
                         "slot": "null_entity"
                     },
                     "conditions": {
-                        "tag_expression": "floor",
-                        "chance": 1.0
-                    }
-                },
-                {
-                    "type": "simple_decorator",
-                    "params": {
-                        "slot": "short_grass"
-                    },
-                    "conditions": {
-                        "tag_expression": "hallway",
+                        "tag_expression": "floor | hallway",
                         "chance": 1.0
                     }
                 },

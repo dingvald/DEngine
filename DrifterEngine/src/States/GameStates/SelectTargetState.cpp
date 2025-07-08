@@ -84,7 +84,7 @@ void drft::SelectTargetState::onPush()
 		.uvCoords = sf::Vector2i{0, 0}, 
 		.texture = tileSetTexture, 
 		.uvSize = DefaultTileTextureSize, 
-		.layer = static_cast<unsigned int>(system::RenderLayer::Tiles), 
+		.layer = RenderLayer::Tiles, 
 		.color = DEFAULT_TARGET_RANGE_COLOR
 	};
 	for (auto&& tile : radius)
@@ -102,7 +102,7 @@ void drft::SelectTargetState::onPush()
 		.uvCoords = sf::Vector2i{0, 0}, 
 		.texture = tileSetTexture, 
 		.uvSize = DefaultTileTextureSize, 
-		.layer = static_cast<unsigned int>(system::RenderLayer::Tiles), 
+		.layer = RenderLayer::Tiles, 
 		.color = DEFAULT_TARGET_AOE_COLOR };
 	for (auto&& tile : _targetSelect->targetShape)
 	{
@@ -121,7 +121,7 @@ void drft::SelectTargetState::onPush()
 		.uvCoords = sf::Vector2i{0, 0}, 
 		.texture = tileSetTexture, 
 		.uvSize = DefaultTileTextureSize,
-		.layer = static_cast<unsigned int>(system::RenderLayer::Tiles), 
+		.layer = RenderLayer::Tiles, 
 		.color = sf::Color{255, 255, 200, 150} };
 	_cursor = system::spawnEffect(getContext().registry,
 		{

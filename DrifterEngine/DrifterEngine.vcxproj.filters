@@ -777,16 +777,22 @@
     <ClCompile Include="src\ProcGen\ChunkGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\Templates\StructureTemplate.cpp">
+    <ClCompile Include="src\Structures\Template\StructureTemplate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\Templates\StructureTemplateLayer.cpp">
+    <ClCompile Include="src\Structures\Template\StructureTemplateLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\SlotPositionList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Features\ChambersFeature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\Instance\StructureInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Structures\Instance\StructureInstanceLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3476,13 +3482,19 @@
     <ClInclude Include="src\ProcGen\ChunkGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\Templates\StructureTemplate.h">
+    <ClInclude Include="src\Structures\Template\StructureTemplate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\Templates\StructureTemplateLayer.h">
+    <ClInclude Include="src\Structures\Template\StructureTemplateLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Features\ChambersFeature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\Instance\StructureInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Structures\Instance\StructureInstanceLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -3566,6 +3578,7 @@
     <None Include="data\static\generation\prefabs\iron_deposit_cache.json" />
     <None Include="data\static\generation\prefabs\tree_grove.json" />
     <None Include="data\static\generation\prefabs\small_oasis.json" />
+    <None Include="data\static\entities\debug.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">
@@ -3644,6 +3657,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\Textures\Environmentals\geo_pile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Textures\debug.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
