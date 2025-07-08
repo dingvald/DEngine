@@ -4,3 +4,8 @@
 void StructureTemplateLayer::createFromJson(const rapidjson::Value& json)
 {
 }
+
+StructureInstanceLayer StructureTemplateLayer::generate() const
+{
+	return StructureInstanceLayer();
+}
