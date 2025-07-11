@@ -36,16 +36,6 @@ void IFeature::addDecorator(IDecorator::Ptr&& decorator)
 	_decorators.emplace_back(std::move(decorator));
 }
 
-void IFeature::setCanBeOverwritten(bool val)
-{
-	_canBeOverridden = val;
-}
-
-bool IFeature::getCanBeOverwritten() const
-{
-	return _canBeOverridden;
-}
-
 GeneratedFeature IFeature::decorate(TaggedPositions& taggedPositions, const GenerationContext& context) const
 {
 	GeneratedFeature result;

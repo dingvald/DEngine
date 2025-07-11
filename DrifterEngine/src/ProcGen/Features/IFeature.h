@@ -25,9 +25,6 @@ public:
 	GeneratedFeature generate(sf::Vector3i position, const GenerationContext& context) const;
 	void addDecorator(IDecorator::Ptr&& decorator);
 
-	void setCanBeOverwritten(bool val);
-	bool getCanBeOverwritten() const;
-
 protected:
 	virtual TaggedPositions generateTags(sf::Vector3i position, const GenerationContext& context) const = 0;
 

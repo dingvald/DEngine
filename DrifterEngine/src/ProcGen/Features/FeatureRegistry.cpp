@@ -51,11 +51,6 @@ void FeatureRegistry::loadFeatures(const std::filesystem::path& biomeFeatruresDi
 				if (auto feature = _featureFactory.build(type))
 				{
 					feature->createFromJson(params);
-					if (params.HasMember("can_be_overwritten"))
-					{
-						bool canBeOverwritten = params["can_be_overwritten"].GetBool();
-						feature->setCanBeOverwritten(canBeOverwritten);
-					}
 					_features.emplace(featureId, std::move(feature));
 				}
 				else
