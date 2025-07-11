@@ -1,16 +1,15 @@
 #include "pch.h"
 #include "SimpleDecorator.h"
-#include <Random/Random.h>
 #include <ProcGen/GenerationContext.h>
 
-void SimpleDecorator::decorate(SlotPositionList& slotPositions, TaggedPositions& taggedPositions, const GenerationContext& context) const
+SlotPositionList SimpleDecorator::decorateImpl(const PositionList& taggedPositions, const GenerationContext&) const
 {
-	drft::rng::Random random{ generateUniqueSeed<SimpleDecorator>(context.seed) };
-	for (auto&& position : getMyPositions(taggedPositions))
+	SlotPositionList result;
+	for (auto&& position : taggedPositions)
 	{
-		if (!meetsCondition(random)) continue;
-		slotPositions.emplace_back(_slot, position);
+		result.emplace_back(_slot, position);
 	}
+	return result;
 }
 
 void SimpleDecorator::createFromJsonImpl(const rapidjson::Value& json)

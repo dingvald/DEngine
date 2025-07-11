@@ -19,19 +19,16 @@ namespace Internal
 }
 
 
-void PrefabDecorator::decorate(SlotPositionList& inOutSlotPositions, TaggedPositions& inOutTaggedPositions, const GenerationContext& context) const
+SlotPositionList PrefabDecorator::decorateImpl(const PositionList& taggedPositions, const GenerationContext& context) const
 {
-	drft::rng::Random random{ generateUniqueSeed<PrefabDecorator>(context.seed) };
-
 	std::optional<sf::Vector3i> placementPosition = std::nullopt;
 
 	bool shouldAlignToChunk = false;
-	auto& prefab = context.registries.prefabs.get(_prefabId);
+	const Prefab& prefab = context.registries.prefabs.get(_prefabId);
 	if (!Internal::fitsInChunk(prefab)) shouldAlignToChunk = true;
 
-	for (auto&& position : getMyPositions(inOutTaggedPositions))
+	for (auto&& position : taggedPositions)
 	{
-		if (!meetsCondition(random)) continue;
 		if (shouldAlignToChunk)
 		{
 			placementPosition = drft::spatial::getChunkOrigin(position);
@@ -42,10 +39,9 @@ void PrefabDecorator::decorate(SlotPositionList& inOutSlotPositions, TaggedPosit
 		break;
 	}
 
-	if (!placementPosition.has_value()) return;
+	if (!placementPosition.has_value()) return {};
 
-	auto result = prefab.generate(placementPosition.value(), context);
-	inOutSlotPositions.append_range(std::move(result));
+	return prefab.generate(placementPosition.value(), context);
 }
 
 void PrefabDecorator::createFromJsonImpl(const rapidjson::Value& json)

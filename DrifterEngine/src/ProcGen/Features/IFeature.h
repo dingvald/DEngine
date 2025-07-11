@@ -36,5 +36,5 @@ private:
 
 private:
 	std::vector<IDecorator::Ptr> _decorators;
-	bool _canBeOverridden = true;
+	bool _canBeOverridden = false;
 };

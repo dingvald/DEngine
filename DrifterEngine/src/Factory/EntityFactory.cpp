@@ -14,7 +14,7 @@ using namespace entt::literals;
 static const char* COMPONENTS_KEY_NAME = "components";
 static const char* INHERITS_KEY_NAME = "inherits";
 
-const entt::id_type NullEntity = "NULL_ENTITY"_hs;
+const entt::id_type NullEntity = "null_entity"_hs;
 
 drft::EntityFactory::EntityFactory()
 {

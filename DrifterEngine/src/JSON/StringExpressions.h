@@ -18,6 +18,7 @@ namespace drft::util
 		template <typename T>
 		std::vector<T> mergeLists(const TokenValueLists<T>& lists) const;
 		const std::unordered_set<entt::id_type>& getTokens() const;
+		size_t getHash() const;
 
 	private:
 		std::vector<entt::id_type> parseExpression(std::string expression) const;
@@ -25,6 +26,7 @@ namespace drft::util
 		bool isOperation(entt::id_type token) const;
 
 	private:
+		size_t _hash;
 		std::vector<entt::id_type> _parsedExpression;
 		std::unordered_set<entt::id_type> _tokens;
 	};

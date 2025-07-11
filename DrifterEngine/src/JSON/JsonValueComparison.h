@@ -6,6 +6,7 @@ struct JsonValueComparison : public ICreateFromJson
 {
 	enum class CompareType
 	{
+		Equal,
 		Less,
 		Greater,
 		LessOrEqual,

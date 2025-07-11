@@ -17,22 +17,19 @@ public:
 	using Ptr = std::unique_ptr<IDecorator>;
 public:
 	void createFromJson(const rapidjson::Value& json) override;
-	virtual void decorate(SlotPositionList& inOutSlotPositions, TaggedPositions& inOutTaggedPositions, const GenerationContext& context) const = 0;
+	void decorate(SlotPositionList& inOutSlotPositions, TaggedPositions& inOutTaggedPositions, const GenerationContext& context) const;
 
 protected:
+	virtual SlotPositionList decorateImpl(const PositionList& taggedPositions, const GenerationContext& context) const = 0;
 	virtual void createFromJsonImpl(const rapidjson::Value& json) = 0;
-	PositionList getMyPositions(const TaggedPositions& taggedPositions) const;
+	size_t generateUniqueSeed(size_t fromSeed) const;
+
+private:
+	PositionList getMyPositions(const TaggedPositions& taggedPositions, size_t globalSeed) const;
 	bool meetsCondition(drft::rng::Random& random) const;
-	template<typename T>
-	size_t generateUniqueSeed(size_t fromGlobalSeed) const
-	{
-		size_t seed = fromGlobalSeed;
-		entt::id_type typeHash = entt::type_index<T>::value();
-		hash_combine(seed, typeHash);
-		return seed;
-	}
 
 private:
 	drft::util::BooleanStringExpression _tagExpression;
-	float _chance;
+	float _chance = 1.0f;
+	int _priority = UNINITIALIZED_SLOT_PRIORITY;
 };

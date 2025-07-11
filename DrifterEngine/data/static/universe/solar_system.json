@@ -13,7 +13,7 @@
                         "entity_packs": [ "basic" ],
                         "biomes": {
                             "desert": {
-                                "depth": [ "greater_or_equal", 0 ]
+                                "depth": [ "equal", 0 ]
                             },
                             "shallow_caves": {
                                 "depth": [ "less", 0 ]
@@ -23,7 +23,16 @@
                             }
                         },
                         "structures": {
-
+                            "junk_village": {
+                                "conditions": [
+                                    {
+                                        "type": "hardcoded_location",
+                                        "params": {
+                                            "location": [1024, 1024, 0]
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     }
                 ]

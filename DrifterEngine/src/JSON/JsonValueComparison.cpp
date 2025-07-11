@@ -4,6 +4,12 @@
 
 namespace evaluation_functions
 {
+    static bool isEqual(float val, drft::math::Range<float> range)
+    {
+        if (range.getMin() != range.getMin()) return false;
+        return drft::math::isNear(val, range.getMin());
+    }
+
     static bool isGreater(float val, drft::math::Range<float> range)
     {
         return val > range.getMax();
@@ -36,6 +42,7 @@ namespace evaluation_functions
 
     static const std::unordered_map<JsonValueComparison::CompareType, bool(*)(float, drft::math::Range<float>)> EvalFunctionMap =
     {
+        {JsonValueComparison::CompareType::Equal,           isEqual},  
         {JsonValueComparison::CompareType::Greater,         isGreater},
         {JsonValueComparison::CompareType::Less,            isLess},
         {JsonValueComparison::CompareType::GreaterOrEqual,  isGreaterOrEqual},
@@ -49,6 +56,7 @@ namespace
 {
     static const std::unordered_map<std::string, JsonValueComparison::CompareType> StringToCompareType =
     {
+        {"equal", JsonValueComparison::CompareType::Equal},
         {"greater", JsonValueComparison::CompareType::Greater},
         {"greater_or_equal", JsonValueComparison::CompareType::GreaterOrEqual},
         {"less", JsonValueComparison::CompareType::Less},
@@ -89,7 +97,8 @@ void JsonValueComparison::createFromJson(const rapidjson::Value& json)
 
         _compareType = comparisonType.value();
 
-        if (_compareType == CompareType::Less 
+        if (_compareType == CompareType::Equal
+            || _compareType == CompareType::Less 
             || _compareType == CompareType::Greater
             || _compareType == CompareType::LessOrEqual
             || _compareType == CompareType::GreaterOrEqual)
@@ -133,6 +142,7 @@ float JsonValueComparison::distanceFromValue(float val) const
 
     switch (_compareType)
     {
+    case CompareType::Equal:
     case CompareType::Less:
     case CompareType::LessOrEqual:
         return std::abs(val - _range.getMax());

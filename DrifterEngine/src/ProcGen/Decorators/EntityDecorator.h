@@ -4,7 +4,7 @@
 
 class EntityDecorator : public IDecorator
 {
-	void decorate(SlotPositionList& slotPositions, TaggedPositions& taggedPositions, const GenerationContext& context) const override;
+	SlotPositionList decorateImpl(const PositionList& taggedPositions, const GenerationContext& context) const override;
 	void createFromJsonImpl(const rapidjson::Value& json) override;
 
 	void generateCluster(sf::Vector3i origin, SlotPositionList& slotPositions, drft::rng::Random& random) const;

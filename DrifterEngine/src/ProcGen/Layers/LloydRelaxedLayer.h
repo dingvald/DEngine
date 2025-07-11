@@ -38,7 +38,7 @@ namespace drft
 
 	private:
 		float _density = 0.5;
-		float _passes = 1;
+		int _passes = 1;
 	};
 }
 

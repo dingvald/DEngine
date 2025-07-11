@@ -3497,6 +3497,9 @@
     <ClInclude Include="src\Structures\Instance\StructureInstanceLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ProcGen\PlacementRequirement\PlacementRequirementVariant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">

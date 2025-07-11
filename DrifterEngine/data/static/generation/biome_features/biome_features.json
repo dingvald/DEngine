@@ -108,7 +108,8 @@
                     "conditions": {
                         "tag_expression": "floor",
                         "chance": 1.0
-                    }
+                    },
+                    "priority": 100
                 },
                 {
                     "type": "entity_decorator",
@@ -141,7 +142,6 @@
         "chambered_cave": {
             "type": "chambers_feature",
             "params": {
-                "can_be_overwritten":  false,
                 "wall_tags": [ "wall" ],
                 "center_tags": [],
                 "floor_tags": [ "floor" ],

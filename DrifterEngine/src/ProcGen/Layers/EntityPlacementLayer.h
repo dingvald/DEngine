@@ -19,7 +19,7 @@ namespace drft
 		virtual GenerationLevel numLevels() const override { return GenerationLevel::Two; }
 
 	public:
-		EntityPositionList chosenEntities;
+		EntityPositionMap chosenEntities;
 
 	private:
 		GenerationState chooseEntitiesForSlots();

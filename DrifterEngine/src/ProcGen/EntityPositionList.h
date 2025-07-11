@@ -9,3 +9,4 @@ struct EntityPositionPair
 };
 
 using EntityPositionList = std::vector<EntityPositionPair>;
+using EntityPositionMap = std::unordered_map<sf::Vector3i, entt::id_type>;

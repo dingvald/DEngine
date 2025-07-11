@@ -30,6 +30,7 @@ const std::unordered_map<char, entt::id_type> HashedOperationsMap =
 
 drft::util::BooleanStringExpression::BooleanStringExpression(std::string expression)
 {
+    _hash = drft::hash(expression);
     _parsedExpression = parseExpression(util::removeWhitespace(expression));
     for (auto&& token : _parsedExpression)
     {
@@ -87,6 +88,11 @@ bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) c
 const std::unordered_set<entt::id_type>& drft::util::BooleanStringExpression::getTokens() const
 {
     return _tokens;
+}
+
+size_t drft::util::BooleanStringExpression::getHash() const
+{
+    return _hash;
 }
 
 std::vector<entt::id_type> drft::util::BooleanStringExpression::parseExpression(std::string expression) const

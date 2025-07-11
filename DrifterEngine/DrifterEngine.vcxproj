@@ -523,6 +523,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\Layers\EntityPlacementLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\EntitySlotLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h" />
+    <ClInclude Include="src\ProcGen\PlacementRequirement\PlacementRequirementVariant.h" />
     <ClInclude Include="src\ProcGen\Prefabs\Prefab.h" />
     <ClInclude Include="src\ProcGen\Prefabs\PrefabRegistry.h" />
     <ClInclude Include="src\Skills\SkillRequirement.h" />

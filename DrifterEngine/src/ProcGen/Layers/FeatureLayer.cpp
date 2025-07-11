@@ -86,29 +86,6 @@ GenerationState drft::FeatureLayerChunk::generateSurroundingFeatures()
     if (!featureLayer.isReady()) return featureLayer.getState();
 
     // Remove overlapping features
-    featureLayer.unwrap().forEachLoadedChunkInVolume(expandedVolume, 
-        [this](FeatureLayerChunk& chunk)
-        {
-            for (auto&& feature : chunk.generatedFeatures)
-            {
-                if (this->_index != chunk._index)
-                {
-                    auto it = generatedFeatures.begin();
-                    while (it != generatedFeatures.end())
-                    {
-                        if (it->area.findIntersection(feature.area).has_value()
-                            && !it->feature->getCanBeOverwritten())
-                        {
-                            it = generatedFeatures.erase(it);
-                        }
-                        else
-                        {
-                            ++it;
-                        }
-                    }
-                }
-            }
-        });
 
     // Place features
     featureLayer.unwrap().forEachLoadedChunkInVolume(expandedVolume,

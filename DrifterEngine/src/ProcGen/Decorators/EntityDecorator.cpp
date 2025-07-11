@@ -4,16 +4,16 @@
 #include <ProcGen/GenerationContext.h>
 #include <Spatial/Helpers.h>
 
-void EntityDecorator::decorate(SlotPositionList& slotPositions, TaggedPositions& taggedPositions, const GenerationContext& context) const
+SlotPositionList EntityDecorator::decorateImpl(const PositionList& taggedPositions, const GenerationContext& context) const
 {
-	drft::rng::Random random = { generateUniqueSeed<EntityDecorator>(context.seed) };
-	
-	for (auto&& position : getMyPositions(taggedPositions))
+	SlotPositionList result;
+
+	drft::rng::Random random{ generateUniqueSeed(context.seed) };
+	for (auto&& position : taggedPositions)
 	{
-		if (!meetsCondition(random)) continue;
-		
-		generateCluster(position, slotPositions, random);
+		generateCluster(position, result, random);
 	}
+	return result;
 }
 
 void EntityDecorator::createFromJsonImpl(const rapidjson::Value& json)

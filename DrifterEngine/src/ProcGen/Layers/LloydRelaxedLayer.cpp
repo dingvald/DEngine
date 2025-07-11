@@ -27,7 +27,7 @@ GenerationState LloydRelaxedLayerChunk::generateRandomPoints(spatial::AABB<int> 
 {
     drft::rng::Random random{ getLocalSeed() };
 
-    int numPoints = volume.dimensions().x * volume.dimensions().y * MaxDensity * _layer.getDistributionDensity();
+    const int numPoints = volume.dimensions().x * volume.dimensions().y * MaxDensity * _layer.getDistributionDensity();
     auto shuffledPositions = random.shuffleRect(volume.flatten());
 
     int i = 0;
@@ -66,7 +66,7 @@ GenerationState LloydRelaxedLayerChunk::applyRelaxationToPoints(spatial::AABB<in
         pointsToRelax.insert(pointsToRelax.end(), chunk.neighborPoints.begin(), chunk.neighborPoints.end() );
     });
 
-    for (int i = 0; i < _layer.getNumberOfRelaxationPasses() - 1; i++)
+    for (int i = 0; i < _layer.getNumberOfRelaxationPasses(); i++)
     {
         VoronoiDiagram diagram{ pointsToRelax };
         pointsToRelax = diagram.getRelaxedPoints();

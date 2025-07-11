@@ -2,6 +2,7 @@
 #include "IDecorator.h"
 #include <Random/Random.h>
 #include <Utility/StandardLogger.h>
+#include <ProcGen/GenerationContext.h>
 
 static const PositionList EmptyList = {};
 
@@ -25,11 +26,44 @@ void IDecorator::createFromJson(const rapidjson::Value& json)
 	{
 		LOG_ERROR("Decorator is missing the 'conditions' field.");
 	}
+	if (json.HasMember("priority"))
+	{
+		_priority = json["priority"].GetInt();
+	}
 }
 
-PositionList IDecorator::getMyPositions(const TaggedPositions& taggedPositions) const
+void IDecorator::decorate(SlotPositionList& inOutSlotPositions, TaggedPositions& inOutTaggedPositions, const GenerationContext& context) const
 {
-	return _tagExpression.mergeLists(taggedPositions);
+	SlotPositionList result = this->decorateImpl(getMyPositions(inOutTaggedPositions, context.seed), context);
+	for (auto&& slot : result)
+	{
+		slot.priority = _priority;
+	}
+	inOutSlotPositions.append_range(result);
+}
+
+size_t IDecorator::generateUniqueSeed(size_t fromSeed) const
+{
+	hash_combine(fromSeed, _tagExpression.getHash());
+	hash_combine(fromSeed, _priority);
+	hash_combine(fromSeed, _chance);
+	return fromSeed;
+}
+
+PositionList IDecorator::getMyPositions(const TaggedPositions& taggedPositions, size_t globalSeed) const
+{
+	PositionList result;
+	auto temp = _tagExpression.mergeLists(taggedPositions);
+	if (temp.empty()) return result;
+
+	drft::rng::Random random{ generateUniqueSeed(globalSeed)};
+
+	for (auto&& pos : temp)
+	{
+		if (!meetsCondition(random)) continue;
+		result.push_back(pos);
+	}
+	return result;
 }
 
 bool IDecorator::meetsCondition(drft::rng::Random& random) const
