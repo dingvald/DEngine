@@ -26,6 +26,7 @@ GenerationState drft::TilePlacementLayerChunk::generate(GenerationLevel /*desire
 			tileColor = biome->getBaseTileColor();
 
 		_tiles.emplace_back(position, tileColor);
+		return true;
 	});
 
 	return GenerationState::Complete;

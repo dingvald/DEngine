@@ -42,7 +42,7 @@ private:
 	};
 
 	bool _hasBeenFinalized = false;
-	drft::GenerationLayerManager* _layers;
+	drft::GenerationLayerManager* _layers = nullptr;
 
 	std::thread _generationThread;
 	std::atomic_bool _shouldShutdown = false;

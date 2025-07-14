@@ -102,7 +102,7 @@ namespace drft::spatial
 	};
 	std::vector<sf::Vector3i> getSurroundingPoints(sf::Vector3i point, PlaneType plane = PlaneType::All);
 
-	void forEachPointInRect(sf::IntRect rect, std::function<void(sf::Vector2i)> func);
+	void forEachPointInRect(sf::IntRect rect, std::function<bool(sf::Vector2i)> func);
 	void forEachPointInVolume(spatial::AABB<int> volume, std::function<void(sf::Vector3i)> func);
 }
 

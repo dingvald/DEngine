@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.cpp" />
     <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp" />
     <ClCompile Include="src\Engine\Debug\IDebugDisplay.cpp" />
     <ClCompile Include="src\ProcGen\ChunkGenerator.cpp" />
@@ -218,6 +219,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\Layers\DepthLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntityPlacementLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp" />
+    <ClCompile Include="src\ProcGen\Layers\PositionArrayLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp" />
     <ClCompile Include="src\ProcGen\Prefabs\Prefab.cpp" />
     <ClCompile Include="src\ProcGen\Prefabs\PrefabRegistry.cpp" />
@@ -496,6 +498,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.h" />
     <ClInclude Include="src\Engine\Debug\DebugDisplay.h" />
     <ClInclude Include="src\Engine\Debug\IDebugDisplay.h" />
     <ClInclude Include="src\ProcGen\EntityPack\NullEntitySlot.h" />
@@ -522,6 +525,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\Layers\DepthLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\EntityPlacementLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\EntitySlotLayer.h" />
+    <ClInclude Include="src\ProcGen\Layers\PositionArrayLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h" />
     <ClInclude Include="src\ProcGen\PlacementRequirement\PlacementRequirementVariant.h" />
     <ClInclude Include="src\ProcGen\Prefabs\Prefab.h" />

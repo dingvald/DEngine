@@ -795,6 +795,12 @@
     <ClCompile Include="src\Structures\Instance\StructureInstanceLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\Layers\PositionArrayLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3498,6 +3504,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\PlacementRequirement\PlacementRequirementVariant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Layers\PositionArrayLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

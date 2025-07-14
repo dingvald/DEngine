@@ -23,6 +23,7 @@ public:
 	std::vector<entt::id_type> getEntitySlotDependencyIds() const;
 	std::vector<entt::id_type> determineValidEntitySlots(const SlotDeterminer::DependencyValues& dependencyValues) const;
 
+	std::vector<entt::id_type> getFeatureIds() const;
 	std::vector<entt::id_type> getFeatureDependencyIds() const;
 	std::vector<entt::id_type> determineValidFeatures(const SlotDeterminer::DependencyValues& dependencyValues) const;
 

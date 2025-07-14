@@ -83,14 +83,15 @@ GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 	
 	spatial::forEachPointInRect(_volume.flatten(), [&](sf::Vector2i position) {
 		const sf::Vector3i position3d = { position.x, position.y, _volume.min.z };
-		if (!slots.contains(position3d)) return;
+		if (!slots.contains(position3d)) return true;
 
 		auto slotId = slots.at(position3d).slot;
 
 		auto entityId = entityPack->selectEntity(slotId, localRandom);
-		if (!entityId.has_value()) return;
+		if (!entityId.has_value()) return true;
 
 		chosenEntities.emplace(position3d, entityId.value());
+		return true;
 	});
 
 	return GenerationState::Complete;

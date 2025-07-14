@@ -161,7 +161,8 @@
                     "conditions": {
                         "tag_expression": "wall",
                         "chance": 1.0
-                    }
+                    },
+                    "priority": 100
                 },
                 {
                     "type": "simple_decorator",

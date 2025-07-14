@@ -10,20 +10,9 @@
 #include <ProcGen/GenerationRegistries.h>
 #include <ProcGen/EntityPack/EntityPack.h>
 #include <ProcGen/LayerPack/LayerPack.h>
+#include <ProcGen/LayeredProcGen/LayeredProcGenBinder.h>
 
 #include <Utility/StandardLogger.h>
-
-#include <ProcGen/Layers/VoronoiLayer.h>
-#include <ProcGen/Layers/JitteredGridLayer.h>
-#include <ProcGen/Layers/RandomLayer.h>
-#include <ProcGen/Layers/PerlinNoiseLayer.h>
-#include <ProcGen/Layers/LloydRelaxedLayer.h>
-#include <ProcGen/Layers/FillLayer.h>
-#include <ProcGen/Layers/DepthLayer.h>
-#include <ProcGen/Layers/FeatureLayer.h>
-#include <ProcGen/Layers/EntitySlotLayer.h>
-#include <ProcGen/Layers/EntityPlacementLayer.h>
-#include <ProcGen/Layers/TilePlacementLayer.h>
 
 using namespace drft;
 using namespace entt::literals;
@@ -32,22 +21,7 @@ CelestialBody::CelestialBody(const GenerationRegistries& registries)
 	: _registries(registries)
 	, _layers(registries)
 {
-	using namespace entt::literals;
-	// register layer types that can have multiple instances created using add
-	_layers.registerType<drft::RandomLayer>("random"_hs);
-	_layers.registerType<drft::PerlinNoiseLayer>("perlin"_hs);
-	_layers.registerType<drft::LloydRelaxedLayer>("relaxed_points"_hs);
-	_layers.registerType<drft::FillLayer>("fill"_hs);
-	_layers.registerType<drft::DepthLayer>("depth"_hs);
-
-	// Add generic layers that all generators can use
-	_layers.add<drft::RandomLayer>();
-	_layers.add<drft::JitteredGridLayer>();
-	_layers.add<drft::VoronoiLayer>();
-	_layers.add<drft::FeatureLayer>();
-	_layers.add<drft::EntitySlotLayer>();
-	_layers.add<drft::EntityPlacementLayer>();
-	_layers.add<drft::TilePlacementLayer>();
+	LayeredProcGenBinder::bindLayers(_layers);
 }
 
 entt::id_type CelestialBody::getSourceId()

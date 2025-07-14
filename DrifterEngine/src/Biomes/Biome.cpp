@@ -2,6 +2,7 @@
 #include "Biome.h"
 
 #include <Utility/Math.h>
+#include <Utility/ContainerHelpers.h>
 
 
 Biome::Biome(std::string name)
@@ -95,6 +96,16 @@ std::vector<entt::id_type> Biome::determineValidEntitySlots(const SlotDeterminer
 	{
 		if (!slotDeterminer.isValidSlot(dependencyValues)) continue;
 		result.push_back(slotId);
+	}
+	return result;
+}
+
+std::vector<entt::id_type> Biome::getFeatureIds() const
+{
+	std::vector<entt::id_type> result;
+	for (auto&& [slotID, determiner] : _featureDeterminers)
+	{
+		result.push_back(slotID);
 	}
 	return result;
 }

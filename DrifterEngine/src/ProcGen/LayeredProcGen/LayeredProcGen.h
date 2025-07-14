@@ -175,8 +175,8 @@ namespace drft
 		GenerationLayerManager(const GenerationLayerManager&) = delete;
 		GenerationLayerManager& operator= (const GenerationLayerManager&) = delete;
 
-		GenerationLayerManager(GenerationLayerManager&&);
-		GenerationLayerManager& operator= (GenerationLayerManager&&);
+		GenerationLayerManager(GenerationLayerManager&&) = default;
+		GenerationLayerManager& operator= (GenerationLayerManager&&) = default;
 
 		void setSeed(unsigned int seed)
 		{

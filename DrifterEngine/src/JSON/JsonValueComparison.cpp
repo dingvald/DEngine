@@ -105,9 +105,18 @@ void JsonValueComparison::createFromJson(const rapidjson::Value& json)
         {
             if (thresholdExpression.Size() == 2)
             {
-                float rangeJson = thresholdExpression[1].GetFloat();
-                _range.setMin(rangeJson);
-                _range.setMax(rangeJson);
+                if (thresholdExpression[1].IsNumber())
+                {
+                    float rangeJson = thresholdExpression[1].GetFloat();
+                    _range.setMin(rangeJson);
+                    _range.setMax(rangeJson);
+                }
+                else if (thresholdExpression[1].IsBool())
+                {
+                    bool val = thresholdExpression[1].GetBool();
+                    _range.setMin(val ? 1.0 : 0.0);
+                    _range.setMax(val ? 1.0 : 0.0);
+                }
             }
             else
             {

@@ -15,7 +15,7 @@
                     "random_scatter_1": [ "less", 0.005 ]
                 },
                 "chambered_cave": {
-                    "random_scatter_1": ["greater", 0.99]
+                    "starting_position": ["equal", true]
                 }
             },
             "entity_slots": {

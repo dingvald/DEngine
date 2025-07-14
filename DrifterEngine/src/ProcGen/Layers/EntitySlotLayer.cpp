@@ -42,13 +42,14 @@ GenerationState drft::EntitySlotLayerChunk::generate(GenerationLevel desiredLeve
                 values.emplace(id, dep->getValueAt(position));
             }
             auto biome = biomeLayer.unwrap().getBiomeAt(position);
-            if (!biome) return;
+            if (!biome) return true;
 
             auto entities = biome->determineValidEntitySlots(values);
             auto selection = random.randomSelection(entities);
-            if (!selection) return;
+            if (!selection) return true;
 
             slots.emplace(position, SlotPriority{ *selection, UNINITIALIZED_SLOT_PRIORITY });
+            return true;
         });
 
     return GenerationState::Complete;
