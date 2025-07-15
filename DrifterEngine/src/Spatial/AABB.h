@@ -107,10 +107,7 @@ namespace drft::spatial
 	template<typename T>
 	inline sf::Vector3<T> AABB<T>::center() const
 	{
-		T center_x = (min.x + max.x) / 2;
-		T center_y = (min.y + max.y) / 2;
-		T center_z = (min.z + max.z) / 2;
-		return {center_x, center_y, center_z};
+		return sf::Vector3<T>{ min + max } / static_cast<T>(2);
 	}
 	template<typename T>
 	inline sf::Rect<T> AABB<T>::flatten() const
