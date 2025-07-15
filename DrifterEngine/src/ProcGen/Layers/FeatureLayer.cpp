@@ -3,8 +3,20 @@
 #include <ProcGen/Layers/BiomeLayer.h>
 #include <Random/Random.h>
 #include <ProcGen/GenerationContext.h>
+#include <Spatial/Helpers.h>
+
+#include <ProcGen/Layers/PositionArrayLayer.h>
 
 using namespace entt::literals;
+
+namespace Internal
+{
+    static sf::Vector3i getMinCenterPosition(const drft::spatial::AABBi& volume)
+    {
+        sf::Vector2i center2d = drft::spatial::toXY(volume.center());
+        return sf::Vector3i{ center2d.x, center2d.y, volume.min.z };
+    }
+}
 
 GenerationState drft::FeatureLayerChunk::generate(GenerationLevel level)
 {
@@ -46,11 +58,9 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
     auto biomes = generateDependency<BiomeLayer>(_volume);
     if (!biomes.isReady()) return biomes.getState();
 
-    rng::Random random = { getLocalSeed() };
-    auto randomPoint = random.positionInRect(_volume.flatten());
-    const sf::Vector3i randomPoint3d = { randomPoint.x, randomPoint.y, _volume.min.z };
+    const sf::Vector3i biomePoint = Internal::getMinCenterPosition(_volume);
 
-    auto biome = biomes.unwrap().getBiomeAt(randomPoint3d);
+    const Biome* biome = biomes.unwrap().getBiomeAt(biomePoint);
     if (!biome) return GenerationState::Complete;
 
     SlotDeterminer::DependencyValues dependencyValues;
@@ -61,7 +71,7 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
         auto depLayer = generateDependency<IGetValueAtLayer>(dependencyID, _volume);
         if (!depLayer.isReady()) return depLayer.getState();
 
-        dependencyValues.emplace(dependencyID, depLayer.unwrap().getValueAt(randomPoint3d));
+        dependencyValues.emplace(dependencyID, depLayer.unwrap().getValueAt(biomePoint));
     }
 
     auto features = biome->determineValidFeatures(dependencyValues);
@@ -71,7 +81,7 @@ GenerationState drft::FeatureLayerChunk::generateFeatures()
         if (!feature) continue;
 
         GenerationContext context = { getLocalSeed(), _layer.getRegistries() };
-        GeneratedFeature generatedFeature = feature->generate(randomPoint3d, context);
+        GeneratedFeature generatedFeature = feature->generate(biomePoint, context);
 
         generatedFeatures.emplace_back(std::move(generatedFeature));
     }
@@ -88,9 +98,8 @@ GenerationState drft::FeatureLayerChunk::generateSurroundingFeatures()
     // Remove overlapping features
 
     // Place features
-    featureLayer.unwrap().forEachLoadedChunkInVolume(expandedVolume,
-        [this](FeatureLayerChunk& chunk)
-        {
+    featureLayer.unwrap().forEachLoadedChunkInVolume(expandedVolume, 
+        [this](FeatureLayerChunk& chunk) {
             for (auto&& feature : chunk.generatedFeatures)
             {
                 placeFeature(feature.slotPositions);
