@@ -93,7 +93,7 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 
 	// Apply light from local light sources
 	auto lighting = _registry.view<const LocalLightSourceComponent, const PositionComponent, component::tag::InViewport>();
-	for (auto [_, light, lightpos] : lighting.each())
+	for (auto&& [_, light, lightpos] : lighting.each())
 	{
 		_fov->compute(lightpos.tile, static_cast<int>(light.radius));
 		for (auto entity : _toLight)
@@ -111,7 +111,7 @@ void drft::system::LightingSystem::render(sf::RenderTarget& target)
 
 	// Apply light from temporary light sources
 	auto tempLighting = _registry.view<const TemporaryLightSourceComponent, const PositionComponent, component::tag::InViewport>();
-	for (auto [_, light, lightpos] : tempLighting.each())
+	for (auto&& [_, light, lightpos] : tempLighting.each())
 	{
 		_fov->compute(lightpos.tile, static_cast<int>(light.radius));
 		for (auto entity : _toLight)

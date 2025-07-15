@@ -67,6 +67,8 @@ void drft::system::EntityRenderer::batchHadSeenEntities(const CameraHandle& came
 		sf::IntRect uv = _textureAtlas->getUV(ren.texture, ren.uvSize, ren.uvCoords);
 		_spriteLayers.at(ren.layer).addSprite(uv, SeenTileColor, renderPosition);
 	}
+
+	// Special case: Stairs
 	const auto seenStairsView = _registry.view< const PositionComponent, const RenderComponent, const PlayerHasSeenComponent, const StairsComponent, component::tag::InViewport>(entt::exclude<component::tag::InPlayerFOV>);
 	for (auto const& [entity, pos, ren, _, stairs] : seenStairsView.each())
 	{

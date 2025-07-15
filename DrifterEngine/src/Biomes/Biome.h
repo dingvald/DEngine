@@ -45,5 +45,3 @@ private:
 	std::vector<IdDeterminerPair> _entitySlotDeterminers;
 	std::vector<IdDeterminerPair> _featureDeterminers;
 };
-
- 

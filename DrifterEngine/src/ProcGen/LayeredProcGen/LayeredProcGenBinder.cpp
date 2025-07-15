@@ -18,6 +18,7 @@
 void drft::LayeredProcGenBinder::bindLayers(GenerationLayerManager& layers)
 {
 	using namespace entt::literals;
+
 	// register layer types that can have multiple instances created using add
 	layers.registerType<drft::RandomLayer>("random"_hs);
 	layers.registerType<drft::PerlinNoiseLayer>("perlin"_hs);
