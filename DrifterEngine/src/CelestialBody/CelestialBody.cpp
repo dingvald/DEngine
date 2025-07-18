@@ -4,6 +4,7 @@
 #include <Cereal/external/rapidjson/document.h>
 #include <EnTT/entt.h>
 #include <ProcGen/Layers/BiomeLayer.h>
+#include <ProcGen/Layers/StructuresLayer.h>
 
 #include <Spatial/AABB.h>
 
@@ -116,6 +117,10 @@ void CelestialBody::createFromJson(const rapidjson::Value& json)
 	if (json.HasMember("biomes"))
 	{
 		_layers.add<BiomeLayer>()->createFromJson(json);
+	}
+	if (json.HasMember("structures"))
+	{
+		_layers.add<StructuresLayer>()->createFromJson(json);
 	}
 	if (json.HasMember("bodies"))
 	{

@@ -1,11 +1,10 @@
 #pragma once
-#include <Spatial/Grid2d.h>
+#include <ProcGen/SlotPositionList.h>
 
 class StructureInstanceLayer
 {
 public:
-
+	const SlotPositionMap& getEntitySlots() const;
 private:
-	using EntitySlotGrid = drft::spatial::Grid2d<entt::id_type>;
-	EntitySlotGrid _slotGrid;
+	SlotPositionMap _slots;
 };

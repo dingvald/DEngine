@@ -50,6 +50,13 @@ namespace drft::spatial
 
 			return result;
 		}
+		AABB<T> offset(sf::Vector3<T> offset) const 
+		{
+			AABB<T> result = *this;
+			result.min += offset;
+			result.max += offset;
+			return result;
+		}
 
 		sf::Vector3<T> min; // top-back-left corner
 		sf::Vector3<T> max; // bottom-front-right corner

@@ -5,4 +5,15 @@ StructureInstance::StructureInstance(const StructureTemplate& structureTemplate,
 	: _template(&structureTemplate)
 	, _origin(origin)
 {
+
+}
+
+const drft::spatial::AABBi& StructureInstance::getVolume() const
+{
+	return _template->getVolume().offset(_origin);
+}
+
+const StructureInstanceLayer* StructureInstance::getOrGenerateLayer(int z)
+{
+	return nullptr;
 }

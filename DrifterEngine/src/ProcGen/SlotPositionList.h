@@ -2,6 +2,7 @@
 #include <SFML/System/Vector3.hpp>
 #include <vector>
 #include <ProcGen/EntityPack/NullEntitySlot.h>
+#include <Utility/stdHashing.h>
 
 static const int DEFAULT_SLOT_PRIORITY = 0;
 static const int UNINITIALIZED_SLOT_PRIORITY = std::numeric_limits<int>::min();
@@ -23,3 +24,4 @@ using SlotPositionList = std::vector<SlotPositionPair>;
 using SlotPositionMap = std::unordered_map<sf::Vector3i, SlotPriority>;
 
 void mergeSlotPositionMaps(SlotPositionMap& map, const SlotPositionMap& other);
+void mergeSlotPositionMaps(SlotPositionMap& map, const SlotPositionMap& other, std::function<bool(sf::Vector3i)> pred);

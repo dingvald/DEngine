@@ -66,14 +66,6 @@
                 },
                 "depth": {
                     "type": "depth"
-                },
-                "starting_position": {
-                    "type": "position_array",
-                    "params": {
-                        "positions": [
-                            [ 1024, 1024, 0 ]
-                        ]
-                    }
                 }
             }
         }  

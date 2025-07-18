@@ -22,6 +22,11 @@ ChunkGenerator::~ChunkGenerator()
 	}
 }
 
+void ChunkGenerator::init(entt::registry& registry)
+{
+
+}
+
 void ChunkGenerator::flushPendingGenerations()
 {
 	std::lock_guard<std::mutex> lock{ _pendingQueueLock };

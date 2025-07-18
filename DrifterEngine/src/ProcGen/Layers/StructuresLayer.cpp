@@ -1,0 +1,48 @@
+#include "pch.h"
+#include "StructuresLayer.h"
+#include <Utility/StandardLogger.h>
+
+using namespace drft;
+
+GenerationState drft::StructuresLayerChunk::generate(GenerationLevel)
+{
+    if (auto structure = _layer.tryGetStructureInVolume(_volume))
+    {
+        auto structureLayer = structure->getOrGenerateLayer(_volume.min.z / _volume.dimensions().z);
+        if (!structureLayer)
+        {
+            LOG_ERROR("StructuresLayerChunk - could not generate requested layer");
+            return GenerationState::Failed;
+        }
+
+        auto ifVolumeContainsPosition = [volume = _volume](sf::Vector3i pos) { return volume.contains(pos); };
+        mergeSlotPositionMaps(slots, structureLayer->getEntitySlots(), ifVolumeContainsPosition);
+    }
+    return GenerationState::Complete;
+}
+
+void StructuresLayer::createFromJson(const rapidjson::Value& json)
+{
+    if (json.HasMember("structures"))
+    {
+        for (auto&& obj : json["structures"].GetObject())
+        {
+
+        }
+    }
+}
+
+sf::Vector3i StructuresLayer::getChunkDimensions() const
+{
+    return { 64, 64, 8 };
+}
+
+StructureInstance* drft::StructuresLayer::tryGetStructureInVolume(const spatial::AABBi& volume)
+{
+    for (auto&& structure : _structures)
+    {
+        if (structure.getVolume().intersects(volume)) 
+            return &structure;
+    }
+    return nullptr;
+}

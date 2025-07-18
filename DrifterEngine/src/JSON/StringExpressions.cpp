@@ -41,7 +41,7 @@ drft::util::BooleanStringExpression::BooleanStringExpression(std::string express
 
 bool drft::util::BooleanStringExpression::evaluate(const TokenValues & values) const
 {
-    if (values.empty()) return false;
+    if (values.empty()) return _parsedExpression.empty() ? true : false;
 
     if (_parsedExpression.empty() && values.size() == 1)
     {

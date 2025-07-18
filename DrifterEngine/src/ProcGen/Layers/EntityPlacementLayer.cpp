@@ -5,6 +5,7 @@
 #include <Spatial/Conversions.h>
 #include <ProcGen/Layers/FeatureLayer.h>
 #include <ProcGen/Layers/EntitySlotLayer.h>
+#include <ProcGen/Layers/StructuresLayer.h>
 #include <Utility/StandardLogger.h>
 #include <Components/StairsComponent.h>
 
@@ -58,6 +59,9 @@ GenerationState drft::EntityPlacementLayerChunk::generate(GenerationLevel desire
 
 GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 {
+	auto structuresLayer = _layer.getLayerManager().generate<StructuresLayer>(_volume);
+	if (!structuresLayer.isReady()) return structuresLayer.getState();
+
 	auto entitySlotLayer = _layer.getLayerManager().generate<EntitySlotLayer>(_volume);
 	if (!entitySlotLayer.isReady()) return entitySlotLayer.getState();
 
@@ -65,6 +69,9 @@ GenerationState drft::EntityPlacementLayerChunk::chooseEntitiesForSlots()
 	if (!featureLayer.isReady()) return featureLayer.getState();
 
 	SlotPositionMap slots;
+	structuresLayer.unwrap().forEachLoadedChunkInVolume(_volume, [&slots](StructuresLayerChunk& chunk) {
+			mergeSlotPositionMaps(slots, chunk.slots);
+		});
 	featureLayer.unwrap().forEachLoadedChunkInVolume(_volume, [&slots](FeatureLayerChunk& chunk) {
 			mergeSlotPositionMaps(slots, chunk.slots);
 		});
