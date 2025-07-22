@@ -1,8 +1,11 @@
 #pragma once
-#include <Structures/Template/StructureTemplate.h>
-#include <Structures/Instance/StructureInstanceLayer.h>
+#include <ProcGen/Structures/Template/StructureTemplate.h>
+#include <ProcGen/Structures/Instance/StructureInstanceLayer.h>
 #include <Spatial/AABB.h>
 
+/// <summary>
+/// Represents a structure that has been placed at position x, y, z
+/// </summary>
 class StructureInstance
 {
 public:
@@ -10,6 +13,9 @@ public:
 
 	const drft::spatial::AABBi& getVolume() const;
 	const StructureInstanceLayer* getOrGenerateLayer(int z);
+
+private:
+	int toTemplateZLevel(int z) const;
 
 private:
 	const StructureTemplate* _template;

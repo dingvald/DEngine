@@ -27,7 +27,14 @@ void StructuresLayer::createFromJson(const rapidjson::Value& json)
     {
         for (auto&& obj : json["structures"].GetObject())
         {
+            auto structureName = obj.name.GetString();
+            const StructureTemplate& structureTemplate = getRegistries().structures.get(entt::hashed_string{structureName});
 
+            // TODO: determine position
+            sf::Vector3i placementPosition = { 0,0,0 };
+            //
+
+            _structures.emplace_back(structureTemplate, placementPosition);
         }
     }
 }

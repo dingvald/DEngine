@@ -1,5 +1,5 @@
 #pragma once
-#include <Structures/Template/StructureTemplateLayer.h>
+#include <ProcGen/Structures/Template/StructureTemplateLayer.h>
 #include <JSON/ICreateFromJson.h>
 #include <Spatial/AABB.h>
 

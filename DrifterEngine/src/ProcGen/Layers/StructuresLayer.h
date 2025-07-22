@@ -1,7 +1,7 @@
 #pragma once
 #include <ProcGen/LayeredProcGen/LayeredProcGen.h>
 #include <JSON/ICreateFromJson.h>
-#include <Structures/Instance/StructureInstance.h>
+#include <ProcGen/Structures/Instance/StructureInstance.h>
 
 namespace drft
 {

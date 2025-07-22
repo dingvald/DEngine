@@ -93,6 +93,8 @@ void drft::GameState::loadGenerationRegistries()
 	_generationRegistries.entityPacks.loadEntityPacks(ENTITY_PACKS_DIRECTORY);
 	_generationRegistries.layerPacks.loadLayerPacks(LAYER_PACKS_DIRECTORY);
 	_generationRegistries.prefabs.loadPrefabs(PREFABS_DIRECTORY);
+	_generationRegistries.structures.loadStructures(STRUCTURES_DIRECTORY);
+
 }
 
 void drft::GameState::setupRegistryContext()

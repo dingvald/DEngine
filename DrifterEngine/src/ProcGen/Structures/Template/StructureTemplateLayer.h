@@ -1,6 +1,6 @@
 #pragma once
 #include <JSON/ICreateFromJson.h>
-#include <Structures/Instance/StructureInstanceLayer.h>
+#include <ProcGen/Structures/Instance/StructureInstanceLayer.h>
 
 class StructureTemplateLayer : public ICreateFromJson
 {

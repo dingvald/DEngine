@@ -777,10 +777,10 @@
     <ClCompile Include="src\ProcGen\ChunkGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\Template\StructureTemplate.cpp">
+    <ClCompile Include="src\ProcGen\Structures\Template\StructureTemplate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\Template\StructureTemplateLayer.cpp">
+    <ClCompile Include="src\ProcGen\Structures\Template\StructureTemplateLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\SlotPositionList.cpp">
@@ -789,10 +789,10 @@
     <ClCompile Include="src\ProcGen\Features\ChambersFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\Instance\StructureInstance.cpp">
+    <ClCompile Include="src\ProcGen\Structures\Instance\StructureInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Structures\Instance\StructureInstanceLayer.cpp">
+    <ClCompile Include="src\ProcGen\Structures\Instance\StructureInstanceLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\PositionArrayLayer.cpp">
@@ -802,6 +802,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProcGen\Layers\StructuresLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\Structures\StructureRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3491,19 +3494,19 @@
     <ClInclude Include="src\ProcGen\ChunkGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\Template\StructureTemplate.h">
+    <ClInclude Include="src\ProcGen\Structures\Template\StructureTemplate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\Template\StructureTemplateLayer.h">
+    <ClInclude Include="src\ProcGen\Structures\Template\StructureTemplateLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Features\ChambersFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\Instance\StructureInstance.h">
+    <ClInclude Include="src\ProcGen\Structures\Instance\StructureInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Structures\Instance\StructureInstanceLayer.h">
+    <ClInclude Include="src\ProcGen\Structures\Instance\StructureInstanceLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Layers\PositionArrayLayer.h">
@@ -3516,6 +3519,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\PositionDeterminer\IPositionDeterminer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\Structures\StructureRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
