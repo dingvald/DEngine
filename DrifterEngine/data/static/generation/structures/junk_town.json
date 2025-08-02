@@ -1,0 +1,27 @@
+{
+    "structure": {
+        "junk_town": {
+            "anchor_point": {
+                "position": "center",
+                "depth": 0
+            },
+            "layers": [
+                {
+                    "depth": 0,
+                    "max_area": [ 120, 120 ],
+                    "prefab_pool": [
+                        {
+                            "id": "desert_hut",
+                            "position_selector": {
+                                "type": "anchor_selector",
+                                "params": {
+                                    "position": "center"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

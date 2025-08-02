@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "StructuresLayer.h"
 #include <Utility/StandardLogger.h>
+#include <ProcGen/GenerationContext.h>
 
 using namespace drft;
 
@@ -8,7 +9,9 @@ GenerationState drft::StructuresLayerChunk::generate(GenerationLevel)
 {
     if (auto structure = _layer.tryGetStructureInVolume(_volume))
     {
-        auto structureLayer = structure->getOrGenerateLayer(_volume.min.z / _volume.dimensions().z);
+        const int depth = _volume.min.z / _volume.dimensions().z;
+        GenerationContext context = { getGlobalSeed(), _layer.getRegistries() };
+        auto structureLayer = structure->getOrGenerateLayer(depth, context);
         if (!structureLayer)
         {
             LOG_ERROR("StructuresLayerChunk - could not generate requested layer");

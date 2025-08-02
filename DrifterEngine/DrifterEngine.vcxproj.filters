@@ -807,6 +807,18 @@
     <ClCompile Include="src\ProcGen\Structures\StructureRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\PositionSelector\PositionSelectorFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\PositionSelector\PositionSelectorIds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\PositionSelector\AnchorPositionSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JSON\JsonValueStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3518,10 +3530,28 @@
     <ClInclude Include="src\ProcGen\Layers\StructuresLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionDeterminer\IPositionDeterminer.h">
+    <ClInclude Include="src\ProcGen\PositionSelector\IPositionSelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ProcGen\Structures\StructureRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JSON\MemberParserValidator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PositionSelector\PositionSelectorFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PositionSelector\PositionSelectorIds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\GenerationFinalizationContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PositionSelector\AnchorPositionSelector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JSON\JsonValueStorage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -3606,6 +3636,9 @@
     <None Include="data\static\generation\prefabs\tree_grove.json" />
     <None Include="data\static\generation\prefabs\small_oasis.json" />
     <None Include="data\static\entities\debug.json" />
+    <None Include="data\static\generation\structures\junk_town.json" />
+    <None Include="data\static\generation\prefabs\size_test_prefab.json" />
+    <None Include="data\static\generation\prefabs\desert_hut.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

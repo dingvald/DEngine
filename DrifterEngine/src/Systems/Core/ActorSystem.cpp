@@ -1,14 +1,14 @@
 #include "pch.h"
-#include "ActorSystem.h"
-#include "Components/Components.h"
-#include "Components/ActorComponent.h"
 #include <Components/CurrentActorComponent.h>
+#include <Events/ChunkSourceTransferCompleteEvent.h>
+#include <Events/ChunkSourceTransferRequestEvent.h>
+#include "ActorSystem.h"
+#include "Components/ActorComponent.h"
 #include "Components/DescriptionComponent.h"
 #include "Components/Tags.h"
 #include "Events/GameTickEvent.h"
-#include "Events/TurnStartEvent.h"
 #include "Events/TurnEndEvent.h"
-#include "Utility/EntityHelpers.h"
+#include "Events/TurnStartEvent.h"
 
 using namespace entt::literals;
 
@@ -17,6 +17,9 @@ const int AP_PER_TICK = 100;
 void drft::system::ActorSystem::init()
 {
 	_registry.on_destroy<ActorComponent>().connect<&ActorSystem::onActorRemove>(this);
+
+	_dispatcher.sink<events::ChunkSourceTransferCompleteEvent>().connect<&ActorSystem::onChunkSourceTransferCompleteEvent>(this);
+	_dispatcher.sink<events::ChunkSourceTransferRequestEvent>().connect<&ActorSystem::onChunkSourceTransferRequestEvent>(this);
 }
 
 void drft::system::ActorSystem::start()
@@ -32,6 +35,7 @@ void drft::system::ActorSystem::start()
 
 void drft::system::ActorSystem::update()
 {
+	if (!_canUpdate) return;
 	if (!handleCurrentActor()) return;
 
 	_registry.clear<CurrentActorComponent>();
@@ -209,4 +213,14 @@ entt::entity drft::system::ActorSystem::rotateQueueToCurrentActor()
 	std::rotate(_queue.begin(), pos, _queue.end());
 
 	return result;
+}
+
+void drft::system::ActorSystem::onChunkSourceTransferRequestEvent(const drft::events::ChunkSourceTransferRequestEvent& ev)
+{
+	_canUpdate = false;
+}
+
+void drft::system::ActorSystem::onChunkSourceTransferCompleteEvent(const drft::events::ChunkSourceTransferCompleteEvent& ev)
+{
+	_canUpdate = true;
 }

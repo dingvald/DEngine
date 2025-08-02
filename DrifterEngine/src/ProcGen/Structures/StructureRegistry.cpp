@@ -11,19 +11,28 @@ void StructureRegistry::loadStructures(const std::filesystem::path& structuresDi
 	{
 		if (entry.is_directory()) continue;
 
-		drft::json::JsonFileWrapper json{ entry.path() };
+		drft::json::JsonFileWrapper json{ entry.path(), "structure" };
 		if (!json.load())
 		{
 			LOG_WARNING("{} could not be loaded", entry.path().string());
 			continue;
 		}
 
-		auto& structureValue = json.getRoot();
-		auto structureName = structureValue["name"].GetString();
-		StructureTemplate newStructure;
-		newStructure.createFromJson(structureValue);
+		for (auto&& structureObj : json.getRoot().GetObject())
+		{
+			entt::id_type name = entt::hashed_string{ structureObj.name.GetString() };
+			StructureTemplate newStructure;
+			newStructure.createFromJson(structureObj.value);
+			_structures.emplace(std::move(name), std::move(newStructure));
+		}
+	}
+}
 
-		_structures.emplace(entt::hashed_string{ structureName }, std::move(newStructure));
+void StructureRegistry::finalize(const GenerationFinalizationContext& context)
+{
+	for (auto&& [id, structure] : _structures)
+	{
+		structure.finalize(context);
 	}
 }
 

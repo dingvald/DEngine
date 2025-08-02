@@ -23,7 +23,7 @@
                             }
                         },
                         "structures": {
-                            "junk_village": {
+                            "junk_town": {
                                 "conditions": [
                                     {
                                         "type": "hardcoded_location",

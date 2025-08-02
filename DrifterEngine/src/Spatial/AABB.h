@@ -50,6 +50,7 @@ namespace drft::spatial
 
 			return result;
 		}
+		// Offsets the entire volume by some amount 'offset'
 		AABB<T> offset(sf::Vector3<T> offset) const 
 		{
 			AABB<T> result = *this;
@@ -57,6 +58,8 @@ namespace drft::spatial
 			result.max += offset;
 			return result;
 		}
+
+		AABB<T> expandToFit(sf::Vector3<T> point) const;
 
 		sf::Vector3<T> min; // top-back-left corner
 		sf::Vector3<T> max; // bottom-front-right corner
@@ -121,4 +124,16 @@ namespace drft::spatial
 	{
 		return sf::Rect<T>{{ min.x, min.y }, { dimensions().x, dimensions().y }};
 	}
+	template<typename T>
+    inline AABB<T> AABB<T>::expandToFit(sf::Vector3<T> point) const
+    {
+		AABB<T> result = *this;
+        result.min.x = std::min(result.min.x, point.x);
+        result.min.y = std::min(result.min.y, point.y);
+        result.min.z = std::min(result.min.z, point.z);
+        result.max.x = std::max(result.max.x, point.x);
+        result.max.y = std::max(result.max.y, point.y);
+        result.max.z = std::max(result.max.z, point.z);
+        return result;
+    }
 }

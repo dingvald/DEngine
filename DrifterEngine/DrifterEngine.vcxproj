@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\JSON\JsonValueStorage.cpp" />
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.cpp" />
     <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp" />
     <ClCompile Include="src\Engine\Debug\IDebugDisplay.cpp" />
@@ -222,6 +223,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\Layers\PositionArrayLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\StructuresLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp" />
+    <ClCompile Include="src\ProcGen\PositionSelector\AnchorPositionSelector.cpp" />
+    <ClCompile Include="src\ProcGen\PositionSelector\PositionSelectorFactory.cpp" />
+    <ClCompile Include="src\ProcGen\PositionSelector\PositionSelectorIds.cpp" />
     <ClCompile Include="src\ProcGen\Prefabs\Prefab.cpp" />
     <ClCompile Include="src\ProcGen\Prefabs\PrefabRegistry.cpp" />
     <ClCompile Include="src\ProcGen\SlotPositionList.cpp" />
@@ -500,6 +504,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\JSON\JsonValueStorage.h" />
+    <ClInclude Include="src\JSON\MemberParserValidator.h" />
+    <ClInclude Include="src\ProcGen\GenerationFinalizationContext.h" />
     <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.h" />
     <ClInclude Include="src\Engine\Debug\DebugDisplay.h" />
     <ClInclude Include="src\Engine\Debug\IDebugDisplay.h" />
@@ -530,7 +537,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\Layers\PositionArrayLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\StructuresLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h" />
-    <ClInclude Include="src\ProcGen\PositionDeterminer\IPositionDeterminer.h" />
+    <ClInclude Include="src\ProcGen\PositionSelector\AnchorPositionSelector.h" />
+    <ClInclude Include="src\ProcGen\PositionSelector\IPositionSelector.h" />
+    <ClInclude Include="src\ProcGen\PositionSelector\PositionSelectorFactory.h" />
+    <ClInclude Include="src\ProcGen\PositionSelector\PositionSelectorIds.h" />
     <ClInclude Include="src\ProcGen\Prefabs\Prefab.h" />
     <ClInclude Include="src\ProcGen\Prefabs\PrefabRegistry.h" />
     <ClInclude Include="src\Skills\SkillRequirement.h" />
@@ -1416,9 +1426,12 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <None Include="data\static\generation\biome_features\biome_features.json" />
     <None Include="data\static\generation\entity_packs\entity_packs.json" />
     <None Include="data\static\generation\layer_packs\layer_packs.json" />
+    <None Include="data\static\generation\prefabs\desert_hut.json" />
     <None Include="data\static\generation\prefabs\iron_deposit_cache.json" />
+    <None Include="data\static\generation\prefabs\size_test_prefab.json" />
     <None Include="data\static\generation\prefabs\small_oasis.json" />
     <None Include="data\static\generation\prefabs\tree_grove.json" />
+    <None Include="data\static\generation\structures\junk_town.json" />
     <None Include="data\static\universe\solar_system.json" />
     <None Include="data\static\utility_ai_archetypes\gatherer_ai_archetype.json" />
     <None Include="data\static\utility_ai_archetypes\soldier_ai_archetype.json" />

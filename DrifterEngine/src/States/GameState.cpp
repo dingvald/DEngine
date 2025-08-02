@@ -24,6 +24,8 @@
 #include "Factory/EntityFactory.h"
 
 #include <ProcGen/Decorators/DecoratorFactory.h>
+#include <ProcGen/PositionSelector/PositionSelectorFactory.h>
+#include <ProcGen/GenerationFinalizationContext.h>
 
 
 drft::GameState::GameState(StateStack& stack, StateContext& context)
@@ -83,9 +85,12 @@ void drft::GameState::loadOrCreateUniverseGenerator()
 
 void drft::GameState::loadGenerationRegistries()
 {
-	// Decorator factory can go out of scope because features and structures will own the decorations
+	LOG_MSG("Loading generation registries...");
 	DecoratorFactory decorators;
 	bindDecorators(decorators);
+
+	PositionSelectorFactory positionSelectors;
+	bindPositionSelectors(positionSelectors);
 
 	_generationRegistries.entityFactory.loadPrototypes(ENTITIES_DIRECTORY);
 	_generationRegistries.biomes.loadBiomes(BIOMES_DIRECTORY);
@@ -94,7 +99,14 @@ void drft::GameState::loadGenerationRegistries()
 	_generationRegistries.layerPacks.loadLayerPacks(LAYER_PACKS_DIRECTORY);
 	_generationRegistries.prefabs.loadPrefabs(PREFABS_DIRECTORY);
 	_generationRegistries.structures.loadStructures(STRUCTURES_DIRECTORY);
+	LOG_MSG("Generation registries loaded.");
 
+	GenerationFinalizationContext finalizationContext{ _generationRegistries, decorators, positionSelectors };
+
+	// Finalize
+	LOG_MSG("Finalizing generation registries...");
+	_generationRegistries.structures.finalize(finalizationContext);
+	LOG_MSG("Generation registries finalized.");
 }
 
 void drft::GameState::setupRegistryContext()

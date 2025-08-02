@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "StructureInstance.h"
 #include <Utility/StandardLogger.h>
+#include <ProcGen/GenerationContext.h>
 
 StructureInstance::StructureInstance(const StructureTemplate& structureTemplate, sf::Vector3i origin)
 	: _template(&structureTemplate)
@@ -14,7 +15,7 @@ const drft::spatial::AABBi& StructureInstance::getVolume() const
 	return _template->getVolume().offset(_origin);
 }
 
-const StructureInstanceLayer* StructureInstance::getOrGenerateLayer(int z)
+const StructureInstanceLayer* StructureInstance::getOrGenerateLayer(int z, const GenerationContext& context)
 {
 	if (_layers.contains(z))
 	{
@@ -29,7 +30,7 @@ const StructureInstanceLayer* StructureInstance::getOrGenerateLayer(int z)
 	}
 
 	// TODO: could be a heavy operation, may need to spread across frames
-	StructureInstanceLayer generatedLayer = layerTemplate->generate();
+	StructureInstanceLayer generatedLayer = layerTemplate->generate(context);
 	auto&& [val, inserted] = _layers.emplace(z, std::move(generatedLayer));
 	return &(val->second);
 }

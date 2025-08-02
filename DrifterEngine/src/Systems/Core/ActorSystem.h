@@ -1,6 +1,12 @@
 #pragma once
 #include "Systems/System.h"
 
+namespace drft::events
+{
+	struct ChunkSourceTransferRequestEvent;
+	struct ChunkSourceTransferCompleteEvent;
+	struct ChunkSourceTransferFailedEvent;
+}
 
 namespace drft::system
 {
@@ -36,7 +42,11 @@ namespace drft::system
 		void refreshActorQueue();
 		entt::entity rotateQueueToCurrentActor();
 
+		void onChunkSourceTransferRequestEvent(const drft::events::ChunkSourceTransferRequestEvent& ev);
+		void onChunkSourceTransferCompleteEvent(const drft::events::ChunkSourceTransferCompleteEvent& ev);
+
 	private:
+		bool _canUpdate = true;
 		entt::entity _timeKeeper = entt::null;
 		entt::entity _currentActor = entt::null;
 		entt::entity _previousActor = entt::null;
