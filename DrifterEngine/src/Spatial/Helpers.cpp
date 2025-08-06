@@ -4,6 +4,11 @@
 #include <Spatial/Conversions.h>
 
 static const sf::Vector3i ZeroVector3i = { 0,0,0 };
+const sf::IntRect drft::spatial::BoundlessPositiveRect =
+{
+	{ 0, 0 },
+	{ std::numeric_limits<int>::max(), std::numeric_limits<int>::max() }
+};
 
 drft::spatial::OffsetPosition drft::spatial::collapseOffset(const TilePosition& position, const sf::Vector3f& offset)
 {

@@ -93,9 +93,29 @@ void StructureTemplateLayer::finalize(const GenerationFinalizationContext& conte
 	}
 }
 
-StructureInstanceLayer StructureTemplateLayer::generate(const GenerationContext& context) const
+StructureInstanceLayer StructureTemplateLayer::generate(sf::Vector2i origin, const GenerationContext& context) const
 {
 	SlotPositionMap map;
+
+	const PrefabRegistry& prefabs = context.registries.prefabs;
+	const SelectorContext selectorCtx{ context.seed };
+
+	for (auto&& prefabPoolItem : _prefabPool)
+	{
+		auto optionalPosition = prefabPoolItem.positionSelector->selectPosition(_area, selectorCtx);
+		if (optionalPosition.has_value())
+		{
+			auto& prefab = prefabs.get(prefabPoolItem.id);
+			const sf::Vector3i position3d = 
+			{ 
+				optionalPosition.value().x + origin.x, 
+				optionalPosition.value().y + origin.y, 
+				0 
+			};
+			SlotPositionList positionList = prefab.generate(position3d, context);
+			mergeSlotListIntoMap(map, positionList);
+		}
+	}
 
 	return StructureInstanceLayer{ std::move(map) };
 }

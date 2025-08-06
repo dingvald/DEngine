@@ -25,3 +25,4 @@ using SlotPositionMap = std::unordered_map<sf::Vector3i, SlotPriority>;
 
 void mergeSlotPositionMaps(SlotPositionMap& map, const SlotPositionMap& other);
 void mergeSlotPositionMaps(SlotPositionMap& map, const SlotPositionMap& other, std::function<bool(sf::Vector3i)> pred);
+void mergeSlotListIntoMap(SlotPositionMap& map, const SlotPositionList& list);

@@ -4,8 +4,11 @@
 
 static const std::unordered_map<std::string, std::function<sf::Vector2i(sf::IntRect)>> AnchorPositionFunctionMap =
 {
-    {"center", [](sf::IntRect rect) { return rect.getCenter(); }},
-    {"top_left", [](sf::IntRect rect) { return rect.position; }}
+    {"center",          [](sf::IntRect rect) { return rect.getCenter(); }},
+    {"top_left",        [](sf::IntRect rect) { return rect.position; }},
+    {"top_right",       [](sf::IntRect rect) { return sf::Vector2i{rect.position.x + rect.size.x, rect.position.y}; }},
+    {"bottom_left",     [](sf::IntRect rect) { return sf::Vector2i{rect.position.x, rect.position.y + rect.size.y}; }},
+    {"bottom_right",    [](sf::IntRect rect) { return rect.position + rect.size; }},
 };
 
 void AnchorPositionSelector::createFromJson(const rapidjson::Value& json)

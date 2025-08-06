@@ -92,6 +92,9 @@ void drft::GameState::loadGenerationRegistries()
 	PositionSelectorFactory positionSelectors;
 	bindPositionSelectors(positionSelectors);
 
+	PositionGeneratorFactory positionGenerators;
+	bindPositionGenerators(positionGenerators);
+
 	_generationRegistries.entityFactory.loadPrototypes(ENTITIES_DIRECTORY);
 	_generationRegistries.biomes.loadBiomes(BIOMES_DIRECTORY);
 	_generationRegistries.features.loadFeatures(BIOME_FEATURES_DIRECTORY, decorators);
@@ -100,6 +103,9 @@ void drft::GameState::loadGenerationRegistries()
 	_generationRegistries.prefabs.loadPrefabs(PREFABS_DIRECTORY);
 	_generationRegistries.structures.loadStructures(STRUCTURES_DIRECTORY);
 	LOG_MSG("Generation registries loaded.");
+
+	// Assign factories to registries
+	_generationRegistries.positionGenerators = std::move(positionGenerators);
 
 	GenerationFinalizationContext finalizationContext{ _generationRegistries, decorators, positionSelectors };
 

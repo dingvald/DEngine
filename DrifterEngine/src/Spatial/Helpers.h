@@ -4,6 +4,8 @@
 
 namespace drft::spatial
 {
+	extern const sf::IntRect BoundlessPositiveRect;
+
 	struct OffsetPosition
 	{
 		TilePosition position;

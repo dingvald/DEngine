@@ -64,6 +64,7 @@ void StructureTemplate::finalize(const GenerationFinalizationContext& context)
     {
         layer.finalize(context);
     }
+
     for (auto&& [depth, layer] : _layers)
     {
         sf::IntRect area = layer.getArea();

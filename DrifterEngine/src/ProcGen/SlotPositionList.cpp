@@ -39,3 +39,22 @@ void mergeSlotPositionMaps(SlotPositionMap& map, const SlotPositionMap& other, s
 		slot.priority = slotPriority.priority;
 	}
 }
+
+void mergeSlotListIntoMap(SlotPositionMap& map, const SlotPositionList& list)
+{
+	for (auto&& [slot, position, priority] : list)
+	{
+		if (auto it = map.find(position); it != map.end())
+		{
+			if (priority > it->second.priority)
+			{
+				it->second.slot = slot;
+				it->second.priority = priority;
+			}
+		}
+		else
+		{
+			map.emplace(position, SlotPriority{ slot, priority });
+		}
+	}
+}

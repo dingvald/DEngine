@@ -223,6 +223,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\ProcGen\Layers\PositionArrayLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\StructuresLayer.cpp" />
     <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp" />
+    <ClCompile Include="src\ProcGen\PositionGenerator\HardcodedPositionGenerator.cpp" />
+    <ClCompile Include="src\ProcGen\PositionGenerator\PositionGeneratorFactory.cpp" />
+    <ClCompile Include="src\ProcGen\PositionGenerator\PositionGeneratorIds.cpp" />
     <ClCompile Include="src\ProcGen\PositionSelector\AnchorPositionSelector.cpp" />
     <ClCompile Include="src\ProcGen\PositionSelector\PositionSelectorFactory.cpp" />
     <ClCompile Include="src\ProcGen\PositionSelector\PositionSelectorIds.cpp" />
@@ -537,6 +540,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\ProcGen\Layers\PositionArrayLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\StructuresLayer.h" />
     <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h" />
+    <ClInclude Include="src\ProcGen\PositionGenerator\HardcodedPositionGenerator.h" />
+    <ClInclude Include="src\ProcGen\PositionGenerator\IPositionGenerator.h" />
+    <ClInclude Include="src\ProcGen\PositionGenerator\PositionGeneratorFactory.h" />
+    <ClInclude Include="src\ProcGen\PositionGenerator\PositionGeneratorIds.h" />
     <ClInclude Include="src\ProcGen\PositionSelector\AnchorPositionSelector.h" />
     <ClInclude Include="src\ProcGen\PositionSelector\IPositionSelector.h" />
     <ClInclude Include="src\ProcGen\PositionSelector\PositionSelectorFactory.h" />

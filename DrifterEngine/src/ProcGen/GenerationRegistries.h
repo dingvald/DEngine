@@ -6,6 +6,7 @@
 #include <ProcGen/Prefabs/PrefabRegistry.h>
 #include <ProcGen/Structures/StructureRegistry.h>
 #include <Factory/EntityFactory.h>
+#include <ProcGen/PositionGenerator/PositionGeneratorFactory.h>
 
 struct GenerationRegistries
 {
@@ -16,4 +17,5 @@ struct GenerationRegistries
 	LayerPackRegistry layerPacks;
 	PrefabRegistry prefabs;
 	StructureRegistry structures;
+	PositionGeneratorFactory positionGenerators;
 };

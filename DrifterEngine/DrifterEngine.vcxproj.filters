@@ -819,6 +819,15 @@
     <ClCompile Include="src\JSON\JsonValueStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcGen\PositionGenerator\PositionGeneratorFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\PositionGenerator\PositionGeneratorIds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProcGen\PositionGenerator\HardcodedPositionGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3552,6 +3561,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\JSON\JsonValueStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PositionGenerator\IPositionGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PositionGenerator\PositionGeneratorFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PositionGenerator\PositionGeneratorIds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProcGen\PositionGenerator\HardcodedPositionGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

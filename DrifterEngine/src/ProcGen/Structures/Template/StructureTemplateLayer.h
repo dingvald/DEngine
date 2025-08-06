@@ -25,7 +25,7 @@ public:
 	void createFromJson(const rapidjson::Value& json) override;
 	void finalize(const GenerationFinalizationContext& context);
 
-	StructureInstanceLayer generate(const GenerationContext& context) const;
+	StructureInstanceLayer generate(sf::Vector2i origin, const GenerationContext& context) const;
 	sf::IntRect getArea() const { return _area;}
 
 private:
