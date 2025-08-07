@@ -1,6 +1,8 @@
 #include <pch.h>
 #include "Prefab.h"
 #include <ProcGen/GenerationContext.h>
+#include <Spatial/Helpers.h>
+#include <Utility/StandardLogger.h>
 
 using namespace entt::literals;
 
@@ -10,47 +12,50 @@ void Prefab::createFromJson(const rapidjson::Value& json)
 {
 	if (json.HasMember("layers"))
 	{
-		auto layers = json["layers"].GetArray();
-		_layers.reserve(layers.Size());
-		for (auto&& layer : layers)
+		// Fill a temporary map causing lower layers to be overwritten by higher layers
+		std::unordered_map<sf::Vector2i, entt::id_type> tempPositionMap;
+		for (auto&& layer : json["layers"].GetArray())
 		{
-			SlotPositionList newList;
 			if (layer.HasMember("entities"))
 			{
 				auto entities = layer["entities"].GetArray();
-				newList.reserve(entities.Size());
 				for (auto&& entity : entities)
 				{
-					SlotPositionPair newPair;
+					sf::Vector2i position;
 
-					newPair.slot = entt::hashed_string{ entity["id"].GetString() };
-					newPair.position.x = entity["x"].GetInt();
-					newPair.position.y = entity["y"].GetInt();
+					entt::id_type slot = entt::hashed_string{ entity["id"].GetString() };
+					position.x = entity["x"].GetInt();
+					position.y = entity["y"].GetInt();
 
-					_area.position.x = std::min(_area.position.x, newPair.position.x);
-					_area.position.y = std::min(_area.position.x, newPair.position.y);
-					_area.size.x = std::max(_area.size.x, newPair.position.x - _area.position.x);
-					_area.size.y = std::max(_area.size.y, newPair.position.y - _area.position.y);
-
-					newList.emplace_back(std::move(newPair));
+					tempPositionMap[position] = slot;
 				}
 			}
-			_layers.emplace_back(std::move(newList));
 		}
+
+		// Create the list and set the area
+		for (auto&& [position, slot] : tempPositionMap)
+		{
+			_area.position.x = std::min(_area.position.x, position.x);
+			_area.position.y = std::min(_area.position.x, position.y);
+			_area.size.x = std::max(_area.size.x, position.x - _area.position.x);
+			_area.size.y = std::max(_area.size.y, position.y - _area.position.y);
+
+			_entitySlots.emplace_back(slot, drft::spatial::vec3FromPlanar(position), PREFAB_PRIORITY);
+		}
+	}
+	else
+	{
+		LOG_ERROR("Prefab file is missing the 'layers' member");
 	}
 }
 
 SlotPositionList Prefab::generate(sf::Vector3i position, const GenerationContext& context) const
 {
 	SlotPositionList result;
-	for (int i = 0; i < _layers.size(); i++)
+	result.reserve(_entitySlots.size());
+	for (auto&& [slot, pos, priority] : _entitySlots)
 	{
-		for (auto&& [slot, pos, priority] : _layers.at(i))
-		{
-			sf::Vector3i finalPos = pos + position;
-			const int finalPriority = priority == UNINITIALIZED_SLOT_PRIORITY ? PREFAB_PRIORITY : priority;
-			result.emplace_back(slot, finalPos, finalPriority);
-		}
+		result.emplace_back(slot, pos + position, priority);
 	}
 	return result;
 }

@@ -10,7 +10,7 @@ struct GenerationContext;
 class Prefab : ICreateFromJson
 {
 public:
-	void createFromJson(const rapidjson::Value & json) override;
+	void createFromJson(const rapidjson::Value& json) override;
 
 	SlotPositionList generate(sf::Vector3i position, const GenerationContext& context) const;
 
@@ -18,5 +18,5 @@ public:
 
 private:
 	sf::IntRect _area;
-	std::vector<SlotPositionList> _layers;
+	SlotPositionList _entitySlots;
 };
