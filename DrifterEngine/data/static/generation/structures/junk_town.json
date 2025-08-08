@@ -8,14 +8,14 @@
             "layers": [
                 {
                     "depth": 0,
-                    "max_area": [ 120, 120 ],
+                    "max_area": [ 64, 32 ],
                     "prefab_pool": [
                         {
-                            "id": "desert_hut",
+                            "id": "junk_town",
                             "position_selector": {
                                 "type": "anchor_selector",
                                 "params": {
-                                    "position": "center"
+                                    "position": "top_left"
                                 }
                             }
                         }

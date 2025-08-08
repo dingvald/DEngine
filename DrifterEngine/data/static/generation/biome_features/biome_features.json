@@ -84,7 +84,7 @@
                     },
                     "conditions": {
                         "tag_expression": "floor & center",
-                        "chance": 1.0
+                        "chance": 0.1
                     }
                 }
             ]
