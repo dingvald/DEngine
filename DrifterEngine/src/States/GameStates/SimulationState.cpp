@@ -85,6 +85,8 @@
 
 using namespace entt::literals;
 
+const drft::TilePosition PlayerStartingPosition = { 1050, 1050, 0 };
+
 drft::SimulationState::SimulationState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
@@ -230,13 +232,9 @@ void drft::SimulationState::loadOrCreatePlayer()
 		const EntityFactory& factory = getContext().registry.ctx().get<const EntityFactory&>();
 		assert(factory.has("player"_hs));
 		_player = factory.build("player"_hs, getContext().registry);
-		_player.patch<PositionComponent>([](PositionComponent& pos)
-			{
-				pos.tile = { 1024, 1024, 0 };
-			});
 
 		auto& dispatcher = getContext().registry.ctx().get<entt::dispatcher>();
-		dispatcher.trigger(events::PlayerTransferRequestEvent{"Arakooine"_hs, TilePosition{1024, 1024, 0}});
+		dispatcher.trigger(events::PlayerTransferRequestEvent{"Arakooine"_hs, PlayerStartingPosition});
 	}
 
 	_player.emplace<CameraTargetComponent>();
