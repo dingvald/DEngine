@@ -1433,6 +1433,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <None Include="data\static\generation\biome_features\biome_features.json" />
     <None Include="data\static\generation\entity_packs\entity_packs.json" />
     <None Include="data\static\generation\layer_packs\layer_packs.json" />
+    <None Include="data\static\generation\prefabs\ai_testing_ground.json" />
     <None Include="data\static\generation\prefabs\desert_hut.json" />
     <None Include="data\static\generation\prefabs\iron_deposit_cache.json" />
     <None Include="data\static\generation\prefabs\junk_town.json" />

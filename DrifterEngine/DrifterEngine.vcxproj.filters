@@ -3661,6 +3661,7 @@
     <None Include="data\static\generation\prefabs\size_test_prefab.json" />
     <None Include="data\static\generation\prefabs\desert_hut.json" />
     <None Include="data\static\generation\prefabs\junk_town.json" />
+    <None Include="data\static\generation\prefabs\ai_testing_ground.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">
