@@ -4,6 +4,6 @@
 
 struct UtilityAIComponent
 {
-	entt::id_type type;
+	entt::id_type archetype;
 	Blackboard blackboard;
 };

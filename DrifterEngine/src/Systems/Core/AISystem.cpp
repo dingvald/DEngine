@@ -33,7 +33,7 @@ void drft::system::AiSystem::update()
 	auto view = _registry.view<UtilityAIComponent, CurrentActorComponent>();
 	for (auto&& [entity, ai, currentActor] : view.each())
 	{
-		auto&& scoredActions = _utility.scoreActions(entity, ai.type, ai.blackboard);
+		auto scoredActions = _utility.scoreActions(entity, ai.archetype, ai.blackboard);
 
 		entt::handle actor_handle = { _registry, entity };
 		auto [action, target] = selectAction(scoredActions, actor_handle);
