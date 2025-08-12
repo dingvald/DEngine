@@ -1,0 +1,27 @@
+{
+    "structure": {
+        "colosseum": {
+            "anchor_point": {
+                "position": "center",
+                "depth": 0
+            },
+            "layers": [
+                {
+                    "depth": 0,
+                    "max_area": [ 64, 32 ],
+                    "prefab_pool": [
+                        {
+                            "id": "ai_testing_ground",
+                            "position_selector": {
+                                "type": "anchor_selector",
+                                "params": {
+                                    "position": "top_left"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
