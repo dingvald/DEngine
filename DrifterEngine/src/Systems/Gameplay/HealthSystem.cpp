@@ -50,15 +50,16 @@ void drft::system::HealthSystem::init()
 void drft::system::HealthSystem::start()
 {
 	SkillsSystem::registerLevelUpHandler(SkillId::Toughness, Internal::onToughnessLevelUp, _registry);
-	for (auto&& entity : _healthAddedObserver)
-	{
-		setupHealthComponentOnStart({ _registry, entity });
-	}
-	_healthAddedObserver.clear();
 }
 
 void drft::system::HealthSystem::update()
 {
+	for (auto&& entity : _healthAddedObserver)
+	{
+		setupHealthComponent({ _registry, entity });
+	}
+	_healthAddedObserver.clear();
+
 	// This sepration of incoming / taking damage allows for event handlers to react to the events separately
 	auto incomingDamageView = _registry.view<component::action::IncomingDamage>();
 	for (auto [entity, incoming] : incomingDamageView.each())
@@ -198,7 +199,7 @@ void drft::system::HealthSystem::onHealthComponentAdded(entt::registry& registry
 	}
 }
 
-void drft::system::HealthSystem::setupHealthComponentOnStart(entt::handle entity) const
+void drft::system::HealthSystem::setupHealthComponent(entt::handle entity) const
 {
 	auto healthComponent = entity.try_get<HealthComponent>();
 	if (!healthComponent) return;

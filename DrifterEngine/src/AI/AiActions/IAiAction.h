@@ -13,5 +13,5 @@ public:
 	virtual bool canPerform(entt::const_handle actor) const = 0;
 
 	// Perform the action
-	virtual void perform(entt::const_handle actor, entt::const_handle target) const = 0;
+	virtual void perform(entt::handle actor, entt::const_handle target) const = 0;
 };

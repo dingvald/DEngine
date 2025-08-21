@@ -85,7 +85,13 @@ bool TextureAtlas::load(const std::filesystem::path& directoryPath)
 		if (!_texture.loadFromImage(image))
 		{
 			LOG_WARNING("image could not be loaded into the texture atlas");
+			return false;
 		}
+		if (!_texture.generateMipmap())
+		{
+			LOG_MSG("mipmap could not be generated");
+		}
+
 	}
 	else
 	{

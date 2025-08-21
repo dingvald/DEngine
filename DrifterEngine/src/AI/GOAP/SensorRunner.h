@@ -20,5 +20,3 @@ namespace drft::goap
 		std::unordered_map<SensorType, CheckerFxn> _checkers;
 	};
 }
-
-

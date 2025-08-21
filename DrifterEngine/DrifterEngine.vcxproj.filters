@@ -828,6 +828,9 @@
     <ClCompile Include="src\ProcGen\PositionGenerator\HardcodedPositionGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AI\AiActions\WaitAiAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3575,6 +3578,9 @@
     <ClInclude Include="src\ProcGen\PositionGenerator\HardcodedPositionGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\AI\AiActions\WaitAiAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Utility\ResourceHolder.inl">
@@ -3663,6 +3669,7 @@
     <None Include="data\static\generation\prefabs\junk_town.json" />
     <None Include="data\static\generation\prefabs\ai_testing_ground.json" />
     <None Include="data\static\generation\structures\colosseum.json" />
+    <None Include="data\static\entities\npc.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\Textures\simple_tileset.png">

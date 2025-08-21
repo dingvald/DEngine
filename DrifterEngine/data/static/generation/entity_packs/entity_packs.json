@@ -50,6 +50,9 @@
                 ],
                 "stone_wall": [
                     [ "stone_wall", 1 ]
+                ],
+                "test_npc": [
+                    ["test_npc", 1]
                 ]
             }
         }

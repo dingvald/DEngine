@@ -29,7 +29,7 @@ void UtilityAction::createFromJson(const rapidjson::Value& json)
             auto obj = val.GetObject();
             newConsideration.inputID = entt::hashed_string{ obj["input"].GetString() };
             newConsideration.responseCurve.createFromJson(obj["curve"]);
-            _considerations.push_back(std::move(newConsideration));
+            _considerations.emplace_back(std::move(newConsideration));
         }
     }
 }

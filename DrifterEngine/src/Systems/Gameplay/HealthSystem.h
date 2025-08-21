@@ -24,7 +24,7 @@ namespace drft::system
 
 		void onTurnStartEvent(events::TurnStartEvent& ev);
 		void onHealthComponentAdded(entt::registry& registry, entt::entity) const;
-		void setupHealthComponentOnStart(entt::handle entity) const;
+		void setupHealthComponent(entt::handle entity) const;
 
 	private:
 		entt::observer _healthAddedObserver;

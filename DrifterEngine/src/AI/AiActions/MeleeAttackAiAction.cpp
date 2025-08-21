@@ -11,7 +11,7 @@ bool MeleeAttackAiAction::canPerform(entt::const_handle actor) const
     return true;
 }
 
-void MeleeAttackAiAction::perform(entt::const_handle actor, entt::const_handle target) const
+void MeleeAttackAiAction::perform(entt::handle actor, entt::const_handle target) const
 {
 
 }

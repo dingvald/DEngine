@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <Components/CurrentActorComponent.h>
+#include <Engine/Debug/IDebugDisplay.h>
 #include <Events/ChunkSourceTransferCompleteEvent.h>
 #include <Events/ChunkSourceTransferRequestEvent.h>
 #include "ActorSystem.h"
@@ -9,6 +10,7 @@
 #include "Events/GameTickEvent.h"
 #include "Events/TurnEndEvent.h"
 #include "Events/TurnStartEvent.h"
+#include <Utility/EntityAccessors/GetEntityName.h>
 
 using namespace entt::literals;
 
@@ -64,6 +66,7 @@ void drft::system::ActorSystem::update()
 	}
 
 	_registry.emplace<CurrentActorComponent>(_currentActor);
+	DEBUG_DISPLAY_VALUE("current actor", util::getEntityName({ _registry, _currentActor }));
 }
 
 void drft::system::ActorSystem::shutdown()

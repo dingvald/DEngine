@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "AiActionRegistry.h"
+#include <Utility/StandardLogger.h>
 
-void AiActionRegistry::registerAction(entt::id_type id, std::unique_ptr<IAiAction> action)
+const IAiAction* AiActionRegistry::getAction(entt::id_type id) const
 {
-    _actions.emplace(id, std::move(action));
-}
-
-const IAiAction& AiActionRegistry::getAction(entt::id_type id) const
-{
-    return *_actions.at(id);
+    if (!_actions.contains(id))
+    {
+        LOG_ERROR("Action registry does not contain action id {}", id);
+        return nullptr;
+    }
+    return _actions.at(id).get();
 }

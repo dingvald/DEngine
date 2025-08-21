@@ -1,0 +1,75 @@
+{
+    "prototypes": {
+        "test_npc": {
+            "inherits": [
+                "human_body"
+            ],
+            "components": {
+                "description": {
+                    "name": "test npc",
+                    "description": "a test dummy for testing ai"
+                },
+                "sprite_controller": {
+                    "states": {
+                        "default": {
+                            "frames": [
+                                {
+                                    "texture": "human_male_tunic_idle",
+                                    "uv_size": [ 16, 24 ],
+                                    "uv_coords": [ 0, 0 ],
+                                    "layer": 2,
+                                    "color": [ 255, 100, 100 ]
+                                },
+                                {
+                                    "uv_coords": [ 1, 0 ]
+                                }
+                            ],
+                            "speed": 1.0,
+                            "synced": true
+                        },
+                        "sprinting": {
+                            "frames": [
+                                {
+                                    "uv_coords": [ 1, 0 ]
+                                }
+                            ],
+                            "speed": 1.0
+                        }
+                    }
+                },
+                "weight": {
+                    "value": 60.0
+                },
+                "physical_blocking": {},
+                "skills": {
+                    "strength": 15,
+                    "agility": 15,
+                    "toughness": 15,
+                    "endurance": 15,
+                    "latent_power": 10
+                },
+                "actor": {
+                    "move_speed": 1.0,
+                    "act_speed": 1.0
+                },
+                "vision": {
+                    "sight_range": 15
+                },
+                "health": {
+                    "recovery": 0.05
+                },
+                "stamina": {},
+                "ai_input": {
+                    "archetype": "soldier"
+                },
+                "faction": {
+                    "name": "test_npc"
+                },
+                "container": {
+                    "capacity": 30
+                }
+            }
+        }
+    }
+}
+    

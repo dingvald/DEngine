@@ -50,6 +50,7 @@
 #include "SyncedAnimationComponent.h"
 #include "TemporaryLightSourceComponent.h"
 #include "TickingLifetimeComponent.h"
+#include "UtilityAIComponent.h"
 #include "VisionComponent.h"
 #include "VisualEffectComponent.h"
 #include "VolumeComponent.h"
@@ -107,6 +108,7 @@ void ComponentMetaBinder::bindComponents()
 	SyncedAnimationComponent::bind(_ctx);
 	TemporaryLightSourceComponent::bind(_ctx);
 	TickingLifetimeComponent::bind(_ctx);
+	UtilityAIComponent::bind(_ctx);
 	VisionComponent::bind(_ctx);
 	VisualEffectComponent::bind(_ctx);
 	VolumeComponent::bind(_ctx);

@@ -5,9 +5,13 @@
 class AiActionRegistry
 {
 public:
-	void registerAction(entt::id_type id, std::unique_ptr<IAiAction> action);
+	template<typename T>
+	void registerAction(entt::id_type id)
+	{
+		_actions.emplace(id, std::make_unique<T>());
+	}
 
-	const IAiAction& getAction(entt::id_type) const;
+	const IAiAction* getAction(entt::id_type id) const;
 
 private:
 	std::unordered_map<entt::id_type, std::unique_ptr<IAiAction>> _actions;

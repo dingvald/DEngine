@@ -2,7 +2,7 @@
 
 #include <AI/AiActions/IAiAction.h>
 
-class MeleeAttackAiAction : public IAiAction
+class WaitAiAction : public IAiAction
 {
 public:
 	bool canPerform(entt::const_handle actor) const override;

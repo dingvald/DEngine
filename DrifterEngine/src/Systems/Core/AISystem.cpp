@@ -12,6 +12,7 @@
 #include <AI/AiActions/AiActionRegistry.h>
 #include <AI/AiActions/IAiAction.h>
 #include <AI/AiActions/MeleeAttackAiAction.h>
+#include <AI/AiActions/WaitAiAction.h>
 
 using namespace entt::literals;
 
@@ -25,7 +26,8 @@ void drft::system::AiSystem::init()
 	_inputClearingHouse.registerInput("target_relationship"_hs, AiInputFunctions::TargetRelationship);
 	_utility.setInputProvider(_inputClearingHouse);
 
-	_actionRegistry.registerAction("melee_attack"_hs, std::make_unique<MeleeAttackAiAction>());
+	_actionRegistry.registerAction<MeleeAttackAiAction>("melee_attack"_hs);
+	_actionRegistry.registerAction<WaitAiAction>("wait"_hs);
 }
 
 void drft::system::AiSystem::update()
@@ -37,6 +39,7 @@ void drft::system::AiSystem::update()
 
 		entt::handle actor_handle = { _registry, entity };
 		auto [action, target] = selectAction(scoredActions, actor_handle);
+		if (!action) continue;
 
 		entt::const_handle target_handle = { _registry, target };
 		if (action->isInRange(actor_handle, target_handle))
@@ -45,8 +48,12 @@ void drft::system::AiSystem::update()
 		}
 		else
 		{
-			auto& moveToAction = _actionRegistry.getAction("move_to"_hs);
-			moveToAction.perform(actor_handle, target_handle);
+			auto moveToAction = _actionRegistry.getAction("move_to"_hs);
+			if (!moveToAction)
+			{
+				throw std::exception("No move to action in the registry, it must exist");
+			}
+			moveToAction->perform(actor_handle, target_handle);
 		}
 	}
 }
@@ -55,11 +62,19 @@ std::pair<const IAiAction*, entt::entity> drft::system::AiSystem::selectAction(c
 {
 	for (auto&& [score, actionTargetPair] : actions)
 	{
-		auto& action = _actionRegistry.getAction(actionTargetPair.action);
-		if (!action.canPerform(actor)) continue;
+		auto* action = _actionRegistry.getAction(actionTargetPair.action);
+		if (!action) continue;
+		if (!action->canPerform(actor)) continue;
 
-		return std::make_pair(&action, actionTargetPair.target);
+		return std::make_pair(action, actionTargetPair.target);
 	}
 
-	return std::pair<IAiAction*, entt::entity>();
+	// default to wait action
+	auto* waitAction = _actionRegistry.getAction("wait"_hs);
+	if (!waitAction)
+	{
+		throw std::exception("No wait action in the registry, it must exist");
+	}
+
+	return { waitAction, actor.entity() };
 }
