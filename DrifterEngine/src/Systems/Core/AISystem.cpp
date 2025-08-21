@@ -14,6 +14,8 @@
 #include <AI/AiActions/MeleeAttackAiAction.h>
 #include <AI/AiActions/WaitAiAction.h>
 
+#pragma optimize("", off)
+
 using namespace entt::literals;
 
 void drft::system::AiSystem::init()
@@ -28,6 +30,9 @@ void drft::system::AiSystem::init()
 
 	_actionRegistry.registerAction<MeleeAttackAiAction>("melee_attack"_hs);
 	_actionRegistry.registerAction<WaitAiAction>("wait"_hs);
+
+	setMoveToAction(_actionRegistry.getAction("move_to"_hs));
+	setDefaultAction(_actionRegistry.getAction("wait"_hs));
 }
 
 void drft::system::AiSystem::update()
@@ -38,7 +43,7 @@ void drft::system::AiSystem::update()
 		auto scoredActions = _utility.scoreActions(entity, ai.archetype, ai.blackboard);
 
 		entt::handle actor_handle = { _registry, entity };
-		auto [action, target] = selectAction(scoredActions, actor_handle);
+		auto&& [action, target] = selectAction(scoredActions, actor_handle);
 		if (!action) continue;
 
 		entt::const_handle target_handle = { _registry, target };
@@ -48,20 +53,27 @@ void drft::system::AiSystem::update()
 		}
 		else
 		{
-			auto moveToAction = _actionRegistry.getAction("move_to"_hs);
-			if (!moveToAction)
-			{
-				throw std::exception("No move to action in the registry, it must exist");
-			}
-			moveToAction->perform(actor_handle, target_handle);
+			_moveToAction->perform(actor_handle, target_handle);
 		}
 	}
+}
+
+void drft::system::AiSystem::setDefaultAction(const IAiAction* defaultAction)
+{
+	_defaultAction = defaultAction;
+}
+
+void drft::system::AiSystem::setMoveToAction(const IAiAction* moveToAction)
+{
+	_moveToAction = moveToAction;
 }
 
 std::pair<const IAiAction*, entt::entity> drft::system::AiSystem::selectAction(const UtilityAI<entt::entity>::ScoredActions& actions, entt::const_handle actor) const
 {
 	for (auto&& [score, actionTargetPair] : actions)
 	{
+		if (score <= 0.f) continue;
+
 		auto* action = _actionRegistry.getAction(actionTargetPair.action);
 		if (!action) continue;
 		if (!action->canPerform(actor)) continue;
@@ -69,12 +81,11 @@ std::pair<const IAiAction*, entt::entity> drft::system::AiSystem::selectAction(c
 		return std::make_pair(action, actionTargetPair.target);
 	}
 
-	// default to wait action
-	auto* waitAction = _actionRegistry.getAction("wait"_hs);
-	if (!waitAction)
+	// Fallback to default action
+	if (!_defaultAction)
 	{
-		throw std::exception("No wait action in the registry, it must exist");
+		throw std::exception("No default action set");
 	}
 
-	return { waitAction, actor.entity() };
+	return { _defaultAction, actor.entity() };
 }

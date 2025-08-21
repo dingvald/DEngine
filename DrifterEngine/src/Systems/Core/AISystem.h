@@ -16,6 +16,8 @@ namespace drft::system
 		void init() override;
 		void update() override;
 
+		void setDefaultAction(const IAiAction* defaultAction);
+		void setMoveToAction(const IAiAction* moveToAction);
 		std::pair<const IAiAction*, entt::entity> selectAction(const UtilityAI<entt::entity>::ScoredActions& actions, entt::const_handle actor) const;
 
 	private:
@@ -23,5 +25,7 @@ namespace drft::system
 
 		AIDataClearingHouse _inputClearingHouse{_registry};
 		AiActionRegistry _actionRegistry;
+		const IAiAction* _moveToAction = nullptr;
+		const IAiAction* _defaultAction = nullptr;
 	};
 }

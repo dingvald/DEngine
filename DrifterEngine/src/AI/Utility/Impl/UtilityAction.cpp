@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "UtilityAction.h"
 
-UtilityTargetCategoryID UtilityAction::getTargetCategory() const
+UtilityTargetCategoryID UtilityAction::getTargetType() const
 {
-    return _targetCategory;
+    return _targetType;
 }
 
 UtilityActionID UtilityAction::getActionID() const
@@ -19,7 +19,7 @@ void UtilityAction::createFromJson(const rapidjson::Value& json)
     }
     if (json.HasMember("target_type"))
     {
-        _targetCategory = entt::hashed_string{ json["target_type"].GetString() };
+        _targetType = entt::hashed_string{ json["target_type"].GetString() };
     }
     if (json.HasMember("considerations"))
     {

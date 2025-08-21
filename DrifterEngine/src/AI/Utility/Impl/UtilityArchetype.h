@@ -8,6 +8,7 @@
 #include <AI/Utility/Impl/UtilityAISharedTypes.h>
 #include <AI/Utility/Impl/UtilityAction.h>
 
+#pragma optimize("", off)
 
 class UtilityArchetype : public ICreateFromJson
 {
@@ -20,11 +21,10 @@ public:
 		std::multimap<float, UtilityActionTargetPair<EntityType>> result;
 		for (auto&& action : _actions)
 		{
-			auto& targetData = blackboard.getList(action.getTargetCategory());
+			auto& targetData = blackboard.getList(action.getTargetType());
 			if (targetData.empty())
 			{
-				float score = action.calculateScore(entity, entity, inputProvider); // HACKZ: pass acting entity as the target - the consideration won't use it anyways... right???
-				result.emplace(score, UtilityActionTargetPair<EntityType>{action.getActionID(), entity});
+				result.emplace(0.f, UtilityActionTargetPair<EntityType>{action.getActionID(), entity});
 			}
 			else
 			{

@@ -13,7 +13,7 @@ class UtilityAction : public ICreateFromJson
 public:
 	void createFromJson(const rapidjson::Value& json) override;
 
-	UtilityTargetCategoryID getTargetCategory() const;
+	UtilityTargetCategoryID getTargetType() const;
 	UtilityActionID getActionID() const;
 
 	template<typename EntityType>
@@ -31,6 +31,6 @@ public:
 
 private:
 	UtilityActionID _id = NullUtilityAction;
-	UtilityTargetCategoryID _targetCategory = NullUtilityTargetCategory;
+	UtilityTargetCategoryID _targetType = NullUtilityTargetCategory;
 	std::vector<Consideration> _considerations;
 };
