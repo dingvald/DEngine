@@ -29,7 +29,7 @@ void drft::system::ArtificialInput::init()
 	goap::ActionRegistry::bind();
 	goap::GoalRegistry::bind();
 
-	_sensorySystem.registerSensor(std::make_unique<goap::HostileSensor>());
+	_sensorySystem.registerSensor(std::make_unique<goap::VisualActorSensor>());
 	_sensorySystem.registerChecker(hasLineOfSight, goap::SensorType::Visual);
 
 	_dispatcher.sink<events::TurnEndEvent>().connect<&ArtificialInput::onTurnEndEvent>(this);

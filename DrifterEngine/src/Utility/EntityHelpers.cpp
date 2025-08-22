@@ -26,6 +26,8 @@ bool drft::util::isType(entt::const_handle entity, entt::id_type typeId)
 
 float drft::util::getDistanceBetween(entt::const_handle e1, entt::const_handle e2)
 {
+	if (e1 == e2) return 0.f;
+
 	if (auto pos1 = e1.try_get<PositionComponent>())
 	{
 		if (auto pos2 = e2.try_get<PositionComponent>())

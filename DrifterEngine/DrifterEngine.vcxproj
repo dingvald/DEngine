@@ -202,6 +202,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AI\AiActions\WaitAiAction.cpp" />
+    <ClCompile Include="src\AI\AiTargetTypes.cpp" />
     <ClCompile Include="src\JSON\JsonValueStorage.cpp" />
     <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.cpp" />
     <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp" />
@@ -348,25 +349,9 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Ability\AbilityRegistry.cpp" />
     <ClCompile Include="src\Ability\IAbility.cpp" />
     <ClCompile Include="src\Systems\Core\FloatingTextSystem.cpp" />
-    <ClCompile Include="src\AI\GOAP\Actions\InvestigateHostileAction.cpp" />
-    <ClCompile Include="src\AI\GOAP\Goals\EscapeHostileGoal.cpp" />
-    <ClCompile Include="src\AI\GOAP\Goals\KillHostileGoal.cpp" />
-    <ClCompile Include="src\AI\GOAP\Goals\ExploreGoal.cpp" />
-    <ClCompile Include="src\AI\GOAP\IGoal.cpp" />
-    <ClCompile Include="src\AI\GOAP\SensorRunner.cpp" />
-    <ClCompile Include="src\AI\GOAP\Sensors\HostileSensor.cpp" />
-    <ClCompile Include="src\AI\GOAP\ISensor.cpp" />
-    <ClCompile Include="src\AI\GOAP\Actions\EscapeHostilesAction.cpp" />
-    <ClCompile Include="src\AI\GOAP\Actions\AttackHostileAction.cpp" />
-    <ClCompile Include="src\AI\GOAP\Actions\RandomMoveAction.cpp" />
-    <ClCompile Include="src\AI\GOAP\Actions\SpotHostileAction.cpp" />
-    <ClCompile Include="src\AI\GOAP\Plan.cpp" />
-    <ClCompile Include="src\AI\GOAP\ActionRegistry.cpp" />
-    <ClCompile Include="src\AI\GOAP\GoalRegistry.cpp" />
-    <ClCompile Include="src\AI\GOAP\IAction.cpp" />
-    <ClCompile Include="src\AI\GOAP\Sensors\Utility\GetClosestEntity.cpp" />
-    <ClCompile Include="src\AI\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp" />
-    <ClCompile Include="src\AI\GOAP\Sensors\Utility\IsHostile.cpp" />
+    <ClCompile Include="src\AI\Sensor\SensorRunner.cpp" />
+    <ClCompile Include="src\AI\Sensor\Sensors\VisualActorSensor.cpp" />
+    <ClCompile Include="src\AI\Sensor\ISensor.cpp" />
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\BodyPart.cpp" />
@@ -499,7 +484,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\States\GameStates\SelectDirectionState.cpp" />
     <ClCompile Include="src\Systems\Helpers\TargetingParameters.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp" />
-    <ClCompile Include="src\AI\GOAP\WorldState.cpp" />
     <ClCompile Include="src\Ability\Abilities\ToggleSprintAbility.cpp" />
     <ClCompile Include="src\Ability\Abilities\ThrowAbility.cpp" />
     <ClCompile Include="src\Systems\Gameplay\ProjectileSystem.cpp" />
@@ -509,6 +493,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AI\AiActions\WaitAiAction.h" />
+    <ClInclude Include="src\AI\AiTargetTypes.h" />
     <ClInclude Include="src\JSON\JsonValueStorage.h" />
     <ClInclude Include="src\JSON\MemberParserValidator.h" />
     <ClInclude Include="src\ProcGen\GenerationFinalizationContext.h" />
@@ -1117,28 +1102,10 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Ability\AbilityIds.h" />
     <ClInclude Include="src\Ability\IAbility.h" />
     <ClInclude Include="src\Systems\Core\FloatingTextSystem.h" />
-    <ClInclude Include="src\AI\GOAP\Actions\InvestigateHostileAction.h" />
-    <ClInclude Include="src\AI\GOAP\Goals\EscapeHostileGoal.h" />
-    <ClInclude Include="src\AI\GOAP\Goals\KillHostileGoal.h" />
-    <ClInclude Include="src\AI\GOAP\Goals\ExploreGoal.h" />
-    <ClInclude Include="src\AI\GOAP\SensorRunner.h" />
-    <ClInclude Include="src\AI\GOAP\Sensors\HostileSensor.h" />
-    <ClInclude Include="src\AI\GOAP\ISensor.h" />
-    <ClInclude Include="src\AI\GOAP\Actions\EscapeHostilesAction.h" />
-    <ClInclude Include="src\AI\GOAP\Actions\AttackHostileAction.h" />
-    <ClInclude Include="src\AI\GOAP\Actions\RandomMoveAction.h" />
-    <ClInclude Include="src\AI\GOAP\Actions\SpotHostileAction.h" />
-    <ClInclude Include="src\AI\GOAP\Actions\AiActionTypes.h" />
-    <ClInclude Include="src\AI\GOAP\IGoal.h" />
-    <ClInclude Include="src\AI\GOAP\Plan.h" />
-    <ClInclude Include="src\AI\GOAP\ActionRegistry.h" />
-    <ClInclude Include="src\AI\GOAP\GoalRegistry.h" />
-    <ClInclude Include="src\AI\GOAP\IAction.h" />
-    <ClInclude Include="src\AI\GOAP\Sensors\Utility\GetClosestEntity.h" />
-    <ClInclude Include="src\AI\GOAP\Sensors\Utility\IsEntityInSurroundings.h" />
-    <ClInclude Include="src\AI\GOAP\Sensors\Utility\IsHostile.h" />
-    <ClInclude Include="src\AI\GOAP\SensorTypes.h" />
-    <ClInclude Include="src\AI\GOAP\WorldStateTypes.h" />
+    <ClInclude Include="src\AI\Sensor\SensorRunner.h" />
+    <ClInclude Include="src\AI\Sensor\Sensors\VisualActorSensor.h" />
+    <ClInclude Include="src\AI\Sensor\ISensor.h" />
+    <ClInclude Include="src\AI\Sensor\SensorTypes.h" />
     <ClInclude Include="src\Random\PercentChance.h" />
     <ClInclude Include="src\Events\SendFloatingMessageEvent.h" />
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h" />
@@ -1416,7 +1383,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\States\GameStates\SelectDirectionState.h" />
     <ClInclude Include="src\Systems\Helpers\TargetingParameters.h" />
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h" />
-    <ClInclude Include="src\AI\GOAP\WorldState.h" />
     <ClInclude Include="src\Ability\Abilities\ToggleSprintAbility.h" />
     <ClInclude Include="src\Ability\Abilities\ThrowAbility.h" />
     <ClInclude Include="src\Systems\Gameplay\ProjectileSystem.h" />

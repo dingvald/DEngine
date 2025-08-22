@@ -3,6 +3,26 @@
 
 static const Blackboard::DataList EmptyDataList = {};
 
+void Blackboard::merge(const Blackboard& other)
+{
+    for (auto&& [key, val] : other._singleData)
+    {
+        if (_singleData.contains(key)) continue;
+        _singleData.emplace(key, val);
+    }
+    for (auto&& [key, list] : other._listData)
+    {
+        if (_listData.contains(key))
+        {
+            _listData.at(key).append_range(list);
+        }
+        else
+        {
+            _listData.emplace(key, list);
+        }
+    }
+}
+
 void Blackboard::set(DataName name, Data data)
 {
     _singleData.emplace(name, std::move(data));

@@ -285,67 +285,16 @@
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\AI\GOAP\IAction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\WorldState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\GoalRegistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\ActionRegistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Plan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Helpers\HasLineOfSight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Actions\SpotHostileAction.cpp">
+    <ClCompile Include="src\AI\Sensor\ISensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Actions\RandomMoveAction.cpp">
+    <ClCompile Include="src\AI\Sensor\Sensors\VisualActorSensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Actions\AttackHostileAction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Actions\EscapeHostilesAction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\ISensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Sensors\HostileSensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\SensorRunner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\IGoal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Goals\ExploreGoal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Goals\KillHostileGoal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Goals\EscapeHostileGoal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Actions\InvestigateHostileAction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Sensors\Utility\GetClosestEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Sensors\Utility\IsHostile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AI\GOAP\Sensors\Utility\IsEntityInSurroundings.cpp">
+    <ClCompile Include="src\AI\Sensor\SensorRunner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Core\FloatingTextSystem.cpp">
@@ -829,6 +778,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AI\AiActions\WaitAiAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AI\AiTargetTypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1619,76 +1571,19 @@
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AI\GOAP\IAction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\WorldState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\GoalRegistry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\ActionRegistry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Plan.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Actions\AiActionTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Systems\Helpers\HasLineOfSight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Actions\SpotHostileAction.h">
+    <ClInclude Include="src\AI\Sensor\ISensor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Actions\RandomMoveAction.h">
+    <ClInclude Include="src\AI\Sensor\Sensors\VisualActorSensor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Actions\AttackHostileAction.h">
+    <ClInclude Include="src\AI\Sensor\SensorRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Actions\EscapeHostilesAction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\IGoal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\ISensor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Sensors\HostileSensor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\SensorRunner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\SensorTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\WorldStateTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Goals\ExploreGoal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Goals\KillHostileGoal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Goals\EscapeHostileGoal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Actions\InvestigateHostileAction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Sensors\Utility\GetClosestEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Sensors\Utility\IsHostile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AI\GOAP\Sensors\Utility\IsEntityInSurroundings.h">
+    <ClInclude Include="src\AI\Sensor\SensorTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Core\FloatingTextSystem.h">
@@ -3579,6 +3474,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AI\AiActions\WaitAiAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AI\AiTargetTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

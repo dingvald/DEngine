@@ -8,6 +8,8 @@ public:
 
 	using DataList = std::vector<Data>;
 	using DataName = entt::id_type;
+
+	void merge(const Blackboard& other);
 	
 	void set(DataName name, Data data);
 	Data get(DataName name) const override;
@@ -21,6 +23,11 @@ public:
 	void clear(DataName name);
 
 private:
+	struct DataMemory
+	{
+
+	};
+
 	std::unordered_map<DataName, Data> _singleData;
 	std::unordered_map<DataName, DataList> _listData;
 };
