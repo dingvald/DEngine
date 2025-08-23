@@ -31,7 +31,6 @@
 #include <Systems/Core/PlayerTransferSystem.h>
 #include <Systems/Core/TweeningSystem.h>
 #include "Systems/Core/ActorSystem.h"
-#include "Systems/Core/ArtificialInput.h"
 #include "Systems/Core/Camera.h"
 #include "Systems/Core/ChunkManager.h"
 #include "Systems/Core/FloatingTextSystem.h"
@@ -157,7 +156,6 @@ void drft::SimulationState::importSystems()
 	_systems->add<MouseStateSystem>();
 	_systems->add<MouseVisualizationSystem>();
 	_systems->add<PlayerInput>();
-	_systems->add<ArtificialInput>();
 	_systems->add<AiSystem>();
 
 	_systems->add<PathNavSystem>();

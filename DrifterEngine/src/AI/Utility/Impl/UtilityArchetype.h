@@ -21,7 +21,7 @@ public:
 		std::multimap<float, UtilityActionTargetPair<EntityType>> result;
 		for (auto&& action : _actions)
 		{
-			auto& targetData = blackboard.getList(action.getTargetType());
+			auto& targetData = blackboard.getList(AiTargetTypes::toIdHash(action.getTargetType()));
 			if (targetData.empty())
 			{
 				result.emplace(0.f, UtilityActionTargetPair<EntityType>{action.getActionID(), entity});

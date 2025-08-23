@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "UtilityAction.h"
+#include <Utility/StandardLogger.h>
 
-UtilityTargetCategoryID UtilityAction::getTargetType() const
+AiTargetType UtilityAction::getTargetType() const
 {
     return _targetType;
 }
@@ -19,7 +20,15 @@ void UtilityAction::createFromJson(const rapidjson::Value& json)
     }
     if (json.HasMember("target_type"))
     {
-        _targetType = entt::hashed_string{ json["target_type"].GetString() };
+        auto targetTypeName = json["target_type"].GetString();
+        if (StringToAiTargetType.contains(targetTypeName))
+        {
+            _targetType = StringToAiTargetType.at(targetTypeName);
+        }
+        else
+        {
+            LOG_ERROR("target_type {} does not exist.", targetTypeName);
+        }
     }
     if (json.HasMember("considerations"))
     {

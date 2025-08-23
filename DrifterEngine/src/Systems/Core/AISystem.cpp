@@ -13,6 +13,7 @@
 #include <AI/AiActions/IAiAction.h>
 #include <AI/AiActions/MeleeAttackAiAction.h>
 #include <AI/AiActions/WaitAiAction.h>
+#include <AI/AiActions/MoveToAiAction.h>
 
 #include <AI/Sensor/Sensors/VisualActorSensor.h>
 
@@ -39,6 +40,7 @@ void drft::system::AiSystem::init()
 	// Register actions
 	_actionRegistry.registerAction<MeleeAttackAiAction>("melee_attack"_hs);
 	_actionRegistry.registerAction<WaitAiAction>("wait"_hs);
+	_actionRegistry.registerAction<MoveToAiAction>("move_to"_hs);
 
 	// Set default actions
 	setMoveToAction(_actionRegistry.getAction("move_to"_hs));
@@ -54,7 +56,8 @@ void drft::system::AiSystem::update()
 
 		_sensors.runSensors(actor);
 
-		selectAndPerformAction(actor, ai);
+		auto&& [action, target] = selectAction(actor, ai);
+		action->perform(actor, { _registry, target });
 	}
 }
 
@@ -76,9 +79,13 @@ void drft::system::AiSystem::setMoveToAction(const IAiAction* moveToAction)
 	_moveToAction = moveToAction;
 }
 
-std::pair<const IAiAction*, entt::entity> drft::system::AiSystem::selectAction(const UtilityAI<entt::entity>::ScoredActions& actions, entt::const_handle actor) const
+std::pair<const IAiAction*, entt::entity> drft::system::AiSystem::selectAction(entt::const_handle actor, const UtilityAIComponent& ai) const
 {
-	for (auto&& [score, actionTargetPair] : actions)
+	auto scoredActions = _utility.scoreActions(actor.entity(), ai.archetype, ai.blackboard);
+
+	auto result = std::make_pair(_defaultAction, actor.entity());
+
+	for (auto&& [score, actionTargetPair] : scoredActions)
 	{
 		if (score <= 0.f) continue;
 
@@ -86,23 +93,14 @@ std::pair<const IAiAction*, entt::entity> drft::system::AiSystem::selectAction(c
 		if (!action) continue;
 		if (!action->canPerform(actor)) continue;
 
-		return std::make_pair(action, actionTargetPair.target);
+		result = std::make_pair(action, actionTargetPair.target);
+		break;
 	}
 
-	return { nullptr, actor.entity() };
-}
+	if (!result.first->isInRange(actor, { *actor.registry(), result.second }))
+	{
+		result.first = _moveToAction;
+	}
 
-void drft::system::AiSystem::selectAndPerformAction(entt::const_handle actor, const UtilityAIComponent& ai) const
-{
-	auto scoredActions = _utility.scoreActions(actor.entity(), ai.archetype, ai.blackboard);
-
-	auto&& [action, target] = selectAction(scoredActions, actor);
-	entt::const_handle targetHandle = { _registry, target };
-
-	if (!action) { action = _defaultAction; }
-	if (!action) { throw std::exception("No default action"); }
-
-	if (!action->isInRange(actor, targetHandle)) { action = _moveToAction; }
-
-	action->perform(actor, targetHandle);
+	return result;
 }

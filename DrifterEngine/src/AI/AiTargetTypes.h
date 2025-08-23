@@ -1,10 +1,16 @@
 #pragma once
 
-enum class AiTargetTypes
+enum class AiTargetType
 {
+	None,
 	Actors,
 	Items
 };
 
-static const std::unordered_map<AiTargetTypes, std::string_view> AiTargetTypeToString;
-static const std::unordered_map<std::string_view, AiTargetTypes> StringToAiTargetType;
+extern const std::unordered_map<AiTargetType, std::string_view> AiTargetTypeToString;
+extern const std::unordered_map<std::string_view, AiTargetType> StringToAiTargetType;
+
+namespace AiTargetTypes
+{
+	entt::id_type toIdHash(AiTargetType targetType);
+}

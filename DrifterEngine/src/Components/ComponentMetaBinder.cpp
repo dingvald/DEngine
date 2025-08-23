@@ -3,7 +3,6 @@
 
 #include "AbilitiesComponent.h"
 #include "ActorComponent.h"
-#include "AIComponent.h"
 #include "AnimationComponent.h"
 #include "BaseMaterialComponent.h"
 #include "BodyComponent.h"
@@ -61,7 +60,6 @@ void ComponentMetaBinder::bindComponents()
 {
 	AbilitiesComponent::bind(_ctx);
 	ActorComponent::bind(_ctx);
-	AIComponent::bind(_ctx);
 	AnimationComponent::bind(_ctx);
 	BaseMaterialComponent::bind(_ctx);
 	BodyComponent::bind(_ctx);

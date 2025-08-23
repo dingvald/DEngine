@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "VisualActorSensor.h"
 
+#include <AI/AiTargetTypes.h>
 #include <AI/Blackboard/Blackboard.h>
 
 #include "Components/PositionComponent.h"
@@ -25,6 +26,8 @@ void VisualActorSensor::sense(entt::handle agent) const
 	auto actorView = agent.registry()->view<ActorComponent, PositionComponent, component::tag::Active>();
 	for (auto&& [entity, actor, position] : actorView.each())
 	{
+		if (entity == agent.entity()) continue;
+
 		if (drft::spatial::distance3d(agentPosition.tile, position.tile) > vision.sightRange) continue;
 
 		auto entities = grid.castRay(agentPosition.tile, position.tile,
@@ -32,9 +35,9 @@ void VisualActorSensor::sense(entt::handle agent) const
 				return registry->all_of<LightBlockingComponent>(entity);
 			});
 
-		if (entities.size() == 1 && entities.front() == entity)
+		if (entities.empty())
 		{
-			blackboard.pushToList("actor"_hs, entity);
+			blackboard.pushToList(AiTargetTypes::toIdHash(AiTargetType::Actors), entity);
 		}
 	}
 }

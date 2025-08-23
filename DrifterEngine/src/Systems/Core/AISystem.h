@@ -21,8 +21,7 @@ namespace drft::system
 
 		void setDefaultAction(const IAiAction* defaultAction);
 		void setMoveToAction(const IAiAction* moveToAction);
-		std::pair<const IAiAction*, entt::entity> selectAction(const UtilityAI<entt::entity>::ScoredActions& actions, entt::const_handle actor) const;
-		void selectAndPerformAction(entt::const_handle actor, const UtilityAIComponent& ai) const;
+		std::pair<const IAiAction*, entt::entity> selectAction(entt::const_handle actor, const UtilityAIComponent& ai) const;
 
 	private:
 		UtilityAI<entt::entity> _utility;

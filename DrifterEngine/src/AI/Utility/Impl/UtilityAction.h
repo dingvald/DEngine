@@ -4,6 +4,7 @@
 
 #include <AI/Utility/Impl/UtilityAISharedTypes.h>
 #include <AI/Utility/Impl/Consideration.h>
+#include <AI/AiTargetTypes.h>
 
 #include <JSON/ICreateFromJson.h>
 
@@ -13,7 +14,7 @@ class UtilityAction : public ICreateFromJson
 public:
 	void createFromJson(const rapidjson::Value& json) override;
 
-	UtilityTargetCategoryID getTargetType() const;
+	AiTargetType getTargetType() const;
 	UtilityActionID getActionID() const;
 
 	template<typename EntityType>
@@ -31,6 +32,6 @@ public:
 
 private:
 	UtilityActionID _id = NullUtilityAction;
-	UtilityTargetCategoryID _targetType = NullUtilityTargetCategory;
+	AiTargetType _targetType = AiTargetType::None;
 	std::vector<Consideration> _considerations;
 };

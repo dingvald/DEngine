@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AI\AiActions\MoveToAiAction.cpp" />
     <ClCompile Include="src\AI\AiActions\WaitAiAction.cpp" />
     <ClCompile Include="src\AI\AiTargetTypes.cpp" />
     <ClCompile Include="src\JSON\JsonValueStorage.cpp" />
@@ -403,7 +404,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Core\HUD.cpp" />
     <ClCompile Include="src\Random\Random.cpp" />
     <ClCompile Include="src\Systems\Gameplay\FactionSystem.cpp" />
-    <ClCompile Include="src\Systems\Core\ArtificialInput.cpp" />
     <ClCompile Include="src\Systems\Gameplay\DeathSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\MeleeAttackActionSystem.cpp" />
     <ClCompile Include="src\Systems\Actions\MoveActionSystem.cpp" />
@@ -492,6 +492,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AI\AiActions\MoveToAiAction.h" />
     <ClInclude Include="src\AI\AiActions\WaitAiAction.h" />
     <ClInclude Include="src\AI\AiTargetTypes.h" />
     <ClInclude Include="src\JSON\JsonValueStorage.h" />
@@ -1042,7 +1043,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\CollisionComponent.h" />
     <ClInclude Include="src\Components\ComponentMetaBinder.h" />
     <ClInclude Include="src\Components\ActorComponent.h" />
-    <ClInclude Include="src\Components\AIComponent.h" />
     <ClInclude Include="src\Components\AnimationComponent.h" />
     <ClInclude Include="src\Components\BodyComponent.h" />
     <ClInclude Include="src\Components\CameraComponent.h" />
@@ -1172,7 +1172,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Core\HUD.h" />
     <ClInclude Include="src\Random\Random.h" />
     <ClInclude Include="src\Systems\Gameplay\FactionSystem.h" />
-    <ClInclude Include="src\Systems\Core\ArtificialInput.h" />
     <ClInclude Include="src\Systems\Gameplay\DeathSystem.h" />
     <ClInclude Include="src\Systems\Actions\MeleeAttackActionSystem.h" />
     <ClInclude Include="src\Systems\Actions\MoveActionSystem.h" />

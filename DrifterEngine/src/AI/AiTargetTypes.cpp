@@ -2,13 +2,19 @@
 
 #include "AiTargetTypes.h"
 
-const std::unordered_map<AiTargetTypes, std::string_view> AiTargetTypeToString =
+const std::unordered_map<AiTargetType, std::string_view> AiTargetTypeToString =
 {
-	{ AiTargetTypes::Actors, "actors" },
-	{ AiTargetTypes::Items, "items" }
+	{ AiTargetType::Actors, "actors" },
+	{ AiTargetType::Items, "items" }
 };
 
-const std::unordered_map<std::string_view, AiTargetTypes> StringToAiTargetType =
+const std::unordered_map<std::string_view, AiTargetType> StringToAiTargetType =
 {
-
+	{ "actors", AiTargetType::Actors },
+	{ "items", AiTargetType::Items }
 };
+
+entt::id_type AiTargetTypes::toIdHash(AiTargetType targetType)
+{
+	return entt::hashed_string{ AiTargetTypeToString.at(targetType).data()};
+}
