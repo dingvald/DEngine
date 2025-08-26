@@ -35,8 +35,8 @@ void drft::system::MeleeAttackActionSystem::update()
 		if (currentActor.state == CurrentActorState::InProgress) continue;
 
 		Tween moveToTween = {
-			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.4f,
-			.time = 0.12f,
+			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.75f,
+			.time = 0.08f,
 			.easing = Easing::linear,
 			.onFinish = [this, action = meleeAttackAction](entt::handle entity) {
 				onTweenReachedTarget(entity, std::move(action));
@@ -44,7 +44,7 @@ void drft::system::MeleeAttackActionSystem::update()
 		};
 		Tween moveBackTween = {
 			.targetOffset = {0.f, 0.f, 0.f},
-			.time = 0.22f,
+			.time = 0.16f,
 			.easing = Easing::easeOutBack,
 			.onFinish = [this](entt::handle entity) {
 				onTweenReturnedToStart(entity);

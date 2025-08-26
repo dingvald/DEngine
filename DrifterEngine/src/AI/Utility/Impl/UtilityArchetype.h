@@ -5,10 +5,7 @@
 #include <AI/Utility/IUtilityBlackboard.h>
 #include <AI/Utility/UtilityActionTargetPair.h>
 
-#include <AI/Utility/Impl/UtilityAISharedTypes.h>
 #include <AI/Utility/Impl/UtilityAction.h>
-
-#pragma optimize("", off)
 
 class UtilityArchetype : public ICreateFromJson
 {
@@ -16,14 +13,15 @@ public:
 	void createFromJson(const rapidjson::Value& json) override;
 
 	template<typename EntityType>
-	std::multimap<float, UtilityActionTargetPair<EntityType>> scoreActions(EntityType entity, const IUtilityBlackboard<EntityType>& blackboard, const IUtilityInputProvider<EntityType>& inputProvider) const
+	std::multimap<float, UtilityActionTargetPair<EntityType>, std::greater<float>> scoreActions(EntityType entity, const IUtilityBlackboard<EntityType>& blackboard, const IUtilityInputProvider<EntityType>& inputProvider) const
 	{
-		std::multimap<float, UtilityActionTargetPair<EntityType>> result;
+		std::multimap<float, UtilityActionTargetPair<EntityType>, std::greater<float>> result;
 		for (auto&& action : _actions)
 		{
 			auto& targetData = blackboard.getList(AiTargetTypes::toIdHash(action.getTargetType()));
 			if (targetData.empty())
 			{
+				// No targets for this target type, so score as a ZERO
 				result.emplace(0.f, UtilityActionTargetPair<EntityType>{action.getActionID(), entity});
 			}
 			else

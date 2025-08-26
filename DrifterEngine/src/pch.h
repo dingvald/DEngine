@@ -67,4 +67,7 @@
 #include <cereal/types/deque.hpp>
 #include <cereal/types/variant.hpp>
 
+// drft libraries
+#include <Utility/DebugAssert.h>
+
 #pragma warning(pop)

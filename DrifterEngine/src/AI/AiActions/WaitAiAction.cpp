@@ -12,7 +12,7 @@ void WaitAiAction::perform(entt::handle actor, entt::const_handle) const
     actor.emplace_or_replace<WaitAction>();
 }
 
-float WaitAiAction::range(entt::const_handle) const
+bool WaitAiAction::isInRange(entt::const_handle, entt::const_handle) const
 {
-    return 0.0f;
+    return true;
 }

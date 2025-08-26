@@ -217,3 +217,13 @@ drft::spatial::WorldGrid::GridPath drft::spatial::WorldGrid::getPath(TilePositio
 
 	return result;
 }
+
+bool drft::spatial::WorldGrid::checkPath(const GridPath& path, const IPathingHeuristic& heuristic) const
+{
+	for (auto&& position : path)
+	{
+		const int cost = heuristic.evaluate(entitiesAt(position));
+		if (cost >= 10) return false;
+	}
+	return true;
+}

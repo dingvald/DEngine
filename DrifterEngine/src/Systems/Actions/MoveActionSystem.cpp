@@ -1,24 +1,15 @@
 #include <pch.h>
-#include "MoveActionSystem.h"
-#include "Spatial/WorldGrid.h"
-#include "Spatial/Conversions.h"
 #include <Spatial/Helpers.h>
+#include "MoveActionSystem.h"
+#include "Spatial/Conversions.h"
+#include "Spatial/WorldGrid.h"
 
-#include <Components/ActorComponent.h>
-#include "Components/Components.h"
-#include "Components/CollisionComponent.h"
-#include "Components/CurrentActorComponent.h"
 #include "Components/Actions/MoveAction.h"
+#include "Components/CollisionComponent.h"
 #include "Components/PhysicalBlockingComponent.h"
 #include "Components/PositionComponent.h"
-#include "Components/StaminaComponent.h"
-#include <Components/TweeningComponent.h>
 
-#include <Systems/Core/TweeningSystem.h>
 #include <Systems/Core/ActorSystem.h>
-#include "Utility/EntityHelpers.h"
-
-const float DEFAULT_MOVE_TWEEN_TIME = 0.1f;
 
 void drft::system::MoveActionSystem::init()
 {
@@ -29,27 +20,8 @@ void drft::system::MoveActionSystem::update()
 {
 	auto view = _registry.view<PositionComponent, MoveAction>(entt::exclude<CollisionComponent>);
 	for (auto&& [entity, position, move] : view.each())
-	{
-		entt::handle handle = { _registry, entity };
-		float tweenTime = DEFAULT_MOVE_TWEEN_TIME;
-		if (auto actor = handle.try_get<ActorComponent>())
-		{
-			tweenTime *= (1.0f / actor->moveSpeed);
-		}
-
-		Tween moveToTween = {
-			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(move.direction)) * 1.0f,
-			.time = tweenTime,
-			.easing = Easing::linear,
-			.onFinish = [this, action = move](entt::handle entity) {
-				processMoveAction(entity, std::move(action));
-			}
-		};
-
-		
-		TweeningSystem::tween(handle, moveToTween);
-
-		ActorSystem::setActionInProgress(handle);
+	{	
+		processMoveAction(entity, move);
 	}
 	_registry.clear<MoveAction>();
 }
@@ -83,9 +55,11 @@ void drft::system::MoveActionSystem::processMoveAction(entt::entity entity, Move
 	{
 		ActorSystem::setActionComplete(handle, ActionCategory::None, 0);
 	}
-
-	move(handle, action.direction);
-	ActorSystem::setActionComplete(handle, ActionCategory::Move);
+	else
+	{
+		move(handle, action.direction);
+		ActorSystem::setActionComplete(handle, ActionCategory::Move);
+	}	
 }
 
 void drft::system::MoveActionSystem::move(entt::handle entity, sf::Vector2i direction) const

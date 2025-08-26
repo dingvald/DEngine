@@ -57,11 +57,12 @@ namespace drft::spatial
 		std::vector<entt::entity> castRay(TilePosition origin, TilePosition destination, std::function<bool(entt::entity)> filterFunc) const;
 
 		///// Pathfinding /////
-		using Heuristic = std::function<int(const std::vector<entt::entity>&)>;
 		using GridPath = std::vector<TilePosition>;
 		// Produces a path from pt1 to pt2.
 		// Operates at the Z-Level of point 1
 		GridPath getPath(TilePosition from, TilePosition to, const IPathingHeuristic& heuristic, unsigned int maxCost = 10000u) const;
+		// Check if the path is still good using the passed-in heuristic
+		bool checkPath(const GridPath& path, const IPathingHeuristic& heuristic) const;
 
 	private:
 		std::unordered_map<ChunkPosition, WorldChunk> _chunks;

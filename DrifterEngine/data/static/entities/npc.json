@@ -49,7 +49,7 @@
                     "latent_power": 10
                 },
                 "actor": {
-                    "move_speed": 1.0,
+                    "move_speed": 0.75,
                     "act_speed": 1.0
                 },
                 "vision": {

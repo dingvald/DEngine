@@ -15,7 +15,7 @@ template<typename EntityType>
 class UtilityAI
 {	
 public:
-	using ScoredActions = std::multimap<float, UtilityActionTargetPair<EntityType>>;
+	using ScoredActions = std::multimap<float, UtilityActionTargetPair<EntityType>, std::greater<float>>;
 
 public:
 	void loadUtilityArchetypes(const std::filesystem::path& directory)
@@ -54,16 +54,13 @@ public:
 
 	ScoredActions scoreActions(EntityType entity, UtilityArchetypeID id, const IUtilityBlackboard<EntityType>& blackboard) const
 	{
-		if (!_inputProvider)
-		{
-			throw std::exception("Cannot use the utility AI without a input provider");
-		}
+		DEBUG_ASSERT(_inputProvider);
 
 		auto& archetype = _archetypes.at(id);
 		return archetype.scoreActions(entity, blackboard, *_inputProvider);
 	}
 
 private:
-	std::unordered_map< UtilityArchetypeID, UtilityArchetype > _archetypes;
+	std::unordered_map<UtilityArchetypeID, UtilityArchetype> _archetypes;
 	const IUtilityInputProvider<EntityType>* _inputProvider = nullptr;
 };

@@ -9,7 +9,7 @@
 #include <Components/TweeningComponent.h>
 
 const float STANDARD_MULTIPLIER = 1.0f;
-const float FAST_MULTIPLIER = 1.5f;
+const float FAST_MULTIPLIER = 1.0f;
 
 
 void drft::system::TweeningSystem::tween(entt::handle entity, Tween tween)

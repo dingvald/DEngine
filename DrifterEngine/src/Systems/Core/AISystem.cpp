@@ -17,8 +17,6 @@
 
 #include <AI/Sensor/Sensors/VisualActorSensor.h>
 
-#include <Utility/StandardLogger.h>
-
 #pragma optimize("", off)
 
 using namespace entt::literals;
@@ -52,9 +50,12 @@ void drft::system::AiSystem::update()
 	auto view = _registry.view<UtilityAIComponent, CurrentActorComponent>();
 	for (auto&& [entity, ai, currentActor] : view.each())
 	{
+		if (currentActor.state != CurrentActorState::Pending) continue;
+
 		entt::handle actor = { _registry, entity };
 
-		_sensors.runSensors(actor);
+		ai.blackboard.clear();
+		_sensors.runSensors(actor, ai.blackboard);
 
 		auto&& [action, target] = selectAction(actor, ai);
 		action->perform(actor, { _registry, target });
@@ -63,19 +64,13 @@ void drft::system::AiSystem::update()
 
 void drft::system::AiSystem::setDefaultAction(const IAiAction* defaultAction)
 {
-	if (!defaultAction)
-	{
-		LOG_ERROR("Setting default action to nullptr");
-	}
+	DEBUG_ASSERT(defaultAction);
 	_defaultAction = defaultAction;
 }
 
 void drft::system::AiSystem::setMoveToAction(const IAiAction* moveToAction)
 {
-	if (!moveToAction)
-	{
-		LOG_ERROR("Setting moveTo action to nullptr");
-	}
+	DEBUG_ASSERT(moveToAction);
 	_moveToAction = moveToAction;
 }
 
@@ -89,7 +84,7 @@ std::pair<const IAiAction*, entt::entity> drft::system::AiSystem::selectAction(e
 	{
 		if (score <= 0.f) continue;
 
-		auto* action = _actionRegistry.getAction(actionTargetPair.action);
+		const IAiAction* action = _actionRegistry.getAction(actionTargetPair.action);
 		if (!action) continue;
 		if (!action->canPerform(actor)) continue;
 

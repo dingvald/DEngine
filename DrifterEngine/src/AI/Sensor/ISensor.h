@@ -9,10 +9,7 @@ class ISensor
 {
 public:
 	virtual bool canUseSensor(entt::const_handle agent) = 0;
-	virtual void sense(entt::handle agent) const = 0;
-
-protected:
-	Blackboard& getBlackboard(entt::handle agent) const;
+	virtual void sense(entt::const_handle agent, Blackboard& blackboard) const = 0;
 };
 
 

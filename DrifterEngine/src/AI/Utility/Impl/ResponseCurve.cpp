@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ResponseCurve.h"
+#include <Utility/StandardLogger.h>
 
 static const std::unordered_map<std::string_view, ResponseCurve::Type> CurveNamesMap =
 {
@@ -28,6 +29,10 @@ void ResponseCurve::createFromJson(const rapidjson::Value & json)
         _k = array[2].GetFloat();
         _b = array[3].GetFloat();
         _c = array[4].GetFloat();
+    }
+    else
+    {
+        LOG_ERROR("Could not parse response curve - values must be in an array");
     }
 }
 

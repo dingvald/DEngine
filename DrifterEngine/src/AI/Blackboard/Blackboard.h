@@ -23,11 +23,6 @@ public:
 	void clear(DataName name);
 
 private:
-	struct DataMemory
-	{
-
-	};
-
 	std::unordered_map<DataName, Data> _singleData;
 	std::unordered_map<DataName, DataList> _listData;
 };

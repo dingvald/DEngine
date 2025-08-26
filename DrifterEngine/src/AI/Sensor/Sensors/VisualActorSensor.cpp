@@ -15,13 +15,12 @@
 
 using namespace entt::literals;
 
-void VisualActorSensor::sense(entt::handle agent) const
+void VisualActorSensor::sense(entt::const_handle agent, Blackboard& blackboard) const
 {
 	auto& grid = agent.registry()->ctx().get<drft::spatial::WorldGrid>();
 
 	auto& vision = agent.get<VisionComponent>();
 	auto& agentPosition = agent.get<PositionComponent>();
-	auto& blackboard = getBlackboard(agent);
 
 	auto actorView = agent.registry()->view<ActorComponent, PositionComponent, component::tag::Active>();
 	for (auto&& [entity, actor, position] : actorView.each())
