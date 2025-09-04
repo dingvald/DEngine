@@ -7,16 +7,19 @@
 #include <Spatial/WorldGrid.h>
 #include <Spatial/PathingHeuristics/PhysicalBlockingHeuristic.h>
 
-bool MoveToAiAction::canPerform(entt::const_handle actor) const
-{
-    return true;
-}
-
-void MoveToAiAction::perform(entt::handle actor, entt::const_handle target) const
+bool MoveToAiAction::isValid(entt::const_handle actor, OptionalTarget target) const
 {
     auto* actorPosition = actor.try_get<PositionComponent>();
-    auto* targetPosition = target.try_get<PositionComponent>();
-    if (!actorPosition || !targetPosition) return;
+    if (!actorPosition) return false;
+
+    return actorPosition->tile != target;
+}
+
+void MoveToAiAction::perform(entt::handle actor, OptionalTarget target) const
+{
+    auto* actorPosition = actor.try_get<PositionComponent>();
+    if (!actorPosition) return;
+    if (!target) return;
 
     auto& grid = actor.registry()->ctx().get<drft::spatial::WorldGrid>();
     if (auto* actorPathNav = actor.try_get<PathNavComponent>())
@@ -25,15 +28,14 @@ void MoveToAiAction::perform(entt::handle actor, entt::const_handle target) cons
         const bool isPathValid = grid.checkPath(path, drft::spatial::PhysicalBlockingHeuristic{ *actor.registry() });
 
         // Path is already taken care of
-        if (isPathValid && actorPathNav->path.back() == targetPosition->tile) return;
+        if (isPathValid && actorPathNav->path.back() == target) return;
     }
     
-    auto path = grid.getPath(actorPosition->tile, targetPosition->tile, drft::spatial::PhysicalBlockingHeuristic{*actor.registry()});
+    auto path = grid.getPath(actorPosition->tile, target.value(), drft::spatial::PhysicalBlockingHeuristic{*actor.registry()});
     actor.emplace_or_replace<PathNavComponent>(std::move(path));
 }
 
-bool MoveToAiAction::isInRange(entt::const_handle, entt::const_handle) const
+bool MoveToAiAction::isInRange(entt::const_handle, OptionalTarget target) const
 {
-    // should always be in range to move... right?
-    return true;
+    return target.has_value();
 }

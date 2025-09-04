@@ -2,11 +2,13 @@
 #include "EnTT/entt.hpp"
 #include <AI/Blackboard/Blackboard.h>
 #include "Snapshot/Reflection.h"
+#include <AI/AiActions/AiActionInstance.h>
 
 struct UtilityAIComponent
 {
 	entt::id_type archetype;
 	Blackboard blackboard;
+	AiActionInstance currentAction;
 
 private:
 	friend class ComponentMetaBinder;

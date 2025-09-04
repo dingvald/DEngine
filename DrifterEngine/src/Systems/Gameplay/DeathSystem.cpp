@@ -2,6 +2,8 @@
 #include "DeathSystem.h"
 #include "Factory/EntityFactory.h"
 
+#include <Engine/CommonEngineDirectories.h>
+
 #include "Components/Components.h"
 #include "Components/MaterialCompositionComponent.h"
 #include <Components/BaseMaterialComponent.h>
@@ -37,7 +39,6 @@ void drft::system::DeathSystem::update()
 		
 		if (_registry.any_of<PlayerInputComponent>(entity))
 		{
-			std::filesystem::remove_all(".\\data\\savegame\\");
 			_dispatcher.trigger(events::RequestStateStackPush(States::GameOver));
 		}
 		_registry.destroy(entity);

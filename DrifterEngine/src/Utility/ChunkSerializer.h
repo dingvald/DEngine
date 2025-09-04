@@ -45,6 +45,7 @@ namespace drft
 		~ChunkSerializer();
 
 		bool isSerialized(SourceChunkPositionPair position) const;
+		void shutdown();
 
 		[[nodiscard]] std::future<entt::registry> queueForSave(SourceChunkPositionPair sourcePositionPair, entt::registry&& registry);
 		[[nodiscard]] std::future<entt::registry> queueForLoad(SourceChunkPositionPair sourcePositionPair, entt::registry&& registry);

@@ -27,6 +27,7 @@
 #include <ProcGen/PositionSelector/PositionSelectorFactory.h>
 #include <ProcGen/GenerationFinalizationContext.h>
 
+static const float SCROLL_WHEEL_THRESHOLD = 0.5f;
 
 drft::GameState::GameState(StateStack& stack, StateContext& context)
 	: State(stack, context)
@@ -135,9 +136,9 @@ void drft::GameState::setupRegistryContext()
 void drft::GameState::setupActionMap()
 {
 	ActionMap& actions = getContext().actions;
-	actions.bind("gameplay", "gameplay", "zoom_in",		[this]() {system::getCurrentCamera(getContext().registry).zoomIn();});
-	actions.bind("gameplay", "gameplay", "zoom_out",	[this]() {system::getCurrentCamera(getContext().registry).zoomOut();});
-	actions.bind("gameplay", "menu", "exit",			[this]() {requestStackPush(States::Pause);});
+	actions.bind("gameplay", "gameplay",	"zoom_in",		[this]() { system::getCurrentCamera(getContext().registry).zoomIn(); });
+	actions.bind("gameplay", "gameplay",	"zoom_out",		[this]() { system::getCurrentCamera(getContext().registry).zoomOut(); });
+	actions.bind("gameplay", "menu",		"exit",			[this]() { requestStackPush(States::Pause); });
 }
 
 bool drft::GameState::handleEvent(const sf::Event& ev)
@@ -173,11 +174,11 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 
 	if (const auto mousescroll = ev.getIf<sf::Event::MouseWheelScrolled>())
 	{
-		if (mousescroll->delta > 0.5f)
+		if (mousescroll->delta > SCROLL_WHEEL_THRESHOLD)
 		{
 			getContext().actions.call("gameplay", "gameplay", "zoom_in");
 		}
-		else if (mousescroll->delta < -0.5f)
+		else if (mousescroll->delta < -SCROLL_WHEEL_THRESHOLD)
 		{
 			getContext().actions.call("gameplay", "gameplay", "zoom_out");
 		}
@@ -190,6 +191,13 @@ bool drft::GameState::update()
 {
 	_inputBuffer.update();
 	_gameStateStack.update();
+
+	if (_gameStateStack.isEmpty())
+	{
+		requestStackClear();
+		requestStackPush(States::MainMenu);
+	}
+
 	return true;
 }
 

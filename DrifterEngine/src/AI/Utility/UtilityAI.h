@@ -2,7 +2,7 @@
 
 #include <AI/Utility/IUtilityInputProvider.h>
 #include <AI/Utility/IUtilityBlackboard.h>
-#include <AI/Utility/UtilityActionTargetPair.h>
+#include <AI/Utility/ScoredUtilityAction.h>
 
 #include <AI/Utility/Impl/UtilityAISharedTypes.h>
 #include <AI/Utility/Impl/UtilityArchetype.h>
@@ -15,7 +15,7 @@ template<typename EntityType>
 class UtilityAI
 {	
 public:
-	using ScoredActions = std::multimap<float, UtilityActionTargetPair<EntityType>, std::greater<float>>;
+	using ScoredActions = std::vector< ScoredUtilityAction<EntityType> >;
 
 public:
 	void loadUtilityArchetypes(const std::filesystem::path& directory)

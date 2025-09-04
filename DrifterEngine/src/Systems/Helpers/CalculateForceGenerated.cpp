@@ -18,7 +18,7 @@ GeneratedForce calculateForceGenerated(entt::const_handle actor, entt::const_han
 	const float agility = static_cast<float>(drft::system::SkillsSystem::getSkillLevel(SkillId::Agility, actor));
 
 	float weight = 0.5f;
-	float sharpness = 0.0f;
+	float sharpness = 1.0f;
 	if (item)
 	{
 		auto weightComponent = item.try_get<WeightComponent>();

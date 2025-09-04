@@ -1,13 +1,16 @@
 #pragma once
+#include <Spatial/TilePosition.h>
 
 class IAiAction
 {
 public:
-	virtual bool isInRange(entt::const_handle actor, entt::const_handle target) const = 0;
+	using OptionalTarget = std::optional<drft::TilePosition>;
 
-	// Checks if the actor has the necessary components to perform the action
-	virtual bool canPerform(entt::const_handle actor) const = 0;
+	virtual bool isInRange(entt::const_handle actor, OptionalTarget target) const = 0;
+
+	// Sanity check to ensure the action can be performed on the target
+	virtual bool isValid(entt::const_handle actor, OptionalTarget target) const = 0;
 
 	// Perform the action
-	virtual void perform(entt::handle actor, entt::const_handle target) const = 0;
+	virtual void perform(entt::handle actor, OptionalTarget target) const = 0;
 };

@@ -2,17 +2,17 @@
 #include "WaitAiAction.h"
 #include <Components/Actions/WaitAction.h>
 
-bool WaitAiAction::canPerform(entt::const_handle actor) const
+bool WaitAiAction::isValid(entt::const_handle, OptionalTarget) const
 {
     return true;
 }
 
-void WaitAiAction::perform(entt::handle actor, entt::const_handle) const
+void WaitAiAction::perform(entt::handle actor, OptionalTarget) const
 {
     actor.emplace_or_replace<WaitAction>();
 }
 
-bool WaitAiAction::isInRange(entt::const_handle, entt::const_handle) const
+bool WaitAiAction::isInRange(entt::const_handle, OptionalTarget) const
 {
     return true;
 }

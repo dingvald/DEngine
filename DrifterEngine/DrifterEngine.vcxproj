@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AI\AiActions\AiActionInstance.cpp" />
     <ClCompile Include="src\AI\AiActions\MoveToAiAction.cpp" />
     <ClCompile Include="src\AI\AiActions\WaitAiAction.cpp" />
     <ClCompile Include="src\AI\AiTargetTypes.cpp" />
@@ -492,9 +493,11 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AI\AiActions\AiActionInstance.h" />
     <ClInclude Include="src\AI\AiActions\MoveToAiAction.h" />
     <ClInclude Include="src\AI\AiActions\WaitAiAction.h" />
     <ClInclude Include="src\AI\AiTargetTypes.h" />
+    <ClInclude Include="src\AI\Utility\ScoredUtilityAction.h" />
     <ClInclude Include="src\JSON\JsonValueStorage.h" />
     <ClInclude Include="src\JSON\MemberParserValidator.h" />
     <ClInclude Include="src\ProcGen\GenerationFinalizationContext.h" />

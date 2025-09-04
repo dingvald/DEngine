@@ -119,9 +119,22 @@ void drft::SimulationState::render(sf::RenderTarget& target)
 
 void drft::SimulationState::onPop()
 {
-	savePlayer();
+	const bool playerAlive = isPlayerAlive();
+	if (playerAlive)
+	{
+		savePlayer();
+	}
+
 	_systems->shutdownAll();
-	saveRegistry();
+
+	if (playerAlive)
+	{
+		saveRegistry();
+	}
+	if (!playerAlive)
+	{
+		std::filesystem::remove_all(SAVE_DIRECTORY);
+	}
 }
 
 void drft::SimulationState::onEnter()
@@ -240,8 +253,6 @@ void drft::SimulationState::loadOrCreatePlayer()
 
 void drft::SimulationState::savePlayer()
 {
-	if (!isPlayerAlive()) return;
-
 	util::saveEntityToFile(_player, PLAYER_SAVE_FILE_PATH);
 	_player.destroy();
 	getContext().registry.compact();

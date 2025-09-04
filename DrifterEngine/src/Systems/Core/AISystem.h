@@ -4,6 +4,7 @@
 #include <AI/Utility/UtilityAI.h>
 #include <AI/InputClearingHouse/AIDataClearingHouse.h>
 #include <AI/AiActions/AiActionRegistry.h>
+#include <AI/AiActions/AiActionInstance.h>
 #include <AI/Sensor/SensorRunner.h>
 
 struct UtilityAIComponent;
@@ -21,7 +22,7 @@ namespace drft::system
 
 		void setDefaultAction(const IAiAction* defaultAction);
 		void setMoveToAction(const IAiAction* moveToAction);
-		std::pair<const IAiAction*, entt::entity> selectAction(entt::const_handle actor, const UtilityAIComponent& ai) const;
+		AiActionInstance selectAction(entt::handle actor, const UtilityAIComponent& ai) const;
 
 	private:
 		UtilityAI<entt::entity> _utility;

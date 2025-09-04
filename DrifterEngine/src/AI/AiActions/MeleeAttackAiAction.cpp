@@ -5,27 +5,28 @@
 #include <Components/Actions/MeleeAttackAction.h>
 
 #include <Spatial/Helpers.h>
-#include <Utility/EntityHelpers.h>
 
-bool MeleeAttackAiAction::canPerform(entt::const_handle actor) const
+bool MeleeAttackAiAction::isValid(entt::const_handle actor, OptionalTarget target) const
 {
-    return true;
+    return target.has_value();
 }
 
-void MeleeAttackAiAction::perform(entt::handle actor, entt::const_handle target) const
+void MeleeAttackAiAction::perform(entt::handle actor, OptionalTarget target) const
 {
     auto* actorPosition = actor.try_get<PositionComponent>();
-    auto* targetPosition = target.try_get<PositionComponent>();
-    if (!actorPosition || !targetPosition)
-    {
-        return;
-    }
-    sf::Vector2i direction = drft::spatial::toXY(targetPosition->tile - actorPosition->tile);
+    if (!actorPosition) return;
+    if (!target.has_value()) return;
+
+    sf::Vector2i direction = drft::spatial::toXY(target.value() - actorPosition->tile);
     actor.emplace_or_replace<MeleeAttackAction>(direction);
 }
 
-bool MeleeAttackAiAction::isInRange(entt::const_handle actor, entt::const_handle target) const
+bool MeleeAttackAiAction::isInRange(entt::const_handle actor, OptionalTarget target) const
 {
-    const float distance = drft::util::getDistanceBetween(actor, target);
+    auto* position = actor.try_get<PositionComponent>();
+    if (!position) return false;
+    if (!target.has_value()) return false;
+
+    const float distance = drft::spatial::distance3d(position->tile, target.value());
     return distance < ( sqrtf(2.0f) + 0.05f );
 }

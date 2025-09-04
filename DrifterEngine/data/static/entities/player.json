@@ -44,7 +44,7 @@
             "skills": {
                 "strength": 20,
                 "agility": 15,
-                "toughness": 10,
+                "toughness": 50,
                 "endurance": 15,
                 "latent_power": 10
             },

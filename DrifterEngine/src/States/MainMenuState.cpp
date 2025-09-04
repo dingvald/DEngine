@@ -19,12 +19,24 @@ drft::MainMenuState::MainMenuState(StateStack& stack, StateContext& context)
 	auto button_continue = tgui::Button::create();
 	button_continue->setTextSize(32);
 	button_continue->setText("Continue");
-	button_continue->onPress([this]() { onContinueButton(); });
+	if (hasSaveFile())
+	{
+		button_continue->onPress([this]() { onContinueButton(); });
+		button_continue->setFocused(true);
+	}
+	else
+	{
+		button_continue->getRenderer()->setTextColor(tgui::Color{ 100,100,100,255 });
+		button_continue->setIgnoreMouseEvents(true);
+		button_continue->setFocusable(false);
+	}
+	
 
 	auto button_new_game = tgui::Button::create();
 	button_new_game->setTextSize(32);
 	button_new_game->setText("New Game");
 	button_new_game->onPress([this]() { onNewGameButton(); });
+	if (!button_continue->isFocusable()) button_new_game->setFocused(true);
 
 	auto button_settings = tgui::Button::create();
 	button_settings->setTextSize(32);
@@ -93,5 +105,5 @@ void drft::MainMenuState::onExitButton()
 
 bool drft::MainMenuState::hasSaveFile() const
 {
-	return std::filesystem::exists(SAVE_DIRECTORY);
+	return std::filesystem::exists(PLAYER_SAVE_FILE_PATH);
 }

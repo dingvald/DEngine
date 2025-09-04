@@ -23,11 +23,13 @@ using namespace entt::literals;
 
 namespace Internal
 {
+	static const float a = 10.f;
+	static const float b = -0.2f;
+	static const float c = 10.f;
+
 	static float calculateMaxHealthForLevel(int level)
 	{
-		float result = 10.f;
-		result += (logf(level) / logf(1.3));
-		return std::round(result);
+		return (a * std::sqrtf(level + b)) + c;
 	}
 
 	static void onToughnessLevelUp(int level, entt::handle entity)

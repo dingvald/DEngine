@@ -18,9 +18,22 @@ drft::ChunkSerializer::ChunkSerializer()
 
 drft::ChunkSerializer::~ChunkSerializer()
 {
-	_shouldShutdown = true;
-	_serializationThread.join();
+	shutdown();
 	saveSerializedChunkList();
+}
+
+void drft::ChunkSerializer::shutdown()
+{
+	_shouldShutdown = true;
+	try
+	{
+		if (_serializationThread.joinable())
+			_serializationThread.join();
+	}
+	catch (std::exception e)
+	{
+		LOG_ERROR("Error when joining serialization thread: {}", e.what());
+	}
 }
 
 bool drft::ChunkSerializer::isSerialized(SourceChunkPositionPair position) const
@@ -182,6 +195,8 @@ void drft::ChunkSerializer::processLoadList()
 
 void drft::ChunkSerializer::saveSerializedChunkList()
 {
+	if (!std::filesystem::exists(SAVE_DIRECTORY)) return;
+
 	std::ofstream file{ CHUNK_LIST_FILEPATH, std::ios::trunc | std::ios::binary };
 	cereal::BinaryOutputArchive archive{ file };
 	archive(_serializedChunks);

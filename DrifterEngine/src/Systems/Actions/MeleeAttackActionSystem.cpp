@@ -78,9 +78,10 @@ void drft::system::MeleeAttackActionSystem::onTweenReachedTarget(entt::handle en
 		force = generatedForce.total;
 	}
 	
+	entt::const_handle forceSource = action.itemUsed ? action.itemUsed : entt::const_handle{ entity };
 	for (auto&& target : targets)
 	{
-		_registry.emplace_or_replace<IncomingForceComponent>(target, force, action.itemUsed);
+		_registry.emplace_or_replace<IncomingForceComponent>(target, force, forceSource);
 	}
 }
 

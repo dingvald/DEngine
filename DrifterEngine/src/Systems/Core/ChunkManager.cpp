@@ -68,6 +68,7 @@ void drft::system::ChunkManager::shutdown()
 	if (!_activeSource) return;
 
 	_activeSource->shutdown(_registry, false);
+	_serializer.shutdown();
 }
 
 void drft::system::ChunkManager::onFirstUpdate()
