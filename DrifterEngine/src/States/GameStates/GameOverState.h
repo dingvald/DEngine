@@ -11,6 +11,14 @@ namespace drft
 
 		bool handleEvent(const sf::Event& ev);
 		bool update() override;
+
+	private:
+		void updateBackgroundPanel() const;
+		void updateCenterPanel() const;
+		void updateText() const;
+
+	private:
+		float _elapsed = 0.f;
 	};
 }
 
