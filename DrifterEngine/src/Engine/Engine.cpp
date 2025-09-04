@@ -48,7 +48,7 @@ void drft::Engine::run()
 
 		handleEvents();
 
-		_debugDisplay.displayValue("dt", std::format("{:.3f} ms", timePassed*1000.f));
+		DEBUG_DISPLAY_VALUE("dt", std::format("{:.3} ms", timePassed * 1000.f));
 
 		while (lag >= SECONDS_PER_FRAME)
 		{
