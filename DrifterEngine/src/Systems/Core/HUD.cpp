@@ -260,7 +260,15 @@ void drft::system::HUD::updateHealthBar(entt::const_handle player)
 	}
 	else
 	{
+		auto bar = _gui->get<tgui::Group>("HP");
 
+		auto number = bar->get<tgui::Label>(w_ResourceBarNumber);
+		number->setText(std::format("{:.1f}", 0.0f));
+
+		auto container = bar->get<tgui::Panel>(w_ResourceBarContainer);
+
+		auto fill = bar->get<tgui::Panel>(w_ResourceBarFill);
+		fill->setSize({ 0.f, tgui::bindHeight(container) - 2 });
 	}
 }
 
@@ -283,7 +291,15 @@ void drft::system::HUD::updateStaminaBar(entt::const_handle player)
 	}
 	else
 	{
+		auto bar = _gui->get<tgui::Group>("ST");
 
+		auto number = bar->get<tgui::Label>(w_ResourceBarNumber);
+		number->setText(std::format("{:.1f}", 0.f));
+
+		auto container = bar->get<tgui::Panel>(w_ResourceBarContainer);
+
+		auto fill = bar->get<tgui::Panel>(w_ResourceBarFill);
+		fill->setSize({ 0.f, tgui::bindHeight(container) - 2 });
 	}
 }
 

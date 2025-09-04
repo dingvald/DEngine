@@ -10,6 +10,7 @@ namespace drft
 		GameOverState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev);
+		bool update() override;
 	};
 }
 

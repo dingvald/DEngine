@@ -11,8 +11,8 @@ drft::GameOverState::GameOverState(StateStack& stack, StateContext& context)
 	auto label = tgui::Label::create();
 	label->setTextSize(32);
 	label->setText("You Died");
-	label->setPosition(255, 255);
-	label->setOrigin("50%, 50%");
+	label->setPosition("50%", "50%");
+	label->setOrigin(0.5f, 0.5f);
 	label->getRenderer()->setTextColor(tgui::Color::White);
 
 	_guiGroup->add(background);
@@ -30,4 +30,9 @@ bool drft::GameOverState::handleEvent(const sf::Event& ev)
 		}
 	}
 	return false;
+}
+
+bool drft::GameOverState::update()
+{
+	return true;
 }
