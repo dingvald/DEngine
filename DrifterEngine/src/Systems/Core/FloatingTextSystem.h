@@ -31,6 +31,7 @@ namespace drft::system
 			sf::Vector2f distanceTraveled;
 		};
 
+		std::vector<FloatingMessage> _queuedMessages;
 		std::vector<FloatingMessage> _floatingMessages;
 	};
 }

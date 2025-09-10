@@ -45,8 +45,7 @@ void drft::system::FloatingTextSystem::queueFloatingMessage(const std::string& m
 		position = toScreenSpace(position, camera);
 	}
 
-	_floatingMessages.emplace_back(sf::Text{ font, message }, position, velocity, trackedEntity, fades, ttl, isScreenSpace);
-	auto& newMessage = _floatingMessages.back();
+	auto& newMessage = _queuedMessages.emplace_back(sf::Text{ font, message }, position, velocity, trackedEntity, fades, ttl, isScreenSpace);
 	newMessage.text.setFillColor(color);
 	newMessage.text.setCharacterSize(16);
 	newMessage.text.setOrigin(util::getTextCenter(newMessage.text));
@@ -57,15 +56,15 @@ void drft::system::FloatingTextSystem::updateFloatingMessagesDisplay()
 	const auto camera = getCurrentCamera(_registry);
 	const sf::Vector2f offset = { TileDimensions.x / 2.f, 0.f }; // So messages originate from the center of cells
 
+	_floatingMessages.insert_range(_floatingMessages.end(), _queuedMessages);
+	_queuedMessages.clear();
+
 	auto it = _floatingMessages.begin();
 	while (it != _floatingMessages.end())
 	{
-		if (it->trackedEntity != entt::null)
+		if (auto posComp = _registry.try_get<PositionComponent>(it->trackedEntity))
 		{
-			if (auto posComp = _registry.try_get<PositionComponent>(it->trackedEntity))
-			{
-				it->position = spatial::toXY(spatial::toFloatSpace(posComp->tile));
-			}
+			it->position = spatial::toXY(spatial::toFloatSpace(posComp->tile));
 		}
 
 		if (it->isScreenSpace)
