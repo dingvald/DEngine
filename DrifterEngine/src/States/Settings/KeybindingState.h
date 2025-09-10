@@ -14,7 +14,7 @@ namespace drft
 		KeybindingState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev);
-		bool update() override;
+		bool fixedUpdate() override;
 
 	private:
 		class KeybindingListener

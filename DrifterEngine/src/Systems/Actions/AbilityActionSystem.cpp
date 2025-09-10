@@ -17,7 +17,7 @@ void drft::system::AbilityActionSystem::init()
 	AbilityRegistry::bind();
 }
 
-void drft::system::AbilityActionSystem::update()
+void drft::system::AbilityActionSystem::update(const float dt)
 {
 	auto playerView = _registry.view<AbilityAction, PlayerInputComponent, CurrentActorComponent>();
 	for (auto&& [entity, action, player, currentActor] : playerView.each())

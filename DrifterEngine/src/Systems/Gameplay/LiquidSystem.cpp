@@ -26,7 +26,7 @@ void drft::system::LiquidSystem::init()
 	_registry.on_destroy<InLiquidComponent>().connect<&LiquidSystem::onRemoveInLiquid>(this);
 }
 
-void drft::system::LiquidSystem::update()
+void drft::system::LiquidSystem::update(const float dt)
 {
 	
 }

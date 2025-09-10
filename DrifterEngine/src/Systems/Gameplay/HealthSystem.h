@@ -16,7 +16,7 @@ namespace drft::system
 
 		void init() override;
 		void start() override;
-		void update() override;
+		void update(const float dt) override;
 
 	private:
 		void processIncomingDamage(entt::entity entity, component::action::IncomingDamage& damage) const;

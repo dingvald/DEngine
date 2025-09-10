@@ -34,7 +34,7 @@ bool drft::TitleScreenState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::TitleScreenState::update()
+bool drft::TitleScreenState::fixedUpdate()
 {
 	float alpha = 0;
 	static int elapsed = 0;

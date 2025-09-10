@@ -30,7 +30,7 @@ namespace drft::system
 	private:
 		void init() override;
 		void start() override;
-		void update() override;
+		void update(const float dt) override;
 		void shutdown() override;
 
 		bool handleCurrentActor() const;
@@ -38,6 +38,7 @@ namespace drft::system
 		void processPoints(entt::handle entity, int points) const;
 		void tick();
 		void rotateQueue();
+		void addTimeToUpdateInterval(const float dt);
 
 		void refreshActorQueue();
 		entt::entity rotateQueueToCurrentActor();
@@ -52,7 +53,7 @@ namespace drft::system
 		entt::entity _previousActor = entt::null;
 
 		std::vector<entt::entity> _queue;
-		std::unordered_set<entt::entity> _managedEntities;
+		std::unordered_map<entt::entity, float> _managedEntities;
 	};
 
 	

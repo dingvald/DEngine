@@ -51,7 +51,7 @@ namespace drft
 
 		bool handleEvent(const sf::Event& ev) override;
 		void guiRender(sf::RenderTarget& target) override;
-		bool update() override;
+		bool fixedUpdate() override;
 
 	private:
 

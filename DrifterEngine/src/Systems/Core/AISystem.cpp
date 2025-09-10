@@ -49,7 +49,7 @@ void drft::system::AiSystem::init()
 	setDefaultAction(_actionRegistry.getAction("wait"_hs));
 }
 
-void drft::system::AiSystem::update()
+void drft::system::AiSystem::update(const float dt)
 {
 	auto view = _registry.view<UtilityAIComponent, CurrentActorComponent>();
 	for (auto&& [entity, ai, currentActor] : view.each())

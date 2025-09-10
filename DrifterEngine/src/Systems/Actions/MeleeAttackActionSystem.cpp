@@ -27,7 +27,7 @@ static constexpr float SKILL_POINT_MULIPLIER = 10.f;
 
 using namespace entt::literals;
 
-void drft::system::MeleeAttackActionSystem::update()
+void drft::system::MeleeAttackActionSystem::update(const float dt)
 {
 	auto view = _registry.view<MeleeAttackAction, CurrentActorComponent>();
 	for (auto&& [entity, meleeAttackAction, currentActor] : view.each())

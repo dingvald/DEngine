@@ -5,15 +5,14 @@
 #include <Components/Actions/MoveAction.h>
 #include <Components/PathNavComponent.h>
 #include <Components/PositionComponent.h>
-#include <Components/Tags.h>
 
 #include <Spatial/Helpers.h>
 
-void drft::system::PathNavSystem::update()
+void drft::system::PathNavSystem::update(const float dt)
 {
 	auto view = _registry.view<PathNavComponent, PositionComponent, CurrentActorComponent>();
 	for (auto [entity, nav, position, current] : view.each())
-	{
+	{	
 		if (current.state == CurrentActorState::InProgress) continue;
 
 		if (nav.progress >= nav.path.size())

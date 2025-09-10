@@ -106,10 +106,16 @@ bool drft::SimulationState::handleEvent(const sf::Event& ev)
     return false;
 }
 
-bool drft::SimulationState::update()
+bool drft::SimulationState::update(const float dt)
 {
-	_systems->update();
+	_systems->update(dt);
     return true;
+}
+
+bool drft::SimulationState::fixedUpdate()
+{
+	_systems->fixedUpdate();
+	return true;
 }
 
 void drft::SimulationState::render(sf::RenderTarget& target)

@@ -11,7 +11,7 @@ namespace drft::system
 		using System::System;
 
 	private:
-		void update() override;
+		void update(const float dt) override;
 
 		void onTweenReachedTarget(entt::handle entity, MeleeAttackAction action) const;
 		void onTweenReturnedToStart(entt::handle entity) const;

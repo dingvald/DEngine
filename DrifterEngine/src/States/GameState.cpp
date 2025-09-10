@@ -187,10 +187,10 @@ bool drft::GameState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::GameState::update()
+bool drft::GameState::update(const float dt)
 {
-	_inputBuffer.update();
-	_gameStateStack.update();
+	_inputBuffer.update(dt);
+	_gameStateStack.update(dt);
 
 	if (_gameStateStack.isEmpty())
 	{
@@ -198,6 +198,12 @@ bool drft::GameState::update()
 		requestStackPush(States::MainMenu);
 	}
 
+	return true;
+}
+
+bool drft::GameState::fixedUpdate()
+{
+	_gameStateStack.fixedUpdate();
 	return true;
 }
 

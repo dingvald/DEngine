@@ -17,7 +17,8 @@ namespace drft
 		virtual ~State();
 
 		virtual bool handleEvent(const sf::Event& ev);
-		virtual bool update();
+		virtual bool update(const float dt);
+		virtual bool fixedUpdate();
 		virtual void render(sf::RenderTarget& target) {};
 		virtual void guiRender(sf::RenderTarget& target) {};
 
@@ -28,6 +29,7 @@ namespace drft
 
 	protected:
 		using FullyProcessed = std::true_type;
+		using NotFullyProcessed = std::false_type;
 
 		void requestStackPush(States stateId);
 		void requestStackPop();

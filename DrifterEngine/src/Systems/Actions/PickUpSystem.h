@@ -9,7 +9,7 @@ namespace drft::system
 		using System::System;
 
 	private:
-		void update() override;
+		void update(const float dt) override;
 	};
 }
 

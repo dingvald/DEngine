@@ -9,7 +9,7 @@
 #include "Systems/Helpers/ItemDatabase.h"
 
 
-void drft::system::LightSourceSystem::update()
+void drft::system::LightSourceSystem::update(const float dt)
 {
 	_registry.clear<TemporaryLightSourceComponent>();
 

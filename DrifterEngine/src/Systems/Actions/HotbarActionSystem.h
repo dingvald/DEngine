@@ -15,7 +15,7 @@ namespace drft::system
 
 	private:
 		virtual void init() override;
-		virtual void update() override;
+		virtual void update(const float dt) override;
 
 		void onHUDHotbarPressedEvent(const events::HUDHotbarPressedEvent& ev);
 	};

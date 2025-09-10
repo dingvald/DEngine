@@ -21,12 +21,17 @@ State::~State()
 
 bool State::handleEvent(const sf::Event& ev)
 {
-	return false;
+	return NotFullyProcessed{};
 }
 
-bool drft::State::update()
+bool drft::State::update(const float)
 {
-	return false;
+	return true;
+}
+
+bool drft::State::fixedUpdate()
+{
+	return true;
 }
 
 void drft::State::onEnter()

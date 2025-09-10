@@ -27,7 +27,8 @@ namespace drft
 		void setupActionMap();
 		void registerStates();
 		void handleEvents();
-		void update();
+		void update(const float dt);
+		void fixedUpdate();
 		void render(const float dt);
 		void shutDown();
 

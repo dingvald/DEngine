@@ -36,7 +36,7 @@ bool drft::KeybindingState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::KeybindingState::update()
+bool drft::KeybindingState::fixedUpdate()
 {
 	if (_keybindingListener)
 	{

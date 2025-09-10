@@ -21,7 +21,7 @@ void drft::system::StairsMoveActionSystem::init()
 	_registry.on_construct<MoveUpStairsAction>().connect<&StairsMoveActionSystem::onMoveUpStairsActionAdded>(this);
 }
 
-void drft::system::StairsMoveActionSystem::update()
+void drft::system::StairsMoveActionSystem::update(const float dt)
 {
 	_registry.clear<MoveDownStairsAction>();
 	_registry.clear<MoveUpStairsAction>();

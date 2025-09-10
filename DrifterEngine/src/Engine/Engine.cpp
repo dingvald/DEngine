@@ -46,18 +46,23 @@ void drft::Engine::run()
 		const float timePassed = clock.restart().asSeconds();
 		lag += std::min(timePassed, SECONDS_PER_FRAME * UPDATES_PER_FRAME_LIMIT);
 
+		// Events
 		handleEvents();
 
 		DEBUG_DISPLAY_VALUE("dt", std::format("{:.3} ms", timePassed * 1000.f));
 
+		// Update
+		update(timePassed);
 		while (lag >= SECONDS_PER_FRAME)
 		{
-			update();
+			fixedUpdate();
 			lag -= SECONDS_PER_FRAME;
 		}
 		
+		// Render
 		render(timePassed);
 
+		//
 		if (_stateStack.isEmpty())
 		{
 			shutDown();
@@ -216,9 +221,14 @@ void drft::Engine::handleEvents()
 	}
 }
 
-void drft::Engine::update()
+void drft::Engine::update(const float dt)
 {
-	_stateStack.update();
+	_stateStack.update(dt);
+}
+
+void drft::Engine::fixedUpdate()
+{
+	_stateStack.fixedUpdate();
 }
 
 void drft::Engine::render(const float)

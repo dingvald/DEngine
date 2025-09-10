@@ -18,7 +18,7 @@ namespace drft::system
 
 	private:
 		void init() override;
-		void update() override;
+		void update(const float dt) override;
 
 		void setDefaultAction(const IAiAction* defaultAction);
 		void setMoveToAction(const IAiAction* moveToAction);

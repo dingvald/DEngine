@@ -136,7 +136,7 @@ void drft::system::HUD::start()
 	}
 }
 
-void drft::system::HUD::update()
+void drft::system::HUD::fixedUpdate()
 {
 	auto player = getPlayerConstHandle(_registry);
 
@@ -483,7 +483,7 @@ void drft::system::HUD::onChangeHUDEnabledEvent(const events::ChangeHUDEnabledEv
 
 void drft::system::HUD::onHudRefreshRequestEvent(const Internal::HudRefreshRequestEvent& ev)
 {
-	this->update();
+	this->fixedUpdate();
 }
 
 void drft::system::HUD::onEnterAbilityContainingWidget(const drft::IAbility& ability, entt::const_handle entity)

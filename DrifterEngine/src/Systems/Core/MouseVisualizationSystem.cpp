@@ -93,7 +93,7 @@ void drft::system::MouseVisualizationSystem::start()
 	_registry.emplace<MouseCursorComponent>(_cursor);
 }
 
-void drft::system::MouseVisualizationSystem::update()
+void drft::system::MouseVisualizationSystem::fixedUpdate()
 {
 	auto& controls = _registry.ctx().get<const ControlsContext&>();
 	if (controls.navigation == NavigationType::Mouse && !_shouldShowMouse && !_hideMouse)

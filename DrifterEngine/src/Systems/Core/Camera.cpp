@@ -36,7 +36,7 @@ void drft::system::Camera::start()
 	_registry.emplace<PositionComponent>(_camera, TilePosition{0,0,0});
 }
 
-void drft::system::Camera::updateEnd()
+void drft::system::Camera::fixedUpdateEnd()
 {
 	CameraHandle camera = getCurrentCamera(_registry);
 	camera.camera.target = tryFindTarget();
@@ -59,11 +59,6 @@ void drft::system::Camera::updateEnd()
 	}
 
 	DEBUG_DISPLAY_VALUE("position", TilePosition::toString(camera.position.tile));
-}
-
-void drft::system::Camera::render(sf::RenderTarget& target)
-{
-	
 }
 
 void drft::system::Camera::shutdown()

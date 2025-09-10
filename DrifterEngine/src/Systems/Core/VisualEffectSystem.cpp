@@ -5,7 +5,7 @@
 #include "Components/RenderComponent.h"
 
 
-void drft::system::VisualEffectSystem::update()
+void drft::system::VisualEffectSystem::fixedUpdate()
 {
 	auto view = _registry.view<VisualEffectComponent, RenderComponent>();
 	for (auto [entity, effect, render] : view.each())

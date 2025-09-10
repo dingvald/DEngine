@@ -6,7 +6,7 @@
 #include "Components/Tags.h"
 
 
-void drft::system::SyncedAnimationSystem::update()
+void drft::system::SyncedAnimationSystem::fixedUpdate()
 {
 	updateSyncPoints();
 
@@ -26,7 +26,7 @@ void drft::system::SyncedAnimationSystem::update()
 	}
 }
 
-void drft::system::SyncedAnimationSystem::updateEnd()
+void drft::system::SyncedAnimationSystem::fixedUpdateEnd()
 {
 	for (auto entity : _toRemoveAnimation)
 	{

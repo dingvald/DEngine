@@ -7,11 +7,20 @@ StateStack::StateStack(StateContext& context)
 	: _context(context)
 {}
 
-void StateStack::update()
+void StateStack::update(const float dt)
 {
 	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
 	{
-		if (!(*state)->update()) break;
+		if (!(*state)->update(dt)) break;
+	}
+	applyPendingChanges();
+}
+
+void drft::StateStack::fixedUpdate()
+{
+	for (auto state = _stack.rbegin(); state != _stack.rend(); ++state)
+	{
+		if (!(*state)->fixedUpdate()) break;
 	}
 	applyPendingChanges();
 }
@@ -74,8 +83,7 @@ bool StateStack::isEmpty() const
 
 State::StatePtr StateStack::createState(States stateID)
 {
-	assert(_factories.contains(stateID));
-
+	DEBUG_ASSERT(_factories.contains(stateID));
 	return _factories.at(stateID)();
 }
 

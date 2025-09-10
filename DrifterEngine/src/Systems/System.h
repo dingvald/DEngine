@@ -12,9 +12,12 @@ namespace drft::system
 		virtual void start() {};
 
 		virtual void updateBegin() {};
-		virtual void update() {};
-		virtual void updateLate() {};
+		virtual void update(const float dt) {};
 		virtual void updateEnd() {};
+
+		virtual void fixedUpdateBegin() {};
+		virtual void fixedUpdate() {};
+		virtual void fixedUpdateEnd() {};
 
 		virtual void render(sf::RenderTarget& target) {};
 		

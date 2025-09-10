@@ -16,7 +16,7 @@
 #include "Random/PercentChance.h"
 
 
-void drft::system::DeathSystem::update()
+void drft::system::DeathSystem::update(const float dt)
 {
 	const auto& factory = _registry.ctx().get<EntityFactory&>();
 	auto view = _registry.view<component::action::Die, PositionComponent>();

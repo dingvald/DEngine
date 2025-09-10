@@ -16,7 +16,7 @@ void drft::system::MouseStateSystem::init()
 
 }
 
-void drft::system::MouseStateSystem::update()
+void drft::system::MouseStateSystem::update(const float dt)
 {
 	auto view = _registry.view<MouseCursorComponent>();
 	for (auto&& [entity, mouse] : view.each())

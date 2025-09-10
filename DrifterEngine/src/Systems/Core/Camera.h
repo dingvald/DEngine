@@ -25,8 +25,7 @@ namespace drft::system
 	private:
 		void init() override;
 		void start() override;
-		void updateEnd() override;
-		void render(sf::RenderTarget& target) override;
+		void fixedUpdateEnd() override;
 		void shutdown() override;
 
 		void smoothCameraToTarget(sf::Vector2f targetPosition, CameraHandle& cam) const;

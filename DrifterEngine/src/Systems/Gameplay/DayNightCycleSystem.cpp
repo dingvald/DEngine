@@ -49,7 +49,7 @@ void drft::system::DayNightCycleSystem::start()
 	}
 }
 
-void drft::system::DayNightCycleSystem::update()
+void drft::system::DayNightCycleSystem::update(const float dt)
 {
 	setSurfaceLight();
 

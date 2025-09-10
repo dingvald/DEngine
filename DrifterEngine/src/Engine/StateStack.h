@@ -26,7 +26,8 @@ namespace drft
 			};
 		}
 
-		void update();
+		void update(const float dt);
+		void fixedUpdate();
 		void render(sf::RenderTarget& target);
 		void guiRender(sf::RenderTarget& target);
 		bool handleEvent(const sf::Event& event);

@@ -28,7 +28,7 @@ namespace drft::system
 
 	private:
 		virtual void init() override;
-		virtual void update() override;
+		virtual void update(const float dt) override;
 
 		void onPlayerTransferRequestEvent(events::PlayerTransferRequestEvent& ev);
 		void onChunkSourceTransferStartedEvent(events::ChunkSourceTransferStartedEvent& ev);

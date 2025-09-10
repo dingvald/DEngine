@@ -17,7 +17,6 @@
 #include <Components/Actions/MoveUpStairsAction.h>
 #include "Components/Components.h"
 #include "Components/PlayerInputComponent.h"
-#include "Components/SprintingComponent.h"
 
 #include <Keybindings/Keybindings.h>
 #include "Systems/HelperClasses/InputBuffer.h"
@@ -122,7 +121,7 @@ void drft::system::PlayerInput::init()
 	}
 }
 
-void drft::system::PlayerInput::update()
+void drft::system::PlayerInput::update(const float dt)
 {
 	auto& inputBuffer = _registry.ctx().get<InputBuffer>();
 	auto& actions = _registry.ctx().get<ActionMap>();

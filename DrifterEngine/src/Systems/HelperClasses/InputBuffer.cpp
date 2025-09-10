@@ -12,11 +12,11 @@ drft::system::InputBuffer::InputBuffer(unsigned int maxBufferSize)
 {
 }
 
-void drft::system::InputBuffer::update()
+void drft::system::InputBuffer::update(const float dt)
 {
     for (auto&& [key, state] : _activeInputs)
     {
-        updateInputState(key, state);
+        updateInputState(key, state, dt);
     }
 }
 
@@ -65,7 +65,7 @@ bool drft::system::InputBuffer::isEmpty() const
     return _inputBuffer.empty();
 }
 
-void drft::system::InputBuffer::updateInputState(const ModifiedInput& input, InputState& state)
+void drft::system::InputBuffer::updateInputState(const ModifiedInput& input, InputState& state, const float dt)
 {
     state.active = false;
     if (std::abs(state.timeHeld) <= std::numeric_limits<float>::epsilon())
@@ -79,5 +79,5 @@ void drft::system::InputBuffer::updateInputState(const ModifiedInput& input, Inp
         state.active = true;
         state.timeHeld -= REFRACTORY_PERIOD;
     }
-    state.timeHeld = std::min(state.timeHeld + SECONDS_PER_FRAME, HOLD_TIME);
+    state.timeHeld = std::min(state.timeHeld + dt, HOLD_TIME);
 }

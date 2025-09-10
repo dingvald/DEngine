@@ -129,7 +129,7 @@ void drft::InventoryState::guiRender(sf::RenderTarget& target)
 	if (_draggingItem) _draggingItem->render(target);
 }
 
-bool drft::InventoryState::update()
+bool drft::InventoryState::fixedUpdate()
 {
 	if (_tooltip.has_value())
 	{

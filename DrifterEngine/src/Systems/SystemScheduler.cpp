@@ -23,8 +23,7 @@ void drft::system::SystemScheduler::initAll() const
 	}
 }
 
-
-void drft::system::SystemScheduler::update() const
+void drft::system::SystemScheduler::update(const float dt) const
 {
 	for (auto&& system : _systems)
 	{
@@ -32,15 +31,27 @@ void drft::system::SystemScheduler::update() const
 	}
 	for (auto&& system : _systems)
 	{
-		system->update();
-	}
-	for (auto&& system : _systems)
-	{
-		system->updateLate();
+		system->update(dt);
 	}
 	for (auto&& system : _systems)
 	{
 		system->updateEnd();
+	}
+}
+
+void drft::system::SystemScheduler::fixedUpdate() const
+{
+	for (auto&& system : _systems)
+	{
+		system->fixedUpdateBegin();
+	}
+	for (auto&& system : _systems)
+	{
+		system->fixedUpdate();
+	}
+	for (auto&& system : _systems)
+	{
+		system->fixedUpdateEnd();
 	}
 }
 

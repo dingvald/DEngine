@@ -8,7 +8,7 @@ namespace drft::system
 	public:
 		InputBuffer(unsigned int maxBufferSize);
 
-		void update();
+		void update(const float dt);
 		void press(ModifiedInput input);
 		void release(ModifiedInput input);
 
@@ -22,7 +22,7 @@ namespace drft::system
 			float timeHeld = 0;
 			bool active = false;
 		};
-		void updateInputState(const ModifiedInput& input, InputState& state);
+		void updateInputState(const ModifiedInput& input, InputState& state, const float dt);
 
 	private:
 		using ModifiedInputBuffer = std::deque<ModifiedInput>;

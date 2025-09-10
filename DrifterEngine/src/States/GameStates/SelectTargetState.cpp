@@ -49,7 +49,7 @@ bool drft::SelectTargetState::handleEvent(const sf::Event& ev)
 	return false;
 }
 
-bool drft::SelectTargetState::update()
+bool drft::SelectTargetState::fixedUpdate()
 {
 	return true;
 }

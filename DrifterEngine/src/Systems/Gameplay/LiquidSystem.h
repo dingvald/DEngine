@@ -21,7 +21,7 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void update() override;
+		void update(const float dt) override;
 
 	private:
 		void addInLiquidEffect(sf::Vector3i position, sf::Color color);

@@ -15,7 +15,7 @@ namespace drft
 		SkillsScreenState(StateStack& stack, StateContext& context);
 
 		bool handleEvent(const sf::Event& ev) override;
-		bool update() override;
+		bool fixedUpdate() override;
 		void guiRender(sf::RenderTarget& target) override;
 
 	private:

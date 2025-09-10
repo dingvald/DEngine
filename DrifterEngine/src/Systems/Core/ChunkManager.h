@@ -33,7 +33,7 @@ namespace drft::system
 
 		virtual void init() override;
 		virtual void start() override;
-		virtual void update() override;
+		virtual void update(const float dt) override;
 		virtual void shutdown() override;
 
 	private:

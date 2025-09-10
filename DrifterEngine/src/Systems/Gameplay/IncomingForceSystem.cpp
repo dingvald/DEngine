@@ -19,7 +19,7 @@ void drft::system::IncomingForceSystem::init()
 {
 }
 
-void drft::system::IncomingForceSystem::update()
+void drft::system::IncomingForceSystem::update(const float dt)
 {
 	auto solidview = _registry.view<IncomingForceComponent, SolidMaterialComponent>();
 	for (auto&& [entity, incomingForce, solid] : solidview.each())

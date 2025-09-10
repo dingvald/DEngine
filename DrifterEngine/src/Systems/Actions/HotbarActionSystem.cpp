@@ -16,7 +16,7 @@ void drft::system::HotbarActionSystem::init()
 	_dispatcher.sink<events::HUDHotbarPressedEvent>().connect<&HotbarActionSystem::onHUDHotbarPressedEvent>(this);
 }
 
-void drft::system::HotbarActionSystem::update()
+void drft::system::HotbarActionSystem::update(const float dt)
 {
 	auto view = _registry.view<HotbarComponent, HotbarAction, CurrentActorComponent>();
 	for (auto&& [entity, hotbar, hotbarAction, currentActor] : view.each())

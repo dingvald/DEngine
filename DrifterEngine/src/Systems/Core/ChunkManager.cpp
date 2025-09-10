@@ -42,7 +42,7 @@ void drft::system::ChunkManager::start()
 	}
 }
 
-void drft::system::ChunkManager::update()
+void drft::system::ChunkManager::update(const float dt)
 {
 	switch (_state)
 	{

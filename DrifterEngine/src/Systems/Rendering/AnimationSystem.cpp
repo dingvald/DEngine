@@ -6,7 +6,7 @@
 
 #include "Utility/Math.h"
 
-void drft::system::AnimationSystem::update()
+void drft::system::AnimationSystem::fixedUpdate()
 {
 	auto noRenderView = _registry.view<AnimationComponent>(entt::exclude<RenderComponent>);
 	for (auto&& [entity, animation] : noRenderView.each())
@@ -34,7 +34,7 @@ void drft::system::AnimationSystem::update()
 	}
 }
 
-void drft::system::AnimationSystem::updateEnd()
+void drft::system::AnimationSystem::fixedUpdateEnd()
 {
 	for (auto entity : _toRemoveAnimation)
 	{

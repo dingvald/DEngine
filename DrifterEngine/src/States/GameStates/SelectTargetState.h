@@ -14,7 +14,7 @@ namespace drft
 	public:
 		SelectTargetState(StateStack& stack, StateContext& context);
 		bool handleEvent(const sf::Event& ev) override;
-		bool update() override;
+		bool fixedUpdate() override;
 
 		void onPush() override;
 		void onPop() override;

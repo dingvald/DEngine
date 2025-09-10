@@ -12,8 +12,8 @@ namespace drft::system
 		using System::System;
 
 	private:
-		void update() override;
-		void updateEnd() override;
+		void fixedUpdate() override;
+		void fixedUpdateEnd() override;
 
 	private:
 		std::vector<entt::entity> _toRemoveAnimation;

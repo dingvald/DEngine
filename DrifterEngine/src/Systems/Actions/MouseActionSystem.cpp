@@ -18,7 +18,7 @@ void drft::system::MouseActionSystem::init()
 	_registry.on_construct<MouseInspectAction>().connect<&MouseActionSystem::onMouseInspectActionAdded>(this);
 }
 
-void drft::system::MouseActionSystem::update()
+void drft::system::MouseActionSystem::update(const float dt)
 {
 	_registry.clear<MouseContextAction>();
 	_registry.clear<MouseInspectAction>();

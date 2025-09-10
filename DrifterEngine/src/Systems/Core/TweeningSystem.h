@@ -13,6 +13,6 @@ namespace drft::system
 		static void tween(entt::handle entity, Tween tween);
 
 	private:
-		void update() override;
+		void fixedUpdate() override;
 	};
 }

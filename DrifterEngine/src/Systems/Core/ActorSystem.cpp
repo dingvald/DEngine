@@ -15,6 +15,7 @@
 using namespace entt::literals;
 
 const int AP_PER_TICK = 100;
+const float MINIMUM_UPDATE_INTERVAL = 0.08f;
 
 void drft::system::ActorSystem::init()
 {
@@ -30,19 +31,24 @@ void drft::system::ActorSystem::start()
 	_registry.emplace<ActorComponent>(_timeKeeper, 0, 1.0f, 1.0f);
 	_registry.emplace<DescriptionComponent>(_timeKeeper, "Time Keeper", "");
 
-	_managedEntities.insert(_timeKeeper);
+	_managedEntities.emplace(_timeKeeper, 0.f);
 	_queue.push_back(_timeKeeper);
 	_currentActor = _timeKeeper;
 }
 
-void drft::system::ActorSystem::update()
+void drft::system::ActorSystem::update(const float dt)
 {
+	addTimeToUpdateInterval(dt);
+
 	if (!_canUpdate) return;
 	if (!handleCurrentActor()) return;
 
 	_registry.clear<CurrentActorComponent>();
 	refreshActorQueue();
 	_currentActor = rotateQueueToCurrentActor();
+
+	if (_managedEntities.at(_currentActor) < MINIMUM_UPDATE_INTERVAL) return;
+	_managedEntities.at(_currentActor) = 0.f;
 
 	if (_currentActor != _previousActor)
 	{
@@ -171,13 +177,21 @@ void drft::system::ActorSystem::rotateQueue()
 	}
 }
 
+void drft::system::ActorSystem::addTimeToUpdateInterval(const float dt)
+{
+	for (auto&& [entity, time] : _managedEntities)
+	{
+		time += dt;
+	}
+}
+
 void drft::system::ActorSystem::refreshActorQueue()
 {
 	_registry.emplace_or_replace<component::tag::Active>(_timeKeeper); // timekeeper should always be active
 	auto actorView = _registry.view<ActorComponent, component::tag::Active>();
 
 	// Remove stale entities
-	for (auto entity : _managedEntities)
+	for (auto&& [entity, _] : _managedEntities)
 	{
 		if (actorView.contains(entity)) continue;
 
@@ -191,7 +205,7 @@ void drft::system::ActorSystem::refreshActorQueue()
 		if (_managedEntities.contains(entity)) continue;
 
 		_queue.push_back(entity);
-		_managedEntities.insert(entity);
+		_managedEntities.emplace(entity, 0.f);
 	}
 }
 

@@ -5,9 +5,7 @@ namespace drft::system
 {
 	class PathNavSystem : public System
 	{
-	public:
 		using System::System;
-
-		void update() override;
+		void update(const float dt) override;
 	};
 }

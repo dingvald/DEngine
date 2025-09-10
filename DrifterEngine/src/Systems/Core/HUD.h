@@ -26,7 +26,7 @@ namespace drft::system
 	private:
 		void init() override;
 		void start() override;
-		void update() override;
+		void fixedUpdate() override;
 		void shutdown() override;
 
 		void createLevelInfo();

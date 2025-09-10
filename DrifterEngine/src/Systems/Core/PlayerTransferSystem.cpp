@@ -17,7 +17,7 @@ void drft::system::PlayerTransferSystem::init()
 	_dispatcher.sink<events::ChunkSourceTransferFailedEvent>().connect<&PlayerTransferSystem::onChunkSourceTransferFailedEvent>(this);
 }
 
-void drft::system::PlayerTransferSystem::update()
+void drft::system::PlayerTransferSystem::update(const float dt)
 {
 }
 

@@ -54,7 +54,7 @@ void drft::system::HealthSystem::start()
 	SkillsSystem::registerLevelUpHandler(SkillId::Toughness, Internal::onToughnessLevelUp, _registry);
 }
 
-void drft::system::HealthSystem::update()
+void drft::system::HealthSystem::update(const float dt)
 {
 	for (auto&& entity : _healthAddedObserver)
 	{

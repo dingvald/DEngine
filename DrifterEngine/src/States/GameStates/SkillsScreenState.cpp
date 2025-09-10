@@ -293,7 +293,7 @@ std::optional<drft::SkillsScreenState::DraggingAbility> drft::SkillsScreenState:
 	return DraggingAbility{abilityId, sprite, iconData.color};
 }
 
-bool drft::SkillsScreenState::update()
+bool drft::SkillsScreenState::fixedUpdate()
 {
 	if (_abilityTooltip.has_value())
 	{
