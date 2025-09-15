@@ -3,9 +3,20 @@
 #include "Components/PositionComponent.h"
 #include "Components/Tags.h"
 #include "Systems/Helpers/GetCurrentCamera.h"
-#include "Spatial/Conversions.h"
-#include <Spatial/Helpers.h>
 
+namespace Internal
+{
+	static sf::FloatRect addBufferToViewport(const sf::FloatRect& viewport)
+	{
+		sf::FloatRect result = viewport;
+		result.position.x -= drft::TileDimensions.x;
+		result.position.y -= drft::TileDimensions.y;
+		result.size.x += 2 * drft::TileDimensions.x;
+		result.size.y += 2 * drft::TileDimensions.y;
+
+		return result;
+	}
+}
 
 void drft::system::CullingSystem::render(sf::RenderTarget& target)
 {
@@ -14,7 +25,7 @@ void drft::system::CullingSystem::render(sf::RenderTarget& target)
 	const auto camera = getCurrentCamera(_registry);
 
 	sf::FloatRect viewRect = camera.getViewRect();
-	viewRect = addBufferToViewport(viewRect);
+	viewRect = Internal::addBufferToViewport(viewRect);
 
 	const auto view = _registry.view<const PositionComponent>();
 	for (auto [entity, pos] : view.each())
@@ -26,15 +37,4 @@ void drft::system::CullingSystem::render(sf::RenderTarget& target)
 
 		_registry.emplace<component::tag::InViewport>(entity);
 	}
-}
-
-sf::FloatRect drft::system::CullingSystem::addBufferToViewport(const sf::FloatRect& viewport) const
-{
-	sf::FloatRect result = viewport;
-	result.position.x -= TileDimensions.x;
-	result.position.y -= TileDimensions.y;
-	result.size.x += 2 * TileDimensions.x;
-	result.size.y += 2 * TileDimensions.y;
-
-	return result;
 }

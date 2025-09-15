@@ -15,7 +15,7 @@
 using namespace entt::literals;
 
 const int AP_PER_TICK = 100;
-const float MINIMUM_UPDATE_INTERVAL = 0.08f;
+const float MINIMUM_UPDATE_INTERVAL = 0.05f;
 
 void drft::system::ActorSystem::init()
 {
@@ -47,8 +47,7 @@ void drft::system::ActorSystem::update(const float dt)
 	refreshActorQueue();
 	_currentActor = rotateQueueToCurrentActor();
 
-	if (_managedEntities.at(_currentActor) < MINIMUM_UPDATE_INTERVAL) return;
-	_managedEntities.at(_currentActor) = 0.f;
+	if (!checkIfEnoughTimePassed(_currentActor)) return;
 
 	if (_currentActor != _previousActor)
 	{
@@ -181,8 +180,15 @@ void drft::system::ActorSystem::addTimeToUpdateInterval(const float dt)
 {
 	for (auto&& [entity, time] : _managedEntities)
 	{
-		time += dt;
+		time = std::min(time + dt, MINIMUM_UPDATE_INTERVAL);
 	}
+}
+
+bool drft::system::ActorSystem::checkIfEnoughTimePassed(entt::entity current)
+{
+	if (_managedEntities[current] < MINIMUM_UPDATE_INTERVAL) return false;
+	_managedEntities.at(current) -= MINIMUM_UPDATE_INTERVAL;
+	return true;
 }
 
 void drft::system::ActorSystem::refreshActorQueue()

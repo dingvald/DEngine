@@ -13,8 +13,7 @@ namespace Internal
 	{
 		return registry.any_of<
 			CameraComponent, 
-			VisualEffectComponent
-		>(entity);
+			VisualEffectComponent>(entity);
 	}
 }
 

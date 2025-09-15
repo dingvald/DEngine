@@ -12,7 +12,6 @@ namespace drft::math
 	double remap(double iMin, double iMax, double oMin, double oMax, double val);
 	float floorToMultiple(float f, float multiple);
 	
-
 	int wrap(int val, int min, int max);
 	
 	template<typename T>

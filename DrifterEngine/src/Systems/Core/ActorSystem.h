@@ -38,7 +38,9 @@ namespace drft::system
 		void processPoints(entt::handle entity, int points) const;
 		void tick();
 		void rotateQueue();
+
 		void addTimeToUpdateInterval(const float dt);
+		bool checkIfEnoughTimePassed(entt::entity current);
 
 		void refreshActorQueue();
 		entt::entity rotateQueueToCurrentActor();

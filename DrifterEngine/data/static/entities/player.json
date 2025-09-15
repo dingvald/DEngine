@@ -42,10 +42,10 @@
             },
             "physical_blocking": {},
             "skills": {
-                "strength": 20,
-                "agility": 15,
-                "toughness": 50,
-                "endurance": 15,
+                "strength": 10,
+                "agility": 10,
+                "toughness": 10,
+                "endurance": 10,
                 "latent_power": 10
             },
             "abilities": [

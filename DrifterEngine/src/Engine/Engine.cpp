@@ -82,17 +82,11 @@ void drft::Engine::initialize()
 	loadSavedKeybindings();
 	setupActionMap();
 	registerStates();
-	setupServiceLocator();
 
 	_gui.setKeyboardNavigationEnabled(true);
 	_window.setMouseCursor(sf::Cursor{ sf::Cursor::Type::Cross });
 
 	_stateStack.pushState(States::Title);
-}
-
-void drft::Engine::setupServiceLocator()
-{
-	entt::locator<IDebugDisplay>::emplace<DebugDisplay>(_debugDisplay);
 }
 
 void drft::Engine::setWindowIcon()
@@ -166,9 +160,12 @@ void drft::Engine::loadDefaultKeybindings()
 
 void drft::Engine::initializeDebugDisplay()
 {
+#ifdef DRFT_DEBUG
 	auto group = tgui::Group::create();
 	_debugDisplay.initialize(group);
 	_gui.add(group);
+	entt::locator<IDebugDisplay>::emplace<DebugDisplay>(_debugDisplay);
+#endif
 }
 
 void drft::Engine::setupActionMap()

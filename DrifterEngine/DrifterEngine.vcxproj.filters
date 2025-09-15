@@ -786,6 +786,9 @@
     <ClCompile Include="src\AI\AiActions\AiActionInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility\Math\Logarithmic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\EnTT\entt.h">
@@ -3486,6 +3489,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AI\Utility\ScoredUtilityAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\Math\Logarithmic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

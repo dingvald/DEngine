@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "VisualEffectSystem.h"
-#include "Components/PositionComponent.h"
 #include "Components/VisualEffectComponent.h"
 #include "Components/RenderComponent.h"
 

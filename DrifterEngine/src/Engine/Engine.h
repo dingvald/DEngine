@@ -1,9 +1,7 @@
 #pragma once
 #include "Utility/ResourceHolder.h"
 #include "Utility/TextureAtlas.h"
-#include "States/StateIdentifiers.h"
 #include "StateStack.h"
-#include "Utility/Statistics.h"
 #include <Keybindings/Keybindings.h>
 #include <Actions/ActionMap.h>
 #include <Engine/Debug/DebugDisplay.h>
@@ -18,7 +16,6 @@ namespace drft
 
 	private:
 		void initialize();
-		void setupServiceLocator();
 		void setWindowIcon();
 		void loadResources();
 		void loadSavedKeybindings();

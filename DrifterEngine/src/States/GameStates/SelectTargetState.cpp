@@ -20,6 +20,32 @@ static const sf::Color DEFAULT_TARGET_RANGE_COLOR = sf::Color(0, 0, 100, 100);
 static const sf::Color DEFAULT_TARGET_AOE_COLOR = sf::Color(50, 50, 200, 150);
 static const sf::Color TARGET_AOE_OUT_OF_RANGE_COLOR = sf::Color(255, 0, 0, 100);
 
+using namespace entt::literals;
+
+static const SpriteOptions RadiusEffect = {
+	.uvCoords = sf::Vector2i{0, 0},
+	.texture = "rectangle"_hs,
+	.uvSize = DefaultTileTextureSize,
+	.layer = drft::RenderLayer::Tiles,
+	.color = DEFAULT_TARGET_RANGE_COLOR
+};
+
+static const SpriteOptions AoeEffect = {
+	.uvCoords = sf::Vector2i{0, 0},
+	.texture = "rectangle"_hs,
+	.uvSize = DefaultTileTextureSize,
+	.layer = drft::RenderLayer::Tiles,
+	.color = DEFAULT_TARGET_AOE_COLOR 
+};
+
+static const SpriteOptions CursorEffect = {
+	.uvCoords = sf::Vector2i{0, 0},
+	.texture = "rectangle"_hs,
+	.uvSize = DefaultTileTextureSize,
+	.layer = drft::RenderLayer::Tiles,
+	.color = sf::Color{255, 255, 200, 150} 
+};
+
 drft::SelectTargetState::SelectTargetState(StateStack& stack, StateContext& context)
 	: State(stack, context)
 {
@@ -76,40 +102,24 @@ void drft::SelectTargetState::onPush()
 		requestStackPop();
 	}
 
-	const entt::id_type tileSetTexture = entt::hashed_string("rectangle");
-
 	auto radius = spatial::getIntCircleInRadius(_startPosition, _targetSelect->range.getMax());
-
-	SpriteOptions radiusEffect = { 
-		.uvCoords = sf::Vector2i{0, 0}, 
-		.texture = tileSetTexture, 
-		.uvSize = DefaultTileTextureSize, 
-		.layer = RenderLayer::Tiles, 
-		.color = DEFAULT_TARGET_RANGE_COLOR
-	};
 	for (auto&& tile : radius)
 	{
 		auto effect = system::spawnEffect(getContext().registry,
 			{
-				.frames = {radiusEffect},
+				.frames = { RadiusEffect },
 				.position = spatial::asTileSpace(tile),
 				.ttl = -1
 			});
 		_radiusEffects.push_back(effect);
 	}
-
-	SpriteOptions aoeEffect = {
-		.uvCoords = sf::Vector2i{0, 0}, 
-		.texture = tileSetTexture, 
-		.uvSize = DefaultTileTextureSize, 
-		.layer = RenderLayer::Tiles, 
-		.color = DEFAULT_TARGET_AOE_COLOR };
+	
 	for (auto&& tile : _targetSelect->targetShape)
 	{
 		auto tile3d = spatial::vec3FromPlanar(tile);
 		auto effect = system::spawnEffect(getContext().registry,
 			{
-				.frames = { aoeEffect },
+				.frames = { AoeEffect },
 				.position = _startPosition + spatial::asTileSpace(tile3d),
 				.ttl = -1,
 				.requiresInFOV = false
@@ -117,15 +127,9 @@ void drft::SelectTargetState::onPush()
 		_aoeEffects.push_back(effect);
 	}
 
-	SpriteOptions cursorEffect = { 
-		.uvCoords = sf::Vector2i{0, 0}, 
-		.texture = tileSetTexture, 
-		.uvSize = DefaultTileTextureSize,
-		.layer = RenderLayer::Tiles, 
-		.color = sf::Color{255, 255, 200, 150} };
 	_cursor = system::spawnEffect(getContext().registry,
 		{
-			.frames = {cursorEffect},
+			.frames = { CursorEffect },
 			.position = _startPosition,
 			.ttl = -1,
 			.requiresInFOV = false
@@ -136,7 +140,6 @@ void drft::SelectTargetState::onPop()
 {
 	getContext().registry.clear<component::action::SelectTarget>();
 	getContext().registry.destroy(_cursor);
-
 	getContext().registry.destroy(_radiusEffects.begin(), _radiusEffects.end());
 	getContext().registry.destroy(_aoeEffects.begin(), _aoeEffects.end());
 }

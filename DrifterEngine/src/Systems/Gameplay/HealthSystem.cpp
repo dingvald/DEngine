@@ -18,18 +18,22 @@
 #include <Systems/Gameplay/SkillsSystem.h>
 #include <Skills/SkillIds.h>
 #include <Utility/Math.h>
+#include <Utility/Math/Logarithmic.h>
 
 using namespace entt::literals;
 
 namespace Internal
 {
-	static const float a = 10.f;
-	static const float b = -0.2f;
+	// See Desmos graph: https://www.desmos.com/calculator/eksnemfbjo
+	static const float a = 4.2f;
+	static const float b = 0.1f;
 	static const float c = 10.f;
+	static const float d = 1.18f;
+	static const float e = 4.7f;
 
 	static float calculateMaxHealthForLevel(int level)
 	{
-		return (a * std::sqrtf(level + b)) + c;
+		return drft::math::log(level, a, b, c, d, e);
 	}
 
 	static void onToughnessLevelUp(int level, entt::handle entity)
@@ -180,7 +184,6 @@ void drft::system::HealthSystem::processTakeDamage(entt::entity entity, componen
 	if (health.current <= 0.f)
 	{
 		handle.emplace<component::action::Die>();
-		_registry.emplace_or_replace<component::action::GainExperience>(damage.source, getExperienceFromKilling(handle));
 	}
 }
 
