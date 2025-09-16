@@ -16,7 +16,7 @@ void drft::system::LevelingSystem::init()
 	_registry.on_construct<component::action::LevelUp>().connect<&LevelingSystem::onLevelUp>(this);
 }
 
-void drft::system::LevelingSystem::updateEnd()
+void drft::system::LevelingSystem::updateEnd(const float dt)
 {
 	_registry.clear<component::action::GainExperience>();
 	_registry.clear<component::action::LevelUp>();

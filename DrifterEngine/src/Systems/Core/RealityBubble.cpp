@@ -11,7 +11,7 @@
 static const float REALITY_RADIUS = 96.0f; // in tiles
 
 
-void drft::system::RealityBubble::updateBegin()
+void drft::system::RealityBubble::updateBegin(const float dt)
 {
 	_registry.clear<component::tag::Active>();
 	const auto camera = getCurrentCamera(_registry);

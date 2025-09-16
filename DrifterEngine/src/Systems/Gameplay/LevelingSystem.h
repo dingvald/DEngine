@@ -9,7 +9,7 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void updateEnd() override;
+		void updateEnd(const float dt) override;
 
 	private:
 		void onXPGained(entt::registry& registry, entt::entity entity);

@@ -12,7 +12,7 @@ void drft::system::CollisionSystem::init()
 	_registry.on_construct<CollisionComponent>().connect<&CollisionSystem::onCollisionAdded>(this);
 }
 
-void drft::system::CollisionSystem::updateEnd()
+void drft::system::CollisionSystem::updateEnd(const float dt)
 {
 	_registry.clear<CollisionComponent>();
 }

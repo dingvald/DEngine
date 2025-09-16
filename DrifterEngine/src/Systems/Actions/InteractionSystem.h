@@ -14,7 +14,7 @@ namespace drft::system
 		using System::System;
 
 		void init() override;
-		void updateEnd() override;
+		void updateEnd(const float dt) override;
 
 	private:
 		std::vector<entt::entity> getInteractableSurroundings(sf::Vector3i position, const spatial::WorldGrid& grid);

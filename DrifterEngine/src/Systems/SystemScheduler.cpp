@@ -27,7 +27,7 @@ void drft::system::SystemScheduler::update(const float dt) const
 {
 	for (auto&& system : _systems)
 	{
-		system->updateBegin();
+		system->updateBegin(_placeholder_);
 	}
 	for (auto&& system : _systems)
 	{
@@ -35,7 +35,7 @@ void drft::system::SystemScheduler::update(const float dt) const
 	}
 	for (auto&& system : _systems)
 	{
-		system->updateEnd();
+		system->updateEnd(_placeholder_);
 	}
 }
 

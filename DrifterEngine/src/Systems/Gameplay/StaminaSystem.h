@@ -10,7 +10,7 @@ namespace drft::system
 	
 		void init() override;
 		void start() override;
-		void updateEnd() override;
+		void updateEnd(const float dt) override;
 
 	private:
 		void setupStaminaComponentOnStart(entt::handle entity) const;

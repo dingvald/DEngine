@@ -51,7 +51,7 @@ void drft::system::StaminaSystem::start()
 	_observer.clear();
 }
 
-void drft::system::StaminaSystem::updateEnd()
+void drft::system::StaminaSystem::updateEnd(const float dt)
 {
 	_registry.clear<component::action::ConsumeStamina>();
 }

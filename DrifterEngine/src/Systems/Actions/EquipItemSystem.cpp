@@ -16,7 +16,7 @@ void drft::system::EquipItemSystem::init()
 	_registry.on_update<component::action::Unequip>().connect<&EquipItemSystem::onItemUnequipped>(this);
 }
 
-void drft::system::EquipItemSystem::updateEnd()
+void drft::system::EquipItemSystem::updateEnd(const float dt)
 {
 	_registry.clear<component::action::Equip>();
 	_registry.clear<component::action::Unequip>();

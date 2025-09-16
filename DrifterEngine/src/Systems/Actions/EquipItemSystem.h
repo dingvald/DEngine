@@ -10,7 +10,7 @@ namespace drft::system
 
 	private:
 		void init() override;
-		void updateEnd() override;
+		void updateEnd(const float dt) override;
 
 		void onItemEquipped(entt::registry& registry, entt::entity entity);
 		void onItemUnequipped(entt::registry& registry, entt::entity entity);

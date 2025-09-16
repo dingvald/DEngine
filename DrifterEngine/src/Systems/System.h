@@ -11,9 +11,9 @@ namespace drft::system
 		virtual void init() {};
 		virtual void start() {};
 
-		virtual void updateBegin() {};
+		virtual void updateBegin(const float dt) {};
 		virtual void update(const float dt) {};
-		virtual void updateEnd() {};
+		virtual void updateEnd(const float dt) {};
 
 		virtual void fixedUpdateBegin() {};
 		virtual void fixedUpdate() {};
