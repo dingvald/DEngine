@@ -254,8 +254,14 @@ void drft::Engine::shutDown()
 
 void drft::Engine::onMouseMoved()
 {
-	if (_controlsContext.navigation == NavigationType::Keyboard)
+	if (!_controlsContext.isKeyboardControlled()) return;
+
+	// Count mouse movements so transient mouse movements don't activate the cursor
+	static int moveCounter = 0; 
+	moveCounter++;
+	if (moveCounter >= 5)
 	{
+		moveCounter = 0;
 		swapToMouse();
 	}
 }
@@ -292,7 +298,7 @@ void drft::Engine::swapToMouse()
 	_window.setMouseCursorVisible(true);
 
 	_gui.unfocusAllWidgets();
-	_controlsContext.navigation = NavigationType::Mouse;
+	_controlsContext.setNavigationType(NavigationType::Mouse);
 }
 
 void drft::Engine::swapToKeyboard()
@@ -307,7 +313,7 @@ void drft::Engine::swapToKeyboard()
 		child->setFocused(true);
 		break;
 	}
-	_controlsContext.navigation = NavigationType::Keyboard;
+	_controlsContext.setNavigationType(NavigationType::Keyboard);
 }
 
 void drft::Engine::toggleFullscreen()

@@ -96,11 +96,11 @@ void drft::system::MouseVisualizationSystem::start()
 void drft::system::MouseVisualizationSystem::fixedUpdate()
 {
 	auto& controls = _registry.ctx().get<const ControlsContext&>();
-	if (controls.navigation == NavigationType::Mouse && !_shouldShowMouse && !_hideMouse)
+	if (controls.isMouseControlled() && !_shouldShowMouse && !_hideMouse)
 	{
 		showMouse();
 	}
-	else if (controls.navigation == NavigationType::Keyboard && _shouldShowMouse)
+	else if (controls.isKeyboardControlled() && _shouldShowMouse)
 	{
 		hideMouse();
 	}
