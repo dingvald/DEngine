@@ -7,14 +7,20 @@
 
 #include <Systems/Gameplay/SkillsSystem.h>
 #include <Skills/SkillIds.h>
+#include <Utility/Math/Logarithmic.h>
 
 namespace Internal
 {
+	// See Desmos graph: https://www.desmos.com/calculator/eksnemfbjo
+	static const float a = 4.2f;
+	static const float b = 0.1f;
+	static const float c = 10.f;
+	static const float d = 1.18f;
+	static const float e = 4.7f;
+
 	static float calculateMaxStaminaForLevel(int level)
 	{
-		float result = 10.f;
-		result += (logf(level) / logf(1.3));
-		return std::round(result);
+		return drft::math::log(level, a, b, c, d, e);
 	}
 
 	static void onEnduranceLevelUp(int level, entt::handle entity)
