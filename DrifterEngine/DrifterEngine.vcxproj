@@ -279,10 +279,11 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Core\MouseStateSystem.cpp" />
     <ClCompile Include="src\Systems\Core\PlayerTransferSystem.cpp" />
     <ClCompile Include="src\Systems\Gameplay\MaterialCompositionSystem.cpp" />
-    <ClCompile Include="src\Systems\Helpers\CalculateForceGenerated.cpp" />
     <ClCompile Include="src\Systems\Helpers\DamageTypes.cpp" />
     <ClCompile Include="src\Systems\Helpers\EmplacePathNavToPosition.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetDominantSide.cpp" />
+    <ClCompile Include="src\Systems\Helpers\GetGlobalRandomObject.cpp" />
+    <ClCompile Include="src\Systems\Helpers\GetItemAttackValues.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetMouseHandle.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetPlayerHandle.cpp" />
     <ClCompile Include="src\Systems\Gameplay\SkillsSystem.cpp" />
@@ -499,6 +500,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\AI\AiActions\WaitAiAction.h" />
     <ClInclude Include="src\AI\AiTargetTypes.h" />
     <ClInclude Include="src\AI\Utility\ScoredUtilityAction.h" />
+    <ClInclude Include="src\Components\BaseDamageComponent.h" />
     <ClInclude Include="src\JSON\JsonValueStorage.h" />
     <ClInclude Include="src\JSON\MemberParserValidator.h" />
     <ClInclude Include="src\ProcGen\GenerationFinalizationContext.h" />
@@ -618,10 +620,11 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Core\MouseStateSystem.h" />
     <ClInclude Include="src\Systems\Core\PlayerTransferSystem.h" />
     <ClInclude Include="src\Systems\Gameplay\MaterialCompositionSystem.h" />
-    <ClInclude Include="src\Systems\Helpers\CalculateForceGenerated.h" />
     <ClInclude Include="src\Systems\Helpers\DamageTypes.h" />
     <ClInclude Include="src\Systems\Helpers\EmplacePathNavToPosition.h" />
     <ClInclude Include="src\Systems\Helpers\GetDominantSide.h" />
+    <ClInclude Include="src\Systems\Helpers\GetGlobalRandomObject.h" />
+    <ClInclude Include="src\Systems\Helpers\GetItemAttackValues.h" />
     <ClInclude Include="src\Systems\Helpers\GetMouseHandle.h" />
     <ClInclude Include="src\Systems\Helpers\GetPlayerHandle.h" />
     <ClInclude Include="src\Systems\Gameplay\SkillsSystem.h" />
@@ -1078,7 +1081,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Components\ProjectileComponent.h" />
     <ClInclude Include="src\Components\PrototypeComponent.h" />
     <ClInclude Include="src\Components\RenderComponent.h" />
-    <ClInclude Include="src\Components\SharpComponent.h" />
+    <ClInclude Include="src\Components\SharpnessComponent.h" />
     <ClInclude Include="src\Components\SprintingComponent.h" />
     <ClInclude Include="src\Components\StaminaComponent.h" />
     <ClInclude Include="src\Components\TemporaryLightSourceComponent.h" />

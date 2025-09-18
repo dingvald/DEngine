@@ -25,8 +25,12 @@
                         [ "smithing", 5 ]
                     ]
                 },
-                "sharp": {
-                    "value": 0.4
+                "sharpness": {
+                    "levels": [30, 30, 15]
+                },
+                "base_damage": {
+                    "min": 2.0,
+                    "max": 8.0
                 },
                 "weight": {
                     "value": 1.5

@@ -675,9 +675,6 @@
     <ClCompile Include="src\Ability\Abilities\PowerAttackAbility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Helpers\CalculateForceGenerated.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utility\EntityAccessors\GetItemInDominantHand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -787,6 +784,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\Math\Logarithmic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\GetItemAttackValues.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Systems\Helpers\GetGlobalRandomObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1727,7 +1730,7 @@
     <ClInclude Include="src\Components\StaminaComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\SharpComponent.h">
+    <ClInclude Include="src\Components\SharpnessComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\FlyingComponent.h">
@@ -3350,9 +3353,6 @@
     <ClInclude Include="src\Defines\CardinalDirections.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Systems\Helpers\CalculateForceGenerated.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\EntityAccessors\GetItemInDominantHand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -3492,6 +3492,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Math\Logarithmic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\BaseDamageComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\GetItemAttackValues.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Systems\Helpers\GetGlobalRandomObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

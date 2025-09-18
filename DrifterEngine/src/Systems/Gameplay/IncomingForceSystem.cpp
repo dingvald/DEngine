@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "IncomingForceSystem.h"
+#include <Components/BaseDamageComponent.h>
 #include <Components/IncomingForceComponent.h>
 #include <Components/SolidMaterialComponent.h>
 #include <Components/LiquidMaterialComponent.h>
 #include <Components/GasMaterialComponent.h>
-#include <Components/SharpComponent.h>
 #include <Components/Components.h>
 #include <Systems/Helpers/MaterialForceDistribution.h>
 
@@ -17,6 +17,7 @@ static const float SolidScalarSum = HardnessScalar + DensityScalar + Brittleness
 
 void drft::system::IncomingForceSystem::init()
 {
+	_random.setSeed(rng::GlobalSeed);
 }
 
 void drft::system::IncomingForceSystem::update(const float dt)
@@ -26,13 +27,8 @@ void drft::system::IncomingForceSystem::update(const float dt)
 	{
 		entt::handle hit = { _registry, entity };
 		entt::handle other = { _registry, incomingForce.entity };
-
-		if (auto otherSolid = other.try_get<SolidMaterialComponent>())
-		{
-			auto sharp = other.try_get<SharpComponent>();
-			auto forces = calculateMaterialForceDistribution(incomingForce.force, { solid, 0.f}, { *otherSolid, sharp ? sharp->value : 0.0f });
-			hit.emplace_or_replace<component::action::TakeDamage>(forces.force1, other.entity());
-		}
+		
+		hit.emplace_or_replace<component::action::TakeDamage>(incomingForce.force, other.entity());
 	}
 
 	auto liquidview = _registry.view<IncomingForceComponent, LiquidMaterialComponent>();

@@ -12,12 +12,14 @@
 #include <Components/IncomingForceComponent.h>
 
 #include <Skills/SkillIds.h>
+#include <Random/Random.h>
 
 #include <Systems/Core/ActorSystem.h>
 #include <Systems/Core/TweeningSystem.h>
 
 #include <Systems/Helpers/EasingFunctions.h>
-#include <Systems/Helpers/CalculateForceGenerated.h>
+#include <Systems/Helpers/GetItemAttackValues.h>
+#include <Systems/Helpers/GetGlobalRandomObject.h>
 #include <Systems/Gameplay/SkillsSystem.h>
 
 
@@ -66,16 +68,15 @@ void drft::system::MeleeAttackActionSystem::onTweenReachedTarget(entt::handle en
 	const auto& positionComponent = entity.get<PositionComponent>();
 
 	drft::TilePosition targetPosition = positionComponent.tile + spatial::asTileSpace(action.direction);
-	auto hasHealthFilter = [this](entt::entity entity) -> bool { return _registry.all_of<HealthComponent>(entity); };
+	auto hasHealthFilter = [this](entt::entity e) -> bool { return _registry.all_of<HealthComponent>(e); };
 	auto targets = grid.entitiesAt(targetPosition, hasHealthFilter);
 
 	float force = 0.f;
 	if (!targets.empty())
 	{
-		GeneratedForce generatedForce = calculateForceGenerated(entity, action.itemUsed);
-		SkillsSystem::useSkill(SkillId::Strength, (int)(std::sqrtf(generatedForce.fromStrength) * SKILL_POINT_MULIPLIER), entity);
-		SkillsSystem::useSkill(SkillId::Agility, (int)(std::sqrtf(generatedForce.fromAgility) * SKILL_POINT_MULIPLIER), entity);
-		force = generatedForce.total;
+		AttackValues attackValues = getItemAttackValues(action.itemUsed, entity);
+		auto& random = getGlobalRandomObject(_registry);
+		force = random.realInRange(attackValues.modifiedDamageRange);
 	}
 	
 	entt::const_handle forceSource = action.itemUsed ? action.itemUsed : entt::const_handle{ entity };

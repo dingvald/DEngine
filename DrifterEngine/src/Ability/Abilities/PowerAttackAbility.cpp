@@ -17,7 +17,6 @@
 #include <Spatial/Conversions.h>
 #include <Spatial/Helpers.h>
 #include "Spatial/WorldGrid.h"
-#include <Systems/Helpers/CalculateForceGenerated.h>
 #include <Utility/EntityAccessors/GetItemInDominantHand.h>
 #include <Utility/TGUIHelpers.h>
 
@@ -134,7 +133,7 @@ namespace drft
 
 	float PowerAttackAbility::calculatePowerAttackForce(entt::const_handle actor, entt::const_handle item) const
 	{
-		GeneratedForce generatedForce = calculateForceGenerated(actor, item);
-		return generatedForce.fromStrength * 3.3f;
+		
+		return 25.f;
 	}
 }

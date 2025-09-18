@@ -4,6 +4,7 @@
 #include "AbilitiesComponent.h"
 #include "ActorComponent.h"
 #include "AnimationComponent.h"
+#include "BaseDamageComponent.h"
 #include "BaseMaterialComponent.h"
 #include "BodyComponent.h"
 #include "ChunkSourceTrackerComponent.h"
@@ -39,7 +40,7 @@
 #include "ProjectileComponent.h"
 #include "PrototypeComponent.h"
 #include "RenderComponent.h"
-#include "SharpComponent.h"
+#include "SharpnessComponent.h"
 #include "SkillsComponent.h"
 #include "SolidMaterialComponent.h"
 #include "SprintingComponent.h"
@@ -61,6 +62,7 @@ void ComponentMetaBinder::bindComponents()
 	AbilitiesComponent::bind(_ctx);
 	ActorComponent::bind(_ctx);
 	AnimationComponent::bind(_ctx);
+	BaseDamageComponent::bind(_ctx);
 	BaseMaterialComponent::bind(_ctx);
 	BodyComponent::bind(_ctx);
 	ChunkSourceTrackerComponent::bind(_ctx);
@@ -96,7 +98,7 @@ void ComponentMetaBinder::bindComponents()
 	ProjectileComponent::bind(_ctx);
 	PrototypeComponent::bind(_ctx);
 	RenderComponent::bind(_ctx);
-	SharpComponent::bind(_ctx);
+	SharpnessComponent::bind(_ctx);
 	SkillsComponent::bind(_ctx);
 	SolidMaterialComponent::bind(_ctx);
 	SprintingComponent::bind(_ctx);

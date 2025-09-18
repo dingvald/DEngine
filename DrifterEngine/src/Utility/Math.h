@@ -69,6 +69,10 @@ namespace drft::math
 				return std::abs(val - _max);
 			}
 		}
+		T clamp(T val) const
+		{
+			return std::clamp(val, _min, _max);
+		}
 	private:
 		T _min = std::numeric_limits<T>::max();
 		T _max = std::numeric_limits<T>::min();
