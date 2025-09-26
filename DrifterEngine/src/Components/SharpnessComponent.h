@@ -37,6 +37,7 @@ struct SharpnessComponent
 		_current = std::clamp(_current + amount, 0, _total);
 		currentLevel = getCurrentSharpness();
 	}
+	int getCurrent() const { return _current; }
 
 private:
 	int _total = 0;
@@ -95,7 +96,7 @@ private:
 	template<class Archive>
 	void serialize(Archive& archive)
 	{
-		archive(levels, _total, _current);
+		archive(levels, currentLevel, _total, _current);
 	}
 };
 

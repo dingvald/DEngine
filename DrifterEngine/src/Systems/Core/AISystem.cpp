@@ -4,6 +4,7 @@
 #include <Engine/CommonEngineDirectories.h>
 
 #include <Components/CurrentActorComponent.h>
+#include <Components/PathNavComponent.h>
 #include <Components/PositionComponent.h>
 #include <Components/UtilityAIComponent.h>
 
@@ -110,7 +111,11 @@ AiActionInstance drft::system::AiSystem::selectAction(entt::handle actor, const 
 		result.target = targetPosition;
 	}
 
-	if (!result.isInRange(actor))
+	if (result.isInRange(actor))
+	{
+		actor.remove<PathNavComponent>();
+	}
+	else
 	{
 		result.action = _moveToAction;
 	}

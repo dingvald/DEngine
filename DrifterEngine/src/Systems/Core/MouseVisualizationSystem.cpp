@@ -104,7 +104,6 @@ void drft::system::MouseVisualizationSystem::fixedUpdate()
 	{
 		hideMouse();
 	}
-
 	updateMousePathVisualization();
 }
 

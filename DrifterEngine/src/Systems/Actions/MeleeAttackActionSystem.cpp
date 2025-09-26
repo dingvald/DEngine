@@ -22,6 +22,8 @@
 #include <Systems/Helpers/GetGlobalRandomObject.h>
 #include <Systems/Gameplay/SkillsSystem.h>
 
+#pragma optimize("", off)
+
 
 static const float C_CONSTANT = 0.5f;
 static const float K_CONSTANT = 1.5f;
@@ -40,8 +42,8 @@ void drft::system::MeleeAttackActionSystem::update(const float dt)
 			.targetOffset = spatial::toFloatSpace(spatial::asTileSpace(meleeAttackAction.direction)) * 0.75f,
 			.time = 0.08f,
 			.easing = Easing::linear,
-			.onFinish = [this, action = meleeAttackAction](entt::handle entity) {
-				onTweenReachedTarget(entity, std::move(action));
+			.onFinish = [this, actionCopy = meleeAttackAction](entt::handle entity) {
+				onTweenReachedTarget(entity, actionCopy);
 			}
 		};
 		Tween moveBackTween = {

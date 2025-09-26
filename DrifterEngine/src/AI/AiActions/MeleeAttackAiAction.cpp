@@ -6,6 +6,8 @@
 
 #include <Spatial/Helpers.h>
 
+#pragma optimize("", off)
+
 bool MeleeAttackAiAction::isValid(entt::const_handle actor, OptionalTarget target) const
 {
     return target.has_value();
@@ -23,10 +25,10 @@ void MeleeAttackAiAction::perform(entt::handle actor, OptionalTarget target) con
 
 bool MeleeAttackAiAction::isInRange(entt::const_handle actor, OptionalTarget target) const
 {
-    auto* position = actor.try_get<PositionComponent>();
-    if (!position) return false;
+    auto* actorPosition = actor.try_get<PositionComponent>();
+    if (!actorPosition) return false;
     if (!target.has_value()) return false;
 
-    const float distance = drft::spatial::distance3d(position->tile, target.value());
+    const float distance = drft::spatial::distance3d(actorPosition->tile, target.value());
     return distance < ( sqrtf(2.0f) + 0.05f );
 }

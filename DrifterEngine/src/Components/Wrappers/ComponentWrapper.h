@@ -37,7 +37,7 @@ inline ComponentWrapper<ComponentType>::ComponentWrapper(entt::handle entity)
 template<typename ComponentType>
 inline bool ComponentWrapper<ComponentType>::isValid() const
 {
-	return _handle.registry() && _handle.valid() && _handle.all_of<ComponentType>();
+	return _handle && _handle.all_of<ComponentType>();
 }
 
 

@@ -2,6 +2,7 @@
 #include "GetItemAttackValues.h"
 #include <Components/BaseDamageComponent.h>
 #include <Components/WeightComponent.h>
+#include <Components/SharpnessComponent.h>
 
 #include <Skills/SkillIds.h>
 #include <Systems/Gameplay/SkillsSystem.h>
@@ -34,14 +35,16 @@ namespace Internal
 
 AttackValues getItemAttackValues(entt::const_handle item, entt::const_handle user)
 {
+    if (!item.registry() || !user.registry()) return {};
+
     AttackValues result;
 
     int userStrength = drft::system::SkillsSystem::getSkillLevel(SkillId::Strength, user);
     int userAgility = drft::system::SkillsSystem::getSkillLevel(SkillId::Agility, user);
 
     auto* baseDamageComponent = item.try_get<BaseDamageComponent>();
-    result.baseDamageRange.setMin(baseDamageComponent ? baseDamageComponent->min : 1.f);
-    result.baseDamageRange.setMax(baseDamageComponent ? baseDamageComponent->max : 3.f);
+    result.baseDamageRange.setMin(baseDamageComponent ? std::round(baseDamageComponent->min) : 1.f);
+    result.baseDamageRange.setMax(baseDamageComponent ? std::round(baseDamageComponent->max) : 3.f);
 
     auto* weightComponent = item.try_get<WeightComponent>();
     const float weight = weightComponent ? weightComponent->value : 0.0f;
@@ -49,8 +52,11 @@ AttackValues getItemAttackValues(entt::const_handle item, entt::const_handle use
     result.strengthModifier = Internal::calculateStrengthModifier(weight, userStrength);
     result.agilityModifier = Internal::calculateAgilityModifier(weight, userAgility);
 
-    result.modifiedDamageRange.setMin(result.baseDamageRange.getMin() * result.agilityModifier);
-    result.modifiedDamageRange.setMax(result.baseDamageRange.getMax() * result.strengthModifier);
+    auto* sharpness = item.try_get<SharpnessComponent>();
+    result.sharpnessModifier = sharpness ? SharpnessLevelMultipliers.at(sharpness->currentLevel) : 0.5f;
+
+    result.modifiedDamageRange.setMin(std::round(result.baseDamageRange.getMin() * result.agilityModifier * result.sharpnessModifier));
+    result.modifiedDamageRange.setMax(std::round(result.baseDamageRange.getMax() * result.strengthModifier * result.sharpnessModifier));
 
     return result;
 }
