@@ -5,10 +5,8 @@ class JsonValueStorage
 public:
 	using Ptr = std::unique_ptr<JsonValueStorage>;
 
-	JsonValueStorage();
 	JsonValueStorage(const rapidjson::Value& value);
 
-	void assignValue(const rapidjson::Value& value);
 	const rapidjson::Value& getValue() const;
 
 private:

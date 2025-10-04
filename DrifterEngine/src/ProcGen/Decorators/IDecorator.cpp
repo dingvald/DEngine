@@ -32,9 +32,9 @@ void IDecorator::createFromJson(const rapidjson::Value& json)
 	}
 }
 
-void IDecorator::decorate(SlotPositionList& inOutSlotPositions, TaggedPositions& inOutTaggedPositions, const GenerationContext& context) const
+void IDecorator::decorate(SlotPositionList& inOutSlotPositions, const TaggedPositions& taggedPositions, const GenerationContext& context) const
 {
-	SlotPositionList result = this->decorateImpl(getMyPositions(inOutTaggedPositions, context.seed), context);
+	SlotPositionList result = this->decorateImpl(getMyPositions(taggedPositions, context.seed), context);
 	for (auto&& slot : result)
 	{
 		slot.priority = _priority;

@@ -14,9 +14,11 @@ public:
 
 	SlotPositionList generate(sf::Vector3i position, const GenerationContext& context) const;
 
+	const TaggedPositions& getTaggedPositions() const;
 	const sf::IntRect& getArea() const;
 
 private:
 	sf::IntRect _area;
 	SlotPositionList _entitySlots;
+	TaggedPositions _taggedPositions;
 };

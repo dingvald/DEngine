@@ -17,7 +17,7 @@ public:
 	using Ptr = std::unique_ptr<IDecorator>;
 public:
 	void createFromJson(const rapidjson::Value& json) override;
-	void decorate(SlotPositionList& inOutSlotPositions, TaggedPositions& inOutTaggedPositions, const GenerationContext& context) const;
+	void decorate(SlotPositionList& inOutSlotPositions, const TaggedPositions& taggedPositions, const GenerationContext& context) const;
 
 protected:
 	virtual SlotPositionList decorateImpl(const PositionList& taggedPositions, const GenerationContext& context) const = 0;
