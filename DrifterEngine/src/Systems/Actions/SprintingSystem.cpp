@@ -91,8 +91,7 @@ void drft::system::SprintingSystem::spawnSprintEffect(const RenderComponent& ren
 	EffectStruct sprintEffect = {
 		.frames = { effectSprite },
 		.position = positionComponent.tile,
-		.ttl = 25,
-		.fadeRate = 1,
+		.ttl = 1.0f,
 		.requiresInFOV = false
 	};
 

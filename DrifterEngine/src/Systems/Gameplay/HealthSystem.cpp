@@ -66,14 +66,6 @@ void drft::system::HealthSystem::update(const float dt)
 	}
 	_healthAddedObserver.clear();
 
-	// This sepration of incoming / taking damage allows for event handlers to react to the events separately
-	auto incomingDamageView = _registry.view<component::action::IncomingDamage>();
-	for (auto [entity, incoming] : incomingDamageView.each())
-	{
-		processIncomingDamage(entity, incoming);
-	}
-	_registry.erase<component::action::IncomingDamage>(incomingDamageView.begin(), incomingDamageView.end());
-
 	auto damageView = _registry.view<component::action::TakeDamage>();
 	for (auto [entity, damage] : damageView.each())
 	{
@@ -82,109 +74,101 @@ void drft::system::HealthSystem::update(const float dt)
 	_registry.erase<component::action::TakeDamage>(damageView.begin(), damageView.end());
 }
 
-void drft::system::HealthSystem::processIncomingDamage(entt::entity entity, component::action::IncomingDamage& damage) const
-{
-	float total = 0;
-	for (auto& [_, damage] : damage.damageTypes)
-	{
-		total += static_cast<float>(damage);
-	}
-	_registry.emplace<component::action::TakeDamage>(entity, total, damage.source);
-}
-
 void drft::system::HealthSystem::processTakeDamage(entt::entity entity, component::action::TakeDamage& damage) const
 {
 	auto handle = entt::handle{ _registry, entity };
 	if (!handle.all_of<HealthComponent>()) return;
 
-	const float damageEffective = math::floorToMultiple(damage.amount, 0.5f);
+	spawnDamageEffects(handle, damage.amount);
 
 	auto& health = handle.get<HealthComponent>();
-	// send floating message
-	if (auto posComp = handle.try_get<PositionComponent>())
-	{
-		sf::Color materialColor = sf::Color::White;
-		auto optionalMaterial = util::getEntityPrimaryMaterial(handle);
-		if (optionalMaterial.has_value())
-		{
-			const RenderComponent& materialRender = optionalMaterial.value().get<RenderComponent>();
-			materialColor = materialRender.color;
-		}
-
-		std::string message;
-		const auto& renderComponent = handle.get<RenderComponent>();
-		sf::Color messageColor = sf::Color::White;
-
-		SpriteOptions damageEffectSprite;
-		createSpriteOptionsFromRenderComponent(damageEffectSprite, renderComponent);
-		damageEffectSprite.layer = static_cast<int>(RenderLayer::EffectsBack);
-
-		int effect_ttl = 2;
-
-		if (math::isNearZero(damageEffective))
-		{
-			messageColor = sf::Color::Blue;
-			damageEffectSprite.color = sf::Color::White;
-			damageEffectSprite.texture = "diamond"_hs;
-			effect_ttl = 30;
-		}
-		else if (damageEffective < 0)
-		{
-			message += "+";
-			messageColor = sf::Color::Green;
-			damageEffectSprite.color = sf::Color::Green;
-			effect_ttl = 10;
-		}
-		else if (damageEffective > 0)
-		{
-			damageEffectSprite.color = sf::Color::Red;
-			std::vector<SpriteOptions> hitParticles =
-			{
-				SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
-				SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
-				SpriteOptions{.uvCoords = sf::Vector2i{2, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
-			};
-
-			sf::Vector3f randomOffset;
-			rng::Random& random = _registry.ctx().get<rng::Random>();
-			randomOffset.x = std::roundf(random.realInRange(-1.f, 1.f));
-			randomOffset.y = std::roundf(random.realInRange(-1.f, 1.f));
-
-			// Spawn Hit particles
-			spawnEffect(_registry, {
-				.frames = std::move(hitParticles),
-				.position = posComp->tile,
-				.offset = randomOffset,
-				.animationSpeed = 10.0f,
-				.requiresInFOV = false
-				});
-		}
-
-		_dispatcher.trigger(events::SendFloatingMessageEvent{
-			.message = message + std::format("{:.0f}", std::abs(damageEffective)),
-			.color = messageColor,
-			.position = spatial::toXY(spatial::toFloatSpace(posComp->tile)),
-			.velocity = {0.f,-1.f},
-			.fades = true,
-			.isScreenSpace = false,
-			.ttl = 80
-			});
-
-		// Spawn HurtEffect
-		spawnEffect(_registry, {
-			.frames = { damageEffectSprite },
-			.position = posComp->tile,
-			.animationSpeed = 10.0f,
-			.ttl = effect_ttl,
-			.requiresInFOV = false
-			});
-	}
-
-	health.current = std::clamp(health.current - damageEffective, 0.f, health.max);
+	health.current = std::clamp(health.current - damage.amount, 0.f, health.max);
 	if (health.current <= 0.f)
 	{
 		handle.emplace<component::action::Die>();
 	}
+}
+
+void drft::system::HealthSystem::spawnDamageEffects(entt::const_handle entity, float damage) const
+{
+	auto posComp = entity.try_get<PositionComponent>();
+	if (!posComp) return;
+
+	sf::Color materialColor = sf::Color::White;
+	auto optionalMaterial = util::getEntityPrimaryMaterial(entity);
+	if (optionalMaterial.has_value())
+	{
+		const RenderComponent& materialRender = optionalMaterial.value().get<RenderComponent>();
+		materialColor = materialRender.color;
+	}
+
+	std::string message;
+	const auto& renderComponent = entity.get<RenderComponent>();
+	sf::Color messageColor = sf::Color::White;
+
+	SpriteOptions damageEffectSprite;
+	createSpriteOptionsFromRenderComponent(damageEffectSprite, renderComponent);
+	damageEffectSprite.layer = static_cast<int>(RenderLayer::EffectsBack);
+
+	float effect_ttl = 0.05f;
+
+	if (math::isNearZero(damage))
+	{
+		messageColor = sf::Color::Blue;
+		damageEffectSprite.color = sf::Color::White;
+		damageEffectSprite.texture = "diamond"_hs;
+		effect_ttl = 0.2f;
+	}
+	else if (damage < 0)
+	{
+		message += "+";
+		messageColor = sf::Color::Green;
+		damageEffectSprite.color = sf::Color::Green;
+		effect_ttl = 0.2f;
+	}
+	else if (damage > 0)
+	{
+		damageEffectSprite.color = sf::Color::White;
+		std::vector<SpriteOptions> hitParticles =
+		{
+			SpriteOptions{.uvCoords = sf::Vector2i{0, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{1, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
+			SpriteOptions{.uvCoords = sf::Vector2i{2, 0}, .texture = "hit_particle"_hs, .layer = RenderLayer::EffectsBack, .color = materialColor},
+		};
+
+		sf::Vector3f randomOffset;
+		rng::Random& random = _registry.ctx().get<rng::Random>();
+		randomOffset.x = std::roundf(random.realInRange(-1.f, 1.f));
+		randomOffset.y = std::roundf(random.realInRange(-1.f, 1.f));
+
+		// Spawn Hit particles
+		spawnEffect(_registry, {
+			.frames = std::move(hitParticles),
+			.position = posComp->tile,
+			.offset = randomOffset,
+			.animationSpeed = 8.f,
+			.requiresInFOV = false
+			});
+	}
+
+	_dispatcher.trigger(events::SendFloatingMessageEvent{
+		.message = message + std::format("{:.0f}", std::abs(damage)),
+		.color = messageColor,
+		.position = spatial::toXY(spatial::toFloatSpace(posComp->tile)),
+		.velocity = {0.f,-1.f},
+		.fades = true,
+		.isScreenSpace = false,
+		.ttl = 80
+		});
+
+	// Spawn Hurt Effect
+	spawnEffect(_registry, {
+		.frames = { damageEffectSprite },
+		.position = posComp->tile,
+		.ttl = effect_ttl,
+		.fadeFunc = [](float f) {return 1.0f;},
+		.requiresInFOV = false
+		});
 }
 
 void drft::system::HealthSystem::onTurnStartEvent(events::TurnStartEvent& ev)

@@ -11,9 +11,9 @@ namespace drft::system
 
 		TilePosition position = { 0,0,0 };
 		sf::Vector3f offset = { 0,0,0 };
-		float animationSpeed = 0.f;
-		int ttl = 60; // how many ticks the effect is alive for (60 ticks / second)
-		int fadeRate = 0; // decrease in alpha per tick
+		float animationSpeed = 0.f; // frames / second
+		std::optional<float> ttl = std::nullopt; // in seconds
+		std::function<float(float)> fadeFunc = [](float f) {return f;};
 		bool loops = false; // does this effect loop (if its an animation)
 		bool requiresInFOV = true; // does the effect need to be in the player's fov to be visible?
 	};

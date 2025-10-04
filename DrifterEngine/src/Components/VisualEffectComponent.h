@@ -6,26 +6,11 @@
 
 struct VisualEffectComponent
 {
-	int ttl = 0;
-	int fadeRate = 0;
+	std::optional<float> ttl = std::nullopt;
+	std::function<float(float)> fadeFunc = [](float f) {return f;};
 	bool requiresInFOV = true;
 
-private:
-	friend class ComponentMetaBinder;
-	static inline const std::string_view NAME = "visual_effect";
-	static void bind(entt::meta_ctx& ctx)
-	{
-		snapshot::reflectComponent<VisualEffectComponent, NAME>(ctx);
-	}
+	float elapsed = 0;
 };
-
-namespace cereal
-{
-	template<class Archive>
-	void serialize(Archive& archive, VisualEffectComponent& visualEffect)
-	{
-		archive(visualEffect.ttl, visualEffect.fadeRate, visualEffect.requiresInFOV);
-	}
-}
 
 

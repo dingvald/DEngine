@@ -5,10 +5,10 @@ namespace drft::system
 {
 	class VisualEffectSystem : public System
 	{
-	public:
 		using System::System;
 
 		void fixedUpdate() override;
+		void shutdown() override;
 	};
 }
 

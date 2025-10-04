@@ -41,6 +41,11 @@ float drft::math::floorToMultiple(float f, float multiple)
     return std::floorf(f / multiple) * multiple;
 }
 
+float drft::math::roundToMultiple(float f, float multiple)
+{
+    return std::roundf(f / multiple) * multiple;
+}
+
 int drft::math::wrap(int val, int min, int max)
 {
     if (val < min) val = max;

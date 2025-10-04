@@ -59,7 +59,6 @@
 #include "Systems/Gameplay/HealingSystem.h"
 #include "Systems/Gameplay/HealthSystem.h"
 #include <Systems/Gameplay/IncomingForceSystem.h>
-#include "Systems/Gameplay/LevelingSystem.h"
 #include "Systems/Gameplay/LightSourceSystem.h"
 #include "Systems/Gameplay/LiquidSystem.h"
 #include <Systems/Gameplay/MaterialCompositionSystem.h>
@@ -103,7 +102,15 @@ drft::SimulationState::SimulationState(StateStack& stack, StateContext& context)
 
 bool drft::SimulationState::handleEvent(const sf::Event& ev)
 {
-    return false;
+	if (ev.is<sf::Event::MouseLeft>())
+	{
+		system::MouseVisualizationSystem::changeMouseVisibility(getContext().registry, { false, false });
+	}
+	if (ev.is<sf::Event::MouseEntered>())
+	{
+		system::MouseVisualizationSystem::changeMouseVisibility(getContext().registry, { true, true });
+	}
+	return false;
 }
 
 bool drft::SimulationState::update(const float dt)
@@ -190,7 +197,6 @@ void drft::SimulationState::importSystems()
 	_systems->add<BodyPartSystem>();
 	_systems->add<HealthSystem>();
 	_systems->add<DeathSystem>();
-	_systems->add<LevelingSystem>();
 	_systems->add<TweeningSystem>();
 
 	_systems->add<DayNightCycleSystem>();

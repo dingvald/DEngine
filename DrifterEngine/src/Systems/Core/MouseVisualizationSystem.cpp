@@ -87,7 +87,6 @@ void drft::system::MouseVisualizationSystem::start()
 		{
 			.frames = { CursorSprite },
 			.position = TilePosition{ 0, 0, 0 },
-			.ttl = -1,
 			.requiresInFOV = false
 		});
 	_registry.emplace<MouseCursorComponent>(_cursor);
@@ -190,7 +189,6 @@ void drft::system::MouseVisualizationSystem::refreshVisualizedPath(const std::ve
 				.frames = { PathSprite },
 				.position = path[i],
 				.animationSpeed = 2.0f,
-				.ttl = -1,
 				.loops = true,
 				.requiresInFOV = false,
 			});

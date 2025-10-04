@@ -19,8 +19,9 @@ namespace drft::system
 		void update(const float dt) override;
 
 	private:
-		void processIncomingDamage(entt::entity entity, component::action::IncomingDamage& damage) const;
 		void processTakeDamage(entt::entity entity, component::action::TakeDamage& damage) const;
+
+		void spawnDamageEffects(entt::const_handle entity, float damage) const;
 
 		void onTurnStartEvent(events::TurnStartEvent& ev);
 		void onHealthComponentAdded(entt::registry& registry, entt::entity) const;

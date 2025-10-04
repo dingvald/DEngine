@@ -258,9 +258,6 @@
     <ClCompile Include="src\Systems\Gameplay\TickingLifetimeSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -646,9 +643,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Systems\Helpers\MaterialForceDistribution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\States\GameStates\SkillsScreenState.cpp">
@@ -1545,9 +1539,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\TickingLifetimeSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h">
@@ -3318,9 +3309,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\PathingHeuristics\PhysicalBlockingHeuristic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Systems\Helpers\MaterialForceDistribution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\States\GameStates\SkillsScreenState.h">

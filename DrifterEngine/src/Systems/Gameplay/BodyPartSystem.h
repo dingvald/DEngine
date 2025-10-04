@@ -13,7 +13,7 @@ namespace drft::system
 	private:
 		void init() override;
 
-		void onMeleeAttackActionAdded(entt::registry& registry, entt::entity entity);
+		void onMeleeAttackActionUpdated(entt::registry& registry, entt::entity entity);
 	};
 
 }

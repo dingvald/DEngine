@@ -23,7 +23,7 @@
                             }
                         },
                         "structures": {
-                            "colosseum": {
+                            "junk_town": {
                                 "conditions": [
                                     {
                                         "type": "hardcoded",

@@ -108,8 +108,7 @@ void drft::SelectTargetState::onPush()
 		auto effect = system::spawnEffect(getContext().registry,
 			{
 				.frames = { RadiusEffect },
-				.position = spatial::asTileSpace(tile),
-				.ttl = -1
+				.position = spatial::asTileSpace(tile)
 			});
 		_radiusEffects.push_back(effect);
 	}
@@ -121,7 +120,6 @@ void drft::SelectTargetState::onPush()
 			{
 				.frames = { AoeEffect },
 				.position = _startPosition + spatial::asTileSpace(tile3d),
-				.ttl = -1,
 				.requiresInFOV = false
 			});
 		_aoeEffects.push_back(effect);
@@ -131,7 +129,6 @@ void drft::SelectTargetState::onPush()
 		{
 			.frames = { CursorEffect },
 			.position = _startPosition,
-			.ttl = -1,
 			.requiresInFOV = false
 		});
 }

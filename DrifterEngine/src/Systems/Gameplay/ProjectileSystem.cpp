@@ -53,8 +53,7 @@ void drft::system::ProjectileSystem::update(const float dt)
 				{
 					.frames = { effectSprite },
 					.position = pos.tile,
-					.ttl = 30,
-					.fadeRate = 3
+					.ttl = 0.1
 				});
 		}
 	}

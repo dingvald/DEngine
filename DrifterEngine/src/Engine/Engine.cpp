@@ -16,22 +16,22 @@
 
 using namespace drft;
 
+static const char* WINDOW_TITLE = "Drifter Engine";
+
 static const std::filesystem::path DEFAULT_THEME = "drifter_theme.txt";
 
-static const unsigned int WINDOW_WIDTH = 2560;
-static const unsigned int WINDOW_HEIGHT = 1440;
-
-static const float DEBUG_X_POSITION = WINDOW_WIDTH - 256;
-static const float DEBUG_Y_POSITION = 16;
-
-static const float MOUSE_TIMEOUT_TIME = 1.5f; // in seconds
+static const unsigned int DEFAULT_WINDOW_WIDTH = 2560;
+static const unsigned int DEFAULT_WINDOW_HEIGHT = 1440;
 
 static constexpr int UPDATES_PER_FRAME_LIMIT = 10;
 
+static sf::Image ICON_IMAGE;
+static const sf::Vector2u ICON_SIZE = { 32u, 32u };
+
 
 drft::Engine::Engine()
-	: _window(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine")
-	, _gui(_window)
+	: _window{ sf::VideoMode{{DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT}}, WINDOW_TITLE }
+	, _gui{_window}
 {
 	initialize();
 }
@@ -63,10 +63,7 @@ void drft::Engine::run()
 		render(timePassed);
 
 		//
-		if (_stateStack.isEmpty())
-		{
-			shutDown();
-		}
+		if (_stateStack.isEmpty()) shutDown();
 	}
 }
 
@@ -75,9 +72,11 @@ void drft::Engine::initialize()
 	LOG_MSG("Initializing Engine...");
 	LOG_MSG("Working Directory: {}", WORKING_DIRECTORY.string());
 
-	setWindowIcon();
-	loadResources();
+	initializeWindow();
+	initializeGui();
 	initializeDebugDisplay();
+
+	loadResources();
 	loadDefaultKeybindings();
 	loadSavedKeybindings();
 	setupActionMap();
@@ -89,13 +88,33 @@ void drft::Engine::initialize()
 	_stateStack.pushState(States::Title);
 }
 
-void drft::Engine::setWindowIcon()
+void drft::Engine::initializeWindow()
 {
-	sf::Image icon;
+	LOG_MSG("Initializing window...");
+
+	// Set window size
+	LOG_MSG("Detecting screen resolution");
+	sf::VideoMode videoMode = sf::VideoMode::getDesktopMode();
+	LOG_MSG("Screen Resolution: W: {}, H: {}", videoMode.size.x, videoMode.size.y);
+	_window.create(videoMode, WINDOW_TITLE);
+
+	// Set window Icon
+	loadWindowIcon();
+
+	LOG_MSG("Window initialized.");
+}
+
+void drft::Engine::initializeGui()
+{
+	_gui.setWindow(_window);
+}
+
+void drft::Engine::loadWindowIcon()
+{
 	const std::filesystem::path iconPath = ICONS_DIRECTORY / "drifter-project-icon.png";
-	if (icon.loadFromFile(iconPath.string()))
+	if (ICON_IMAGE.loadFromFile(iconPath))
 	{
-		_window.setIcon({ 32, 32 }, icon.getPixelsPtr());
+		_window.setIcon(ICON_SIZE, ICON_IMAGE.getPixelsPtr());
 	}
 	else
 	{
@@ -162,9 +181,9 @@ void drft::Engine::initializeDebugDisplay()
 {
 #ifdef DRFT_DEBUG
 	auto group = tgui::Group::create();
-	_debugDisplay.initialize(group);
+	_debugDisplay = std::make_unique<DebugDisplay>(group);
 	_gui.add(group);
-	entt::locator<IDebugDisplay>::emplace<DebugDisplay>(_debugDisplay);
+	entt::locator<IDebugDisplay>::emplace<DebugDisplay>(*_debugDisplay);
 #endif
 }
 
@@ -230,7 +249,7 @@ void drft::Engine::fixedUpdate()
 
 void drft::Engine::render(const float)
 {
-	_debugDisplay.moveToFront();
+	if (_debugDisplay) _debugDisplay->moveToFront();
 
 	_window.clear();
 
@@ -244,6 +263,8 @@ void drft::Engine::render(const float)
 void drft::Engine::shutDown()
 {
 	LOG_MSG("Closing Engine");
+
+	entt::locator<IDebugDisplay>::reset();
 
 	_stateStack.clearStatesNow();
 
@@ -289,7 +310,7 @@ bool drft::Engine::passEventToStates(sf::Event event)
 
 bool drft::Engine::passEventToDebug(sf::Event event)
 {
-	_debugDisplay.handleEvent(event);
+	if (_debugDisplay) _debugDisplay->handleEvent(event);
 	return false;
 }
 
@@ -318,9 +339,11 @@ void drft::Engine::swapToKeyboard()
 
 void drft::Engine::toggleFullscreen()
 {
+	sf::VideoMode videoMode = sf::VideoMode::getDesktopMode();
 	if (_isFullScreen)
 	{
-		_window.create(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine");
+		_window.create(videoMode, WINDOW_TITLE);
+		_window.setIcon(ICON_SIZE, ICON_IMAGE.getPixelsPtr());
 		_window.setVerticalSyncEnabled(false);
 		_window.setMouseCursor(sf::Cursor{ sf::Cursor::Type::Cross });
 		_isFullScreen = false;
@@ -328,18 +351,24 @@ void drft::Engine::toggleFullscreen()
 	}
 	else
 	{
-		_window.create(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Drifter Engine", sf::State::Fullscreen);
+		_window.create(videoMode, WINDOW_TITLE, sf::State::Fullscreen);
+		_window.setIcon(ICON_SIZE, ICON_IMAGE.getPixelsPtr());
 		_window.setVerticalSyncEnabled(true);
 		_window.setMouseCursor(sf::Cursor{ sf::Cursor::Type::Cross });
 		_isFullScreen = true;
 		LOG_MSG("Window set to fullscreen mode");
 	}
+
+	// Reset the mouse cursor
+	_window.setMouseCursor(sf::Cursor{ sf::Cursor::Type::Cross });
 }
 
 void drft::Engine::toggleDebug()
 {
-	_debugDisplay.setVisible(!_debugDisplay.isVisible());
-	_debugDisplay.moveToFront();
+	if (!_debugDisplay) return;
+
+	_debugDisplay->setVisible(!_debugDisplay->isVisible());
+	_debugDisplay->moveToFront();
 }
 
 void drft::Engine::saveKeybindings()

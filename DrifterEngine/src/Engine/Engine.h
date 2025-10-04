@@ -16,13 +16,16 @@ namespace drft
 
 	private:
 		void initialize();
-		void setWindowIcon();
+		void initializeWindow();
+		void initializeGui();
+		void loadWindowIcon();
 		void loadResources();
 		void loadSavedKeybindings();
 		void loadDefaultKeybindings();
 		void initializeDebugDisplay();
 		void setupActionMap();
 		void registerStates();
+
 		void handleEvents();
 		void update(const float dt);
 		void fixedUpdate();
@@ -47,14 +50,16 @@ namespace drft
 	private:
 		sf::RenderWindow _window;
 		tgui::Gui _gui;
+
 		entt::registry _registry;
 		TextureAtlas _textures;
 		ResourceHolder<sf::Font, std::string> _fonts;
-		ControlsContext _controlsContext = {};
-		DebugDisplay _debugDisplay;
+		ControlsContext _controlsContext;
+
+		std::unique_ptr<DebugDisplay> _debugDisplay = nullptr;
 
 		Keybindings _keybindings;
-		ActionMap _actionMap{_keybindings};
+		ActionMap _actionMap{ _keybindings };
 
 		StateContext _stateContext = {
 			_window,

@@ -80,8 +80,7 @@ void drft::SelectDirectionState::placeTargetingTiles()
 		auto effect = system::spawnEffect(getContext().registry,
 			{
 				.frames = {radiusEffect},
-				.position = spatial::asTileSpace(tile),
-				.ttl = -1
+				.position = spatial::asTileSpace(tile)
 			});
 		_targetingTileEntities.push_back(effect);
 	}

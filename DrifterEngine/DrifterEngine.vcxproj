@@ -287,7 +287,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Systems\Helpers\GetMouseHandle.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetPlayerHandle.cpp" />
     <ClCompile Include="src\Systems\Gameplay\SkillsSystem.cpp" />
-    <ClCompile Include="src\Systems\Helpers\MaterialForceDistribution.cpp" />
     <ClCompile Include="src\Systems\Helpers\RequestGameplayScreen.cpp" />
     <ClCompile Include="src\Utility\ColorToHexString.cpp" />
     <ClCompile Include="src\Utility\EntityAccessors\EntityHasTag.cpp" />
@@ -359,7 +358,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\PercentChance.cpp" />
     <ClCompile Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\BodyPart.cpp" />
-    <ClCompile Include="src\Systems\Gameplay\LevelingSystem.cpp" />
     <ClCompile Include="src\Systems\HelperClasses\EquipmentSlots.cpp" />
     <ClCompile Include="src\Systems\Helpers\GetExperienceFromKilling.cpp" />
     <ClCompile Include="src\Systems\Helpers\HasLineOfSight.cpp" />
@@ -628,7 +626,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Helpers\GetMouseHandle.h" />
     <ClInclude Include="src\Systems\Helpers\GetPlayerHandle.h" />
     <ClInclude Include="src\Systems\Gameplay\SkillsSystem.h" />
-    <ClInclude Include="src\Systems\Helpers\MaterialForceDistribution.h" />
     <ClInclude Include="src\Systems\Helpers\RequestGameplayScreen.h" />
     <ClInclude Include="src\Utility\ColorToHexString.h" />
     <ClInclude Include="src\Utility\DebugAssert.h" />
@@ -1120,7 +1117,6 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Systems\Gameplay\TargetSelectors\TargetSelectors.h" />
     <ClInclude Include="src\Systems\HelperClasses\AIStates.h" />
     <ClInclude Include="src\Systems\HelperClasses\BodyPart.h" />
-    <ClInclude Include="src\Systems\Gameplay\LevelingSystem.h" />
     <ClInclude Include="src\Systems\HelperClasses\EquipmentSlots.h" />
     <ClInclude Include="src\Systems\Helpers\GetExperienceFromKilling.h" />
     <ClInclude Include="src\Systems\Helpers\HasLineOfSight.h" />

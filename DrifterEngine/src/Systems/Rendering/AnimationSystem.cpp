@@ -17,7 +17,7 @@ void drft::system::AnimationSystem::fixedUpdate()
 	auto withRenderView = _registry.view<AnimationComponent, RenderComponent>();
 	for (auto&& [entity, animation, render] : withRenderView.each())
 	{
-		++animation.elapsed;
+		animation.elapsed++;
 		const float numFramesTillNextIndex = TARGET_UPDATES_PER_SECOND / std::abs(animation.speed);
 		if (animation.elapsed >= numFramesTillNextIndex)
 		{

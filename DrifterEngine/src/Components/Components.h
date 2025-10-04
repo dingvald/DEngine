@@ -85,14 +85,4 @@ namespace component::action
 	{
 		float amount = 0.f;
 	};
-
-	struct GainExperience
-	{
-		unsigned int amount = 0;
-	};
-
-	struct LevelUp 
-	{
-		std::unordered_map<std::string, int> statChanges;
-	};
 }

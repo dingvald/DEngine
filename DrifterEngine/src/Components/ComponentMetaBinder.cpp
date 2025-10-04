@@ -52,7 +52,6 @@
 #include "TickingLifetimeComponent.h"
 #include "UtilityAIComponent.h"
 #include "VisionComponent.h"
-#include "VisualEffectComponent.h"
 #include "VolumeComponent.h"
 #include "WearableComponent.h"
 #include "WeightComponent.h"
@@ -110,7 +109,6 @@ void ComponentMetaBinder::bindComponents()
 	TickingLifetimeComponent::bind(_ctx);
 	UtilityAIComponent::bind(_ctx);
 	VisionComponent::bind(_ctx);
-	VisualEffectComponent::bind(_ctx);
 	VolumeComponent::bind(_ctx);
 	WearableComponent::bind(_ctx);
 	WeightComponent::bind(_ctx);

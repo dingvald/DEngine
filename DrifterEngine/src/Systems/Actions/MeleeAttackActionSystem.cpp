@@ -79,6 +79,7 @@ void drft::system::MeleeAttackActionSystem::onTweenReachedTarget(entt::handle en
 		AttackValues attackValues = getItemAttackValues(action.itemUsed, entity);
 		auto& random = getGlobalRandomObject(_registry);
 		force = random.realInRange(attackValues.modifiedDamageRange);
+		force = std::roundf(force);
 	}
 	
 	entt::const_handle forceSource = action.itemUsed ? action.itemUsed : entt::const_handle{ entity };
