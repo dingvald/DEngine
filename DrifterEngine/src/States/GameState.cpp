@@ -23,9 +23,9 @@
 #include "Utility/StandardLogger.h"
 #include "Factory/EntityFactory.h"
 
-#include <ProcGen/Decorators/DecoratorFactory.h>
-#include <ProcGen/PositionSelector/PositionSelectorFactory.h>
-#include <ProcGen/GenerationFinalizationContext.h>
+#include <Generation/Decorators/DecoratorFactory.h>
+#include <Generation/PositionSelector/PositionSelectorFactory.h>
+#include <Generation/GenerationFinalizationContext.h>
 
 static const float SCROLL_WHEEL_THRESHOLD = 0.5f;
 

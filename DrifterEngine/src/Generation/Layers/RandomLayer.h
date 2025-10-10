@@ -1,0 +1,17 @@
+#pragma once
+#include <Generation/LayeredProcGen/LayeredProcGen.h>
+
+namespace drft
+{
+	class RandomLayer : public OnDemandLayer
+	{
+	public:
+		using OnDemandLayer::OnDemandLayer;
+
+		void createFromJson(const rapidjson::Value& json) override;
+		double getValueAt(sf::Vector3i tilePosition) override;
+
+	private:
+		unsigned int _seed;
+	};
+}

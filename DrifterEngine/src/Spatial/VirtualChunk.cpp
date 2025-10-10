@@ -3,7 +3,7 @@
 #include "Utility/CopyEntity.h"
 #include "WorldGrid.h"
 #include <Utility/ChunkSerializer.h>
-#include <ProcGen/ChunkGenerator.h>
+#include <Generation/ChunkGenerator.h>
 #include <Utility/StandardLogger.h>
 
 using namespace drft::spatial;

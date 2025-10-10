@@ -6,7 +6,7 @@
 #include <Spatial/WorldGrid.h>
 #include <Engine/Debug/IDebugDisplay.h>
 #include <Utility/ChunkSerializer.h>
-#include <ProcGen/ChunkGenerator.h>
+#include <Generation/ChunkGenerator.h>
 
 static constexpr int ACTIVE_CHUNK_RADIUS_XY = 10;
 static constexpr int TO_SAVE_CHUNK_RADIUS_XY = ACTIVE_CHUNK_RADIUS_XY + 2;

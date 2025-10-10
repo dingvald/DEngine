@@ -348,7 +348,7 @@
     <ClCompile Include="src\JSON\JSONHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PlaceEntities.cpp">
+    <ClCompile Include="src\Generation\PlaceEntities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\OpenableSystem.cpp">
@@ -384,31 +384,31 @@
     <ClCompile Include="src\Factory\Factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\BiomeLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\BiomeLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\PerlinNoiseLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\PerlinNoiseLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\JitteredGridLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\JitteredGridLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\VoronoiLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\VoronoiLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Random\XORshift.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\LloydRelaxedLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\LloydRelaxedLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\StandardLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\FillLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\FillLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\RandomLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\RandomLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\JSON\StringExpressions.cpp">
@@ -561,49 +561,49 @@
     <ClCompile Include="src\Systems\Core\PlayerTransferSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\EntityPack\EntityPack.cpp">
+    <ClCompile Include="src\Generation\EntityPack\EntityPack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\EntityPack\EntityPackRegistry.cpp">
+    <ClCompile Include="src\Generation\EntityPack\EntityPackRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\LayerPack\LayerPack.cpp">
+    <ClCompile Include="src\Generation\LayerPack\LayerPack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\LayerPack\LayerPackRegistry.cpp">
+    <ClCompile Include="src\Generation\LayerPack\LayerPackRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGen.cpp">
+    <ClCompile Include="src\Generation\LayeredProcGen\LayeredProcGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Features\FeatureRegistry.cpp">
+    <ClCompile Include="src\Generation\Features\FeatureRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Features\IFeature.cpp">
+    <ClCompile Include="src\Generation\Features\IFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Features\ClusterFeature.cpp">
+    <ClCompile Include="src\Generation\Features\ClusterFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\FeatureLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\FeatureLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Features\AutomataFeature.cpp">
+    <ClCompile Include="src\Generation\Features\AutomataFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\SlotDeterminer\SlotDeterminer.cpp">
+    <ClCompile Include="src\Generation\SlotDeterminer\SlotDeterminer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Decorators\IDecorator.cpp">
+    <ClCompile Include="src\Generation\Decorators\IDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Decorators\DecoratorFactory.cpp">
+    <ClCompile Include="src\Generation\Decorators\DecoratorFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Decorators\EntityDecorator.cpp">
+    <ClCompile Include="src\Generation\Decorators\EntityDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Decorators\SimpleDecorator.cpp">
+    <ClCompile Include="src\Generation\Decorators\SimpleDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Gameplay\SkillsSystem.cpp">
@@ -678,31 +678,31 @@
     <ClCompile Include="src\JSON\JsonValueComparison.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\DepthLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\DepthLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Decorators\DecoratorIds.cpp">
+    <ClCompile Include="src\Generation\Decorators\DecoratorIds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\EntityPlacementLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\EntityPlacementLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\EntitySlotLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\EntitySlotLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\TilePlacementLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\TilePlacementLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Prefabs\Prefab.cpp">
+    <ClCompile Include="src\Generation\Prefabs\Prefab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Prefabs\PrefabRegistry.cpp">
+    <ClCompile Include="src\Generation\Prefabs\PrefabRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Decorators\PrefabDecorator.cpp">
+    <ClCompile Include="src\Generation\Decorators\PrefabDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Features\SingleFeature.cpp">
+    <ClCompile Include="src\Generation\Features\SingleFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Debug\DebugDisplay.cpp">
@@ -711,58 +711,58 @@
     <ClCompile Include="src\Engine\Debug\IDebugDisplay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\ChunkGenerator.cpp">
+    <ClCompile Include="src\Generation\ChunkGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Structures\Template\StructureTemplate.cpp">
+    <ClCompile Include="src\Generation\Structures\Template\StructureTemplate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Structures\Template\StructureTemplateLayer.cpp">
+    <ClCompile Include="src\Generation\Structures\Template\StructureTemplateLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\SlotPositionList.cpp">
+    <ClCompile Include="src\Generation\SlotPositionList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Features\ChambersFeature.cpp">
+    <ClCompile Include="src\Generation\Features\ChambersFeature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Structures\Instance\StructureInstance.cpp">
+    <ClCompile Include="src\Generation\Structures\Instance\StructureInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Structures\Instance\StructureInstanceLayer.cpp">
+    <ClCompile Include="src\Generation\Structures\Instance\StructureInstanceLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\PositionArrayLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\PositionArrayLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.cpp">
+    <ClCompile Include="src\Generation\LayeredProcGen\LayeredProcGenBinder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Layers\StructuresLayer.cpp">
+    <ClCompile Include="src\Generation\Layers\StructuresLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\Structures\StructureRegistry.cpp">
+    <ClCompile Include="src\Generation\Structures\StructureRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PositionSelector\PositionSelectorFactory.cpp">
+    <ClCompile Include="src\Generation\PositionSelector\PositionSelectorFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PositionSelector\PositionSelectorIds.cpp">
+    <ClCompile Include="src\Generation\PositionSelector\PositionSelectorIds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PositionSelector\AnchorPositionSelector.cpp">
+    <ClCompile Include="src\Generation\PositionSelector\AnchorPositionSelector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\JSON\JsonValueStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PositionGenerator\PositionGeneratorFactory.cpp">
+    <ClCompile Include="src\Generation\PositionGenerator\PositionGeneratorFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PositionGenerator\PositionGeneratorIds.cpp">
+    <ClCompile Include="src\Generation\PositionGenerator\PositionGeneratorIds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcGen\PositionGenerator\HardcodedPositionGenerator.cpp">
+    <ClCompile Include="src\Generation\PositionGenerator\HardcodedPositionGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AI\AiActions\WaitAiAction.cpp">
@@ -1658,7 +1658,7 @@
     <ClInclude Include="src\JSON\JSONHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PlaceEntities.h">
+    <ClInclude Include="src\Generation\PlaceEntities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Gameplay\OpenableSystem.h">
@@ -1838,19 +1838,19 @@
     <ClInclude Include="src\Components\Actions\InteractionAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\BiomeLayer.h">
+    <ClInclude Include="src\Generation\Layers\BiomeLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGen.h">
+    <ClInclude Include="src\Generation\LayeredProcGen\LayeredProcGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\PerlinNoiseLayer.h">
+    <ClInclude Include="src\Generation\Layers\PerlinNoiseLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\JitteredGridLayer.h">
+    <ClInclude Include="src\Generation\Layers\JitteredGridLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\VoronoiLayer.h">
+    <ClInclude Include="src\Generation\Layers\VoronoiLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="deps\jc_voronoi\jc_voronoi.h">
@@ -1865,13 +1865,13 @@
     <ClInclude Include="src\Utility\StandardLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\LloydRelaxedLayer.h">
+    <ClInclude Include="src\Generation\Layers\LloydRelaxedLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\FillLayer.h">
+    <ClInclude Include="src\Generation\Layers\FillLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\RandomLayer.h">
+    <ClInclude Include="src\Generation\Layers\RandomLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\JSON\StringExpressions.h">
@@ -3158,13 +3158,13 @@
     <ClInclude Include="src\Events\ChunkSourceTransferStartedEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\IChunkDataSourceProvider.h">
+    <ClInclude Include="src\Generation\IChunkDataSourceProvider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationState.h">
+    <ClInclude Include="src\Generation\GenerationState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\IChunkDataSource.h">
+    <ClInclude Include="src\Generation\IChunkDataSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\CelestialBody\CelestialBody.h">
@@ -3179,19 +3179,19 @@
     <ClInclude Include="src\Events\ChunkSourceTransferFailedEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationRegistries.h">
+    <ClInclude Include="src\Generation\GenerationRegistries.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\EntityPack\EntityPack.h">
+    <ClInclude Include="src\Generation\EntityPack\EntityPack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\EntityPack\EntityPackRegistry.h">
+    <ClInclude Include="src\Generation\EntityPack\EntityPackRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\LayerPack\LayerPack.h">
+    <ClInclude Include="src\Generation\LayerPack\LayerPack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\LayerPack\LayerPackRegistry.h">
+    <ClInclude Include="src\Generation\LayerPack\LayerPackRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\DynamicPointerCast.h">
@@ -3200,46 +3200,46 @@
     <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Features\IFeature.h">
+    <ClInclude Include="src\Generation\Features\IFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Features\FeatureRegistry.h">
+    <ClInclude Include="src\Generation\Features\FeatureRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Features\ClusterFeature.h">
+    <ClInclude Include="src\Generation\Features\ClusterFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\AutoGrid3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\FeatureLayer.h">
+    <ClInclude Include="src\Generation\Layers\FeatureLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Features\AutomataFeature.h">
+    <ClInclude Include="src\Generation\Features\AutomataFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\SlotDeterminer\SlotDeterminer.h">
+    <ClInclude Include="src\Generation\SlotDeterminer\SlotDeterminer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Decorators\IDecorator.h">
+    <ClInclude Include="src\Generation\Decorators\IDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\TaggedPositions.h">
+    <ClInclude Include="src\Generation\TaggedPositions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Decorators\DecoratorFactory.h">
+    <ClInclude Include="src\Generation\Decorators\DecoratorFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Decorators\EntityDecorator.h">
+    <ClInclude Include="src\Generation\Decorators\EntityDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationContext.h">
+    <ClInclude Include="src\Generation\GenerationContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\SlotPositionList.h">
+    <ClInclude Include="src\Generation\SlotPositionList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Decorators\SimpleDecorator.h">
+    <ClInclude Include="src\Generation\Decorators\SimpleDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\SkillsComponent.h">
@@ -3359,37 +3359,37 @@
     <ClInclude Include="src\JSON\JsonValueComparison.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\DepthLayer.h">
+    <ClInclude Include="src\Generation\Layers\DepthLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Decorators\DecoratorIds.h">
+    <ClInclude Include="src\Generation\Decorators\DecoratorIds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\EntityPlacementLayer.h">
+    <ClInclude Include="src\Generation\Layers\EntityPlacementLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\EntitySlotLayer.h">
+    <ClInclude Include="src\Generation\Layers\EntitySlotLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\EntityPositionList.h">
+    <ClInclude Include="src\Generation\EntityPositionList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\TilePlacementLayer.h">
+    <ClInclude Include="src\Generation\Layers\TilePlacementLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Prefabs\Prefab.h">
+    <ClInclude Include="src\Generation\Prefabs\Prefab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Prefabs\PrefabRegistry.h">
+    <ClInclude Include="src\Generation\Prefabs\PrefabRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Decorators\PrefabDecorator.h">
+    <ClInclude Include="src\Generation\Decorators\PrefabDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Features\SingleFeature.h">
+    <ClInclude Include="src\Generation\Features\SingleFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\EntityPack\NullEntitySlot.h">
+    <ClInclude Include="src\Generation\EntityPack\NullEntitySlot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Debug\DebugDisplay.h">
@@ -3398,67 +3398,67 @@
     <ClInclude Include="src\Engine\Debug\IDebugDisplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\ChunkGenerator.h">
+    <ClInclude Include="src\Generation\ChunkGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Structures\Template\StructureTemplate.h">
+    <ClInclude Include="src\Generation\Structures\Template\StructureTemplate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Structures\Template\StructureTemplateLayer.h">
+    <ClInclude Include="src\Generation\Structures\Template\StructureTemplateLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Features\ChambersFeature.h">
+    <ClInclude Include="src\Generation\Features\ChambersFeature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Structures\Instance\StructureInstance.h">
+    <ClInclude Include="src\Generation\Structures\Instance\StructureInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Structures\Instance\StructureInstanceLayer.h">
+    <ClInclude Include="src\Generation\Structures\Instance\StructureInstanceLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\PositionArrayLayer.h">
+    <ClInclude Include="src\Generation\Layers\PositionArrayLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\LayeredProcGen\LayeredProcGenBinder.h">
+    <ClInclude Include="src\Generation\LayeredProcGen\LayeredProcGenBinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Layers\StructuresLayer.h">
+    <ClInclude Include="src\Generation\Layers\StructuresLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionSelector\IPositionSelector.h">
+    <ClInclude Include="src\Generation\PositionSelector\IPositionSelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\Structures\StructureRegistry.h">
+    <ClInclude Include="src\Generation\Structures\StructureRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\JSON\MemberParserValidator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionSelector\PositionSelectorFactory.h">
+    <ClInclude Include="src\Generation\PositionSelector\PositionSelectorFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionSelector\PositionSelectorIds.h">
+    <ClInclude Include="src\Generation\PositionSelector\PositionSelectorIds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\GenerationFinalizationContext.h">
+    <ClInclude Include="src\Generation\GenerationFinalizationContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionSelector\AnchorPositionSelector.h">
+    <ClInclude Include="src\Generation\PositionSelector\AnchorPositionSelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\JSON\JsonValueStorage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionGenerator\IPositionGenerator.h">
+    <ClInclude Include="src\Generation\PositionGenerator\IPositionGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionGenerator\PositionGeneratorFactory.h">
+    <ClInclude Include="src\Generation\PositionGenerator\PositionGeneratorFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionGenerator\PositionGeneratorIds.h">
+    <ClInclude Include="src\Generation\PositionGenerator\PositionGeneratorIds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcGen\PositionGenerator\HardcodedPositionGenerator.h">
+    <ClInclude Include="src\Generation\PositionGenerator\HardcodedPositionGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\AI\AiActions\WaitAiAction.h">

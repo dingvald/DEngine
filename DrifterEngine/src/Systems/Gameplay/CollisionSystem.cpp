@@ -42,7 +42,7 @@ drft::system::Relationship drft::system::CollisionSystem::determineTargetRelatio
 	Relationship targetRelationship = Relationship::Neutral;
 	for (auto&& blocker : entities)
 	{
-		targetRelationship = FactionSystem::resolveRelationship(sourceEntity, { *sourceEntity.registry(), blocker});
+		targetRelationship = FactionSystem::getRelationshipSimple(sourceEntity, { *sourceEntity.registry(), blocker});
 		// if there are any hostiles, then all targets at that cell are considered hostile
 		if (targetRelationship == Relationship::Hostile)
 		{

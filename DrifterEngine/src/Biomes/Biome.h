@@ -1,7 +1,7 @@
 #pragma once
 #include "Components/RenderComponent.h"
 #include <JSON/ICreateFromJson.h>
-#include <ProcGen/SlotDeterminer/SlotDeterminer.h>
+#include <Generation/SlotDeterminer/SlotDeterminer.h>
 
 
 using BiomeIcon = RenderComponent;

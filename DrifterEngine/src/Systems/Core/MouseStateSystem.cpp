@@ -45,7 +45,7 @@ void drft::system::MouseStateSystem::updateMouseContextualState(entt::entity mou
 	for (auto&& entity : entities)
 	{
 		auto entityHandle = entt::const_handle{ _registry, entity };
-		if (FactionSystem::resolveRelationship(player, entityHandle) == Relationship::Hostile)
+		if (FactionSystem::getRelationshipSimple(player, entityHandle) == Relationship::Hostile)
 		{
 			mouseCursor.actionState = MouseContextualActionState::Attack;
 			return;

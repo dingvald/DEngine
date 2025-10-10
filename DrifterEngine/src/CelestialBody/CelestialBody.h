@@ -1,11 +1,11 @@
 #pragma once
-#include <ProcGen/LayeredProcGen/LayeredProcGen.h>
-#include <ProcGen/IChunkDataSource.h>
-#include <ProcGen/IChunkDataSourceProvider.h>
+#include <Generation/LayeredProcGen/LayeredProcGen.h>
+#include <Generation/IChunkDataSource.h>
+#include <Generation/IChunkDataSourceProvider.h>
 #include <JSON/ICreateFromJson.h>
 #include <Utility/Math.h>
-#include <ProcGen/EntityPack/EntityPack.h>
-#include <ProcGen/GenerationRegistries.h>
+#include <Generation/EntityPack/EntityPack.h>
+#include <Generation/GenerationRegistries.h>
 
 class CelestialBody : public IChunkDataSource, public IChunkDataSourceProvider, public ICreateFromJson
 {

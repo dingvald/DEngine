@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "SolarSystem.h"
 #include <EnTT/entt.h>
-#include <ProcGen/IChunkDataSource.h>
-#include <ProcGen/GenerationRegistries.h>
+#include <Generation/IChunkDataSource.h>
+#include <Generation/GenerationRegistries.h>
 
 SolarSystem::SolarSystem(const GenerationRegistries& registries)
 	: _registries(registries)

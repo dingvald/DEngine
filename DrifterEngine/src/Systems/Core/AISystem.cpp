@@ -35,10 +35,10 @@ void drft::system::AiSystem::init()
 	_sensors.registerSensor<VisualActorSensor>();
 
 	// Register AI consideration inputs
-	_inputClearingHouse.registerInput("my_health"_hs, AiInputFunctions::MyHealth);
-	_inputClearingHouse.registerInput("target_health"_hs, AiInputFunctions::TargetHealth);
-	_inputClearingHouse.registerInput("distance_to_target"_hs, AiInputFunctions::DistanceToTarget);
-	_inputClearingHouse.registerInput("target_relationship"_hs, AiInputFunctions::TargetRelationship);
+	_inputClearingHouse.registerInput("my_health"_hs, AiInputFunctions::myHealth);
+	_inputClearingHouse.registerInput("target_health"_hs, AiInputFunctions::targetHealth);
+	_inputClearingHouse.registerInput("distance_to_target"_hs, AiInputFunctions::distanceToTarget);
+	_inputClearingHouse.registerInput("target_relationship"_hs, AiInputFunctions::targetRelationship);
 
 	// Register actions
 	_actionRegistry.registerAction<MeleeAttackAiAction>("melee_attack"_hs);

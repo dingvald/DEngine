@@ -3,15 +3,15 @@
 
 #include <Cereal/external/rapidjson/document.h>
 #include <EnTT/entt.h>
-#include <ProcGen/Layers/BiomeLayer.h>
-#include <ProcGen/Layers/StructuresLayer.h>
+#include <Generation/Layers/BiomeLayer.h>
+#include <Generation/Layers/StructuresLayer.h>
 
 #include <Spatial/AABB.h>
 
-#include <ProcGen/GenerationRegistries.h>
-#include <ProcGen/EntityPack/EntityPack.h>
-#include <ProcGen/LayerPack/LayerPack.h>
-#include <ProcGen/LayeredProcGen/LayeredProcGenBinder.h>
+#include <Generation/GenerationRegistries.h>
+#include <Generation/EntityPack/EntityPack.h>
+#include <Generation/LayerPack/LayerPack.h>
+#include <Generation/LayeredProcGen/LayeredProcGenBinder.h>
 
 #include <Utility/StandardLogger.h>
 

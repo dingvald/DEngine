@@ -1,6 +1,10 @@
 #pragma once
 #include <JSON/ICreateFromJson.h>
 
+/// <summary>
+/// Represents a mathematical response curve with configurable parameters.
+/// Calulates a response and clamps the output between [0.0, 1.0]
+/// </summary>
 class ResponseCurve : public ICreateFromJson
 {
 public:

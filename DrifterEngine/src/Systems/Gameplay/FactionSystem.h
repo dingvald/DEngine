@@ -15,14 +15,16 @@ namespace drft::system
 	{
 	public:
 		static inline Closeness MaxCloseness = 1000;
+		static inline Closeness MinCloseness = -1000;
 	public:
 		using System::System;
 
 		void init() override;
 
-		[[nodiscard]] static Relationship resolveRelationship(entt::const_handle entity1, entt::const_handle entity2);
-		static Closeness getCloseness(const std::string& faction1, const std::string& faction2);
-		static void modifyCloseness(const std::string& faction1, const std::string& faction2, Closeness deltaValue);
+		[[nodiscard]] static Relationship getRelationshipSimple(entt::const_handle entity1, entt::const_handle entity2);
+		static void addNewRelationship(const std::string& faction1, const std::string& faction2);
+		static Closeness getRelationship(const std::string& faction1, const std::string& faction2);
+		static void modifyRelationship(const std::string& faction1, const std::string& faction2, Closeness deltaValue);
 
 		// TODO: Save/Load faction table
 

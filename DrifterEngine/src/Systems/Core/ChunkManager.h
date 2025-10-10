@@ -3,7 +3,7 @@
 
 #include <Spatial/ChunkSource.h>
 #include <Utility/ChunkSerializer.h>
-#include <ProcGen/ChunkGenerator.h>
+#include <Generation/ChunkGenerator.h>
 #include <EnTT/entt.h>
 #include <memory>
 #include <optional>

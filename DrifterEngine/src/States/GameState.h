@@ -2,7 +2,7 @@
 #include "State.h"
 #include "Systems/HelperClasses/InputBuffer.h"
 #include <Engine/StateStack.h>
-#include <ProcGen/GenerationRegistries.h>
+#include <Generation/GenerationRegistries.h>
 
 class SolarSystem;
 

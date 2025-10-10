@@ -9,9 +9,9 @@
 
 #include <Spatial/Helpers.h>
 
-constexpr float MAX_DISTANCE = 15.f;
+using namespace drft::system;
 
-float AiInputFunctions::MyHealth(entt::const_handle actor, entt::const_handle target)
+float AiInputFunctions::myHealth(entt::const_handle actor, entt::const_handle target)
 {
 	if (auto health = actor.try_get<HealthComponent>())
 	{
@@ -20,7 +20,7 @@ float AiInputFunctions::MyHealth(entt::const_handle actor, entt::const_handle ta
 	return 0.f;
 }
 
-float AiInputFunctions::TargetHealth(entt::const_handle actor, entt::const_handle target)
+float AiInputFunctions::targetHealth(entt::const_handle actor, entt::const_handle target)
 {
 	if (auto health = target.try_get<HealthComponent>())
 	{
@@ -29,8 +29,10 @@ float AiInputFunctions::TargetHealth(entt::const_handle actor, entt::const_handl
 	return 0.f;
 }
 
-float AiInputFunctions::DistanceToTarget(entt::const_handle actor, entt::const_handle target)
+float AiInputFunctions::distanceToTarget(entt::const_handle actor, entt::const_handle target)
 {
+	static constexpr float MAX_DISTANCE = 15.f;
+
 	auto actorPosition = actor.try_get<PositionComponent>();
 	auto targetPosition = target.try_get<PositionComponent>();
 
@@ -42,17 +44,17 @@ float AiInputFunctions::DistanceToTarget(entt::const_handle actor, entt::const_h
 	return 0.f;
 }
 
-float AiInputFunctions::TargetRelationship(entt::const_handle actor, entt::const_handle target)
+float AiInputFunctions::targetRelationship(entt::const_handle actor, entt::const_handle target)
 {
 	auto actorFaction = actor.try_get<FactionComponent>();
 	auto targetFaction = target.try_get<FactionComponent>();
 
 	if (actorFaction && targetFaction)
 	{
-		using namespace drft::system;
+		Closeness closeness = FactionSystem::getRelationship(actorFaction->name, targetFaction->name);
 
-		Closeness closeness = FactionSystem::getCloseness(actorFaction->name, targetFaction->name);
-		return static_cast<float>(closeness) / static_cast<float>(FactionSystem::MaxCloseness);
+		return static_cast<float>(closeness + FactionSystem::MaxCloseness) 
+			/ static_cast<float>(std::abs(FactionSystem::MinCloseness) + FactionSystem::MaxCloseness);
 	}
-	return 0.f;
+	return 0.5f; // Return a neutral relationship
 }

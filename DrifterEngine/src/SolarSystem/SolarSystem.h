@@ -6,8 +6,8 @@
 
 #include <JSON/ICreateFromJson.h>
 
-#include <ProcGen/IChunkDataSource.h>
-#include <ProcGen/IChunkDataSourceProvider.h>
+#include <Generation/IChunkDataSource.h>
+#include <Generation/IChunkDataSourceProvider.h>
 
 #include <vector>
 
