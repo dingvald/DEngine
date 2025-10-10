@@ -80,8 +80,9 @@ drft::InventoryState::InventoryState(StateStack& stack, StateContext& context)
 
 	auto equipment = tgui::Grid::create();
 	equipment->setOrigin(0.5f, 0.5f);
-	equipment->setPosition("25%", "50%");
+	equipment->setPosition(tgui::bindPosition(equipmentBackground));
 	equipment->setTextSize(16);
+	equipment->setSize(tgui::bindSize(equipmentBackground));
 
 	_guiGroup->add(equipmentBackground);
 	_guiGroup->add(equipment, w_EquipmentGrid);
@@ -249,7 +250,7 @@ void drft::InventoryState::refreshEquipmentUI(tgui::Grid::Ptr equipment)
 	auto paperdoll = _sessionEntity.try_get<PaperdollLayoutComponent>();
 	if (!paperdoll) return;
 
-	const tgui::Padding gridCellPadding = { 12, 8 };
+	const tgui::Padding gridCellPadding = { "2%", "1%" };
 
 	for (int row = 0; row < paperdoll->dimensions.y; row++)
 	{
@@ -262,6 +263,7 @@ void drft::InventoryState::refreshEquipmentUI(tgui::Grid::Ptr equipment)
 
 				auto panel = tgui::Panel::copy(_paperdollNodeTemplate);
 				panel->getRenderer()->setBackgroundColor(guiColor::BlackAgate);
+				panel->setSize("12%", "12%");
 				equipment->addWidget(panel, row, col, tgui::Grid::Alignment::Center, gridCellPadding);
 				addItemToEquipmentUI(slotName, panel);
 			}
@@ -330,6 +332,7 @@ void drft::InventoryState::addItemToEquipmentUI(const std::string& slotName, tgu
 		texture.setColor(render.color);
 		auto icon = layout->get<tgui::Picture>(w_EntryIcon);
 		icon->getRenderer()->setTexture(texture);
+		icon->setSize(tgui::bindSize(layout));
 
 		layout->onMousePress([this, slotName, item_handle]() { onLeftMousePressEquipmentItem(slotName, item_handle); });
 		layout->onRightMousePress([this, slotName, item_handle]() { onRightMousePressEquipmentItem(slotName, item_handle); });

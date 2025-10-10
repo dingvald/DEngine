@@ -72,11 +72,12 @@ void drft::Engine::initialize()
 	LOG_MSG("Initializing Engine...");
 	LOG_MSG("Working Directory: {}", WORKING_DIRECTORY.string());
 
+	loadResources();
+
 	initializeWindow();
 	initializeGui();
 	initializeDebugDisplay();
 
-	loadResources();
 	loadDefaultKeybindings();
 	loadSavedKeybindings();
 	setupActionMap();

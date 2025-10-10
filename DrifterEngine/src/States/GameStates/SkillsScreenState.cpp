@@ -48,7 +48,6 @@ drft::SkillsScreenState::SkillsScreenState(StateStack& stack, StateContext& cont
 	split->setSize(tgui::bindSize(panel));
 	split->setOrientation(tgui::Orientation::Horizontal);
 	split->setSplitterWidth(1.f);
-	split->setSplitterOffset("40%");
 	split->setMinValidSplitterOffset("40%");
 	split->setMaxValidSplitterOffset("65%");
 	split->getRenderer()->setSplitterColor(guiColor::TranslucentAsh);
@@ -58,6 +57,7 @@ drft::SkillsScreenState::SkillsScreenState(StateStack& stack, StateContext& cont
 	skillsList->setItemsHeight(48.f);
 	skillsList->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
 	split->add(skillsList);
+	split->setSplitterOffset(tgui::bindRight(skillsList).getValue());
 
 	setupPanelTemplate(skillsList->getPanelTemplate());
 
