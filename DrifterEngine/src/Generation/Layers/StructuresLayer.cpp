@@ -18,13 +18,6 @@ GenerationState drft::StructuresLayerChunk::generate(GenerationLevel)
 
         auto ifVolumeContainsPosition = [volume = _volume](sf::Vector3i pos) { return volume.contains(pos); };
         mergeSlotPositionMaps(slots, structureLayer->getEntitySlots(), ifVolumeContainsPosition);
-
-        GenerationMap map;
-        map["slots"].add(MapTag{24}, {1, 1, 1});
-        map["entities"].add(MapTag{ 10 }, { 0,0,0 });
-
-        map["slots"].forEachPositionWithTag(MapTag{ 10 }, [](auto pos) { return true; });
-
     }
     return GenerationState::Complete;
 }
