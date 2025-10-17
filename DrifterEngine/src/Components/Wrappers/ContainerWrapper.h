@@ -1,5 +1,6 @@
 #pragma once
 #include <Components/ItemComponent.h>
+#include <Components/ContainerComponent.h>
 #include <Components/Wrappers/ComponentWrapper.h>
 
 struct ContainerComponent;

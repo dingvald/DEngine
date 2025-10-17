@@ -15,7 +15,8 @@
 #include <Spatial/ChunkSource.h>
 #include <Utility/StandardLogger.h>
 #include "Systems/Helpers/GetCurrentCamera.h"
-#include <SolarSystem/SolarSystem.h>
+#include <Generation/IChunkDataSource.h>
+#include <Generation/IChunkDataSourceProvider.h>
 
 using namespace entt::literals;
 
@@ -241,10 +242,17 @@ void drft::system::ChunkManager::onUpdateCameraTarget(entt::registry& registry, 
 	}
 }
 
+IChunkDataSourceProvider& drft::system::ChunkManager::getChunkDataSourceProvider() const
+{
+	auto dataSourceProvider = _registry.ctx().get<IChunkDataSourceProvider*>();
+	DEBUG_ASSERT(dataSourceProvider != nullptr);
+	return dataSourceProvider ? *dataSourceProvider : _dummyProvider;
+}
+
 drft::system::ChunkManager::SourcePtr drft::system::ChunkManager::tryCreateNewChunkSource(entt::id_type sourceId)
 {
-	auto& solarSytem = _registry.ctx().get<SolarSystem>("solar_system"_hs);
-	if (auto dataSource = solarSytem.tryGetDataSource(sourceId))
+	IChunkDataSourceProvider& provider = getChunkDataSourceProvider();
+	if (auto dataSource = provider.tryGetDataSource(sourceId))
 	{
 		_generator.setGenerationLayers(dataSource->getGenerationLayers());
 		return std::make_unique<spatial::ChunkSource>(_pendingTransfer->newSourceId, _serializer, _generator);
@@ -254,8 +262,8 @@ drft::system::ChunkManager::SourcePtr drft::system::ChunkManager::tryCreateNewCh
 
 bool drft::system::ChunkManager::doesChunkSourceExist(entt::id_type sourceId) const
 {
-	auto& solarSytem = _registry.ctx().get<SolarSystem>("solar_system"_hs);
-	if (auto dataSource = solarSytem.tryGetDataSource(sourceId))
+	IChunkDataSourceProvider& provider = getChunkDataSourceProvider();
+	if (auto dataSource = provider.tryGetDataSource(sourceId))
 	{
 		return true;
 	}

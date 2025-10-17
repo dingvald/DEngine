@@ -4,21 +4,13 @@
 #include "Components/Components.h"
 #include "Components/RenderComponent.h"
 #include <Components/PaperdollLayoutComponent.h>
-#include "Components/HealthComponent.h"
-#include "Components/ContainerComponent.h"
-#include "Components/InteractableComponent.h"
 #include "Components/ItemComponent.h"
-#include "Components/WearableComponent.h"
-#include "Components/DescriptionComponent.h"
 
 #include <Defines/CommonGuiColors.h>
-
-#include <Events/ChangeMouseVisibilityEvent.h>
 
 #include <Utility/EntityAccessors/GetEntityName.h>
 #include <Utility/EntityHelpers.h>
 #include "Systems/Helpers/ItemDatabase.h"
-#include <Systems/Core/MouseVisualizationSystem.h>
 #include <Utility/StandardLogger.h>
 #include "Utility/StringManipulation.h"
 #include "Utility/TextureAtlas.h"
@@ -383,7 +375,7 @@ void drft::InventoryState::onLeftMousePressInventoryItem(size_t index, entt::con
 	else
 	{
 		_container.remove(item.entity());
-		_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = index });
+		_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .previousInventoryPosition = index });
 		_tooltip.reset();
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 		refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
@@ -402,7 +394,7 @@ void drft::InventoryState::onLeftMousePressEquipmentItem(const std::string& slot
 		_draggingItem.reset();
 		if (item)
 		{
-			_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .index = _container.getItems().size() });
+			_draggingItem.emplace(DraggingFromInventoryContext{ .item = item, .container = &_container, .previousInventoryPosition = _container.getItems().size() });
 		}
 
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
@@ -411,7 +403,7 @@ void drft::InventoryState::onLeftMousePressEquipmentItem(const std::string& slot
 	else if (item)
 	{
 		_body.unequip(slotName);
-		_draggingItem.emplace(DraggingFromEquipmentContext{ .item = item, .body = &_body, .slot = slotName });
+		_draggingItem.emplace(DraggingFromEquipmentContext{ .item = item, .body = &_body, .previousEquipmentSlotName = slotName });
 		_tooltip.reset();
 		refreshInventoryUI(_guiGroup->get<tgui::PanelListBox>(w_InventoryList), false);
 		refreshEquipmentUI(_guiGroup->get<tgui::Grid>(w_EquipmentGrid));
@@ -491,9 +483,9 @@ void drft::InventoryState::onLeaveItemContainingWidget()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 drft::InventoryState::DraggingItem::DraggingItem(DraggingContext ctx)
-	: context(ctx)
+	: _context(ctx)
 {
-	if (std::holds_alternative<std::monostate>(context)) return;
+	if (std::holds_alternative<std::monostate>(_context)) return;
 
 	entt::const_handle item = getItem();
 
@@ -522,13 +514,13 @@ void drft::InventoryState::DraggingItem::setPosition(sf::Vector2i position)
 
 entt::const_handle drft::InventoryState::DraggingItem::getItem() const
 {
-	if (std::holds_alternative<std::monostate>(context)) return entt::const_handle{};
+	if (std::holds_alternative<std::monostate>(_context)) return entt::const_handle{};
 
-	if (auto fromInventory = std::get_if<DraggingFromInventoryContext>(&context))
+	if (auto fromInventory = std::get_if<DraggingFromInventoryContext>(&_context))
 	{
 		return fromInventory->item;
 	}
-	else if (auto fromEquipment = std::get_if<DraggingFromEquipmentContext>(&context))
+	else if (auto fromEquipment = std::get_if<DraggingFromEquipmentContext>(&_context))
 	{
 		return fromEquipment->item;
 	}
@@ -537,15 +529,15 @@ entt::const_handle drft::InventoryState::DraggingItem::getItem() const
 
 void drft::InventoryState::DraggingItem::undo()
 {
-	if (std::holds_alternative<std::monostate>(context)) return;
+	if (std::holds_alternative<std::monostate>(_context)) return;
 
-	if (auto fromInventory = std::get_if<DraggingFromInventoryContext>(&context))
+	if (auto fromInventory = std::get_if<DraggingFromInventoryContext>(&_context))
 	{
-		fromInventory->container->addBefore(fromInventory->item, fromInventory->index);
+		fromInventory->container->addBefore(fromInventory->item, fromInventory->previousInventoryPosition);
 	}
-	else if (auto fromEquipment = std::get_if<DraggingFromEquipmentContext>(&context))
+	else if (auto fromEquipment = std::get_if<DraggingFromEquipmentContext>(&_context))
 	{
-		fromEquipment->body->equip(fromEquipment->slot, fromEquipment->item.entity());
+		fromEquipment->body->equip(fromEquipment->previousEquipmentSlotName, fromEquipment->item.entity());
 	}
 }
 

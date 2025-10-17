@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Generation\GenerationMap.cpp" />
     <ClCompile Include="src\AI\AiActions\AiActionInstance.cpp" />
     <ClCompile Include="src\AI\AiActions\MoveToAiAction.cpp" />
     <ClCompile Include="src\AI\AiActions\WaitAiAction.cpp" />
@@ -255,7 +256,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Generation\Features\ClusterFeature.cpp" />
     <ClCompile Include="src\Generation\Features\IFeature.cpp" />
     <ClCompile Include="src\Generation\Features\FeatureRegistry.cpp" />
-    <ClCompile Include="src\CelestialBody\CelestialBody.cpp" />
+    <ClCompile Include="src\Universe\CelestialBody\CelestialBody.cpp" />
     <ClCompile Include="src\GUI\ItemTooltip.cpp" />
     <ClCompile Include="src\Actions\ActionMap.cpp" />
     <ClCompile Include="src\Components\Wrappers\BodyWrapper.cpp" />
@@ -271,7 +272,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Generation\Layers\FeatureLayer.cpp" />
     <ClCompile Include="src\Skills\Skill.cpp" />
     <ClCompile Include="src\Skills\SkillIds.cpp" />
-    <ClCompile Include="src\SolarSystem\SolarSystem.cpp" />
+    <ClCompile Include="src\Universe\SolarSystem\SolarSystem.cpp" />
     <ClCompile Include="src\Spatial\ChunkSource.cpp" />
     <ClCompile Include="src\States\Settings\KeybindingState.cpp" />
     <ClCompile Include="src\States\SettingsState.cpp" />
@@ -493,6 +494,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClCompile Include="src\Random\XORshift.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Generation\GenerationMap.h" />
     <ClInclude Include="src\AI\AiActions\AiActionInstance.h" />
     <ClInclude Include="src\AI\AiActions\MoveToAiAction.h" />
     <ClInclude Include="src\AI\AiActions\WaitAiAction.h" />
@@ -570,7 +572,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Generation\Features\AutomataFeature.h" />
     <ClInclude Include="src\Generation\Features\ClusterFeature.h" />
     <ClInclude Include="src\Generation\Features\IFeature.h" />
-    <ClInclude Include="src\CelestialBody\CelestialBody.h" />
+    <ClInclude Include="src\Universe\CelestialBody\CelestialBody.h" />
     <ClInclude Include="src\Components\ChunkSourceTrackerComponent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferCompleteEvent.h" />
     <ClInclude Include="src\Events\ChunkSourceTransferFailedEvent.h" />
@@ -609,7 +611,7 @@ xcopy "$(ProjectDir)resources\" "$(OutDir)resources\" /y /s /d
     <ClInclude Include="src\Generation\Layers\FeatureLayer.h" />
     <ClInclude Include="src\Skills\Skill.h" />
     <ClInclude Include="src\Skills\SkillIds.h" />
-    <ClInclude Include="src\SolarSystem\SolarSystem.h" />
+    <ClInclude Include="src\Universe\SolarSystem\SolarSystem.h" />
     <ClInclude Include="src\Spatial\AutoGrid3d.h" />
     <ClInclude Include="src\Spatial\ChunkSource.h" />
     <ClInclude Include="src\States\Settings\KeybindingState.h" />

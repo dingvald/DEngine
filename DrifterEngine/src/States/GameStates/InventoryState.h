@@ -13,13 +13,13 @@ namespace drft
 		{
 			entt::const_handle item;
 			ContainerWrapper* container;
-			size_t index;
+			size_t previousInventoryPosition;
 		};
 		struct DraggingFromEquipmentContext
 		{
 			entt::const_handle item;
 			BodyWrapper* body;
-			std::string slot;
+			std::string previousEquipmentSlotName;
 		};
 
 		using DraggingContext = std::variant<std::monostate, DraggingFromInventoryContext, DraggingFromEquipmentContext>;
@@ -40,7 +40,7 @@ namespace drft
 		private:
 			std::unique_ptr<sf::Sprite> _icon;
 			sf::RectangleShape _background;
-			DraggingContext context;
+			DraggingContext _context;
 
 		private:
 			bool _isClickHandled = false;

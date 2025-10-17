@@ -3,6 +3,7 @@
 #include <Utility/StandardLogger.h>
 #include <Generation/GenerationContext.h>
 #include <Spatial/Helpers.h>
+#include <Generation/GenerationMap.h>
 
 using namespace drft;
 
@@ -12,11 +13,18 @@ GenerationState drft::StructuresLayerChunk::generate(GenerationLevel)
     {
         const int depth = _volume.min.z / _volume.dimensions().z;
         GenerationContext context = { getGlobalSeed(), _layer.getRegistries() };
-        auto structureLayer = structure->getOrGenerateLayer(depth, context);
+        const StructureInstanceLayer* structureLayer = structure->getOrGenerateLayer(depth, context);
         if (!structureLayer) return GenerationState::Complete;
 
         auto ifVolumeContainsPosition = [volume = _volume](sf::Vector3i pos) { return volume.contains(pos); };
         mergeSlotPositionMaps(slots, structureLayer->getEntitySlots(), ifVolumeContainsPosition);
+
+        GenerationMap map;
+        map["slots"].add(MapTag{24}, {1, 1, 1});
+        map["entities"].add(MapTag{ 10 }, { 0,0,0 });
+
+        map["slots"].forEachPositionWithTag(MapTag{ 10 }, [](auto pos) { return true; });
+
     }
     return GenerationState::Complete;
 }

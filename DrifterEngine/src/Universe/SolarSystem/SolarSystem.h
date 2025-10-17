@@ -1,5 +1,5 @@
 #pragma once
-#include <CelestialBody/CelestialBody.h>
+#include <Universe/CelestialBody/CelestialBody.h>
 #include <Cereal/external/rapidjson/document.h>
 
 #include <EnTT/entt.h>

@@ -1,6 +1,7 @@
 #pragma once
 #include "Systems/System.h"
 
+#include <Generation/IChunkDataSourceProvider.h>
 #include <Spatial/ChunkSource.h>
 #include <Utility/ChunkSerializer.h>
 #include <Generation/ChunkGenerator.h>
@@ -51,6 +52,17 @@ namespace drft::system
 		void onConstructChunkSourceTracker(entt::registry& registry, entt::entity entity);
 		void onUpdateCameraTarget(entt::registry& registry, entt::entity entity);
 
+		class DummyDataProvider : public IChunkDataSourceProvider
+		{
+		public:
+			IChunkDataSource* tryGetDataSource(entt::id_type sourceId) override 
+			{
+				return nullptr;
+			};
+		};
+
+		IChunkDataSourceProvider& getChunkDataSourceProvider() const;
+
 		SourcePtr tryCreateNewChunkSource(entt::id_type sourceId);
 		bool doesChunkSourceExist(entt::id_type sourceId) const;
 
@@ -65,6 +77,7 @@ namespace drft::system
 	private:
 		ChunkSerializer _serializer;
 		ChunkGenerator _generator;
+		static inline DummyDataProvider _dummyProvider;
 
 		State _state = State::FirstUpdate;
 		SourcePtr _activeSource;

@@ -7,7 +7,7 @@
 #include "Events/RequestStateChange.h"
 #include <Keybindings/KeybindingsUtils.h>
 
-#include <SolarSystem/SolarSystem.h>
+#include <Universe/SolarSystem/SolarSystem.h>
 
 #include <States/GameStates/CraftingState.h>
 #include <States/GameStates/GameOverState.h>
@@ -122,7 +122,7 @@ void drft::GameState::setupRegistryContext()
 
 	getContext().registry.ctx().emplace<system::InputBuffer&>(_inputBuffer);
 	getContext().registry.ctx().emplace<Keybindings&>(getContext().keybindings);
-	getContext().registry.ctx().emplace_as<SolarSystem&>("solar_system"_hs, * _solarSystem);
+	getContext().registry.ctx().emplace<IChunkDataSourceProvider*>(_solarSystem.get());
 	getContext().registry.ctx().emplace<sf::RenderWindow&>(getContext().window);
 	getContext().registry.ctx().emplace<TextureAtlas&>(getContext().textures);
 	getContext().registry.ctx().emplace<const ControlsContext&>(getContext().controls);

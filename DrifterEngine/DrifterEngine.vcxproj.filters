@@ -549,13 +549,13 @@
     <ClCompile Include="src\Utility\ColorToHexString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SolarSystem\SolarSystem.cpp">
+    <ClCompile Include="src\Universe\SolarSystem\SolarSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Spatial\ChunkSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\CelestialBody\CelestialBody.cpp">
+    <ClCompile Include="src\Universe\CelestialBody\CelestialBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Core\PlayerTransferSystem.cpp">
@@ -784,6 +784,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Systems\Helpers\GetGlobalRandomObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Generation\GenerationMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3143,7 +3146,7 @@
     <ClInclude Include="src\Utility\ColorToHexString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SolarSystem\SolarSystem.h">
+    <ClInclude Include="src\Universe\SolarSystem\SolarSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Spatial\ChunkSource.h">
@@ -3167,7 +3170,7 @@
     <ClInclude Include="src\Generation\IChunkDataSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\CelestialBody\CelestialBody.h">
+    <ClInclude Include="src\Universe\CelestialBody\CelestialBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Core\PlayerTransferSystem.h">
@@ -3489,6 +3492,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Systems\Helpers\GetGlobalRandomObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Generation\GenerationMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
